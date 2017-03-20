@@ -54,7 +54,11 @@ void udelay(uint32_t usec)
  ***********************************************************/
 void mdelay(uint32_t msec)
 {
-	udelay(msec * 1000U);
+	unsigned long timeout = msec*1000;
+
+	while (timeout--) {
+		udelay(1);
+	}
 }
 
 /***********************************************************
