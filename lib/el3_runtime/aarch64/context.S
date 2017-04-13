@@ -467,6 +467,12 @@ func restore_gp_pmcr_pauth_regs
 	ldr	x28, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_SP_EL0]
 	msr	sp_el0, x28
 	ldp	x28, x29, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X28]
+
+	/* AP-23154 -- post-icc_eoirx flush moved here, keep vectors short */
+	nop; nop; nop; nop
+	dsb sy
+	isb
+	
 	ret
 endfunc restore_gp_pmcr_pauth_regs
 
