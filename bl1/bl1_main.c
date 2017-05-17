@@ -43,7 +43,6 @@ void bl1_calc_bl2_mem_layout(const meminfo_t *bl1_mem_layout,
 			meminfo_t *bl2_mem_layout)
 {
 	assert(bl1_mem_layout != NULL);
-	assert(bl2_mem_layout != NULL);
 
 	/*
 	 * Remove BL1 RW data from the scope of memory visible to BL2.
