@@ -14,6 +14,7 @@
 #include <common/bl_common.h>
 #include <common/debug.h>
 #include <drivers/auth/auth_mod.h>
+#include <drivers/auth/crypto_mod.h>
 #include <drivers/io/io_storage.h>
 #include <lib/utils.h>
 #include <lib/xlat_tables/xlat_tables_defs.h>
@@ -185,9 +186,45 @@ static int load_auth_image_internal(unsigned int image_id,
 			return -EAUTH;
 		}
 	}
-#endif /* TRUSTED_BOARD_BOOT */
 
+#if CRYPTO_BOARD_BOOT
 	/*
+	 * If images were encrypted during build time indicated as
+	 * CIPHER_TYPE passed as argument to build system, perform
+	 * decryption of this image.
+	 */
+	unsigned char *key;
+	unsigned int key_len;
+
+	/* Obtain decryption key from platform layer */
+	rc = plat_get_crypt_key(&key, &key_len);
+	if (rc != 0) {
+		/*
+		 * Unable to get key for decrypt image,
+		 * zero memory and flush it right away.
+		 */
+		zero_normalmem((void *)image_data->image_base,
+		       image_data->image_size);
+		flush_dcache_range(image_data->image_base,
+				   image_data->image_size);
+		return -EDECRYPT;
+	}
+
+	rc = crypto_mod_decrypt_image(image_id,
+				      (void *)image_data->image_base,
+				      image_data->image_size, &key, &key_len);
+	if (rc != 0) {
+		/* Decryption error, zero memory and flush it right away. */
+		zero_normalmem((void *)image_data->image_base,
+		       image_data->image_size);
+		flush_dcache_range(image_data->image_base,
+				   image_data->image_size);
+		return -EDECRYPT;
+	}
+#endif /* CRYPTO_BOARD_BOOT */
+#endif /* TRUSTED_BOARD_BOOT */
+	/*
+	 * File has been successfully loaded, authenticated and optionally encrypted.
 	 * Flush the image to main memory so that it can be executed later by
 	 * any CPU, regardless of cache and MMU state. If TBB is enabled, then
 	 * the file has been successfully loaded and authenticated and flush
@@ -197,7 +234,6 @@ static int load_auth_image_internal(unsigned int image_id,
 		flush_dcache_range(image_data->image_base,
 				   image_data->image_size);
 	}
-
 
 	return 0;
 }
