@@ -358,6 +358,8 @@
 #define HCR_AMO_BIT		(ULL(1) << 5)
 #define HCR_IMO_BIT		(ULL(1) << 4)
 #define HCR_FMO_BIT		(ULL(1) << 3)
+#define HCR_BSU0_BIT		(ULL(1) << 10)
+#define HCR_BSU1_BIT		(ULL(1) << 11)
 
 /* ISR definitions */
 #define ISR_A_SHIFT		U(8)
