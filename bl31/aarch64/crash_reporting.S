@@ -309,7 +309,7 @@ func do_crash_reporting
 	mrs	x14, mair_el1
 	mrs	x15, amair_el1
 	bl	str_in_crash_buf_print
-	mrs	x8, tcr_el1
+/*	mrs	x8, tcr_el1
 	mrs	x9, tpidr_el1
 	mrs	x10, tpidr_el0
 	mrs	x11, tpidrro_el0
@@ -329,6 +329,7 @@ func do_crash_reporting
 	bl	str_in_crash_buf_print
 	mrs	x8, isr_el1
 	bl	str_in_crash_buf_print
+*/
 
 #if CTX_INCLUDE_AARCH32_REGS
 	/* Print the AArch32 registers */
