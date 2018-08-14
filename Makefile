@@ -97,7 +97,7 @@ ifneq (${DEBUG}, 0)
         endif
 
         # Use LOG_LEVEL_INFO by default for debug builds
-        LOG_LEVEL	:=	50
+        LOG_LEVEL	:=	40
 else
         BUILD_TYPE	:=	release
         # Use LOG_LEVEL_NOTICE by default for release builds
