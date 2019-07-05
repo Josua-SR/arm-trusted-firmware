@@ -26,7 +26,7 @@
  *        of SMC calls.
  */
 /* OcteonTX OEM Service UUID */
-DEFINE_SVC_UUID(octeontx_svc_uid,
+DEFINE_SVC_UUID2(octeontx_svc_uid,
 		0xcf98f46f, 0xfa9c, 0x4e5a, 0xa4, 0x3a,
 		0x2a, 0x2f, 0x05, 0xb1, 0x45, 0x59);
 
