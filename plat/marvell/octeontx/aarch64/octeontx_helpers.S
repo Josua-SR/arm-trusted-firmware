@@ -19,6 +19,7 @@
 	.globl	plat_secondary_cold_boot_setup
 	.globl	plat_crash_console_init
 	.globl	plat_crash_console_putc
+	.globl	plat_crash_console_flush
 	.globl	platform_mem_init
 	.globl	octeontx_sec_entry_point
 
@@ -120,6 +121,19 @@ func plat_crash_console_putc
 	 */
 	b	console_putc
 endfunc plat_crash_console_putc
+
+	/* ---------------------------------------------
+	 * int plat_crash_console_flush()
+	 * Function to force a write of all buffered
+	 * data that hasn't been output.
+	 * Out : return -1 on error else return 0.
+	 * Clobber list : r0
+	 * ---------------------------------------------
+	 */
+func plat_crash_console_flush
+	mov_imm	x0, 0x87E028000000
+	b	console_pl011_flush
+endfunc plat_crash_console_flush
 
 	/* --------------------------------------------------------
 	 * void platform_mem_init (void);
