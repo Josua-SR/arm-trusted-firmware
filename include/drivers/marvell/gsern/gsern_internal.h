@@ -81,7 +81,6 @@
 #define GSERN_CSR_INIT			CSR_INIT
 #define GSERN_CSR_WRITE			CSR_WRITE
 #define GSERN_CSR_READ			CSR_READ
-#define bool				int
 #define false				0
 #define true				1
 #define gsern_error			WARN

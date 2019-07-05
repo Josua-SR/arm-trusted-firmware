@@ -9,6 +9,7 @@
 #define _GSERN_H_
 
 #include <gsern/gsern_settings.h>
+#include <stdbool.h>
 #include <stdint.h>
 
 #define GSERN_COMMON_BIAS_BCFG_PWDN_BIT			BIT(0)
@@ -71,7 +72,7 @@ typedef struct {
  *
  * @return Zero on success, negative on failure
  */
-int gsern_set_mode(int qlm, int qlm_lane, enum gsern_mode mode, int is_first,
+int gsern_set_mode(int qlm, int qlm_lane, enum gsern_mode mode, bool is_first,
 	int baud_mhz, enum gsern_flags flags);
 
 /**
