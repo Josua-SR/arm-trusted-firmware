@@ -101,15 +101,9 @@ entry_point_info_t *bl31_plat_get_next_image_ep_info(uint32_t type)
  * has flushed this information to memory, so we are guaranteed to pick up good
  * data
  ******************************************************************************/
-#if LOAD_IMAGE_V2
 void bl31_early_platform_setup(void *from_bl2,
 				void *plat_params_from_bl2,
 				uint64_t nt_fw_config_size)
-#else
-void bl31_early_platform_setup(bl31_params_t *from_bl2,
-				void *plat_params_from_bl2,
-				uint64_t nt_fw_config_size)
-#endif
 {
 	console_pl011_register(UAAX_PF_BAR0(0), 0, 0, &console);
 	console_set_scope((console_t *)&console, CONSOLE_FLAG_RUNTIME);
@@ -124,7 +118,6 @@ void bl31_early_platform_setup(bl31_params_t *from_bl2,
 #ifdef NT_FW_CONFIG
 	plat_octeontx_set_nt_fw_config_size(nt_fw_config_size);
 #endif
-#if LOAD_IMAGE_V2
 	/*
 	 * Check params passed from BL2 should not be NULL,
 	 */
@@ -159,28 +152,6 @@ void bl31_early_platform_setup(bl31_params_t *from_bl2,
 
 	if (bl33_image_ep_info.pc == 0)
 		panic();
-
-#else /* LOAD_IMAGE_V2 */
-
-	/* Check params passed from BL2 should not be NULL,
-	 * We are not checking plat_params_from_bl2 as NULL as we are not
-	 * using it on FVP
-	 */
-	assert(from_bl2 != NULL);
-	assert(from_bl2->h.type == PARAM_BL31);
-	assert(from_bl2->h.version >= VERSION_1);
-
-	fdt_ptr = plat_params_from_bl2;
-
-	/*
-	 * Copy BL3-3, BL3-2 entry point information.
-	 * They are stored in Secure RAM, in BL2's address space.
-	 */
-	if (from_bl2->bl32_ep_info)
-		bl32_image_ep_info = *from_bl2->bl32_ep_info;
-	bl33_image_ep_info = *from_bl2->bl33_ep_info;
-#endif /* LOAD_IMAGE_V2 */
-
 }
 
 

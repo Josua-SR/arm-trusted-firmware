@@ -54,6 +54,9 @@ BL2_SOURCES		+=	drivers/marvell/spi.c		\
 				plat/marvell/octeontx/octeontx_board_cfg_setup.c	\
 				plat/marvell/octeontx/octeontx_scfg_setup.c		\
 				plat/marvell/octeontx/aarch64/octeontx_reset_handler.S	\
+				common/desc_image_load.c				\
+				plat/marvell/octeontx/aarch64/octeontx_bl2_mem_params_desc.c	\
+				plat/marvell/octeontx/octeontx_image_load.c		\
 
 BL31_SOURCES		+=	drivers/arm/gic/common/gic_common.c		\
 				drivers/arm/gic/v3/gicv3_main.c			\
@@ -88,14 +91,7 @@ CTX_INCLUDE_AARCH32_REGS	:=	0
 
 PROGRAMMABLE_RESET_ADDRESS	:=	1
 
-
 WORKAROUND_CVE_2017_5715	:=	0
-
-ifeq (${LOAD_IMAGE_V2},1)
-    BL2_SOURCES		+=	common/desc_image_load.c				\
-				plat/marvell/octeontx/aarch64/octeontx_bl2_mem_params_desc.c	\
-				plat/marvell/octeontx/octeontx_image_load.c
-endif
 
 ifeq (${SECURE_BOOT},1)
     include drivers/auth/mbedtls/mbedtls_common.mk
