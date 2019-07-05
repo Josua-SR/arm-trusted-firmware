@@ -30,6 +30,15 @@ func octeontx_cpu_reg_dump
 	ret
 endfunc octeontx_cpu_reg_dump
 
+#if REPORT_ERRATA
+/*
+ * Errata printing function for octeontx. Must follow AAPCS.
+ */
+func octeontx_errata_report
+	ret
+endfunc octeontx_errata_report
+#endif
+
 declare_cpu_ops octeontx, OCTEONTX_CN81XX_MIDR, \
 	octeontx_reset_func, \
 	octeontx_core_pwr_dwn, \
