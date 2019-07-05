@@ -757,7 +757,7 @@ void octeontx_trap_handler(void *ctx_handle)
 	 * traps this bit is cleared, it's set for instruction traps.
 	 */
 	if (reg_el3 & ESR_FAR_ELX_NOT_VALID_MASK) {
-		ERROR("Invalid FAR_EL3, unable to get address that came from EL%llu\n",
+		ERROR("Invalid FAR_EL3, unable to get address that came from EL%lu\n",
 		      GET_EL(read_spsr_el3()));
 		panic();
 	}
@@ -766,7 +766,7 @@ void octeontx_trap_handler(void *ctx_handle)
 	reg_el3 = read_far_el3();
 	pa = virt_to_phys(reg_el3);
 	if (pa == 0) {
-		ERROR("Invalid PA 0x%llx from EL%llu\n", pa, GET_EL(read_spsr_el3()));
+		ERROR("Invalid PA 0x%llx from EL%lu\n", pa, GET_EL(read_spsr_el3()));
 		panic();
 	}
 
