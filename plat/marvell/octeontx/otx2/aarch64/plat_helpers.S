@@ -120,4 +120,4 @@ vector_entry    del3t_trap_handler
         /* this may never be called */
         b       el3_exit
 
-        check_vector_size del3t_trap_handler
+end_vector_entry del3t_trap_handler
