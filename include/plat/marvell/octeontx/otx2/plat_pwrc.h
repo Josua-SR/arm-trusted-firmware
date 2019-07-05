@@ -10,7 +10,6 @@
 
 #include <cdefs.h>
 #include <psci.h>
-#include <types.h>
 
 /* SCMI related defines */
 
