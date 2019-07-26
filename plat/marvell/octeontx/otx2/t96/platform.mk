@@ -37,15 +37,14 @@ PLAT_BL_COMMON_SOURCES	+=	plat/marvell/octeontx/otx2/t96/plat_t96_setup.c		\
 				plat/marvell/octeontx/otx2/plat_setup.c		\
 				plat/marvell/octeontx/otx2/plat_svc_mdio.c	\
 
-BL1_SOURCES		+=	plat/marvell/octeontx/otx2/aarch64/plat_octeontx_common.S	\
-				plat/marvell/octeontx/otx2/aarch64/plat_helpers.S	\
-				plat/marvell/octeontx/otx2/plat_board_cfg.c	\
-				plat/marvell/octeontx/otx2/plat_scfg.c	\
-
 BL2_SOURCES		+=	plat/marvell/octeontx/otx2/t96/plat_t96_ecam.c		\
 				drivers/marvell/sh_fwdata.c		\
 				drivers/marvell/rvu.c		\
 				plat/marvell/octeontx/otx2/plat_npc_mcam_profile.c	\
+				plat/marvell/octeontx/otx2/aarch64/plat_octeontx_common.S	\
+				plat/marvell/octeontx/otx2/aarch64/plat_helpers.S		\
+				plat/marvell/octeontx/otx2/plat_board_cfg.c			\
+				plat/marvell/octeontx/otx2/plat_scfg.c				\
 
 BL31_LIBS               +=      lib/libphy/libphy_88x5113.a     \
 
@@ -70,14 +69,6 @@ BL31_SOURCES		+=	plat/marvell/octeontx/otx2/aarch64/plat_octeontx_common.S	\
 				plat/marvell/octeontx/otx2/plat_legacy_pm_ops.c		\
 				plat/marvell/octeontx/otx2/t96/plat_t96_svc.c  \
 				plat/marvell/octeontx/otx2/lmc_ras.c		\
-
-ifeq (${BL2_AT_EL3},1)
-    BL2_SOURCES		+=	plat/marvell/octeontx/otx2/aarch64/plat_octeontx_common.S	\
-				plat/marvell/octeontx/otx2/aarch64/plat_helpers.S		\
-				plat/marvell/octeontx/otx2/plat_board_cfg.c			\
-				plat/marvell/octeontx/otx2/plat_scfg.c				\
-
-endif
 
 ifdef NT_FW_CONFIG
     $(eval $(call add_define,NT_FW_CONFIG))

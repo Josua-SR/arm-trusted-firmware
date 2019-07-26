@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013-2014, ARM Limited and Contributors. All rights reserved.
- * Copyright (c) 2016-2018, Marvell International Ltd. All rights reserved.<BR>
+ * Copyright (c) 2016-2019, Marvell International Ltd. All rights reserved.<BR>
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,12 +49,10 @@
 #include <octeontx_io_storage.h>
 #include <timers_octeontx.h>
 
-#if BL2_AT_EL3
 #include <octeontx_board_cfg_setup.h>
 #include <octeontx_scfg_setup.h>
 #include <plat_octeontx.h>
 #include <octeontx_helpers.h>
-#endif
 
 #if ENABLE_ATTESTATION_SERVICE
 #include <octeontx_attestation.h>
@@ -82,9 +80,7 @@ static console_pl011_t console;
 #if ENABLE_ATTESTATION_SERVICE
 /*
  * This holds the BL2 platform data (which includes s/w attestation info).
- * Upon entry to BL2, the contents are copied from the args passed by BL1.
- * Later, the contents are adjusted to reflect images which have been
- * loaded by BL2.
+ * The contents are adjusted to reflect images which have been loaded by BL2.
  * Finally, upon exit, the contents of this structure are passed to BL31.
  *
  * See also BL31 variable 'octeontx_bl31_plat_args'.
@@ -148,8 +144,6 @@ int decode_hash_digest(void *digest_info_ptr, unsigned int digest_info_len,
 /*
  * This populates the platform argument pointer that is passed to BL31
  * as 'arg1' - see also 'bl31_early_platform_setup2()'.
- *
- * It adds to the platform argument structure that was received from BL1.
  */
 static void populate_platform_args_for_bl31(void)
 {
@@ -172,26 +166,6 @@ static void populate_platform_args_for_bl31(void)
 	size_t idx, hash_len;
 
 	octeontx_bl2_plat_args.fdt = fdt_ptr;
-
-#if !BL2_AT_EL3
-	/*
-	 * BL1 saved an ENCODED BL2 image hash - here we decode it and store
-	 * it into attestation info struct.
-	 *
-	 * See notes in 'populate_platform_args_for_bl2()' in BL1.
-	 */
-	img_id = BL2_IMAGE_ID;
-	INFO("Decoding saved image ID %u attestation signature (from BL1).\n",
-	     img_id);
-	if ((decode_hash_digest(octeontx_bl2_plat_args.atf_bl2_enc_sig,
-				sizeof(octeontx_bl2_plat_args.atf_bl2_enc_sig),
-				&hash, &hash_len) == 0) &&
-	    (hash_len == sizeof(octeontx_bl2_plat_args.atf_bl2_sig))) {
-		memcpy(octeontx_bl2_plat_args.atf_bl2_sig, hash, hash_len);
-	} else
-		ERROR("Error deocding attestation signature for image ID %u\n",
-		      img_id);
-#endif /* !BL2_AT_EL3 */
 
 	/* copy BL31 saved authentication signature for s/w attestation info */
 	img_id = BL31_IMAGE_ID;
@@ -308,13 +282,8 @@ static void populate_platform_args_for_bl31(void)
 			dst = octeontx_bl2_plat_args.ap_tbl1fw_sig;
 		else if (strncmp(comp_str, "init.bin", 8) == 0)
 			dst = octeontx_bl2_plat_args.init_bin_sig;
-		else if (strncmp(comp_str, "bl1.bin", 7) == 0)
-			dst = octeontx_bl2_plat_args.atf_bl1_sig;
-#if BL2_AT_EL3
-		/* Here, BL2 was loaded by BDK, not BL1 */
 		else if (strncmp(comp_str, "bl2.bin", 7) == 0)
 			dst = octeontx_bl2_plat_args.atf_bl2_sig;
-#endif /* BL2_AT_EL3 */
 		else if (strncmp(comp_str, board_dt, strlen(board_dt)) == 0)
 			dst = octeontx_bl2_plat_args.board_dt_sig;
 		else if (strncmp(comp_str, board_linux_dt,
@@ -501,7 +470,6 @@ static bl2_to_bl31_params_mem_t bl31_params_mem;
 
 #endif /* LOAD_IMAGE_V2 */
 
-#if BL2_AT_EL3
 static void bl2_platform_print_chip_id(void)
 {
 	const void *fdt = fdt_ptr;
@@ -559,40 +527,6 @@ void bl2_el3_early_platform_setup(u_register_t arg0, u_register_t arg1,
 		BL31_BASE);
 #endif
 }
-#else  /* BL2_AT_EL3 */
-/*******************************************************************************
- * BL1 has passed the extents of the trusted SRAM that should be visible to BL2
- * in x0. This memory layout is sitting at the base of the free trusted SRAM.
- * Copy it to a safe loaction before its reclaimed by later BL2 functionality.
- ******************************************************************************/
-void bl2_early_platform_setup(meminfo_t *mem_layout,
-				void *plat_params_from_bl1)
-{
-	/* Initialize the console to provide early debug support */
-	console_pl011_register(UAAX_PF_BAR0(0), 0, 0, &console);
-	console_set_scope((console_t *)&console, CONSOLE_FLAG_RUNTIME);
-	console_switch_state(CONSOLE_FLAG_RUNTIME);
-
-	/* Setup the BL2 memory layout */
-	bl2_tzram_layout = *mem_layout;
-
-#if ENABLE_ATTESTATION_SERVICE
-	/* copy the platform parameters passed to us */
-	octeontx_bl2_plat_args =
-		*((octeontx_bl_platform_args_t *)plat_params_from_bl1);
-	fdt_ptr = octeontx_bl2_plat_args.fdt;
-#else
-	fdt_ptr = plat_params_from_bl1;
-#endif
-}
-
-void bl2_early_platform_setup2(u_register_t arg0, u_register_t arg1,
-				u_register_t arg2, u_register_t arg3)
-{
-	/* arg1 is a pointer to mem_layout, arg0 is a pointer to FDT */
-	bl2_early_platform_setup((void *)arg1, (void *)arg0);
-}
-#endif /* BL2_AT_EL3 */
 
 /*******************************************************************************
  * Perform platform specific setup. For now just initialize the memory location
@@ -600,11 +534,9 @@ void bl2_early_platform_setup2(u_register_t arg0, u_register_t arg1,
  ******************************************************************************/
 void bl2_platform_setup(void)
 {
-#if BL2_AT_EL3
 	bl2_platform_print_chip_id();
 	octeontx_fill_soc_details();
 	octeontx_fill_board_details(1);
-#endif /* BL2_AT_EL3 */
 
 	timers_octeontx_init_delay();
 	/*
@@ -623,11 +555,7 @@ void bl2_platform_setup(void)
  * Perform the very early platform specific architectural setup here. At the
  * moment this is only intializes the mmu in a quick and dirty way.
  ******************************************************************************/
-#if BL2_AT_EL3
 void bl2_el3_plat_arch_setup(void)
-#else
-void bl2_plat_arch_setup(void)
-#endif
 {
 	mmap_add_region(bl2_tzram_layout.total_base, bl2_tzram_layout.total_base,
 			bl2_tzram_layout.total_size,
@@ -645,13 +573,9 @@ void bl2_plat_arch_setup(void)
 
 	init_xlat_tables();
 
-#if BL2_AT_EL3
 	enable_mmu_el3(0);
 	plat_octeontx_set_secondary_cpu_jump_addr(
 				(uint64_t)plat_secondary_cold_boot_setup);
-#else
-	enable_mmu_el1(0);
-#endif
 }
 
 /*******************************************************************************

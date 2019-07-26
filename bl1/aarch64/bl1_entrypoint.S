@@ -8,7 +8,8 @@
 #include <el3_common_macros.S>
 #include <platform_def.h>
 
-	.weak bl1_entrypoint
+	.globl	bl1_entrypoint
+
 
 	/* -----------------------------------------------------
 	 * bl1_entrypoint() is the entry point into the trusted
