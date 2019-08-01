@@ -71,6 +71,7 @@ BL31_SOURCES		+=	drivers/arm/gic/common/gic_common.c		\
 				drivers/marvell/gpio_octeontx.c		\
 				drivers/marvell/gti_watchdog.c                  \
 				plat/marvell/octeontx/octeontx_bl31_setup.c			\
+				plat/marvell/octeontx/octeontx_ehf.c		\
 				plat/marvell/octeontx/octeontx_legacy_pm.c			\
 				plat/marvell/octeontx/octeontx_legacy_pwrc.c		\
 				plat/marvell/octeontx/octeontx_svc.c				\
@@ -96,6 +97,8 @@ CTX_INCLUDE_AARCH32_REGS	:=	0
 PROGRAMMABLE_RESET_ADDRESS	:=	1
 
 WORKAROUND_CVE_2017_5715	:=	0
+
+EL3_EXCEPTION_HANDLING	:=       1
 
 ifeq (${TRUSTED_BOARD_BOOT},1)
     ifeq (${ARM_ROTPK_LOCATION}, regs)

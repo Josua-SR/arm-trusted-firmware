@@ -146,4 +146,10 @@
 
 #define ECAM_PF_BAR2(x)		CAVM_ECAM_BAR_E_ECAMX_PF_BAR2_CN8(x)
 
+/* Priority levels for OcteonTX platforms */
+#define PLAT_IRQ_PRI			0x30
+
+/* OcteonTX platforms use 3 upper bits of secure interrupt priority */
+#define OCTEONTX_PRI_BITS		3
+
 #endif
