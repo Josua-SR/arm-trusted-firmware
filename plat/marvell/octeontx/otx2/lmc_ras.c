@@ -28,6 +28,10 @@
 #include <drivers/delay_timer.h>
 #include <octeontx_ehf.h>
 
+#if RAS_EXTENSION
+#include <plat_ras.h>
+#endif /* RAS_EXTENSION */
+
 /* DEBUG_RAS requires DEBUG, 0/1 dis/enables DEBUG=1 RAS chatter */
 #define DEBUG_RAS (0 && DEBUG)
 
@@ -959,7 +963,7 @@ static void check_cn9xxx_mdc(void)
 	}
 }
 
-static uint64_t tx2_mdc_isr(uint32_t id, uint32_t flags, void *cookie)
+uint64_t otx2_mdc_isr(uint32_t id, uint32_t flags, void *cookie)
 {
 	union cavm_mdc_ecc_status stat;
 	uint64_t mdc_int = CSR_READ(CAVM_MDC_INT_W1C);
@@ -980,7 +984,7 @@ static uint64_t tx2_mdc_isr(uint32_t id, uint32_t flags, void *cookie)
 	return 0;
 }
 
-static uint64_t tx2_mcc_isr(uint32_t id, uint32_t flags, void *cookie)
+uint64_t otx2_mcc_isr(uint32_t id, uint32_t flags, void *cookie)
 {
 	union cavm_mccx_lmcoex_ras_int lmcoe_ras_int;
 	union cavm_mccx_const mcc_const;
@@ -1006,7 +1010,7 @@ static uint64_t tx2_mcc_isr(uint32_t id, uint32_t flags, void *cookie)
 static int edac_poll(int hd)
 {
 	/* one call sufficient, it doesn't inspect args ... */
-	tx2_mcc_isr(0, 0, NULL);
+	otx2_mcc_isr(0, 0, NULL);
 	return 0;
 }
 #endif
@@ -1036,11 +1040,12 @@ static int ras_init_mcc(int mcc)
 	int vec;
 	uint64_t vaddr;
 	uint64_t vctl;
+#if !RAS_EXTENSION
 	int rc = 0;
+#endif /* !RAS_EXTENSION */
 
 	debug_ras("%s(%d)\n", __func__, mcc);
 	debug_ras("Installing tx2_mcc_isr\n");
-
 
 	mc.u = CSR_READ(CAVM_MCCX_CONST(mcc));
 	for (lmcoe = 0; lmcoe < mc.s.lmcs; lmcoe++) {
@@ -1053,12 +1058,14 @@ static int ras_init_mcc(int mcc)
 		vctl = vaddr + 0x8;
 
 		irq = MCC_SPI_IRQ(vec + mcc * 8);
-		rc = octeontx_ehf_register_irq_handler(irq, tx2_mcc_isr);
+#if !RAS_EXTENSION
+		rc = octeontx_ehf_register_irq_handler(irq, otx2_mcc_isr);
 		if (rc) {
 			debug_ras("e?%d tx2_mcc_isr(%x), mcc: %d\n",
 			     rc, irq, mcc);
 			return rc;
 		}
+#endif /* !RAS_EXTENSION */
 
 		debug_ras("Enabling error MSIX interrupt %d for MCC %d, LMCOE %d, vaddr: 0x%llx, vctl: 0x%llx, irq: 0x%x\n",
 		     vec, mcc, lmcoe, vaddr, vctl, irq);
@@ -1091,7 +1098,9 @@ static int ras_init_mccs(void)
 {
 	uint64_t vaddr = CAVM_MDC_PF_MSIX_VECX_ADDR(0);
 	uint64_t vctl = CAVM_MDC_PF_MSIX_VECX_CTL(0);
+#if !RAS_EXTENSION
 	int rc = 0;
+#endif /* !RAS_EXTENSION */
 	int irq = MDC_SPI_IRQ();
 	int mcc;
 	int num_mccs = plat_octeontx_get_mcc_count();
@@ -1102,13 +1111,16 @@ static int ras_init_mccs(void)
 
 	uint64_t ctl = CAVM_GICD_SETSPI_SR | 1;
 
+#if !RAS_EXTENSION
 	debug_ras("Registering MCC interrupt handlers\n");
 
-	rc = octeontx_ehf_register_irq_handler(irq, tx2_mdc_isr);
+	rc = octeontx_ehf_register_irq_handler(irq, otx2_mdc_isr);
 	if (rc) {
 		debug_ras("e?%d tx2_mdc_isr(%x)\n", rc, irq);
 		return rc;
 	}
+#endif /* !RAS_EXTENSION */
+
 	octeontx_write64(vaddr, ctl);
 	octeontx_write64(vctl, irq);
 

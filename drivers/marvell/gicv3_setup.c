@@ -26,6 +26,10 @@
 #include <plat/common/platform.h>
 #include <bl31/interrupt_mgmt.h>
 
+#ifndef PLAT_RAS_PRI
+#define PLAT_RAS_PRI		PLAT_IRQ_PRI
+#endif
+
 #if IMAGE_BL31
 /* The GICv3 driver only needs to be initialized in EL3 */
 uintptr_t rdistif_base_addrs[PLATFORM_CORE_COUNT];
@@ -83,7 +87,7 @@ static void initialize_interrupt_array(interrupt_prop_t *intr_array)
 	/* Configure all MCC LMCOE IRQs */
 	for (i = 0; i < MCC_SPI_IRQS; i++) {
 		intr_array[idx].intr_num = MCC_SPI_IRQ(i);
-		intr_array[idx].intr_pri = PLAT_IRQ_PRI;
+		intr_array[idx].intr_pri = PLAT_RAS_PRI;
 		intr_array[idx].intr_grp = INTR_TYPE_EL3;
 		intr_array[idx].intr_cfg = GIC_INTR_CFG_EDGE;
 		idx++;
@@ -92,7 +96,7 @@ static void initialize_interrupt_array(interrupt_prop_t *intr_array)
 	/* Configure all MDC IRQs */
 	for (i = 0; i < MDC_SPI_IRQS; i++) {
 		intr_array[idx].intr_num = MDC_SPI_IRQ();
-		intr_array[idx].intr_pri = PLAT_IRQ_PRI;
+		intr_array[idx].intr_pri = PLAT_RAS_PRI;
 		intr_array[idx].intr_grp = INTR_TYPE_EL3;
 		intr_array[idx].intr_cfg = GIC_INTR_CFG_EDGE;
 		idx++;

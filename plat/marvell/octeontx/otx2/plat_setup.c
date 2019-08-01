@@ -24,6 +24,10 @@
 #include <octeontx_security.h>
 #include <sh_fwdata.h>
 
+#if RAS_EXTENSION
+#include <plat_ras.h>
+#endif /* RAS_EXTENSION */
+
 static int disable_ooo;
 
 /* Any SoC family specific setup
@@ -45,6 +49,10 @@ void plat_octeontx_setup(void)
 
 	/* Workaround for FLR handling on CN9xxx */
 	plat_flr_init();
+
+#if RAS_EXTENSION
+	otx2_ras_init();
+#endif /* RAS_EXTENSION */
 
 	plat_dram_ras_init();
 
