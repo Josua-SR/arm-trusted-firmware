@@ -21,6 +21,7 @@
 #include <octeontx_irqs_def.h>
 
 #include <octeontx_ecam.h>
+#include <octeontx_ehf.h>
 #include <octeontx_svc.h>
 #include <octeontx_common.h>
 #include <bphy.h>
@@ -387,8 +388,8 @@ int cavm_register_bphy_intr_handlers(void)
 	int i, rc = 0;
 
 	for (i = 0; i < MAX_BPHY_PSM_INTS; i++) {
-		rc = register_interrupt_handler(INTR_TYPE_EL3,
-						BPHY_PSM_IRQ(i), bphy_psm_irq_handler);
+		rc = octeontx_ehf_register_irq_handler(BPHY_PSM_IRQ(i),
+							bphy_psm_irq_handler);
 		if (rc) {
 			ERROR("err %d registering BPHY secure IRQ handler\n", rc);
 			break;

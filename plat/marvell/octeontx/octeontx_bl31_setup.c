@@ -54,6 +54,10 @@
 #if ENABLE_ATTESTATION_SERVICE
 #include <octeontx_attestation.h>
 #endif
+#include <bl31/ehf.h>
+#include <octeontx_ehf.h>
+
+#include <gpio_octeontx.h>
 
 static entry_point_info_t bl33_image_ep_info, bl32_image_ep_info;
 
@@ -161,20 +165,6 @@ void bl31_early_platform_setup2(u_register_t arg0, u_register_t arg1,
 	bl31_early_platform_setup((void *)arg0, (void *)arg1, (uint64_t)arg2);
 }
 
-static void octeontx_el3_irq_init(void)
-{
-	uint32_t flags;
-	int32_t rc;
-
-	flags = 0;
-	set_interrupt_rm_flag(flags, SECURE);
-	set_interrupt_rm_flag(flags, NON_SECURE);
-
-	rc = register_interrupt_type_handler(INTR_TYPE_EL3, handle_irq_el3, flags);
-	if (rc)
-		printf("err %d on registering secure handler;\n", rc);
-}
-
 /*******************************************************************************
  * Initialize the gic, configure the CLCD and zero out variables needed by the
  * secondaries to boot up correctly.
@@ -187,7 +177,7 @@ void bl31_platform_setup()
 	 * do it here, because every firmware image is loaded at this time.
 	 */
 	octeontx_configure_mmc_security(0); /* non-secure */
-	octeontx_el3_irq_init();
+	octeontx_ehf_setup();
 	octeontx_gic_driver_init();
 	octeontx_gic_init();
 	timers_init();
