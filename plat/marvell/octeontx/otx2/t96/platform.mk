@@ -3,6 +3,9 @@
 # SPDX-License-Identifier:     BSD-3-Clause
 # https://spdx.org/licenses
 
+RAS_EXTENSION		:=       1
+HANDLE_EA_EL3_FIRST	:=       1
+
 # Include common Marvell platform's makefile helper
 include plat/marvell/octeontx/platform.mk
 
@@ -80,6 +83,9 @@ BL31_SOURCES		+=	plat/marvell/octeontx/otx2/aarch64/plat_octeontx_common.S	\
 				plat/marvell/octeontx/otx2/plat_legacy_pm_ops.c		\
 				plat/marvell/octeontx/otx2/t96/plat_t96_svc.c  \
 				plat/marvell/octeontx/otx2/lmc_ras.c		\
+				plat/marvell/octeontx/otx2/plat_ras.c		\
+				lib/extensions/ras/std_err_record.c		\
+				lib/extensions/ras/ras_common.c			\
 
 ifdef NT_FW_CONFIG
     $(eval $(call add_define,NT_FW_CONFIG))

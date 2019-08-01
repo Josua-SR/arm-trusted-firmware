@@ -27,6 +27,10 @@ static irq_handler_entry_t irq_handlers_list[NUMBER_OF_GIC_INTERRUPTS];
 ehf_pri_desc_t octeontx_exceptions[] = {
 	/* IRQ Priority */
 	EHF_PRI_DESC(OCTEONTX_PRI_BITS, PLAT_IRQ_PRI),
+#ifdef PLAT_RAS_PRI
+	/* RAS Priority */
+	EHF_PRI_DESC(OCTEONTX_PRI_BITS, PLAT_RAS_PRI),
+#endif /* PLAT_RAS_PRI */
 };
 
 /* Plug in OcteonTX2 exceptions to Exception Handling Framework. */

@@ -57,6 +57,10 @@
 #include <bl31/ehf.h>
 #include <octeontx_ehf.h>
 
+#if RAS_EXTENSION
+#include <lib/extensions/ras.h>
+#endif /* RAS_EXTENSION */
+
 #include <gpio_octeontx.h>
 
 static entry_point_info_t bl33_image_ep_info, bl32_image_ep_info;
@@ -189,6 +193,10 @@ void bl31_platform_setup()
 
 	/* Intialize the power controller */
 	plat_pwrc_setup();
+
+#if RAS_EXTENSION
+	ras_init();
+#endif
 }
 
 /*******************************************************************************
