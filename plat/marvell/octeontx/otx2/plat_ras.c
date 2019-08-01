@@ -19,14 +19,13 @@
 #define RAS_MCC_HANDLER			1
 #define RAS_HANDLERS			2
 
-
-int plat_ras_mdc_handler(const struct err_record_info *info,
+static int plat_ras_mdc_handler(const struct err_record_info *info,
 		int probe_data, const struct err_handler_data *const data)
 {
 	return otx2_mdc_isr(data->interrupt, data->flags, data->cookie);
 }
 
-int plat_ras_mcc_handler(const struct err_record_info *info,
+static int plat_ras_mcc_handler(const struct err_record_info *info,
 		int probe_data, const struct err_handler_data *const data)
 {
 	return otx2_mcc_isr(data->interrupt, data->flags, data->cookie);
@@ -36,9 +35,11 @@ struct ras_interrupt otx2_ras_interrupts[NUMBER_OF_RAS_INTERRUPTS];
 
 struct err_record_info otx2_err_records[RAS_HANDLERS] = {
 	[RAS_MDC_HANDLER] = {
+		.probe = otx2_mdc_probe,
 		.handler = plat_ras_mdc_handler,
 	},
 	[RAS_MCC_HANDLER] = {
+		.probe = otx2_mcc_probe,
 		.handler = plat_ras_mcc_handler,
 	},
 };

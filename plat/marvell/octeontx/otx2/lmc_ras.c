@@ -29,6 +29,7 @@
 #include <octeontx_ehf.h>
 
 #if RAS_EXTENSION
+#include <lib/extensions/ras.h>
 #include <plat_ras.h>
 #endif /* RAS_EXTENSION */
 
@@ -963,6 +964,13 @@ static void check_cn9xxx_mdc(void)
 	}
 }
 
+#if RAS_EXTENSION
+int otx2_mdc_probe(const struct err_record_info *info, int *probe_data)
+{
+	return CSR_READ(CAVM_MDC_INT_W1C) ? 1 : 0;
+}
+#endif /* RAS_EXTENSION */
+
 uint64_t otx2_mdc_isr(uint32_t id, uint32_t flags, void *cookie)
 {
 	union cavm_mdc_ecc_status stat;
@@ -983,6 +991,28 @@ uint64_t otx2_mdc_isr(uint32_t id, uint32_t flags, void *cookie)
 	CSR_WRITE(CAVM_MDC_INT_W1C, mdc_int);
 	return 0;
 }
+
+#if RAS_EXTENSION
+int otx2_mcc_probe(const struct err_record_info *info, int *probe_data)
+{
+	union cavm_mccx_lmcoex_ras_int lmcoe_ras_int;
+	union cavm_mccx_const mcc_const;
+	int mcc, lmcoe;
+	int num_mccs = plat_octeontx_get_mcc_count();
+
+	for (mcc = 0; mcc < num_mccs; mcc++) {
+		mcc_const.u = CSR_READ(CAVM_MCCX_CONST(mcc));
+		for (lmcoe = 0; lmcoe < mcc_const.s.lmcs ; lmcoe++) {
+			lmcoe_ras_int.u = CSR_READ(CAVM_MCCX_LMCOEX_RAS_INT(mcc,
+									lmcoe));
+			if (lmcoe_ras_int.u)
+				return 1;
+		}
+	}
+
+	return 0;
+}
+#endif /* RAS_EXTENSION */
 
 uint64_t otx2_mcc_isr(uint32_t id, uint32_t flags, void *cookie)
 {
