@@ -158,28 +158,37 @@ struct ecam_init_callback plat_init_callbacks[] = {
 	{ECAM_INVALID_DEV_ID, 0, 0}
 };
 
+
+/*
+ * Following device's BAR0 will be hidden
+ * from non-secure world.
+ * Set instance to the instance number
+ * you want to hide or ECAM_ALL_INSTANCES
+ * if all the instances are hidden
+ */
+
 struct secure_devices secure_devs[] = {
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_SMMU},
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_GIC},
-/*	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_GTI}, */
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_L2C},
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_SGP},
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_DAP},
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_MIO_FUS},
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_FUSF},
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_NCSI},
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_KEY},
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_MIO_BOOT},
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_UAA},
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_PEM},
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_IOBN},
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_GSER},
-/*	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_SLIRE}, */
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_VRM},
-	{CAVM_PCC_PROD_E_CN83XX, CAVM_PCC_DEV_IDL_E_PCIERC},
-	{CAVM_PCC_PROD_E_CN83XX, CAVM_PCC_DEV_IDL_E_CHIP},
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_NDF},
-	{ECAM_INVALID_PROD_ID, ECAM_INVALID_PCC_IDL_ID}
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_SMMU, ECAM_ALL_INSTANCES},
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_GIC, ECAM_ALL_INSTANCES},
+/*	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_GTI, ECAM_ALL_INSTANCES}, */
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_L2C, ECAM_ALL_INSTANCES},
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_SGP, ECAM_ALL_INSTANCES},
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_DAP, ECAM_ALL_INSTANCES},
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_MIO_FUS, ECAM_ALL_INSTANCES},
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_FUSF, ECAM_ALL_INSTANCES},
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_NCSI, ECAM_ALL_INSTANCES},
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_KEY, ECAM_ALL_INSTANCES},
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_MIO_BOOT, ECAM_ALL_INSTANCES},
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_UAA, ECAM_ALL_INSTANCES},
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_PEM, ECAM_ALL_INSTANCES},
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_IOBN, ECAM_ALL_INSTANCES},
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_GSER, ECAM_ALL_INSTANCES},
+/*	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_SLIRE, ECAM_ALL_INSTANCES}, */
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_VRM, ECAM_ALL_INSTANCES},
+	{CAVM_PCC_PROD_E_CN83XX, CAVM_PCC_DEV_IDL_E_PCIERC, ECAM_ALL_INSTANCES},
+	{CAVM_PCC_PROD_E_CN83XX, CAVM_PCC_DEV_IDL_E_CHIP, ECAM_ALL_INSTANCES},
+	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_NDF, ECAM_ALL_INSTANCES},
+	{ECAM_INVALID_PROD_ID, ECAM_INVALID_PCC_IDL_ID, ECAM_ALL_INSTANCES}
 };
 
 static inline uint64_t cn83xx_get_dev_config(struct ecam_device *dev)
@@ -349,16 +358,21 @@ static inline int cn83xx_is_domain_present(struct ecam_device *dev)
 static int cn83xx_get_secure_settings(struct ecam_device *dev, uint64_t pconfig)
 {
 	cavm_pccpf_xxx_id_t pccpf_id;
+	union cavm_pccpf_xxx_vsec_ctl vsec_ctl;
 	int i = 0;
 
 	/* Get secure/non-secure setting */
 	pccpf_id.u = octeontx_read32(pconfig + CAVM_PCCPF_XXX_ID);
+	vsec_ctl.u = octeontx_read32(pconfig + CAVM_PCCPF_XXX_VSEC_CTL);
 	debug_plat_ecam("%s: DeviceID=0x%04x\n", __func__, pccpf_id.s.devid);
+	debug_plat_ecam("%s: InstNum=0x%04x\n", __func__, vsec_ctl.s.inst_num);
 
 	dev->config.s.is_secure = 0;
 	while (secure_devs[i].devid != ECAM_INVALID_PCC_IDL_ID) {
-		if (((secure_devs[i].prodid << ECAM_PROD_SHIFT) |
-			secure_devs[i].devid) == pccpf_id.s.devid)
+		if ((((secure_devs[i].prodid << ECAM_PROD_SHIFT) |
+			secure_devs[i].devid) == pccpf_id.s.devid) &&
+			(secure_devs[i].instance == ECAM_ALL_INSTANCES ||
+			secure_devs[i].instance == vsec_ctl.s.inst_num))
 			dev->config.s.is_secure = 1;
 		i++;
 	}

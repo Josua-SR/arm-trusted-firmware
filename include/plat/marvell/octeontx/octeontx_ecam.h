@@ -101,6 +101,8 @@
 /* PCCPF_XXX_BARxL LBAB mask */
 #define ECAM_PCCPF_XXX_BARXL_LBAB_MASK	ULL(0xffff0000)
 
+#define ECAM_ALL_INSTANCES	0xFFFFFFFF
+
 /*
  * Structure for secure/non-secure settings
  * (in a meaning of BAR0 visibility to non-secure world),
@@ -196,10 +198,14 @@ struct ecam_init_callback {
 /*
  * Structure used for defining devices that should be hidden from
  * non-secure world or SCP/MCP.
+ * The instance field in the structure allows hiding one device
+ * instance or all instances. One entry will need to be created for
+ * each instance that will be hidden.
  */
 struct secure_devices {
 	int prodid;
 	int devid;
+	int instance;
 };
 
 struct msix_cap {
