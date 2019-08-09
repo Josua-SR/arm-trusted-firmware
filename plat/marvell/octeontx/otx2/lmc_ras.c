@@ -248,9 +248,9 @@ uint64_t ras_ccs_reverse_lmc_hash(uint64_t _pa_no_lr_hash,
 		for (i = 0; i < 4; i++) {
 			lower_lmc_hash_parity =
 				__rxor(((adr_mcs[i] >> 8) & 0xf) & low_addr);
-			if (lower_lmc_hash_parity ^
-			      (upper_lmc_hash_parity[i] ==
-			       ((lmc_hash >> i) & 0x1)))
+			if ((lower_lmc_hash_parity ^
+			      upper_lmc_hash_parity[i]) ==
+			       ((lmc_hash >> i) & 0x1))
 				num_good_bits++;
 		}
 		if (num_good_bits == 4)
