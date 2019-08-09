@@ -14,11 +14,14 @@ ifeq (${BUILD_TYPE}, release)
         LOG_LEVEL	:=	30
 endif
 
+OVERRIDE_LIBC		:=	1
+include plat/marvell/octeontx/libc/libc.mk
+
 LIBFDT_DIR		:=	lib/libfdt
 
 PLAT_INCLUDES		:=	-Iinclude/common/tbbr				\
+				-Iinclude/common 				\
 				-Iinclude/lib/libfdt 				\
-				-Iinclude/lib/stdlib				\
 				-Iinclude/plat/marvell/octeontx 			\
 				-Iinclude/plat/marvell/octeontx/csr 			\
 				-Iinclude/plat/marvell/octeontx/aarch64 			\
@@ -44,6 +47,7 @@ PLAT_BL_COMMON_SOURCES	:=	drivers/arm/pl011/aarch64/pl011_console.S	\
 				plat/marvell/octeontx/aarch64/octeontx_report_exception.S	\
 				plat/marvell/octeontx/aarch64/octeontx_helpers.S 	\
 				${XLAT_TABLES_LIB_SRCS}				\
+				${LIBC_SRCS}					\
 
 BL2_SOURCES		+=	drivers/marvell/spi.c		\
 				drivers/io/io_fip.c				\

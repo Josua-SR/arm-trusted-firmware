@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <libfdt.h>
 #include <stdlib.h>
+#include <strtol.h>
 
 int gsern_is_platform(int plat)
 {

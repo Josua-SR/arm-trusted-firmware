@@ -16,6 +16,7 @@
 #include <octeontx_common.h>
 #include <debug.h>
 #include <assert.h>
+#include <strtol.h>
 
 #include <libfdt.h>
 

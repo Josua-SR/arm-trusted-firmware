@@ -44,6 +44,7 @@
 #include <octeontx_utils.h>
 #include <plat_board_cfg.h>
 #include <spi.h>
+#include <strncasecmp.h>
 
 #include <cavm-arch.h>
 #include <octeontx_io_storage.h>

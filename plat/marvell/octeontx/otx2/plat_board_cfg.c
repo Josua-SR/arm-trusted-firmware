@@ -19,6 +19,7 @@
 #include <octeontx_utils.h>
 #include <qlm.h>
 #include <rvu.h>
+#include <strtol.h>
 
 /* define DEBUG_ATF_DTS to enable debug logs */
 #undef DEBUG_ATF_DTS

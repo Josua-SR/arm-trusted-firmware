@@ -13,6 +13,7 @@
 #include <plat_board_cfg.h>
 #include <octeontx_common.h>
 #include <octeontx_board_cfg_setup.h>
+#include <strtol.h>
 
 static void octeontx_boot_device_from_strapx()
 {
