@@ -11,6 +11,7 @@
 #define MAX_SATA 4
 #define MAX_MCC 2
 #define MAX_LMC 3
+#define MAX_CCU 4
 
 #define MAX_QLM 8
 #define MAX_LANES_PER_QLM 4

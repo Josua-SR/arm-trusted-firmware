@@ -6,6 +6,7 @@
  */
 
 /* EDAC driver for OcteonTX2 */
+/* some code derived from BDK e2557f367 */
 
 #include <arch.h>
 #include <stdint.h>
@@ -63,7 +64,6 @@ struct ras_ccs_addr_conversion_data {
 	uint64_t ASC_MD_LR_EN;	//Bit mask of Address bits used in hash
 	uint64_t ASC_OFFSET;	//Address offset
 	uint64_t ASC_MCS_EN[4];	//Bit Masks for Hashing
-	//int show_debug;
 };
 
 // Table to translate ECC single-bit syndrome to "byte.bit" format.
@@ -303,7 +303,8 @@ uint64_t ras_ccs_convert_lmc_to_pa_algorithm(
 	int pa_no_lr_hash_mod6;
 
 	debug_ras("Starting LMC to PA Conversion Algorithm\n");
-	debug_ras("%-40s: 0x%016llx\n", "pre_offset", pre_offset);
+	debug_ras("region:%d pre_offset:0x%llx pmask:%x lmask:%x mode:%d\n",
+		region, pre_offset, phys_lmc_mask, ASC_LMC_MASK, ASC_LMC_MODE);
 
 	/* check if lmcmask and ASC LMC MASK intersect if not this region
 	 * isn't mapped to this ASC
@@ -512,7 +513,6 @@ static uint64_t ras_ccs_convert_lmc_to_pa(uint64_t _lmc_addr)
 			debug_ras("ASC%d: Checking Conversion from LMC to PA\n",
 				  region);
 			adr_ctl.u = CSR_READ(CAVM_CCS_ADR_CTL);
-			//addr_data.idx_alias = !adr_ctl.s.dissetalias;
 			addr_data.ASC_MD_LR_BIT = adr_ctl.s.md_lr_bit;
 			addr_data.ASC_MD_LR_EN = adr_ctl.s.md_lr_en;
 			addr_data.ASC_LMC_MASK = attr.s.lmc_mask;
@@ -644,18 +644,18 @@ static int ras_dram_get_lmc_map(struct ras_dram_lmc_map *map, int lmc)
 {
 	map->lmc = lmc;
 
+	if (lmc > 2)
+		return -1;
 	switch (plat_octeontx_get_mcc_count()) {
 	case 2:
-		if (lmc > 2)
-			return -1;
 		map->mcc = (lmc != 1);
 		map->lmcoe = (lmc == 2);
 		return 0;
 	case 1:
-		if (lmc > 1)
+		if (lmc & 1)
 			return -1;
 		map->mcc = 0;
-		map->lmcoe = lmc;
+		map->lmcoe = lmc >> 1;
 		return 0;
 	default:
 		ERROR("%s: Error: Unsupported OcteonTX2 model!\n", __func__);
