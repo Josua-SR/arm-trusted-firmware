@@ -131,7 +131,7 @@ mmu_off:
 endfunc disable_mmu_dcache
 
 	/* -----------------------------------------------------
-	 * Disable all TLB entries
+	 * Invalidate all TLB entries
 	 * -----------------------------------------------------
 	 */
 func invalidate_tlb_all
