@@ -65,6 +65,14 @@ static int octeontx_signal_mcu(uint8_t signal)
 	return 0;
 }
 
+static void plat_disable_all_cores(void)
+{
+	uint64_t cores;
+
+	cores = CSR_READ(CAVM_RST_PP_AVAILABLE);
+	CSR_WRITE(CAVM_RST_PP_RESET, cores);
+}
+
 static void octeontx_signal_shutdown(void)
 {
 	int rc;
@@ -74,10 +82,12 @@ static void octeontx_signal_shutdown(void)
 		/* We're on EBB, shutdown using MCU */
 		rc = octeontx_signal_mcu(OCTEONTX_MCU_SHUTDOWN_SIGNAL);
 		if (!rc) {
-			INFO("Cavium System Off: shutting down system...\n");
+			INFO("OcteonTX System Off: shutting down system...\n");
 			for(;;);
 		} else {
-			ERROR("Cavium System Off: Unable to send shutdown to MCU\n");
+			ERROR(
+				"OcteonTX System Off: Unable to send shutdown to MCU\n"
+				);
 			panic();
 		}
 	/* Check for GPIO config */
@@ -85,9 +95,12 @@ static void octeontx_signal_shutdown(void)
 		/* We're on SFF board, shutdown using GPIO */
 		octeontx_odm_shutdown(plat_octeontx_bcfg->bcfg.gpio_shutdown_ctl_out);
 	} else {
-		ERROR("Cavium System Off: Incorrect shutdown configuration\n");
-		panic();
+		INFO("OcteonTX System Off: disable AP cores\n");
+		plat_disable_all_cores();
 	}
+
+	ERROR("OcteonTX System Off: Incorrect shutdown configuration\n");
+	panic();
 }
 
 static void octeontx_legacy_power_domain_on_finish_common(const psci_power_state_t *target_state)
