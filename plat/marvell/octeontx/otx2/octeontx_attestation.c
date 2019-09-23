@@ -19,6 +19,7 @@
 #include <mbedtls/platform.h>
 #include <mbedtls/entropy.h>
 #include <mbedtls/ctr_drbg.h>
+#include <mbedtls/cipher.h>
 #include <plat_octeontx.h>
 #include <endian.h>
 #include <sh_fwdata.h>
@@ -142,7 +143,7 @@ uint8_t sign_cert_der[] = {
  * After decryption, the signing key is stored in 'sign_key_der_buf'.
  *
  * These are the encryption parameters used for this data.
- * AES-256-CBC
+ * AES-256-CTR
  * KEY: AF195A91520813669F07D97F3CFFB9CAF48EF5F4A2945D294D3F7F0ABDAD8063
  * IV:  B8D745D598385A333412E2D0BD8A4F75
  *
@@ -153,30 +154,21 @@ uint8_t sign_cert_der[] = {
  *        16 .. 31              AES Encrypted Block #1
  *           ..
  *      N*16 .. (N+1)*16 - 1    AES Encrypted Block #N
- *  (N+1)*16 .. (N+1)*16 + 32   HMAC-SHA-256(ciphertext)
  */
 uint8_t encrypted_sign_key[] = {
 0xb8, 0xd7, 0x45, 0xd5, 0x98, 0x38, 0x5a, 0x33, 0x34, 0x12, 0xe2, 0xd0,
-0xbd, 0x8a, 0x4f, 0x75, 0x3b, 0x9e, 0xc0, 0xdb, 0xa4, 0x56, 0xa7, 0x24,
-0x60, 0x01, 0xab, 0x1e, 0x22, 0xe0, 0x7a, 0x59, 0x07, 0x2a, 0xc9, 0x3e,
-0x59, 0xd3, 0x3c, 0x4b, 0x32, 0xb3, 0xf9, 0xc8, 0x36, 0x12, 0xfa, 0x7a,
-0xb9, 0x7c, 0x4b, 0x75, 0x40, 0x94, 0xe6, 0x89, 0xb8, 0xf6, 0x13, 0x23,
-0x23, 0xfd, 0x35, 0x3f, 0x7f, 0x34, 0x34, 0x67, 0xb3, 0xd6, 0x68, 0x30,
-0xd2, 0xab, 0xbe, 0x5d, 0x5b, 0x33, 0xf5, 0xcc, 0x94, 0xcc, 0xf1, 0xc2,
-0xca, 0xad, 0x4b, 0x80, 0x0c, 0x41, 0x3d, 0x1b, 0x82, 0x4d, 0x16, 0xe3,
-0xe8, 0x38, 0x19, 0xc2, 0xac, 0x6b, 0xd9, 0x0f, 0x82, 0x59, 0x45, 0x43,
-0x3b, 0xa5, 0x7f, 0x9d, 0xe3, 0x71, 0x3f, 0xbf, 0xf5, 0x08, 0xc6, 0x20,
-0xf5, 0xf4, 0xbb, 0x29, 0xac, 0x43, 0x5a, 0x02, 0x8e, 0x94, 0xf0, 0x92,
-0x58, 0x66, 0xd3, 0x38, 0xa3, 0xc4, 0x95, 0xa0, 0x8c, 0x96, 0xa9, 0xcc,
-0x24, 0x66, 0xd5, 0x99, 0xaa, 0x27, 0xc3, 0x9d, 0x72, 0x9c, 0xd5, 0x66,
-0x32, 0x4c, 0x85, 0xed, 0x78, 0x02, 0x8b, 0x31, 0x51, 0xd8, 0x02, 0xfc,
-0xd7, 0x84, 0x83, 0xc4, 0x57, 0xbe, 0x1c, 0x0a
+0xbd, 0x8a, 0x4f, 0x75, 0xd4, 0xaf, 0x1a, 0x36, 0x96, 0x2b, 0x3f, 0x4a,
+0x22, 0xc9, 0xa5, 0xfd, 0x76, 0x09, 0x72, 0x4a, 0xf4, 0x2f, 0x38, 0x31,
+0x4b, 0x54, 0xa5, 0xc1, 0xc7, 0x43, 0xc9, 0xd2, 0x11, 0xc3, 0xfc, 0x85,
+0x0b, 0xa7, 0xc5, 0xec, 0x21, 0x23, 0x8e, 0x64, 0x90, 0xd1, 0xaf, 0x36,
+0xda, 0x60, 0x62, 0x8a, 0x68, 0x8b, 0x7a, 0x56, 0x22, 0x4e, 0xec, 0xb0,
+0xb1, 0x48, 0x46, 0xe5, 0xc0, 0x03, 0xf0, 0xe2, 0x8a, 0xcd, 0x9d, 0xac,
+0x0a, 0x62, 0xad, 0x71, 0xe4, 0x7d, 0xd4, 0x18, 0x67, 0x01, 0xd4, 0xa0,
+0x4e, 0xf4, 0x03, 0x24, 0xc9, 0x5f, 0xe0, 0x86, 0x33, 0xe7, 0x3b, 0x27,
+0x88, 0x16, 0x2a, 0x44, 0xbe, 0x34, 0x85, 0x31, 0x47, 0x26, 0xe8, 0x5f,
+0x45, 0x67, 0x9c, 0x07, 0xc8, 0x5f, 0x04, 0x26, 0x5a, 0xca, 0xec, 0x3f,
+0x3f, 0xea, 0x17, 0x5b, 0xa0
 };
-/* AES encrypted data must be > 48 B and be a whole multiple of 16 */
-_Static_assert(sizeof(encrypted_sign_key) >= 48,
-	       "Invalid encrypted signing key!\n");
-_Static_assert((sizeof(encrypted_sign_key) % 16) == 0,
-	       "Invalid encrypted signing key!\n");
 
 /* This is the secret key that is used to decrypt the signing key.
  * The contents of this secret key are loaded from FUSF_SW(2..5).
@@ -223,11 +215,9 @@ static struct {
 #define AES_256_KEYLEN 32
 #define KEY_DIGEST_LEN 32
 static struct {
-	mbedtls_aes_context aes_ctx;
-	mbedtls_md_context_t sha_ctx;
+	mbedtls_cipher_context_t cipher_ctx;
 	uint8_t IV[AES_256_IV_LEN];
 	uint8_t key[AES_256_KEYLEN];
-	uint8_t digest[KEY_DIGEST_LEN];
 } mbedtls_decrypt_work;
 
 /* Adds an entry to a linked-list. */
@@ -452,43 +442,48 @@ static void copy_data64(void *dst, uint64_t data64)
  */
 int decrypt_signing_key(void)
 {
-#	define AES_256_HMAC_LEN 32
 	int ret, i;
 	uint8_t *IV;
-	uint8_t tmp[16];
 	uint8_t *key;
-	uint8_t *digest;
-	uint8_t dec_buf[16];
-	uint8_t diff;
-	uint8_t *enc_data, *hmac;
-	size_t enc_off, enc_len, key_len, len, finalblocklen;
-	mbedtls_aes_context *aes_ctx;
-	mbedtls_md_context_t *sha_ctx;
+	uint8_t dec_buf[32];
+	uint8_t *enc_data;
+	size_t enc_off, enc_len, key_len, len, outlen;
+	mbedtls_cipher_context_t *cipher_ctx;
+	const mbedtls_cipher_info_t *cipher_info;
+	const char *cipher_name = "AES-256-CTR";
 	cavm_fusf_swx_t fusf_swx;
 
 	/* Assign local pointers to work area buffers.
 	 * The work area buffers are defined as global variables rather than
 	 * local variables so as to not overrun the stack.
 	 */
-	aes_ctx = &mbedtls_decrypt_work.aes_ctx;
-	sha_ctx = &mbedtls_decrypt_work.sha_ctx;
+	cipher_ctx = &mbedtls_decrypt_work.cipher_ctx;
 	IV = mbedtls_decrypt_work.IV;
 	key = mbedtls_decrypt_work.key;
-	digest = mbedtls_decrypt_work.digest;
 
-	mbedtls_aes_init(aes_ctx);
-	mbedtls_md_init(sha_ctx);
+	cipher_info = mbedtls_cipher_info_from_string(cipher_name);
+	if (cipher_info == NULL) {
+		ERROR("Unable to locate cipher '%s'\n", cipher_name);
+		ret = -1;
+		goto exit;
+	}
 
-	ret = mbedtls_md_setup(sha_ctx,
-			       mbedtls_md_info_from_type(MBEDTLS_MD_SHA256), 1);
+	mbedtls_cipher_init(cipher_ctx);
+	ret = mbedtls_cipher_setup(cipher_ctx, cipher_info);
 	if (ret) {
-		ERROR("mbedtls_md_setup() returned -0x%04x\n", -ret);
+		ERROR("Error -0x%04x from cipher setup.\n", -ret);
+		ret = -1;
+		goto exit;
+	}
+
+	if (mbedtls_cipher_get_block_size(cipher_ctx) > sizeof(dec_buf)) {
+		ERROR("Internal error: cipher block size > decode buf size\n");
+		ret = -1;
 		goto exit;
 	}
 
 	memset(IV, 0, AES_256_IV_LEN);
 	memset(key, 0, AES_256_KEYLEN);
-	memset(digest, 0, KEY_DIGEST_LEN);
 	memset(dec_buf, 0, sizeof(dec_buf));
 
 	enc_len = sizeof(encrypted_sign_key);
@@ -508,27 +503,24 @@ int decrypt_signing_key(void)
 	/* subtract length of IV */
 	enc_len -= AES_256_IV_LEN;
 
-	/* subtract length of HMAC */
-	enc_len -= AES_256_HMAC_LEN;
-
-	/*
-	 * Hash the IV and the secret key together 8192 times
-	 * using the result to setup the AES context and HMAC.
-	 */
-	memset(digest, 0, KEY_DIGEST_LEN);
-	memcpy(digest, IV, AES_256_IV_LEN);
-
-	for (i = 0; i < 8192; i++) {
-		mbedtls_md_starts(sha_ctx);
-		mbedtls_md_update(sha_ctx, digest, KEY_DIGEST_LEN);
-		mbedtls_md_update(sha_ctx, key, key_len);
-		mbedtls_md_finish(sha_ctx, digest);
+	if (mbedtls_cipher_setkey(cipher_ctx, key, cipher_info->key_bitlen,
+				 MBEDTLS_DECRYPT) != 0) {
+		ERROR("Unable to set cipher key\n");
+		ret = -1;
+		goto exit;
 	}
 
-	mbedtls_aes_setkey_dec(aes_ctx, digest, 256);
-	mbedtls_md_hmac_starts(sha_ctx, digest, KEY_DIGEST_LEN);
+	if (mbedtls_cipher_set_iv(cipher_ctx, IV, AES_256_IV_LEN) != 0) {
+		ERROR("Unable to set cipher IV\n");
+		ret = -1;
+		goto exit;
+	}
 
-	finalblocklen = SIGNING_KEY_DER_LEN % 16;
+	if (mbedtls_cipher_reset(cipher_ctx) != 0) {
+		ERROR("Unable to reset cipher\n");
+		ret = -1;
+		goto exit;
+	}
 
 	/*
 	 * Decrypt the ciphertext into plaintext.
@@ -540,24 +532,19 @@ int decrypt_signing_key(void)
 	 * and there is no chance of leaking it.
 	 *
 	 */
-	for (enc_off = 0; enc_off < enc_len; enc_off += 16) {
-		/* copy next block of ciphertext to work buffer */
-		memcpy(dec_buf, &enc_data[enc_off], 16);
+	for (enc_off = 0; enc_off < enc_len; enc_off += len) {
+		len = enc_len - enc_off;
+		if (len > mbedtls_cipher_get_block_size(cipher_ctx))
+			len = mbedtls_cipher_get_block_size(cipher_ctx);
 
-		/* save as next IV */
-		memcpy(tmp, dec_buf, 16);
-
-		mbedtls_md_hmac_update(sha_ctx, dec_buf, 16);
-		mbedtls_aes_crypt_ecb(aes_ctx, MBEDTLS_AES_DECRYPT,
-				      dec_buf, dec_buf);
-
-		for (i = 0; i < 16; i++)
-			dec_buf[i] = (uint8_t)(dec_buf[i] ^ IV[i]);
-
-		memcpy(IV, tmp, 16);
-
-		len = ((enc_off == (enc_len - 16)) && !!finalblocklen) ?
-		      finalblocklen : 16;
+		if ((mbedtls_cipher_update(cipher_ctx, &enc_data[enc_off], len,
+					   dec_buf, &outlen) != 0) ||
+		    (outlen != len)) {
+			ERROR("decryption error: ilen %ld, olen %ld\n", len,
+			      outlen);
+			ret = -1;
+			goto exit;
+		}
 
 		/* Copy decrypted data to output buffer.
 		 * NOTE: we can use 'enc_off' for the output buffer
@@ -567,25 +554,7 @@ int decrypt_signing_key(void)
 		copy_bytes(&sign_key_der_buf[enc_off], dec_buf, len);
 	}
 
-	/*
-	 * Verify the message authentication code.
-	 */
-	mbedtls_md_hmac_finish(sha_ctx, digest);
-
-	/* HMAC is contiguous to cipher-text data */
-	hmac = &enc_data[enc_len];
-
-	/* Use constant-time buffer comparison */
-	diff = 0;
-	for (i = 0; i < KEY_DIGEST_LEN; i++)
-		diff |= digest[i] ^ hmac[i];
-
-	if (diff != 0) {
-		ERROR("HMAC check failed\n");
-		ret = -2;
-		goto exit;
-	} else
-		ret = 0;
+	ret = 0;
 
 exit:
 	/* In case of error, don't leak the [decrypted] private signing key */
@@ -593,12 +562,9 @@ exit:
 		memset(sign_key_der_buf, 0, sizeof(sign_key_der_buf));
 	memset(IV, 0, AES_256_IV_LEN);
 	memset(key, 0, AES_256_KEYLEN);
-	memset(tmp, 0, sizeof(tmp));
 	memset(dec_buf, 0, sizeof(dec_buf));
-	memset(digest, 0, KEY_DIGEST_LEN);
 
-	mbedtls_aes_free(aes_ctx);
-	mbedtls_md_free(sha_ctx);
+	mbedtls_cipher_free(cipher_ctx);
 
 	return ret;
 }

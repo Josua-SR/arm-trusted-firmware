@@ -112,6 +112,8 @@ BL31_SOURCES            +=      plat/marvell/octeontx/otx2/octeontx_attestation.
                                   entropy_poll.c                        \
                                   ctr_drbg.c                            \
                                   aes.c                                 \
+                                  cipher.c                              \
+                                  cipher_wrap.c                         \
                                  )
 CPPFLAGS                +=      -Wno-error=cpp
 $(eval $(call add_define,ENABLE_ATTESTATION_SERVICE))

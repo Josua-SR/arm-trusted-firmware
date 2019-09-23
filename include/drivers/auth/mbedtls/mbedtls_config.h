@@ -120,6 +120,12 @@
 /* Enable the CTR_DRBG AES-256-based random generator. */
 #define MBEDTLS_CTR_DRBG_C
 
+/* Enable the cipher layer */
+#define MBEDTLS_CIPHER_C
+
+/* This cipher is used for Attestation signing key decryption */
+#define MBEDTLS_CIPHER_MODE_CTR
+
 #ifndef __ASSEMBLER__
 /* System headers required to build mbed TLS with the current configuration */
 #include <stdlib.h>
