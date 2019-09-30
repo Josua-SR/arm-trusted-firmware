@@ -1,4 +1,11 @@
-#include <gsern/gsern_internal.h>
+/*
+ * Copyright (C) 2019 Marvell International Ltd.
+ *
+ * SPDX-License-Identifier:     BSD-3-Clause
+ * https://spdx.org/licenses
+ */
+
+#include <gser_internal.h>
 
 #include <string.h>
 #include <platform_def.h>
@@ -9,13 +16,13 @@
 #include <stdlib.h>
 #include <strtol.h>
 
-int gsern_is_platform(int plat)
+int gser_is_platform(int plat)
 {
 	return !strncmp(plat_octeontx_bcfg->bcfg.board_model,
-		plat == GSERN_PLATFORM_ASIM ? "asim-" : "emul-", 5);
+		plat == GSER_PLATFORM_ASIM ? "asim-" : "emul-", 5);
 }
 
-int gsern_poll_for_csr(uint64_t addr, uint64_t mask, int poll_val, int timeout)
+int gser_poll_for_csr(uint64_t addr, uint64_t mask, int poll_val, int timeout)
 {
 	uint64_t val;
 
@@ -94,7 +101,7 @@ const char *qlm_mode_to_cfg_str(qlm_modes_t mode)
 	return "INVALID_QLM_MODE_VALUE";
 }
 
-static int gsern_config_get_qlm_tuning(int prop, const char *mode, int baud_mhz,
+static int gser_config_get_qlm_tuning(int prop, const char *mode, int baud_mhz,
 	int qlm, int lane)
 {
 	char name[64];
@@ -116,17 +123,17 @@ static int gsern_config_get_qlm_tuning(int prop, const char *mode, int baud_mhz,
 
 
 	switch (prop) {
-	case GSERN_CONFIG_QLM_TUNING_TX_MAIN:
-		type = GSERN_CONFIG_QLM_TUNING_TX_MAIN_NAME;
+	case GSER_CONFIG_QLM_TUNING_TX_MAIN:
+		type = GSER_CONFIG_QLM_TUNING_TX_MAIN_NAME;
 		break;
-	case GSERN_CONFIG_QLM_TUNING_TX_PRE:
-		type = GSERN_CONFIG_QLM_TUNING_TX_PRE_NAME;
+	case GSER_CONFIG_QLM_TUNING_TX_PRE:
+		type = GSER_CONFIG_QLM_TUNING_TX_PRE_NAME;
 		break;
-	case GSERN_CONFIG_QLM_TUNING_TX_POST:
-		type = GSERN_CONFIG_QLM_TUNING_TX_POST_NAME;
+	case GSER_CONFIG_QLM_TUNING_TX_POST:
+		type = GSER_CONFIG_QLM_TUNING_TX_POST_NAME;
 		break;
-	case GSERN_CONFIG_QLM_TUNING_TX_BS:
-		type = GSERN_CONFIG_QLM_TUNING_TX_BS_NAME;
+	case GSER_CONFIG_QLM_TUNING_TX_BS:
+		type = GSER_CONFIG_QLM_TUNING_TX_BS_NAME;
 		break;
 	default:
 		WARN("Unknown property to read from BDK DT\n");
@@ -138,23 +145,23 @@ static int gsern_config_get_qlm_tuning(int prop, const char *mode, int baud_mhz,
 
 	buf = fdt_getprop(fdt, offset, name, &len);
 	if (!buf) {
-		debug_gsern("No %s option is set in BDK DT\n", name);
+		debug_gser("No %s option is set in BDK DT\n", name);
 		return -1;
 	}
 	return strtol(buf, NULL, 10);
 }
 
-static int gsern_get_lane_config(int prop, int qlm, int lane)
+static int gser_get_lane_config(int prop, int qlm, int lane)
 {
 	switch (prop) {
-	case GSERN_CONFIG_QLM_LANE_RX_POLARITY:
+	case GSER_CONFIG_QLM_LANE_RX_POLARITY:
 		return plat_octeontx_bcfg->qlm_cfg[qlm].lane_rx_polarity[lane];
-	case GSERN_CONFIG_QLM_LANE_TX_POLARITY:
+	case GSER_CONFIG_QLM_LANE_TX_POLARITY:
 		return plat_octeontx_bcfg->qlm_cfg[qlm].lane_tx_polarity[lane];
-	case GSERN_CONFIG_QLM_TUNING_RX_PREVGA_GN_OVRD:
+	case GSER_CONFIG_QLM_TUNING_RX_PREVGA_GN_OVRD:
 		return plat_octeontx_bcfg->qlm_cfg[qlm]
 						.lane_rx_prevga_gn_ovrd[lane];
-	case GSERN_CONFIG_QLM_TUNING_RX_PREVGA_GN_ADAPT:
+	case GSER_CONFIG_QLM_TUNING_RX_PREVGA_GN_ADAPT:
 		return plat_octeontx_bcfg->qlm_cfg[qlm]
 						.lane_rx_prevga_gn_adapt[lane];
 	default:
@@ -163,7 +170,7 @@ static int gsern_get_lane_config(int prop, int qlm, int lane)
 	}
 }
 
-int gsern_config_get_int(int prop, ...)
+int gser_config_get_int(int prop, ...)
 {
 	int ret;
 	int qlm, lane, baud_mhz;
@@ -173,26 +180,26 @@ int gsern_config_get_int(int prop, ...)
 	va_start(vl, prop);
 
 	switch (prop) {
-	case GSERN_CONFIG_QLM_LANE_RX_POLARITY:
-	case GSERN_CONFIG_QLM_LANE_TX_POLARITY:
-	case GSERN_CONFIG_QLM_TUNING_RX_PREVGA_GN_OVRD:
-	case GSERN_CONFIG_QLM_TUNING_RX_PREVGA_GN_ADAPT:
+	case GSER_CONFIG_QLM_LANE_RX_POLARITY:
+	case GSER_CONFIG_QLM_LANE_TX_POLARITY:
+	case GSER_CONFIG_QLM_TUNING_RX_PREVGA_GN_OVRD:
+	case GSER_CONFIG_QLM_TUNING_RX_PREVGA_GN_ADAPT:
 		qlm = va_arg(vl, int);
 		lane = va_arg(vl, int);
-		ret = gsern_get_lane_config(prop, qlm, lane);
+		ret = gser_get_lane_config(prop, qlm, lane);
 		break;
-	case GSERN_CONFIG_QLM_TUNING_TX_MAIN:
-	case GSERN_CONFIG_QLM_TUNING_TX_PRE:
-	case GSERN_CONFIG_QLM_TUNING_TX_POST:
-	case GSERN_CONFIG_QLM_TUNING_TX_BS:
+	case GSER_CONFIG_QLM_TUNING_TX_MAIN:
+	case GSER_CONFIG_QLM_TUNING_TX_PRE:
+	case GSER_CONFIG_QLM_TUNING_TX_POST:
+	case GSER_CONFIG_QLM_TUNING_TX_BS:
 		mode = va_arg(vl, char*);
 		baud_mhz = va_arg(vl, int);
 		qlm = va_arg(vl, int);
 		lane = va_arg(vl, int);
-		ret = gsern_config_get_qlm_tuning(
+		ret = gser_config_get_qlm_tuning(
 			prop, mode, baud_mhz, qlm, lane);
 		break;
-	case GSERN_CONFIG_QLM_VOLTAGE:
+	case GSER_CONFIG_QLM_VOLTAGE:
 		ret = plat_octeontx_bcfg->qlm_voltage;
 		break;
 	default:
@@ -218,4 +225,9 @@ int gsern_init_sata_no_scc(int qlm, enum gsern_lane_modes mode)
 int gsern_init_sata_scc(int qlm, enum gsern_lane_modes mode)
 {
 	return -1;
+}
+
+uint8_t gser_rng_get_random8(void)
+{
+	return octeontx_read8(CAVM_RNM_RANDOM);
 }

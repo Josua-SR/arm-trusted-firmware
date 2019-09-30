@@ -17,7 +17,7 @@
 #include <octeontx_plat_configuration.h>
 #include <plat_otx2_configuration.h>
 #include <plat_octeontx.h>
-#include <qlm.h>
+#include <qlm/qlm.h>
 
 static uint64_t msix_addr_save;
 

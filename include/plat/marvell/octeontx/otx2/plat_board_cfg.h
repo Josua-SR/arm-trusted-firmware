@@ -10,7 +10,7 @@
 
 #include <platform_dt.h>
 #include <cgx.h>
-#include <qlm.h>
+#include <qlm/qlm.h>
 #include <sfp_mgmt.h>
 #include <phy_mgmt.h>
 #include <platform_scfg.h>

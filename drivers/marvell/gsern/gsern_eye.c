@@ -8,8 +8,8 @@
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
-#include <gsern.h>
-#include <gsern/gsern_internal.h>
+#include <gsern/gsern.h>
+#include <gser_internal.h>
 
 /* GSERN requires a short hold time between most changes to time or
    voltage. Theser are defined as 1.6us, but the BDK uses integers,
@@ -30,30 +30,30 @@
 static void eye_move_location(int qlm, int lane, int t, int v)
 {
 	/* Move along the X axis (time) */
-	GSERN_CSR_INIT(cdrfsm_bcfg, CAVM_GSERNX_LANEX_CDRFSM_BCFG(qlm, lane));
+	GSER_CSR_INIT(cdrfsm_bcfg, CAVM_GSERNX_LANEX_CDRFSM_BCFG(qlm, lane));
 	while (cdrfsm_bcfg.s.eoffs != t)
 	{
 		if (cdrfsm_bcfg.s.eoffs > t)
 			cdrfsm_bcfg.s.eoffs--;
 		else
 			cdrfsm_bcfg.s.eoffs++;
-		GSERN_CSR_WRITE(CAVM_GSERNX_LANEX_CDRFSM_BCFG(qlm, lane), cdrfsm_bcfg.u);
-		gsern_wait_usec(SETTLE_TIME); /* 1.6 us */
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_QAC_BCFG(qlm, lane),
+		GSER_CSR_WRITE(CAVM_GSERNX_LANEX_CDRFSM_BCFG(qlm, lane), cdrfsm_bcfg.u);
+		gser_wait_usec(SETTLE_TIME); /* 1.6 us */
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_QAC_BCFG(qlm, lane),
 			c.s.cdr_qac_sele = 0);
-		gsern_wait_usec(SETTLE_TIME); /* 1.6 us */
+		gser_wait_usec(SETTLE_TIME); /* 1.6 us */
 	}
 
 	/* Move along the Y axis (voltage) */
-	GSERN_CSR_INIT(rx_os_5_bcfg, CAVM_GSERNX_LANEX_RX_OS_5_BCFG(qlm, lane));
+	GSER_CSR_INIT(rx_os_5_bcfg, CAVM_GSERNX_LANEX_RX_OS_5_BCFG(qlm, lane));
 	while (rx_os_5_bcfg.s.c1_e_adjust != v)
 	{
 		if (rx_os_5_bcfg.s.c1_e_adjust > v)
 			rx_os_5_bcfg.s.c1_e_adjust--;
 		else
 			rx_os_5_bcfg.s.c1_e_adjust++;
-		GSERN_CSR_WRITE(CAVM_GSERNX_LANEX_RX_OS_5_BCFG(qlm, lane), rx_os_5_bcfg.u);
-		gsern_wait_usec(SETTLE_TIME); /* 1.6 us */
+		GSER_CSR_WRITE(CAVM_GSERNX_LANEX_RX_OS_5_BCFG(qlm, lane), rx_os_5_bcfg.u);
+		gser_wait_usec(SETTLE_TIME); /* 1.6 us */
 	}
 }
 
@@ -69,28 +69,28 @@ static void eye_move_location(int qlm, int lane, int t, int v)
  */
 static uint64_t eye_measure_errors(int qlm, int lane, uint64_t cycles)
 {
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL(qlm, lane),
 		c.s.rst_n = 0);
 	/* Load Cycle Count */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL(qlm, lane),
 		c.s.cycle_cnt_en = 1;
 		c.s.cycle_cnt = cycles);
 	/* Start Eye Measurement */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL(qlm, lane),
 		c.s.eye_en = 1);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL(qlm, lane),
 		c.s.rst_n = 1);
 	/* Wait for eye measurement done */
-	if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_EYE_DAT(qlm, lane), GSERN_LANE_EYE_DAT_CYCLE_CNT_DONE, ==, 1, 10000000))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_EYE_DAT(qlm, lane), GSERN_LANE_EYE_DAT_CYCLE_CNT_DONE, ==, 1, 10000000))
 	{
-		gsern_warn("Timeout waiting for cycle to complete, aborting eye\n");
+		gser_warn("Timeout waiting for cycle to complete, aborting eye\n");
 		return UINT64_MAX;
 	}
 	/* Stop the eye */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL(qlm, lane),
 		c.s.eye_en = 0);
 	/* Read Error count */
-	GSERN_CSR_INIT(eye_dat, CAVM_GSERNX_LANEX_EYE_DAT(qlm, lane));
+	GSER_CSR_INIT(eye_dat, CAVM_GSERNX_LANEX_EYE_DAT(qlm, lane));
 	if (eye_dat.s.err_cnt_ovf || (eye_dat.s.err_cnt > UINT32_MAX))
 		return UINT32_MAX;
 	else
@@ -110,27 +110,27 @@ static uint64_t eye_measure_errors(int qlm, int lane, uint64_t cycles)
  *
  * @return Zero on success, negative on failure
  */
-int gsern_eye_capture(int qlm, int lane, int show_data, gsern_qlm_eye_t *eye_data)
+int gsern_eye_capture(int qlm, int lane, int show_data, gser_qlm_eye_t *eye_data)
 {
 	const int TIMEOUT = 10000; /* 10ms */
 	int return_status = 0;
 
-	GSERN_CSR_INIT(cdrfsm_bcfg_original, CAVM_GSERNX_LANEX_CDRFSM_BCFG(qlm, lane));
+	GSER_CSR_INIT(cdrfsm_bcfg_original, CAVM_GSERNX_LANEX_CDRFSM_BCFG(qlm, lane));
 
 	/* Disable DFE Periodic Offset update */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_24_BCFG(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_24_BCFG(qlm, lane),
 		c.s.dfe_oscomp_timer_en = 0);
 
 	/* Power-up the eye monitor */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, lane),
 		c.s.rst_eye_rst_sm = 0);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, lane),
 		c.s.ln_reset_use_eye = 1);
 
 	/* Poll for eye monitor ready */
-	if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_LANE_INIT_BSTS_EYE_READY, ==, 1, TIMEOUT))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_LANE_INIT_BSTS_EYE_READY, ==, 1, TIMEOUT))
 	{
-		gsern_error("N0.QLM%d.Lane%d: Eye monitor not ready\n", qlm, lane);
+		gser_error("N0.QLM%d.Lane%d: Eye monitor not ready\n", qlm, lane);
 		return -1;
 	}
 
@@ -145,7 +145,7 @@ int gsern_eye_capture(int qlm, int lane, int show_data, gsern_qlm_eye_t *eye_dat
 	eye_data->height = v_height * 2 - 1;
 
 	/* Determine if we're in 20 bit or 40 bit mode */
-	GSERN_CSR_INIT(bcfg, CAVM_GSERNX_LANEX_PCS_802P3_BCFG(qlm, lane));
+	GSER_CSR_INIT(bcfg, CAVM_GSERNX_LANEX_PCS_802P3_BCFG(qlm, lane));
 	int bus_width = bcfg.s.rx_wpk_20b40b ? 20 : 40;
 
 	if (show_data)
@@ -165,12 +165,12 @@ int gsern_eye_capture(int qlm, int lane, int show_data, gsern_qlm_eye_t *eye_dat
 		printf("Capturing eye...\n");
 
 	/* Initialize eyeEoffs from eyeQacEoffs */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_QAC_BCFG(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_QAC_BCFG(qlm, lane),
 		c.s.en_qac_e = 0);
-	gsern_wait_usec(SETTLE_TIME); /* 1.6 us */
-	GSERN_CSR_INIT(rx_qac_bsts, CAVM_GSERNX_LANEX_RX_QAC_BSTS(qlm, lane));
+	gser_wait_usec(SETTLE_TIME); /* 1.6 us */
+	GSER_CSR_INIT(rx_qac_bsts, CAVM_GSERNX_LANEX_RX_QAC_BSTS(qlm, lane));
 	int eye_eoffs = rx_qac_bsts.s.qac_eoffs;
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_CDRFSM_BCFG(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_CDRFSM_BCFG(qlm, lane),
 		c.s.eoffs = eye_eoffs);
 	int delta_eye = eye_eoffs - 0x20;
 	if (delta_eye < 0)
@@ -184,13 +184,13 @@ int gsern_eye_capture(int qlm, int lane, int show_data, gsern_qlm_eye_t *eye_dat
 			eye_move_location(qlm, lane, t + delta_eye, v);
 
 			/* Configure Eye Monitor to capture Non-Transitions Ones */
-			GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL_2(qlm, lane),
+			GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL_2(qlm, lane),
 				c.s.capture_ones_en = 1;
 				c.s.capture_ones = 1;
 				c.s.capture_edgemode = 0;
 				c.s.capture_trans = 0;
 				c.s.eye_adapt_en = 1);
-			gsern_wait_usec(SETTLE_TIME); /* 1.6 us */
+			gser_wait_usec(SETTLE_TIME); /* 1.6 us */
 			uint64_t errors_nt_ones = eye_measure_errors(qlm, lane, cycles);
 			if (errors_nt_ones == UINT64_MAX)
 			{
@@ -198,13 +198,13 @@ int gsern_eye_capture(int qlm, int lane, int show_data, gsern_qlm_eye_t *eye_dat
 				goto fail;
 			}
 			/* Configure Eye Monitor to Capture Transitions Ones */
-			GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL_2(qlm, lane),
+			GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL_2(qlm, lane),
 				c.s.capture_ones_en = 1;
 				c.s.capture_ones = 1;
 				c.s.capture_edgemode = 1;
 				c.s.capture_trans = 1;
 				c.s.eye_adapt_en = 1);
-			gsern_wait_usec(SETTLE_TIME); /* 1.6 us */
+			gser_wait_usec(SETTLE_TIME); /* 1.6 us */
 			uint64_t errors_tr_ones = eye_measure_errors(qlm, lane, cycles);
 			if (errors_tr_ones == UINT64_MAX)
 			{
@@ -212,13 +212,13 @@ int gsern_eye_capture(int qlm, int lane, int show_data, gsern_qlm_eye_t *eye_dat
 				goto fail;
 			}
 			/* Configure Eye Monitor to capture Non-Transitions Zeros */
-			GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL_2(qlm, lane),
+			GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL_2(qlm, lane),
 				c.s.capture_ones_en = 0;
 				c.s.capture_ones = 0;
 				c.s.capture_edgemode = 0;
 				c.s.capture_trans = 0;
 				c.s.eye_adapt_en = 1);
-			gsern_wait_usec(SETTLE_TIME); /* 1.6 us */
+			gser_wait_usec(SETTLE_TIME); /* 1.6 us */
 			uint64_t errors_nt_zeros = eye_measure_errors(qlm, lane, cycles);
 			if (errors_nt_zeros == UINT64_MAX)
 			{
@@ -226,13 +226,13 @@ int gsern_eye_capture(int qlm, int lane, int show_data, gsern_qlm_eye_t *eye_dat
 				goto fail;
 			}
 			/* Configure Eye Monitor to capture Transitions Zeros */
-			GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL_2(qlm, lane),
+			GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL_2(qlm, lane),
 				c.s.capture_ones_en = 0;
 				c.s.capture_ones = 0;
 				c.s.capture_edgemode = 1;
 				c.s.capture_trans = 1;
 				c.s.eye_adapt_en = 1);
-			gsern_wait_usec(SETTLE_TIME); /* 1.6 us */
+			gser_wait_usec(SETTLE_TIME); /* 1.6 us */
 			uint64_t errors_tr_zeros = eye_measure_errors(qlm, lane, cycles);
 			if (errors_tr_zeros == UINT64_MAX)
 			{
@@ -257,25 +257,25 @@ int gsern_eye_capture(int qlm, int lane, int show_data, gsern_qlm_eye_t *eye_dat
 	}
 fail:
 	/* Power-down the eye monitor */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, lane),
 		c.s.ln_reset_use_eye = 0);
 
 	/* Re-Enable DFE Periodic Offset update */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_24_BCFG(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_24_BCFG(qlm, lane),
 		c.s.dfe_oscomp_timer_en = 1);
 
 	/* Reset the eye monitor  */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_CDRFSM_BCFG(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_CDRFSM_BCFG(qlm, lane),
 		c.s.eoffs = cdrfsm_bcfg_original.s.eoffs);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_QAC_BCFG(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_QAC_BCFG(qlm, lane),
 		c.s.en_qac_e = 1;
 		c.s.en_qac_q = 1;
 		c.s.cdr_qac_sele = 1);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL_2(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL_2(qlm, lane),
 		c.s.capture_edgemode = 0;
 		c.s.capture_trans = 0;
 		c.s.eye_adapt_en = 0);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_EYE_CTL(qlm, lane),
 		c.s.cycle_cnt_en = 0;
 		c.s.rst_n = 0);
 	return return_status;

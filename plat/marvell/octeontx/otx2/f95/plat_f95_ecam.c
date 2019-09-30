@@ -19,7 +19,7 @@
 #include <octeontx_utils.h>
 #include <rvu.h>
 #include <plat_otx2_configuration.h>
-#include <qlm.h>
+#include <qlm/qlm.h>
 
 #ifdef DEBUG_ATF_PLAT_ECAM
 #define debug_plat_ecam printf

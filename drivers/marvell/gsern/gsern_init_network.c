@@ -8,19 +8,19 @@
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
-#include <gsern.h>
-#include <gsern/gsern_internal.h>
+#include <gsern/gsern.h>
+#include <gser_internal.h>
 
 static int gsern_init_pll(int qlm, enum gsern_flags flags, enum gsern_lane_modes mode)
 {
 	/* Skip REFCLK setup as already done */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_COMMON_BIAS_BCFG(qlm),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_COMMON_BIAS_BCFG(qlm),
 		c.s.dac1 = ((gsern_voltage > 950) || (mode == GSERN_GEN_25781250000)) ? 0xf : 0x8;
 		c.s.dac0 = 8;
 		c.s.bias = 1;
 		c.s.bypass = 0;
 		c.s.bias_pwdn = 0);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_COMMON_PLL_1_BCFG(qlm),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_COMMON_PLL_1_BCFG(qlm),
 		c.s.cal_cp_mult = 3;
 		c.s.cp = 0;
 		c.s.cp_overide = 0;
@@ -37,7 +37,7 @@ static int gsern_init_pll(int qlm, enum gsern_flags flags, enum gsern_lane_modes
 		c.s.post_div = 0xa;
 		c.s.div_n = 0x42;
 		c.s.div_f = 0);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_COMMON_PLL_2_BCFG(qlm),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_COMMON_PLL_2_BCFG(qlm),
 		c.s.mio_refclk_en = 1;
 		c.s.lock_check_cnt_ovrd_en = 0;
 		c.s.lock_check_cnt_ovrd = 0x7e01;
@@ -55,12 +55,12 @@ static int gsern_init_pll(int qlm, enum gsern_flags flags, enum gsern_lane_modes
 		c.s.cal_dac_low = 4;
 		c.s.cal_dac_mid = 8;
 		c.s.cal_dac_high = 0xc);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_COMMON_RST_BCFG(qlm),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_COMMON_RST_BCFG(qlm),
 		c.s.lock_ppm = 2;
 		c.s.lock_wait = 2;
 		c.s.cal_en = 1;
 		c.s.pwdn = 0);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_COMMON_RST_BCFG(qlm),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_COMMON_RST_BCFG(qlm),
 		c.s.rst_pll_rst_sm = 0);
 
 	/* Wait for Common PLL Ready */
@@ -86,7 +86,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 	}
 
 	/* Check if the common pll is setup. Only setup once */
-	GSERN_CSR_INIT(bias_cfg, CAVM_GSERNX_COMMON_BIAS_BCFG(qlm));
+	GSER_CSR_INIT(bias_cfg, CAVM_GSERNX_COMMON_BIAS_BCFG(qlm));
 	if (bias_cfg.s.bias_pwdn)
 	{
 		/* Common GSERN Initialization code for Ethernet XAUI,DXAUI,RXAUI,QSGMII,
@@ -95,9 +95,9 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 			return -1;
 	}
 
-	int prevga_gn_ovrd = gsern_config_get_int(GSERN_CONFIG_QLM_TUNING_RX_PREVGA_GN_OVRD, qlm, qlm_lane);
+	int prevga_gn_ovrd = gser_config_get_int(GSER_CONFIG_QLM_TUNING_RX_PREVGA_GN_OVRD, qlm, qlm_lane);
 	int prevga_gn_ovrd_en;
-	int prevga_gn_adpt = gsern_config_get_int(GSERN_CONFIG_QLM_TUNING_RX_PREVGA_GN_ADAPT, qlm, qlm_lane);
+	int prevga_gn_adpt = gser_config_get_int(GSER_CONFIG_QLM_TUNING_RX_PREVGA_GN_ADAPT, qlm, qlm_lane);
 
 	/* Configure preVGA adaption overrides for 20Gb/s QLM modes */
 	if (mode == GSERN_GEN_20625000000)
@@ -124,17 +124,17 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 	}
 
 	/* Force lane into Rx idle while initializing the GSER */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_IDLEDET_2_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_IDLEDET_2_BCFG(qlm, qlm_lane),
 		c.s.frc_en = 1;
 		c.s.frc_val = 1);
 
 	/* Reset indiviual lane before continuing */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, qlm_lane),
 		c.s.rst_pll_rst_sm = 1;
 		c.s.rst_tx_rst_sm = 1;
 		c.s.rst_rx_rst_sm = 1;
 		c.s.rst_adpt_rst_sm = 1);
-	gsern_wait_usec(1000);
+	gser_wait_usec(1000);
 
 	/* Here we will select Lane PLL values by protocol assuming the
 	   gsern_lane_modes can be used to make the selection another
@@ -163,17 +163,17 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 
 	if (use_quad)
 	{
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RSTCLKMSK_BCFG(qlm, 4),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RSTCLKMSK_BCFG(qlm, 4),
 			c.s.txdivrst_algn_lane_mask = 0xf);
 	}
 	if (use_dual)
 	{
 		/* First lane in a dual pair is always the even lane */
 		int first_lane = qlm_lane & -2;
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RSTCLKMSK_BCFG(qlm, qlm_lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RSTCLKMSK_BCFG(qlm, qlm_lane),
 			c.s.txdivrst_algn_lane_mask = 0x3 << first_lane);
 	}
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TRAIN_0_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TRAIN_0_BCFG(qlm, qlm_lane),
 		c.s.cfg_cgx = 1;
 		c.s.cgx_quad = use_quad;
 		c.s.cgx_dual = use_dual);
@@ -181,7 +181,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 	if ((mode == GSERN_GEN_03125000000) || (mode == GSERN_GEN_06250000000)) /* XAUI, DXAUI, RXAUI */
 	{
 		int post_div = (mode == GSERN_GEN_03125000000) ? 3 : 2;
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PLL_1_BCFG(qlm, qlm_lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PLL_1_BCFG(qlm, qlm_lane),
 			c.s.cal_cp_mult = 1;
 			c.s.cp = 0xc;
 			c.s.cp_overide = 0;
@@ -202,7 +202,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 	else if (qsgmii || sgmii_1p25 || sgmii_2p5)
 	{
 		int post_div = (qsgmii) ? 2 : 3;
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PLL_1_BCFG(qlm, qlm_lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PLL_1_BCFG(qlm, qlm_lane),
 			c.s.cal_cp_mult = 1;
 			c.s.cp = 0xc;
 			c.s.cp_overide = 0;
@@ -223,7 +223,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 	else if (usxgmii_20p625 || usxgmii_10p3125 || usxgmii_5p15625 || usxgmii_2p578125)
 	{
 		int post_div = (usxgmii_20p625) ? 0 : (usxgmii_10p3125) ? 1 : (usxgmii_5p15625) ? 2 : 3;
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PLL_1_BCFG(qlm, qlm_lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PLL_1_BCFG(qlm, qlm_lane),
 			c.s.cal_cp_mult = 1;
 			c.s.cp = 0xc;
 			c.s.cp_overide = 0;
@@ -243,7 +243,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 	}
 	else if (mode == GSERN_GEN_25781250000)
 	{
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PLL_1_BCFG(qlm, qlm_lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PLL_1_BCFG(qlm, qlm_lane),
 			c.s.cal_cp_mult = 1;
 			c.s.cp = 0xc;
 			c.s.cp_overide = 0;
@@ -263,7 +263,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 	}
 	else if (mode == GSERN_GEN_12890625000)
 	{
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PLL_1_BCFG(qlm, qlm_lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PLL_1_BCFG(qlm, qlm_lane),
 			c.s.cal_cp_mult = 1;
 			c.s.cp = 0xc;
 			c.s.cp_overide = 0;
@@ -282,9 +282,9 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 			c.s.div_f = 0);
 	}
 	else
-		gsern_error("N0.QLm%d: Lane PLL setup not implemented\n", qlm);
+		gser_error("N0.QLm%d: Lane PLL setup not implemented\n", qlm);
 
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PLL_2_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PLL_2_BCFG(qlm, qlm_lane),
 		c.s.lock_check_cnt_ovrd_en = 0;
 		c.s.vcm_sel = 0;
 		c.s.cp_boost = 0;
@@ -301,7 +301,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.cal_dac_mid = 8;
 		c.s.cal_dac_high = 0xc);
 
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_SRCMX_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_SRCMX_BCFG(qlm, qlm_lane),
 		c.s.en_hldcdrfsm_on_idle = 1;
 		c.s.en_pauseadpt_on_idle = 1;
 		c.s.trn_sclk_cgt_on = 0;
@@ -325,12 +325,12 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 	/* For SGMII 1.25G mode only, SerDes PIPE runs in Bit-Stuff Mode
 	   with 20-bit data path, must enable 40-bit/20-bit word
 	   unpacking/packing to/from CGX */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PCS_802P3_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PCS_802P3_BCFG(qlm, qlm_lane),
 		c.s.rx_wpk_order = 0;
 		c.s.tx_wup_order = 0;
 		c.s.rx_wpk_20b40b = use_20bit;
 		c.s.tx_wup_40b20b = use_20bit);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_BCFG(qlm, qlm_lane),
 		c.s.inj_err_cnt_rst_n = 0;
 		c.s.inj_err_cnt_en = 0;
 		c.s.inj_err_cnt_len = 0;
@@ -344,7 +344,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.sloop_mode = 0;
 		c.s.bitstuff_rx_drop_even = use_20bit;
 		c.s.bitstuff_rx_en = use_20bit;
-		c.s.inv_rx_polarity = gsern_config_get_int(GSERN_CONFIG_QLM_LANE_RX_POLARITY, qlm, qlm_lane);
+		c.s.inv_rx_polarity = gser_config_get_int(GSER_CONFIG_QLM_LANE_RX_POLARITY, qlm, qlm_lane);
 		c.s.reverse_rx_bit_order = 1;
 		c.s.fifo_algn_qlm_mask_rsvd = 0;
 		c.s.fifo_algn_lane_mask_rsvd = 0;
@@ -352,9 +352,9 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.tx_fifo_pop_start_addr = 6;
 		c.s.fifo_rst_n = 1;
 		c.s.bitstuff_tx_en = use_20bit;
-		c.s.inv_tx_polarity = gsern_config_get_int(GSERN_CONFIG_QLM_LANE_TX_POLARITY, qlm, qlm_lane);
+		c.s.inv_tx_polarity = gser_config_get_int(GSER_CONFIG_QLM_LANE_TX_POLARITY, qlm, qlm_lane);
 		c.s.reverse_tx_bit_order = 1);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_OS_5_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_OS_5_BCFG(qlm, qlm_lane),
 		c.s.run_eye_oscal = gsern_lane_run_eye_oscal;
 		c.s.c1_e_adjust = 0;
 		c.s.c1_i_adjust = 0;
@@ -370,7 +370,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.idle_offset_trigger = 0;
 		c.s.afe_offset_trigger = 0;
 		c.s.dfe_offset_trigger = 0);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_CDRFSM_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_CDRFSM_BCFG(qlm, qlm_lane),
 		c.s.voter_sp_mask = gsern_lane_voter_sp_mask[mode];
 		c.s.rst_n = 1;
 		c.s.clk_sel = 2;
@@ -380,7 +380,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.qoffs = gsern_lane_qoffs[mode];
 		c.s.inc2 = gsern_lane_inc2[mode];
 		c.s.inc1 = gsern_lane_inc1[mode]);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST1_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST1_BCFG(qlm, qlm_lane),
 		c.s.perst_n_ovrd = 1;
 		c.s.perst_n_ovrd_en = 0;
 		c.s.domain_rst_en = 1;
@@ -427,7 +427,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.reset = 0;
 		c.s.cal_en = 0;
 		c.s.pwdn = 1);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_QAC_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_QAC_BCFG(qlm, qlm_lane),
 		c.s.cdr_qac_selq = gsern_lane_cdr_qac_selq[mode];  /* SGMII 1.25G only disable QAC E and QAC Q */
 		c.s.cdr_qac_sele = gsern_lane_cdr_qac_sele[mode];  /* SGMII 1.25G only disable QAC E and QAC Q */
 		c.s.qac_cntset_q = 3;
@@ -436,7 +436,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.qac_ref_eoffs = gsern_lane_qac_ref_eoffs;
 		c.s.en_qac_e = gsern_lane_en_qac_e[mode];  /* SGMII 1.25G only disable QAC E and QAC Q */
 		c.s.en_qac_q = gsern_lane_en_qac_q[mode]); /* SGMII 1.25G only disable QAC E and QAC Q */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_4_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_4_BCFG(qlm, qlm_lane),
 		c.s.edgesel_even_ovrd_en = gsern_lane_edgesel_even_ovrd_en;
 		c.s.edgesel_even_ovrd = gsern_lane_edgesel_even_ovrd;
 		c.s.edgesel_odd_ovrd_en = gsern_lane_edgesel_odd_ovrd_en;
@@ -457,7 +457,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.ctle_gain_ovrd = gsern_lane_ctle_gain_ovrd[mode];
 		c.s.vga_gain_ovrd_en = gsern_lane_vga_gain_ovrd_en[mode];
 		c.s.vga_gain_ovrd = gsern_lane_vga_gain_ovrd[mode]);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_ST_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_ST_BCFG(qlm, qlm_lane),
 		c.s.rxcdrfsmi = gsern_lane_rxcdrfsmi;
 		c.s.rx_dcc_iboost = gsern_lane_rx_dcc_iboost[mode];
 		c.s.rx_dcc_lowf = gsern_lane_rx_dcc_lowf[mode];
@@ -477,30 +477,30 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.en_rt85 = 0;
 		c.s.en_lb = 0;
 		c.s.en_rterm = 1);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_8_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_8_BCFG(qlm, qlm_lane),
 		c.s.subrate_init = gsern_lane_subrate_init[mode];
 		c.s.subrate_final = gsern_lane_subrate_final[mode]);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_13_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_13_BCFG(qlm, qlm_lane),
 		c.s.afeos_subrate_scale = 7;
 		c.s.afeos_subrate_init = gsern_lane_afeos_subrate_init[mode];
 		c.s.afeos_subrate_final = gsern_lane_afeos_subrate_final[mode]);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_20_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_20_BCFG(qlm, qlm_lane),
 		c.s.blwc_subrate_scale = 7;
 		c.s.blwc_subrate_init = gsern_lane_blwc_subrate_init;
 		c.s.blwc_subrate_final = gsern_lane_blwc_subrate_final);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_21_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_21_BCFG(qlm, qlm_lane),
 		c.s.prevga_gn_subrate_now_ovrd_en = 0;
 		c.s.prevga_gn_subrate_now_ovrd = 0xf732;
 		c.s.prevga_gn_subrate_scale = 7;
 		c.s.prevga_gn_subrate_init = gsern_lane_prevga_gn_subrate_init[mode];
 		c.s.prevga_gn_subrate_fin = gsern_lane_prevga_gn_subrate_fin[mode]);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_9_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_9_BCFG(qlm, qlm_lane),
 		c.s.ctlelte_deadband = gsern_lane_ctlelte_deadband;
 		c.s.ctlez_deadband = gsern_lane_ctlez_deadband;
 		c.s.ctle_deadband = gsern_lane_ctle_deadband;
 		c.s.dfe_deadband = gsern_lane_dfe_deadband;
 		c.s.vga_deadband = gsern_lane_vga_deadband);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_19_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_19_BCFG(qlm, qlm_lane),
 		c.s.blwc_leak_sgn = gsern_lane_blwc_leak_sgn;
 		c.s.blwc_updn_len = gsern_lane_blwc_updn_len;
 		c.s.blwc_deadband = gsern_lane_blwc_deadband;
@@ -508,42 +508,42 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.blwc_leak = gsern_lane_blwc_leak;
 		c.s.blwc_mu = gsern_lane_blwc_mu;
 		c.s.blwc_timer_max = gsern_lane_blwc_timer_max);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_23_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_23_BCFG(qlm, qlm_lane),
 		c.s.prevga_gn_leak_sgn = gsern_lane_prevga_gn_leak_sgn;
 		c.s.prevga_gn_deadband = gsern_lane_prevga_gn_deadband;
 		c.s.prevga_gn_deadband_inc = 0;
 		c.s.prevga_gn_leak = gsern_lane_prevga_gn_leak;
 		c.s.prevga_gn_mu = gsern_lane_prevga_gn_mu;
 		c.s.prevga_gn_timer_max = gsern_lane_prevga_gn_timer_max);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_12_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_12_BCFG(qlm, qlm_lane),
 		c.s.afeos_leak_sgn = gsern_lane_afeos_leak_sgn;
 		c.s.afeos_deadband = gsern_lane_afeos_deadband;
 		c.s.afeos_deadband_inc = 0;
 		c.s.afeos_leak = gsern_lane_afeos_leak;
 		c.s.afeos_mu = gsern_lane_afeos_mu;
 		c.s.afeos_timer_max = gsern_lane_afeos_timer_max);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_14_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_14_BCFG(qlm, qlm_lane),
 		c.s.c6_c15_limit_hi = gsern_lane_c6_c15_limit_hi[mode];
 		c.s.c6_c15_limit_lo = gsern_lane_c6_c15_limit_lo[mode];
 		c.s.dfe_c1_deadband = gsern_lane_dfe_c1_deadband;
 		c.s.dfe_c1_deadband_inc = 0);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST_CNT4_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST_CNT4_BCFG(qlm, qlm_lane),
 		c.s.svc_clk_freq = 0;
 		c.s.blwc_reset_wait = 0xf;
 		c.s.dfe_afe_oscal_wait = gsern_lane_dfe_afe_oscal_wait);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_6_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_6_BCFG(qlm, qlm_lane),
 		c.s.ctlez_leak = gsern_lane_ctlez_leak;
 		c.s.ctlez_mu = gsern_lane_ctlez_mu;
 		c.s.ctlez_timer_max = gsern_lane_ctlez_timer_max;
 		c.s.ctle_leak = gsern_lane_ctle_leak;
 		c.s.ctle_mu = gsern_lane_ctle_mu;
 		c.s.ctle_timer_max = gsern_lane_ctle_timer_max);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_6A_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_6A_BCFG(qlm, qlm_lane),
 		c.s.ctlelte_leak_sgn = gsern_lane_ctlelte_leak_sgn;
 		c.s.ctlelte_leak = gsern_lane_ctlelte_leak;
 		c.s.ctlelte_mu = gsern_lane_ctlelte_mu;
 		c.s.ctlelte_timer_max = gsern_lane_ctlelte_timer_max);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_5_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_5_BCFG(qlm, qlm_lane),
 		c.s.ctle_leak_sgn = gsern_lane_ctle_leak_sgn;
 		c.s.ctlez_leak_sgn = gsern_lane_ctlez_leak_sgn;
 		c.s.dfe_c1_leak_sgn = gsern_lane_dfe_c1_leak_sgn;
@@ -559,7 +559,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.dfe_mu = gsern_lane_dfe_mu;
 		c.s.dfe_timer_max = gsern_lane_dfe_timer_max);
 	/* Errata GSER-35489 Disable DFE C2 & C3 Taps for 25.78125Gbd mode */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_0_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_0_BCFG(qlm, qlm_lane),
 		c.s.c9_ovrd_en = gsern_lane_c9_ovrd_en;
 		c.s.c9_ovrd = gsern_lane_c9_ovrd;
 		c.s.c8_ovrd_en = gsern_lane_c8_ovrd_en;
@@ -577,7 +577,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.c2_ovrd_en = gsern_lane_c2_ovrd_en[mode];
 		c.s.c2_ovrd = gsern_lane_c2_ovrd);
 
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_1_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_1_BCFG(qlm, qlm_lane),
 		c.s.prevga_gn_ovrd_en = prevga_gn_ovrd_en;
 		c.s.prevga_gn_ovrd = prevga_gn_ovrd;
 		c.s.blwc_ovrd_en = gsern_lane_blwc_ovrd_en[mode];
@@ -594,10 +594,10 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.c11_ovrd = gsern_lane_c11_ovrd;
 		c.s.c10_ovrd_en = gsern_lane_c10_ovrd_en;
 		c.s.c10_ovrd = gsern_lane_c10_ovrd);
-	int c1_limit_lo = gsern_is_model(OCTEONTX_CN96XX_PASS1_X) ?
+	int c1_limit_lo = gser_is_model(OCTEONTX_CN96XX_PASS1_X) ?
 		gsern_lane_c1_limit_lo_cn96xx[mode] :
 		gsern_lane_c1_limit_lo_cnf95xx[mode];
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_15_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_15_BCFG(qlm, qlm_lane),
 		c.s.c1_limit_lo = c1_limit_lo;
 		c.s.c1_limit_hi = gsern_lane_c1_limit_hi[mode];
 		c.s.c2_limit_lo = gsern_lane_c2_limit_lo[mode];
@@ -612,7 +612,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 	/* Start v---v These will only set the ovrd_en=1 for the SGMII 1.25Gbd
 	   and CPRI 1.228Gbd data rates modes from the
 	   cavm-gsern-settings.h table */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_OS_1_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_OS_1_BCFG(qlm, qlm_lane),
 		c.s.os3_1_ovrd_en = gsern_lane_os3_1_ovrd_en;
 		c.s.os3_1_ovrd	= gsern_lane_os3_1_ovrd;
 		c.s.os3_0_ovrd_en = gsern_lane_os3_0_ovrd_en[mode];
@@ -629,7 +629,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.os0_1_ovrd	= gsern_lane_os0_1_ovrd;
 		c.s.os0_0_ovrd_en = gsern_lane_os0_0_ovrd_en[mode];
 		c.s.os0_0_ovrd	= gsern_lane_os0_0_ovrd);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_OS_2_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_OS_2_BCFG(qlm, qlm_lane),
 		c.s.os7_1_ovrd_en = gsern_lane_os7_1_ovrd_en;
 		c.s.os7_1_ovrd	= gsern_lane_os7_1_ovrd;
 		c.s.os7_0_ovrd_en = gsern_lane_os7_0_ovrd_en[mode];
@@ -646,7 +646,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.os4_1_ovrd	= gsern_lane_os4_1_ovrd;
 		c.s.os4_0_ovrd_en = gsern_lane_os4_0_ovrd_en[mode];
 		c.s.os4_0_ovrd	= gsern_lane_os4_0_ovrd);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_OS_3_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_OS_3_BCFG(qlm, qlm_lane),
 		c.s.os11_1_ovrd_en = gsern_lane_os11_1_ovrd_en;
 		c.s.os11_1_ovrd	= gsern_lane_os11_1_ovrd;
 		c.s.os11_0_ovrd_en = gsern_lane_os11_0_ovrd_en[mode];
@@ -663,7 +663,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.os8_1_ovrd	= gsern_lane_os8_1_ovrd;
 		c.s.os8_0_ovrd_en = gsern_lane_os8_0_ovrd_en[mode];
 		c.s.os8_0_ovrd	= gsern_lane_os8_0_ovrd);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_OS_4_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_OS_4_BCFG(qlm, qlm_lane),
 		c.s.os15_1_ovrd_en = gsern_lane_os15_1_ovrd_en;
 		c.s.os15_1_ovrd	= gsern_lane_os15_1_ovrd;
 		c.s.os15_0_ovrd_en = gsern_lane_os15_0_ovrd_en[mode];
@@ -683,7 +683,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 	/* End ^---^ These will only set the ovrd_en for the SGMII 1.25Gbd and
 	   CPRI 1.228Gbd data rates - End */
 
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, qlm_lane),
 		c.s.do_prevga_gn_final = gsern_lane_do_prevga_gn_final;
 		c.s.do_blwc_final = gsern_lane_do_blwc_final[mode];
 		c.s.do_afeos_final = gsern_lane_do_afeos_final[mode];
@@ -722,7 +722,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 	/* The trim16-45 overrides are enabled for XAUI,RXAUI,DXAUI,SGMII,QSGMII,
 	   USXGMII(5.15625,2.578125) modes should be automatically set to
 	   1 via the "mode" index in the table */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_ITRIM_3_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_ITRIM_3_BCFG(qlm, qlm_lane),
 		c.s.trim15_ovrd_en = gsern_lane_trim15_ovrd_en;
 		c.s.trim14_ovrd_en = gsern_lane_trim14_ovrd_en;
 		c.s.trim13_ovrd_en = gsern_lane_trim13_ovrd_en;
@@ -738,7 +738,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.trim3_ovrd_en = gsern_lane_trim3_ovrd_en;
 		c.s.trim2_ovrd_en = gsern_lane_trim2_ovrd_en;
 		c.s.trim1_ovrd_en = gsern_lane_trim1_ovrd_en);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_ITRIM_4_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_ITRIM_4_BCFG(qlm, qlm_lane),
 		c.s.trim31_ovrd_en = gsern_lane_trim31_ovrd_en;
 		c.s.trim30_ovrd_en = gsern_lane_trim30_ovrd_en;
 		c.s.trim29_ovrd_en = gsern_lane_trim29_ovrd_en;
@@ -755,7 +755,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.trim18_ovrd_en = gsern_lane_trim18_ovrd_en;
 		c.s.trim17_ovrd_en = gsern_lane_trim17_ovrd_en;
 		c.s.trim16_ovrd_en = gsern_lane_trim16_ovrd_en);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_ITRIM_5_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_ITRIM_5_BCFG(qlm, qlm_lane),
 		c.s.trim45_ovrd_en = gsern_lane_trim45_ovrd_en;
 		c.s.trim44_ovrd_en = gsern_lane_trim44_ovrd_en;
 		c.s.trim43_ovrd_en = gsern_lane_trim43_ovrd_en;
@@ -772,7 +772,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.trim32_ovrd_en = gsern_lane_trim32_ovrd_en);
 	/*  end trim16-45 overrides */
 
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TX_1_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TX_1_BCFG(qlm, qlm_lane),
 		c.s.tx_acjtag = 0;
 		c.s.tx_dacj = 0;
 		c.s.tx_enloop = 0;
@@ -783,10 +783,10 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.div20 = gsern_lane_div20[mode];
 		c.s.tx_enfast = gsern_lane_tx_enfast[mode];
 		c.s.tx_encm = gsern_lane_tx_encm);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST_CNT5_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST_CNT5_BCFG(qlm, qlm_lane),
 		c.s.idle_exit_wait = 0xff;
 		c.s.idle_exit_wait_en = 1);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_OS_5_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_OS_5_BCFG(qlm, qlm_lane),
 		c.s.run_eye_oscal = gsern_lane_run_eye_oscal;
 		c.s.c1_e_adjust = 0;
 		c.s.c1_i_adjust = 0;
@@ -802,7 +802,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.idle_offset_trigger = 0;
 		c.s.afe_offset_trigger = 0;
 		c.s.dfe_offset_trigger = 0);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST1_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST1_BCFG(qlm, qlm_lane),
 		c.s.perst_n_ovrd = 1;
 		c.s.perst_n_ovrd_en = 0;
 		c.s.domain_rst_en = 1;
@@ -849,7 +849,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.reset = 0;
 		c.s.cal_en = 1;
 		c.s.pwdn = 0);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, qlm_lane),
 		c.s.do_prevga_gn_final = gsern_lane_do_prevga_gn_final;
 		c.s.do_blwc_final = gsern_lane_do_blwc_final[mode];
 		c.s.do_afeos_final = gsern_lane_do_afeos_final[mode];
@@ -894,10 +894,10 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 	if (gsern_init_wait_for_tx_ready(qlm, qlm_lane))
 		return -1;
 
-	gsern_wait_usec(1000);
+	gser_wait_usec(1000);
 
 	/* Clear the Rx idle override after GSER init complete */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_IDLEDET_2_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_IDLEDET_2_BCFG(qlm, qlm_lane),
 		c.s.frc_en = 0;
 		c.s.frc_val = 0);
 

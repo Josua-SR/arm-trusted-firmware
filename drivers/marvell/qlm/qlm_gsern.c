@@ -8,8 +8,11 @@
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
-#include <gsern/gsern_internal.h>
-#include <qlm.h>
+#include <gser_internal.h>
+#include <qlm/qlm.h>
+#include <qlm/qlm_gsern.h>
+#include <qlm/qlm_gserc.h>
+#include <qlm/qlm_gserr.h>
 
 static const int TX_TUNING_INVALID = -1000;
 static const int TX_TUNING_IDLE = -2000;
@@ -96,7 +99,7 @@ void qlm_setup_pem_reset_gsern(int pem, int is_endpoint)
 {
 	/* Make sure is_endpoint is either 0 or 1 */
 	is_endpoint = (is_endpoint != 0);
-	GSERN_CSR_MODIFY(c, CAVM_RST_CTLX(pem),
+	GSER_CSR_MODIFY(c, CAVM_RST_CTLX(pem),
 		c.s.prst_link = 0;		  /* Link down doesn't automatically assert PERST */
 		c.s.rst_link = is_endpoint; /* Link down automatically assert soft reset for EP */
 		c.s.rst_drv = !is_endpoint; /* PERST is output for RC, input for EP */
@@ -107,10 +110,10 @@ void qlm_setup_pem_reset_gsern(int pem, int is_endpoint)
 	{
 		/* If we're configuring an endpoint manually the PEM will not
 		   be turned on by default by the hardware. Turn it on now */
-		GSERN_CSR_INIT(pemx_on, CAVM_PEMX_ON(pem));
+		GSER_CSR_INIT(pemx_on, CAVM_PEMX_ON(pem));
 		if (!pemx_on.s.pemon)
 		{
-			GSERN_CSR_MODIFY(c, CAVM_PEMX_ON(pem),
+			GSER_CSR_MODIFY(c, CAVM_PEMX_ON(pem),
 				c.s.pemon = 1);
 		}
 	}
@@ -125,9 +128,9 @@ void qlm_setup_pem_reset_gsern(int pem, int is_endpoint)
  */
 int qlm_measure_refclock_gsern(int qlm)
 {
-	if (gsern_is_platform(GSERN_PLATFORM_ASIM) || gsern_is_platform(GSERN_PLATFORM_EMULATOR))
+	if (gser_is_platform(GSER_PLATFORM_ASIM) || gser_is_platform(GSER_PLATFORM_EMULATOR))
 	{
-		GSERN_CSR_INIT(refclk, CAVM_GSERNX_COMMON_REFCLK_BCFG(qlm));
+		GSER_CSR_INIT(refclk, CAVM_GSERNX_COMMON_REFCLK_BCFG(qlm));
 		switch (refclk.s.cclksel)
 		{
 			case 0: /* HRM recommended 100Mhz non SSC for SATA, PCIe, or USB */
@@ -141,18 +144,18 @@ int qlm_measure_refclock_gsern(int qlm)
 		}
 	}
 
-	GSERN_CSR_INIT(ctr_start, CAVM_GSERNX_COMMON_REFCLK_CTR(qlm));
-	uint64_t start = gsern_clock_get_count(GSERN_CLOCK_TIME);
+	GSER_CSR_INIT(ctr_start, CAVM_GSERNX_COMMON_REFCLK_CTR(qlm));
+	uint64_t start = gser_clock_get_count(GSER_CLOCK_TIME);
 
 	/* Wait for a short time to get a number of counts */
-	gsern_wait_usec(50000); /* 50ms */
+	gser_wait_usec(50000); /* 50ms */
 
-	GSERN_CSR_INIT(ctr_stop, CAVM_GSERNX_COMMON_REFCLK_CTR(qlm));
-	uint64_t stop = gsern_clock_get_count(GSERN_CLOCK_TIME);
+	GSER_CSR_INIT(ctr_stop, CAVM_GSERNX_COMMON_REFCLK_CTR(qlm));
+	uint64_t stop = gser_clock_get_count(GSER_CLOCK_TIME);
 
 	/* Calculate the rate */
 	uint64_t count = ctr_stop.u - ctr_start.u;
-	count *= gsern_clock_get_rate(gsern_numa_local(), GSERN_CLOCK_TIME);
+	count *= gser_clock_get_rate(gser_numa_local(), GSER_CLOCK_TIME);
 	count /= stop - start;
 	return count;
 }
@@ -167,7 +170,7 @@ int qlm_measure_refclock_gsern(int qlm)
  */
 int qlm_reset_gsern(int qlm)
 {
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_COMMON_RST_BCFG(qlm),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_COMMON_RST_BCFG(qlm),
 		c.s.domain_rst_en = 1;
 		c.s.rst_pll_rst_sm = 1;
 		c.s.pwdn = 1);
@@ -285,24 +288,24 @@ int qlm_enable_prbs_gsern(int qlm, int prbs, qlm_direction_t dir)
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
 		/* PRBS polarity is inverted internally. Need to invert the current polarity */
-		GSERN_CSR_INIT(lt_bcfg, CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane));
+		GSER_CSR_INIT(lt_bcfg, CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane));
 		if (enable_rx)
-			lt_bcfg.s.inv_rx_polarity = ~(gsern_config_get_int(GSERN_CONFIG_QLM_LANE_RX_POLARITY, qlm, lane));
+			lt_bcfg.s.inv_rx_polarity = ~(gser_config_get_int(GSER_CONFIG_QLM_LANE_RX_POLARITY, qlm, lane));
 		if (enable_tx)
-			lt_bcfg.s.inv_tx_polarity = ~(gsern_config_get_int(GSERN_CONFIG_QLM_LANE_TX_POLARITY, qlm, lane));
-		GSERN_CSR_WRITE(CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane), lt_bcfg.u);
+			lt_bcfg.s.inv_tx_polarity = ~(gser_config_get_int(GSER_CONFIG_QLM_LANE_TX_POLARITY, qlm, lane));
+		GSER_CSR_WRITE(CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane), lt_bcfg.u);
 
 		if (enable_tx)
 		{
 			/* Enable Bias Override and Tx Driver */
-			GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TX_DRV_BCFG(qlm, lane),
+			GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TX_DRV_BCFG(qlm, lane),
 				c.s.en_tx_bs = 1;  //Enable the TX_BS override
 				c.s.en_tx_drv = 1);  //Enable the Tx Driver
 		}
 
 		if (is_pattern)
 		{
-			GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PAT_CTRL(qlm, lane),
+			GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PAT_CTRL(qlm, lane),
 				if (enable_tx)
 					c.s.tx_rst_n = is_pattern;
 				if (enable_rx)
@@ -315,7 +318,7 @@ int qlm_enable_prbs_gsern(int qlm, int prbs, qlm_direction_t dir)
 		{
 			/* Check if the prbs_type has changed.  This requires a PRBS reset */
 			bool prbs_type_changed = false;
-			GSERN_CSR_INIT(lt_prbs1_bcfg, CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane));
+			GSER_CSR_INIT(lt_prbs1_bcfg, CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane));
 			if (enable_rx && (lt_prbs1_bcfg.s.prbs_type_rx != prbs_type))
 			{
 				lt_prbs1_bcfg.s.prbs_rx_rst_n = 0;
@@ -326,11 +329,11 @@ int qlm_enable_prbs_gsern(int qlm, int prbs, qlm_direction_t dir)
 				lt_prbs1_bcfg.s.prbs_tx_rst_n = 0;
 				prbs_type_changed = true;
 			}
-			GSERN_CSR_WRITE(CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane), lt_prbs1_bcfg.u);
+			GSER_CSR_WRITE(CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane), lt_prbs1_bcfg.u);
 			if (prbs_type_changed)
-				gsern_wait_usec(1);
+				gser_wait_usec(1);
 
-			lt_prbs1_bcfg.u = GSERN_CSR_READ(CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane));
+			lt_prbs1_bcfg.u = GSER_CSR_READ(CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane));
 			if (enable_rx)
 			{
 				lt_prbs1_bcfg.s.prbs_rx_mode = !is_pattern;
@@ -343,9 +346,9 @@ int qlm_enable_prbs_gsern(int qlm, int prbs, qlm_direction_t dir)
 			}
 			lt_prbs1_bcfg.s.cycle_cnt_en = 0;
 			lt_prbs1_bcfg.s.cycle_cnt = 0;
-			GSERN_CSR_WRITE(CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane), lt_prbs1_bcfg.u);
+			GSER_CSR_WRITE(CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane), lt_prbs1_bcfg.u);
 
-			gsern_wait_usec(1);
+			gser_wait_usec(1);
 
 			if (enable_rx)
 			{
@@ -355,9 +358,9 @@ int qlm_enable_prbs_gsern(int qlm, int prbs, qlm_direction_t dir)
 			{
 				lt_prbs1_bcfg.s.prbs_tx_rst_n = !is_pattern;
 			}
-			GSERN_CSR_WRITE(CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane), lt_prbs1_bcfg.u);
+			GSER_CSR_WRITE(CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane), lt_prbs1_bcfg.u);
 
-			GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane),
+			GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane),
 				if (enable_rx)
 				{
 					c.s.prbs_rx_rst_n = !is_pattern;
@@ -376,7 +379,7 @@ int qlm_enable_prbs_gsern(int qlm, int prbs, qlm_direction_t dir)
 
 		if (enable_tx)
 		{
-			GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_SRCMX_BCFG(qlm, lane),
+			GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_SRCMX_BCFG(qlm, lane),
 				c.s.tx_ctrl_sel =  is_pattern ? 0x10 : 0;
 				c.s.tx_data_sel = is_pattern ? 0x10 : 0);
 		}
@@ -397,30 +400,30 @@ int qlm_disable_prbs_gsern(int qlm)
 	int num_lanes = qlm_get_lanes(qlm);
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PAT_CTRL(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PAT_CTRL(qlm, lane),
 			c.s.tx_rst_n = 0;
 			c.s.rx_rst_n = 0;
 			c.s.en = 0);
 		/* PRBS requires the polarity to be inverted. Need to set back to the original polarity */
-		GSERN_CSR_INIT(lt_bcfg, CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane));
-		lt_bcfg.s.inv_rx_polarity = gsern_config_get_int(GSERN_CONFIG_QLM_LANE_RX_POLARITY, qlm, lane);
-		lt_bcfg.s.inv_tx_polarity = gsern_config_get_int(GSERN_CONFIG_QLM_LANE_TX_POLARITY, qlm, lane);
-		GSERN_CSR_WRITE(CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane), lt_bcfg.u);
+		GSER_CSR_INIT(lt_bcfg, CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane));
+		lt_bcfg.s.inv_rx_polarity = gser_config_get_int(GSER_CONFIG_QLM_LANE_RX_POLARITY, qlm, lane);
+		lt_bcfg.s.inv_tx_polarity = gser_config_get_int(GSER_CONFIG_QLM_LANE_TX_POLARITY, qlm, lane);
+		GSER_CSR_WRITE(CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane), lt_bcfg.u);
 		/* Put the PRBS Tx/Rx in Reset */
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane),
 			c.s.prbs_rx_rst_n = 0;
 			c.s.prbs_tx_rst_n = 0);
-		gsern_wait_usec(1);
+		gser_wait_usec(1);
 		/* Disable Rx/Tx PRBS mode */
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane),
 			c.s.prbs_rx_mode = 0;
 			c.s.prbs_tx_mode = 0;
 			c.s.cycle_cnt_en = 0);
 		/* Clear the TX_DRV CSR Tx EQ overrides */
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TX_DRV_BCFG(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TX_DRV_BCFG(qlm, lane),
 			c.s.en_tx_bs = 0;	//Disable the TX_BS override
 			c.s.en_tx_drv = 0);  //Disable the Tx Driver
-		qlm_state_lane_t state = {.u = GSERN_CSR_READ(CAVM_GSERNX_LANEX_SCRATCHX(qlm, lane, 0))};
+		qlm_state_lane_t state = {.u = GSER_CSR_READ(CAVM_GSERNX_LANEX_SCRATCHX(qlm, lane, 0))};
 		/* Determine where the QLM gets data from */
 		int pcs_src;
 		if (state.s.pcie)
@@ -431,7 +434,7 @@ int qlm_disable_prbs_gsern(int qlm)
 			pcs_src = 2;
 		else
 			pcs_src = 0; /* PRBS */
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_SRCMX_BCFG(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_SRCMX_BCFG(qlm, lane),
 			c.s.tx_ctrl_sel = pcs_src;
 			c.s.tx_data_sel = pcs_src);
 	}
@@ -450,17 +453,17 @@ int qlm_disable_prbs_gsern(int qlm)
  */
 uint64_t qlm_get_prbs_errors_gsern(int qlm, int lane, int clear)
 {
-	GSERN_CSR_INIT(srcx_bcfg, CAVM_GSERNX_LANEX_SRCMX_BCFG(qlm, lane));
+	GSER_CSR_INIT(srcx_bcfg, CAVM_GSERNX_LANEX_SRCMX_BCFG(qlm, lane));
 	if (srcx_bcfg.s.tx_data_sel == 0x10)
 	{
 		/* Pattern mode */
-		GSERN_CSR_INIT(pat_dat, CAVM_GSERNX_LANEX_PAT_DAT(qlm, lane));
+		GSER_CSR_INIT(pat_dat, CAVM_GSERNX_LANEX_PAT_DAT(qlm, lane));
 		if (clear)
 		{
-			GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PAT_CTRL(qlm, lane),
+			GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PAT_CTRL(qlm, lane),
 				c.s.rx_rst_n = 0);
-			gsern_wait_usec(1);
-			GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PAT_CTRL(qlm, lane),
+			gser_wait_usec(1);
+			GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PAT_CTRL(qlm, lane),
 				c.s.rx_rst_n = 1);
 		}
 		if (!pat_dat.s.lock || pat_dat.s.err_cnt_ovf)
@@ -470,13 +473,13 @@ uint64_t qlm_get_prbs_errors_gsern(int qlm, int lane, int clear)
 	else
 	{
 		/* PRBS mode */
-		GSERN_CSR_INIT(lt_prbs_sts, CAVM_GSERNX_LANEX_LT_PRBS_STS(qlm, lane));
+		GSER_CSR_INIT(lt_prbs_sts, CAVM_GSERNX_LANEX_LT_PRBS_STS(qlm, lane));
 		if (clear)
 		{
-			GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane),
+			GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane),
 				c.s.prbs_rx_rst_n = 0);
-			gsern_wait_usec(1);
-			GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane),
+			gser_wait_usec(1);
+			GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(qlm, lane),
 				c.s.prbs_rx_rst_n = 1);
 		}
 		if (!lt_prbs_sts.s.lock || lt_prbs_sts.s.err_cnt_ovf)
@@ -494,10 +497,10 @@ uint64_t qlm_get_prbs_errors_gsern(int qlm, int lane, int clear)
  */
 void qlm_inject_prbs_error_gsern(int qlm, int lane)
 {
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane),
 		c.s.inj_err_cnt_rst_n = 0);
-	gsern_wait_usec(1);
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane),
+	gser_wait_usec(1);
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane),
 		c.s.inj_err_cnt_rst_n = 1;
 		c.s.inj_err_cnt_en = 1;
 		c.s.inj_err_cnt_len = 1);
@@ -517,10 +520,10 @@ int qlm_enable_loop_gsern(int qlm, qlm_loop_t loop)
 	int num_lanes = qlm_get_lanes(qlm);
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
-		GSERN_CSR_INIT(lanex_pll_2_bcfg, CAVM_GSERNX_LANEX_PLL_2_BCFG(qlm, lane));
-		GSERN_CSR_INIT(lanex_lt_bcfg, CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane));
-		GSERN_CSR_INIT(lanex_rx_st_bcfg, CAVM_GSERNX_LANEX_RX_ST_BCFG(qlm, lane));
-		GSERN_CSR_INIT(lanex_tx_1_bcfg, CAVM_GSERNX_LANEX_TX_1_BCFG(qlm, lane));
+		GSER_CSR_INIT(lanex_pll_2_bcfg, CAVM_GSERNX_LANEX_PLL_2_BCFG(qlm, lane));
+		GSER_CSR_INIT(lanex_lt_bcfg, CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane));
+		GSER_CSR_INIT(lanex_rx_st_bcfg, CAVM_GSERNX_LANEX_RX_ST_BCFG(qlm, lane));
+		GSER_CSR_INIT(lanex_tx_1_bcfg, CAVM_GSERNX_LANEX_TX_1_BCFG(qlm, lane));
 		switch (loop)
 		{
 			case QLM_LOOP_DISABLED:
@@ -556,10 +559,10 @@ int qlm_enable_loop_gsern(int qlm, qlm_loop_t loop)
 				lanex_tx_1_bcfg.s.tx_enloop		 = 0; /* Near end loop TX to RX in analog */
 				break;
 		}
-		GSERN_CSR_WRITE(CAVM_GSERNX_LANEX_PLL_2_BCFG(qlm, lane), lanex_pll_2_bcfg.u);
-		GSERN_CSR_WRITE(CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane), lanex_lt_bcfg.u);
-		GSERN_CSR_WRITE(CAVM_GSERNX_LANEX_RX_ST_BCFG(qlm, lane), lanex_rx_st_bcfg.u);
-		GSERN_CSR_WRITE(CAVM_GSERNX_LANEX_TX_1_BCFG(qlm, lane), lanex_tx_1_bcfg.u);
+		GSER_CSR_WRITE(CAVM_GSERNX_LANEX_PLL_2_BCFG(qlm, lane), lanex_pll_2_bcfg.u);
+		GSER_CSR_WRITE(CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane), lanex_lt_bcfg.u);
+		GSER_CSR_WRITE(CAVM_GSERNX_LANEX_RX_ST_BCFG(qlm, lane), lanex_rx_st_bcfg.u);
+		GSER_CSR_WRITE(CAVM_GSERNX_LANEX_TX_1_BCFG(qlm, lane), lanex_tx_1_bcfg.u);
 	}
 	return 0;
 }
@@ -574,7 +577,7 @@ int qlm_enable_loop_gsern(int qlm, qlm_loop_t loop)
  */
 int qlm_get_gbaud_mhz_pem_gsern(int pem)
 {
-	GSERN_CSR_INIT(diag_status, CAVM_PEMX_DIAG_STATUS(pem));
+	GSER_CSR_INIT(diag_status, CAVM_PEMX_DIAG_STATUS(pem));
 	switch (diag_status.cn9.pclk_rate)
 	{
 		case 0: /* Gen 1 */
@@ -604,44 +607,44 @@ int qlm_calculate_fom_gsern(int qlm, int qlm_lane, int fom_type)
 	const int TIMEOUT = 10000; /* 10ms */
 
 	/* 1. Write GSERN()_LANE()_TRAIN_10_BCFG to select FOM measurement */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TRAIN_10_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TRAIN_10_BCFG(qlm, qlm_lane),
 		c.s.fom_type = fom_type);
 
 	/* 2. Setup FOM divider and FOM eye cycles */
 	/* Setup for PCIe */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TRAIN_8_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TRAIN_8_BCFG(qlm, qlm_lane),
 		c.s.pcie_ecnt_div_val = 6;
 		c.s.pcie_ecnt_div_en = 1;
 		c.s.pcie_eye_cnt_val = 32760;
 		c.s.pcie_eye_cnt_en = 1);
 	/* Setup for Networking */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TRAIN_4_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TRAIN_4_BCFG(qlm, qlm_lane),
 		c.s.err_cnt_div_ovrrd_val = 7;
 		c.s.err_cnt_div_ovrrd_en = 1;
 		c.s.eye_cnt_ovrrd_val = 26208;
 		c.s.eye_cnt_ovrrd_en = 1);
 
 	/* 3. Enable the equalization override */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TRAIN_4_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TRAIN_4_BCFG(qlm, qlm_lane),
 		c.s.eq_eval_ovrrd_en = 1);
 
 	/* 4. Generate a SW based EQ FOM request */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TRAIN_4_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TRAIN_4_BCFG(qlm, qlm_lane),
 		c.s.eq_eval_ovrrd_req = 1);
 
 	/* 5. Wait for equalization acknowledgement to read back as 1 */
-	if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_TRAIN_5_BCFG(qlm, qlm_lane),
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_TRAIN_5_BCFG(qlm, qlm_lane),
 		GSERNX_LANEX_TRAIN_5_BCFG_EQ_EVAL_ACK, ==, 1, TIMEOUT))
 	{
-		GSERN_TRACE(QLM, "N0.QLM%d.LANE%d: Error calculating RAW FOM\n", qlm, qlm_lane);
+		GSER_TRACE(QLM, "N0.QLM%d.LANE%d: Error calculating RAW FOM\n", qlm, qlm_lane);
 		return -1;
 	}
 
 	/* 6. Read the Raw FOM (12-bit) value */
-	GSERN_CSR_INIT(train_5_bcfg, CAVM_GSERNX_LANEX_TRAIN_5_BCFG(qlm, qlm_lane));
+	GSER_CSR_INIT(train_5_bcfg, CAVM_GSERNX_LANEX_TRAIN_5_BCFG(qlm, qlm_lane));
 
 	/* 7. Clear the Equalization Evaluation request to release the eye monitor */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TRAIN_4_BCFG(qlm, qlm_lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TRAIN_4_BCFG(qlm, qlm_lane),
 		c.s.eq_eval_ovrrd_req = 0;
 		c.s.eq_eval_ovrrd_en = 0);
 
@@ -663,7 +666,7 @@ void qlm_display_settings_gsern(int qlm, int qlm_lane, bool show_tx, bool show_r
 	{
 		bool is_pcie = false;
 		/* Check to see if GSER is in PCIe mode */
-		GSERN_CSR_INIT(srcmx_bcfg, CAVM_GSERNX_LANEX_SRCMX_BCFG(qlm, qlm_lane));
+		GSER_CSR_INIT(srcmx_bcfg, CAVM_GSERNX_LANEX_SRCMX_BCFG(qlm, qlm_lane));
 		if (srcmx_bcfg.s.tx_ctrl_sel == 1)
 			is_pcie = true;
 
@@ -683,32 +686,32 @@ void qlm_display_settings_gsern(int qlm, int qlm_lane, bool show_tx, bool show_r
 				qlm_calculate_fom_gsern(qlm, qlm_lane, 1);
 		}
 	}
-	GSERN_CSR_INIT(c_bias_bcfg, CAVM_GSERNX_COMMON_BIAS_BCFG(qlm));
-	GSERN_CSR_INIT(c_pll_1_bcfg, CAVM_GSERNX_COMMON_PLL_1_BCFG(qlm));
-	GSERN_CSR_INIT(c_pll_2_bcfg, CAVM_GSERNX_COMMON_PLL_2_BCFG(qlm));
-	GSERN_CSR_INIT(c_refclk_bcfg, CAVM_GSERNX_COMMON_REFCLK_BCFG(qlm));
-	GSERN_CSR_INIT(init_bsts, CAVM_GSERNX_LANEX_INIT_BSTS(qlm, qlm_lane));
-	GSERN_CSR_INIT(lt_bsts, CAVM_GSERNX_LANEX_LT_BSTS(qlm, qlm_lane));
-	GSERN_CSR_INIT(pll_1_bcfg, CAVM_GSERNX_LANEX_PLL_1_BCFG(qlm, qlm_lane));
-	GSERN_CSR_INIT(pll_2_bcfg, CAVM_GSERNX_LANEX_PLL_2_BCFG(qlm, qlm_lane));
-	GSERN_CSR_INIT(rx_0_bsts, CAVM_GSERNX_LANEX_RX_0_BSTS(qlm, qlm_lane));
-	GSERN_CSR_INIT(rx_10_bsts, CAVM_GSERNX_LANEX_RX_10_BSTS(qlm, qlm_lane));
-	GSERN_CSR_INIT(rx_11_bsts, CAVM_GSERNX_LANEX_RX_11_BSTS(qlm, qlm_lane));
-	GSERN_CSR_INIT(rx_1_bsts, CAVM_GSERNX_LANEX_RX_1_BSTS(qlm, qlm_lane));
-	GSERN_CSR_INIT(rx_2_bsts, CAVM_GSERNX_LANEX_RX_2_BSTS(qlm, qlm_lane));
-	GSERN_CSR_INIT(rx_3_bsts, CAVM_GSERNX_LANEX_RX_3_BSTS(qlm, qlm_lane));
-	GSERN_CSR_INIT(rx_4_bsts, CAVM_GSERNX_LANEX_RX_4_BSTS(qlm, qlm_lane));
-	GSERN_CSR_INIT(rx_5_bsts, CAVM_GSERNX_LANEX_RX_5_BSTS(qlm, qlm_lane));
-	GSERN_CSR_INIT(rx_5a_bsts, CAVM_GSERNX_LANEX_RX_5A_BSTS(qlm, qlm_lane));
-	GSERN_CSR_INIT(rx_6_bsts, CAVM_GSERNX_LANEX_RX_6_BSTS(qlm, qlm_lane));
-	GSERN_CSR_INIT(rx_8_bsts, CAVM_GSERNX_LANEX_RX_8_BSTS(qlm, qlm_lane));
-	GSERN_CSR_INIT(srcmx_bcfg, CAVM_GSERNX_LANEX_SRCMX_BCFG(qlm, qlm_lane));
-	GSERN_CSR_INIT(train_0_bcfg, CAVM_GSERNX_LANEX_TRAIN_0_BCFG(qlm, qlm_lane));
-	GSERN_CSR_INIT(train_10_bcfg, CAVM_GSERNX_LANEX_TRAIN_10_BCFG(qlm, qlm_lane));
-	GSERN_CSR_INIT(train_1_bcfg, CAVM_GSERNX_LANEX_TRAIN_1_BCFG(qlm, qlm_lane));
-	GSERN_CSR_INIT(train_4_bcfg, CAVM_GSERNX_LANEX_TRAIN_4_BCFG(qlm, qlm_lane));
-	GSERN_CSR_INIT(train_5_bcfg, CAVM_GSERNX_LANEX_TRAIN_5_BCFG(qlm, qlm_lane));
-	GSERN_CSR_INIT(tx_drv_bsts, CAVM_GSERNX_LANEX_TX_DRV_BSTS(qlm, qlm_lane));
+	GSER_CSR_INIT(c_bias_bcfg, CAVM_GSERNX_COMMON_BIAS_BCFG(qlm));
+	GSER_CSR_INIT(c_pll_1_bcfg, CAVM_GSERNX_COMMON_PLL_1_BCFG(qlm));
+	GSER_CSR_INIT(c_pll_2_bcfg, CAVM_GSERNX_COMMON_PLL_2_BCFG(qlm));
+	GSER_CSR_INIT(c_refclk_bcfg, CAVM_GSERNX_COMMON_REFCLK_BCFG(qlm));
+	GSER_CSR_INIT(init_bsts, CAVM_GSERNX_LANEX_INIT_BSTS(qlm, qlm_lane));
+	GSER_CSR_INIT(lt_bsts, CAVM_GSERNX_LANEX_LT_BSTS(qlm, qlm_lane));
+	GSER_CSR_INIT(pll_1_bcfg, CAVM_GSERNX_LANEX_PLL_1_BCFG(qlm, qlm_lane));
+	GSER_CSR_INIT(pll_2_bcfg, CAVM_GSERNX_LANEX_PLL_2_BCFG(qlm, qlm_lane));
+	GSER_CSR_INIT(rx_0_bsts, CAVM_GSERNX_LANEX_RX_0_BSTS(qlm, qlm_lane));
+	GSER_CSR_INIT(rx_10_bsts, CAVM_GSERNX_LANEX_RX_10_BSTS(qlm, qlm_lane));
+	GSER_CSR_INIT(rx_11_bsts, CAVM_GSERNX_LANEX_RX_11_BSTS(qlm, qlm_lane));
+	GSER_CSR_INIT(rx_1_bsts, CAVM_GSERNX_LANEX_RX_1_BSTS(qlm, qlm_lane));
+	GSER_CSR_INIT(rx_2_bsts, CAVM_GSERNX_LANEX_RX_2_BSTS(qlm, qlm_lane));
+	GSER_CSR_INIT(rx_3_bsts, CAVM_GSERNX_LANEX_RX_3_BSTS(qlm, qlm_lane));
+	GSER_CSR_INIT(rx_4_bsts, CAVM_GSERNX_LANEX_RX_4_BSTS(qlm, qlm_lane));
+	GSER_CSR_INIT(rx_5_bsts, CAVM_GSERNX_LANEX_RX_5_BSTS(qlm, qlm_lane));
+	GSER_CSR_INIT(rx_5a_bsts, CAVM_GSERNX_LANEX_RX_5A_BSTS(qlm, qlm_lane));
+	GSER_CSR_INIT(rx_6_bsts, CAVM_GSERNX_LANEX_RX_6_BSTS(qlm, qlm_lane));
+	GSER_CSR_INIT(rx_8_bsts, CAVM_GSERNX_LANEX_RX_8_BSTS(qlm, qlm_lane));
+	GSER_CSR_INIT(srcmx_bcfg, CAVM_GSERNX_LANEX_SRCMX_BCFG(qlm, qlm_lane));
+	GSER_CSR_INIT(train_0_bcfg, CAVM_GSERNX_LANEX_TRAIN_0_BCFG(qlm, qlm_lane));
+	GSER_CSR_INIT(train_10_bcfg, CAVM_GSERNX_LANEX_TRAIN_10_BCFG(qlm, qlm_lane));
+	GSER_CSR_INIT(train_1_bcfg, CAVM_GSERNX_LANEX_TRAIN_1_BCFG(qlm, qlm_lane));
+	GSER_CSR_INIT(train_4_bcfg, CAVM_GSERNX_LANEX_TRAIN_4_BCFG(qlm, qlm_lane));
+	GSER_CSR_INIT(train_5_bcfg, CAVM_GSERNX_LANEX_TRAIN_5_BCFG(qlm, qlm_lane));
+	GSER_CSR_INIT(tx_drv_bsts, CAVM_GSERNX_LANEX_TX_DRV_BSTS(qlm, qlm_lane));
 
 	printf("N0.QLM%d Lane %d:\n", qlm, qlm_lane);
 	if (show_tx && show_rx)
@@ -728,21 +731,21 @@ void qlm_display_settings_gsern(int qlm, int qlm_lane, bool show_tx, bool show_r
 	{
 		printf("  Receiver Status:\n");
 		bool use0 = rx_3_bsts.s.calo_even & 1;
-		int c1 = (use0) ? gsern_extract_smag(rx_2_bsts.s.c1_0q, 0, 5) : gsern_extract_smag(rx_2_bsts.s.c1_1q, 0, 5);
-		int c2 = gsern_extract_smag(rx_0_bsts.s.c2, 0, 5);
-		int c3 = gsern_extract_smag(rx_0_bsts.s.c3, 0, 5);
-		int c4 = gsern_extract_smag(rx_0_bsts.s.c4, 0, 5);
-		int c5 = gsern_extract_smag(rx_0_bsts.s.c5, 0, 5);
-		int c6 = gsern_extract_smag(rx_0_bsts.s.c6, 0, 5);
-		int c7 = gsern_extract_smag(rx_0_bsts.s.c7, 0, 5);
-		int c8 = gsern_extract_smag(rx_0_bsts.s.c8, 0, 5);
-		int c9 = gsern_extract_smag(rx_0_bsts.s.c9, 0, 5);
-		int c10 = gsern_extract_smag(rx_1_bsts.s.c10, 0, 5);
-		int c11 = gsern_extract_smag(rx_1_bsts.s.c11, 0, 5);
-		int c12 = gsern_extract_smag(rx_1_bsts.s.c12, 0, 5);
-		int c13 = gsern_extract_smag(rx_1_bsts.s.c13, 0, 5);
-		int c14 = gsern_extract_smag(rx_1_bsts.s.c14, 0, 5);
-		int c15 = gsern_extract_smag(rx_1_bsts.s.c15, 0, 5);
+		int c1 = (use0) ? gser_extract_smag(rx_2_bsts.s.c1_0q, 0, 5) : gser_extract_smag(rx_2_bsts.s.c1_1q, 0, 5);
+		int c2 = gser_extract_smag(rx_0_bsts.s.c2, 0, 5);
+		int c3 = gser_extract_smag(rx_0_bsts.s.c3, 0, 5);
+		int c4 = gser_extract_smag(rx_0_bsts.s.c4, 0, 5);
+		int c5 = gser_extract_smag(rx_0_bsts.s.c5, 0, 5);
+		int c6 = gser_extract_smag(rx_0_bsts.s.c6, 0, 5);
+		int c7 = gser_extract_smag(rx_0_bsts.s.c7, 0, 5);
+		int c8 = gser_extract_smag(rx_0_bsts.s.c8, 0, 5);
+		int c9 = gser_extract_smag(rx_0_bsts.s.c9, 0, 5);
+		int c10 = gser_extract_smag(rx_1_bsts.s.c10, 0, 5);
+		int c11 = gser_extract_smag(rx_1_bsts.s.c11, 0, 5);
+		int c12 = gser_extract_smag(rx_1_bsts.s.c12, 0, 5);
+		int c13 = gser_extract_smag(rx_1_bsts.s.c13, 0, 5);
+		int c14 = gser_extract_smag(rx_1_bsts.s.c14, 0, 5);
+		int c15 = gser_extract_smag(rx_1_bsts.s.c15, 0, 5);
 		printf("	DFE Taps: C1=%+d,  C2=%+d,  C3=%+d,  C4=%+d,  C5=%+d,  C6=%+d,  C7=%+d, C8=%+d\n",
 			c1, c2, c3, c4, c5, c6, c7, c8);
 		printf("			  C9=%+d, C10=%+d, C11=%+d, C12=%+d, C13=%+d, C14=%+d, C15=%+d\n",
@@ -750,8 +753,8 @@ void qlm_display_settings_gsern(int qlm, int qlm_lane, bool show_tx, bool show_r
 		printf("	BLWC=%d, PreVGA Gain=%d, CTLE LTE Gain=%d, CTLE LTE Zero=%d, CTLE Gain=%d, CTLE Zero=%d\n",
 			rx_4_bsts.s.blwc, rx_4_bsts.s.prevga_gn, rx_4_bsts.s.ctle_lte_gain,
 			rx_4_bsts.s.ctle_lte_zero, rx_4_bsts.s.ctle_gain, rx_4_bsts.s.ctle_zero);
-		int os_afe_odd = gsern_extract_smag(rx_4_bsts.s.os_afe_odd, 0, 5);
-		int os_afe_even = gsern_extract_smag(rx_4_bsts.s.os_afe_even, 0, 5);
+		int os_afe_odd = gser_extract_smag(rx_4_bsts.s.os_afe_odd, 0, 5);
+		int os_afe_even = gser_extract_smag(rx_4_bsts.s.os_afe_even, 0, 5);
 		printf("	VGA Gain=%d, OS_AFE_Odd=%d, OS_AFE_Even=%d\n",
 			rx_4_bsts.s.vga_gain, os_afe_odd, os_afe_even);
 		printf("	BLWC_ADAPT_STATUS=%d, PREVGA_GN_ADAPT_STATUS=%d, CTLEZ_ADAPT_STATUS=%d, CTLELTE_ADAPT_STATUS=%d, CTLE_ADAPT_STATUS=%d\n",
@@ -759,11 +762,11 @@ void qlm_display_settings_gsern(int qlm, int qlm_lane, bool show_tx, bool show_r
 			rx_5a_bsts.s.ctlez_adapt_status, rx_6_bsts.s.ctlelte_adapt_status, rx_5_bsts.s.ctle_adapt_status);
 		printf("	VGA_ADAPT_STATUS=%d, AFEOS_ADAPT_STATUS=%d, DFE_ADAPT_STATUS=%d\n",
 			   rx_5_bsts.s.vga_adapt_status, rx_8_bsts.s.afeos_adapt_status, rx_5_bsts.s.dfe_adapt_status);
-		int sensor = gsern_is_model(OCTEONTX_CNF95XX) ? 2 : 9;
-		GSERN_CSR_INIT(temp_conv_result, CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
+		int sensor = gser_is_model(OCTEONTX_CNF95XX) ? 2 : 9;
+		GSER_CSR_INIT(temp_conv_result, CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
 		if (temp_conv_result.s.temp_valid)
 		{
-			int temp_x4 = gsern_extracts(temp_conv_result.s.temp_corrected, 0, 11);
+			int temp_x4 = gser_extracts(temp_conv_result.s.temp_corrected, 0, 11);
 			printf("	TEMPERATURE=%d.%02dC\n", temp_x4 >> 2, (temp_x4 & 3) * 25);
 		}
 		else
@@ -835,15 +838,15 @@ void qlm_display_settings_gsern(int qlm, int qlm_lane, bool show_tx, bool show_r
  */
 int qlm_rx_equalization_gsern(int qlm, int qlm_lane)
 {
-	if (gsern_is_platform(GSERN_PLATFORM_ASIM))
+	if (gser_is_platform(GSER_PLATFORM_ASIM))
 		return 0;
 
 	const int TIMEOUT = 10000; /* 10ms */
 	const int MAX_LANES = qlm_get_lanes(qlm);
 	if (qlm_lane == -1)
-		GSERN_TRACE(QLM, "N0.QLM%d: Starting RX equalization on lanes 0 to %d\n", qlm, MAX_LANES-1);
+		GSER_TRACE(QLM, "N0.QLM%d: Starting RX equalization on lanes 0 to %d\n", qlm, MAX_LANES-1);
 	else
-		GSERN_TRACE(QLM, "N0.QLM%d: Starting RX equalization on lane %d\n", qlm, qlm_lane);
+		GSER_TRACE(QLM, "N0.QLM%d: Starting RX equalization on lane %d\n", qlm, qlm_lane);
 
 	int fail = 0; /* Bitmask of lanes that failed Rx Ready, Electrical Idle check or Rx adaptation */
 
@@ -857,29 +860,29 @@ int qlm_rx_equalization_gsern(int qlm, int qlm_lane)
 
 		/* Check if GSER Rx is NOT ready or */
 		/* if GSER Rx is idle (no signal detected) */
-		GSERN_CSR_INIT(init_bsts, CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane));
+		GSER_CSR_INIT(init_bsts, CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane));
 		if (!init_bsts.s.rx_ready)
 		{
-			GSERN_TRACE(QLM, "N0.QLM%d: Rx is not ready on lane %d\n", qlm, lane);
+			GSER_TRACE(QLM, "N0.QLM%d: Rx is not ready on lane %d\n", qlm, lane);
 			/* Mark bad so we skip this lane below */
 			fail |= 1 << lane;
 			continue;
 		}
-		GSERN_CSR_INIT(rx_idledet_bsts, CAVM_GSERNX_LANEX_RX_IDLEDET_BSTS(qlm, lane));
+		GSER_CSR_INIT(rx_idledet_bsts, CAVM_GSERNX_LANEX_RX_IDLEDET_BSTS(qlm, lane));
 		if (rx_idledet_bsts.s.idle)
 		{
-			GSERN_TRACE(QLM, "N0.QLM%d: Rx is idle.  No signal detected on lane %d\n", qlm, lane);
+			GSER_TRACE(QLM, "N0.QLM%d: Rx is idle.  No signal detected on lane %d\n", qlm, lane);
 			/* Mark bad so we skip this lane below */
 			fail |= 1 << lane;
 			continue;
 		}
 
 		/* Force lane into Rx idle before starting rx adaptation */
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_IDLEDET_2_BCFG(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_IDLEDET_2_BCFG(qlm, lane),
 			c.s.frc_en = 1;
 			c.s.frc_val = 1);
 		/* Enable deep idle */
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST1_BCFG(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST1_BCFG(qlm, lane),
 			c.s.rx_go2deep_idle = 1);
 	}
 
@@ -894,12 +897,12 @@ int qlm_rx_equalization_gsern(int qlm, int qlm_lane)
 			continue;
 
 		/* Wait for deep idle */
-		GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane),
+		GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane),
 		 GSERN_LANE_INIT_BSTS_RX_DEEP_IDLE, ==, 1, TIMEOUT);
 	}
 
 	/* Stay in deep idle for 100us */
-	gsern_wait_usec(100);
+	gser_wait_usec(100);
 
 	/* Take the lanes out of deep idle */
 	for (int lane = 0; lane < MAX_LANES; lane++)
@@ -912,7 +915,7 @@ int qlm_rx_equalization_gsern(int qlm, int qlm_lane)
 			continue;
 
 		/* Disable deep idle */
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST1_BCFG(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST1_BCFG(qlm, lane),
 			c.s.rx_go2deep_idle = 0);
 	}
 
@@ -925,20 +928,20 @@ int qlm_rx_equalization_gsern(int qlm, int qlm_lane)
 		/* Skip lanes that failed the Rx Idle or Rx ready check */
 		if ((fail >> lane) & 0x1)
 			continue;
-		if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_LANE_INIT_BSTS_RX_RST_SM_COMPLETE, ==, 1, TIMEOUT))
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_LANE_INIT_BSTS_RX_RST_SM_COMPLETE, ==, 1, TIMEOUT))
 		{
-			GSERN_TRACE(QLM, "N0.QLM%d: Rx RST state machine timed out on lane %d\n", qlm, lane);
+			GSER_TRACE(QLM, "N0.QLM%d: Rx RST state machine timed out on lane %d\n", qlm, lane);
 			fail |= 1 << lane;
 		}
-		if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_LANE_INIT_BSTS_RX_READY, ==, 1, TIMEOUT))
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_LANE_INIT_BSTS_RX_READY, ==, 1, TIMEOUT))
 		{
-			GSERN_TRACE(QLM, "N0.QLM%d: Rx ready timed out on lane %d\n", qlm, lane);
+			GSER_TRACE(QLM, "N0.QLM%d: Rx ready timed out on lane %d\n", qlm, lane);
 			fail |= 1 << lane;
 		}
 	}
 
 	/* Allow lanes to settle for 1ms */
-	gsern_wait_usec(1000); /* 1ms */
+	gser_wait_usec(1000); /* 1ms */
 
 	/* Undo the force idle detect */
 	for (int lane = 0; lane < MAX_LANES; lane++)
@@ -951,13 +954,13 @@ int qlm_rx_equalization_gsern(int qlm, int qlm_lane)
 			continue;
 
 		/* Clear  Rx idle override after rx adaptation loop reset */
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_IDLEDET_2_BCFG(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RX_IDLEDET_2_BCFG(qlm, lane),
 			c.s.frc_en = 0;
 			c.s.frc_val = 0);
 	}
 
 	/* Verify all the Rx adaptation loops complete within 10ms */
-	uint64_t timeout_adapt = gsern_clock_get_rate(GSERN_CLOCK_TIME)/100 + gsern_clock_get_count(GSERN_CLOCK_TIME);
+	uint64_t timeout_adapt = gser_clock_get_rate(GSER_CLOCK_TIME)/100 + gser_clock_get_count(GSER_CLOCK_TIME);
 	bool need_rx_adaptation;
 	int adapt_fail = 0;
 	while (1)
@@ -972,13 +975,13 @@ int qlm_rx_equalization_gsern(int qlm, int qlm_lane)
 				continue;
 
 			/* Read the QLM config and status */
-			GSERN_CSR_INIT(rst2_bcfg, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, lane));
-			GSERN_CSR_INIT(rx_10_bsts, CAVM_GSERNX_LANEX_RX_10_BSTS(qlm, lane));
-			GSERN_CSR_INIT(rx_11_bsts, CAVM_GSERNX_LANEX_RX_11_BSTS(qlm, lane));
-			GSERN_CSR_INIT(rx_5_bsts, CAVM_GSERNX_LANEX_RX_5_BSTS(qlm, lane));
-			GSERN_CSR_INIT(rx_5a_bsts, CAVM_GSERNX_LANEX_RX_5A_BSTS(qlm, lane));
-			GSERN_CSR_INIT(rx_6_bsts, CAVM_GSERNX_LANEX_RX_6_BSTS(qlm, lane));
-			GSERN_CSR_INIT(rx_8_bsts, CAVM_GSERNX_LANEX_RX_8_BSTS(qlm, lane));
+			GSER_CSR_INIT(rst2_bcfg, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, lane));
+			GSER_CSR_INIT(rx_10_bsts, CAVM_GSERNX_LANEX_RX_10_BSTS(qlm, lane));
+			GSER_CSR_INIT(rx_11_bsts, CAVM_GSERNX_LANEX_RX_11_BSTS(qlm, lane));
+			GSER_CSR_INIT(rx_5_bsts, CAVM_GSERNX_LANEX_RX_5_BSTS(qlm, lane));
+			GSER_CSR_INIT(rx_5a_bsts, CAVM_GSERNX_LANEX_RX_5A_BSTS(qlm, lane));
+			GSER_CSR_INIT(rx_6_bsts, CAVM_GSERNX_LANEX_RX_6_BSTS(qlm, lane));
+			GSER_CSR_INIT(rx_8_bsts, CAVM_GSERNX_LANEX_RX_8_BSTS(qlm, lane));
 
 			/* The various receiver status bits should match the final values */
 			need_rx_adaptation = false;
@@ -1000,7 +1003,7 @@ int qlm_rx_equalization_gsern(int qlm, int qlm_lane)
 		if (!adapt_fail)
 			break;
 
-		if (gsern_clock_get_count(GSERN_CLOCK_TIME) >= timeout_adapt)
+		if (gser_clock_get_count(GSER_CLOCK_TIME) >= timeout_adapt)
 		{
 			break;
 		}
@@ -1018,7 +1021,7 @@ int qlm_rx_equalization_gsern(int qlm, int qlm_lane)
 			if ((fail >> lane) & 0x1)
 				continue;
 			if ((adapt_fail >> lane) & 0x1)
-				GSERN_TRACE(QLM, "N0.QLM%d: Rx adaptation failed to complete on lane %d\n", qlm, lane);
+				GSER_TRACE(QLM, "N0.QLM%d: Rx adaptation failed to complete on lane %d\n", qlm, lane);
 		}
 	}
 
@@ -1036,7 +1039,7 @@ int qlm_rx_equalization_gsern(int qlm, int qlm_lane)
 			continue;
 
 		/* Print our the Rx equalization setting if QLM tracing is enabled */
-		if (gsern_trace_enables & (1ull << GSERN_TRACE_ENABLE_QLM))
+		if (gser_trace_enables & (1ull << GSER_TRACE_ENABLE_QLM))
 		{
 			qlm_display_settings_gsern(qlm, lane, 0, 1);
 		}
@@ -1086,29 +1089,29 @@ int qlm_tune_lane_tx_gsern(int qlm, int lane, int tx_cmain, int tx_cpre, int tx_
 		16 >= [TX_CPOST] >= 0 */
 	if (tx_cmain + tx_cpre + tx_cpost > 48)
 	{
-		gsern_error("N0.QLM%d.Lane%d: Invalid tuning, Main(%d) + Pre(%d) + Post(%d) <= 48(%d)\n",
+		gser_error("N0.QLM%d.Lane%d: Invalid tuning, Main(%d) + Pre(%d) + Post(%d) <= 48(%d)\n",
 			qlm, lane, tx_cmain, tx_cpre, tx_cpost, tx_cmain + tx_cpre + tx_cpost);
 		return -1;
 	}
 	if (tx_cmain - tx_cpre - tx_cpost < 6)
 	{
-		gsern_error("N0.QLM%d.Lane%d: Invalid tuning, Main(%d) - Pre(%d) - Post(%d) >= 6(%d)\n",
+		gser_error("N0.QLM%d.Lane%d: Invalid tuning, Main(%d) - Pre(%d) - Post(%d) >= 6(%d)\n",
 			qlm, lane, tx_cmain, tx_cpre, tx_cpost, tx_cmain - tx_cpre - tx_cpost);
 		return -1;
 	}
 	if ((tx_cmain < 24) || (tx_cmain > 48))
 	{
-		gsern_error("N0.QLM%d.Lane%d: Invalid tuning, Main (%d, should be 24-48)\n", qlm, lane, tx_cmain);
+		gser_error("N0.QLM%d.Lane%d: Invalid tuning, Main (%d, should be 24-48)\n", qlm, lane, tx_cmain);
 		return -1;
 	}
 	if ((tx_cpre < 0) || (tx_cpre > 16))
 	{
-		gsern_error("N0.QLM%d.Lane%d: Invalid tuning, Pre (%d, should be 0-16)\n", qlm, lane, tx_cpre);
+		gser_error("N0.QLM%d.Lane%d: Invalid tuning, Pre (%d, should be 0-16)\n", qlm, lane, tx_cpre);
 		return -1;
 	}
 	if ((tx_cpost < 0) || (tx_cpost > 16))
 	{
-		gsern_error("N0.QLM%d.Lane%d: Invalid tuning, Post (%d, should be 0-16)\n", qlm, lane, tx_cpost);
+		gser_error("N0.QLM%d.Lane%d: Invalid tuning, Post (%d, should be 0-16)\n", qlm, lane, tx_cpost);
 		return -1;
 	}
 
@@ -1334,7 +1337,7 @@ int qlm_tune_lane_tx_gsern(int qlm, int lane, int tx_cmain, int tx_cpre, int tx_
 	enpost = (en > 0) ? enpost_int : 0;	// enpost = {2{en}} & enpost_int;
 
 	/* Now Update the TX_DRV CSR with the decoded Tx EQ override values */
-	GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TX_DRV_BCFG(qlm, lane),
+	GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TX_DRV_BCFG(qlm, lane),
 		if (tx_bs != -1)
 			c.s.tx_bs = tx_bs;
 		//Post EQ Tap
@@ -1365,18 +1368,18 @@ int qlm_tune_lane_tx_gsern(int qlm, int lane, int tx_cmain, int tx_cpre, int tx_
 		);
 
 	cavm_gsernx_lanex_srcmx_bcfg_t gsernx_lanex_srcmx_bcfg;
-	gsernx_lanex_srcmx_bcfg.u = GSERN_CSR_READ(CAVM_GSERNX_LANEX_SRCMX_BCFG(qlm, lane));
+	gsernx_lanex_srcmx_bcfg.u = GSER_CSR_READ(CAVM_GSERNX_LANEX_SRCMX_BCFG(qlm, lane));
 	/* Check if GSER lane is configured in PCIe mode */
 	if (gsernx_lanex_srcmx_bcfg.s.tx_ctrl_sel == 1)
 	{
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PCIE_TXBIAS_BCFG(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PCIE_TXBIAS_BCFG(qlm, lane),
 			c.s.tx_bias_full = tx_bs);
 		return 0;
 	}
 	/* Check if GSER lane is configured in CGX mode */
 	else if (gsernx_lanex_srcmx_bcfg.s.tx_ctrl_sel == 2)
 	{
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_CGX_TXEQ_BCFG(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_CGX_TXEQ_BCFG(qlm, lane),
 			if (tx_cpost != -1)
 				c.s.tx_cpost = tx_cpost;
 			if (tx_cmain != -1)
@@ -1386,14 +1389,14 @@ int qlm_tune_lane_tx_gsern(int qlm, int lane, int tx_cmain, int tx_cpre, int tx_
 			if (tx_bs != -1)
 				c.s.tx_bs = tx_bs;
 			);
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_CGX_TXEQ_BCFG(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_CGX_TXEQ_BCFG(qlm, lane),
 			c.s.tx_coeff_update = 1);
 		return 0;
 	}
 	/* Check if GSER lane is configured in SATA mode */
 	else if (gsernx_lanex_srcmx_bcfg.s.tx_ctrl_sel == 4)
 	{
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_SATA_TXDRV1_BCFG(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_SATA_TXDRV1_BCFG(qlm, lane),
 			if (tx_cpost != -1)
 				c.s.sata_g1_cpost = tx_cpost;
 			if (tx_cpost != -1)
@@ -1403,7 +1406,7 @@ int qlm_tune_lane_tx_gsern(int qlm, int lane, int tx_cmain, int tx_cpre, int tx_
 			if (tx_bs != -1)
 				c.s.sata_g1_tx_bias = tx_bs;
 			);
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_SATA_TXDRV2_BCFG(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_SATA_TXDRV2_BCFG(qlm, lane),
 			if (tx_cpost != -1)
 				c.s.sata_g2_cpost = tx_cpost;
 			if (tx_cpost != -1)
@@ -1413,7 +1416,7 @@ int qlm_tune_lane_tx_gsern(int qlm, int lane, int tx_cmain, int tx_cpre, int tx_
 			if (tx_bs != -1)
 				c.s.sata_g2_tx_bias = tx_bs;
 			);
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_SATA_TXDRV3_BCFG(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_SATA_TXDRV3_BCFG(qlm, lane),
 			if (tx_cpost != -1)
 				c.s.sata_g3_cpost = tx_cpost;
 			if (tx_cpost != -1)
@@ -1427,7 +1430,7 @@ int qlm_tune_lane_tx_gsern(int qlm, int lane, int tx_cmain, int tx_cpre, int tx_
 	}
 	else
 		/* Enable Bias Override and Tx Driver */
-		GSERN_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TX_DRV_BCFG(qlm, lane),
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TX_DRV_BCFG(qlm, lane),
 			c.s.en_tx_bs = 1;  //Enable the TX_BS override
 			c.s.en_tx_drv = 1);  //Enable the Tx Driver
 
@@ -1466,7 +1469,7 @@ int qlm_tune_lane_tx_gsern(int qlm, int lane, int tx_cmain, int tx_cpre, int tx_
  */
 int qlm_get_tune_lane_tx_gsern(int qlm, int lane, int *tx_cmain, int *tx_cpre, int *tx_cpost, int *tx_bs, int *tx_unused)
 {
-	GSERN_CSR_INIT(tx_drv_bsts, CAVM_GSERNX_LANEX_TX_DRV_BSTS(qlm, lane));
+	GSER_CSR_INIT(tx_drv_bsts, CAVM_GSERNX_LANEX_TX_DRV_BSTS(qlm, lane));
 
 	extract_tx_tuning(tx_drv_bsts, tx_cmain, tx_cpre, tx_cpost);
 	*tx_bs = tx_drv_bsts.s.tx_bs;
@@ -1501,19 +1504,19 @@ void qlm_tune_gsern(int qlm, int lane, qlm_modes_t mode, int baud_mhz)
 	{
 		if ((l == lane) || (lane == -1))
 		{
-			int tx_cmain = gsern_config_get_int(GSERN_CONFIG_QLM_TUNING_TX_MAIN, smode, baud_mhz, qlm, l);
+			int tx_cmain = gser_config_get_int(GSER_CONFIG_QLM_TUNING_TX_MAIN, smode, baud_mhz, qlm, l);
 			if (tx_cmain < 0)
 				tx_cmain = tuning->tx_cmain;
 
-			int tx_cpre = gsern_config_get_int(GSERN_CONFIG_QLM_TUNING_TX_PRE, smode, baud_mhz, qlm, l);
+			int tx_cpre = gser_config_get_int(GSER_CONFIG_QLM_TUNING_TX_PRE, smode, baud_mhz, qlm, l);
 			if (tx_cpre < 0)
 				tx_cpre = tuning->tx_cpre;
 
-			int tx_cpost = gsern_config_get_int(GSERN_CONFIG_QLM_TUNING_TX_POST, smode, baud_mhz, qlm, l);
+			int tx_cpost = gser_config_get_int(GSER_CONFIG_QLM_TUNING_TX_POST, smode, baud_mhz, qlm, l);
 			if (tx_cpost < 0)
 				tx_cpost = tuning->tx_cpost;
 
-			int tx_bs = gsern_config_get_int(GSERN_CONFIG_QLM_TUNING_TX_BS, smode, baud_mhz, qlm, l);
+			int tx_bs = gser_config_get_int(GSER_CONFIG_QLM_TUNING_TX_BS, smode, baud_mhz, qlm, l);
 			if (tx_bs < 0)
 				tx_bs = tuning->tx_bs;
 
@@ -1530,10 +1533,10 @@ void qlm_tune_gsern(int qlm, int lane, qlm_modes_t mode, int baud_mhz)
 void qlm_init_gsern()
 {
 	/* Power on the common clocks */
-	GSERN_CSR_MODIFY(c, CAVM_RST_REFC_CTL,
+	GSER_CSR_MODIFY(c, CAVM_RST_REFC_CTL,
 		c.s.cclk2_pwdn = 0;
 		c.s.cclk1_pwdn = 0);
-	gsern_voltage = gsern_config_get_int(GSERN_CONFIG_QLM_VOLTAGE);
+	gsern_voltage = gser_config_get_int(GSER_CONFIG_QLM_VOLTAGE);
 }
 
 /**
@@ -1672,7 +1675,7 @@ int qlm_set_mode_gsern(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
 		/*
 		 * Delete in qlm.patch applied by gsern-update script in SDK
 		 */
-		// GSERN_CSR_WRITE(CAVM_GSERNX_LANEX_SCRATCHX(qlm, l, 0), state.u);
+		// GSER_CSR_WRITE(CAVM_GSERNX_LANEX_SCRATCHX(qlm, l, 0), state.u);
 		qlm_tune_gsern(qlm, l, mode, baud_mhz);
 	}
 

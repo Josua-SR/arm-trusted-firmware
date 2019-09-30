@@ -48,15 +48,6 @@ enum gsern_flags {
 	GSERN_FLAGS_QUAD = 0x2
 };
 
-/*
- * Eye diagram captures are stored in the following structure
- */
-typedef struct {
-	int width;              /* Width in the x direction (time) */
-	int height;             /* Height in the y direction (voltage) */
-	uint32_t data[64][128]; /* Error count at location, saturates as max */
-} gsern_qlm_eye_t;
-
 /**
  * Setup the initial mode of a GSERN serdes. This is called for the initial mode
  * set, not mode change due to auto negotiation.
@@ -74,19 +65,5 @@ typedef struct {
  */
 int gsern_set_mode(int qlm, int qlm_lane, enum gsern_mode mode, bool is_first,
 	int baud_mhz, enum gsern_flags flags);
-
-/**
- * Capture an eye diagram
- *
- * @param node	 Node to access
- * @param qlm	  QLM to access
- * @param lane	 Lane to access
- * @param show_data Set to non-zero to have the eye capture dump the raw eye data as
- *				  it is captured
- * @param eye_data Location where the eye data will be stored
- *
- * @return Zero on success, negative on failure
- */
-int gsern_eye_capture(int qlm, int lane, int show_data, gsern_qlm_eye_t *eye_data);
 
 #endif /* _GSERN_H_ */

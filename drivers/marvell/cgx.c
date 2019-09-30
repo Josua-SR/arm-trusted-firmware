@@ -18,9 +18,10 @@
 #include <plat_board_cfg.h>
 #include <cgx.h>
 #include <cgx_intf.h>
-#include <qlm.h>
+#include <qlm/qlm.h>
+#include <qlm/qlm_gsern.h>
 #include <octeontx_utils.h>
-#include <gsern/gsern_internal.h>
+#include <gser_internal.h>
 
 /* define DEBUG_ATF_CGX to enable debug logs */
 #undef DEBUG_ATF_CGX
@@ -2407,7 +2408,7 @@ void cgx_hw_init(int cgx_id)
 						lane = lmac->rev_lane;
 					qlm_set_mode_gsern(lmac->qlm, lane,
 								qlm_mode, baud_rate, flags);
-					GSERN_CSR_WRITE(CAVM_GSERNX_LANEX_SCRATCHX(
+					CSR_WRITE(CAVM_GSERNX_LANEX_SCRATCHX(
 								lmac->qlm, lmac->lane, 0), state.u);
 				}
 				cgx_lmac_init(cgx_id, lmac_id);

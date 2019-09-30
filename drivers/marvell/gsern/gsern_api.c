@@ -8,8 +8,8 @@
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
-#include <gsern.h>
-#include <gsern/gsern_internal.h>
+#include <gsern/gsern.h>
+#include <gser_internal.h>
 
 /**
  * Setup the initial mode of a GSERN serdes. This is called for the initial mode

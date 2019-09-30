@@ -19,7 +19,7 @@
 #include <plat_octeontx.h>
 #include <octeontx_irqs_def.h>
 #include <plat_scfg.h>
-#include <qlm.h>
+#include <qlm/qlm.h>
 
 static uint64_t msix_addr_save;
 

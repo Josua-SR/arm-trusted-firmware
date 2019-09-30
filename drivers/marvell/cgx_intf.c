@@ -18,12 +18,13 @@
 #include <plat_board_cfg.h>
 #include <cgx_intf.h>
 #include <cgx.h>
-#include <qlm.h>
+#include <qlm/qlm.h>
+#include <qlm/qlm_gsern.h>
 #include <plat_scfg.h>
 #include <sh_fwdata.h>
-#include <gsern/gsern_internal.h>
+#include <gser_internal.h>
 #include <platform_setup.h>
-#include <gsern.h>
+#include <gsern/gsern.h>
 
 #ifdef NT_FW_CONFIG
 #include <plat_npc_mcam_profile.h>
@@ -912,7 +913,7 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 			 * original lane
 			 */
 			/* FIXME */
-			GSERN_CSR_WRITE(CAVM_GSERNX_LANEX_SCRATCHX(lmac->qlm, lmac->lane,
+			GSER_CSR_WRITE(CAVM_GSERNX_LANEX_SCRATCHX(lmac->qlm, lmac->lane,
 						0), state.u);
 
 			/* Wait 5ms before bringing UP the CGX link */

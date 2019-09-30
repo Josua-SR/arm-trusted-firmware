@@ -19,7 +19,7 @@
 #include <plat_otx2_configuration.h>
 #include <plat_octeontx.h>
 #include <octeontx_irqs_def.h>
-#include <qlm.h>
+#include <qlm/qlm.h>
 
 #define CAVM_BPHY_BAR_E_BPHY_PF_BAR0 (0x860000000000ll)
 #define CAVM_BPHY_BAR_E_BPHY_PF_BAR0_SIZE 0x4000000000ull

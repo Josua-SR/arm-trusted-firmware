@@ -9,8 +9,8 @@
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
-#include <gsern.h>
-#include <gsern/gsern_internal.h>
+#include <gsern/gsern.h>
+#include <gser_internal.h>
 
 /* Some fields in GSERN must be based on the VDD supplied to VDDA_GSER. This
    global contains the BDK's guess as what the voltage currently is in
@@ -29,27 +29,27 @@ int gsern_init_wait_for_sm_complete(int qlm)
 {
 	const int TIMEOUT = 10000; /* Timeout for wait loops in microsec */
 
-	if (gsern_is_platform(GSERN_PLATFORM_ASIM) || gsern_is_platform(GSERN_PLATFORM_EMULATOR))
+	if (gser_is_platform(GSER_PLATFORM_ASIM) || gser_is_platform(GSER_PLATFORM_EMULATOR))
 		return 0;
 
-	if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_COMMON_INIT_BSTS(qlm), GSERN_COMMON_INIT_BSTS_RST_SM_COMPLETE, ==, 1, TIMEOUT))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_COMMON_INIT_BSTS(qlm), GSERN_COMMON_INIT_BSTS_RST_SM_COMPLETE, ==, 1, TIMEOUT))
 	{
-		gsern_error("N0.QLM%d: Timeout waiting for GSERNX_COMMON_INIT_BSTS[rst_sm_complete]\n", qlm);
+		gser_error("N0.QLM%d: Timeout waiting for GSERNX_COMMON_INIT_BSTS[rst_sm_complete]\n", qlm);
 		return -1;
 	}
-	if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_COMMON_INIT_BSTS(qlm), GSERN_COMMON_INIT_BSTS_RST_SM_READY, ==, 1, TIMEOUT))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_COMMON_INIT_BSTS(qlm), GSERN_COMMON_INIT_BSTS_RST_SM_READY, ==, 1, TIMEOUT))
 	{
-		gsern_error("N0.QLM%d: Timeout waiting for GSERNX_COMMON_INIT_BSTS[rst_sm_ready]\n", qlm);
+		gser_error("N0.QLM%d: Timeout waiting for GSERNX_COMMON_INIT_BSTS[rst_sm_ready]\n", qlm);
 		return -1;
 	}
-	if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_COMMON_INIT_BSTS(qlm), GSERN_COMMON_INIT_BSTS_CAL_READY, ==, 1, TIMEOUT))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_COMMON_INIT_BSTS(qlm), GSERN_COMMON_INIT_BSTS_CAL_READY, ==, 1, TIMEOUT))
 	{
-		gsern_error("N0.QLM%d: Timeout waiting for GSERNX_COMMON_INIT_BSTS[cal_ready]\n", qlm);
+		gser_error("N0.QLM%d: Timeout waiting for GSERNX_COMMON_INIT_BSTS[cal_ready]\n", qlm);
 		return -1;
 	}
-	if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_COMMON_INIT_BSTS(qlm), GSERN_COMMON_INIT_BSTS_CAL_FAIL, ==, 0, TIMEOUT))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_COMMON_INIT_BSTS(qlm), GSERN_COMMON_INIT_BSTS_CAL_FAIL, ==, 0, TIMEOUT))
 	{
-		gsern_error("N0.QLM%d: Timeout waiting for GSERNX_COMMON_INIT_BSTS[cal_fail=0]\n", qlm);
+		gser_error("N0.QLM%d: Timeout waiting for GSERNX_COMMON_INIT_BSTS[cal_fail=0]\n", qlm);
 		return -1;
 	}
 	return 0;
@@ -67,9 +67,9 @@ int gsern_init_wait_for_sm_complete(int qlm)
 int gsern_init_wait_for_sm_ready(int qlm, int qlm_lane)
 {
 	const int TIMEOUT = 10000; /* Timeout for wait loops in microsec */
-	int num_lanes = gsern_qlm_get_lanes(qlm);
+	int num_lanes = gser_qlm_get_lanes(qlm);
 
-	if (gsern_is_platform(GSERN_PLATFORM_ASIM) || gsern_is_platform(GSERN_PLATFORM_EMULATOR))
+	if (gser_is_platform(GSER_PLATFORM_ASIM) || gser_is_platform(GSER_PLATFORM_EMULATOR))
 		return 0;
 
 	for (int lane = 0; lane < num_lanes; lane++)
@@ -78,24 +78,24 @@ int gsern_init_wait_for_sm_ready(int qlm, int qlm_lane)
 		if ((qlm_lane != -1) && (qlm_lane != lane))
 			continue;
 
-		if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_COMMON_INIT_BSTS_RST_SM_COMPLETE, ==, 1, TIMEOUT))
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_COMMON_INIT_BSTS_RST_SM_COMPLETE, ==, 1, TIMEOUT))
 		{
-			gsern_error("N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[rst_sm_complete]\n", qlm, lane);
+			gser_error("N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[rst_sm_complete]\n", qlm, lane);
 			return -1;
 		}
-		if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_COMMON_INIT_BSTS_RST_SM_READY, ==, 1, TIMEOUT))
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_COMMON_INIT_BSTS_RST_SM_READY, ==, 1, TIMEOUT))
 		{
-			gsern_error("N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[rst_sm_ready]\n", qlm, lane);
+			gser_error("N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[rst_sm_ready]\n", qlm, lane);
 			return -1;
 		}
-		if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_COMMON_INIT_BSTS_CAL_READY, ==, 1, TIMEOUT))
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_COMMON_INIT_BSTS_CAL_READY, ==, 1, TIMEOUT))
 		{
-			gsern_error("N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[cal_ready]\n", qlm, lane);
+			gser_error("N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[cal_ready]\n", qlm, lane);
 			return -1;
 		}
-		if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_COMMON_INIT_BSTS_CAL_FAIL, ==, 0, TIMEOUT))
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_COMMON_INIT_BSTS_CAL_FAIL, ==, 0, TIMEOUT))
 		{
-			gsern_error("N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[cal_fail=0]\n", qlm, lane);
+			gser_error("N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[cal_fail=0]\n", qlm, lane);
 			return -1;
 		}
 	}
@@ -114,9 +114,9 @@ int gsern_init_wait_for_sm_ready(int qlm, int qlm_lane)
 int gsern_init_wait_for_rx_ready(int qlm, int qlm_lane)
 {
 	const int TIMEOUT = 10000; /* Timeout for wait loops in microsec */
-	int num_lanes = gsern_qlm_get_lanes(qlm);
+	int num_lanes = gser_qlm_get_lanes(qlm);
 
-	if (gsern_is_platform(GSERN_PLATFORM_ASIM) || gsern_is_platform(GSERN_PLATFORM_EMULATOR))
+	if (gser_is_platform(GSER_PLATFORM_ASIM) || gser_is_platform(GSER_PLATFORM_EMULATOR))
 		return 0;
 
 	for (int lane = 0; lane < num_lanes; lane++)
@@ -125,14 +125,14 @@ int gsern_init_wait_for_rx_ready(int qlm, int qlm_lane)
 		if ((qlm_lane != -1) && (qlm_lane != lane))
 			continue;
 
-		if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_LANE_INIT_BSTS_RX_READY, ==, 1, TIMEOUT))
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_LANE_INIT_BSTS_RX_READY, ==, 1, TIMEOUT))
 		{
-			GSERN_TRACE(QLM, "N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[rx_ready]\n", qlm, lane);
+			GSER_TRACE(QLM, "N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[rx_ready]\n", qlm, lane);
 			return -1;
 		}
-		if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_LANE_INIT_BSTS_RX_RST_SM_COMPLETE, ==, 1, TIMEOUT))
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_LANE_INIT_BSTS_RX_RST_SM_COMPLETE, ==, 1, TIMEOUT))
 		{
-			GSERN_TRACE(QLM, "N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[rx_rst_sm_complete]\n", qlm, lane);
+			GSER_TRACE(QLM, "N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[rx_rst_sm_complete]\n", qlm, lane);
 			return -1;
 		}
 	}
@@ -151,9 +151,9 @@ int gsern_init_wait_for_rx_ready(int qlm, int qlm_lane)
 int gsern_init_wait_for_tx_ready(int qlm, int qlm_lane)
 {
 	const int TIMEOUT = 10000; /* Timeout for wait loops in microsec */
-	int num_lanes = gsern_qlm_get_lanes(qlm);
+	int num_lanes = gser_qlm_get_lanes(qlm);
 
-	if (gsern_is_platform(GSERN_PLATFORM_ASIM) || gsern_is_platform(GSERN_PLATFORM_EMULATOR))
+	if (gser_is_platform(GSER_PLATFORM_ASIM) || gser_is_platform(GSER_PLATFORM_EMULATOR))
 		return 0;
 
 	for (int lane = 0; lane < num_lanes; lane++)
@@ -162,14 +162,14 @@ int gsern_init_wait_for_tx_ready(int qlm, int qlm_lane)
 		if ((qlm_lane != -1) && (qlm_lane != lane))
 			continue;
 
-		if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_LANE_INIT_BSTS_TX_READY, ==, 1, TIMEOUT))
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_LANE_INIT_BSTS_TX_READY, ==, 1, TIMEOUT))
 		{
-			gsern_error("N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[tx_ready]\n", qlm, lane);
+			gser_error("N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[tx_ready]\n", qlm, lane);
 			return -1;
 		}
-		if (GSERN_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_LANE_INIT_BSTS_TX_RST_SM_COMPLETE, ==, 1, TIMEOUT))
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane), GSERN_LANE_INIT_BSTS_TX_RST_SM_COMPLETE, ==, 1, TIMEOUT))
 		{
-			gsern_error("N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[tx_rst_sm_complete]\n", qlm, lane);
+			gser_error("N0.QLM%d.Lane%d: Timeout waiting for GSERNX_LANEX_INIT_BSTS[tx_rst_sm_complete]\n", qlm, lane);
 			return -1;
 		}
 	}
