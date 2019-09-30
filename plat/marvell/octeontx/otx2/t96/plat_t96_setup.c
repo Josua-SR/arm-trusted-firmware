@@ -137,31 +137,6 @@ const qlm_ops_t *plat_otx2_get_qlm_ops(int *qlm)
 	return &qlm_gsern_ops;
 }
 
-qlm_state_lane_t plat_otx2_get_qlm_state_lane(int qlm, int lane)
-{
-	qlm_state_lane_t state;
-
-	state.u = 0;
-	state.s.mode = QLM_MODE_DISABLED;
-
-	if (qlm >= plat_octeontx_get_gser_count())
-		return state;
-
-	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 3)) {
-		int gserr_qlm;
-		int gserp_count = plat_otx2_get_gserp_count();
-
-		if (qlm < gserp_count)
-			return state;
-		gserr_qlm = qlm - gserp_count;
-		state.u = CSR_READ(CAVM_GSERRX_SCRATCHX(gserr_qlm, lane));
-	} else {
-		state.u = CSR_READ(CAVM_GSERNX_LANEX_SCRATCHX(qlm, lane, 0));
-	}
-
-	return state;
-}
-
 int plat_octeontx_get_uaa_count(void)
 {
 	return 8;

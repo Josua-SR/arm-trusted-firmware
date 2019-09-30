@@ -119,28 +119,6 @@ const qlm_ops_t *plat_otx2_get_qlm_ops(int *qlm)
 	return &qlm_gserr_ops;
 }
 
-qlm_state_lane_t plat_otx2_get_qlm_state_lane(int qlm, int lane)
-{
-	qlm_state_lane_t state;
-	int gserr_qlm;
-	int gserp_count;
-
-	state.u = 0;
-	state.s.mode = QLM_MODE_DISABLED;
-
-	if (qlm >= plat_octeontx_get_gser_count())
-		return state;
-
-	gserp_count = plat_otx2_get_gserp_count();
-	if (qlm < gserp_count)
-		return state;
-
-	gserr_qlm = qlm - gserp_count;
-	state.u = CSR_READ(CAVM_GSERRX_SCRATCHX(gserr_qlm, lane));
-
-	return state;
-}
-
 int plat_octeontx_get_uaa_count(void)
 {
 	return 8;

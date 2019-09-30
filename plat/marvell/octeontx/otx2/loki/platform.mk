@@ -29,9 +29,7 @@ PLAT_BL_COMMON_SOURCES	+=	plat/marvell/octeontx/otx2/loki/plat_loki_setup.c	\
 				drivers/marvell/cgx.c		\
 				drivers/marvell/cgx_flash_ops.c		\
 				drivers/marvell/gser_internal.c			\
-				drivers/marvell/gsern/gsern_eye.c		\
 				drivers/marvell/qlm/qlm.c			\
-				drivers/marvell/qlm/qlm_gsern.c		\
 				drivers/marvell/qlm/qlm_gserr.c			\
 				drivers/marvell/qlm/qlm_gserc.c			\
 				drivers/marvell/qlm/qlm_gserr_ops.c		\

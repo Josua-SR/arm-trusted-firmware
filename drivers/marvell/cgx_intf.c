@@ -19,7 +19,6 @@
 #include <cgx_intf.h>
 #include <cgx.h>
 #include <qlm/qlm.h>
-#include <qlm/qlm_gsern.h>
 #include <plat_scfg.h>
 #include <sh_fwdata.h>
 #include <gser_internal.h>
@@ -846,6 +845,8 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 		valid = cgx_check_speed_change_allowed(cgx_id, lmac_id,
 						lmac_type, req_mode);
 		if (valid) {
+			const qlm_ops_t *qlm_ops;
+
 			/* Bring down the CGX link */
 			ret = cgx_link_bringdown(cgx_id, lmac_id);
 
@@ -907,14 +908,22 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 			else
 				lane = lmac->rev_lane;
 
-			qlm_set_mode_gsern(qlm, lane, qlm_mode, baud_mhz, 0);
+			qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+			if (qlm_ops == NULL) {
+				debug_cgx_intf("%s:get_qlm_ops failed %d\n",
+					__func__, qlm);
+				return -1;
+			}
+			qlm_ops->qlm_set_mode(qlm, lane, qlm_mode, baud_mhz, 0);
 
 			/* Update the SCRATCHX register with the new link info to the
 			 * original lane
 			 */
-			/* FIXME */
-			GSER_CSR_WRITE(CAVM_GSERNX_LANEX_SCRATCHX(lmac->qlm, lmac->lane,
-						0), state.u);
+			if (!strncmp(plat_octeontx_bcfg->bcfg.board_model,
+					"ebb96", 5)) {
+				qlm_ops->qlm_set_state(
+						lmac->qlm, lmac->lane, state);
+			}
 
 			/* Wait 5ms before bringing UP the CGX link */
 			mdelay(5);
@@ -1058,7 +1067,9 @@ static int do_prbs(int qlm, int mode, int time)
 	int errors;
 	int time_left, delay;
 	int cgx_id;
+	int qlm_idx;
 	cgx_config_t *cgx_cfg;
+	const qlm_ops_t *qlm_ops;
 	const int DISPLAY_INTERVAL = 5;
 
 	if (qlm >= MAX_QLM || qlm < 0) {
@@ -1081,8 +1092,16 @@ static int do_prbs(int qlm, int mode, int time)
 	debug_cgx_intf("Start PRBS-%d on QLM%d (CGX %d), end in %d sec\n",
 		mode, qlm, cgx_id, time);
 
+	qlm_idx = qlm;
+	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+	if (qlm_ops == NULL) {
+		WARN("%s:get_qlm_ops failed %d\n",
+			__func__, qlm);
+		return -1;
+	}
+
 	/* Start PRBS */
-	qlm_enable_prbs_gsern(qlm, mode, QLM_DIRECTION_TX);
+	qlm_ops->qlm_enable_prbs(qlm, mode, QLM_DIRECTION_TX);
 
 	for (lane = 0; lane < num_lanes; lane++) {
 		/* BDK use here bdk_netphy_get_handle function */
@@ -1098,7 +1117,7 @@ static int do_prbs(int qlm, int mode, int time)
 		}
 	}
 	udelay(1000);  /* Let TX run for 1ms before starting RX */
-	qlm_enable_prbs_gsern(qlm, mode, QLM_DIRECTION_RX);
+	qlm_ops->qlm_enable_prbs(qlm, mode, QLM_DIRECTION_RX);
 
 	for (lane = 0; lane < num_lanes; lane++) {
 		/* BDK use here bdk_netphy_get_handle function */
@@ -1123,9 +1142,9 @@ static int do_prbs(int qlm, int mode, int time)
 		mdelay(delay * 1000);
 
 		for (lane = 0; lane < num_lanes; lane++) {
-			errors = qlm_get_prbs_errors_gsern(qlm, lane, 0);
+			errors = qlm_ops->qlm_get_prbs_errors(qlm, lane, 0);
 			debug_cgx_intf("Time: %d seconds QLM%d.Lane%d: errors: ",
-				time - time_left, qlm, lane);
+				time - time_left, qlm_idx, lane);
 			if (errors != -1)
 				debug_cgx_intf("%d", errors);
 			else
@@ -1161,7 +1180,7 @@ static int do_prbs(int qlm, int mode, int time)
 
 	debug_cgx_intf("Stopping pattern generator\n");
 	/* Stop PRBS */
-	qlm_disable_prbs_gsern(qlm);
+	qlm_ops->qlm_disable_prbs(qlm);
 
 	for (lane = 0; lane < num_lanes; lane++) {
 		/* BDK use here bdk_netphy_get_handle function */
@@ -1218,7 +1237,7 @@ static uint64_t log10(uint64_t num)
 }
 
 /* This structure has over 32KiB and cannot be stored on stack */
-static gsern_qlm_eye_t eye;
+static gser_qlm_eye_t eye;
 
 static int do_eye(int qlm, int qlm_lane)
 {
@@ -1227,9 +1246,19 @@ static int do_eye(int qlm, int qlm_lane)
 	int eye_area = 0;
 	int eye_width = 0;
 	int eye_height = 0;
+	int qlm_idx;
+	const qlm_ops_t *qlm_ops;
 	char color_str[] = "\33[40m"; /* Note: This is modified, not constant */
 
-	if (gsern_eye_capture(qlm, qlm_lane, 1 /* = show_data */, &eye))
+	qlm_idx = qlm;
+	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+	if (qlm_ops == NULL) {
+		WARN("%s:get_qlm_ops failed %d\n",
+			__func__, qlm);
+		return -1;
+	}
+
+	if (qlm_ops->qlm_eye_capture(qlm, qlm_lane, 1 /* = show_data */, &eye))
 		return -1;
 
 	/* Calculate the max eye width */
@@ -1258,7 +1287,8 @@ static int do_eye(int qlm, int qlm_lane)
 			eye_height = height;
 	}
 
-	debug_cgx_intf("\nEye Diagram for QLM %d, Lane %d\n", qlm, qlm_lane);
+	debug_cgx_intf("\nEye Diagram for QLM %d, Lane %d\n",
+			qlm_idx, qlm_lane);
 
 	last_color = -1;
 	for (y = 0; y < eye.height; y++) {

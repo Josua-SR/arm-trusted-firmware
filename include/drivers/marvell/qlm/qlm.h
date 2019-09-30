@@ -233,6 +233,4 @@ typedef struct {
  */
 const qlm_ops_t *plat_otx2_get_qlm_ops(int *qlm);
 
-qlm_state_lane_t plat_otx2_get_qlm_state_lane(int qlm, int lane);
-
 #endif /* _QLM_H_ */

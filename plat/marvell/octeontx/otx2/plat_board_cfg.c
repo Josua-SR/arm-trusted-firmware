@@ -1777,18 +1777,27 @@ static void octeontx2_fill_cgx_network_lane_order(const void *fdt)
 static void octeontx2_fill_cgx_details(const void *fdt)
 {
 	int qlm_idx;
+	int qlm;
 	int lane_idx;
 	int lnum;
 	int linit;
 	qlm_state_lane_t qlm_state;
+	const qlm_ops_t *qlm_ops;
 
 	octeontx2_fill_cgx_network_lane_order(fdt);
 
 	for (qlm_idx = 0; qlm_idx < plat_octeontx_scfg->gser_count; qlm_idx++) {
+		qlm = qlm_idx;
+		qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+		if (qlm_ops == NULL) {
+			INFO("%s:get_qlm_ops failed for QLM %d\n",
+				__func__, qlm);
+			continue;
+		}
+
 		lnum = plat_octeontx_scfg->qlm_max_lane_num[qlm_idx];
 		for (lane_idx = 0; lane_idx < lnum; lane_idx++) {
-			qlm_state = plat_otx2_get_qlm_state_lane(
-							qlm_idx, lane_idx);
+			qlm_state = qlm_ops->qlm_get_state(qlm, lane_idx);
 			debug_dts("QLM%d.LANE%d: mode=%d:%s\n",
 					qlm_idx, lane_idx,
 					qlm_state.s.mode,

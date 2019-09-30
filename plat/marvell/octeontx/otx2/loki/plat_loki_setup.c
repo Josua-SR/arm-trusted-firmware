@@ -140,22 +140,6 @@ const qlm_ops_t *plat_otx2_get_qlm_ops(int *qlm)
 	return NULL;
 }
 
-qlm_state_lane_t plat_otx2_get_qlm_state_lane(int qlm, int lane)
-{
-	qlm_state_lane_t state;
-
-	if (qlm == 1)
-		state.u = CSR_READ(CAVM_GSERRX_SCRATCHX(0, lane));
-	else if (qlm >= 2 && qlm <= 6)
-		state.u = CSR_READ(CAVM_GSERCX_SCRATCHX(qlm - 2, lane));
-	else {
-		state.u = 0;
-		state.s.mode = QLM_MODE_DISABLED;
-	}
-
-	return state;
-}
-
 int plat_octeontx_get_uaa_count(void)
 {
 	return 8;

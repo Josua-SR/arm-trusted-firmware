@@ -108,8 +108,16 @@ static inline int64_t gser_extract_smag(uint64_t v, int lsb, int msb)
 static inline int qlm_get_gbaud_mhz(int qlm, int lane)
 {
 	qlm_state_lane_t state;
+	const qlm_ops_t *qlm_ops;
 
-	state = plat_otx2_get_qlm_state_lane(qlm, lane);
+	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+	if (qlm_ops == NULL) {
+		WARN("%s:get_qlm_ops failed %d\n", __func__, qlm);
+		return -1;
+	}
+
+	state = qlm_ops->qlm_get_state(qlm, lane);
+
 	return state.s.baud_mhz;
 }
 

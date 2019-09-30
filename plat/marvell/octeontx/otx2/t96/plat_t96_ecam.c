@@ -96,7 +96,10 @@ static int ecam_probe_cgx_p3(unsigned long long arg)
 {
 	qlm_state_lane_t qlm_state;
 	int lnum = 0, qlm = 0;
-
+	const qlm_ops_t *qlm_ops;
+#ifdef DEBUG_ATF_PLAT_ECAM
+	int qlm_idx;
+#endif /* DEBUG_ATF_PLAT_ECAM */
 	printf("%s arg %lld\n", __func__, arg);
 
 	switch (arg) {
@@ -112,11 +115,22 @@ static int ecam_probe_cgx_p3(unsigned long long arg)
 	}
 
 	lnum = plat_octeontx_scfg->qlm_max_lane_num[qlm];
+
+#ifdef DEBUG_ATF_PLAT_ECAM
+	qlm_idx = qlm;
+#endif /* DEBUG_ATF_PLAT_ECAM */
+	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+	if (qlm_ops == NULL) {
+		debug_plat_ecam(
+			"%s:get_qlm_ops failed %d\n", __func__, qlm_idx);
+		return 0;
+	}
+
 	for (int lane = 0; lane < lnum; lane++) {
-		qlm_state = plat_otx2_get_qlm_state_lane(qlm, lane);
+		qlm_state = qlm_ops->qlm_get_state(qlm, lane);
 		if (qlm_state.s.cgx) {
 			debug_plat_ecam("%s: CGX detected on qlm %d lane %d\n",
-					__func__, qlm, lane);
+					__func__, qlm_idx, lane);
 			return 1;
 		}
 	};
