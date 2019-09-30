@@ -150,6 +150,12 @@ typedef enum {
 	QLM_LOOP_CORE,
 } qlm_loop_t;
 
+typedef enum {
+	QLM_GSERC_TYPE,
+	QLM_GSERR_TYPE,
+	QLM_GSERN_TYPE,
+} qlm_type_t;
+
 /*
  * Eye diagram captures are stored in the following structure
  */
@@ -193,7 +199,39 @@ static inline qlm_state_lane_t qlm_build_state(qlm_modes_t mode, int baud_mhz,
 
 const struct qlm_mode_strmap_s qlm_get_mode_strmap(int qlm_mode);
 
+typedef struct {
+	qlm_type_t type;
+	qlm_state_lane_t (*qlm_get_state)(int qlm, int lane);
+	void (*qlm_set_state)(int qlm, int lane, qlm_state_lane_t state);
+	int (*qlm_set_mode)(int qlm, int lane, qlm_modes_t mode, int baud_mhz,
+			qlm_mode_flags_t flags);
+	int (*qlm_measure_refclock)(int qlm);
+	int (*qlm_reset)(int qlm);
+	int (*qlm_enable_prbs)(int qlm, int prbs, qlm_direction_t dir);
+	int (*qlm_disable_prbs)(int qlm);
+	uint64_t (*qlm_get_prbs_errors)(int qlm, int lane, int clear);
+	void (*qlm_inject_prbs_error)(int qlm, int lane);
+	int (*qlm_enable_loop)(int qlm, qlm_loop_t loop);
+	int (*qlm_tune_lane_tx)(int qlm, int lane, int tx_cmain, int tx_cpre,
+			int tx_cpost, int tx_bs, int tx_unused);
+	int (*qlm_get_tune_lane_tx)(int qlm, int lane, int *tx_cmain,
+			int *tx_cpre, int *tx_cpost, int *tx_bs,
+			int *tx_unused);
+	int (*qlm_rx_equalization)(int qlm, int qlm_lane);
+	void (*qlm_display_settings)(int qlm, int qlm_lane, bool show_tx,
+			bool show_rx);
+	int (*qlm_eye_capture)(int qlm, int lane, int show_data,
+			gser_qlm_eye_t *eye_data);
+} qlm_ops_t;
+
 /* QLM platform specific API */
+
+/*
+ * Return struct qlm_ops_t with pointer to functions for specific qlm.
+ * It may modify qlm index, and this new qlm value should be use as argument
+ * for functions from qlm_ops_t.
+ */
+const qlm_ops_t *plat_otx2_get_qlm_ops(int *qlm);
 
 qlm_state_lane_t plat_otx2_get_qlm_state_lane(int qlm, int lane);
 

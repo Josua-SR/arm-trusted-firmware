@@ -122,6 +122,24 @@ int plat_octeontx_get_gserc_count(void)
 	return 5;
 }
 
+extern const qlm_ops_t qlm_gserc_ops;
+extern const qlm_ops_t qlm_gserr_ops;
+
+const qlm_ops_t *plat_otx2_get_qlm_ops(int *qlm)
+{
+	if (*qlm == 1) {
+		*qlm -= 1;
+
+		return &qlm_gserr_ops;
+	} else if (*qlm >= 2 && *qlm <= 6) {
+		*qlm -= 2;
+
+		return &qlm_gserc_ops;
+	}
+
+	return NULL;
+}
+
 qlm_state_lane_t plat_otx2_get_qlm_state_lane(int qlm, int lane)
 {
 	qlm_state_lane_t state;

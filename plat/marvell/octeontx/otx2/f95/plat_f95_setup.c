@@ -116,13 +116,25 @@ int plat_octeontx_get_gser_count(void)
 	return 3;
 }
 
+extern const qlm_ops_t qlm_gsern_ops;
+extern const qlm_ops_t qlm_gserr_ops;
+
+const qlm_ops_t *plat_otx2_get_qlm_ops(int *qlm)
+{
+	if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
+		return &qlm_gsern_ops;
+	else if (*qlm >= 0 && *qlm < 3)
+		return &qlm_gserr_ops;
+
+	return NULL;
+}
+
 qlm_state_lane_t plat_otx2_get_qlm_state_lane(int qlm, int lane)
 {
 	qlm_state_lane_t state;
 
 	if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
-		state.u = CSR_READ(CAVM_GSERNX_LANEX_SCRATCHX(
-					qlm, lane, 0));
+		state.u = CSR_READ(CAVM_GSERNX_LANEX_SCRATCHX(qlm, lane, 0));
 	else if (qlm >= 0 && qlm < 3)
 		state.u = CSR_READ(CAVM_GSERRX_SCRATCHX(qlm, lane));
 	else {
