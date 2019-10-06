@@ -57,6 +57,7 @@ struct mv_ddr_iface dram_iface_ap0 = {
 		MV_DDR_64BIT_ECC_PUP8_BUS_MASK,	/* subphys mask */
 #endif
 		MV_DDR_CFG_SPD,			/* ddr configuration data src */
+		NOT_COMBINED,			/* ddr twin-die combined*/
 		{ {0} },			/* raw spd data */
 		{0},				/* timing parameters */
 		{	/* electrical configuration */
