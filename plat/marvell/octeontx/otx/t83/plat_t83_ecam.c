@@ -256,10 +256,26 @@ static inline void cn83xx_disable_dev(struct ecam_device *dev)
 	debug_plat_ecam("disable_dev %d:%d:%02x\n", dev->ecam, dev->dev);
 }
 
+static inline int disable_pccbr(struct ecam_device *dev)
+{
+	/* disable PCC Bridge of BCH, CPT1 and RAD */
+	if ((dev->bus == 0) &&
+	    ((dev->dev == 0xA || dev->dev == 0xD || dev->dev == 0xE)) &&
+	    dev->func == 0)
+		return 1;
+
+	return 0;
+}
+
 static inline void cn83xx_enable_dev(struct ecam_device *dev)
 {
 	cavm_ecamx_devx_sdis_t dev_sdis;
 	cavm_ecamx_devx_nsdis_t dev_nsdis;
+
+	if (disable_pccbr(dev)) {
+		cn83xx_disable_dev(dev);
+		return;
+	}
 
 	/* enable device */
 	dev_sdis.u = CSR_READ(CAVM_ECAMX_DEVX_SDIS(dev->ecam, dev->dev));
