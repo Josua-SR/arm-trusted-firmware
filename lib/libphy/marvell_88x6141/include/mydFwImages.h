@@ -13,4 +13,7 @@ extern unsigned short x6141_sbus_master_image_end[];
 extern unsigned short x6141_serdes_image_start[];
 extern unsigned short x6141_serdes_image_end[];
 
+extern const unsigned short x6141_sbus_master_fw_rev;
+extern const unsigned short x6141_serdes_fw_rev;
+
 #endif
