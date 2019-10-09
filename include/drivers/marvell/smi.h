@@ -8,7 +8,7 @@
 #ifndef __SMI_H__
 #define __SMI_H__
 
-#define MDIO_TIMEOUT 10000
+#define MDIO_TIMEOUT 100000 /* in units of micro seconds */
 
 enum {
 	CLAUSE22 = 0,

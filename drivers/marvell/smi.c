@@ -62,7 +62,10 @@ static int smi_c45_addr(int bus_id, int addr, int devad, int regnum)
 
 	do {
 		smix_wr_dat.u = CSR_READ(CAVM_SMI_X_WR_DAT(bus_id));
-		udelay(100);
+		/* Poll often so that a completed transaction is detected
+		 * quickly.
+		 */
+		udelay(1);
 		timeout--;
 	} while (smix_wr_dat.s.pending && timeout);
 
@@ -106,7 +109,10 @@ int smi_read(int bus_id, int mode, int addr, int devad, int regnum)
 
 	do {
 		smix_rd_dat.u = CSR_READ(CAVM_SMI_X_RD_DAT(bus_id));
-		udelay(10);
+		/* Poll often so that a completed transaction is detected
+		 * quickly.
+		 */
+		udelay(1);
 		timeout--;
 	} while (smix_rd_dat.s.pending && timeout);
 
@@ -158,7 +164,10 @@ int smi_write(int bus_id, int addr, int devad,
 
 	do {
 		smix_wr_dat.u = CSR_READ(CAVM_SMI_X_WR_DAT(bus_id));
-		udelay(10);
+		/* Poll often so that a completed transaction is detected
+		 * quickly.
+		 */
+		udelay(1);
 		timeout--;
 	} while (smix_wr_dat.s.pending && timeout);
 
