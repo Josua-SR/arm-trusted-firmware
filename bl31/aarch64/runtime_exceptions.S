@@ -15,6 +15,7 @@
 #include <lib/el3_runtime/cpu_data.h>
 #include <lib/smccc.h>
 
+
 	.globl	runtime_exceptions
 
 	.globl	sync_exception_sp_el0
@@ -468,6 +469,7 @@ smc_unknown:
 smc_prohibited:
 	ldr	x30, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_LR]
 	mov	x0, #SMC_UNK
+	before_eret
 	eret
 
 #if DEBUG

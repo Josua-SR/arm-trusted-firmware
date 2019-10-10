@@ -536,6 +536,7 @@ func el3_exit
 	 */
 	esb
 #endif
+	before_eret
 	eret
 
 endfunc el3_exit
@@ -712,6 +713,7 @@ func el3_start_el0_isr
 	mov x29, xzr; mov x30, xzr;
 	dsb sy
 	isb
+	before_eret
 	eret
 endfunc el3_start_el0_isr
 
@@ -773,6 +775,7 @@ func el3_invoke_elx_kernel_callback
 
 	dsb sy
 	isb
+	before_eret
 	eret
 
 endfunc el3_invoke_elx_kernel_callback
