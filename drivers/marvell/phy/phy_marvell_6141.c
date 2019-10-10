@@ -56,6 +56,10 @@ void phy_marvell_6141_probe(int cgx_id, int lmac_id)
 	MYD_U16 x6141_serdes_image_size;
 	MYD_STATUS status;
 	phy_config_t *phy;
+	MYD_BOOL possible_to_skip_fw_load;
+	int val;
+	MYD_U16 serdesRevision = 0;
+	MYD_U16 sbmRevision = 0;
 
 	debug_phy_driver("%s: %d:%d\n", __func__, cgx_id, lmac_id);
 
@@ -65,6 +69,87 @@ void phy_marvell_6141_probe(int cgx_id, int lmac_id)
 	if (((MYD_DEV_PTR)phy->priv)->devEnabled)
 		return;
 
+	/* Look for indication of recent cold reset. */
+	val = smi_read(phy->mdio_bus, CLAUSE45, phy->addr, MYD_LINE_SIDE,
+		       MYD_MODE_SELECTION) & 0xF;
+	if (!val) {
+		/* There was a recent board cold reset. */
+		possible_to_skip_fw_load = MYD_FALSE;
+	} else {
+		/* There was a recent T93 warm reset, meanwhile the 6141 remains
+		 * fully operational and reset-free.  It is possible to skip
+		 * the PHY firmware load operation, but we won't on some cases.
+		 */
+		possible_to_skip_fw_load = MYD_TRUE;
+
+		/* Look at the flag that indicates if we should force PHY
+		 * firmware load (for debug purposes).  That flag is bit 13 of
+		 * PHY reg LED1_CTRL_STATUS, which is, according to PHY team,
+		 * available for general purpose SW use.
+		 */
+#define FORCE_PHY_FW_LOAD_FLAG 0x2000
+		val = smi_read(phy->mdio_bus, CLAUSE45, phy->addr, MYD_CHIP_REG,
+			       MYD_LED1_CTRL_STATUS);
+		if (val & FORCE_PHY_FW_LOAD_FLAG) {
+			possible_to_skip_fw_load = MYD_FALSE;
+
+			/* clear the flag in the register */
+			val &= ~FORCE_PHY_FW_LOAD_FLAG;
+			smi_write(phy->mdio_bus, phy->addr, MYD_CHIP_REG,
+				  CLAUSE45, MYD_LED1_CTRL_STATUS, val);
+		}
+	}
+
+	if (possible_to_skip_fw_load) {
+		status = mydReloadDriver(myd_read_mdio, myd_write_mdio,
+					 phy->addr,
+					 phy,
+					 MYD_RELOAD_CONFIG,
+					 phy->priv);
+		if (status != MYD_OK) {
+			ERROR("%s: %d:%d mydReloadDriver() failed\n",
+			      __func__, cgx_id, lmac_id);
+			return;
+		}
+
+		status = mydSerdesGetRevision(phy->priv, phy->addr,
+					      &serdesRevision, &sbmRevision);
+		if (status != MYD_OK) {
+			ERROR("%s: %d:%d mydSerdesGetRevision() failed\n",
+			      __func__, cgx_id, lmac_id);
+			return;
+		}
+
+		if (serdesRevision == x6141_serdes_fw_rev &&
+		    sbmRevision == x6141_sbus_master_fw_rev) {
+			/* The PHY is already running the proper firmware, and
+			 * we were not instructed to force a firmware load, and
+			 * so we skip it.  But before returning from this
+			 * function, put the PHY line-side in disengage mode
+			 * (for an explanantion, see other comments at the
+			 * bottom of this function).
+			 */
+			myd_write_mdio(phy->priv, phy->addr, MYD_LINE_SIDE,
+				       MYD_DATAPATH_CNTL,
+				       MYD_DP_DISENGAGE_MODE << 14);
+
+			NOTICE("Skipping firmware load for 6141 PHY at address %d\n",
+			       phy->addr);
+			return;
+		}
+
+		/* The PHY is not running the firmware that we want, so we need
+		 * to replace it.  But before we load the right firmware, we
+		 * need to unload MYD driver because the API for firmware load
+		 * requires an uninitialized MYD driver.
+		 */
+		status = mydUnloadDriver(phy->priv);
+		if (status != MYD_OK)
+			ERROR("%s: %d:%d mydUnloadDriver() failed\n",
+			      __func__, cgx_id, lmac_id);
+	}
+
+	NOTICE("Loading firmware to 6141 PHY at address %d\n", phy->addr);
 	x6141_sbus_master_image_size = x6141_sbus_master_image_end -
 						x6141_sbus_master_image_start;
 	x6141_serdes_image_size = x6141_serdes_image_end -
@@ -84,20 +169,13 @@ void phy_marvell_6141_probe(int cgx_id, int lmac_id)
 		return;
 	}
 
-#ifdef DEBUG_ATF_MARVELL_PHY_DRIVER
-	MYD_U16 serdesRevision = 0;
-	MYD_U16 sbmRevision = 0;
-
-	status = mydSerdesGetRevision(phy->priv, phy->addr, &serdesRevision,
-				      &sbmRevision);
-	if (status != MYD_OK) {
-		ERROR("%s: %d:%d mydSerdesGetRevision() failed\n", __func__,
-		      cgx_id, lmac_id);
-	}
-	printf("%s: %d:%d SERDES FW rev 0x%x SBUS MASTER FW rev 0x%x\n",
-			 __func__, cgx_id, lmac_id, serdesRevision,
-			 sbmRevision);
-#endif
+	/* Put the line-side in disengage mode.  This allows the line-side PCS
+	 * to get link up with the link partner even if the host-side PCS link
+	 * is down.  This fulfills a customer requirement to keep the line-side
+	 * link up during an LIO3 (T93) warm reset.
+	 */
+	myd_write_mdio(phy->priv, phy->addr, MYD_LINE_SIDE, MYD_DATAPATH_CNTL,
+		       MYD_DP_DISENGAGE_MODE << 14);
 }
 
 void phy_marvell_6141_config(int cgx_id, int lmac_id)
@@ -110,7 +188,7 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 	MYD_U16 lane;
 	MYD_U32 mode_option;
 	MYD_DEV_PTR myd_dev;
-	PMYD_MODE_CONFIG myd_host_config;
+	PMYD_MODE_CONFIG myd_host_config, myd_line_config;
 
 	debug_phy_driver("%s: %d:%d\n", __func__, cgx_id, lmac_id);
 
@@ -208,6 +286,14 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 	lane = lmac_cfg->lane_to_sds & 3;
 	myd_dev = phy->priv;
 	myd_host_config = &myd_dev->hostConfig[0][lane];
+	myd_line_config = &myd_dev->lineConfig[0][lane];
+
+	if (host_mode == myd_host_config->opMode &&
+	    line_mode == myd_line_config->opMode) {
+		/* There are no mode changes.  There is nothing to do. */
+		return;
+	}
+
 	if (myd_host_config->opMode == MYD_P25YN && host_mode != MYD_P25YN) {
 		/* undo the 25GBASE-R2 hack */
 		myd_write_mdio(phy->priv, phy->addr, 4, 0xF06C, 0);
