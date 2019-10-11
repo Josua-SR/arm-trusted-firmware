@@ -116,6 +116,12 @@ BL31_SOURCES            +=      plat/marvell/octeontx/otx2/octeontx_attestation.
                                   cipher_wrap.c                         \
                                  )
 CPPFLAGS                +=      -Wno-error=cpp
+ifneq ($(ATTESTATION_SIGNING_KEY_FILE),)
+    override ATTESTATION_SIGNING_KEY_FILE:=\"$(ATTESTATION_SIGNING_KEY_FILE)\"
+else
+    ATTESTATION_SIGNING_KEY_FILE:=\"attestation_signing_key.h\"
+endif
+$(eval $(call add_define,ATTESTATION_SIGNING_KEY_FILE))
 $(eval $(call add_define,ENABLE_ATTESTATION_SERVICE))
 $(eval $(call assert_boolean,ENABLE_ATTESTATION_SERVICE))
 endif
