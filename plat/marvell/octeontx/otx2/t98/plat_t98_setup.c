@@ -146,7 +146,13 @@ int plat_get_max_lane_num(int qlm)
 /* Return the CGX<->QLM mapping */
 int plat_get_cgx_idx(int qlm)
 {
-	return qlm;
+	int gserp_cnt = plat_otx2_get_gserp_count();
+
+	if (qlm < gserp_cnt) {
+		printf("Invalid QLM%d for CGX\n", qlm);
+		return -1;
+	}
+	return qlm - gserp_cnt;
 }
 
 /*
