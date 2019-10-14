@@ -729,6 +729,33 @@ static int cgx_check_speed_change_allowed(int cgx_id, int lmac_id, int new_mode,
 	return change;
 }
 
+static int cgx_set_phy_mod_type(int cgx_id, int lmac_id, int phy_mod_type)
+{
+	cgx_lmac_config_t *lmac;
+
+	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+
+	if (lmac->phy_present && lmac->phy_config.init &&
+	    lmac->phy_config.valid) {
+		if (!phy_set_mod_type(cgx_id, lmac_id, phy_mod_type)) {
+			if (cgx_update_flash_phy_mod_param(cgx_id,
+							   lmac_id,
+							   phy_mod_type)) {
+				debug_cgx_intf("%s: %d:%d failed to update phy mod in flash\n",
+					       __func__, cgx_id, lmac_id);
+				return -1;
+			}
+		} else {
+			return -1; /* phy_set_mod_type() failed */
+		}
+	} else {
+		debug_cgx_intf("%s: %d:%d phy not present\n",
+			       __func__, cgx_id, lmac_id);
+		return -1;
+	}
+	return 0;
+}
+
 int cgx_handle_mode_change(int cgx_id, int lmac_id,
 				struct cgx_mode_change_args *args)
 {
@@ -863,8 +890,18 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 			/* Wait 5ms before bringing UP the CGX link */
 			mdelay(5);
 
-			if ((lmac->phy_present) && (lmac->phy_config.init))
+			if ((lmac->phy_present) && (lmac->phy_config.init)) {
 				lmac->phy_config.forceconfig = 1;
+				if (lmac->phy_config.mod_type
+					== PHY_MOD_TYPE_PAM4 &&
+				    qlm_mode != QLM_MODE_50GAUI_4_C2C &&
+				    qlm_mode != QLM_MODE_50GAUI_2_C2C) {
+					WARN("%s: %d:%d Setting PHY modulation type to NRZ because new speed does not support PAM4.\n",
+					     __func__, cgx_id, lmac_id);
+					cgx_set_phy_mod_type(cgx_id, lmac_id,
+							     PHY_MOD_TYPE_NRZ);
+				}
+			}
 
 			cgx_lmac_init(cgx_id, lmac_id);
 
@@ -979,31 +1016,6 @@ int cgx_set_fec_type(int cgx_id, int lmac_id, int req_fec)
 	cgx_set_link_state(cgx_id, lmac_id, &link,
 			cgx_get_error_type(cgx_id, lmac_id));
 
-	return 0;
-}
-
-static int cgx_set_phy_mod_type(int cgx_id, int lmac_id, int phy_mod_type)
-{
-	cgx_lmac_config_t *lmac;
-
-	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
-
-	if (lmac->phy_present && lmac->phy_config.init &&
-	    lmac->phy_config.valid) {
-		if (!phy_set_mod_type(cgx_id, lmac_id, phy_mod_type)) {
-			if (cgx_update_flash_phy_mod_param(cgx_id,
-							   lmac_id,
-							   phy_mod_type)) {
-				debug_cgx_intf("Flash update phymod failed\n");
-				return -1;
-			}
-		} else {
-			return -1; /* phy_set_mod_type() failed */
-		}
-	} else {
-		debug_cgx_intf("phy not present for SET_PHY_MOD\n");
-		return -1;
-	}
 	return 0;
 }
 
