@@ -479,10 +479,24 @@ exit:
 	return ret;
 }
 
-/* Returns the base address of the attestation information buffer. */
+/* Returns the base address and length of the attestation information buffer. */
 void *attestation_info_base(void)
 {
-	return (void *)SW_ATTEST_INFO_BASE;
+	sw_attestation_info_hdr_t *att_info_hdr;
+	size_t len;
+
+	att_info_hdr = (sw_attestation_info_hdr_t *)SW_ATTEST_INFO_BASE;
+	memset(att_info_hdr, 0, sizeof(*att_info_hdr));
+
+	copy_data32(&att_info_hdr->magic_be, htobe32(ATTESTATION_MAGIC_ID));
+	/* return total length of buffer */
+	len = SW_ATTEST_INFO_SIZE;
+	copy_data16(&att_info_hdr->total_len_be, htobe16(len));
+	/* return length of tlv data that can be submitted to us */
+	len -= sizeof(*att_info_hdr);
+	copy_data16(&att_info_hdr->tlv_len_be, htobe16(len));
+
+	return att_info_hdr;
 }
 
 /* TODO: formalize return codes */
@@ -502,14 +516,14 @@ void *attestation_info_base(void)
  *   on success, 0
  *   on error, negative return value
  */
-intptr_t generate_attestation_info(uint64_t nonce_len)
+intptr_t generate_attestation_info(uint64_t tlv_len)
 {
 #define MBEDTLS_ECDSA_SIG_MAX_LEN 72
 #define SHA256_HASH_LEN           32
 #define MAX_SIGNING_ATTEMPTS      10
-	size_t tot_len, tlv_len, len, tlv_img_id_cnt, signing_attempts;
+	size_t nonce_len, tot_len, len, tlv_img_id_cnt, signing_attempts;
 	int ret;
-	void *cert, *sig;
+	void *cert, *sig, *tlv_limit;
 	sw_attestation_info_hdr_t *att_info_hdr;
 	sw_attestation_tlv_t *tlv;
 	const char *pers = "attestation_rnd_seed";
@@ -541,22 +555,63 @@ intptr_t generate_attestation_info(uint64_t nonce_len)
 
 	init_heap();
 
+	nonce_len = 0;
 	memset(nonce_buf, 0, SW_ATT_INFO_NONCE_MAX_LEN);
 	att_info_hdr = (sw_attestation_info_hdr_t *)attestation_info_base();
 
-	if (nonce_len > SW_ATT_INFO_NONCE_MAX_LEN) {
-		ERROR("Input nonce too large (%lu vs %u)\n",
-		      (long)nonce_len, SW_ATT_INFO_NONCE_MAX_LEN);
+	if (tlv_len > htobe16(att_info_hdr->tlv_len_be)) {
+		ERROR("Input TLV data too large (%lu vs %u)\n",
+		      (long)tlv_len, htobe16(att_info_hdr->tlv_len_be));
 		return -2;
 	}
 
-	/* copy the caller-supplied nonce from the transfer buffer */
-	copy_bytes(nonce_buf, (uint8_t *)att_info_hdr->input_nonce, nonce_len);
+	/* retrieve input TLV data */
+	tlv = att_info_hdr->tlv_list;
+	tlv_limit = (void *)tlv + tlv_len;
+
+	while ((uintptr_t)tlv < (uintptr_t)tlv_limit) {
+		len = htobe16(tlv->length_be);
+		sig = NULL;
+		switch ((int)be16toh(tlv->type_be)) {
+		case ATT_SIG_NONCE:
+			nonce_len = len;
+			if (len > SW_ATT_INFO_NONCE_MAX_LEN) {
+				ERROR("Input nonce data too large.\n");
+				return -2;
+			}
+			sig = nonce_buf;
+			break;
+
+		case ATT_IMG_FIT_KERNEL:
+			if (len != SHA256_HASH_LEN) {
+				ERROR("Invalid FIT kernel img ID len.\n");
+				break;
+			}
+			sig = octeontx_bl31_plat_args.fit_kernel_img_sig;
+			break;
+
+		default:
+			ERROR("Unknown TLV type %d\n", htobe16(tlv->type_be));
+			break;
+		}
+
+		if (sig)
+			copy_bytes(sig, tlv->value, len);
+
+		tlv = (sw_attestation_tlv_t *)&tlv->value[len];
+	}
+
+	/* validate length of tlv data */
+	len = (uintptr_t)tlv - (uintptr_t)att_info_hdr->tlv_list;
+	if (len != tlv_len) {
+		ERROR("Improperly formed input TLV data\n");
+		return -2;
+	}
 
 	/* INIT_BIN, ATF_BL1, BOARD_DT, LINUX_DT, SCP_TBL1FW, MCP_TBL1FW,
-	 * AP_TBL1FW, ATF_BL2, ATF_BL31, ATF_BL33
+	 * AP_TBL1FW, ATF_BL2, ATF_BL31, ATF_BL33, ATT_IMG_FIT_KERNEL
 	 */
-	tlv_img_id_cnt = 10;
+	tlv_img_id_cnt = 11;
 
 	tot_len = sizeof(*att_info_hdr);
 	/* each image signature is a SHA256 hash in a TLV */
@@ -645,6 +700,13 @@ intptr_t generate_attestation_info(uint64_t nonce_len)
 	len = sizeof(octeontx_bl31_plat_args.atf_bl33_sig);
 	copy_data16(&tlv->length_be, htobe16(len));
 	copy_bytes(tlv->value, octeontx_bl31_plat_args.atf_bl33_sig, len);
+	tlv = (sw_attestation_tlv_t *)&tlv->value[len];
+
+	/* append [optional] supplied FIT kernel image hash ID */
+	copy_data16(&tlv->type_be, htobe16(ATT_IMG_FIT_KERNEL));
+	len = sizeof(octeontx_bl31_plat_args.fit_kernel_img_sig);
+	copy_data16(&tlv->length_be, htobe16(len));
+	copy_bytes(tlv->value, octeontx_bl31_plat_args.fit_kernel_img_sig, len);
 	tlv = (sw_attestation_tlv_t *)&tlv->value[len];
 
 	/* append the NONCE as a TLV element */

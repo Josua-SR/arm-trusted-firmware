@@ -42,15 +42,18 @@
  */
 #define PLAT_OCTEONTX_MDIO_DBG_WRITE		0xc2000d02
 
-/*
- * X1 - if <= 0, query for attestation buffer address.
- *      if > 0, specifies nonce len
- * Return:
- *      > 0: specifies attestation buffer address (for query call).
- *      0  : success
- *      < 0: failure
- */
 #define OCTEONTX_ATTESTATION_QUERY		0xc2000d03
+
+/* X1 - if <= 0, query for attestation buffer address.
+ *      if > 0, specifies nonce len
+ */
+#define OCTEONTX_ATTESTATION_QUERY_SUBCMD_LEGACY 0
+
+/* no args */
+#define OCTEONTX_ATTESTATION_QUERY_SUBCMD_BUFFER 1
+
+/* no args */
+#define OCTEONTX_ATTESTATION_QUERY_SUBCMD_INFO   2
 
 /* Number of platform specific SMCs */
 #define PLAT_OCTEONTX_NUM_SMC_CALLS	7

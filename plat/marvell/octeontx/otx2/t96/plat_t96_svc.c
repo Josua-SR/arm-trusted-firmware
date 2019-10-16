@@ -71,13 +71,18 @@ uintptr_t plat_octeontx_svc_smc_handler(uint32_t smc_fid,
 
 #if ENABLE_ATTESTATION_SERVICE
 	case OCTEONTX_ATTESTATION_QUERY:
-		/* x1: <= 0 - query for buffer ptr
-		 *      > 0 - nonce len
-		 */
-		if ((register_t)x1 <= 0)
+		if (x2 == OCTEONTX_ATTESTATION_QUERY_SUBCMD_LEGACY) {
+			/* deprecated subcmd */
+			ret = SMC_UNK;
+		} else if (x2 == OCTEONTX_ATTESTATION_QUERY_SUBCMD_BUFFER) {
 			ret = (uintptr_t)attestation_info_base();
-		else
+		} else if (x2 == OCTEONTX_ATTESTATION_QUERY_SUBCMD_INFO) {
 			ret = generate_attestation_info(x1);
+		} else {
+			/* Unknown subcmd */
+			ret = SMC_UNK;
+		}
+
 		SMC_RET1(handle, ret);
 		break;
 #endif

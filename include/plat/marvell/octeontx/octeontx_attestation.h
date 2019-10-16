@@ -26,6 +26,7 @@ enum sw_attestation_tlv_type {
 	ATT_IMG_ATF_BL31,
 	ATT_IMG_ATF_BL33,
 	ATT_SIG_NONCE,
+	ATT_IMG_FIT_KERNEL,
 
 	ATT_TLV_TYPE_COUNT
 };
@@ -81,12 +82,14 @@ typedef struct octeontx_bl_platform_args {
 	uint8_t atf_bl2_sig[SHA256_HASH_LEN];
 	uint8_t atf_bl31_sig[SHA256_HASH_LEN];
 	uint8_t atf_bl33_sig[SHA256_HASH_LEN];
+	/* supplied by U-Boot (optional) */
+	uint8_t fit_kernel_img_sig[SHA256_HASH_LEN];
 	void *fdt;
 } octeontx_bl_platform_args_t;
 
 void *attestation_info_base(void);
 
-intptr_t generate_attestation_info(uint64_t nonce_len);
+intptr_t generate_attestation_info(uint64_t tlv_len);
 
 #endif /* __OCTEONTX_ATTESTATION_H__ */
 
