@@ -50,11 +50,24 @@ static int is_qlm_configured_as_cgx(int qlm)
 
 static int ecam_probe_cgx(unsigned long long arg)
 {
+	int qlm;
+
 	debug_plat_ecam("%s arg %lld\n", __func__, arg);
 
-	return is_qlm_configured_as_cgx(arg);
+	/* cgx to qlm mapping.
+	 * CGX0 - QLM9
+	 * CGX1 - QLM10
+	 * CGX2 - QLM11
+	 * CGX3 - QLM12
+	 * CGX4 - QLM13
+	 */
+	if (arg >= 5)
+		return 0;
 
-}	
+	qlm = arg + 9;
+
+	return is_qlm_configured_as_cgx(qlm);
+}
 
 struct ecam_probe_callback probe_callbacks[] = {
 	{0xa059, 0x177d, ecam_probe_cgx, 0},

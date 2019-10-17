@@ -92,12 +92,12 @@ int plat_octeontx_get_pem_count(void)
 
 int plat_octeontx_get_gser_count(void)
 {
-	return 15;
+	return 14;
 }
 
 int plat_otx2_get_gserp_count(void)
 {
-	return 10;
+	return 9;
 }
 
 qlm_state_lane_t plat_otx2_get_qlm_state_lane(int qlm, int lane)
