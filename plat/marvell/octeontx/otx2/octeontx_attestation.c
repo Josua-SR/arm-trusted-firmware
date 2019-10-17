@@ -523,6 +523,7 @@ intptr_t generate_attestation_info(uint64_t nonce_len)
 	uint8_t *sig_buf;
 	void *(*mbedtls_calloc_orig)(size_t num, size_t size);
 	void (*mbedtls_free_orig)(void *buf);
+	cavm_rnm_ctl_status_t ctl_status;
 	/* TODO: move to header */
 	extern octeontx_bl_platform_args_t octeontx_bl31_plat_args;
 
@@ -675,6 +676,13 @@ intptr_t generate_attestation_info(uint64_t nonce_len)
 		goto exit;
 	}
 
+	/* enable random number generator for the entropy source
+	 * mbedtls_hardware_poll'()'.
+	 */
+	ctl_status.u = CSR_READ(CAVM_RNM_CTL_STATUS);
+	ctl_status.s.rng_en = 1;
+	CSR_WRITE(CAVM_RNM_CTL_STATUS, ctl_status.u);
+
 	/* one-time initialization */
 	mbedtls_entropy_init(entropy);
 	mbedtls_ctr_drbg_init(ctr_drbg);
@@ -806,6 +814,21 @@ exit:
 	return ret;
 }
 
+/*
+ * Entropy source for mbedtls (see definition 'MBEDTLS_ENTROPY_HARDWARE_ALT').
+ */
+int mbedtls_hardware_poll(void *data, unsigned char *output, size_t len,
+			  size_t *olen)
+{
+	size_t read;
+
+	read = 0;
+
+	while (read++ < len)
+		*output++ = (unsigned char)CSR_READ(CAVM_RNM_RANDOM);
+
+	*olen = len;
+
+	return 0;
+}
 #endif  /* #if ENABLE_ATTESTATION_SERVICE */
-
-

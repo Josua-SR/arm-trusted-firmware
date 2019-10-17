@@ -108,11 +108,11 @@
 /* Enable the platform-specific entropy code. */
 #define MBEDTLS_ENTROPY_C
 
-/* --- TODO: update these once platform entropy support is integrated --- */
-#define MBEDTLS_NO_DEFAULT_ENTROPY_SOURCES
-#define MBEDTLS_TEST_NULL_ENTROPY
+/* platform entropy is "OS-level" */
 #define MBEDTLS_NO_PLATFORM_ENTROPY
-/* --- TODO: --- */
+
+/* we provide hardware entropy source 'mbedtls_hardware_poll()' */
+#define MBEDTLS_ENTROPY_HARDWARE_ALT
 
 /* prerequesite to 'MBEDTLS_CTR_DRBG_C' */
 #define MBEDTLS_AES_C

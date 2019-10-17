@@ -233,6 +233,12 @@ void plat_add_mmio()
 	add_map_record(CAVM_MIO_EMM_BAR_E_MIO_EMM_PF_BAR4, CAVM_MIO_EMM_BAR_E_MIO_EMM_PF_BAR4_SIZE, attr);
 	add_map_record(CAVM_FUSF_BAR_E_FUSF_PF_BAR0,
 		       CAVM_FUSF_BAR_E_FUSF_PF_BAR0_SIZE, attr);
+#if ENABLE_ATTESTATION_SERVICE
+	add_map_record(CAVM_RNM_BAR_E_RNM_PF_BAR0_CN9,
+		       CAVM_RNM_BAR_E_RNM_PF_BAR0_CN9_SIZE, attr);
+	add_map_record(CAVM_RNM_BAR_E_RNM_VF_BAR0_CN9,
+		       CAVM_RNM_BAR_E_RNM_VF_BAR0_CN9_SIZE, attr);
+#endif
 
 	device_type_count = plat_octeontx_get_mpi_count();
 	for (i = 0; i < device_type_count; i++) {
