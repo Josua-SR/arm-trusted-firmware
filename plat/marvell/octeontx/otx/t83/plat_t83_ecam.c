@@ -98,6 +98,15 @@ struct ecam_probe_callback probe_callbacks[] = {
 	{ECAM_INVALID_DEV_ID, 0, 0, 0}
 };
 
+static void init_cpt_rid(uint64_t config_base, uint64_t config_size)
+{
+	union cavm_pccpf_xxx_vsec_sctl vsec_sctl;
+
+	vsec_sctl.u = octeontx_read32(config_base + CAVM_PCCPF_XXX_VSEC_SCTL);
+	vsec_sctl.cn8.rid = 0;
+	octeontx_write32(config_base + CAVM_PCCPF_XXX_VSEC_SCTL, vsec_sctl.u);
+}
+
 static void init_gpio(uint64_t config_base, uint64_t config_size)
 {
 	union cavm_pccpf_xxx_vsec_sctl vsec_sctl;
@@ -155,6 +164,8 @@ static void init_gpio(uint64_t config_base, uint64_t config_size)
  */
 struct ecam_init_callback plat_init_callbacks[] = {
 	{0xa00a, 0x177d, init_gpio},
+	{0xa040, 0x177d, init_cpt_rid}, /* 0x40 - PCC_DEV_IDL_E::CPT_PF */
+	{0xa041, 0x177d, init_cpt_rid}, /* 0x41 - PCC_DEV_IDL_E::CPT_VF */
 	{ECAM_INVALID_DEV_ID, 0, 0}
 };
 

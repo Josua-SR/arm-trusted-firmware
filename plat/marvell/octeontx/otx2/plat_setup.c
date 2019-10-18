@@ -49,6 +49,28 @@ void plat_octeontx_setup(void)
 }
 
 /*
+ * Program REVID for PCIe CPT device.
+ */
+unsigned int plat_configure_cpt_rid(void)
+{
+	unsigned int val = 0;
+	uint64_t midr;
+
+	midr = read_midr();
+
+	/* program CPT revision id */
+	if (IS_OCTEONTX_PN(midr, T98PARTNUM))
+		val = 3;
+	else if (IS_OCTEONTX_PN(midr, T96PARTNUM)) {
+		if (IS_OCTEONTX_VAR(midr, T96PARTNUM, 1))
+			val = 1;
+		else
+			val = 2;
+	}
+	return val;
+}
+
+/*
  * Program REVID for PCIe devices.
  * Bits 0..1: minor pass
  * Bits 3..2: major pass

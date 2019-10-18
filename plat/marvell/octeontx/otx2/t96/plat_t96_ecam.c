@@ -151,6 +151,15 @@ static void init_gpio(uint64_t config_base, uint64_t config_size)
 	octeontx_write32(config_base + CAVM_PCCPF_XXX_VSEC_SCTL, vsec_sctl.u);
 }
 
+static void init_cpt_rid(uint64_t config_base, uint64_t config_size)
+{
+	union cavm_pccpf_xxx_vsec_sctl vsec_sctl;
+
+	vsec_sctl.u = octeontx_read32(config_base + CAVM_PCCPF_XXX_VSEC_SCTL);
+	vsec_sctl.cn9.rid = plat_configure_cpt_rid();
+	octeontx_write32(config_base + CAVM_PCCPF_XXX_VSEC_SCTL, vsec_sctl.u);
+}
+
 static void init_rvu_rid(uint64_t config_base, uint64_t config_size)
 {
 	union cavm_pccpf_xxx_vsec_sctl vsec_sctl;
@@ -191,8 +200,8 @@ struct ecam_init_callback plat_init_callbacks[] = {
 	{0xa065, 0x177d, init_rvu}, /* 0x65 - PCC_DEV_IDL_E::RVU_AF */
 	{0xa063, 0x177d, init_rvu_rid}, /* 0x63 - PCC_DEV_IDL_E::RVU */
 	{0xa0f8, 0x177d, init_rvu_rid}, /* 0xf8 - PCC_DEV_IDL_E::RVU_AF_VF */
-	{0xa0fd, 0x177d, init_rvu_rid}, /* 0xfd - PCC_DEV_IDL_E::RVU_CPT_PF */
-	{0xa0fe, 0x177d, init_rvu_rid}, /* 0xfe - PCC_DEV_IDL_E::RVU_CPT_VF */
+	{0xa0fd, 0x177d, init_cpt_rid}, /* 0xfd - PCC_DEV_IDL_E::RVU_CPT_PF */
+	{0xa0fe, 0x177d, init_cpt_rid}, /* 0xfe - PCC_DEV_IDL_E::RVU_CPT_VF */
 	{0xa0fb, 0x177d, init_rvu_rid}, /* 0xfb - PCC_DEV_IDL_E::RVU_NPA_PF */
 	{0xa0fc, 0x177d, init_rvu_rid}, /* 0xfc - PCC_DEV_IDL_E::RVU_NPA_VF */
 	{0xa0f9, 0x177d, init_rvu_rid}, /* 0xf9 - PCC_DEV_IDL_E::RVU_SSO_PF */

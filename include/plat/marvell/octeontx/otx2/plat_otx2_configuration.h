@@ -20,5 +20,6 @@ int plat_octeontx_get_pem_count(void);
 int plat_get_altpkg(void);
 int plat_get_ooo_status(void);
 unsigned int plat_configure_rid(void);
+unsigned int plat_configure_cpt_rid(void);
 
 #endif /* __PLAT_OTX2_CONFIGURATION_H__ */
