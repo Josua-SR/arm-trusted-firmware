@@ -12964,7 +12964,56 @@ union cavm_sdpx_lmac_const0x
         uint64_t reserved_40_63        : 24;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sdpx_lmac_const0x_s cn; */
+    /* struct cavm_sdpx_lmac_const0x_s cn9; */
+    /* struct cavm_sdpx_lmac_const0x_s cn96xxp1; */
+    struct cavm_sdpx_lmac_const0x_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_40_63        : 24;
+        uint64_t epf                   : 8;  /**< [ 39: 32](RO) EPF number. Indicates the index number to the base EPF registers, e.g. the second index
+                                                                 of SDP()_EPF()_RINFO. */
+        uint64_t pf                    : 8;  /**< [ 31: 24](RO) Max number of physical functions that are supported.
+                                                                 SDP()_MAC()_PF_RING_CTL[NPFS] should not exceed [PF]. */
+        uint64_t mac                   : 8;  /**< [ 23: 16](RO) Relative MAC number. Indicates the index number to MAC registers, e.g. the
+                                                                 second index of SDP()_MAC()_PF_RING_CTL. */
+        uint64_t ifn                   : 8;  /**< [ 15:  8](RO) Interface number. Indicates the physical PEM number. */
+        uint64_t ifty                  : 4;  /**< [  7:  4](RO) Interface type.
+                                                                 0x0 = PEM. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t ep                    : 1;  /**< [  1:  1](RO) Endpoint.
+                                                                 0 = This MAC/PF does not support endpoint mode; many registers are not
+                                                                 implemented including input and output ring-based registers. MSI-X message
+                                                                 generation is also not implemented.
+                                                                 1 = This MAC/PF combination supports endpoint mode. */
+        uint64_t v                     : 1;  /**< [  0:  0](RO) Valid entry.
+                                                                 0 = Fields in this register will all be zero. This ends the list of capabilities.
+                                                                 1 = Fields are valid. There will be at least one subsequent list entry. */
+#else /* Word 0 - Little Endian */
+        uint64_t v                     : 1;  /**< [  0:  0](RO) Valid entry.
+                                                                 0 = Fields in this register will all be zero. This ends the list of capabilities.
+                                                                 1 = Fields are valid. There will be at least one subsequent list entry. */
+        uint64_t ep                    : 1;  /**< [  1:  1](RO) Endpoint.
+                                                                 0 = This MAC/PF does not support endpoint mode; many registers are not
+                                                                 implemented including input and output ring-based registers. MSI-X message
+                                                                 generation is also not implemented.
+                                                                 1 = This MAC/PF combination supports endpoint mode. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t ifty                  : 4;  /**< [  7:  4](RO) Interface type.
+                                                                 0x0 = PEM. */
+        uint64_t ifn                   : 8;  /**< [ 15:  8](RO) Interface number. Indicates the physical PEM number. */
+        uint64_t mac                   : 8;  /**< [ 23: 16](RO) Relative MAC number. Indicates the index number to MAC registers, e.g. the
+                                                                 second index of SDP()_MAC()_PF_RING_CTL. */
+        uint64_t pf                    : 8;  /**< [ 31: 24](RO) Max number of physical functions that are supported.
+                                                                 SDP()_MAC()_PF_RING_CTL[NPFS] should not exceed [PF]. */
+        uint64_t epf                   : 8;  /**< [ 39: 32](RO) EPF number. Indicates the index number to the base EPF registers, e.g. the second index
+                                                                 of SDP()_EPF()_RINFO. */
+        uint64_t reserved_40_63        : 24;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_sdpx_lmac_const0x_cn96xxp3 cn98xx; */
+    /* struct cavm_sdpx_lmac_const0x_s cnf95xxp1; */
+    /* struct cavm_sdpx_lmac_const0x_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_sdpx_lmac_const0x_cn96xxp3 loki; */
 };
 typedef union cavm_sdpx_lmac_const0x cavm_sdpx_lmac_const0x_t;
 

@@ -2373,7 +2373,82 @@ union cavm_rvu_pf_block_addrx_disc
         uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_rvu_pf_block_addrx_disc_s cn; */
+    /* struct cavm_rvu_pf_block_addrx_disc_s cn9; */
+    /* struct cavm_rvu_pf_block_addrx_disc_s cn96xx; */
+    struct cavm_rvu_pf_block_addrx_disc_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_28_63        : 36;
+        uint64_t btype                 : 8;  /**< [ 27: 20](RO/H) Block type enumerated by RVU_BLOCK_TYPE_E. */
+        uint64_t rid                   : 8;  /**< [ 19: 12](RO/H) Revision ID of the block from RVU_PRIV_BLOCK_TYPE()_REV[RID]. */
+        uint64_t imp                   : 1;  /**< [ 11: 11](RO/H) Implemented. When set, a block is present at this BLOCK_ADDR index as
+                                                                 enumerated by RVU_BLOCK_ADDR_E. When clear, a block is not present and the
+                                                                 remaining fields in the register are RAZ.
+
+                                                                 Internal:
+                                                                 Returns zero if the block is implemented but disabled or fused out.
+
+                                                                 CN93XX:
+                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
+                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
+                                                                 _ CPT(0) = ~disable_crypto(0).
+                                                                 _ All others = 0.
+
+                                                                 CNF95XX:
+                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
+                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
+                                                                 _ All others = 0.
+
+                                                                 CN98XX:
+                                                                 _ RVUM, LMT, NPA, NIX(0..1), NPC, NDC(0..5) = 1.
+                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
+                                                                 _ CPT(0..1) = ~disable_crypto.
+                                                                 _ REE(0..1) = ~ree_cripple(0..1).
+                                                                 _ All others = 0. */
+        uint64_t reserved_9_10         : 2;
+        uint64_t num_lfs               : 9;  /**< [  8:  0](RO/H) Number of local functions from the block that are provisioned to the VF/PF.
+                                                                 When non-zero, the provisioned LFs are mapped to slots 0 to [NUM_LFS]-1 in
+                                                                 the block.
+                                                                 Returns 0 for block types that do not have local functions, 0 or 1 for
+                                                                 single-slot blocks; see RVU_BLOCK_TYPE_E. */
+#else /* Word 0 - Little Endian */
+        uint64_t num_lfs               : 9;  /**< [  8:  0](RO/H) Number of local functions from the block that are provisioned to the VF/PF.
+                                                                 When non-zero, the provisioned LFs are mapped to slots 0 to [NUM_LFS]-1 in
+                                                                 the block.
+                                                                 Returns 0 for block types that do not have local functions, 0 or 1 for
+                                                                 single-slot blocks; see RVU_BLOCK_TYPE_E. */
+        uint64_t reserved_9_10         : 2;
+        uint64_t imp                   : 1;  /**< [ 11: 11](RO/H) Implemented. When set, a block is present at this BLOCK_ADDR index as
+                                                                 enumerated by RVU_BLOCK_ADDR_E. When clear, a block is not present and the
+                                                                 remaining fields in the register are RAZ.
+
+                                                                 Internal:
+                                                                 Returns zero if the block is implemented but disabled or fused out.
+
+                                                                 CN93XX:
+                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
+                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
+                                                                 _ CPT(0) = ~disable_crypto(0).
+                                                                 _ All others = 0.
+
+                                                                 CNF95XX:
+                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
+                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
+                                                                 _ All others = 0.
+
+                                                                 CN98XX:
+                                                                 _ RVUM, LMT, NPA, NIX(0..1), NPC, NDC(0..5) = 1.
+                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
+                                                                 _ CPT(0..1) = ~disable_crypto.
+                                                                 _ REE(0..1) = ~ree_cripple(0..1).
+                                                                 _ All others = 0. */
+        uint64_t rid                   : 8;  /**< [ 19: 12](RO/H) Revision ID of the block from RVU_PRIV_BLOCK_TYPE()_REV[RID]. */
+        uint64_t btype                 : 8;  /**< [ 27: 20](RO/H) Block type enumerated by RVU_BLOCK_TYPE_E. */
+        uint64_t reserved_28_63        : 36;
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_rvu_pf_block_addrx_disc_s cnf95xx; */
+    /* struct cavm_rvu_pf_block_addrx_disc_s loki; */
 };
 typedef union cavm_rvu_pf_block_addrx_disc cavm_rvu_pf_block_addrx_disc_t;
 
@@ -5180,7 +5255,82 @@ union cavm_rvu_vf_block_addrx_disc
         uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_rvu_vf_block_addrx_disc_s cn; */
+    /* struct cavm_rvu_vf_block_addrx_disc_s cn9; */
+    /* struct cavm_rvu_vf_block_addrx_disc_s cn96xx; */
+    struct cavm_rvu_vf_block_addrx_disc_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_28_63        : 36;
+        uint64_t btype                 : 8;  /**< [ 27: 20](RO/H) Block type enumerated by RVU_BLOCK_TYPE_E. */
+        uint64_t rid                   : 8;  /**< [ 19: 12](RO/H) Revision ID of the block from RVU_PRIV_BLOCK_TYPE()_REV[RID]. */
+        uint64_t imp                   : 1;  /**< [ 11: 11](RO/H) Implemented. When set, a block is present at this BLOCK_ADDR index as
+                                                                 enumerated by RVU_BLOCK_ADDR_E. When clear, a block is not present and the
+                                                                 remaining fields in the register are RAZ.
+
+                                                                 Internal:
+                                                                 Returns zero if the block is implemented but disabled or fused out.
+
+                                                                 CN93XX:
+                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
+                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
+                                                                 _ CPT(0) = ~disable_crypto(0).
+                                                                 _ All others = 0.
+
+                                                                 CNF95XX:
+                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
+                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
+                                                                 _ All others = 0.
+
+                                                                 CN98XX:
+                                                                 _ RVUM, LMT, NPA, NIX(0..1), NPC, NDC(0..5) = 1.
+                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
+                                                                 _ CPT(0..1) = ~disable_crypto.
+                                                                 _ REE(0..1) = ~ree_cripple(0..1).
+                                                                 _ All others = 0. */
+        uint64_t reserved_9_10         : 2;
+        uint64_t num_lfs               : 9;  /**< [  8:  0](RO/H) Number of local functions from the block that are provisioned to the VF/PF.
+                                                                 When non-zero, the provisioned LFs are mapped to slots 0 to [NUM_LFS]-1 in
+                                                                 the block.
+                                                                 Returns 0 for block types that do not have local functions, 0 or 1 for
+                                                                 single-slot blocks; see RVU_BLOCK_TYPE_E. */
+#else /* Word 0 - Little Endian */
+        uint64_t num_lfs               : 9;  /**< [  8:  0](RO/H) Number of local functions from the block that are provisioned to the VF/PF.
+                                                                 When non-zero, the provisioned LFs are mapped to slots 0 to [NUM_LFS]-1 in
+                                                                 the block.
+                                                                 Returns 0 for block types that do not have local functions, 0 or 1 for
+                                                                 single-slot blocks; see RVU_BLOCK_TYPE_E. */
+        uint64_t reserved_9_10         : 2;
+        uint64_t imp                   : 1;  /**< [ 11: 11](RO/H) Implemented. When set, a block is present at this BLOCK_ADDR index as
+                                                                 enumerated by RVU_BLOCK_ADDR_E. When clear, a block is not present and the
+                                                                 remaining fields in the register are RAZ.
+
+                                                                 Internal:
+                                                                 Returns zero if the block is implemented but disabled or fused out.
+
+                                                                 CN93XX:
+                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
+                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
+                                                                 _ CPT(0) = ~disable_crypto(0).
+                                                                 _ All others = 0.
+
+                                                                 CNF95XX:
+                                                                 _ RVUM, LMT, NPA, NIX(0), NPC, NDC(0..2) = 1.
+                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
+                                                                 _ All others = 0.
+
+                                                                 CN98XX:
+                                                                 _ RVUM, LMT, NPA, NIX(0..1), NPC, NDC(0..5) = 1.
+                                                                 _ SSO, SSOW, TIM = ~sso_cripple.
+                                                                 _ CPT(0..1) = ~disable_crypto.
+                                                                 _ REE(0..1) = ~ree_cripple(0..1).
+                                                                 _ All others = 0. */
+        uint64_t rid                   : 8;  /**< [ 19: 12](RO/H) Revision ID of the block from RVU_PRIV_BLOCK_TYPE()_REV[RID]. */
+        uint64_t btype                 : 8;  /**< [ 27: 20](RO/H) Block type enumerated by RVU_BLOCK_TYPE_E. */
+        uint64_t reserved_28_63        : 36;
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_rvu_vf_block_addrx_disc_s cnf95xx; */
+    /* struct cavm_rvu_vf_block_addrx_disc_s loki; */
 };
 typedef union cavm_rvu_vf_block_addrx_disc cavm_rvu_vf_block_addrx_disc_t;
 

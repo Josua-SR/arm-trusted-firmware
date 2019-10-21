@@ -736,6 +736,36 @@ union cavm_npc_af_const
     struct cavm_npc_af_const_cn96xxp3
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t match_stats           : 16; /**< [ 63: 48](RO) Number of NPC_AF_MATCH_STAT() base counters. */
+        uint64_t mcam_banks            : 4;  /**< [ 47: 44](RO) Number of MCAM banks. */
+        uint64_t mcam_bank_depth       : 16; /**< [ 43: 28](RO) MCAM bank base depth. */
+        uint64_t reserved_26_27        : 2;
+        uint64_t mcam_bank_width       : 10; /**< [ 25: 16](RO) MCAM bank width. Combined number of nonreserved bits in
+                                                                 NPC_AF_MCAME(0)_BANK(0)_CAM(0)_W0, NPC_AF_MCAME(0)_BANK(0)_CAM(0)_W1 and
+                                                                 NPC_AF_MCAME(0)_BANK(0)_CAM(0)_INTF. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t kpus                  : 5;  /**< [ 12:  8](RO) Number of KPUs. */
+        uint64_t lids                  : 4;  /**< [  7:  4](RO) Number of layer IDs enumerated by NPC_LID_E. This is the maximum number of
+                                                                 protocol layers captured by NPC. */
+        uint64_t intfs                 : 4;  /**< [  3:  0](RO) Number of interfaces enumerated by NPC_INTF_E. */
+#else /* Word 0 - Little Endian */
+        uint64_t intfs                 : 4;  /**< [  3:  0](RO) Number of interfaces enumerated by NPC_INTF_E. */
+        uint64_t lids                  : 4;  /**< [  7:  4](RO) Number of layer IDs enumerated by NPC_LID_E. This is the maximum number of
+                                                                 protocol layers captured by NPC. */
+        uint64_t kpus                  : 5;  /**< [ 12:  8](RO) Number of KPUs. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t mcam_bank_width       : 10; /**< [ 25: 16](RO) MCAM bank width. Combined number of nonreserved bits in
+                                                                 NPC_AF_MCAME(0)_BANK(0)_CAM(0)_W0, NPC_AF_MCAME(0)_BANK(0)_CAM(0)_W1 and
+                                                                 NPC_AF_MCAME(0)_BANK(0)_CAM(0)_INTF. */
+        uint64_t reserved_26_27        : 2;
+        uint64_t mcam_bank_depth       : 16; /**< [ 43: 28](RO) MCAM bank base depth. */
+        uint64_t mcam_banks            : 4;  /**< [ 47: 44](RO) Number of MCAM banks. */
+        uint64_t match_stats           : 16; /**< [ 63: 48](RO) Number of NPC_AF_MATCH_STAT() base counters. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    struct cavm_npc_af_const_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t match_stats           : 16; /**< [ 63: 48](RO) Number of NPC_AF_MATCH_STAT() base counters. When NPC_AF_CONST2[MATCH_STATS_EXT]
                                                                  is present and non-zero, the device supports the extended MCAM capabilities.
 
@@ -778,8 +808,7 @@ union cavm_npc_af_const
                                                                  Internal:
                                                                  Deprecated in CN98XX. */
 #endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_npc_af_const_cn96xxp3 cn98xx; */
+    } cn98xx;
     /* struct cavm_npc_af_const_s cnf95xxp1; */
     /* struct cavm_npc_af_const_cn96xxp3 cnf95xxp2; */
     /* struct cavm_npc_af_const_cn96xxp3 loki; */

@@ -264,7 +264,7 @@ static inline void cavm_csr_write(cavm_node_t node, cavm_csr_type_t type, int bu
                 result = -1;                                            \
                 break;                                                  \
             } else                                                      \
-                cavm_thread_yield();                                     \
+                cavm_wait_usec(1);                                       \
         }                                                               \
     } while (0);                                                        \
     result;})
@@ -299,7 +299,7 @@ static inline void cavm_csr_write(cavm_node_t node, cavm_csr_type_t type, int bu
                 result = -1;                                            \
                 break;                                                  \
             } else                                                      \
-                cavm_thread_yield();                                     \
+                cavm_wait_usec(1);                                       \
         }                                                               \
     } while (0);                                                        \
     result;})

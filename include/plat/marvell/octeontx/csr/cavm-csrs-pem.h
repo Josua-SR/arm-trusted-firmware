@@ -6875,8 +6875,198 @@ union cavm_pemx_dbg_info
         uint64_t reserved_50_63        : 14;
 #endif /* Word 0 - End */
     } cn9;
-    /* struct cavm_pemx_dbg_info_cn9 cn96xx; */
-    /* struct cavm_pemx_dbg_info_cn9 cn98xx; */
+    /* struct cavm_pemx_dbg_info_cn9 cn96xxp1; */
+    struct cavm_pemx_dbg_info_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_50_63        : 14;
+        uint64_t bad_zero              : 1;  /**< [ 49: 49](R/W1C/H) An access used ACC table to map to a zero-byte read but was not contained
+                                                                 to a single QWord */
+        uint64_t p_store_zero_byte     : 1;  /**< [ 48: 48](R/W1C/H) An NCBO store from IOBN P queue had no byte enables active. */
+        uint64_t n_store_zero_byte     : 1;  /**< [ 47: 47](R/W1C/H) An NCBO store from IOBN N queue had no byte enables active. */
+        uint64_t p_maps_to_n           : 1;  /**< [ 46: 46](R/W1C/H) A store access coming from the IOBN P queue is either an ECAM DID access or
+                                                                 an ACC table access that maps to CFG or IO type. */
+        uint64_t n_store               : 1;  /**< [ 45: 45](R/W1C/H) An NCBO store used ACC table to map to a CFG or IO type and was not contained
+                                                                 to a single DWord. */
+        uint64_t atomic_to_csr         : 1;  /**< [ 44: 44](R/W1C/H) An NCBO atomic access was within the CSR DID. */
+        uint64_t csr_load              : 1;  /**< [ 43: 43](R/W1C/H) An NCBO load from CSR DID was improperly formatted based on size/alignment. Proper
+                                                                 format is either DWord aligned DWord access or QWord aligned QWord access or,
+                                                                 if an MSIX register, as long as it is contained within a single QWord. */
+        uint64_t p_csr_store           : 1;  /**< [ 42: 42](R/W1C/H) An NCBO store to CSR DID and from IOBN P queue was improperly formatted based on
+                                                                 size/alignment. Proper format is either DWord aligned DWord access or QWord aligned
+                                                                 QWord access or, if an MSIX register, as long as it is contained within a single QWord. */
+        uint64_t n_csr_store           : 1;  /**< [ 41: 41](R/W1C/H) An NCBO store to CSR DID and from IOBN N queue was improperly formatted based on
+                                                                 size/alignment. Proper format is either DWord aligned DWord access or QWord aligned
+                                                                 QWord access or, if an MSIX register, as long as it is contained within a single QWord. */
+        uint64_t ecam_load             : 1;  /**< [ 40: 40](R/W1C/H) An NCBO load from ECAM DID was 64-bit. */
+        uint64_t p_ecam_store          : 1;  /**< [ 39: 39](R/W1C/H) An NCBO store to ECAM DID was not contained within a single DWord and from IOBN P queue. */
+        uint64_t n_ecam_store          : 1;  /**< [ 38: 38](R/W1C/H) An NCBO store to ECAM DID was not contained within a single DWord and from IOBN N queue. */
+        uint64_t atomic_non_mem        : 1;  /**< [ 37: 37](R/W1C/H) An NCBO atomic to an ACC region mapped to CFG or IO. */
+        uint64_t non_mem_load          : 1;  /**< [ 36: 36](R/W1C/H) An NCBO load to an ACC region mapped to CFG or IO and not contained to a single DWord. */
+        uint64_t vf_en_off             : 1;  /**< [ 35: 35](R/W1C/H) A NP or P TLP was seen in the outbound path, but it was blocked due to
+                                                                 being a VF-based access (vf_active set) while the VF enable was clear. */
+        uint64_t in_flr                : 1;  /**< [ 34: 34](R/W1C/H) A NP or P TLP was seen in the outbound path, but it was blocked due to being in FLR. */
+        uint64_t rasdp                 : 1;  /**< [ 33: 33](R/W1C/H) Core entered RAS data protection error mode. */
+        uint64_t bmd_e                 : 1;  /**< [ 32: 32](R/W1C/H) A NP or P TLP was seen in the outbound path, but it was not allowed to master the bus.
+                                                                 If a PF TLP and the PCIEEP_CMD[ME] is not set.
+                                                                 For VF TLP, either the PCIEEP_CMD[ME]/PCIEEPVF_CMD[ME] are not set. */
+        uint64_t lofp                  : 1;  /**< [ 31: 31](R/W1C/H) Lack of forward progress at TLP FIFOs timeout occurred. */
+        uint64_t ecrc_e                : 1;  /**< [ 30: 30](R/W1C/H) Reserved. */
+        uint64_t rawwpp                : 1;  /**< [ 29: 29](R/W1C/H) Reserved. */
+        uint64_t racpp                 : 1;  /**< [ 28: 28](R/W1C/H) Reserved. */
+        uint64_t ramtlp                : 1;  /**< [ 27: 27](R/W1C/H) Reserved. */
+        uint64_t rarwdns               : 1;  /**< [ 26: 26](R/W1C/H) Reserved. */
+        uint64_t caar                  : 1;  /**< [ 25: 25](R/W1C/H) Reserved. */
+        uint64_t racca                 : 1;  /**< [ 24: 24](R/W1C/H) Reserved. */
+        uint64_t racur                 : 1;  /**< [ 23: 23](R/W1C/H) Reserved. */
+        uint64_t rauc                  : 1;  /**< [ 22: 22](R/W1C/H) Reserved.. */
+        uint64_t rqo                   : 1;  /**< [ 21: 21](R/W1C/H) Reserved. */
+        uint64_t fcuv                  : 1;  /**< [ 20: 20](R/W1C/H) Reserved. */
+        uint64_t rpe                   : 1;  /**< [ 19: 19](R/W1C/H) Reserved. */
+        uint64_t fcpvwt                : 1;  /**< [ 18: 18](R/W1C/H) Reserved. */
+        uint64_t dpeoosd               : 1;  /**< [ 17: 17](R/W1C/H) Reserved. */
+        uint64_t rtwdle                : 1;  /**< [ 16: 16](R/W1C/H) Reserved. */
+        uint64_t rdwdle                : 1;  /**< [ 15: 15](R/W1C/H) Reserved. */
+        uint64_t mre                   : 1;  /**< [ 14: 14](R/W1C/H) Reserved. */
+        uint64_t rte                   : 1;  /**< [ 13: 13](R/W1C/H) Reserved. */
+        uint64_t acto                  : 1;  /**< [ 12: 12](R/W1C/H) A completion timeout occurred.
+                                                                 Internal:
+                                                                 pedc_radm_cpl_timeout. */
+        uint64_t rvdm                  : 1;  /**< [ 11: 11](R/W1C/H) Received vendor-defined message.
+                                                                 Internal:
+                                                                 pedc_radm_vendor_msg. */
+        uint64_t rumep                 : 1;  /**< [ 10: 10](R/W1C/H) Received unlock message (EP mode only).
+                                                                 Internal:
+                                                                 pedc_radm_msg_unlock. */
+        uint64_t rptamrc               : 1;  /**< [  9:  9](R/W1C/H) Received PME turnoff acknowledge message (RC mode only).
+                                                                 Internal:
+                                                                 pedc_radm_pm_to_ack. */
+        uint64_t rpmerc                : 1;  /**< [  8:  8](R/W1C/H) Received PME message (RC mode only).
+                                                                 Internal:
+                                                                 pedc_radm_pm_pme. */
+        uint64_t rfemrc                : 1;  /**< [  7:  7](R/W1C/H) Received fatal-error message. This bit is set when a message with ERR_FATAL
+                                                                 is received.
+
+                                                                 Internal:
+                                                                 pedc_radm_fatal_err. */
+        uint64_t rnfemrc               : 1;  /**< [  6:  6](R/W1C/H) Received nonfatal error message.
+                                                                 Internal:
+                                                                 pedc_radm_nonfatal_err. */
+        uint64_t rcemrc                : 1;  /**< [  5:  5](R/W1C/H) Received correctable error message.
+                                                                 Internal:
+                                                                 pedc_radm_correctable_err. */
+        uint64_t rpoison               : 1;  /**< [  4:  4](R/W1C/H) Received poisoned TLP not to be forwarded to the peer.
+                                                                 Internal:
+                                                                 pedc__radm_trgt1_poisoned & pedc__radm_trgt1_hv. */
+        uint64_t recrce                : 1;  /**< [  3:  3](R/W1C/H) Received ECRC error.
+                                                                 Internal:
+                                                                 pedc_radm_trgt1_ecrc_err & pedc__radm_trgt1_eot. */
+        uint64_t rtlplle               : 1;  /**< [  2:  2](R/W1C/H) Received TLP has link layer error.
+                                                                 Internal:
+                                                                 pedc_radm_trgt1_dllp_abort &
+                                                                 pedc__radm_trgt1_eot. */
+        uint64_t rtlpmal               : 1;  /**< [  1:  1](R/W1C/H) Received TLP is malformed or a message. If the core receives a MSG (or vendor message) or
+                                                                 if a received AtomicOp violates address/length rules, this bit is set as well.
+
+                                                                 Internal:
+                                                                 pedc_radm_trgt1_tlp_abort & pedc__radm_trgt1_eot. */
+        uint64_t spoison               : 1;  /**< [  0:  0](R/W1C/H) Poisoned TLP sent. This legacy interrupt is deprecated and is never set. */
+#else /* Word 0 - Little Endian */
+        uint64_t spoison               : 1;  /**< [  0:  0](R/W1C/H) Poisoned TLP sent. This legacy interrupt is deprecated and is never set. */
+        uint64_t rtlpmal               : 1;  /**< [  1:  1](R/W1C/H) Received TLP is malformed or a message. If the core receives a MSG (or vendor message) or
+                                                                 if a received AtomicOp violates address/length rules, this bit is set as well.
+
+                                                                 Internal:
+                                                                 pedc_radm_trgt1_tlp_abort & pedc__radm_trgt1_eot. */
+        uint64_t rtlplle               : 1;  /**< [  2:  2](R/W1C/H) Received TLP has link layer error.
+                                                                 Internal:
+                                                                 pedc_radm_trgt1_dllp_abort &
+                                                                 pedc__radm_trgt1_eot. */
+        uint64_t recrce                : 1;  /**< [  3:  3](R/W1C/H) Received ECRC error.
+                                                                 Internal:
+                                                                 pedc_radm_trgt1_ecrc_err & pedc__radm_trgt1_eot. */
+        uint64_t rpoison               : 1;  /**< [  4:  4](R/W1C/H) Received poisoned TLP not to be forwarded to the peer.
+                                                                 Internal:
+                                                                 pedc__radm_trgt1_poisoned & pedc__radm_trgt1_hv. */
+        uint64_t rcemrc                : 1;  /**< [  5:  5](R/W1C/H) Received correctable error message.
+                                                                 Internal:
+                                                                 pedc_radm_correctable_err. */
+        uint64_t rnfemrc               : 1;  /**< [  6:  6](R/W1C/H) Received nonfatal error message.
+                                                                 Internal:
+                                                                 pedc_radm_nonfatal_err. */
+        uint64_t rfemrc                : 1;  /**< [  7:  7](R/W1C/H) Received fatal-error message. This bit is set when a message with ERR_FATAL
+                                                                 is received.
+
+                                                                 Internal:
+                                                                 pedc_radm_fatal_err. */
+        uint64_t rpmerc                : 1;  /**< [  8:  8](R/W1C/H) Received PME message (RC mode only).
+                                                                 Internal:
+                                                                 pedc_radm_pm_pme. */
+        uint64_t rptamrc               : 1;  /**< [  9:  9](R/W1C/H) Received PME turnoff acknowledge message (RC mode only).
+                                                                 Internal:
+                                                                 pedc_radm_pm_to_ack. */
+        uint64_t rumep                 : 1;  /**< [ 10: 10](R/W1C/H) Received unlock message (EP mode only).
+                                                                 Internal:
+                                                                 pedc_radm_msg_unlock. */
+        uint64_t rvdm                  : 1;  /**< [ 11: 11](R/W1C/H) Received vendor-defined message.
+                                                                 Internal:
+                                                                 pedc_radm_vendor_msg. */
+        uint64_t acto                  : 1;  /**< [ 12: 12](R/W1C/H) A completion timeout occurred.
+                                                                 Internal:
+                                                                 pedc_radm_cpl_timeout. */
+        uint64_t rte                   : 1;  /**< [ 13: 13](R/W1C/H) Reserved. */
+        uint64_t mre                   : 1;  /**< [ 14: 14](R/W1C/H) Reserved. */
+        uint64_t rdwdle                : 1;  /**< [ 15: 15](R/W1C/H) Reserved. */
+        uint64_t rtwdle                : 1;  /**< [ 16: 16](R/W1C/H) Reserved. */
+        uint64_t dpeoosd               : 1;  /**< [ 17: 17](R/W1C/H) Reserved. */
+        uint64_t fcpvwt                : 1;  /**< [ 18: 18](R/W1C/H) Reserved. */
+        uint64_t rpe                   : 1;  /**< [ 19: 19](R/W1C/H) Reserved. */
+        uint64_t fcuv                  : 1;  /**< [ 20: 20](R/W1C/H) Reserved. */
+        uint64_t rqo                   : 1;  /**< [ 21: 21](R/W1C/H) Reserved. */
+        uint64_t rauc                  : 1;  /**< [ 22: 22](R/W1C/H) Reserved.. */
+        uint64_t racur                 : 1;  /**< [ 23: 23](R/W1C/H) Reserved. */
+        uint64_t racca                 : 1;  /**< [ 24: 24](R/W1C/H) Reserved. */
+        uint64_t caar                  : 1;  /**< [ 25: 25](R/W1C/H) Reserved. */
+        uint64_t rarwdns               : 1;  /**< [ 26: 26](R/W1C/H) Reserved. */
+        uint64_t ramtlp                : 1;  /**< [ 27: 27](R/W1C/H) Reserved. */
+        uint64_t racpp                 : 1;  /**< [ 28: 28](R/W1C/H) Reserved. */
+        uint64_t rawwpp                : 1;  /**< [ 29: 29](R/W1C/H) Reserved. */
+        uint64_t ecrc_e                : 1;  /**< [ 30: 30](R/W1C/H) Reserved. */
+        uint64_t lofp                  : 1;  /**< [ 31: 31](R/W1C/H) Lack of forward progress at TLP FIFOs timeout occurred. */
+        uint64_t bmd_e                 : 1;  /**< [ 32: 32](R/W1C/H) A NP or P TLP was seen in the outbound path, but it was not allowed to master the bus.
+                                                                 If a PF TLP and the PCIEEP_CMD[ME] is not set.
+                                                                 For VF TLP, either the PCIEEP_CMD[ME]/PCIEEPVF_CMD[ME] are not set. */
+        uint64_t rasdp                 : 1;  /**< [ 33: 33](R/W1C/H) Core entered RAS data protection error mode. */
+        uint64_t in_flr                : 1;  /**< [ 34: 34](R/W1C/H) A NP or P TLP was seen in the outbound path, but it was blocked due to being in FLR. */
+        uint64_t vf_en_off             : 1;  /**< [ 35: 35](R/W1C/H) A NP or P TLP was seen in the outbound path, but it was blocked due to
+                                                                 being a VF-based access (vf_active set) while the VF enable was clear. */
+        uint64_t non_mem_load          : 1;  /**< [ 36: 36](R/W1C/H) An NCBO load to an ACC region mapped to CFG or IO and not contained to a single DWord. */
+        uint64_t atomic_non_mem        : 1;  /**< [ 37: 37](R/W1C/H) An NCBO atomic to an ACC region mapped to CFG or IO. */
+        uint64_t n_ecam_store          : 1;  /**< [ 38: 38](R/W1C/H) An NCBO store to ECAM DID was not contained within a single DWord and from IOBN N queue. */
+        uint64_t p_ecam_store          : 1;  /**< [ 39: 39](R/W1C/H) An NCBO store to ECAM DID was not contained within a single DWord and from IOBN P queue. */
+        uint64_t ecam_load             : 1;  /**< [ 40: 40](R/W1C/H) An NCBO load from ECAM DID was 64-bit. */
+        uint64_t n_csr_store           : 1;  /**< [ 41: 41](R/W1C/H) An NCBO store to CSR DID and from IOBN N queue was improperly formatted based on
+                                                                 size/alignment. Proper format is either DWord aligned DWord access or QWord aligned
+                                                                 QWord access or, if an MSIX register, as long as it is contained within a single QWord. */
+        uint64_t p_csr_store           : 1;  /**< [ 42: 42](R/W1C/H) An NCBO store to CSR DID and from IOBN P queue was improperly formatted based on
+                                                                 size/alignment. Proper format is either DWord aligned DWord access or QWord aligned
+                                                                 QWord access or, if an MSIX register, as long as it is contained within a single QWord. */
+        uint64_t csr_load              : 1;  /**< [ 43: 43](R/W1C/H) An NCBO load from CSR DID was improperly formatted based on size/alignment. Proper
+                                                                 format is either DWord aligned DWord access or QWord aligned QWord access or,
+                                                                 if an MSIX register, as long as it is contained within a single QWord. */
+        uint64_t atomic_to_csr         : 1;  /**< [ 44: 44](R/W1C/H) An NCBO atomic access was within the CSR DID. */
+        uint64_t n_store               : 1;  /**< [ 45: 45](R/W1C/H) An NCBO store used ACC table to map to a CFG or IO type and was not contained
+                                                                 to a single DWord. */
+        uint64_t p_maps_to_n           : 1;  /**< [ 46: 46](R/W1C/H) A store access coming from the IOBN P queue is either an ECAM DID access or
+                                                                 an ACC table access that maps to CFG or IO type. */
+        uint64_t n_store_zero_byte     : 1;  /**< [ 47: 47](R/W1C/H) An NCBO store from IOBN N queue had no byte enables active. */
+        uint64_t p_store_zero_byte     : 1;  /**< [ 48: 48](R/W1C/H) An NCBO store from IOBN P queue had no byte enables active. */
+        uint64_t bad_zero              : 1;  /**< [ 49: 49](R/W1C/H) An access used ACC table to map to a zero-byte read but was not contained
+                                                                 to a single QWord */
+        uint64_t reserved_50_63        : 14;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pemx_dbg_info_cn96xxp3 cn98xx; */
     struct cavm_pemx_dbg_info_cnf95xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -7067,7 +7257,7 @@ union cavm_pemx_dbg_info
         uint64_t reserved_50_63        : 14;
 #endif /* Word 0 - End */
     } cnf95xx;
-    /* struct cavm_pemx_dbg_info_cn9 loki; */
+    /* struct cavm_pemx_dbg_info_cn96xxp3 loki; */
 };
 typedef union cavm_pemx_dbg_info cavm_pemx_dbg_info_t;
 
@@ -12750,7 +12940,55 @@ union cavm_pemx_obff_ctl_status
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pemx_obff_ctl_status_s cn; */
+    /* struct cavm_pemx_obff_ctl_status_s cn9; */
+    /* struct cavm_pemx_obff_ctl_status_s cn96xxp1; */
+    struct cavm_pemx_obff_ctl_status_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t dec_err               : 1;  /**< [  4:  4](R/W1C) Wake decoder received a invalid WAKE pattern.
+
+                                                                 When a invalid WAKE pattern is detected, the OBFF
+                                                                 wake decoder is forced into the CPU_ACT state. */
+        uint64_t dec_state             : 4;  /**< [  3:  0](RO/H) The current FSM state of the OBFF wake decoder.  EP mode only.
+                                                                 For debug purposes only.
+
+                                                                 0x0 = IDLE (RC mode).
+                                                                 0x1 = IDLE to OBFF.
+                                                                 0x3 = IDLE to CPU.
+                                                                 0x4 = OBFF to IDLE.
+                                                                 0x5 = OBFF.
+                                                                 0x6 = OBFF to CPU 1, inactive pulse.
+                                                                 0xa = CPU_IDLE.
+                                                                 0xb = CPU_ACT (default state in EP mode).
+                                                                 0xe = OBFF to CPU 1, inactive pulse.
+
+                                                                 All other FSM states are undefined. */
+#else /* Word 0 - Little Endian */
+        uint64_t dec_state             : 4;  /**< [  3:  0](RO/H) The current FSM state of the OBFF wake decoder.  EP mode only.
+                                                                 For debug purposes only.
+
+                                                                 0x0 = IDLE (RC mode).
+                                                                 0x1 = IDLE to OBFF.
+                                                                 0x3 = IDLE to CPU.
+                                                                 0x4 = OBFF to IDLE.
+                                                                 0x5 = OBFF.
+                                                                 0x6 = OBFF to CPU 1, inactive pulse.
+                                                                 0xa = CPU_IDLE.
+                                                                 0xb = CPU_ACT (default state in EP mode).
+                                                                 0xe = OBFF to CPU 1, inactive pulse.
+
+                                                                 All other FSM states are undefined. */
+        uint64_t dec_err               : 1;  /**< [  4:  4](R/W1C) Wake decoder received a invalid WAKE pattern.
+
+                                                                 When a invalid WAKE pattern is detected, the OBFF
+                                                                 wake decoder is forced into the CPU_ACT state. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pemx_obff_ctl_status_cn96xxp3 cn98xx; */
+    /* struct cavm_pemx_obff_ctl_status_s cnf95xx; */
+    /* struct cavm_pemx_obff_ctl_status_cn96xxp3 loki; */
 };
 typedef union cavm_pemx_obff_ctl_status cavm_pemx_obff_ctl_status_t;
 
@@ -13811,7 +14049,77 @@ union cavm_pemx_ptm_ctl
         uint64_t reserved_11_63        : 53;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pemx_ptm_ctl_s cn; */
+    /* struct cavm_pemx_ptm_ctl_s cn9; */
+    /* struct cavm_pemx_ptm_ctl_s cn96xxp1; */
+    struct cavm_pemx_ptm_ctl_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_11_63        : 53;
+        uint64_t ptm_lcl_cap           : 1;  /**< [ 10: 10](WO) When set, causes a hardware pulse to update the following:
+
+                                                                 The local time (PCIEEP_PTM_REQ_LOCALL & PCIEEP_PTM_REQ_LOCALM) is
+                                                                 captured in PEM()_PTM_LCL_TIME.
+
+                                                                 The master time master time (as selected by [PTM_MSTR_SEL]) is captured
+                                                                 in PEM()_PTM_MAS_TIME.
+
+                                                                 This bit will always read as a zero. */
+        uint64_t ptm_auto_load         : 1;  /**< [  9:  9](R/W) Precision time management auto load to (PCIERC/PCIEEP_PTM_REQ_LOCALL and
+                                                                 PCIERC/PCIEEP_PTM_REQ_LOCALM) will be loaded.
+                                                                 0 = Software.
+                                                                 1 = Hardware auto-load when in L0. */
+        uint64_t ptm_mstr_sel          : 1;  /**< [  8:  8](R/W) Determines for precision time management protocol which master clock input to use.
+                                                                 0 = Master clock from PTP timestamp.
+                                                                 1 = Master clock from GTI_CC_CNTCV. */
+        uint64_t ptm_mstr_adj          : 8;  /**< [  7:  0](R/W) This value (in ns) is added to the selected ([PTM_MSTR_SEL]) master time input
+                                                                 to account for insertion (including clock domain crossing) delays, before
+                                                                 being presented to the MAC.
+
+                                                                 To calculate an accurate delay:
+
+                                                                   [PTM_MSTR_ADJ] = 2 sclk cycles + channel_flop_delay + 3.5 core_clk cycles.
+
+                                                                   channel_flop_delay (PEM2 and PEM3 when [PTM_MSTR_SEL] is 0) = 6 sclk cycles
+                                                                   channel_flop_delay (All other cases) = 5 sclk cycles
+
+                                                                 The default value assumes the MAC is operating at GEN1, and there are 2 channel
+                                                                 flops on the master time inputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t ptm_mstr_adj          : 8;  /**< [  7:  0](R/W) This value (in ns) is added to the selected ([PTM_MSTR_SEL]) master time input
+                                                                 to account for insertion (including clock domain crossing) delays, before
+                                                                 being presented to the MAC.
+
+                                                                 To calculate an accurate delay:
+
+                                                                   [PTM_MSTR_ADJ] = 2 sclk cycles + channel_flop_delay + 3.5 core_clk cycles.
+
+                                                                   channel_flop_delay (PEM2 and PEM3 when [PTM_MSTR_SEL] is 0) = 6 sclk cycles
+                                                                   channel_flop_delay (All other cases) = 5 sclk cycles
+
+                                                                 The default value assumes the MAC is operating at GEN1, and there are 2 channel
+                                                                 flops on the master time inputs. */
+        uint64_t ptm_mstr_sel          : 1;  /**< [  8:  8](R/W) Determines for precision time management protocol which master clock input to use.
+                                                                 0 = Master clock from PTP timestamp.
+                                                                 1 = Master clock from GTI_CC_CNTCV. */
+        uint64_t ptm_auto_load         : 1;  /**< [  9:  9](R/W) Precision time management auto load to (PCIERC/PCIEEP_PTM_REQ_LOCALL and
+                                                                 PCIERC/PCIEEP_PTM_REQ_LOCALM) will be loaded.
+                                                                 0 = Software.
+                                                                 1 = Hardware auto-load when in L0. */
+        uint64_t ptm_lcl_cap           : 1;  /**< [ 10: 10](WO) When set, causes a hardware pulse to update the following:
+
+                                                                 The local time (PCIEEP_PTM_REQ_LOCALL & PCIEEP_PTM_REQ_LOCALM) is
+                                                                 captured in PEM()_PTM_LCL_TIME.
+
+                                                                 The master time master time (as selected by [PTM_MSTR_SEL]) is captured
+                                                                 in PEM()_PTM_MAS_TIME.
+
+                                                                 This bit will always read as a zero. */
+        uint64_t reserved_11_63        : 53;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pemx_ptm_ctl_cn96xxp3 cn98xx; */
+    /* struct cavm_pemx_ptm_ctl_s cnf95xx; */
+    /* struct cavm_pemx_ptm_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_pemx_ptm_ctl cavm_pemx_ptm_ctl_t;
 

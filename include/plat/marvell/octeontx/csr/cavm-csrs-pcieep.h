@@ -377,7 +377,45 @@ union cavm_pcieepx_acs_cap_hdr
                                                                  by default. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pcieepx_acs_cap_hdr_s cn; */
+    /* struct cavm_pcieepx_acs_cap_hdr_s cn9; */
+    /* struct cavm_pcieepx_acs_cap_hdr_s cn96xxp1; */
+    struct cavm_pcieepx_acs_cap_hdr_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t nco                   : 12; /**< [ 31: 20](RO/WRSL/H) Next capability offset.
+                                                                 Writable through PEM()_CFG_TBL().
+
+                                                                 Reset values:
+                                                                 _ PF0:          0x2f8.
+                                                                 _ PF1 - PF15:   0x310.
+
+                                                                 For PF0, this points to the LTR Extended Capabilities by default.
+                                                                 For all other PFs, this field points to the L1 Substates Extended Capabilities
+                                                                 by default. */
+        uint32_t cv                    : 4;  /**< [ 19: 16](RO/WRSL) Capability version.
+                                                                 Writable through PEM()_CFG_TBL(). */
+        uint32_t pcieec                : 16; /**< [ 15:  0](RO/WRSL) PCI Express extended capability.
+                                                                 Writable through PEM()_CFG_TBL(). */
+#else /* Word 0 - Little Endian */
+        uint32_t pcieec                : 16; /**< [ 15:  0](RO/WRSL) PCI Express extended capability.
+                                                                 Writable through PEM()_CFG_TBL(). */
+        uint32_t cv                    : 4;  /**< [ 19: 16](RO/WRSL) Capability version.
+                                                                 Writable through PEM()_CFG_TBL(). */
+        uint32_t nco                   : 12; /**< [ 31: 20](RO/WRSL/H) Next capability offset.
+                                                                 Writable through PEM()_CFG_TBL().
+
+                                                                 Reset values:
+                                                                 _ PF0:          0x2f8.
+                                                                 _ PF1 - PF15:   0x310.
+
+                                                                 For PF0, this points to the LTR Extended Capabilities by default.
+                                                                 For all other PFs, this field points to the L1 Substates Extended Capabilities
+                                                                 by default. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pcieepx_acs_cap_hdr_cn96xxp3 cn98xx; */
+    /* struct cavm_pcieepx_acs_cap_hdr_s cnf95xx; */
+    /* struct cavm_pcieepx_acs_cap_hdr_cn96xxp3 loki; */
 };
 typedef union cavm_pcieepx_acs_cap_hdr cavm_pcieepx_acs_cap_hdr_t;
 
@@ -6787,7 +6825,7 @@ union cavm_pcieepx_cfg121
                                                                  TLPs.  For more details, refer to PCIEEP()_CFG127. */
         uint32_t einj4_en              : 1;  /**< [  4:  4](R/W) FC credit update error injection enable.  Enables insertion of errors into
                                                                  Updated FCs. See PCIEEP()_CFG126. */
-        uint32_t einj3_en              : 1;  /**< [  3:  3](R/W) Symbol datak mask or sync header error enable.  Enables data masking of special
+        uint32_t einj3_en              : 1;  /**< [  3:  3](R/W) Symbol data mask or sync header error enable.  Enables data masking of special
                                                                  symbols or the breaking of the sync header.  See PCIEEP()_CFG125. */
         uint32_t einj2_en              : 1;  /**< [  2:  2](R/W) DLLP error injection enable.  enables insertion of DLLP errors.
                                                                  See PCIEEP()_CFG124. */
@@ -6804,7 +6842,7 @@ union cavm_pcieepx_cfg121
                                                                  See PCIEEP()_CFG123. */
         uint32_t einj2_en              : 1;  /**< [  2:  2](R/W) DLLP error injection enable.  enables insertion of DLLP errors.
                                                                  See PCIEEP()_CFG124. */
-        uint32_t einj3_en              : 1;  /**< [  3:  3](R/W) Symbol datak mask or sync header error enable.  Enables data masking of special
+        uint32_t einj3_en              : 1;  /**< [  3:  3](R/W) Symbol data mask or sync header error enable.  Enables data masking of special
                                                                  symbols or the breaking of the sync header.  See PCIEEP()_CFG125. */
         uint32_t einj4_en              : 1;  /**< [  4:  4](R/W) FC credit update error injection enable.  Enables insertion of errors into
                                                                  Updated FCs. See PCIEEP()_CFG126. */
@@ -8383,14 +8421,14 @@ union cavm_pcieepx_cfg154
                                                                  at same cycle time in SKPOS state.
                                                                  0x28 = When a 2-block timeout occurs for SKP OS in SKPOS state.
                                                                  0x29 = When receiving consecutive OS Blocks within a Data Stream in SKPOS state.n.
-                                                                 0x2A = When Phy status error was detected in SKPOS state.
+                                                                 0x2A = When PHY status error was detected in SKPOS state.
                                                                  0x2B = When not all active lanes receiving EIOS starting at
                                                                  same cycle time in EIOS state.
                                                                  0x2C = When at least one symbol from the first 4 symbols
                                                                  is not EIOS symbol in EIOS state (CX_NB=2 only).
                                                                  0x2D = When not all active lanes receiving EIEOS starting
                                                                  at same cycle time in EIEOS state.
-                                                                 0x2E = When not full 16 eieos symbols are received in EIEOS state.
+                                                                 0x2E = When not full 16 EIEOS symbols are received in EIEOS state.
 
                                                                  All other values not listed above are reserved. */
 #else /* Word 0 - Little Endian */
@@ -8430,14 +8468,14 @@ union cavm_pcieepx_cfg154
                                                                  at same cycle time in SKPOS state.
                                                                  0x28 = When a 2-block timeout occurs for SKP OS in SKPOS state.
                                                                  0x29 = When receiving consecutive OS Blocks within a Data Stream in SKPOS state.n.
-                                                                 0x2A = When Phy status error was detected in SKPOS state.
+                                                                 0x2A = When PHY status error was detected in SKPOS state.
                                                                  0x2B = When not all active lanes receiving EIOS starting at
                                                                  same cycle time in EIOS state.
                                                                  0x2C = When at least one symbol from the first 4 symbols
                                                                  is not EIOS symbol in EIOS state (CX_NB=2 only).
                                                                  0x2D = When not all active lanes receiving EIEOS starting
                                                                  at same cycle time in EIEOS state.
-                                                                 0x2E = When not full 16 eieos symbols are received in EIEOS state.
+                                                                 0x2E = When not full 16 EIEOS symbols are received in EIEOS state.
 
                                                                  All other values not listed above are reserved. */
         uint32_t framing_err           : 1;  /**< [  7:  7](R/W1C) Framing error.
@@ -20643,7 +20681,67 @@ union cavm_pcieepx_ptm_req_ctl
         uint32_t reserved_17_31        : 15;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pcieepx_ptm_req_ctl_s cn; */
+    /* struct cavm_pcieepx_ptm_req_ctl_s cn9; */
+    /* struct cavm_pcieepx_ptm_req_ctl_s cn96xxp1; */
+    struct cavm_pcieepx_ptm_req_ctl_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_17_31        : 15;
+        uint32_t pd_byterev            : 1;  /**< [ 16: 16](R/W) PTM requester propagation delay byte reverse
+
+                                                                 0 = The PTM propagation delay word in the PTM response
+                                                                 message is implemented as high order byte first.
+
+                                                                 1 = The PTM propagation delay word in the PTM response
+                                                                 message is implemented as low order byte first, which is not
+                                                                 in accordance with the PCI-SIG interpretation. */
+        uint32_t rlt                   : 8;  /**< [ 15:  8](R/W) PTM requester long timer.
+                                                                 Determines the period between each auto update PTM Dialogue in miliseconds.
+                                                                 Update period is the register value +1 milisecond. For the Switch product
+                                                                 this value must not be set larger than 0x9 for spec compliance. For more
+                                                                 details, see the PTM section in the Databook. */
+        uint32_t reserved_3_7          : 5;
+        uint32_t rft                   : 1;  /**< [  2:  2](R/W) PTM fast timers.
+                                                                 Debug mode for PTM timers. The 100us timer output will go high at 30us and
+                                                                 the 10ms timer output will go high at 100us (The Long Timer Value is ignored).
+                                                                 There is no change to the 1us timer. The requester operation will otherwise
+                                                                 remain the same. For more details, see the PTM section in the Databook. */
+        uint32_t rsd                   : 1;  /**< [  1:  1](R/W1C) PTM requester start update.
+                                                                 When set the PTM Requester will attempt a PTM Dialogue to update it's context;
+                                                                 This bit is self clearing. For more details, see the PTM section in the Databook. */
+        uint32_t rauen                 : 1;  /**< [  0:  0](R/W) PTM requester auto update enabled.
+                                                                 When enabled, PTM Requester will automatically attempt to update its context every 10ms. */
+#else /* Word 0 - Little Endian */
+        uint32_t rauen                 : 1;  /**< [  0:  0](R/W) PTM requester auto update enabled.
+                                                                 When enabled, PTM Requester will automatically attempt to update its context every 10ms. */
+        uint32_t rsd                   : 1;  /**< [  1:  1](R/W1C) PTM requester start update.
+                                                                 When set the PTM Requester will attempt a PTM Dialogue to update it's context;
+                                                                 This bit is self clearing. For more details, see the PTM section in the Databook. */
+        uint32_t rft                   : 1;  /**< [  2:  2](R/W) PTM fast timers.
+                                                                 Debug mode for PTM timers. The 100us timer output will go high at 30us and
+                                                                 the 10ms timer output will go high at 100us (The Long Timer Value is ignored).
+                                                                 There is no change to the 1us timer. The requester operation will otherwise
+                                                                 remain the same. For more details, see the PTM section in the Databook. */
+        uint32_t reserved_3_7          : 5;
+        uint32_t rlt                   : 8;  /**< [ 15:  8](R/W) PTM requester long timer.
+                                                                 Determines the period between each auto update PTM Dialogue in miliseconds.
+                                                                 Update period is the register value +1 milisecond. For the Switch product
+                                                                 this value must not be set larger than 0x9 for spec compliance. For more
+                                                                 details, see the PTM section in the Databook. */
+        uint32_t pd_byterev            : 1;  /**< [ 16: 16](R/W) PTM requester propagation delay byte reverse
+
+                                                                 0 = The PTM propagation delay word in the PTM response
+                                                                 message is implemented as high order byte first.
+
+                                                                 1 = The PTM propagation delay word in the PTM response
+                                                                 message is implemented as low order byte first, which is not
+                                                                 in accordance with the PCI-SIG interpretation. */
+        uint32_t reserved_17_31        : 15;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pcieepx_ptm_req_ctl_cn96xxp3 cn98xx; */
+    /* struct cavm_pcieepx_ptm_req_ctl_s cnf95xx; */
+    /* struct cavm_pcieepx_ptm_req_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_pcieepx_ptm_req_ctl cavm_pcieepx_ptm_req_ctl_t;
 
@@ -23075,7 +23173,49 @@ union cavm_pcieepx_ras_einj_en
         uint32_t reserved_7_31         : 25;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pcieepx_ras_einj_en_s cn; */
+    /* struct cavm_pcieepx_ras_einj_en_s cn9; */
+    /* struct cavm_pcieepx_ras_einj_en_s cn96xxp1; */
+    struct cavm_pcieepx_ras_einj_en_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_7_31         : 25;
+        uint32_t einj6_en              : 1;  /**< [  6:  6](R/W) Specific TLP error injection enable.  Enables insertion of errors into the
+                                                                 packet selected.  For more details, refer to PCIEEP_RAS_EINJ_CTL6CMPP0. */
+        uint32_t einj5_en              : 1;  /**< [  5:  5](R/W) TLP duplicate/nullify error injection enable.  Enables insertion of duplicate/nullified
+                                                                 TLPs.  For more details, refer to PCIEEP_RAS_EINJ_CTL5. */
+        uint32_t einj4_en              : 1;  /**< [  4:  4](R/W) FC credit update error injection enable.  Enables insertion of errors into
+                                                                 Updated FCs. See PCIEEP_RAS_EINJ_CTL4. */
+        uint32_t einj3_en              : 1;  /**< [  3:  3](R/W) Symbol data mask or sync header error enable.  Enables data masking of special
+                                                                 symbols or the breaking of the sync header.  See PCIEEP_RAS_EINJ_CTL3. */
+        uint32_t einj2_en              : 1;  /**< [  2:  2](R/W) DLLP error injection enable.  enables insertion of DLLP errors.
+                                                                 See PCIEEP_RAS_EINJ_CTL2. */
+        uint32_t einj1_en              : 1;  /**< [  1:  1](R/W) Sequence number error injection enable.  Enables insertion of errors into
+                                                                 sequence numbers.
+                                                                 See PCIEEP_RAS_EINJ_CTL1. */
+        uint32_t einj0_en              : 1;  /**< [  0:  0](R/W) CRC error injection enable.  Enables insertion of errors into various CRC.
+                                                                 See PCIEEP_RAS_EINJ_CTL0. */
+#else /* Word 0 - Little Endian */
+        uint32_t einj0_en              : 1;  /**< [  0:  0](R/W) CRC error injection enable.  Enables insertion of errors into various CRC.
+                                                                 See PCIEEP_RAS_EINJ_CTL0. */
+        uint32_t einj1_en              : 1;  /**< [  1:  1](R/W) Sequence number error injection enable.  Enables insertion of errors into
+                                                                 sequence numbers.
+                                                                 See PCIEEP_RAS_EINJ_CTL1. */
+        uint32_t einj2_en              : 1;  /**< [  2:  2](R/W) DLLP error injection enable.  enables insertion of DLLP errors.
+                                                                 See PCIEEP_RAS_EINJ_CTL2. */
+        uint32_t einj3_en              : 1;  /**< [  3:  3](R/W) Symbol data mask or sync header error enable.  Enables data masking of special
+                                                                 symbols or the breaking of the sync header.  See PCIEEP_RAS_EINJ_CTL3. */
+        uint32_t einj4_en              : 1;  /**< [  4:  4](R/W) FC credit update error injection enable.  Enables insertion of errors into
+                                                                 Updated FCs. See PCIEEP_RAS_EINJ_CTL4. */
+        uint32_t einj5_en              : 1;  /**< [  5:  5](R/W) TLP duplicate/nullify error injection enable.  Enables insertion of duplicate/nullified
+                                                                 TLPs.  For more details, refer to PCIEEP_RAS_EINJ_CTL5. */
+        uint32_t einj6_en              : 1;  /**< [  6:  6](R/W) Specific TLP error injection enable.  Enables insertion of errors into the
+                                                                 packet selected.  For more details, refer to PCIEEP_RAS_EINJ_CTL6CMPP0. */
+        uint32_t reserved_7_31         : 25;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pcieepx_ras_einj_en_cn96xxp3 cn98xx; */
+    /* struct cavm_pcieepx_ras_einj_en_s cnf95xx; */
+    /* struct cavm_pcieepx_ras_einj_en_cn96xxp3 loki; */
 };
 typedef union cavm_pcieepx_ras_einj_en cavm_pcieepx_ras_einj_en_t;
 
@@ -24255,7 +24395,149 @@ union cavm_pcieepx_ras_sd_l1ltssm
                                                                  0x8-0xF = idle_to_rlock_transitioned. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pcieepx_ras_sd_l1ltssm_s cn; */
+    /* struct cavm_pcieepx_ras_sd_l1ltssm_s cn9; */
+    /* struct cavm_pcieepx_ras_sd_l1ltssm_s cn96xxp1; */
+    struct cavm_pcieepx_ras_sd_l1ltssm_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t ltssm_var             : 16; /**< [ 31: 16](RO/H) LTSSM variable.
+                                                                 Indicates internal LTSSM variables defined in the PCI
+                                                                 Express base specification.
+                                                                 0x0 = directed_speed change.
+                                                                 0x1 = changed_speed_recovery.
+                                                                 0x2 = successful_speed_negotiation.
+                                                                 0x3 = upconfigure_capable; Set to one if both ports advertised
+                                                                 the UpConfigure capability in the last Config.Complete.
+                                                                 0x4 = select_deemphasis.
+                                                                 0x5 = start_equalization_w_preset.
+                                                                 0x6 = equalization_done_8GT_data_rate.
+                                                                 0x7 = equalization_done_16GT_data_rate.
+                                                                 0x8-0xF = idle_to_rlock_transitioned. */
+        uint32_t lane_rev              : 1;  /**< [ 15: 15](RO/H) Lane reversal operation.
+                                                                 Receiver detected lane reversal. */
+        uint32_t reserved_11_14        : 4;
+        uint32_t pipe_pwr_dwn          : 3;  /**< [ 10:  8](RO/H) PIPE:PowerDown.
+                                                                 Indicates PIPE PowerDown signal. */
+        uint32_t framing_err           : 1;  /**< [  7:  7](R/W1C/H) Framing error.
+                                                                 Indicates framing error detection status. */
+        uint32_t framing_err_ptr       : 7;  /**< [  6:  0](RO/H) First framing error pointer.
+                                                                 Identifies the first framing error using the following
+                                                                 encoding. The field contents are only valid value when
+                                                                 [FRAMING_ERR] = 1.
+
+                                                                 Received unexpected framing token:
+                                                                 0x1 = When non-STP/SDP/IDL token was received and it
+                                                                 was not in TLP/DLLP reception.
+                                                                 0x02 = When current token was not a valid EDB token and
+                                                                 previous token was an EDB. (128/256 bit core only).
+                                                                 0x03 = When SDP token was received but not expected.
+                                                                 0x04 = When STP token was received but not expected.
+                                                                 0x05 = When EDS token was expected but not received or
+                                                                 whenever an EDS token was received but not expected.
+                                                                 0x06 = When a framing error was detected in the deskew
+                                                                 block while a packet has been in progress in token_finder.
+                                                                 Received Unexpected STP Token
+                                                                 0x11 = When framing CRC in STP token did not match.
+                                                                 0x12 = When framing parity in STP token did not match.
+                                                                 0x13 = When framing TLP length in STP token was
+                                                                 smaller than 5 DWORDs.
+
+                                                                 \<page\>
+
+                                                                 Received unexpected block:
+                                                                 0x21 = When receiving an OS block following SDS in datastream state.n.
+                                                                 0x22 = When data block followed by OS block different.
+                                                                 from SKP, EI, EIE in datastream state.
+                                                                 0x23 = When block with an undefined block type in datastream state.
+                                                                 0x24 = When data stream without data over three cycles in datastream state.
+                                                                 0x25 = When OS block during data stream in datastream state.
+                                                                 0x26 = When RxStatus error was detected in datastream state.
+                                                                 0x27 = When not all active lanes receiving SKP OS starting
+                                                                 at same cycle time in SKPOS state.
+                                                                 0x28 = When a two-block timeout occurs for SKP OS in SKPOS state.
+                                                                 0x29 = When receiving consecutive OS blocks within a data stream in SKPOS state.n.
+                                                                 0x2A = When PHY status error was detected in SKPOS state.
+                                                                 0x2B = When not all active lanes receiving EIOS starting at
+                                                                 same cycle time in EIOS state.
+                                                                 0x2C = When at least one symbol from the first 4 symbols
+                                                                 is not EIOS symbol in EIOS state (CX_NB=2 only).
+                                                                 0x2D = When not all active lanes receiving EIEOS starting
+                                                                 at same cycle time in EIEOS state.
+                                                                 0x2E = When not full 16 EIEOS symbols are received in EIEOS state.
+
+                                                                 All other values not listed above are reserved. */
+#else /* Word 0 - Little Endian */
+        uint32_t framing_err_ptr       : 7;  /**< [  6:  0](RO/H) First framing error pointer.
+                                                                 Identifies the first framing error using the following
+                                                                 encoding. The field contents are only valid value when
+                                                                 [FRAMING_ERR] = 1.
+
+                                                                 Received unexpected framing token:
+                                                                 0x1 = When non-STP/SDP/IDL token was received and it
+                                                                 was not in TLP/DLLP reception.
+                                                                 0x02 = When current token was not a valid EDB token and
+                                                                 previous token was an EDB. (128/256 bit core only).
+                                                                 0x03 = When SDP token was received but not expected.
+                                                                 0x04 = When STP token was received but not expected.
+                                                                 0x05 = When EDS token was expected but not received or
+                                                                 whenever an EDS token was received but not expected.
+                                                                 0x06 = When a framing error was detected in the deskew
+                                                                 block while a packet has been in progress in token_finder.
+                                                                 Received Unexpected STP Token
+                                                                 0x11 = When framing CRC in STP token did not match.
+                                                                 0x12 = When framing parity in STP token did not match.
+                                                                 0x13 = When framing TLP length in STP token was
+                                                                 smaller than 5 DWORDs.
+
+                                                                 \<page\>
+
+                                                                 Received unexpected block:
+                                                                 0x21 = When receiving an OS block following SDS in datastream state.n.
+                                                                 0x22 = When data block followed by OS block different.
+                                                                 from SKP, EI, EIE in datastream state.
+                                                                 0x23 = When block with an undefined block type in datastream state.
+                                                                 0x24 = When data stream without data over three cycles in datastream state.
+                                                                 0x25 = When OS block during data stream in datastream state.
+                                                                 0x26 = When RxStatus error was detected in datastream state.
+                                                                 0x27 = When not all active lanes receiving SKP OS starting
+                                                                 at same cycle time in SKPOS state.
+                                                                 0x28 = When a two-block timeout occurs for SKP OS in SKPOS state.
+                                                                 0x29 = When receiving consecutive OS blocks within a data stream in SKPOS state.n.
+                                                                 0x2A = When PHY status error was detected in SKPOS state.
+                                                                 0x2B = When not all active lanes receiving EIOS starting at
+                                                                 same cycle time in EIOS state.
+                                                                 0x2C = When at least one symbol from the first 4 symbols
+                                                                 is not EIOS symbol in EIOS state (CX_NB=2 only).
+                                                                 0x2D = When not all active lanes receiving EIEOS starting
+                                                                 at same cycle time in EIEOS state.
+                                                                 0x2E = When not full 16 EIEOS symbols are received in EIEOS state.
+
+                                                                 All other values not listed above are reserved. */
+        uint32_t framing_err           : 1;  /**< [  7:  7](R/W1C/H) Framing error.
+                                                                 Indicates framing error detection status. */
+        uint32_t pipe_pwr_dwn          : 3;  /**< [ 10:  8](RO/H) PIPE:PowerDown.
+                                                                 Indicates PIPE PowerDown signal. */
+        uint32_t reserved_11_14        : 4;
+        uint32_t lane_rev              : 1;  /**< [ 15: 15](RO/H) Lane reversal operation.
+                                                                 Receiver detected lane reversal. */
+        uint32_t ltssm_var             : 16; /**< [ 31: 16](RO/H) LTSSM variable.
+                                                                 Indicates internal LTSSM variables defined in the PCI
+                                                                 Express base specification.
+                                                                 0x0 = directed_speed change.
+                                                                 0x1 = changed_speed_recovery.
+                                                                 0x2 = successful_speed_negotiation.
+                                                                 0x3 = upconfigure_capable; Set to one if both ports advertised
+                                                                 the UpConfigure capability in the last Config.Complete.
+                                                                 0x4 = select_deemphasis.
+                                                                 0x5 = start_equalization_w_preset.
+                                                                 0x6 = equalization_done_8GT_data_rate.
+                                                                 0x7 = equalization_done_16GT_data_rate.
+                                                                 0x8-0xF = idle_to_rlock_transitioned. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pcieepx_ras_sd_l1ltssm_cn96xxp3 cn98xx; */
+    /* struct cavm_pcieepx_ras_sd_l1ltssm_s cnf95xx; */
+    /* struct cavm_pcieepx_ras_sd_l1ltssm_cn96xxp3 loki; */
 };
 typedef union cavm_pcieepx_ras_sd_l1ltssm cavm_pcieepx_ras_sd_l1ltssm_t;
 
@@ -24319,7 +24601,43 @@ union cavm_pcieepx_ras_sd_statusl2
         uint32_t reserved_28_31        : 4;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pcieepx_ras_sd_statusl2_s cn; */
+    /* struct cavm_pcieepx_ras_sd_statusl2_s cn9; */
+    /* struct cavm_pcieepx_ras_sd_statusl2_s cn96xxp1; */
+    struct cavm_pcieepx_ras_sd_statusl2_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_28_31        : 4;
+        uint32_t fc_init2              : 1;  /**< [ 27: 27](RO) Indicates the core is in FC_INIT2(VC0) state. */
+        uint32_t fc_init1              : 1;  /**< [ 26: 26](RO) Indicates the core is in FC_INIT1(VC0) state. */
+        uint32_t dlcmsm                : 2;  /**< [ 25: 24](RO/H) Indicates the current DLCMSM.
+                                                                 0x0 = DL_INACTIVE.
+                                                                 0x1 = DL_FC_INIT.
+                                                                 0x2 = Reserved.
+                                                                 0x3 = DL_ACTIVE. */
+        uint32_t rx_ack_seq_no         : 12; /**< [ 23: 12](RO/H) RX ACK sequence number.
+                                                                 Indicates the ACK sequence number which is updated by receiving
+                                                                 ACK/NAK DLLP. */
+        uint32_t tx_ack_seq_no         : 12; /**< [ 11:  0](RO/H) TX ACK sequence number.
+                                                                 Indicates next transmit sequence number for transmit TLP. */
+#else /* Word 0 - Little Endian */
+        uint32_t tx_ack_seq_no         : 12; /**< [ 11:  0](RO/H) TX ACK sequence number.
+                                                                 Indicates next transmit sequence number for transmit TLP. */
+        uint32_t rx_ack_seq_no         : 12; /**< [ 23: 12](RO/H) RX ACK sequence number.
+                                                                 Indicates the ACK sequence number which is updated by receiving
+                                                                 ACK/NAK DLLP. */
+        uint32_t dlcmsm                : 2;  /**< [ 25: 24](RO/H) Indicates the current DLCMSM.
+                                                                 0x0 = DL_INACTIVE.
+                                                                 0x1 = DL_FC_INIT.
+                                                                 0x2 = Reserved.
+                                                                 0x3 = DL_ACTIVE. */
+        uint32_t fc_init1              : 1;  /**< [ 26: 26](RO) Indicates the core is in FC_INIT1(VC0) state. */
+        uint32_t fc_init2              : 1;  /**< [ 27: 27](RO) Indicates the core is in FC_INIT2(VC0) state. */
+        uint32_t reserved_28_31        : 4;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pcieepx_ras_sd_statusl2_cn96xxp3 cn98xx; */
+    /* struct cavm_pcieepx_ras_sd_statusl2_s cnf95xx; */
+    /* struct cavm_pcieepx_ras_sd_statusl2_cn96xxp3 loki; */
 };
 typedef union cavm_pcieepx_ras_sd_statusl2 cavm_pcieepx_ras_sd_statusl2_t;
 
@@ -24929,7 +25247,43 @@ union cavm_pcieepx_rasdp_cap_hdr
                                                                  For all other other PFs, this field points to PTM Requester Capabilities by default. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pcieepx_rasdp_cap_hdr_s cn; */
+    /* struct cavm_pcieepx_rasdp_cap_hdr_s cn9; */
+    /* struct cavm_pcieepx_rasdp_cap_hdr_s cn96xxp1; */
+    struct cavm_pcieepx_rasdp_cap_hdr_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t nco                   : 12; /**< [ 31: 20](RO/WRSL/H) Next capability offset.
+                                                                 Writable through PEM()_CFG_TBL().
+
+                                                                 Reset values:
+                                                                 _ PF0:          0x450.
+                                                                 _ PF1 - PF15:   0x468.
+
+                                                                 For PF0, this points to the Data Link Feature Extended Capabilities.
+                                                                 For all other PFs, this field points to PTM Requester Capabilities by default. */
+        uint32_t cv                    : 4;  /**< [ 19: 16](RO/WRSL) Capability version.
+                                                                 Writable through PEM()_CFG_TBL(). */
+        uint32_t pcieec                : 16; /**< [ 15:  0](RO/WRSL) PCI Express extended capability.
+                                                                 Writable through PEM()_CFG_TBL(). */
+#else /* Word 0 - Little Endian */
+        uint32_t pcieec                : 16; /**< [ 15:  0](RO/WRSL) PCI Express extended capability.
+                                                                 Writable through PEM()_CFG_TBL(). */
+        uint32_t cv                    : 4;  /**< [ 19: 16](RO/WRSL) Capability version.
+                                                                 Writable through PEM()_CFG_TBL(). */
+        uint32_t nco                   : 12; /**< [ 31: 20](RO/WRSL/H) Next capability offset.
+                                                                 Writable through PEM()_CFG_TBL().
+
+                                                                 Reset values:
+                                                                 _ PF0:          0x450.
+                                                                 _ PF1 - PF15:   0x468.
+
+                                                                 For PF0, this points to the Data Link Feature Extended Capabilities.
+                                                                 For all other PFs, this field points to PTM Requester Capabilities by default. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pcieepx_rasdp_cap_hdr_cn96xxp3 cn98xx; */
+    /* struct cavm_pcieepx_rasdp_cap_hdr_s cnf95xx; */
+    /* struct cavm_pcieepx_rasdp_cap_hdr_cn96xxp3 loki; */
 };
 typedef union cavm_pcieepx_rasdp_cap_hdr cavm_pcieepx_rasdp_cap_hdr_t;
 

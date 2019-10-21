@@ -3326,7 +3326,9 @@ union cavm_gpio_pkg_ver
 
                                                                  If FUS_FUSE_NUM_E::CHIP_ID() fuses indicate pass C or later:
                                                                  0x4 = SKU package M = 50 x 50mm package, up to 3 DDR channels,
-                                                                                       backwards A0 board-compatible.
+                                                                                       backwards board-compatible with package A.
+                                                                 0x5 = SKU package N = 42.5 x 42.5mm package, up to 2 DDR channels, 8 lanes Ethernet.
+                                                                                       backwards board-compatible with package C.
                                                                  0x7 = SKU package P = 50 x 50mm package, up to 3 DDR channels.
 
                                                                  Internal:
@@ -3347,7 +3349,9 @@ union cavm_gpio_pkg_ver
 
                                                                  If FUS_FUSE_NUM_E::CHIP_ID() fuses indicate pass C or later:
                                                                  0x4 = SKU package M = 50 x 50mm package, up to 3 DDR channels,
-                                                                                       backwards A0 board-compatible.
+                                                                                       backwards board-compatible with package A.
+                                                                 0x5 = SKU package N = 42.5 x 42.5mm package, up to 2 DDR channels, 8 lanes Ethernet.
+                                                                                       backwards board-compatible with package C.
                                                                  0x7 = SKU package P = 50 x 50mm package, up to 3 DDR channels.
 
                                                                  Internal:

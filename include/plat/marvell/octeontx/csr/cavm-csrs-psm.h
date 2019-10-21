@@ -746,7 +746,6 @@ union cavm_psm_cmd_qrun_s
  * Structure psm_cmd_rsp_s
  *
  * PSM MHAB/MDAB Response Command Structure
- * Internal:
  * This structure specifies the PSM MHAB/MDAB response command
  * (opcode=PSM_OP_RSP).  This command is used for the MHAB/MDAB
  * to send job status information back to the PSM.  It
@@ -1938,7 +1937,30 @@ union cavm_psm_djcntx_cfg
         uint64_t reserved_11_63        : 53;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_psm_djcntx_cfg_s cn; */
+    /* struct cavm_psm_djcntx_cfg_s cn9; */
+    /* struct cavm_psm_djcntx_cfg_s cnf95xxp1; */
+    struct cavm_psm_djcntx_cfg_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_11_63        : 53;
+        uint64_t djcnt_sat             : 1;  /**< [ 10: 10](R/W) Enable counter saturation.  When set, the DJCNT will not
+                                                                 increment past 0xFF or decrement below 0x0. */
+        uint64_t djcnt_sosf            : 1;  /**< [  9:  9](R/W) Enable SOS auto-decrement. When set, the DJCNT will decrement by one
+                                                                 when an RFIF SOS is received. */
+        uint64_t djcnt_update          : 1;  /**< [  8:  8](R/W/H) When written 1, the DJCNT will be updated with [DJCNT_VAL]. */
+        uint64_t djcnt_val             : 8;  /**< [  7:  0](R/W/H) On read, returns the current value of the DJCNT. On write, the DJCNT will be
+                                                                 updated with this value if [DJCNT_UPDATE] is set. */
+#else /* Word 0 - Little Endian */
+        uint64_t djcnt_val             : 8;  /**< [  7:  0](R/W/H) On read, returns the current value of the DJCNT. On write, the DJCNT will be
+                                                                 updated with this value if [DJCNT_UPDATE] is set. */
+        uint64_t djcnt_update          : 1;  /**< [  8:  8](R/W/H) When written 1, the DJCNT will be updated with [DJCNT_VAL]. */
+        uint64_t djcnt_sosf            : 1;  /**< [  9:  9](R/W) Enable SOS auto-decrement. When set, the DJCNT will decrement by one
+                                                                 when an RFIF SOS is received. */
+        uint64_t djcnt_sat             : 1;  /**< [ 10: 10](R/W) Enable counter saturation.  When set, the DJCNT will not
+                                                                 increment past 0xFF or decrement below 0x0. */
+        uint64_t reserved_11_63        : 53;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
 };
 typedef union cavm_psm_djcntx_cfg cavm_psm_djcntx_cfg_t;
 
@@ -4978,7 +5000,7 @@ static inline uint64_t CAVM_PSM_SET2_MABQX_CDT_USAGE(unsigned long a)
 /**
  * Register (NCB) psm_set2_mabq#_job_cdt#
  *
- * PHY Scheduler Set 2 MDAB Job Credit Registers
+ * PHY Scheduler Set 2 RFOE Job Credit Registers
  * These registers define the current number of jobs that the PSM
  * can submit to the MABQs of each RFOE at a time.
  */

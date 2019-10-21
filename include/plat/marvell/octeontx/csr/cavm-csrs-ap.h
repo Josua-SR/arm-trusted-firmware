@@ -7149,6 +7149,71 @@ union cavm_ap_cvmctl2_el1
     struct cavm_ap_cvmctl2_el1_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_53_63        : 11;
+        uint64_t disable_ldi_interrupt : 1;  /**< [ 52: 52](R/W) Disable interrupts attaching to LDI. For diagnostic use only. */
+        uint64_t jsr_dis               : 1;  /**< [ 51: 51](R/W) Disable the return stack. For diagnostic use only. */
+        uint64_t btc_hysteresis_dis    : 1;  /**< [ 50: 50](R/W) Disable hysteresis in the branch-target cache. For diagnostic use only. */
+        uint64_t btc_dis               : 1;  /**< [ 49: 49](R/W) Disable the branch-target cache. For diagnostic use only. */
+        uint64_t tage_dis              : 1;  /**< [ 48: 48](R/W) Disable the TAGE branch-prediction algorithm; use bimodal prediction
+                                                                 instead. For diagnostic use only. */
+        uint64_t force_bp_not_taken    : 1;  /**< [ 47: 47](R/W) Force the branch predictor to always predict not-taken. Also disables updates to
+                                                                 predictors. For diagnostic use only. */
+        uint64_t fetch_latency_c       : 5;  /**< [ 46: 42](R/W) Highest-level latency threshold for fetcher SPX indication. For diagnostic use
+                                                                 only. */
+        uint64_t fetch_latency_b       : 5;  /**< [ 41: 37](R/W) Mid-level latency threshold for fetcher SPX indication. For diagnostic use only. */
+        uint64_t fetch_latency_a       : 5;  /**< [ 36: 32](R/W) Lowest-level latency threshold for fetcher SPX indication. For diagnostic use
+                                                                 only. */
+        uint64_t force_fe_bubbles      : 1;  /**< [ 31: 31](R/W) Force bubbles in fetch unit pseudo-randomly. For diagnostic use only. */
+        uint64_t ifill_stream_dis      : 1;  /**< [ 30: 30](R/W) When 0, allow "nearby" IFill requests above what [IFILL_FETCH_LIMIT] would
+                                                                 permit. When 1, strictly use IFILL_FETCH_LIMIT. For diagnostic use only. */
+        uint64_t icache_max_ways       : 6;  /**< [ 29: 24](R/W) Maximum ways to allocate in ICache. When 0x0, maximum way number is all ways
+                                                                 (i.e., use 32 ways). For diagnostic use only. */
+        uint64_t ifill_fetch_limit     : 3;  /**< [ 23: 21](R/W) Number of outstanding IFill requests allowed. When 0x0, allow 4 outstanding
+                                                                 requests. See [IFILL_STREAM_DIS]. For diagnostic use only. */
+        uint64_t ifill_wait            : 5;  /**< [ 20: 16](R/W) Cycles to delay before forcing IFill to issue. For diagnostic use only. */
+        uint64_t reserved_12_15        : 4;
+        uint64_t livelock_stall_detect : 4;  /**< [ 11:  8](R/W) Livelock stall detector. 0x0 = Disabled, else number of cycles = 16 *
+                                                                 1\<\<[LIVELOCK_STALL_DETECT]. */
+        uint64_t reserved_4_7          : 4;
+        uint64_t reduce_map_bandwidth  : 2;  /**< [  3:  2](R/W) Reduce map bandwidth to 1-3 instr/cycle (also reduces max inflight instructions to 32,64,96) */
+        uint64_t allow_one_ifi         : 1;  /**< [  1:  1](R/W) Allow only one inflight instruction. */
+        uint64_t allow_one_ifmr        : 1;  /**< [  0:  0](R/W) Allow only one inflight memory reference. */
+#else /* Word 0 - Little Endian */
+        uint64_t allow_one_ifmr        : 1;  /**< [  0:  0](R/W) Allow only one inflight memory reference. */
+        uint64_t allow_one_ifi         : 1;  /**< [  1:  1](R/W) Allow only one inflight instruction. */
+        uint64_t reduce_map_bandwidth  : 2;  /**< [  3:  2](R/W) Reduce map bandwidth to 1-3 instr/cycle (also reduces max inflight instructions to 32,64,96) */
+        uint64_t reserved_4_7          : 4;
+        uint64_t livelock_stall_detect : 4;  /**< [ 11:  8](R/W) Livelock stall detector. 0x0 = Disabled, else number of cycles = 16 *
+                                                                 1\<\<[LIVELOCK_STALL_DETECT]. */
+        uint64_t reserved_12_15        : 4;
+        uint64_t ifill_wait            : 5;  /**< [ 20: 16](R/W) Cycles to delay before forcing IFill to issue. For diagnostic use only. */
+        uint64_t ifill_fetch_limit     : 3;  /**< [ 23: 21](R/W) Number of outstanding IFill requests allowed. When 0x0, allow 4 outstanding
+                                                                 requests. See [IFILL_STREAM_DIS]. For diagnostic use only. */
+        uint64_t icache_max_ways       : 6;  /**< [ 29: 24](R/W) Maximum ways to allocate in ICache. When 0x0, maximum way number is all ways
+                                                                 (i.e., use 32 ways). For diagnostic use only. */
+        uint64_t ifill_stream_dis      : 1;  /**< [ 30: 30](R/W) When 0, allow "nearby" IFill requests above what [IFILL_FETCH_LIMIT] would
+                                                                 permit. When 1, strictly use IFILL_FETCH_LIMIT. For diagnostic use only. */
+        uint64_t force_fe_bubbles      : 1;  /**< [ 31: 31](R/W) Force bubbles in fetch unit pseudo-randomly. For diagnostic use only. */
+        uint64_t fetch_latency_a       : 5;  /**< [ 36: 32](R/W) Lowest-level latency threshold for fetcher SPX indication. For diagnostic use
+                                                                 only. */
+        uint64_t fetch_latency_b       : 5;  /**< [ 41: 37](R/W) Mid-level latency threshold for fetcher SPX indication. For diagnostic use only. */
+        uint64_t fetch_latency_c       : 5;  /**< [ 46: 42](R/W) Highest-level latency threshold for fetcher SPX indication. For diagnostic use
+                                                                 only. */
+        uint64_t force_bp_not_taken    : 1;  /**< [ 47: 47](R/W) Force the branch predictor to always predict not-taken. Also disables updates to
+                                                                 predictors. For diagnostic use only. */
+        uint64_t tage_dis              : 1;  /**< [ 48: 48](R/W) Disable the TAGE branch-prediction algorithm; use bimodal prediction
+                                                                 instead. For diagnostic use only. */
+        uint64_t btc_dis               : 1;  /**< [ 49: 49](R/W) Disable the branch-target cache. For diagnostic use only. */
+        uint64_t btc_hysteresis_dis    : 1;  /**< [ 50: 50](R/W) Disable hysteresis in the branch-target cache. For diagnostic use only. */
+        uint64_t jsr_dis               : 1;  /**< [ 51: 51](R/W) Disable the return stack. For diagnostic use only. */
+        uint64_t disable_ldi_interrupt : 1;  /**< [ 52: 52](R/W) Disable interrupts attaching to LDI. For diagnostic use only. */
+        uint64_t reserved_53_63        : 11;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_ap_cvmctl2_el1_s cn9; */
+    struct cavm_ap_cvmctl2_el1_cn96xxp1
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_52_63        : 12;
         uint64_t jsr_dis               : 1;  /**< [ 51: 51](R/W) Disable the return stack. For diagnostic use only. */
         uint64_t btc_hysteresis_dis    : 1;  /**< [ 50: 50](R/W) Disable hysteresis in the branch-target cache. For diagnostic use only. */
@@ -7207,8 +7272,12 @@ union cavm_ap_cvmctl2_el1
         uint64_t jsr_dis               : 1;  /**< [ 51: 51](R/W) Disable the return stack. For diagnostic use only. */
         uint64_t reserved_52_63        : 12;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_ap_cvmctl2_el1_s cn; */
+    } cn96xxp1;
+    /* struct cavm_ap_cvmctl2_el1_s cn96xxp3; */
+    /* struct cavm_ap_cvmctl2_el1_s cn98xx; */
+    /* struct cavm_ap_cvmctl2_el1_cn96xxp1 cnf95xxp1; */
+    /* struct cavm_ap_cvmctl2_el1_s cnf95xxp2; */
+    /* struct cavm_ap_cvmctl2_el1_s loki; */
 };
 typedef union cavm_ap_cvmctl2_el1 cavm_ap_cvmctl2_el1_t;
 

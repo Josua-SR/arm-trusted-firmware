@@ -3367,6 +3367,8 @@ static inline uint64_t CAVM_CGXX_CMRX_SW_INT(unsigned long a, unsigned long b)
         return 0x87e0e0000180ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
         return 0x87e0e0000180ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
+        return 0x87e0e0000180ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
     __cavm_csr_fatal("CGXX_CMRX_SW_INT", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -3408,6 +3410,16 @@ union cavm_cgxx_cmrx_sw_int_ena_w1c
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } cn98xx;
+    struct cavm_cgxx_cmrx_sw_int_ena_w1c_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_1_63         : 63;
+        uint64_t sw_set                : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_SW_INT[SW_SET]. */
+#else /* Word 0 - Little Endian */
+        uint64_t sw_set                : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for CGX(0..3)_CMR(0..3)_SW_INT[SW_SET]. */
+        uint64_t reserved_1_63         : 63;
+#endif /* Word 0 - End */
+    } loki;
 };
 typedef union cavm_cgxx_cmrx_sw_int_ena_w1c cavm_cgxx_cmrx_sw_int_ena_w1c_t;
 
@@ -3418,6 +3430,8 @@ static inline uint64_t CAVM_CGXX_CMRX_SW_INT_ENA_W1C(unsigned long a, unsigned l
         return 0x87e0e0000190ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
         return 0x87e0e0000190ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
+        return 0x87e0e0000190ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
     __cavm_csr_fatal("CGXX_CMRX_SW_INT_ENA_W1C", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -3459,6 +3473,16 @@ union cavm_cgxx_cmrx_sw_int_ena_w1s
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } cn98xx;
+    struct cavm_cgxx_cmrx_sw_int_ena_w1s_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_1_63         : 63;
+        uint64_t sw_set                : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_SW_INT[SW_SET]. */
+#else /* Word 0 - Little Endian */
+        uint64_t sw_set                : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for CGX(0..3)_CMR(0..3)_SW_INT[SW_SET]. */
+        uint64_t reserved_1_63         : 63;
+#endif /* Word 0 - End */
+    } loki;
 };
 typedef union cavm_cgxx_cmrx_sw_int_ena_w1s cavm_cgxx_cmrx_sw_int_ena_w1s_t;
 
@@ -3469,6 +3493,8 @@ static inline uint64_t CAVM_CGXX_CMRX_SW_INT_ENA_W1S(unsigned long a, unsigned l
         return 0x87e0e0000198ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
         return 0x87e0e0000198ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
+        return 0x87e0e0000198ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
     __cavm_csr_fatal("CGXX_CMRX_SW_INT_ENA_W1S", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -3510,6 +3536,16 @@ union cavm_cgxx_cmrx_sw_int_w1s
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } cn98xx;
+    struct cavm_cgxx_cmrx_sw_int_w1s_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_1_63         : 63;
+        uint64_t sw_set                : 1;  /**< [  0:  0](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_SW_INT[SW_SET]. */
+#else /* Word 0 - Little Endian */
+        uint64_t sw_set                : 1;  /**< [  0:  0](R/W1S/H) Reads or sets CGX(0..3)_CMR(0..3)_SW_INT[SW_SET]. */
+        uint64_t reserved_1_63         : 63;
+#endif /* Word 0 - End */
+    } loki;
 };
 typedef union cavm_cgxx_cmrx_sw_int_w1s cavm_cgxx_cmrx_sw_int_w1s_t;
 
@@ -3520,6 +3556,8 @@ static inline uint64_t CAVM_CGXX_CMRX_SW_INT_W1S(unsigned long a, unsigned long 
         return 0x87e0e0000188ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=3)))
         return 0x87e0e0000188ll + 0x1000000ll * ((a) & 0x7) + 0x40000ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=3)))
+        return 0x87e0e0000188ll + 0x1000000ll * ((a) & 0x3) + 0x40000ll * ((b) & 0x3);
     __cavm_csr_fatal("CGXX_CMRX_SW_INT_W1S", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -13212,7 +13250,7 @@ static inline uint64_t CAVM_CGXX_MSIX_VECX_ADDR(unsigned long a, unsigned long b
         return 0x87e0e0400000ll + 0x1000000ll * ((a) & 0x7) + 0x10ll * ((b) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=37)))
         return 0x87e0e0400000ll + 0x1000000ll * ((a) & 0x3) + 0x10ll * ((b) & 0x3f);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=37)))
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=41)))
         return 0x87e0e0400000ll + 0x1000000ll * ((a) & 0x3) + 0x10ll * ((b) & 0x3f);
     __cavm_csr_fatal("CGXX_MSIX_VECX_ADDR", 2, a, b, 0, 0, 0, 0);
 }
@@ -13260,7 +13298,7 @@ static inline uint64_t CAVM_CGXX_MSIX_VECX_CTL(unsigned long a, unsigned long b)
         return 0x87e0e0400008ll + 0x1000000ll * ((a) & 0x7) + 0x10ll * ((b) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=37)))
         return 0x87e0e0400008ll + 0x1000000ll * ((a) & 0x3) + 0x10ll * ((b) & 0x3f);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=37)))
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=3) && (b<=41)))
         return 0x87e0e0400008ll + 0x1000000ll * ((a) & 0x3) + 0x10ll * ((b) & 0x3f);
     __cavm_csr_fatal("CGXX_MSIX_VECX_CTL", 2, a, b, 0, 0, 0, 0);
 }
@@ -18150,7 +18188,7 @@ union cavm_cgxx_spux_br_status2
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_cgxx_spux_br_status2_s cnf95xx; */
-    /* struct cavm_cgxx_spux_br_status2_cn98xx loki; */
+    /* struct cavm_cgxx_spux_br_status2_s loki; */
 };
 typedef union cavm_cgxx_spux_br_status2 cavm_cgxx_spux_br_status2_t;
 
@@ -18783,7 +18821,8 @@ union cavm_cgxx_spux_control1
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } cn96xxp3;
-    struct cavm_cgxx_spux_control1_cn98xx
+    /* struct cavm_cgxx_spux_control1_cn96xxp3 cn98xx; */
+    struct cavm_cgxx_spux_control1_cnf95xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_22_63        : 42;
@@ -18896,9 +18935,8 @@ union cavm_cgxx_spux_control1
                                                                  USXGMII. Enumerated by CGX_USXGMII_RATE_E. */
         uint64_t reserved_22_63        : 42;
 #endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_cgxx_spux_control1_cn98xx cnf95xx; */
-    /* struct cavm_cgxx_spux_control1_cn98xx loki; */
+    } cnf95xx;
+    /* struct cavm_cgxx_spux_control1_cn96xxp3 loki; */
 };
 typedef union cavm_cgxx_spux_control1 cavm_cgxx_spux_control1_t;
 

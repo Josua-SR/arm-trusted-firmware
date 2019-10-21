@@ -22,7 +22,7 @@
 /**
  * Register (RSL) dtx_bbx2i#_bcst_rsp
  *
- * DTX BBX2I Control Register
+ * INTERNAL: DTX BBX2I Control Register
  */
 union cavm_dtx_bbx2ix_bcst_rsp
 {
@@ -46,8 +46,6 @@ static inline uint64_t CAVM_DTX_BBX2IX_BCST_RSP(unsigned long a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e0fee40080ll + 0x40000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e0fee40080ll + 0x40000ll * ((a) & 0x1);
     __cavm_csr_fatal("DTX_BBX2IX_BCST_RSP", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -60,7 +58,7 @@ static inline uint64_t CAVM_DTX_BBX2IX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_bbx2i#_ctl
  *
- * DTX BBX2I Control Register
+ * INTERNAL: DTX BBX2I Control Register
  */
 union cavm_dtx_bbx2ix_ctl
 {
@@ -85,7 +83,28 @@ union cavm_dtx_bbx2ix_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_bbx2ix_ctl_s cn; */
+    /* struct cavm_dtx_bbx2ix_ctl_s cn9; */
+    /* struct cavm_dtx_bbx2ix_ctl_s cnf95xxp1; */
+    struct cavm_dtx_bbx2ix_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
 };
 typedef union cavm_dtx_bbx2ix_ctl cavm_dtx_bbx2ix_ctl_t;
 
@@ -93,8 +112,6 @@ static inline uint64_t CAVM_DTX_BBX2IX_CTL(unsigned long a) __attribute__ ((pure
 static inline uint64_t CAVM_DTX_BBX2IX_CTL(unsigned long a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
-        return 0x87e0fee40060ll + 0x40000ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e0fee40060ll + 0x40000ll * ((a) & 0x1);
     __cavm_csr_fatal("DTX_BBX2IX_CTL", 1, a, 0, 0, 0, 0, 0);
 }
@@ -108,7 +125,7 @@ static inline uint64_t CAVM_DTX_BBX2IX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_bbx2i#_dat#
  *
- * DTX BBX2I Raw Data Register
+ * INTERNAL: DTX BBX2I Raw Data Register
  */
 union cavm_dtx_bbx2ix_datx
 {
@@ -134,8 +151,6 @@ static inline uint64_t CAVM_DTX_BBX2IX_DATX(unsigned long a, unsigned long b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
         return 0x87e0fee40040ll + 0x40000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
-        return 0x87e0fee40040ll + 0x40000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("DTX_BBX2IX_DATX", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -148,7 +163,7 @@ static inline uint64_t CAVM_DTX_BBX2IX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_bbx2i#_ena#
  *
- * DTX BBX2I Data Enable Register
+ * INTERNAL: DTX BBX2I Data Enable Register
  */
 union cavm_dtx_bbx2ix_enax
 {
@@ -174,8 +189,6 @@ static inline uint64_t CAVM_DTX_BBX2IX_ENAX(unsigned long a, unsigned long b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
         return 0x87e0fee40020ll + 0x40000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
-        return 0x87e0fee40020ll + 0x40000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("DTX_BBX2IX_ENAX", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -188,7 +201,7 @@ static inline uint64_t CAVM_DTX_BBX2IX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_bbx2i#_sel#
  *
- * DTX BBX2I Select Register
+ * INTERNAL: DTX BBX2I Select Register
  */
 union cavm_dtx_bbx2ix_selx
 {
@@ -212,8 +225,6 @@ static inline uint64_t CAVM_DTX_BBX2IX_SELX(unsigned long a, unsigned long b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
         return 0x87e0fee40000ll + 0x40000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
-        return 0x87e0fee40000ll + 0x40000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("DTX_BBX2IX_SELX", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -226,7 +237,7 @@ static inline uint64_t CAVM_DTX_BBX2IX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_bbx4_bcst_rsp
  *
- * DTX BBX4 Control Register
+ * INTERNAL: DTX BBX4 Control Register
  */
 union cavm_dtx_bbx4_bcst_rsp
 {
@@ -251,8 +262,6 @@ static inline uint64_t CAVM_DTX_BBX4_BCST_RSP_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e0fee78080ll;
-    if (cavm_is_model(OCTEONTX_LOKI))
-        return 0x87e0fee78080ll;
     __cavm_csr_fatal("DTX_BBX4_BCST_RSP", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -265,7 +274,7 @@ static inline uint64_t CAVM_DTX_BBX4_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_bbx4_ctl
  *
- * DTX BBX4 Control Register
+ * INTERNAL: DTX BBX4 Control Register
  */
 union cavm_dtx_bbx4_ctl
 {
@@ -290,7 +299,28 @@ union cavm_dtx_bbx4_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_bbx4_ctl_s cn; */
+    /* struct cavm_dtx_bbx4_ctl_s cn9; */
+    /* struct cavm_dtx_bbx4_ctl_s cnf95xxp1; */
+    struct cavm_dtx_bbx4_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
 };
 typedef union cavm_dtx_bbx4_ctl cavm_dtx_bbx4_ctl_t;
 
@@ -299,8 +329,6 @@ static inline uint64_t CAVM_DTX_BBX4_CTL_FUNC(void) __attribute__ ((pure, always
 static inline uint64_t CAVM_DTX_BBX4_CTL_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX))
-        return 0x87e0fee78060ll;
-    if (cavm_is_model(OCTEONTX_LOKI))
         return 0x87e0fee78060ll;
     __cavm_csr_fatal("DTX_BBX4_CTL", 0, 0, 0, 0, 0, 0, 0);
 }
@@ -314,7 +342,7 @@ static inline uint64_t CAVM_DTX_BBX4_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_bbx4_dat#
  *
- * DTX BBX4 Raw Data Register
+ * INTERNAL: DTX BBX4 Raw Data Register
  */
 union cavm_dtx_bbx4_datx
 {
@@ -340,8 +368,6 @@ static inline uint64_t CAVM_DTX_BBX4_DATX(unsigned long a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e0fee78040ll + 8ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e0fee78040ll + 8ll * ((a) & 0x1);
     __cavm_csr_fatal("DTX_BBX4_DATX", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -354,7 +380,7 @@ static inline uint64_t CAVM_DTX_BBX4_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_bbx4_ena#
  *
- * DTX BBX4 Data Enable Register
+ * INTERNAL: DTX BBX4 Data Enable Register
  */
 union cavm_dtx_bbx4_enax
 {
@@ -380,8 +406,6 @@ static inline uint64_t CAVM_DTX_BBX4_ENAX(unsigned long a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e0fee78020ll + 8ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e0fee78020ll + 8ll * ((a) & 0x1);
     __cavm_csr_fatal("DTX_BBX4_ENAX", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -394,7 +418,7 @@ static inline uint64_t CAVM_DTX_BBX4_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_bbx4_sel#
  *
- * DTX BBX4 Select Register
+ * INTERNAL: DTX BBX4 Select Register
  */
 union cavm_dtx_bbx4_selx
 {
@@ -418,8 +442,6 @@ static inline uint64_t CAVM_DTX_BBX4_SELX(unsigned long a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e0fee78000ll + 8ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e0fee78000ll + 8ll * ((a) & 0x1);
     __cavm_csr_fatal("DTX_BBX4_SELX", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -432,7 +454,7 @@ static inline uint64_t CAVM_DTX_BBX4_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_bbx5_bcst_rsp
  *
- * DTX BBX5 Control Register
+ * INTERNAL: DTX BBX5 Control Register
  */
 union cavm_dtx_bbx5_bcst_rsp
 {
@@ -457,8 +479,6 @@ static inline uint64_t CAVM_DTX_BBX5_BCST_RSP_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e0feec0080ll;
-    if (cavm_is_model(OCTEONTX_LOKI))
-        return 0x87e0feec0080ll;
     __cavm_csr_fatal("DTX_BBX5_BCST_RSP", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -471,7 +491,7 @@ static inline uint64_t CAVM_DTX_BBX5_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_bbx5_ctl
  *
- * DTX BBX5 Control Register
+ * INTERNAL: DTX BBX5 Control Register
  */
 union cavm_dtx_bbx5_ctl
 {
@@ -496,7 +516,28 @@ union cavm_dtx_bbx5_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_bbx5_ctl_s cn; */
+    /* struct cavm_dtx_bbx5_ctl_s cn9; */
+    /* struct cavm_dtx_bbx5_ctl_s cnf95xxp1; */
+    struct cavm_dtx_bbx5_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
 };
 typedef union cavm_dtx_bbx5_ctl cavm_dtx_bbx5_ctl_t;
 
@@ -505,8 +546,6 @@ static inline uint64_t CAVM_DTX_BBX5_CTL_FUNC(void) __attribute__ ((pure, always
 static inline uint64_t CAVM_DTX_BBX5_CTL_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX))
-        return 0x87e0feec0060ll;
-    if (cavm_is_model(OCTEONTX_LOKI))
         return 0x87e0feec0060ll;
     __cavm_csr_fatal("DTX_BBX5_CTL", 0, 0, 0, 0, 0, 0, 0);
 }
@@ -520,7 +559,7 @@ static inline uint64_t CAVM_DTX_BBX5_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_bbx5_dat#
  *
- * DTX BBX5 Raw Data Register
+ * INTERNAL: DTX BBX5 Raw Data Register
  */
 union cavm_dtx_bbx5_datx
 {
@@ -546,8 +585,6 @@ static inline uint64_t CAVM_DTX_BBX5_DATX(unsigned long a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e0feec0040ll + 8ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e0feec0040ll + 8ll * ((a) & 0x1);
     __cavm_csr_fatal("DTX_BBX5_DATX", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -560,7 +597,7 @@ static inline uint64_t CAVM_DTX_BBX5_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_bbx5_ena#
  *
- * DTX BBX5 Data Enable Register
+ * INTERNAL: DTX BBX5 Data Enable Register
  */
 union cavm_dtx_bbx5_enax
 {
@@ -586,8 +623,6 @@ static inline uint64_t CAVM_DTX_BBX5_ENAX(unsigned long a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e0feec0020ll + 8ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e0feec0020ll + 8ll * ((a) & 0x1);
     __cavm_csr_fatal("DTX_BBX5_ENAX", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -600,7 +635,7 @@ static inline uint64_t CAVM_DTX_BBX5_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_bbx5_sel#
  *
- * DTX BBX5 Select Register
+ * INTERNAL: DTX BBX5 Select Register
  */
 union cavm_dtx_bbx5_selx
 {
@@ -624,8 +659,6 @@ static inline uint64_t CAVM_DTX_BBX5_SELX(unsigned long a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e0feec0000ll + 8ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e0feec0000ll + 8ll * ((a) & 0x1);
     __cavm_csr_fatal("DTX_BBX5_SELX", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -638,7 +671,7 @@ static inline uint64_t CAVM_DTX_BBX5_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_bbx6_bcst_rsp
  *
- * DTX BBX6 Control Register
+ * INTERNAL: DTX BBX6 Control Register
  */
 union cavm_dtx_bbx6_bcst_rsp
 {
@@ -663,8 +696,6 @@ static inline uint64_t CAVM_DTX_BBX6_BCST_RSP_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e0feec8080ll;
-    if (cavm_is_model(OCTEONTX_LOKI))
-        return 0x87e0feec8080ll;
     __cavm_csr_fatal("DTX_BBX6_BCST_RSP", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -677,7 +708,7 @@ static inline uint64_t CAVM_DTX_BBX6_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_bbx6_ctl
  *
- * DTX BBX6 Control Register
+ * INTERNAL: DTX BBX6 Control Register
  */
 union cavm_dtx_bbx6_ctl
 {
@@ -702,7 +733,28 @@ union cavm_dtx_bbx6_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_bbx6_ctl_s cn; */
+    /* struct cavm_dtx_bbx6_ctl_s cn9; */
+    /* struct cavm_dtx_bbx6_ctl_s cnf95xxp1; */
+    struct cavm_dtx_bbx6_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
 };
 typedef union cavm_dtx_bbx6_ctl cavm_dtx_bbx6_ctl_t;
 
@@ -711,8 +763,6 @@ static inline uint64_t CAVM_DTX_BBX6_CTL_FUNC(void) __attribute__ ((pure, always
 static inline uint64_t CAVM_DTX_BBX6_CTL_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX))
-        return 0x87e0feec8060ll;
-    if (cavm_is_model(OCTEONTX_LOKI))
         return 0x87e0feec8060ll;
     __cavm_csr_fatal("DTX_BBX6_CTL", 0, 0, 0, 0, 0, 0, 0);
 }
@@ -726,7 +776,7 @@ static inline uint64_t CAVM_DTX_BBX6_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_bbx6_dat#
  *
- * DTX BBX6 Raw Data Register
+ * INTERNAL: DTX BBX6 Raw Data Register
  */
 union cavm_dtx_bbx6_datx
 {
@@ -752,8 +802,6 @@ static inline uint64_t CAVM_DTX_BBX6_DATX(unsigned long a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e0feec8040ll + 8ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e0feec8040ll + 8ll * ((a) & 0x1);
     __cavm_csr_fatal("DTX_BBX6_DATX", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -766,7 +814,7 @@ static inline uint64_t CAVM_DTX_BBX6_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_bbx6_ena#
  *
- * DTX BBX6 Data Enable Register
+ * INTERNAL: DTX BBX6 Data Enable Register
  */
 union cavm_dtx_bbx6_enax
 {
@@ -792,8 +840,6 @@ static inline uint64_t CAVM_DTX_BBX6_ENAX(unsigned long a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e0feec8020ll + 8ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e0feec8020ll + 8ll * ((a) & 0x1);
     __cavm_csr_fatal("DTX_BBX6_ENAX", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -806,7 +852,7 @@ static inline uint64_t CAVM_DTX_BBX6_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_bbx6_sel#
  *
- * DTX BBX6 Select Register
+ * INTERNAL: DTX BBX6 Select Register
  */
 union cavm_dtx_bbx6_selx
 {
@@ -830,8 +876,6 @@ static inline uint64_t CAVM_DTX_BBX6_SELX(unsigned long a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e0feec8000ll + 8ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
-        return 0x87e0feec8000ll + 8ll * ((a) & 0x1);
     __cavm_csr_fatal("DTX_BBX6_SELX", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -844,7 +888,7 @@ static inline uint64_t CAVM_DTX_BBX6_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_bch_bcst_rsp
  *
- * DTX BCH Control Register
+ * INTERNAL: DTX BCH Control Register
  */
 union cavm_dtx_bch_bcst_rsp
 {
@@ -879,7 +923,7 @@ static inline uint64_t CAVM_DTX_BCH_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_bch_ctl
  *
- * DTX BCH Control Register
+ * INTERNAL: DTX BCH Control Register
  */
 union cavm_dtx_bch_ctl
 {
@@ -890,22 +934,25 @@ union cavm_dtx_bch_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_bch_ctl_s cn8; */
-    struct cavm_dtx_bch_ctl_cn9
+    /* struct cavm_dtx_bch_ctl_s cn9; */
+    /* struct cavm_dtx_bch_ctl_s cn96xx; */
+    /* struct cavm_dtx_bch_ctl_s cn98xx; */
+    struct cavm_dtx_bch_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -924,7 +971,9 @@ union cavm_dtx_bch_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xxp1;
+    /* struct cavm_dtx_bch_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_bch_ctl_s loki; */
 };
 typedef union cavm_dtx_bch_ctl cavm_dtx_bch_ctl_t;
 
@@ -944,7 +993,7 @@ static inline uint64_t CAVM_DTX_BCH_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_bch_dat#
  *
- * DTX BCH Raw Data Register
+ * INTERNAL: DTX BCH Raw Data Register
  */
 union cavm_dtx_bch_datx
 {
@@ -982,7 +1031,7 @@ static inline uint64_t CAVM_DTX_BCH_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_bch_ena#
  *
- * DTX BCH Data Enable Register
+ * INTERNAL: DTX BCH Data Enable Register
  */
 union cavm_dtx_bch_enax
 {
@@ -1020,7 +1069,7 @@ static inline uint64_t CAVM_DTX_BCH_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_bch_sel#
  *
- * DTX BCH Select Register
+ * INTERNAL: DTX BCH Select Register
  */
 union cavm_dtx_bch_selx
 {
@@ -1056,7 +1105,7 @@ static inline uint64_t CAVM_DTX_BCH_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_bcn_bcst_rsp
  *
- * DTX BCN Control Register
+ * INTERNAL: DTX BCN Control Register
  */
 union cavm_dtx_bcn_bcst_rsp
 {
@@ -1093,7 +1142,7 @@ static inline uint64_t CAVM_DTX_BCN_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_bcn_ctl
  *
- * DTX BCN Control Register
+ * INTERNAL: DTX BCN Control Register
  */
 union cavm_dtx_bcn_ctl
 {
@@ -1104,14 +1153,14 @@ union cavm_dtx_bcn_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
@@ -1140,7 +1189,7 @@ static inline uint64_t CAVM_DTX_BCN_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_bcn_dat#
  *
- * DTX BCN Raw Data Register
+ * INTERNAL: DTX BCN Raw Data Register
  */
 union cavm_dtx_bcn_datx
 {
@@ -1178,7 +1227,7 @@ static inline uint64_t CAVM_DTX_BCN_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_bcn_ena#
  *
- * DTX BCN Data Enable Register
+ * INTERNAL: DTX BCN Data Enable Register
  */
 union cavm_dtx_bcn_enax
 {
@@ -1216,7 +1265,7 @@ static inline uint64_t CAVM_DTX_BCN_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_bcn_sel#
  *
- * DTX BCN Select Register
+ * INTERNAL: DTX BCN Select Register
  */
 union cavm_dtx_bcn_selx
 {
@@ -1252,7 +1301,7 @@ static inline uint64_t CAVM_DTX_BCN_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_bgx#_bcst_rsp
  *
- * DTX BGX Control Register
+ * INTERNAL: DTX BGX Control Register
  */
 union cavm_dtx_bgxx_bcst_rsp
 {
@@ -1290,7 +1339,7 @@ static inline uint64_t CAVM_DTX_BGXX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_bgx#_ctl
  *
- * DTX BGX Control Register
+ * INTERNAL: DTX BGX Control Register
  */
 union cavm_dtx_bgxx_ctl
 {
@@ -1301,15 +1350,15 @@ union cavm_dtx_bgxx_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -1338,7 +1387,7 @@ static inline uint64_t CAVM_DTX_BGXX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_bgx#_dat#
  *
- * DTX BGX Raw Data Register
+ * INTERNAL: DTX BGX Raw Data Register
  */
 union cavm_dtx_bgxx_datx
 {
@@ -1378,7 +1427,7 @@ static inline uint64_t CAVM_DTX_BGXX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_bgx#_ena#
  *
- * DTX BGX Data Enable Register
+ * INTERNAL: DTX BGX Data Enable Register
  */
 union cavm_dtx_bgxx_enax
 {
@@ -1418,7 +1467,7 @@ static inline uint64_t CAVM_DTX_BGXX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_bgx#_sel#
  *
- * DTX BGX Select Register
+ * INTERNAL: DTX BGX Select Register
  */
 union cavm_dtx_bgxx_selx
 {
@@ -1467,22 +1516,25 @@ union cavm_dtx_broadcast_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_broadcast_ctl_s cn8; */
-    struct cavm_dtx_broadcast_ctl_cn9
+    /* struct cavm_dtx_broadcast_ctl_s cn9; */
+    /* struct cavm_dtx_broadcast_ctl_s cn96xx; */
+    /* struct cavm_dtx_broadcast_ctl_s cn98xx; */
+    struct cavm_dtx_broadcast_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -1501,7 +1553,9 @@ union cavm_dtx_broadcast_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xxp1;
+    /* struct cavm_dtx_broadcast_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_broadcast_ctl_s loki; */
 };
 typedef union cavm_dtx_broadcast_ctl cavm_dtx_broadcast_ctl_t;
 
@@ -1595,7 +1649,7 @@ static inline uint64_t CAVM_DTX_BROADCAST_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_bts_bcst_rsp
  *
- * DTX BTS Control Register
+ * INTERNAL: DTX BTS Control Register
  */
 union cavm_dtx_bts_bcst_rsp
 {
@@ -1632,12 +1686,35 @@ static inline uint64_t CAVM_DTX_BTS_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_bts_ctl
  *
- * DTX BTS Control Register
+ * INTERNAL: DTX BTS Control Register
  */
 union cavm_dtx_bts_ctl
 {
     uint64_t u;
     struct cavm_dtx_bts_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_bts_ctl_s cn9; */
+    /* struct cavm_dtx_bts_ctl_s cn96xx; */
+    /* struct cavm_dtx_bts_ctl_s cn98xx; */
+    struct cavm_dtx_bts_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -1656,8 +1733,9 @@ union cavm_dtx_bts_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_bts_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_bts_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_bts_ctl_s loki; */
 };
 typedef union cavm_dtx_bts_ctl cavm_dtx_bts_ctl_t;
 
@@ -1679,7 +1757,7 @@ static inline uint64_t CAVM_DTX_BTS_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_bts_dat#
  *
- * DTX BTS Raw Data Register
+ * INTERNAL: DTX BTS Raw Data Register
  */
 union cavm_dtx_bts_datx
 {
@@ -1717,7 +1795,7 @@ static inline uint64_t CAVM_DTX_BTS_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_bts_ena#
  *
- * DTX BTS Data Enable Register
+ * INTERNAL: DTX BTS Data Enable Register
  */
 union cavm_dtx_bts_enax
 {
@@ -1755,7 +1833,7 @@ static inline uint64_t CAVM_DTX_BTS_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_bts_sel#
  *
- * DTX BTS Select Register
+ * INTERNAL: DTX BTS Select Register
  */
 union cavm_dtx_bts_selx
 {
@@ -1791,7 +1869,7 @@ static inline uint64_t CAVM_DTX_BTS_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_ccu#_msw_bcst_rsp
  *
- * DTX CCU_MSW Control Register
+ * INTERNAL: DTX CCU_MSW Control Register
  */
 union cavm_dtx_ccux_msw_bcst_rsp
 {
@@ -1833,12 +1911,35 @@ static inline uint64_t CAVM_DTX_CCUX_MSW_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_ccu#_msw_ctl
  *
- * DTX CCU_MSW Control Register
+ * INTERNAL: DTX CCU_MSW Control Register
  */
 union cavm_dtx_ccux_msw_ctl
 {
     uint64_t u;
     struct cavm_dtx_ccux_msw_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ccux_msw_ctl_s cn9; */
+    /* struct cavm_dtx_ccux_msw_ctl_s cn96xx; */
+    /* struct cavm_dtx_ccux_msw_ctl_s cn98xx; */
+    struct cavm_dtx_ccux_msw_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -1857,8 +1958,9 @@ union cavm_dtx_ccux_msw_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_ccux_msw_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_ccux_msw_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_ccux_msw_ctl_s loki; */
 };
 typedef union cavm_dtx_ccux_msw_ctl cavm_dtx_ccux_msw_ctl_t;
 
@@ -1885,7 +1987,7 @@ static inline uint64_t CAVM_DTX_CCUX_MSW_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_ccu#_msw_dat#
  *
- * DTX CCU_MSW Raw Data Register
+ * INTERNAL: DTX CCU_MSW Raw Data Register
  */
 union cavm_dtx_ccux_msw_datx
 {
@@ -1929,7 +2031,7 @@ static inline uint64_t CAVM_DTX_CCUX_MSW_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ccu#_msw_ena#
  *
- * DTX CCU_MSW Data Enable Register
+ * INTERNAL: DTX CCU_MSW Data Enable Register
  */
 union cavm_dtx_ccux_msw_enax
 {
@@ -1973,7 +2075,7 @@ static inline uint64_t CAVM_DTX_CCUX_MSW_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ccu#_msw_sel#
  *
- * DTX CCU_MSW Select Register
+ * INTERNAL: DTX CCU_MSW Select Register
  */
 union cavm_dtx_ccux_msw_selx
 {
@@ -2015,7 +2117,7 @@ static inline uint64_t CAVM_DTX_CCUX_MSW_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ccu#_pic_bcst_rsp
  *
- * DTX CCU_PIC Control Register
+ * INTERNAL: DTX CCU_PIC Control Register
  */
 union cavm_dtx_ccux_pic_bcst_rsp
 {
@@ -2057,12 +2159,35 @@ static inline uint64_t CAVM_DTX_CCUX_PIC_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_ccu#_pic_ctl
  *
- * DTX CCU_PIC Control Register
+ * INTERNAL: DTX CCU_PIC Control Register
  */
 union cavm_dtx_ccux_pic_ctl
 {
     uint64_t u;
     struct cavm_dtx_ccux_pic_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ccux_pic_ctl_s cn9; */
+    /* struct cavm_dtx_ccux_pic_ctl_s cn96xx; */
+    /* struct cavm_dtx_ccux_pic_ctl_s cn98xx; */
+    struct cavm_dtx_ccux_pic_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -2081,8 +2206,9 @@ union cavm_dtx_ccux_pic_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_ccux_pic_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_ccux_pic_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_ccux_pic_ctl_s loki; */
 };
 typedef union cavm_dtx_ccux_pic_ctl cavm_dtx_ccux_pic_ctl_t;
 
@@ -2109,7 +2235,7 @@ static inline uint64_t CAVM_DTX_CCUX_PIC_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_ccu#_pic_dat#
  *
- * DTX CCU_PIC Raw Data Register
+ * INTERNAL: DTX CCU_PIC Raw Data Register
  */
 union cavm_dtx_ccux_pic_datx
 {
@@ -2153,7 +2279,7 @@ static inline uint64_t CAVM_DTX_CCUX_PIC_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ccu#_pic_ena#
  *
- * DTX CCU_PIC Data Enable Register
+ * INTERNAL: DTX CCU_PIC Data Enable Register
  */
 union cavm_dtx_ccux_pic_enax
 {
@@ -2197,7 +2323,7 @@ static inline uint64_t CAVM_DTX_CCUX_PIC_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ccu#_pic_sel#
  *
- * DTX CCU_PIC Select Register
+ * INTERNAL: DTX CCU_PIC Select Register
  */
 union cavm_dtx_ccux_pic_selx
 {
@@ -2239,7 +2365,7 @@ static inline uint64_t CAVM_DTX_CCUX_PIC_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ccu#_tad#_bcst_rsp
  *
- * DTX CCU_TAD Control Register
+ * INTERNAL: DTX CCU_TAD Control Register
  */
 union cavm_dtx_ccux_tadx_bcst_rsp
 {
@@ -2281,12 +2407,35 @@ static inline uint64_t CAVM_DTX_CCUX_TADX_BCST_RSP(unsigned long a, unsigned lon
 /**
  * Register (RSL) dtx_ccu#_tad#_ctl
  *
- * DTX CCU_TAD Control Register
+ * INTERNAL: DTX CCU_TAD Control Register
  */
 union cavm_dtx_ccux_tadx_ctl
 {
     uint64_t u;
     struct cavm_dtx_ccux_tadx_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ccux_tadx_ctl_s cn9; */
+    /* struct cavm_dtx_ccux_tadx_ctl_s cn96xx; */
+    /* struct cavm_dtx_ccux_tadx_ctl_s cn98xx; */
+    struct cavm_dtx_ccux_tadx_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -2305,8 +2454,9 @@ union cavm_dtx_ccux_tadx_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_ccux_tadx_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_ccux_tadx_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_ccux_tadx_ctl_s loki; */
 };
 typedef union cavm_dtx_ccux_tadx_ctl cavm_dtx_ccux_tadx_ctl_t;
 
@@ -2333,7 +2483,7 @@ static inline uint64_t CAVM_DTX_CCUX_TADX_CTL(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ccu#_tad#_dat#
  *
- * DTX CCU_TAD Raw Data Register
+ * INTERNAL: DTX CCU_TAD Raw Data Register
  */
 union cavm_dtx_ccux_tadx_datx
 {
@@ -2377,7 +2527,7 @@ static inline uint64_t CAVM_DTX_CCUX_TADX_DATX(unsigned long a, unsigned long b,
 /**
  * Register (RSL) dtx_ccu#_tad#_ena#
  *
- * DTX CCU_TAD Data Enable Register
+ * INTERNAL: DTX CCU_TAD Data Enable Register
  */
 union cavm_dtx_ccux_tadx_enax
 {
@@ -2421,7 +2571,7 @@ static inline uint64_t CAVM_DTX_CCUX_TADX_ENAX(unsigned long a, unsigned long b,
 /**
  * Register (RSL) dtx_ccu#_tad#_sel#
  *
- * DTX CCU_TAD Select Register
+ * INTERNAL: DTX CCU_TAD Select Register
  */
 union cavm_dtx_ccux_tadx_selx
 {
@@ -2511,15 +2661,15 @@ union cavm_dtx_cde_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -2659,7 +2809,7 @@ static inline uint64_t CAVM_DTX_CDE_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_cgx#_bcst_rsp
  *
- * DTX CGX Control Register
+ * INTERNAL: DTX CGX Control Register
  */
 union cavm_dtx_cgxx_bcst_rsp
 {
@@ -2701,12 +2851,35 @@ static inline uint64_t CAVM_DTX_CGXX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_cgx#_ctl
  *
- * DTX CGX Control Register
+ * INTERNAL: DTX CGX Control Register
  */
 union cavm_dtx_cgxx_ctl
 {
     uint64_t u;
     struct cavm_dtx_cgxx_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_cgxx_ctl_s cn9; */
+    /* struct cavm_dtx_cgxx_ctl_s cn96xx; */
+    /* struct cavm_dtx_cgxx_ctl_s cn98xx; */
+    struct cavm_dtx_cgxx_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -2725,8 +2898,9 @@ union cavm_dtx_cgxx_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_cgxx_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_cgxx_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_cgxx_ctl_s loki; */
 };
 typedef union cavm_dtx_cgxx_ctl cavm_dtx_cgxx_ctl_t;
 
@@ -2753,7 +2927,7 @@ static inline uint64_t CAVM_DTX_CGXX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_cgx#_dat#
  *
- * DTX CGX Raw Data Register
+ * INTERNAL: DTX CGX Raw Data Register
  */
 union cavm_dtx_cgxx_datx
 {
@@ -2797,7 +2971,7 @@ static inline uint64_t CAVM_DTX_CGXX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_cgx#_ena#
  *
- * DTX CGX Data Enable Register
+ * INTERNAL: DTX CGX Data Enable Register
  */
 union cavm_dtx_cgxx_enax
 {
@@ -2841,7 +3015,7 @@ static inline uint64_t CAVM_DTX_CGXX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_cgx#_sel#
  *
- * DTX CGX Select Register
+ * INTERNAL: DTX CGX Select Register
  */
 union cavm_dtx_cgxx_selx
 {
@@ -2883,7 +3057,7 @@ static inline uint64_t CAVM_DTX_CGXX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_cpc_bcst_rsp
  *
- * DTX CPC Control Register
+ * INTERNAL: DTX CPC Control Register
  */
 union cavm_dtx_cpc_bcst_rsp
 {
@@ -2920,12 +3094,35 @@ static inline uint64_t CAVM_DTX_CPC_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_cpc_ctl
  *
- * DTX CPC Control Register
+ * INTERNAL: DTX CPC Control Register
  */
 union cavm_dtx_cpc_ctl
 {
     uint64_t u;
     struct cavm_dtx_cpc_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_cpc_ctl_s cn9; */
+    /* struct cavm_dtx_cpc_ctl_s cn96xx; */
+    /* struct cavm_dtx_cpc_ctl_s cn98xx; */
+    struct cavm_dtx_cpc_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -2944,8 +3141,9 @@ union cavm_dtx_cpc_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_cpc_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_cpc_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_cpc_ctl_s loki; */
 };
 typedef union cavm_dtx_cpc_ctl cavm_dtx_cpc_ctl_t;
 
@@ -2967,7 +3165,7 @@ static inline uint64_t CAVM_DTX_CPC_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_cpc_dat#
  *
- * DTX CPC Raw Data Register
+ * INTERNAL: DTX CPC Raw Data Register
  */
 union cavm_dtx_cpc_datx
 {
@@ -3005,7 +3203,7 @@ static inline uint64_t CAVM_DTX_CPC_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_cpc_ena#
  *
- * DTX CPC Data Enable Register
+ * INTERNAL: DTX CPC Data Enable Register
  */
 union cavm_dtx_cpc_enax
 {
@@ -3043,7 +3241,7 @@ static inline uint64_t CAVM_DTX_CPC_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_cpc_sel#
  *
- * DTX CPC Select Register
+ * INTERNAL: DTX CPC Select Register
  */
 union cavm_dtx_cpc_selx
 {
@@ -3079,7 +3277,7 @@ static inline uint64_t CAVM_DTX_CPC_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_cpri#_bcst_rsp
  *
- * DTX CPRI Control Register
+ * INTERNAL: DTX CPRI Control Register
  */
 union cavm_dtx_cprix_bcst_rsp
 {
@@ -3115,7 +3313,7 @@ static inline uint64_t CAVM_DTX_CPRIX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_cpri#_ctl
  *
- * DTX CPRI Control Register
+ * INTERNAL: DTX CPRI Control Register
  */
 union cavm_dtx_cprix_ctl
 {
@@ -3126,14 +3324,14 @@ union cavm_dtx_cprix_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
@@ -3161,7 +3359,7 @@ static inline uint64_t CAVM_DTX_CPRIX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_cpri#_dat#
  *
- * DTX CPRI Raw Data Register
+ * INTERNAL: DTX CPRI Raw Data Register
  */
 union cavm_dtx_cprix_datx
 {
@@ -3199,7 +3397,7 @@ static inline uint64_t CAVM_DTX_CPRIX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_cpri#_ena#
  *
- * DTX CPRI Data Enable Register
+ * INTERNAL: DTX CPRI Data Enable Register
  */
 union cavm_dtx_cprix_enax
 {
@@ -3237,7 +3435,7 @@ static inline uint64_t CAVM_DTX_CPRIX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_cpri#_sel#
  *
- * DTX CPRI Select Register
+ * INTERNAL: DTX CPRI Select Register
  */
 union cavm_dtx_cprix_selx
 {
@@ -3273,7 +3471,7 @@ static inline uint64_t CAVM_DTX_CPRIX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_cpt#_bcst_rsp
  *
- * DTX CPT Control Register
+ * INTERNAL: DTX CPT Control Register
  */
 union cavm_dtx_cptx_bcst_rsp
 {
@@ -3311,7 +3509,7 @@ static inline uint64_t CAVM_DTX_CPTX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_cpt#_ctl
  *
- * DTX CPT Control Register
+ * INTERNAL: DTX CPT Control Register
  */
 union cavm_dtx_cptx_ctl
 {
@@ -3322,41 +3520,21 @@ union cavm_dtx_cptx_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_cptx_ctl_s cn8; */
-    struct cavm_dtx_cptx_ctl_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_5_63         : 59;
-        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
-        uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
-                                                                 registers.  For diagnostic use only. */
-        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-#else /* Word 0 - Little Endian */
-        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
-                                                                 registers.  For diagnostic use only. */
-        uint64_t reserved_2_3          : 2;
-        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
-        uint64_t reserved_5_63         : 59;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_dtx_cptx_ctl_s cn; */
 };
 typedef union cavm_dtx_cptx_ctl cavm_dtx_cptx_ctl_t;
 
@@ -3379,7 +3557,7 @@ static inline uint64_t CAVM_DTX_CPTX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_cpt#_dat#
  *
- * DTX CPT Raw Data Register
+ * INTERNAL: DTX CPT Raw Data Register
  */
 union cavm_dtx_cptx_datx
 {
@@ -3419,7 +3597,7 @@ static inline uint64_t CAVM_DTX_CPTX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_cpt#_ena#
  *
- * DTX CPT Data Enable Register
+ * INTERNAL: DTX CPT Data Enable Register
  */
 union cavm_dtx_cptx_enax
 {
@@ -3459,7 +3637,7 @@ static inline uint64_t CAVM_DTX_CPTX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_cpt#_sel#
  *
- * DTX CPT Select Register
+ * INTERNAL: DTX CPT Select Register
  */
 union cavm_dtx_cptx_selx
 {
@@ -3497,7 +3675,7 @@ static inline uint64_t CAVM_DTX_CPTX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_cpt0_bcst_rsp
  *
- * DTX CPT0 Control Register
+ * INTERNAL: DTX CPT0 Control Register
  */
 union cavm_dtx_cpt0_bcst_rsp
 {
@@ -3534,7 +3712,7 @@ static inline uint64_t CAVM_DTX_CPT0_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_cpt0_ctl
  *
- * DTX CPT0 Control Register
+ * INTERNAL: DTX CPT0 Control Register
  */
 union cavm_dtx_cpt0_ctl
 {
@@ -3545,15 +3723,15 @@ union cavm_dtx_cpt0_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -3581,7 +3759,7 @@ static inline uint64_t CAVM_DTX_CPT0_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_cpt0_dat#
  *
- * DTX CPT0 Raw Data Register
+ * INTERNAL: DTX CPT0 Raw Data Register
  */
 union cavm_dtx_cpt0_datx
 {
@@ -3619,7 +3797,7 @@ static inline uint64_t CAVM_DTX_CPT0_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_cpt0_ena#
  *
- * DTX CPT0 Data Enable Register
+ * INTERNAL: DTX CPT0 Data Enable Register
  */
 union cavm_dtx_cpt0_enax
 {
@@ -3657,7 +3835,7 @@ static inline uint64_t CAVM_DTX_CPT0_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_cpt0_sel#
  *
- * DTX CPT0 Select Register
+ * INTERNAL: DTX CPT0 Select Register
  */
 union cavm_dtx_cpt0_selx
 {
@@ -3693,7 +3871,7 @@ static inline uint64_t CAVM_DTX_CPT0_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_cpt_bcst_rsp
  *
- * DTX CPT Control Register
+ * INTERNAL: DTX CPT Control Register
  */
 union cavm_dtx_cpt_bcst_rsp
 {
@@ -3730,7 +3908,7 @@ static inline uint64_t CAVM_DTX_CPT_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_cpt_ctl
  *
- * DTX CPT Control Register
+ * INTERNAL: DTX CPT Control Register
  */
 union cavm_dtx_cpt_ctl
 {
@@ -3741,14 +3919,14 @@ union cavm_dtx_cpt_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
@@ -3777,7 +3955,7 @@ static inline uint64_t CAVM_DTX_CPT_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_cpt_dat#
  *
- * DTX CPT Raw Data Register
+ * INTERNAL: DTX CPT Raw Data Register
  */
 union cavm_dtx_cpt_datx
 {
@@ -3815,7 +3993,7 @@ static inline uint64_t CAVM_DTX_CPT_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_cpt_ena#
  *
- * DTX CPT Data Enable Register
+ * INTERNAL: DTX CPT Data Enable Register
  */
 union cavm_dtx_cpt_enax
 {
@@ -3853,7 +4031,7 @@ static inline uint64_t CAVM_DTX_CPT_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_cpt_sel#
  *
- * DTX CPT Select Register
+ * INTERNAL: DTX CPT Select Register
  */
 union cavm_dtx_cpt_selx
 {
@@ -3889,7 +4067,7 @@ static inline uint64_t CAVM_DTX_CPT_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_dap_bcst_rsp
  *
- * DTX DAP Control Register
+ * INTERNAL: DTX DAP Control Register
  */
 union cavm_dtx_dap_bcst_rsp
 {
@@ -3924,7 +4102,7 @@ static inline uint64_t CAVM_DTX_DAP_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_dap_ctl
  *
- * DTX DAP Control Register
+ * INTERNAL: DTX DAP Control Register
  */
 union cavm_dtx_dap_ctl
 {
@@ -3935,22 +4113,25 @@ union cavm_dtx_dap_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_dap_ctl_s cn8; */
-    struct cavm_dtx_dap_ctl_cn9
+    /* struct cavm_dtx_dap_ctl_s cn9; */
+    /* struct cavm_dtx_dap_ctl_s cn96xx; */
+    /* struct cavm_dtx_dap_ctl_s cn98xx; */
+    struct cavm_dtx_dap_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -3969,7 +4150,9 @@ union cavm_dtx_dap_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xxp1;
+    /* struct cavm_dtx_dap_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_dap_ctl_s loki; */
 };
 typedef union cavm_dtx_dap_ctl cavm_dtx_dap_ctl_t;
 
@@ -3989,7 +4172,7 @@ static inline uint64_t CAVM_DTX_DAP_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_dap_dat#
  *
- * DTX DAP Raw Data Register
+ * INTERNAL: DTX DAP Raw Data Register
  */
 union cavm_dtx_dap_datx
 {
@@ -4027,7 +4210,7 @@ static inline uint64_t CAVM_DTX_DAP_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_dap_ena#
  *
- * DTX DAP Data Enable Register
+ * INTERNAL: DTX DAP Data Enable Register
  */
 union cavm_dtx_dap_enax
 {
@@ -4065,7 +4248,7 @@ static inline uint64_t CAVM_DTX_DAP_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_dap_sel#
  *
- * DTX DAP Select Register
+ * INTERNAL: DTX DAP Select Register
  */
 union cavm_dtx_dap_selx
 {
@@ -4101,7 +4284,7 @@ static inline uint64_t CAVM_DTX_DAP_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_ddf_bcst_rsp
  *
- * DTX DDF Control Register
+ * INTERNAL: DTX DDF Control Register
  */
 union cavm_dtx_ddf_bcst_rsp
 {
@@ -4138,7 +4321,7 @@ static inline uint64_t CAVM_DTX_DDF_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_ddf_ctl
  *
- * DTX DDF Control Register
+ * INTERNAL: DTX DDF Control Register
  */
 union cavm_dtx_ddf_ctl
 {
@@ -4149,15 +4332,15 @@ union cavm_dtx_ddf_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -4185,7 +4368,7 @@ static inline uint64_t CAVM_DTX_DDF_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_ddf_dat#
  *
- * DTX DDF Raw Data Register
+ * INTERNAL: DTX DDF Raw Data Register
  */
 union cavm_dtx_ddf_datx
 {
@@ -4223,7 +4406,7 @@ static inline uint64_t CAVM_DTX_DDF_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_ddf_ena#
  *
- * DTX DDF Data Enable Register
+ * INTERNAL: DTX DDF Data Enable Register
  */
 union cavm_dtx_ddf_enax
 {
@@ -4261,7 +4444,7 @@ static inline uint64_t CAVM_DTX_DDF_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_ddf_sel#
  *
- * DTX DDF Select Register
+ * INTERNAL: DTX DDF Select Register
  */
 union cavm_dtx_ddf_selx
 {
@@ -4297,7 +4480,7 @@ static inline uint64_t CAVM_DTX_DDF_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_denc_bcst_rsp
  *
- * DTX DENC Control Register
+ * INTERNAL: DTX DENC Control Register
  */
 union cavm_dtx_denc_bcst_rsp
 {
@@ -4336,7 +4519,7 @@ static inline uint64_t CAVM_DTX_DENC_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_denc_ctl
  *
- * DTX DENC Control Register
+ * INTERNAL: DTX DENC Control Register
  */
 union cavm_dtx_denc_ctl
 {
@@ -4361,7 +4544,29 @@ union cavm_dtx_denc_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_denc_ctl_s cn; */
+    /* struct cavm_dtx_denc_ctl_s cn9; */
+    /* struct cavm_dtx_denc_ctl_s cnf95xxp1; */
+    struct cavm_dtx_denc_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_denc_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_denc_ctl cavm_dtx_denc_ctl_t;
 
@@ -4385,7 +4590,7 @@ static inline uint64_t CAVM_DTX_DENC_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_denc_dat#
  *
- * DTX DENC Raw Data Register
+ * INTERNAL: DTX DENC Raw Data Register
  */
 union cavm_dtx_denc_datx
 {
@@ -4425,7 +4630,7 @@ static inline uint64_t CAVM_DTX_DENC_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_denc_ena#
  *
- * DTX DENC Data Enable Register
+ * INTERNAL: DTX DENC Data Enable Register
  */
 union cavm_dtx_denc_enax
 {
@@ -4465,7 +4670,7 @@ static inline uint64_t CAVM_DTX_DENC_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_denc_sel#
  *
- * DTX DENC Select Register
+ * INTERNAL: DTX DENC Select Register
  */
 union cavm_dtx_denc_selx
 {
@@ -4501,9 +4706,205 @@ static inline uint64_t CAVM_DTX_DENC_SELX(unsigned long a)
 #define arguments_CAVM_DTX_DENC_SELX(a) (a),-1,-1,-1
 
 /**
+ * Register (RSL) dtx_dlfe_bcst_rsp
+ *
+ * INTERNAL: DTX DLFE Control Register
+ */
+union cavm_dtx_dlfe_bcst_rsp
+{
+    uint64_t u;
+    struct cavm_dtx_dlfe_bcst_rsp_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_1_63         : 63;
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable this DTX instance as the responder to DTX broadcast read/write operations. */
+#else /* Word 0 - Little Endian */
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable this DTX instance as the responder to DTX broadcast read/write operations. */
+        uint64_t reserved_1_63         : 63;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_dlfe_bcst_rsp_s cn; */
+};
+typedef union cavm_dtx_dlfe_bcst_rsp cavm_dtx_dlfe_bcst_rsp_t;
+
+#define CAVM_DTX_DLFE_BCST_RSP CAVM_DTX_DLFE_BCST_RSP_FUNC()
+static inline uint64_t CAVM_DTX_DLFE_BCST_RSP_FUNC(void) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_DLFE_BCST_RSP_FUNC(void)
+{
+    if (cavm_is_model(OCTEONTX_LOKI))
+        return 0x87e0fee18080ll;
+    __cavm_csr_fatal("DTX_DLFE_BCST_RSP", 0, 0, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_DLFE_BCST_RSP cavm_dtx_dlfe_bcst_rsp_t
+#define bustype_CAVM_DTX_DLFE_BCST_RSP CSR_TYPE_RSL
+#define basename_CAVM_DTX_DLFE_BCST_RSP "DTX_DLFE_BCST_RSP"
+#define busnum_CAVM_DTX_DLFE_BCST_RSP 0
+#define arguments_CAVM_DTX_DLFE_BCST_RSP -1,-1,-1,-1
+
+/**
+ * Register (RSL) dtx_dlfe_ctl
+ *
+ * INTERNAL: DTX DLFE Control Register
+ */
+union cavm_dtx_dlfe_ctl
+{
+    uint64_t u;
+    struct cavm_dtx_dlfe_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_dlfe_ctl_s cn; */
+};
+typedef union cavm_dtx_dlfe_ctl cavm_dtx_dlfe_ctl_t;
+
+#define CAVM_DTX_DLFE_CTL CAVM_DTX_DLFE_CTL_FUNC()
+static inline uint64_t CAVM_DTX_DLFE_CTL_FUNC(void) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_DLFE_CTL_FUNC(void)
+{
+    if (cavm_is_model(OCTEONTX_LOKI))
+        return 0x87e0fee18060ll;
+    __cavm_csr_fatal("DTX_DLFE_CTL", 0, 0, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_DLFE_CTL cavm_dtx_dlfe_ctl_t
+#define bustype_CAVM_DTX_DLFE_CTL CSR_TYPE_RSL
+#define basename_CAVM_DTX_DLFE_CTL "DTX_DLFE_CTL"
+#define busnum_CAVM_DTX_DLFE_CTL 0
+#define arguments_CAVM_DTX_DLFE_CTL -1,-1,-1,-1
+
+/**
+ * Register (RSL) dtx_dlfe_dat#
+ *
+ * INTERNAL: DTX DLFE Raw Data Register
+ */
+union cavm_dtx_dlfe_datx
+{
+    uint64_t u;
+    struct cavm_dtx_dlfe_datx_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_36_63        : 28;
+        uint64_t raw                   : 36; /**< [ 35:  0](RO/H) Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                                 ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
+#else /* Word 0 - Little Endian */
+        uint64_t raw                   : 36; /**< [ 35:  0](RO/H) Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                                 ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
+        uint64_t reserved_36_63        : 28;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_dlfe_datx_s cn; */
+};
+typedef union cavm_dtx_dlfe_datx cavm_dtx_dlfe_datx_t;
+
+static inline uint64_t CAVM_DTX_DLFE_DATX(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_DLFE_DATX(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee18040ll + 8ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_DLFE_DATX", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_DLFE_DATX(a) cavm_dtx_dlfe_datx_t
+#define bustype_CAVM_DTX_DLFE_DATX(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_DLFE_DATX(a) "DTX_DLFE_DATX"
+#define busnum_CAVM_DTX_DLFE_DATX(a) (a)
+#define arguments_CAVM_DTX_DLFE_DATX(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) dtx_dlfe_ena#
+ *
+ * INTERNAL: DTX DLFE Data Enable Register
+ */
+union cavm_dtx_dlfe_enax
+{
+    uint64_t u;
+    struct cavm_dtx_dlfe_enax_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_36_63        : 28;
+        uint64_t ena                   : 36; /**< [ 35:  0](R/W) Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                                 buses. Normally only one block will drive each bit. */
+#else /* Word 0 - Little Endian */
+        uint64_t ena                   : 36; /**< [ 35:  0](R/W) Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                                 buses. Normally only one block will drive each bit. */
+        uint64_t reserved_36_63        : 28;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_dlfe_enax_s cn; */
+};
+typedef union cavm_dtx_dlfe_enax cavm_dtx_dlfe_enax_t;
+
+static inline uint64_t CAVM_DTX_DLFE_ENAX(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_DLFE_ENAX(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee18020ll + 8ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_DLFE_ENAX", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_DLFE_ENAX(a) cavm_dtx_dlfe_enax_t
+#define bustype_CAVM_DTX_DLFE_ENAX(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_DLFE_ENAX(a) "DTX_DLFE_ENAX"
+#define busnum_CAVM_DTX_DLFE_ENAX(a) (a)
+#define arguments_CAVM_DTX_DLFE_ENAX(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) dtx_dlfe_sel#
+ *
+ * INTERNAL: DTX DLFE Select Register
+ */
+union cavm_dtx_dlfe_selx
+{
+    uint64_t u;
+    struct cavm_dtx_dlfe_selx_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_24_63        : 40;
+        uint64_t value                 : 24; /**< [ 23:  0](R/W) Debug select. Selects which signals to drive onto low/high 36-bit debug buses. */
+#else /* Word 0 - Little Endian */
+        uint64_t value                 : 24; /**< [ 23:  0](R/W) Debug select. Selects which signals to drive onto low/high 36-bit debug buses. */
+        uint64_t reserved_24_63        : 40;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_dlfe_selx_s cn; */
+};
+typedef union cavm_dtx_dlfe_selx cavm_dtx_dlfe_selx_t;
+
+static inline uint64_t CAVM_DTX_DLFE_SELX(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_DLFE_SELX(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee18000ll + 8ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_DLFE_SELX", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_DLFE_SELX(a) cavm_dtx_dlfe_selx_t
+#define bustype_CAVM_DTX_DLFE_SELX(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_DLFE_SELX(a) "DTX_DLFE_SELX"
+#define busnum_CAVM_DTX_DLFE_SELX(a) (a)
+#define arguments_CAVM_DTX_DLFE_SELX(a) (a),-1,-1,-1
+
+/**
  * Register (RSL) dtx_dmap#_bcst_rsp
  *
- * DTX DMAP Control Register
+ * INTERNAL: DTX DMAP Control Register
  */
 union cavm_dtx_dmapx_bcst_rsp
 {
@@ -4541,7 +4942,7 @@ static inline uint64_t CAVM_DTX_DMAPX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_dmap#_ctl
  *
- * DTX DMAP Control Register
+ * INTERNAL: DTX DMAP Control Register
  */
 union cavm_dtx_dmapx_ctl
 {
@@ -4566,7 +4967,29 @@ union cavm_dtx_dmapx_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_dmapx_ctl_s cn; */
+    /* struct cavm_dtx_dmapx_ctl_s cn9; */
+    /* struct cavm_dtx_dmapx_ctl_s cnf95xxp1; */
+    struct cavm_dtx_dmapx_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_dmapx_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_dmapx_ctl cavm_dtx_dmapx_ctl_t;
 
@@ -4589,7 +5012,7 @@ static inline uint64_t CAVM_DTX_DMAPX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_dmap#_dat#
  *
- * DTX DMAP Raw Data Register
+ * INTERNAL: DTX DMAP Raw Data Register
  */
 union cavm_dtx_dmapx_datx
 {
@@ -4629,7 +5052,7 @@ static inline uint64_t CAVM_DTX_DMAPX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_dmap#_ena#
  *
- * DTX DMAP Data Enable Register
+ * INTERNAL: DTX DMAP Data Enable Register
  */
 union cavm_dtx_dmapx_enax
 {
@@ -4669,7 +5092,7 @@ static inline uint64_t CAVM_DTX_DMAPX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_dmap#_sel#
  *
- * DTX DMAP Select Register
+ * INTERNAL: DTX DMAP Select Register
  */
 union cavm_dtx_dmapx_selx
 {
@@ -4707,7 +5130,7 @@ static inline uint64_t CAVM_DTX_DMAPX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_dpi#_bcst_rsp
  *
- * DTX DPI Control Register
+ * INTERNAL: DTX DPI Control Register
  */
 union cavm_dtx_dpix_bcst_rsp
 {
@@ -4743,7 +5166,7 @@ static inline uint64_t CAVM_DTX_DPIX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_dpi#_ctl
  *
- * DTX DPI Control Register
+ * INTERNAL: DTX DPI Control Register
  */
 union cavm_dtx_dpix_ctl
 {
@@ -4754,14 +5177,14 @@ union cavm_dtx_dpix_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
@@ -4789,7 +5212,7 @@ static inline uint64_t CAVM_DTX_DPIX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_dpi#_dat#
  *
- * DTX DPI Raw Data Register
+ * INTERNAL: DTX DPI Raw Data Register
  */
 union cavm_dtx_dpix_datx
 {
@@ -4827,7 +5250,7 @@ static inline uint64_t CAVM_DTX_DPIX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_dpi#_ena#
  *
- * DTX DPI Data Enable Register
+ * INTERNAL: DTX DPI Data Enable Register
  */
 union cavm_dtx_dpix_enax
 {
@@ -4865,7 +5288,7 @@ static inline uint64_t CAVM_DTX_DPIX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_dpi#_sel#
  *
- * DTX DPI Select Register
+ * INTERNAL: DTX DPI Select Register
  */
 union cavm_dtx_dpix_selx
 {
@@ -4901,7 +5324,7 @@ static inline uint64_t CAVM_DTX_DPIX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_dpi_bcst_rsp
  *
- * DTX DPI Control Register
+ * INTERNAL: DTX DPI Control Register
  */
 union cavm_dtx_dpi_bcst_rsp
 {
@@ -4944,7 +5367,7 @@ static inline uint64_t CAVM_DTX_DPI_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_dpi_ctl
  *
- * DTX DPI Control Register
+ * INTERNAL: DTX DPI Control Register
  */
 union cavm_dtx_dpi_ctl
 {
@@ -4955,22 +5378,24 @@ union cavm_dtx_dpi_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_dpi_ctl_s cn8; */
-    struct cavm_dtx_dpi_ctl_cn9
+    /* struct cavm_dtx_dpi_ctl_s cn9; */
+    /* struct cavm_dtx_dpi_ctl_s cn96xx; */
+    struct cavm_dtx_dpi_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -4989,7 +5414,9 @@ union cavm_dtx_dpi_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xxp1;
+    /* struct cavm_dtx_dpi_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_dpi_ctl_s loki; */
 };
 typedef union cavm_dtx_dpi_ctl cavm_dtx_dpi_ctl_t;
 
@@ -5017,7 +5444,7 @@ static inline uint64_t CAVM_DTX_DPI_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_dpi_dat#
  *
- * DTX DPI Raw Data Register
+ * INTERNAL: DTX DPI Raw Data Register
  */
 union cavm_dtx_dpi_datx
 {
@@ -5061,7 +5488,7 @@ static inline uint64_t CAVM_DTX_DPI_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_dpi_ena#
  *
- * DTX DPI Data Enable Register
+ * INTERNAL: DTX DPI Data Enable Register
  */
 union cavm_dtx_dpi_enax
 {
@@ -5105,7 +5532,7 @@ static inline uint64_t CAVM_DTX_DPI_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_dpi_sel#
  *
- * DTX DPI Select Register
+ * INTERNAL: DTX DPI Select Register
  */
 union cavm_dtx_dpi_selx
 {
@@ -5145,9 +5572,595 @@ static inline uint64_t CAVM_DTX_DPI_SELX(unsigned long a)
 #define arguments_CAVM_DTX_DPI_SELX(a) (a),-1,-1,-1
 
 /**
+ * Register (RSL) dtx_ecmp_bcst_rsp
+ *
+ * INTERNAL: DTX ECMP Control Register
+ */
+union cavm_dtx_ecmp_bcst_rsp
+{
+    uint64_t u;
+    struct cavm_dtx_ecmp_bcst_rsp_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_1_63         : 63;
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable this DTX instance as the responder to DTX broadcast read/write operations. */
+#else /* Word 0 - Little Endian */
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable this DTX instance as the responder to DTX broadcast read/write operations. */
+        uint64_t reserved_1_63         : 63;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ecmp_bcst_rsp_s cn; */
+};
+typedef union cavm_dtx_ecmp_bcst_rsp cavm_dtx_ecmp_bcst_rsp_t;
+
+#define CAVM_DTX_ECMP_BCST_RSP CAVM_DTX_ECMP_BCST_RSP_FUNC()
+static inline uint64_t CAVM_DTX_ECMP_BCST_RSP_FUNC(void) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_ECMP_BCST_RSP_FUNC(void)
+{
+    if (cavm_is_model(OCTEONTX_LOKI))
+        return 0x87e0fee80080ll;
+    __cavm_csr_fatal("DTX_ECMP_BCST_RSP", 0, 0, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_ECMP_BCST_RSP cavm_dtx_ecmp_bcst_rsp_t
+#define bustype_CAVM_DTX_ECMP_BCST_RSP CSR_TYPE_RSL
+#define basename_CAVM_DTX_ECMP_BCST_RSP "DTX_ECMP_BCST_RSP"
+#define busnum_CAVM_DTX_ECMP_BCST_RSP 0
+#define arguments_CAVM_DTX_ECMP_BCST_RSP -1,-1,-1,-1
+
+/**
+ * Register (RSL) dtx_ecmp_ctl
+ *
+ * INTERNAL: DTX ECMP Control Register
+ */
+union cavm_dtx_ecmp_ctl
+{
+    uint64_t u;
+    struct cavm_dtx_ecmp_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ecmp_ctl_s cn; */
+};
+typedef union cavm_dtx_ecmp_ctl cavm_dtx_ecmp_ctl_t;
+
+#define CAVM_DTX_ECMP_CTL CAVM_DTX_ECMP_CTL_FUNC()
+static inline uint64_t CAVM_DTX_ECMP_CTL_FUNC(void) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_ECMP_CTL_FUNC(void)
+{
+    if (cavm_is_model(OCTEONTX_LOKI))
+        return 0x87e0fee80060ll;
+    __cavm_csr_fatal("DTX_ECMP_CTL", 0, 0, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_ECMP_CTL cavm_dtx_ecmp_ctl_t
+#define bustype_CAVM_DTX_ECMP_CTL CSR_TYPE_RSL
+#define basename_CAVM_DTX_ECMP_CTL "DTX_ECMP_CTL"
+#define busnum_CAVM_DTX_ECMP_CTL 0
+#define arguments_CAVM_DTX_ECMP_CTL -1,-1,-1,-1
+
+/**
+ * Register (RSL) dtx_ecmp_dat#
+ *
+ * INTERNAL: DTX ECMP Raw Data Register
+ */
+union cavm_dtx_ecmp_datx
+{
+    uint64_t u;
+    struct cavm_dtx_ecmp_datx_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_36_63        : 28;
+        uint64_t raw                   : 36; /**< [ 35:  0](RO/H) Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                                 ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
+#else /* Word 0 - Little Endian */
+        uint64_t raw                   : 36; /**< [ 35:  0](RO/H) Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                                 ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
+        uint64_t reserved_36_63        : 28;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ecmp_datx_s cn; */
+};
+typedef union cavm_dtx_ecmp_datx cavm_dtx_ecmp_datx_t;
+
+static inline uint64_t CAVM_DTX_ECMP_DATX(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_ECMP_DATX(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee80040ll + 8ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_ECMP_DATX", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_ECMP_DATX(a) cavm_dtx_ecmp_datx_t
+#define bustype_CAVM_DTX_ECMP_DATX(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_ECMP_DATX(a) "DTX_ECMP_DATX"
+#define busnum_CAVM_DTX_ECMP_DATX(a) (a)
+#define arguments_CAVM_DTX_ECMP_DATX(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) dtx_ecmp_ena#
+ *
+ * INTERNAL: DTX ECMP Data Enable Register
+ */
+union cavm_dtx_ecmp_enax
+{
+    uint64_t u;
+    struct cavm_dtx_ecmp_enax_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_36_63        : 28;
+        uint64_t ena                   : 36; /**< [ 35:  0](R/W) Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                                 buses. Normally only one block will drive each bit. */
+#else /* Word 0 - Little Endian */
+        uint64_t ena                   : 36; /**< [ 35:  0](R/W) Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                                 buses. Normally only one block will drive each bit. */
+        uint64_t reserved_36_63        : 28;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ecmp_enax_s cn; */
+};
+typedef union cavm_dtx_ecmp_enax cavm_dtx_ecmp_enax_t;
+
+static inline uint64_t CAVM_DTX_ECMP_ENAX(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_ECMP_ENAX(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee80020ll + 8ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_ECMP_ENAX", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_ECMP_ENAX(a) cavm_dtx_ecmp_enax_t
+#define bustype_CAVM_DTX_ECMP_ENAX(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_ECMP_ENAX(a) "DTX_ECMP_ENAX"
+#define busnum_CAVM_DTX_ECMP_ENAX(a) (a)
+#define arguments_CAVM_DTX_ECMP_ENAX(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) dtx_ecmp_sel#
+ *
+ * INTERNAL: DTX ECMP Select Register
+ */
+union cavm_dtx_ecmp_selx
+{
+    uint64_t u;
+    struct cavm_dtx_ecmp_selx_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_24_63        : 40;
+        uint64_t value                 : 24; /**< [ 23:  0](R/W) Debug select. Selects which signals to drive onto low/high 36-bit debug buses. */
+#else /* Word 0 - Little Endian */
+        uint64_t value                 : 24; /**< [ 23:  0](R/W) Debug select. Selects which signals to drive onto low/high 36-bit debug buses. */
+        uint64_t reserved_24_63        : 40;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ecmp_selx_s cn; */
+};
+typedef union cavm_dtx_ecmp_selx cavm_dtx_ecmp_selx_t;
+
+static inline uint64_t CAVM_DTX_ECMP_SELX(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_ECMP_SELX(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee80000ll + 8ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_ECMP_SELX", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_ECMP_SELX(a) cavm_dtx_ecmp_selx_t
+#define bustype_CAVM_DTX_ECMP_SELX(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_ECMP_SELX(a) "DTX_ECMP_SELX"
+#define busnum_CAVM_DTX_ECMP_SELX(a) (a)
+#define arguments_CAVM_DTX_ECMP_SELX(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) dtx_edec_bcst_rsp
+ *
+ * INTERNAL: DTX EDEC Control Register
+ */
+union cavm_dtx_edec_bcst_rsp
+{
+    uint64_t u;
+    struct cavm_dtx_edec_bcst_rsp_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_1_63         : 63;
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable this DTX instance as the responder to DTX broadcast read/write operations. */
+#else /* Word 0 - Little Endian */
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable this DTX instance as the responder to DTX broadcast read/write operations. */
+        uint64_t reserved_1_63         : 63;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_edec_bcst_rsp_s cn; */
+};
+typedef union cavm_dtx_edec_bcst_rsp cavm_dtx_edec_bcst_rsp_t;
+
+#define CAVM_DTX_EDEC_BCST_RSP CAVM_DTX_EDEC_BCST_RSP_FUNC()
+static inline uint64_t CAVM_DTX_EDEC_BCST_RSP_FUNC(void) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_EDEC_BCST_RSP_FUNC(void)
+{
+    if (cavm_is_model(OCTEONTX_LOKI))
+        return 0x87e0fee40080ll;
+    __cavm_csr_fatal("DTX_EDEC_BCST_RSP", 0, 0, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_EDEC_BCST_RSP cavm_dtx_edec_bcst_rsp_t
+#define bustype_CAVM_DTX_EDEC_BCST_RSP CSR_TYPE_RSL
+#define basename_CAVM_DTX_EDEC_BCST_RSP "DTX_EDEC_BCST_RSP"
+#define busnum_CAVM_DTX_EDEC_BCST_RSP 0
+#define arguments_CAVM_DTX_EDEC_BCST_RSP -1,-1,-1,-1
+
+/**
+ * Register (RSL) dtx_edec_ctl
+ *
+ * INTERNAL: DTX EDEC Control Register
+ */
+union cavm_dtx_edec_ctl
+{
+    uint64_t u;
+    struct cavm_dtx_edec_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_edec_ctl_s cn; */
+};
+typedef union cavm_dtx_edec_ctl cavm_dtx_edec_ctl_t;
+
+#define CAVM_DTX_EDEC_CTL CAVM_DTX_EDEC_CTL_FUNC()
+static inline uint64_t CAVM_DTX_EDEC_CTL_FUNC(void) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_EDEC_CTL_FUNC(void)
+{
+    if (cavm_is_model(OCTEONTX_LOKI))
+        return 0x87e0fee40060ll;
+    __cavm_csr_fatal("DTX_EDEC_CTL", 0, 0, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_EDEC_CTL cavm_dtx_edec_ctl_t
+#define bustype_CAVM_DTX_EDEC_CTL CSR_TYPE_RSL
+#define basename_CAVM_DTX_EDEC_CTL "DTX_EDEC_CTL"
+#define busnum_CAVM_DTX_EDEC_CTL 0
+#define arguments_CAVM_DTX_EDEC_CTL -1,-1,-1,-1
+
+/**
+ * Register (RSL) dtx_edec_dat#
+ *
+ * INTERNAL: DTX EDEC Raw Data Register
+ */
+union cavm_dtx_edec_datx
+{
+    uint64_t u;
+    struct cavm_dtx_edec_datx_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_36_63        : 28;
+        uint64_t raw                   : 36; /**< [ 35:  0](RO/H) Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                                 ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
+#else /* Word 0 - Little Endian */
+        uint64_t raw                   : 36; /**< [ 35:  0](RO/H) Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                                 ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
+        uint64_t reserved_36_63        : 28;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_edec_datx_s cn; */
+};
+typedef union cavm_dtx_edec_datx cavm_dtx_edec_datx_t;
+
+static inline uint64_t CAVM_DTX_EDEC_DATX(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_EDEC_DATX(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee40040ll + 8ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_EDEC_DATX", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_EDEC_DATX(a) cavm_dtx_edec_datx_t
+#define bustype_CAVM_DTX_EDEC_DATX(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_EDEC_DATX(a) "DTX_EDEC_DATX"
+#define busnum_CAVM_DTX_EDEC_DATX(a) (a)
+#define arguments_CAVM_DTX_EDEC_DATX(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) dtx_edec_ena#
+ *
+ * INTERNAL: DTX EDEC Data Enable Register
+ */
+union cavm_dtx_edec_enax
+{
+    uint64_t u;
+    struct cavm_dtx_edec_enax_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_36_63        : 28;
+        uint64_t ena                   : 36; /**< [ 35:  0](R/W) Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                                 buses. Normally only one block will drive each bit. */
+#else /* Word 0 - Little Endian */
+        uint64_t ena                   : 36; /**< [ 35:  0](R/W) Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                                 buses. Normally only one block will drive each bit. */
+        uint64_t reserved_36_63        : 28;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_edec_enax_s cn; */
+};
+typedef union cavm_dtx_edec_enax cavm_dtx_edec_enax_t;
+
+static inline uint64_t CAVM_DTX_EDEC_ENAX(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_EDEC_ENAX(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee40020ll + 8ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_EDEC_ENAX", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_EDEC_ENAX(a) cavm_dtx_edec_enax_t
+#define bustype_CAVM_DTX_EDEC_ENAX(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_EDEC_ENAX(a) "DTX_EDEC_ENAX"
+#define busnum_CAVM_DTX_EDEC_ENAX(a) (a)
+#define arguments_CAVM_DTX_EDEC_ENAX(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) dtx_edec_sel#
+ *
+ * INTERNAL: DTX EDEC Select Register
+ */
+union cavm_dtx_edec_selx
+{
+    uint64_t u;
+    struct cavm_dtx_edec_selx_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_24_63        : 40;
+        uint64_t value                 : 24; /**< [ 23:  0](R/W) Debug select. Selects which signals to drive onto low/high 36-bit debug buses. */
+#else /* Word 0 - Little Endian */
+        uint64_t value                 : 24; /**< [ 23:  0](R/W) Debug select. Selects which signals to drive onto low/high 36-bit debug buses. */
+        uint64_t reserved_24_63        : 40;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_edec_selx_s cn; */
+};
+typedef union cavm_dtx_edec_selx cavm_dtx_edec_selx_t;
+
+static inline uint64_t CAVM_DTX_EDEC_SELX(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_EDEC_SELX(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee40000ll + 8ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_EDEC_SELX", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_EDEC_SELX(a) cavm_dtx_edec_selx_t
+#define bustype_CAVM_DTX_EDEC_SELX(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_EDEC_SELX(a) "DTX_EDEC_SELX"
+#define busnum_CAVM_DTX_EDEC_SELX(a) (a)
+#define arguments_CAVM_DTX_EDEC_SELX(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) dtx_fdeq#_bcst_rsp
+ *
+ * INTERNAL: DTX FDEQ Control Register
+ */
+union cavm_dtx_fdeqx_bcst_rsp
+{
+    uint64_t u;
+    struct cavm_dtx_fdeqx_bcst_rsp_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_1_63         : 63;
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable this DTX instance as the responder to DTX broadcast read/write operations. */
+#else /* Word 0 - Little Endian */
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable this DTX instance as the responder to DTX broadcast read/write operations. */
+        uint64_t reserved_1_63         : 63;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_fdeqx_bcst_rsp_s cn; */
+};
+typedef union cavm_dtx_fdeqx_bcst_rsp cavm_dtx_fdeqx_bcst_rsp_t;
+
+static inline uint64_t CAVM_DTX_FDEQX_BCST_RSP(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_FDEQX_BCST_RSP(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee20080ll + 0x80000ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_FDEQX_BCST_RSP", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_FDEQX_BCST_RSP(a) cavm_dtx_fdeqx_bcst_rsp_t
+#define bustype_CAVM_DTX_FDEQX_BCST_RSP(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_FDEQX_BCST_RSP(a) "DTX_FDEQX_BCST_RSP"
+#define busnum_CAVM_DTX_FDEQX_BCST_RSP(a) (a)
+#define arguments_CAVM_DTX_FDEQX_BCST_RSP(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) dtx_fdeq#_ctl
+ *
+ * INTERNAL: DTX FDEQ Control Register
+ */
+union cavm_dtx_fdeqx_ctl
+{
+    uint64_t u;
+    struct cavm_dtx_fdeqx_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_fdeqx_ctl_s cn; */
+};
+typedef union cavm_dtx_fdeqx_ctl cavm_dtx_fdeqx_ctl_t;
+
+static inline uint64_t CAVM_DTX_FDEQX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_FDEQX_CTL(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee20060ll + 0x80000ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_FDEQX_CTL", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_FDEQX_CTL(a) cavm_dtx_fdeqx_ctl_t
+#define bustype_CAVM_DTX_FDEQX_CTL(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_FDEQX_CTL(a) "DTX_FDEQX_CTL"
+#define busnum_CAVM_DTX_FDEQX_CTL(a) (a)
+#define arguments_CAVM_DTX_FDEQX_CTL(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) dtx_fdeq#_dat#
+ *
+ * INTERNAL: DTX FDEQ Raw Data Register
+ */
+union cavm_dtx_fdeqx_datx
+{
+    uint64_t u;
+    struct cavm_dtx_fdeqx_datx_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_36_63        : 28;
+        uint64_t raw                   : 36; /**< [ 35:  0](RO/H) Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                                 ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
+#else /* Word 0 - Little Endian */
+        uint64_t raw                   : 36; /**< [ 35:  0](RO/H) Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                                 ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
+        uint64_t reserved_36_63        : 28;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_fdeqx_datx_s cn; */
+};
+typedef union cavm_dtx_fdeqx_datx cavm_dtx_fdeqx_datx_t;
+
+static inline uint64_t CAVM_DTX_FDEQX_DATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_FDEQX_DATX(unsigned long a, unsigned long b)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
+        return 0x87e0fee20040ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
+    __cavm_csr_fatal("DTX_FDEQX_DATX", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_FDEQX_DATX(a,b) cavm_dtx_fdeqx_datx_t
+#define bustype_CAVM_DTX_FDEQX_DATX(a,b) CSR_TYPE_RSL
+#define basename_CAVM_DTX_FDEQX_DATX(a,b) "DTX_FDEQX_DATX"
+#define busnum_CAVM_DTX_FDEQX_DATX(a,b) (a)
+#define arguments_CAVM_DTX_FDEQX_DATX(a,b) (a),(b),-1,-1
+
+/**
+ * Register (RSL) dtx_fdeq#_ena#
+ *
+ * INTERNAL: DTX FDEQ Data Enable Register
+ */
+union cavm_dtx_fdeqx_enax
+{
+    uint64_t u;
+    struct cavm_dtx_fdeqx_enax_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_36_63        : 28;
+        uint64_t ena                   : 36; /**< [ 35:  0](R/W) Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                                 buses. Normally only one block will drive each bit. */
+#else /* Word 0 - Little Endian */
+        uint64_t ena                   : 36; /**< [ 35:  0](R/W) Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                                 buses. Normally only one block will drive each bit. */
+        uint64_t reserved_36_63        : 28;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_fdeqx_enax_s cn; */
+};
+typedef union cavm_dtx_fdeqx_enax cavm_dtx_fdeqx_enax_t;
+
+static inline uint64_t CAVM_DTX_FDEQX_ENAX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_FDEQX_ENAX(unsigned long a, unsigned long b)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
+        return 0x87e0fee20020ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
+    __cavm_csr_fatal("DTX_FDEQX_ENAX", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_FDEQX_ENAX(a,b) cavm_dtx_fdeqx_enax_t
+#define bustype_CAVM_DTX_FDEQX_ENAX(a,b) CSR_TYPE_RSL
+#define basename_CAVM_DTX_FDEQX_ENAX(a,b) "DTX_FDEQX_ENAX"
+#define busnum_CAVM_DTX_FDEQX_ENAX(a,b) (a)
+#define arguments_CAVM_DTX_FDEQX_ENAX(a,b) (a),(b),-1,-1
+
+/**
+ * Register (RSL) dtx_fdeq#_sel#
+ *
+ * INTERNAL: DTX FDEQ Select Register
+ */
+union cavm_dtx_fdeqx_selx
+{
+    uint64_t u;
+    struct cavm_dtx_fdeqx_selx_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_24_63        : 40;
+        uint64_t value                 : 24; /**< [ 23:  0](R/W) Debug select. Selects which signals to drive onto low/high 36-bit debug buses. */
+#else /* Word 0 - Little Endian */
+        uint64_t value                 : 24; /**< [ 23:  0](R/W) Debug select. Selects which signals to drive onto low/high 36-bit debug buses. */
+        uint64_t reserved_24_63        : 40;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_fdeqx_selx_s cn; */
+};
+typedef union cavm_dtx_fdeqx_selx cavm_dtx_fdeqx_selx_t;
+
+static inline uint64_t CAVM_DTX_FDEQX_SELX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_FDEQX_SELX(unsigned long a, unsigned long b)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
+        return 0x87e0fee20000ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
+    __cavm_csr_fatal("DTX_FDEQX_SELX", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_FDEQX_SELX(a,b) cavm_dtx_fdeqx_selx_t
+#define bustype_CAVM_DTX_FDEQX_SELX(a,b) CSR_TYPE_RSL
+#define basename_CAVM_DTX_FDEQX_SELX(a,b) "DTX_FDEQX_SELX"
+#define busnum_CAVM_DTX_FDEQX_SELX(a,b) (a)
+#define arguments_CAVM_DTX_FDEQX_SELX(a,b) (a),(b),-1,-1
+
+/**
  * Register (RSL) dtx_fpa_bcst_rsp
  *
- * DTX FPA Control Register
+ * INTERNAL: DTX FPA Control Register
  */
 union cavm_dtx_fpa_bcst_rsp
 {
@@ -5184,7 +6197,7 @@ static inline uint64_t CAVM_DTX_FPA_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_fpa_ctl
  *
- * DTX FPA Control Register
+ * INTERNAL: DTX FPA Control Register
  */
 union cavm_dtx_fpa_ctl
 {
@@ -5195,15 +6208,15 @@ union cavm_dtx_fpa_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -5231,7 +6244,7 @@ static inline uint64_t CAVM_DTX_FPA_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_fpa_dat#
  *
- * DTX FPA Raw Data Register
+ * INTERNAL: DTX FPA Raw Data Register
  */
 union cavm_dtx_fpa_datx
 {
@@ -5269,7 +6282,7 @@ static inline uint64_t CAVM_DTX_FPA_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_fpa_ena#
  *
- * DTX FPA Data Enable Register
+ * INTERNAL: DTX FPA Data Enable Register
  */
 union cavm_dtx_fpa_enax
 {
@@ -5307,7 +6320,7 @@ static inline uint64_t CAVM_DTX_FPA_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_fpa_sel#
  *
- * DTX FPA Select Register
+ * INTERNAL: DTX FPA Select Register
  */
 union cavm_dtx_fpa_selx
 {
@@ -5343,7 +6356,7 @@ static inline uint64_t CAVM_DTX_FPA_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_gic_bcst_rsp
  *
- * DTX GIC Control Register
+ * INTERNAL: DTX GIC Control Register
  */
 union cavm_dtx_gic_bcst_rsp
 {
@@ -5378,7 +6391,7 @@ static inline uint64_t CAVM_DTX_GIC_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_gic_ctl
  *
- * DTX GIC Control Register
+ * INTERNAL: DTX GIC Control Register
  */
 union cavm_dtx_gic_ctl
 {
@@ -5389,22 +6402,25 @@ union cavm_dtx_gic_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_gic_ctl_s cn8; */
-    struct cavm_dtx_gic_ctl_cn9
+    /* struct cavm_dtx_gic_ctl_s cn9; */
+    /* struct cavm_dtx_gic_ctl_s cn96xx; */
+    /* struct cavm_dtx_gic_ctl_s cn98xx; */
+    struct cavm_dtx_gic_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -5423,7 +6439,9 @@ union cavm_dtx_gic_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xxp1;
+    /* struct cavm_dtx_gic_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_gic_ctl_s loki; */
 };
 typedef union cavm_dtx_gic_ctl cavm_dtx_gic_ctl_t;
 
@@ -5443,7 +6461,7 @@ static inline uint64_t CAVM_DTX_GIC_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_gic_dat#
  *
- * DTX GIC Raw Data Register
+ * INTERNAL: DTX GIC Raw Data Register
  */
 union cavm_dtx_gic_datx
 {
@@ -5481,7 +6499,7 @@ static inline uint64_t CAVM_DTX_GIC_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_gic_ena#
  *
- * DTX GIC Data Enable Register
+ * INTERNAL: DTX GIC Data Enable Register
  */
 union cavm_dtx_gic_enax
 {
@@ -5519,7 +6537,7 @@ static inline uint64_t CAVM_DTX_GIC_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_gic_sel#
  *
- * DTX GIC Select Register
+ * INTERNAL: DTX GIC Select Register
  */
 union cavm_dtx_gic_selx
 {
@@ -5555,7 +6573,7 @@ static inline uint64_t CAVM_DTX_GIC_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_gser#_bcst_rsp
  *
- * DTX GSER Control Register
+ * INTERNAL: DTX GSER Control Register
  */
 union cavm_dtx_gserx_bcst_rsp
 {
@@ -5593,7 +6611,7 @@ static inline uint64_t CAVM_DTX_GSERX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_gser#_ctl
  *
- * DTX GSER Control Register
+ * INTERNAL: DTX GSER Control Register
  */
 union cavm_dtx_gserx_ctl
 {
@@ -5604,15 +6622,15 @@ union cavm_dtx_gserx_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -5641,7 +6659,7 @@ static inline uint64_t CAVM_DTX_GSERX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_gser#_dat#
  *
- * DTX GSER Raw Data Register
+ * INTERNAL: DTX GSER Raw Data Register
  */
 union cavm_dtx_gserx_datx
 {
@@ -5681,7 +6699,7 @@ static inline uint64_t CAVM_DTX_GSERX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_gser#_ena#
  *
- * DTX GSER Data Enable Register
+ * INTERNAL: DTX GSER Data Enable Register
  */
 union cavm_dtx_gserx_enax
 {
@@ -5721,7 +6739,7 @@ static inline uint64_t CAVM_DTX_GSERX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_gser#_sel#
  *
- * DTX GSER Select Register
+ * INTERNAL: DTX GSER Select Register
  */
 union cavm_dtx_gserx_selx
 {
@@ -5759,7 +6777,7 @@ static inline uint64_t CAVM_DTX_GSERX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_gti_bcst_rsp
  *
- * DTX GTI Control Register
+ * INTERNAL: DTX GTI Control Register
  */
 union cavm_dtx_gti_bcst_rsp
 {
@@ -5796,12 +6814,35 @@ static inline uint64_t CAVM_DTX_GTI_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_gti_ctl
  *
- * DTX GTI Control Register
+ * INTERNAL: DTX GTI Control Register
  */
 union cavm_dtx_gti_ctl
 {
     uint64_t u;
     struct cavm_dtx_gti_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_gti_ctl_s cn9; */
+    /* struct cavm_dtx_gti_ctl_s cn96xx; */
+    /* struct cavm_dtx_gti_ctl_s cn98xx; */
+    struct cavm_dtx_gti_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -5820,8 +6861,9 @@ union cavm_dtx_gti_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_gti_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_gti_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_gti_ctl_s loki; */
 };
 typedef union cavm_dtx_gti_ctl cavm_dtx_gti_ctl_t;
 
@@ -5843,7 +6885,7 @@ static inline uint64_t CAVM_DTX_GTI_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_gti_dat#
  *
- * DTX GTI Raw Data Register
+ * INTERNAL: DTX GTI Raw Data Register
  */
 union cavm_dtx_gti_datx
 {
@@ -5881,7 +6923,7 @@ static inline uint64_t CAVM_DTX_GTI_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_gti_ena#
  *
- * DTX GTI Data Enable Register
+ * INTERNAL: DTX GTI Data Enable Register
  */
 union cavm_dtx_gti_enax
 {
@@ -5919,7 +6961,7 @@ static inline uint64_t CAVM_DTX_GTI_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_gti_sel#
  *
- * DTX GTI Select Register
+ * INTERNAL: DTX GTI Select Register
  */
 union cavm_dtx_gti_selx
 {
@@ -5955,7 +6997,7 @@ static inline uint64_t CAVM_DTX_GTI_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_iobn#_bcst_rsp
  *
- * DTX IOBN Control Register
+ * INTERNAL: DTX IOBN Control Register
  */
 union cavm_dtx_iobnx_bcst_rsp
 {
@@ -6001,7 +7043,7 @@ static inline uint64_t CAVM_DTX_IOBNX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_iobn#_ctl
  *
- * DTX IOBN Control Register
+ * INTERNAL: DTX IOBN Control Register
  */
 union cavm_dtx_iobnx_ctl
 {
@@ -6012,22 +7054,25 @@ union cavm_dtx_iobnx_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_iobnx_ctl_s cn8; */
-    struct cavm_dtx_iobnx_ctl_cn9
+    /* struct cavm_dtx_iobnx_ctl_s cn9; */
+    /* struct cavm_dtx_iobnx_ctl_s cn96xx; */
+    /* struct cavm_dtx_iobnx_ctl_s cn98xx; */
+    struct cavm_dtx_iobnx_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -6046,7 +7091,9 @@ union cavm_dtx_iobnx_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xxp1;
+    /* struct cavm_dtx_iobnx_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_iobnx_ctl_s loki; */
 };
 typedef union cavm_dtx_iobnx_ctl cavm_dtx_iobnx_ctl_t;
 
@@ -6077,7 +7124,7 @@ static inline uint64_t CAVM_DTX_IOBNX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_iobn#_dat#
  *
- * DTX IOBN Raw Data Register
+ * INTERNAL: DTX IOBN Raw Data Register
  */
 union cavm_dtx_iobnx_datx
 {
@@ -6125,7 +7172,7 @@ static inline uint64_t CAVM_DTX_IOBNX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_iobn#_ena#
  *
- * DTX IOBN Data Enable Register
+ * INTERNAL: DTX IOBN Data Enable Register
  */
 union cavm_dtx_iobnx_enax
 {
@@ -6173,7 +7220,7 @@ static inline uint64_t CAVM_DTX_IOBNX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_iobn#_inrx_bcst_rsp
  *
- * DTX IOBN_INRX Control Register
+ * INTERNAL: DTX IOBN_INRX Control Register
  */
 union cavm_dtx_iobnx_inrx_bcst_rsp
 {
@@ -6215,12 +7262,35 @@ static inline uint64_t CAVM_DTX_IOBNX_INRX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_iobn#_inrx_ctl
  *
- * DTX IOBN_INRX Control Register
+ * INTERNAL: DTX IOBN_INRX Control Register
  */
 union cavm_dtx_iobnx_inrx_ctl
 {
     uint64_t u;
     struct cavm_dtx_iobnx_inrx_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_iobnx_inrx_ctl_s cn9; */
+    /* struct cavm_dtx_iobnx_inrx_ctl_s cn96xx; */
+    /* struct cavm_dtx_iobnx_inrx_ctl_s cn98xx; */
+    struct cavm_dtx_iobnx_inrx_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -6239,8 +7309,9 @@ union cavm_dtx_iobnx_inrx_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_iobnx_inrx_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_iobnx_inrx_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_iobnx_inrx_ctl_s loki; */
 };
 typedef union cavm_dtx_iobnx_inrx_ctl cavm_dtx_iobnx_inrx_ctl_t;
 
@@ -6267,7 +7338,7 @@ static inline uint64_t CAVM_DTX_IOBNX_INRX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_iobn#_inrx_dat#
  *
- * DTX IOBN_INRX Raw Data Register
+ * INTERNAL: DTX IOBN_INRX Raw Data Register
  */
 union cavm_dtx_iobnx_inrx_datx
 {
@@ -6311,7 +7382,7 @@ static inline uint64_t CAVM_DTX_IOBNX_INRX_DATX(unsigned long a, unsigned long b
 /**
  * Register (RSL) dtx_iobn#_inrx_ena#
  *
- * DTX IOBN_INRX Data Enable Register
+ * INTERNAL: DTX IOBN_INRX Data Enable Register
  */
 union cavm_dtx_iobnx_inrx_enax
 {
@@ -6355,7 +7426,7 @@ static inline uint64_t CAVM_DTX_IOBNX_INRX_ENAX(unsigned long a, unsigned long b
 /**
  * Register (RSL) dtx_iobn#_inrx_sel#
  *
- * DTX IOBN_INRX Select Register
+ * INTERNAL: DTX IOBN_INRX Select Register
  */
 union cavm_dtx_iobnx_inrx_selx
 {
@@ -6397,7 +7468,7 @@ static inline uint64_t CAVM_DTX_IOBNX_INRX_SELX(unsigned long a, unsigned long b
 /**
  * Register (RSL) dtx_iobn#_sel#
  *
- * DTX IOBN Select Register
+ * INTERNAL: DTX IOBN Select Register
  */
 union cavm_dtx_iobnx_selx
 {
@@ -6443,7 +7514,7 @@ static inline uint64_t CAVM_DTX_IOBNX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_key_bcst_rsp
  *
- * DTX KEY Control Register
+ * INTERNAL: DTX KEY Control Register
  */
 union cavm_dtx_key_bcst_rsp
 {
@@ -6480,7 +7551,7 @@ static inline uint64_t CAVM_DTX_KEY_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_key_ctl
  *
- * DTX KEY Control Register
+ * INTERNAL: DTX KEY Control Register
  */
 union cavm_dtx_key_ctl
 {
@@ -6491,15 +7562,15 @@ union cavm_dtx_key_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -6527,7 +7598,7 @@ static inline uint64_t CAVM_DTX_KEY_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_key_dat#
  *
- * DTX KEY Raw Data Register
+ * INTERNAL: DTX KEY Raw Data Register
  */
 union cavm_dtx_key_datx
 {
@@ -6565,7 +7636,7 @@ static inline uint64_t CAVM_DTX_KEY_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_key_ena#
  *
- * DTX KEY Data Enable Register
+ * INTERNAL: DTX KEY Data Enable Register
  */
 union cavm_dtx_key_enax
 {
@@ -6603,7 +7674,7 @@ static inline uint64_t CAVM_DTX_KEY_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_key_sel#
  *
- * DTX KEY Select Register
+ * INTERNAL: DTX KEY Select Register
  */
 union cavm_dtx_key_selx
 {
@@ -6639,7 +7710,7 @@ static inline uint64_t CAVM_DTX_KEY_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_l2c_cbc#_bcst_rsp
  *
- * DTX L2C_CBC Control Register
+ * INTERNAL: DTX L2C_CBC Control Register
  */
 union cavm_dtx_l2c_cbcx_bcst_rsp
 {
@@ -6677,7 +7748,7 @@ static inline uint64_t CAVM_DTX_L2C_CBCX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_l2c_cbc#_ctl
  *
- * DTX L2C_CBC Control Register
+ * INTERNAL: DTX L2C_CBC Control Register
  */
 union cavm_dtx_l2c_cbcx_ctl
 {
@@ -6688,15 +7759,15 @@ union cavm_dtx_l2c_cbcx_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -6725,7 +7796,7 @@ static inline uint64_t CAVM_DTX_L2C_CBCX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_l2c_cbc#_dat#
  *
- * DTX L2C_CBC Raw Data Register
+ * INTERNAL: DTX L2C_CBC Raw Data Register
  */
 union cavm_dtx_l2c_cbcx_datx
 {
@@ -6765,7 +7836,7 @@ static inline uint64_t CAVM_DTX_L2C_CBCX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_l2c_cbc#_ena#
  *
- * DTX L2C_CBC Data Enable Register
+ * INTERNAL: DTX L2C_CBC Data Enable Register
  */
 union cavm_dtx_l2c_cbcx_enax
 {
@@ -6805,7 +7876,7 @@ static inline uint64_t CAVM_DTX_L2C_CBCX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_l2c_cbc#_sel#
  *
- * DTX L2C_CBC Select Register
+ * INTERNAL: DTX L2C_CBC Select Register
  */
 union cavm_dtx_l2c_cbcx_selx
 {
@@ -6843,7 +7914,7 @@ static inline uint64_t CAVM_DTX_L2C_CBCX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_l2c_mci#_bcst_rsp
  *
- * DTX L2C_MCI Control Register
+ * INTERNAL: DTX L2C_MCI Control Register
  */
 union cavm_dtx_l2c_mcix_bcst_rsp
 {
@@ -6881,7 +7952,7 @@ static inline uint64_t CAVM_DTX_L2C_MCIX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_l2c_mci#_ctl
  *
- * DTX L2C_MCI Control Register
+ * INTERNAL: DTX L2C_MCI Control Register
  */
 union cavm_dtx_l2c_mcix_ctl
 {
@@ -6892,15 +7963,15 @@ union cavm_dtx_l2c_mcix_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -6929,7 +8000,7 @@ static inline uint64_t CAVM_DTX_L2C_MCIX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_l2c_mci#_dat#
  *
- * DTX L2C_MCI Raw Data Register
+ * INTERNAL: DTX L2C_MCI Raw Data Register
  */
 union cavm_dtx_l2c_mcix_datx
 {
@@ -6969,7 +8040,7 @@ static inline uint64_t CAVM_DTX_L2C_MCIX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_l2c_mci#_ena#
  *
- * DTX L2C_MCI Data Enable Register
+ * INTERNAL: DTX L2C_MCI Data Enable Register
  */
 union cavm_dtx_l2c_mcix_enax
 {
@@ -7009,7 +8080,7 @@ static inline uint64_t CAVM_DTX_L2C_MCIX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_l2c_mci#_sel#
  *
- * DTX L2C_MCI Select Register
+ * INTERNAL: DTX L2C_MCI Select Register
  */
 union cavm_dtx_l2c_mcix_selx
 {
@@ -7047,7 +8118,7 @@ static inline uint64_t CAVM_DTX_L2C_MCIX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_l2c_tad#_bcst_rsp
  *
- * DTX L2C_TAD Control Register
+ * INTERNAL: DTX L2C_TAD Control Register
  */
 union cavm_dtx_l2c_tadx_bcst_rsp
 {
@@ -7085,7 +8156,7 @@ static inline uint64_t CAVM_DTX_L2C_TADX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_l2c_tad#_ctl
  *
- * DTX L2C_TAD Control Register
+ * INTERNAL: DTX L2C_TAD Control Register
  */
 union cavm_dtx_l2c_tadx_ctl
 {
@@ -7096,15 +8167,15 @@ union cavm_dtx_l2c_tadx_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -7133,7 +8204,7 @@ static inline uint64_t CAVM_DTX_L2C_TADX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_l2c_tad#_dat#
  *
- * DTX L2C_TAD Raw Data Register
+ * INTERNAL: DTX L2C_TAD Raw Data Register
  */
 union cavm_dtx_l2c_tadx_datx
 {
@@ -7173,7 +8244,7 @@ static inline uint64_t CAVM_DTX_L2C_TADX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_l2c_tad#_ena#
  *
- * DTX L2C_TAD Data Enable Register
+ * INTERNAL: DTX L2C_TAD Data Enable Register
  */
 union cavm_dtx_l2c_tadx_enax
 {
@@ -7213,7 +8284,7 @@ static inline uint64_t CAVM_DTX_L2C_TADX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_l2c_tad#_sel#
  *
- * DTX L2C_TAD Select Register
+ * INTERNAL: DTX L2C_TAD Select Register
  */
 union cavm_dtx_l2c_tadx_selx
 {
@@ -7251,7 +8322,7 @@ static inline uint64_t CAVM_DTX_L2C_TADX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_lbk#_bcst_rsp
  *
- * DTX LBK Control Register
+ * INTERNAL: DTX LBK Control Register
  */
 union cavm_dtx_lbkx_bcst_rsp
 {
@@ -7287,7 +8358,7 @@ static inline uint64_t CAVM_DTX_LBKX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_lbk#_ctl
  *
- * DTX LBK Control Register
+ * INTERNAL: DTX LBK Control Register
  */
 union cavm_dtx_lbkx_ctl
 {
@@ -7298,14 +8369,14 @@ union cavm_dtx_lbkx_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
@@ -7333,7 +8404,7 @@ static inline uint64_t CAVM_DTX_LBKX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_lbk#_dat#
  *
- * DTX LBK Raw Data Register
+ * INTERNAL: DTX LBK Raw Data Register
  */
 union cavm_dtx_lbkx_datx
 {
@@ -7371,7 +8442,7 @@ static inline uint64_t CAVM_DTX_LBKX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_lbk#_ena#
  *
- * DTX LBK Data Enable Register
+ * INTERNAL: DTX LBK Data Enable Register
  */
 union cavm_dtx_lbkx_enax
 {
@@ -7409,7 +8480,7 @@ static inline uint64_t CAVM_DTX_LBKX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_lbk#_sel#
  *
- * DTX LBK Select Register
+ * INTERNAL: DTX LBK Select Register
  */
 union cavm_dtx_lbkx_selx
 {
@@ -7445,7 +8516,7 @@ static inline uint64_t CAVM_DTX_LBKX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_lbk_bcst_rsp
  *
- * DTX LBK Control Register
+ * INTERNAL: DTX LBK Control Register
  */
 union cavm_dtx_lbk_bcst_rsp
 {
@@ -7488,7 +8559,7 @@ static inline uint64_t CAVM_DTX_LBK_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_lbk_ctl
  *
- * DTX LBK Control Register
+ * INTERNAL: DTX LBK Control Register
  */
 union cavm_dtx_lbk_ctl
 {
@@ -7499,22 +8570,24 @@ union cavm_dtx_lbk_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_lbk_ctl_s cn8; */
-    struct cavm_dtx_lbk_ctl_cn9
+    /* struct cavm_dtx_lbk_ctl_s cn9; */
+    /* struct cavm_dtx_lbk_ctl_s cn96xx; */
+    struct cavm_dtx_lbk_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -7533,7 +8606,9 @@ union cavm_dtx_lbk_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xxp1;
+    /* struct cavm_dtx_lbk_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_lbk_ctl_s loki; */
 };
 typedef union cavm_dtx_lbk_ctl cavm_dtx_lbk_ctl_t;
 
@@ -7561,7 +8636,7 @@ static inline uint64_t CAVM_DTX_LBK_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_lbk_dat#
  *
- * DTX LBK Raw Data Register
+ * INTERNAL: DTX LBK Raw Data Register
  */
 union cavm_dtx_lbk_datx
 {
@@ -7605,7 +8680,7 @@ static inline uint64_t CAVM_DTX_LBK_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_lbk_ena#
  *
- * DTX LBK Data Enable Register
+ * INTERNAL: DTX LBK Data Enable Register
  */
 union cavm_dtx_lbk_enax
 {
@@ -7649,7 +8724,7 @@ static inline uint64_t CAVM_DTX_LBK_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_lbk_sel#
  *
- * DTX LBK Select Register
+ * INTERNAL: DTX LBK Select Register
  */
 union cavm_dtx_lbk_selx
 {
@@ -7691,7 +8766,7 @@ static inline uint64_t CAVM_DTX_LBK_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_ldec#_bcst_rsp
  *
- * DTX LDEC Control Register
+ * INTERNAL: DTX LDEC Control Register
  */
 union cavm_dtx_ldecx_bcst_rsp
 {
@@ -7729,7 +8804,7 @@ static inline uint64_t CAVM_DTX_LDECX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_ldec#_ctl
  *
- * DTX LDEC Control Register
+ * INTERNAL: DTX LDEC Control Register
  */
 union cavm_dtx_ldecx_ctl
 {
@@ -7754,7 +8829,29 @@ union cavm_dtx_ldecx_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_ldecx_ctl_s cn; */
+    /* struct cavm_dtx_ldecx_ctl_s cn9; */
+    /* struct cavm_dtx_ldecx_ctl_s cnf95xxp1; */
+    struct cavm_dtx_ldecx_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_ldecx_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_ldecx_ctl cavm_dtx_ldecx_ctl_t;
 
@@ -7777,7 +8874,7 @@ static inline uint64_t CAVM_DTX_LDECX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_ldec#_dat#
  *
- * DTX LDEC Raw Data Register
+ * INTERNAL: DTX LDEC Raw Data Register
  */
 union cavm_dtx_ldecx_datx
 {
@@ -7817,7 +8914,7 @@ static inline uint64_t CAVM_DTX_LDECX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ldec#_ena#
  *
- * DTX LDEC Data Enable Register
+ * INTERNAL: DTX LDEC Data Enable Register
  */
 union cavm_dtx_ldecx_enax
 {
@@ -7857,7 +8954,7 @@ static inline uint64_t CAVM_DTX_LDECX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ldec#_sel#
  *
- * DTX LDEC Select Register
+ * INTERNAL: DTX LDEC Select Register
  */
 union cavm_dtx_ldecx_selx
 {
@@ -7895,7 +8992,7 @@ static inline uint64_t CAVM_DTX_LDECX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_lenc#_bcst_rsp
  *
- * DTX LENC Control Register
+ * INTERNAL: DTX LENC Control Register
  */
 union cavm_dtx_lencx_bcst_rsp
 {
@@ -7933,7 +9030,7 @@ static inline uint64_t CAVM_DTX_LENCX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_lenc#_ctl
  *
- * DTX LENC Control Register
+ * INTERNAL: DTX LENC Control Register
  */
 union cavm_dtx_lencx_ctl
 {
@@ -7958,7 +9055,29 @@ union cavm_dtx_lencx_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_lencx_ctl_s cn; */
+    /* struct cavm_dtx_lencx_ctl_s cn9; */
+    /* struct cavm_dtx_lencx_ctl_s cnf95xxp1; */
+    struct cavm_dtx_lencx_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_lencx_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_lencx_ctl cavm_dtx_lencx_ctl_t;
 
@@ -7981,7 +9100,7 @@ static inline uint64_t CAVM_DTX_LENCX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_lenc#_dat#
  *
- * DTX LENC Raw Data Register
+ * INTERNAL: DTX LENC Raw Data Register
  */
 union cavm_dtx_lencx_datx
 {
@@ -8021,7 +9140,7 @@ static inline uint64_t CAVM_DTX_LENCX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_lenc#_ena#
  *
- * DTX LENC Data Enable Register
+ * INTERNAL: DTX LENC Data Enable Register
  */
 union cavm_dtx_lencx_enax
 {
@@ -8061,7 +9180,7 @@ static inline uint64_t CAVM_DTX_LENCX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_lenc#_sel#
  *
- * DTX LENC Select Register
+ * INTERNAL: DTX LENC Select Register
  */
 union cavm_dtx_lencx_selx
 {
@@ -8099,7 +9218,7 @@ static inline uint64_t CAVM_DTX_LENCX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_lmc#_bcst_rsp
  *
- * DTX LMC Control Register
+ * INTERNAL: DTX LMC Control Register
  */
 union cavm_dtx_lmcx_bcst_rsp
 {
@@ -8145,7 +9264,7 @@ static inline uint64_t CAVM_DTX_LMCX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_lmc#_ctl
  *
- * DTX LMC Control Register
+ * INTERNAL: DTX LMC Control Register
  */
 union cavm_dtx_lmcx_ctl
 {
@@ -8156,22 +9275,25 @@ union cavm_dtx_lmcx_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_lmcx_ctl_s cn8; */
-    struct cavm_dtx_lmcx_ctl_cn9
+    /* struct cavm_dtx_lmcx_ctl_s cn9; */
+    /* struct cavm_dtx_lmcx_ctl_s cn96xx; */
+    /* struct cavm_dtx_lmcx_ctl_s cn98xx; */
+    struct cavm_dtx_lmcx_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -8190,7 +9312,9 @@ union cavm_dtx_lmcx_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xxp1;
+    /* struct cavm_dtx_lmcx_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_lmcx_ctl_s loki; */
 };
 typedef union cavm_dtx_lmcx_ctl cavm_dtx_lmcx_ctl_t;
 
@@ -8221,7 +9345,7 @@ static inline uint64_t CAVM_DTX_LMCX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_lmc#_dat#
  *
- * DTX LMC Raw Data Register
+ * INTERNAL: DTX LMC Raw Data Register
  */
 union cavm_dtx_lmcx_datx
 {
@@ -8269,7 +9393,7 @@ static inline uint64_t CAVM_DTX_LMCX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_lmc#_ena#
  *
- * DTX LMC Data Enable Register
+ * INTERNAL: DTX LMC Data Enable Register
  */
 union cavm_dtx_lmcx_enax
 {
@@ -8317,7 +9441,7 @@ static inline uint64_t CAVM_DTX_LMCX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_lmc#_sel#
  *
- * DTX LMC Select Register
+ * INTERNAL: DTX LMC Select Register
  */
 union cavm_dtx_lmcx_selx
 {
@@ -8363,7 +9487,7 @@ static inline uint64_t CAVM_DTX_LMCX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_mcc#_bcst_rsp
  *
- * DTX MCC Control Register
+ * INTERNAL: DTX MCC Control Register
  */
 union cavm_dtx_mccx_bcst_rsp
 {
@@ -8405,12 +9529,35 @@ static inline uint64_t CAVM_DTX_MCCX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_mcc#_ctl
  *
- * DTX MCC Control Register
+ * INTERNAL: DTX MCC Control Register
  */
 union cavm_dtx_mccx_ctl
 {
     uint64_t u;
     struct cavm_dtx_mccx_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_mccx_ctl_s cn9; */
+    /* struct cavm_dtx_mccx_ctl_s cn96xx; */
+    /* struct cavm_dtx_mccx_ctl_s cn98xx; */
+    struct cavm_dtx_mccx_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -8429,8 +9576,9 @@ union cavm_dtx_mccx_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_mccx_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_mccx_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_mccx_ctl_s loki; */
 };
 typedef union cavm_dtx_mccx_ctl cavm_dtx_mccx_ctl_t;
 
@@ -8457,7 +9605,7 @@ static inline uint64_t CAVM_DTX_MCCX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_mcc#_dat#
  *
- * DTX MCC Raw Data Register
+ * INTERNAL: DTX MCC Raw Data Register
  */
 union cavm_dtx_mccx_datx
 {
@@ -8501,7 +9649,7 @@ static inline uint64_t CAVM_DTX_MCCX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_mcc#_ena#
  *
- * DTX MCC Data Enable Register
+ * INTERNAL: DTX MCC Data Enable Register
  */
 union cavm_dtx_mccx_enax
 {
@@ -8545,7 +9693,7 @@ static inline uint64_t CAVM_DTX_MCCX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_mcc#_mci#_bcst_rsp
  *
- * DTX MCC_MCI Control Register
+ * INTERNAL: DTX MCC_MCI Control Register
  */
 union cavm_dtx_mccx_mcix_bcst_rsp
 {
@@ -8583,7 +9731,7 @@ static inline uint64_t CAVM_DTX_MCCX_MCIX_BCST_RSP(unsigned long a, unsigned lon
 /**
  * Register (RSL) dtx_mcc#_mci#_ctl
  *
- * DTX MCC_MCI Control Register
+ * INTERNAL: DTX MCC_MCI Control Register
  */
 union cavm_dtx_mccx_mcix_ctl
 {
@@ -8594,14 +9742,14 @@ union cavm_dtx_mccx_mcix_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
@@ -8631,7 +9779,7 @@ static inline uint64_t CAVM_DTX_MCCX_MCIX_CTL(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_mcc#_mci#_dat#
  *
- * DTX MCC_MCI Raw Data Register
+ * INTERNAL: DTX MCC_MCI Raw Data Register
  */
 union cavm_dtx_mccx_mcix_datx
 {
@@ -8671,7 +9819,7 @@ static inline uint64_t CAVM_DTX_MCCX_MCIX_DATX(unsigned long a, unsigned long b,
 /**
  * Register (RSL) dtx_mcc#_mci#_ena#
  *
- * DTX MCC_MCI Data Enable Register
+ * INTERNAL: DTX MCC_MCI Data Enable Register
  */
 union cavm_dtx_mccx_mcix_enax
 {
@@ -8711,7 +9859,7 @@ static inline uint64_t CAVM_DTX_MCCX_MCIX_ENAX(unsigned long a, unsigned long b,
 /**
  * Register (RSL) dtx_mcc#_mci#_sel#
  *
- * DTX MCC_MCI Select Register
+ * INTERNAL: DTX MCC_MCI Select Register
  */
 union cavm_dtx_mccx_mcix_selx
 {
@@ -8749,7 +9897,7 @@ static inline uint64_t CAVM_DTX_MCCX_MCIX_SELX(unsigned long a, unsigned long b,
 /**
  * Register (RSL) dtx_mcc#_sel#
  *
- * DTX MCC Select Register
+ * INTERNAL: DTX MCC Select Register
  */
 union cavm_dtx_mccx_selx
 {
@@ -8791,7 +9939,7 @@ static inline uint64_t CAVM_DTX_MCCX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_mcc0_mci0_bcst_rsp
  *
- * DTX MCC0_MCI0 Control Register
+ * INTERNAL: DTX MCC0_MCI0 Control Register
  */
 union cavm_dtx_mcc0_mci0_bcst_rsp
 {
@@ -8830,7 +9978,7 @@ static inline uint64_t CAVM_DTX_MCC0_MCI0_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_mcc0_mci0_ctl
  *
- * DTX MCC0_MCI0 Control Register
+ * INTERNAL: DTX MCC0_MCI0 Control Register
  */
 union cavm_dtx_mcc0_mci0_ctl
 {
@@ -8855,7 +10003,29 @@ union cavm_dtx_mcc0_mci0_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_mcc0_mci0_ctl_s cn; */
+    /* struct cavm_dtx_mcc0_mci0_ctl_s cn9; */
+    /* struct cavm_dtx_mcc0_mci0_ctl_s cnf95xxp1; */
+    struct cavm_dtx_mcc0_mci0_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_mcc0_mci0_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_mcc0_mci0_ctl cavm_dtx_mcc0_mci0_ctl_t;
 
@@ -8879,7 +10049,7 @@ static inline uint64_t CAVM_DTX_MCC0_MCI0_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_mcc0_mci0_dat#
  *
- * DTX MCC0_MCI0 Raw Data Register
+ * INTERNAL: DTX MCC0_MCI0 Raw Data Register
  */
 union cavm_dtx_mcc0_mci0_datx
 {
@@ -8919,7 +10089,7 @@ static inline uint64_t CAVM_DTX_MCC0_MCI0_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_mcc0_mci0_ena#
  *
- * DTX MCC0_MCI0 Data Enable Register
+ * INTERNAL: DTX MCC0_MCI0 Data Enable Register
  */
 union cavm_dtx_mcc0_mci0_enax
 {
@@ -8959,7 +10129,7 @@ static inline uint64_t CAVM_DTX_MCC0_MCI0_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_mcc0_mci0_sel#
  *
- * DTX MCC0_MCI0 Select Register
+ * INTERNAL: DTX MCC0_MCI0 Select Register
  */
 union cavm_dtx_mcc0_mci0_selx
 {
@@ -8997,7 +10167,7 @@ static inline uint64_t CAVM_DTX_MCC0_MCI0_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_mdb#_bcst_rsp
  *
- * DTX MDB Control Register
+ * INTERNAL: DTX MDB Control Register
  */
 union cavm_dtx_mdbx_bcst_rsp
 {
@@ -9035,7 +10205,7 @@ static inline uint64_t CAVM_DTX_MDBX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_mdb#_ctl
  *
- * DTX MDB Control Register
+ * INTERNAL: DTX MDB Control Register
  */
 union cavm_dtx_mdbx_ctl
 {
@@ -9060,7 +10230,29 @@ union cavm_dtx_mdbx_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_mdbx_ctl_s cn; */
+    /* struct cavm_dtx_mdbx_ctl_s cn9; */
+    /* struct cavm_dtx_mdbx_ctl_s cnf95xxp1; */
+    struct cavm_dtx_mdbx_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_mdbx_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_mdbx_ctl cavm_dtx_mdbx_ctl_t;
 
@@ -9083,7 +10275,7 @@ static inline uint64_t CAVM_DTX_MDBX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_mdb#_dat#
  *
- * DTX MDB Raw Data Register
+ * INTERNAL: DTX MDB Raw Data Register
  */
 union cavm_dtx_mdbx_datx
 {
@@ -9123,7 +10315,7 @@ static inline uint64_t CAVM_DTX_MDBX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_mdb#_ena#
  *
- * DTX MDB Data Enable Register
+ * INTERNAL: DTX MDB Data Enable Register
  */
 union cavm_dtx_mdbx_enax
 {
@@ -9163,7 +10355,7 @@ static inline uint64_t CAVM_DTX_MDBX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_mdb#_sel#
  *
- * DTX MDB Select Register
+ * INTERNAL: DTX MDB Select Register
  */
 union cavm_dtx_mdbx_selx
 {
@@ -9265,7 +10457,29 @@ union cavm_dtx_mhbw_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_mhbw_ctl_s cn; */
+    /* struct cavm_dtx_mhbw_ctl_s cn9; */
+    /* struct cavm_dtx_mhbw_ctl_s cnf95xxp1; */
+    struct cavm_dtx_mhbw_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_mhbw_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_mhbw_ctl cavm_dtx_mhbw_ctl_t;
 
@@ -9407,7 +10621,7 @@ static inline uint64_t CAVM_DTX_MHBW_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_mio_bcst_rsp
  *
- * DTX MIO Control Register
+ * INTERNAL: DTX MIO Control Register
  */
 union cavm_dtx_mio_bcst_rsp
 {
@@ -9442,7 +10656,7 @@ static inline uint64_t CAVM_DTX_MIO_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_mio_ctl
  *
- * DTX MIO Control Register
+ * INTERNAL: DTX MIO Control Register
  */
 union cavm_dtx_mio_ctl
 {
@@ -9453,22 +10667,25 @@ union cavm_dtx_mio_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_mio_ctl_s cn8; */
-    struct cavm_dtx_mio_ctl_cn9
+    /* struct cavm_dtx_mio_ctl_s cn9; */
+    /* struct cavm_dtx_mio_ctl_s cn96xx; */
+    /* struct cavm_dtx_mio_ctl_s cn98xx; */
+    struct cavm_dtx_mio_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -9487,7 +10704,9 @@ union cavm_dtx_mio_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xxp1;
+    /* struct cavm_dtx_mio_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_mio_ctl_s loki; */
 };
 typedef union cavm_dtx_mio_ctl cavm_dtx_mio_ctl_t;
 
@@ -9507,7 +10726,7 @@ static inline uint64_t CAVM_DTX_MIO_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_mio_dat#
  *
- * DTX MIO Raw Data Register
+ * INTERNAL: DTX MIO Raw Data Register
  */
 union cavm_dtx_mio_datx
 {
@@ -9545,7 +10764,7 @@ static inline uint64_t CAVM_DTX_MIO_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_mio_ena#
  *
- * DTX MIO Data Enable Register
+ * INTERNAL: DTX MIO Data Enable Register
  */
 union cavm_dtx_mio_enax
 {
@@ -9583,7 +10802,7 @@ static inline uint64_t CAVM_DTX_MIO_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_mio_sel#
  *
- * DTX MIO Select Register
+ * INTERNAL: DTX MIO Select Register
  */
 union cavm_dtx_mio_selx
 {
@@ -9619,7 +10838,7 @@ static inline uint64_t CAVM_DTX_MIO_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_mpi#_bcst_rsp
  *
- * DTX MPI Control Register
+ * INTERNAL: DTX MPI Control Register
  */
 union cavm_dtx_mpix_bcst_rsp
 {
@@ -9655,12 +10874,35 @@ static inline uint64_t CAVM_DTX_MPIX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_mpi#_ctl
  *
- * DTX MPI Control Register
+ * INTERNAL: DTX MPI Control Register
  */
 union cavm_dtx_mpix_ctl
 {
     uint64_t u;
     struct cavm_dtx_mpix_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_mpix_ctl_s cn9; */
+    /* struct cavm_dtx_mpix_ctl_s cn96xx; */
+    /* struct cavm_dtx_mpix_ctl_s cn98xx; */
+    struct cavm_dtx_mpix_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -9679,8 +10921,9 @@ union cavm_dtx_mpix_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_mpix_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_mpix_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_mpix_ctl_s loki; */
 };
 typedef union cavm_dtx_mpix_ctl cavm_dtx_mpix_ctl_t;
 
@@ -9701,7 +10944,7 @@ static inline uint64_t CAVM_DTX_MPIX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_mpi#_dat#
  *
- * DTX MPI Raw Data Register
+ * INTERNAL: DTX MPI Raw Data Register
  */
 union cavm_dtx_mpix_datx
 {
@@ -9739,7 +10982,7 @@ static inline uint64_t CAVM_DTX_MPIX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_mpi#_ena#
  *
- * DTX MPI Data Enable Register
+ * INTERNAL: DTX MPI Data Enable Register
  */
 union cavm_dtx_mpix_enax
 {
@@ -9777,7 +11020,7 @@ static inline uint64_t CAVM_DTX_MPIX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_mpi#_sel#
  *
- * DTX MPI Select Register
+ * INTERNAL: DTX MPI Select Register
  */
 union cavm_dtx_mpix_selx
 {
@@ -9813,7 +11056,7 @@ static inline uint64_t CAVM_DTX_MPIX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_mrml_bcst_rsp
  *
- * DTX MRML Control Register
+ * INTERNAL: DTX MRML Control Register
  */
 union cavm_dtx_mrml_bcst_rsp
 {
@@ -9848,7 +11091,7 @@ static inline uint64_t CAVM_DTX_MRML_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_mrml_ctl
  *
- * DTX MRML Control Register
+ * INTERNAL: DTX MRML Control Register
  */
 union cavm_dtx_mrml_ctl
 {
@@ -9859,22 +11102,25 @@ union cavm_dtx_mrml_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_mrml_ctl_s cn8; */
-    struct cavm_dtx_mrml_ctl_cn9
+    /* struct cavm_dtx_mrml_ctl_s cn9; */
+    /* struct cavm_dtx_mrml_ctl_s cn96xx; */
+    /* struct cavm_dtx_mrml_ctl_s cn98xx; */
+    struct cavm_dtx_mrml_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -9893,7 +11139,9 @@ union cavm_dtx_mrml_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xxp1;
+    /* struct cavm_dtx_mrml_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_mrml_ctl_s loki; */
 };
 typedef union cavm_dtx_mrml_ctl cavm_dtx_mrml_ctl_t;
 
@@ -9913,7 +11161,7 @@ static inline uint64_t CAVM_DTX_MRML_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_mrml_dat#
  *
- * DTX MRML Raw Data Register
+ * INTERNAL: DTX MRML Raw Data Register
  */
 union cavm_dtx_mrml_datx
 {
@@ -9951,7 +11199,7 @@ static inline uint64_t CAVM_DTX_MRML_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_mrml_ena#
  *
- * DTX MRML Data Enable Register
+ * INTERNAL: DTX MRML Data Enable Register
  */
 union cavm_dtx_mrml_enax
 {
@@ -9989,7 +11237,7 @@ static inline uint64_t CAVM_DTX_MRML_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_mrml_sel#
  *
- * DTX MRML Select Register
+ * INTERNAL: DTX MRML Select Register
  */
 union cavm_dtx_mrml_selx
 {
@@ -10025,7 +11273,7 @@ static inline uint64_t CAVM_DTX_MRML_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_ncbw_bcst_rsp
  *
- * DTX NCBW Control Register
+ * INTERNAL: DTX NCBW Control Register
  */
 union cavm_dtx_ncbw_bcst_rsp
 {
@@ -10064,7 +11312,7 @@ static inline uint64_t CAVM_DTX_NCBW_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_ncbw_ctl
  *
- * DTX NCBW Control Register
+ * INTERNAL: DTX NCBW Control Register
  */
 union cavm_dtx_ncbw_ctl
 {
@@ -10089,7 +11337,29 @@ union cavm_dtx_ncbw_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_ncbw_ctl_s cn; */
+    /* struct cavm_dtx_ncbw_ctl_s cn9; */
+    /* struct cavm_dtx_ncbw_ctl_s cnf95xxp1; */
+    struct cavm_dtx_ncbw_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_ncbw_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_ncbw_ctl cavm_dtx_ncbw_ctl_t;
 
@@ -10113,7 +11383,7 @@ static inline uint64_t CAVM_DTX_NCBW_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_ncbw_dat#
  *
- * DTX NCBW Raw Data Register
+ * INTERNAL: DTX NCBW Raw Data Register
  */
 union cavm_dtx_ncbw_datx
 {
@@ -10153,7 +11423,7 @@ static inline uint64_t CAVM_DTX_NCBW_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_ncbw_ena#
  *
- * DTX NCBW Data Enable Register
+ * INTERNAL: DTX NCBW Data Enable Register
  */
 union cavm_dtx_ncbw_enax
 {
@@ -10193,7 +11463,7 @@ static inline uint64_t CAVM_DTX_NCBW_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_ncbw_sel#
  *
- * DTX NCBW Select Register
+ * INTERNAL: DTX NCBW Select Register
  */
 union cavm_dtx_ncbw_selx
 {
@@ -10231,7 +11501,7 @@ static inline uint64_t CAVM_DTX_NCBW_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_ncsi_bcst_rsp
  *
- * DTX NCSI Control Register
+ * INTERNAL: DTX NCSI Control Register
  */
 union cavm_dtx_ncsi_bcst_rsp
 {
@@ -10272,7 +11542,7 @@ static inline uint64_t CAVM_DTX_NCSI_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_ncsi_ctl
  *
- * DTX NCSI Control Register
+ * INTERNAL: DTX NCSI Control Register
  */
 union cavm_dtx_ncsi_ctl
 {
@@ -10283,41 +11553,21 @@ union cavm_dtx_ncsi_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_ncsi_ctl_s cn8; */
-    struct cavm_dtx_ncsi_ctl_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_5_63         : 59;
-        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
-        uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
-                                                                 registers.  For diagnostic use only. */
-        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-#else /* Word 0 - Little Endian */
-        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
-                                                                 registers.  For diagnostic use only. */
-        uint64_t reserved_2_3          : 2;
-        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
-        uint64_t reserved_5_63         : 59;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_dtx_ncsi_ctl_s cn; */
 };
 typedef union cavm_dtx_ncsi_ctl cavm_dtx_ncsi_ctl_t;
 
@@ -10343,7 +11593,7 @@ static inline uint64_t CAVM_DTX_NCSI_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_ncsi_dat#
  *
- * DTX NCSI Raw Data Register
+ * INTERNAL: DTX NCSI Raw Data Register
  */
 union cavm_dtx_ncsi_datx
 {
@@ -10385,7 +11635,7 @@ static inline uint64_t CAVM_DTX_NCSI_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_ncsi_ena#
  *
- * DTX NCSI Data Enable Register
+ * INTERNAL: DTX NCSI Data Enable Register
  */
 union cavm_dtx_ncsi_enax
 {
@@ -10427,7 +11677,7 @@ static inline uint64_t CAVM_DTX_NCSI_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_ncsi_sel#
  *
- * DTX NCSI Select Register
+ * INTERNAL: DTX NCSI Select Register
  */
 union cavm_dtx_ncsi_selx
 {
@@ -10467,7 +11717,7 @@ static inline uint64_t CAVM_DTX_NCSI_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_ndc#_bcst_rsp
  *
- * DTX NDC Control Register
+ * INTERNAL: DTX NDC Control Register
  */
 union cavm_dtx_ndcx_bcst_rsp
 {
@@ -10489,7 +11739,13 @@ typedef union cavm_dtx_ndcx_bcst_rsp cavm_dtx_ndcx_bcst_rsp_t;
 static inline uint64_t CAVM_DTX_NDCX_BCST_RSP(unsigned long a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_DTX_NDCX_BCST_RSP(unsigned long a)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=2))
+    if (cavm_is_model(OCTEONTX_CN96XX) && (a<=2))
+        return 0x87e0fea20080ll + 0x8000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=5))
+        return 0x87e0fea20080ll + 0x8000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=2))
+        return 0x87e0fea20080ll + 0x8000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x87e0fea20080ll + 0x8000ll * ((a) & 0x3);
     __cavm_csr_fatal("DTX_NDCX_BCST_RSP", 1, a, 0, 0, 0, 0, 0);
 }
@@ -10503,12 +11759,35 @@ static inline uint64_t CAVM_DTX_NDCX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_ndc#_ctl
  *
- * DTX NDC Control Register
+ * INTERNAL: DTX NDC Control Register
  */
 union cavm_dtx_ndcx_ctl
 {
     uint64_t u;
     struct cavm_dtx_ndcx_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ndcx_ctl_s cn9; */
+    /* struct cavm_dtx_ndcx_ctl_s cn96xx; */
+    /* struct cavm_dtx_ndcx_ctl_s cn98xx; */
+    struct cavm_dtx_ndcx_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -10527,15 +11806,22 @@ union cavm_dtx_ndcx_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_ndcx_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_ndcx_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_ndcx_ctl_s loki; */
 };
 typedef union cavm_dtx_ndcx_ctl cavm_dtx_ndcx_ctl_t;
 
 static inline uint64_t CAVM_DTX_NDCX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_DTX_NDCX_CTL(unsigned long a)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=2))
+    if (cavm_is_model(OCTEONTX_CN96XX) && (a<=2))
+        return 0x87e0fea20060ll + 0x8000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=5))
+        return 0x87e0fea20060ll + 0x8000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=2))
+        return 0x87e0fea20060ll + 0x8000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x87e0fea20060ll + 0x8000ll * ((a) & 0x3);
     __cavm_csr_fatal("DTX_NDCX_CTL", 1, a, 0, 0, 0, 0, 0);
 }
@@ -10549,7 +11835,7 @@ static inline uint64_t CAVM_DTX_NDCX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_ndc#_dat#
  *
- * DTX NDC Raw Data Register
+ * INTERNAL: DTX NDC Raw Data Register
  */
 union cavm_dtx_ndcx_datx
 {
@@ -10573,7 +11859,13 @@ typedef union cavm_dtx_ndcx_datx cavm_dtx_ndcx_datx_t;
 static inline uint64_t CAVM_DTX_NDCX_DATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_DTX_NDCX_DATX(unsigned long a, unsigned long b)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX) && ((a<=2) && (b<=1)))
+    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=1)))
+        return 0x87e0fea20040ll + 0x8000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=5) && (b<=1)))
+        return 0x87e0fea20040ll + 0x8000ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=1)))
+        return 0x87e0fea20040ll + 0x8000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1)))
         return 0x87e0fea20040ll + 0x8000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("DTX_NDCX_DATX", 2, a, b, 0, 0, 0, 0);
 }
@@ -10587,7 +11879,7 @@ static inline uint64_t CAVM_DTX_NDCX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ndc#_ena#
  *
- * DTX NDC Data Enable Register
+ * INTERNAL: DTX NDC Data Enable Register
  */
 union cavm_dtx_ndcx_enax
 {
@@ -10611,7 +11903,13 @@ typedef union cavm_dtx_ndcx_enax cavm_dtx_ndcx_enax_t;
 static inline uint64_t CAVM_DTX_NDCX_ENAX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_DTX_NDCX_ENAX(unsigned long a, unsigned long b)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX) && ((a<=2) && (b<=1)))
+    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=1)))
+        return 0x87e0fea20020ll + 0x8000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=5) && (b<=1)))
+        return 0x87e0fea20020ll + 0x8000ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=1)))
+        return 0x87e0fea20020ll + 0x8000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1)))
         return 0x87e0fea20020ll + 0x8000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("DTX_NDCX_ENAX", 2, a, b, 0, 0, 0, 0);
 }
@@ -10625,7 +11923,7 @@ static inline uint64_t CAVM_DTX_NDCX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ndc#_sel#
  *
- * DTX NDC Select Register
+ * INTERNAL: DTX NDC Select Register
  */
 union cavm_dtx_ndcx_selx
 {
@@ -10647,7 +11945,13 @@ typedef union cavm_dtx_ndcx_selx cavm_dtx_ndcx_selx_t;
 static inline uint64_t CAVM_DTX_NDCX_SELX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_DTX_NDCX_SELX(unsigned long a, unsigned long b)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX) && ((a<=2) && (b<=1)))
+    if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=2) && (b<=1)))
+        return 0x87e0fea20000ll + 0x8000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=5) && (b<=1)))
+        return 0x87e0fea20000ll + 0x8000ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=2) && (b<=1)))
+        return 0x87e0fea20000ll + 0x8000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1)))
         return 0x87e0fea20000ll + 0x8000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("DTX_NDCX_SELX", 2, a, b, 0, 0, 0, 0);
 }
@@ -10661,7 +11965,7 @@ static inline uint64_t CAVM_DTX_NDCX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ngnt#_bcst_rsp
  *
- * DTX NGNT Control Register
+ * INTERNAL: DTX NGNT Control Register
  */
 union cavm_dtx_ngntx_bcst_rsp
 {
@@ -10703,12 +12007,35 @@ static inline uint64_t CAVM_DTX_NGNTX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_ngnt#_ctl
  *
- * DTX NGNT Control Register
+ * INTERNAL: DTX NGNT Control Register
  */
 union cavm_dtx_ngntx_ctl
 {
     uint64_t u;
     struct cavm_dtx_ngntx_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ngntx_ctl_s cn9; */
+    /* struct cavm_dtx_ngntx_ctl_s cn96xx; */
+    /* struct cavm_dtx_ngntx_ctl_s cn98xx; */
+    struct cavm_dtx_ngntx_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -10727,8 +12054,9 @@ union cavm_dtx_ngntx_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_ngntx_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_ngntx_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_ngntx_ctl_s loki; */
 };
 typedef union cavm_dtx_ngntx_ctl cavm_dtx_ngntx_ctl_t;
 
@@ -10755,7 +12083,7 @@ static inline uint64_t CAVM_DTX_NGNTX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_ngnt#_dat#
  *
- * DTX NGNT Raw Data Register
+ * INTERNAL: DTX NGNT Raw Data Register
  */
 union cavm_dtx_ngntx_datx
 {
@@ -10799,7 +12127,7 @@ static inline uint64_t CAVM_DTX_NGNTX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ngnt#_ena#
  *
- * DTX NGNT Data Enable Register
+ * INTERNAL: DTX NGNT Data Enable Register
  */
 union cavm_dtx_ngntx_enax
 {
@@ -10843,7 +12171,7 @@ static inline uint64_t CAVM_DTX_NGNTX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ngnt#_sel#
  *
- * DTX NGNT Select Register
+ * INTERNAL: DTX NGNT Select Register
  */
 union cavm_dtx_ngntx_selx
 {
@@ -10885,7 +12213,7 @@ static inline uint64_t CAVM_DTX_NGNTX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_nic_bcst_rsp
  *
- * DTX NIC Control Register
+ * INTERNAL: DTX NIC Control Register
  */
 union cavm_dtx_nic_bcst_rsp
 {
@@ -10922,7 +12250,7 @@ static inline uint64_t CAVM_DTX_NIC_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_nic_ctl
  *
- * DTX NIC Control Register
+ * INTERNAL: DTX NIC Control Register
  */
 union cavm_dtx_nic_ctl
 {
@@ -10933,15 +12261,15 @@ union cavm_dtx_nic_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -10969,7 +12297,7 @@ static inline uint64_t CAVM_DTX_NIC_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_nic_dat#
  *
- * DTX NIC Raw Data Register
+ * INTERNAL: DTX NIC Raw Data Register
  */
 union cavm_dtx_nic_datx
 {
@@ -11007,7 +12335,7 @@ static inline uint64_t CAVM_DTX_NIC_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_nic_ena#
  *
- * DTX NIC Data Enable Register
+ * INTERNAL: DTX NIC Data Enable Register
  */
 union cavm_dtx_nic_enax
 {
@@ -11045,7 +12373,7 @@ static inline uint64_t CAVM_DTX_NIC_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_nic_sel#
  *
- * DTX NIC Select Register
+ * INTERNAL: DTX NIC Select Register
  */
 union cavm_dtx_nic_selx
 {
@@ -11081,7 +12409,7 @@ static inline uint64_t CAVM_DTX_NIC_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_nixrx#_bcst_rsp
  *
- * DTX NIXRX Control Register
+ * INTERNAL: DTX NIXRX Control Register
  */
 union cavm_dtx_nixrxx_bcst_rsp
 {
@@ -11123,12 +12451,35 @@ static inline uint64_t CAVM_DTX_NIXRXX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_nixrx#_ctl
  *
- * DTX NIXRX Control Register
+ * INTERNAL: DTX NIXRX Control Register
  */
 union cavm_dtx_nixrxx_ctl
 {
     uint64_t u;
     struct cavm_dtx_nixrxx_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_nixrxx_ctl_s cn9; */
+    /* struct cavm_dtx_nixrxx_ctl_s cn96xx; */
+    /* struct cavm_dtx_nixrxx_ctl_s cn98xx; */
+    struct cavm_dtx_nixrxx_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -11147,8 +12498,9 @@ union cavm_dtx_nixrxx_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_nixrxx_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_nixrxx_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_nixrxx_ctl_s loki; */
 };
 typedef union cavm_dtx_nixrxx_ctl cavm_dtx_nixrxx_ctl_t;
 
@@ -11175,7 +12527,7 @@ static inline uint64_t CAVM_DTX_NIXRXX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_nixrx#_dat#
  *
- * DTX NIXRX Raw Data Register
+ * INTERNAL: DTX NIXRX Raw Data Register
  */
 union cavm_dtx_nixrxx_datx
 {
@@ -11219,7 +12571,7 @@ static inline uint64_t CAVM_DTX_NIXRXX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_nixrx#_ena#
  *
- * DTX NIXRX Data Enable Register
+ * INTERNAL: DTX NIXRX Data Enable Register
  */
 union cavm_dtx_nixrxx_enax
 {
@@ -11263,7 +12615,7 @@ static inline uint64_t CAVM_DTX_NIXRXX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_nixrx#_sel#
  *
- * DTX NIXRX Select Register
+ * INTERNAL: DTX NIXRX Select Register
  */
 union cavm_dtx_nixrxx_selx
 {
@@ -11305,7 +12657,7 @@ static inline uint64_t CAVM_DTX_NIXRXX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_nixtx#_bcst_rsp
  *
- * DTX NIXTX Control Register
+ * INTERNAL: DTX NIXTX Control Register
  */
 union cavm_dtx_nixtxx_bcst_rsp
 {
@@ -11327,7 +12679,13 @@ typedef union cavm_dtx_nixtxx_bcst_rsp cavm_dtx_nixtxx_bcst_rsp_t;
 static inline uint64_t CAVM_DTX_NIXTXX_BCST_RSP(unsigned long a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_DTX_NIXTXX_BCST_RSP(unsigned long a)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX) && (a==0))
+    if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
+        return 0x87e0fea80080ll + 0x8000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
+        return 0x87e0fea80080ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x87e0fea80080ll + 0x8000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x87e0fea80080ll + 0x8000ll * ((a) & 0x0);
     __cavm_csr_fatal("DTX_NIXTXX_BCST_RSP", 1, a, 0, 0, 0, 0, 0);
 }
@@ -11341,12 +12699,35 @@ static inline uint64_t CAVM_DTX_NIXTXX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_nixtx#_ctl
  *
- * DTX NIXTX Control Register
+ * INTERNAL: DTX NIXTX Control Register
  */
 union cavm_dtx_nixtxx_ctl
 {
     uint64_t u;
     struct cavm_dtx_nixtxx_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_nixtxx_ctl_s cn9; */
+    /* struct cavm_dtx_nixtxx_ctl_s cn96xx; */
+    /* struct cavm_dtx_nixtxx_ctl_s cn98xx; */
+    struct cavm_dtx_nixtxx_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -11365,15 +12746,22 @@ union cavm_dtx_nixtxx_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_nixtxx_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_nixtxx_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_nixtxx_ctl_s loki; */
 };
 typedef union cavm_dtx_nixtxx_ctl cavm_dtx_nixtxx_ctl_t;
 
 static inline uint64_t CAVM_DTX_NIXTXX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_DTX_NIXTXX_CTL(unsigned long a)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX) && (a==0))
+    if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
+        return 0x87e0fea80060ll + 0x8000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
+        return 0x87e0fea80060ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x87e0fea80060ll + 0x8000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x87e0fea80060ll + 0x8000ll * ((a) & 0x0);
     __cavm_csr_fatal("DTX_NIXTXX_CTL", 1, a, 0, 0, 0, 0, 0);
 }
@@ -11387,7 +12775,7 @@ static inline uint64_t CAVM_DTX_NIXTXX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_nixtx#_dat#
  *
- * DTX NIXTX Raw Data Register
+ * INTERNAL: DTX NIXTX Raw Data Register
  */
 union cavm_dtx_nixtxx_datx
 {
@@ -11411,7 +12799,13 @@ typedef union cavm_dtx_nixtxx_datx cavm_dtx_nixtxx_datx_t;
 static inline uint64_t CAVM_DTX_NIXTXX_DATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_DTX_NIXTXX_DATX(unsigned long a, unsigned long b)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX) && ((a==0) && (b<=1)))
+    if (cavm_is_model(OCTEONTX_CN96XX) && ((a==0) && (b<=1)))
+        return 0x87e0fea80040ll + 0x8000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=1)))
+        return 0x87e0fea80040ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) && (b<=1)))
+        return 0x87e0fea80040ll + 0x8000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b<=1)))
         return 0x87e0fea80040ll + 0x8000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("DTX_NIXTXX_DATX", 2, a, b, 0, 0, 0, 0);
 }
@@ -11425,7 +12819,7 @@ static inline uint64_t CAVM_DTX_NIXTXX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_nixtx#_ena#
  *
- * DTX NIXTX Data Enable Register
+ * INTERNAL: DTX NIXTX Data Enable Register
  */
 union cavm_dtx_nixtxx_enax
 {
@@ -11449,7 +12843,13 @@ typedef union cavm_dtx_nixtxx_enax cavm_dtx_nixtxx_enax_t;
 static inline uint64_t CAVM_DTX_NIXTXX_ENAX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_DTX_NIXTXX_ENAX(unsigned long a, unsigned long b)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX) && ((a==0) && (b<=1)))
+    if (cavm_is_model(OCTEONTX_CN96XX) && ((a==0) && (b<=1)))
+        return 0x87e0fea80020ll + 0x8000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=1)))
+        return 0x87e0fea80020ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) && (b<=1)))
+        return 0x87e0fea80020ll + 0x8000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b<=1)))
         return 0x87e0fea80020ll + 0x8000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("DTX_NIXTXX_ENAX", 2, a, b, 0, 0, 0, 0);
 }
@@ -11463,7 +12863,7 @@ static inline uint64_t CAVM_DTX_NIXTXX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_nixtx#_sel#
  *
- * DTX NIXTX Select Register
+ * INTERNAL: DTX NIXTX Select Register
  */
 union cavm_dtx_nixtxx_selx
 {
@@ -11485,7 +12885,13 @@ typedef union cavm_dtx_nixtxx_selx cavm_dtx_nixtxx_selx_t;
 static inline uint64_t CAVM_DTX_NIXTXX_SELX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_DTX_NIXTXX_SELX(unsigned long a, unsigned long b)
 {
-    if (cavm_is_model(OCTEONTX_CN9XXX) && ((a==0) && (b<=1)))
+    if (cavm_is_model(OCTEONTX_CN96XX) && ((a==0) && (b<=1)))
+        return 0x87e0fea80000ll + 0x8000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=1)))
+        return 0x87e0fea80000ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) && (b<=1)))
+        return 0x87e0fea80000ll + 0x8000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b<=1)))
         return 0x87e0fea80000ll + 0x8000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("DTX_NIXTXX_SELX", 2, a, b, 0, 0, 0, 0);
 }
@@ -11499,7 +12905,7 @@ static inline uint64_t CAVM_DTX_NIXTXX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_npa_bcst_rsp
  *
- * DTX NPA Control Register
+ * INTERNAL: DTX NPA Control Register
  */
 union cavm_dtx_npa_bcst_rsp
 {
@@ -11536,12 +12942,35 @@ static inline uint64_t CAVM_DTX_NPA_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_npa_ctl
  *
- * DTX NPA Control Register
+ * INTERNAL: DTX NPA Control Register
  */
 union cavm_dtx_npa_ctl
 {
     uint64_t u;
     struct cavm_dtx_npa_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_npa_ctl_s cn9; */
+    /* struct cavm_dtx_npa_ctl_s cn96xx; */
+    /* struct cavm_dtx_npa_ctl_s cn98xx; */
+    struct cavm_dtx_npa_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -11560,8 +12989,9 @@ union cavm_dtx_npa_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_npa_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_npa_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_npa_ctl_s loki; */
 };
 typedef union cavm_dtx_npa_ctl cavm_dtx_npa_ctl_t;
 
@@ -11583,7 +13013,7 @@ static inline uint64_t CAVM_DTX_NPA_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_npa_dat#
  *
- * DTX NPA Raw Data Register
+ * INTERNAL: DTX NPA Raw Data Register
  */
 union cavm_dtx_npa_datx
 {
@@ -11621,7 +13051,7 @@ static inline uint64_t CAVM_DTX_NPA_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_npa_ena#
  *
- * DTX NPA Data Enable Register
+ * INTERNAL: DTX NPA Data Enable Register
  */
 union cavm_dtx_npa_enax
 {
@@ -11659,7 +13089,7 @@ static inline uint64_t CAVM_DTX_NPA_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_npa_sel#
  *
- * DTX NPA Select Register
+ * INTERNAL: DTX NPA Select Register
  */
 union cavm_dtx_npa_selx
 {
@@ -11695,7 +13125,7 @@ static inline uint64_t CAVM_DTX_NPA_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_npc_bcst_rsp
  *
- * DTX NPC Control Register
+ * INTERNAL: DTX NPC Control Register
  */
 union cavm_dtx_npc_bcst_rsp
 {
@@ -11732,12 +13162,35 @@ static inline uint64_t CAVM_DTX_NPC_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_npc_ctl
  *
- * DTX NPC Control Register
+ * INTERNAL: DTX NPC Control Register
  */
 union cavm_dtx_npc_ctl
 {
     uint64_t u;
     struct cavm_dtx_npc_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_npc_ctl_s cn9; */
+    /* struct cavm_dtx_npc_ctl_s cn96xx; */
+    /* struct cavm_dtx_npc_ctl_s cn98xx; */
+    struct cavm_dtx_npc_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -11756,8 +13209,9 @@ union cavm_dtx_npc_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_npc_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_npc_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_npc_ctl_s loki; */
 };
 typedef union cavm_dtx_npc_ctl cavm_dtx_npc_ctl_t;
 
@@ -11779,7 +13233,7 @@ static inline uint64_t CAVM_DTX_NPC_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_npc_dat#
  *
- * DTX NPC Raw Data Register
+ * INTERNAL: DTX NPC Raw Data Register
  */
 union cavm_dtx_npc_datx
 {
@@ -11817,7 +13271,7 @@ static inline uint64_t CAVM_DTX_NPC_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_npc_ena#
  *
- * DTX NPC Data Enable Register
+ * INTERNAL: DTX NPC Data Enable Register
  */
 union cavm_dtx_npc_enax
 {
@@ -11855,7 +13309,7 @@ static inline uint64_t CAVM_DTX_NPC_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_npc_sel#
  *
- * DTX NPC Select Register
+ * INTERNAL: DTX NPC Select Register
  */
 union cavm_dtx_npc_selx
 {
@@ -11891,7 +13345,7 @@ static inline uint64_t CAVM_DTX_NPC_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_pdec_bcst_rsp
  *
- * DTX PDEC Control Register
+ * INTERNAL: DTX PDEC Control Register
  */
 union cavm_dtx_pdec_bcst_rsp
 {
@@ -11930,7 +13384,7 @@ static inline uint64_t CAVM_DTX_PDEC_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_pdec_ctl
  *
- * DTX PDEC Control Register
+ * INTERNAL: DTX PDEC Control Register
  */
 union cavm_dtx_pdec_ctl
 {
@@ -11955,7 +13409,29 @@ union cavm_dtx_pdec_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_pdec_ctl_s cn; */
+    /* struct cavm_dtx_pdec_ctl_s cn9; */
+    /* struct cavm_dtx_pdec_ctl_s cnf95xxp1; */
+    struct cavm_dtx_pdec_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_pdec_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_pdec_ctl cavm_dtx_pdec_ctl_t;
 
@@ -11979,7 +13455,7 @@ static inline uint64_t CAVM_DTX_PDEC_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_pdec_dat#
  *
- * DTX PDEC Raw Data Register
+ * INTERNAL: DTX PDEC Raw Data Register
  */
 union cavm_dtx_pdec_datx
 {
@@ -12019,7 +13495,7 @@ static inline uint64_t CAVM_DTX_PDEC_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_pdec_ena#
  *
- * DTX PDEC Data Enable Register
+ * INTERNAL: DTX PDEC Data Enable Register
  */
 union cavm_dtx_pdec_enax
 {
@@ -12059,7 +13535,7 @@ static inline uint64_t CAVM_DTX_PDEC_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_pdec_sel#
  *
- * DTX PDEC Select Register
+ * INTERNAL: DTX PDEC Select Register
  */
 union cavm_dtx_pdec_selx
 {
@@ -12097,7 +13573,7 @@ static inline uint64_t CAVM_DTX_PDEC_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_pem#_bcst_rsp
  *
- * DTX PEM Control Register
+ * INTERNAL: DTX PEM Control Register
  */
 union cavm_dtx_pemx_bcst_rsp
 {
@@ -12143,7 +13619,7 @@ static inline uint64_t CAVM_DTX_PEMX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_pem#_ctl
  *
- * DTX PEM Control Register
+ * INTERNAL: DTX PEM Control Register
  */
 union cavm_dtx_pemx_ctl
 {
@@ -12154,22 +13630,25 @@ union cavm_dtx_pemx_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_pemx_ctl_s cn8; */
-    struct cavm_dtx_pemx_ctl_cn9
+    /* struct cavm_dtx_pemx_ctl_s cn9; */
+    /* struct cavm_dtx_pemx_ctl_s cn96xx; */
+    /* struct cavm_dtx_pemx_ctl_s cn98xx; */
+    struct cavm_dtx_pemx_ctl_cnf95xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -12188,7 +13667,8 @@ union cavm_dtx_pemx_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xx;
+    /* struct cavm_dtx_pemx_ctl_s loki; */
 };
 typedef union cavm_dtx_pemx_ctl cavm_dtx_pemx_ctl_t;
 
@@ -12219,7 +13699,7 @@ static inline uint64_t CAVM_DTX_PEMX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_pem#_dat#
  *
- * DTX PEM Raw Data Register
+ * INTERNAL: DTX PEM Raw Data Register
  */
 union cavm_dtx_pemx_datx
 {
@@ -12267,7 +13747,7 @@ static inline uint64_t CAVM_DTX_PEMX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_pem#_ena#
  *
- * DTX PEM Data Enable Register
+ * INTERNAL: DTX PEM Data Enable Register
  */
 union cavm_dtx_pemx_enax
 {
@@ -12315,7 +13795,7 @@ static inline uint64_t CAVM_DTX_PEMX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_pem#_sel#
  *
- * DTX PEM Select Register
+ * INTERNAL: DTX PEM Select Register
  */
 union cavm_dtx_pemx_selx
 {
@@ -12361,7 +13841,7 @@ static inline uint64_t CAVM_DTX_PEMX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_penc_bcst_rsp
  *
- * DTX PENC Control Register
+ * INTERNAL: DTX PENC Control Register
  */
 union cavm_dtx_penc_bcst_rsp
 {
@@ -12400,7 +13880,7 @@ static inline uint64_t CAVM_DTX_PENC_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_penc_ctl
  *
- * DTX PENC Control Register
+ * INTERNAL: DTX PENC Control Register
  */
 union cavm_dtx_penc_ctl
 {
@@ -12425,7 +13905,29 @@ union cavm_dtx_penc_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_penc_ctl_s cn; */
+    /* struct cavm_dtx_penc_ctl_s cn9; */
+    /* struct cavm_dtx_penc_ctl_s cnf95xxp1; */
+    struct cavm_dtx_penc_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_penc_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_penc_ctl cavm_dtx_penc_ctl_t;
 
@@ -12449,7 +13951,7 @@ static inline uint64_t CAVM_DTX_PENC_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_penc_dat#
  *
- * DTX PENC Raw Data Register
+ * INTERNAL: DTX PENC Raw Data Register
  */
 union cavm_dtx_penc_datx
 {
@@ -12489,7 +13991,7 @@ static inline uint64_t CAVM_DTX_PENC_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_penc_ena#
  *
- * DTX PENC Data Enable Register
+ * INTERNAL: DTX PENC Data Enable Register
  */
 union cavm_dtx_penc_enax
 {
@@ -12529,7 +14031,7 @@ static inline uint64_t CAVM_DTX_PENC_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_penc_sel#
  *
- * DTX PENC Select Register
+ * INTERNAL: DTX PENC Select Register
  */
 union cavm_dtx_penc_selx
 {
@@ -12567,7 +14069,7 @@ static inline uint64_t CAVM_DTX_PENC_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_pki_bcst_rsp
  *
- * DTX PKI Control Register
+ * INTERNAL: DTX PKI Control Register
  */
 union cavm_dtx_pki_bcst_rsp
 {
@@ -12604,7 +14106,7 @@ static inline uint64_t CAVM_DTX_PKI_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_pki_ctl
  *
- * DTX PKI Control Register
+ * INTERNAL: DTX PKI Control Register
  */
 union cavm_dtx_pki_ctl
 {
@@ -12615,15 +14117,15 @@ union cavm_dtx_pki_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -12651,7 +14153,7 @@ static inline uint64_t CAVM_DTX_PKI_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_pki_dat#
  *
- * DTX PKI Raw Data Register
+ * INTERNAL: DTX PKI Raw Data Register
  */
 union cavm_dtx_pki_datx
 {
@@ -12689,7 +14191,7 @@ static inline uint64_t CAVM_DTX_PKI_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_pki_ena#
  *
- * DTX PKI Data Enable Register
+ * INTERNAL: DTX PKI Data Enable Register
  */
 union cavm_dtx_pki_enax
 {
@@ -12727,7 +14229,7 @@ static inline uint64_t CAVM_DTX_PKI_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_pki_sel#
  *
- * DTX PKI Select Register
+ * INTERNAL: DTX PKI Select Register
  */
 union cavm_dtx_pki_selx
 {
@@ -12763,7 +14265,7 @@ static inline uint64_t CAVM_DTX_PKI_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_pko_bcst_rsp
  *
- * DTX PKO Control Register
+ * INTERNAL: DTX PKO Control Register
  */
 union cavm_dtx_pko_bcst_rsp
 {
@@ -12800,7 +14302,7 @@ static inline uint64_t CAVM_DTX_PKO_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_pko_ctl
  *
- * DTX PKO Control Register
+ * INTERNAL: DTX PKO Control Register
  */
 union cavm_dtx_pko_ctl
 {
@@ -12811,15 +14313,15 @@ union cavm_dtx_pko_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -12847,7 +14349,7 @@ static inline uint64_t CAVM_DTX_PKO_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_pko_dat#
  *
- * DTX PKO Raw Data Register
+ * INTERNAL: DTX PKO Raw Data Register
  */
 union cavm_dtx_pko_datx
 {
@@ -12885,7 +14387,7 @@ static inline uint64_t CAVM_DTX_PKO_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_pko_ena#
  *
- * DTX PKO Data Enable Register
+ * INTERNAL: DTX PKO Data Enable Register
  */
 union cavm_dtx_pko_enax
 {
@@ -12923,7 +14425,7 @@ static inline uint64_t CAVM_DTX_PKO_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_pko_sel#
  *
- * DTX PKO Select Register
+ * INTERNAL: DTX PKO Select Register
  */
 union cavm_dtx_pko_selx
 {
@@ -12959,7 +14461,7 @@ static inline uint64_t CAVM_DTX_PKO_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_pnb#_bcst_rsp
  *
- * DTX PNB Control Register
+ * INTERNAL: DTX PNB Control Register
  */
 union cavm_dtx_pnbx_bcst_rsp
 {
@@ -12997,7 +14499,7 @@ static inline uint64_t CAVM_DTX_PNBX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_pnb#_ctl
  *
- * DTX PNB Control Register
+ * INTERNAL: DTX PNB Control Register
  */
 union cavm_dtx_pnbx_ctl
 {
@@ -13022,7 +14524,29 @@ union cavm_dtx_pnbx_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_pnbx_ctl_s cn; */
+    /* struct cavm_dtx_pnbx_ctl_s cn9; */
+    /* struct cavm_dtx_pnbx_ctl_s cnf95xxp1; */
+    struct cavm_dtx_pnbx_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_pnbx_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_pnbx_ctl cavm_dtx_pnbx_ctl_t;
 
@@ -13045,7 +14569,7 @@ static inline uint64_t CAVM_DTX_PNBX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_pnb#_dat#
  *
- * DTX PNB Raw Data Register
+ * INTERNAL: DTX PNB Raw Data Register
  */
 union cavm_dtx_pnbx_datx
 {
@@ -13085,7 +14609,7 @@ static inline uint64_t CAVM_DTX_PNBX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_pnb#_ena#
  *
- * DTX PNB Data Enable Register
+ * INTERNAL: DTX PNB Data Enable Register
  */
 union cavm_dtx_pnbx_enax
 {
@@ -13125,7 +14649,7 @@ static inline uint64_t CAVM_DTX_PNBX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_pnb#_sel#
  *
- * DTX PNB Select Register
+ * INTERNAL: DTX PNB Select Register
  */
 union cavm_dtx_pnbx_selx
 {
@@ -13161,9 +14685,203 @@ static inline uint64_t CAVM_DTX_PNBX_SELX(unsigned long a, unsigned long b)
 #define arguments_CAVM_DTX_PNBX_SELX(a,b) (a),(b),-1,-1
 
 /**
+ * Register (RSL) dtx_pnbd#_bcst_rsp
+ *
+ * INTERNAL: DTX PNBD Control Register
+ */
+union cavm_dtx_pnbdx_bcst_rsp
+{
+    uint64_t u;
+    struct cavm_dtx_pnbdx_bcst_rsp_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_1_63         : 63;
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable this DTX instance as the responder to DTX broadcast read/write operations. */
+#else /* Word 0 - Little Endian */
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable this DTX instance as the responder to DTX broadcast read/write operations. */
+        uint64_t reserved_1_63         : 63;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_pnbdx_bcst_rsp_s cn; */
+};
+typedef union cavm_dtx_pnbdx_bcst_rsp cavm_dtx_pnbdx_bcst_rsp_t;
+
+static inline uint64_t CAVM_DTX_PNBDX_BCST_RSP(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_PNBDX_BCST_RSP(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee90080ll + 0x8000ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_PNBDX_BCST_RSP", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_PNBDX_BCST_RSP(a) cavm_dtx_pnbdx_bcst_rsp_t
+#define bustype_CAVM_DTX_PNBDX_BCST_RSP(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_PNBDX_BCST_RSP(a) "DTX_PNBDX_BCST_RSP"
+#define busnum_CAVM_DTX_PNBDX_BCST_RSP(a) (a)
+#define arguments_CAVM_DTX_PNBDX_BCST_RSP(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) dtx_pnbd#_ctl
+ *
+ * INTERNAL: DTX PNBD Control Register
+ */
+union cavm_dtx_pnbdx_ctl
+{
+    uint64_t u;
+    struct cavm_dtx_pnbdx_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_pnbdx_ctl_s cn; */
+};
+typedef union cavm_dtx_pnbdx_ctl cavm_dtx_pnbdx_ctl_t;
+
+static inline uint64_t CAVM_DTX_PNBDX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_PNBDX_CTL(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee90060ll + 0x8000ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_PNBDX_CTL", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_PNBDX_CTL(a) cavm_dtx_pnbdx_ctl_t
+#define bustype_CAVM_DTX_PNBDX_CTL(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_PNBDX_CTL(a) "DTX_PNBDX_CTL"
+#define busnum_CAVM_DTX_PNBDX_CTL(a) (a)
+#define arguments_CAVM_DTX_PNBDX_CTL(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) dtx_pnbd#_dat#
+ *
+ * INTERNAL: DTX PNBD Raw Data Register
+ */
+union cavm_dtx_pnbdx_datx
+{
+    uint64_t u;
+    struct cavm_dtx_pnbdx_datx_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_36_63        : 28;
+        uint64_t raw                   : 36; /**< [ 35:  0](RO/H) Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                                 ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
+#else /* Word 0 - Little Endian */
+        uint64_t raw                   : 36; /**< [ 35:  0](RO/H) Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                                 ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
+        uint64_t reserved_36_63        : 28;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_pnbdx_datx_s cn; */
+};
+typedef union cavm_dtx_pnbdx_datx cavm_dtx_pnbdx_datx_t;
+
+static inline uint64_t CAVM_DTX_PNBDX_DATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_PNBDX_DATX(unsigned long a, unsigned long b)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
+        return 0x87e0fee90040ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
+    __cavm_csr_fatal("DTX_PNBDX_DATX", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_PNBDX_DATX(a,b) cavm_dtx_pnbdx_datx_t
+#define bustype_CAVM_DTX_PNBDX_DATX(a,b) CSR_TYPE_RSL
+#define basename_CAVM_DTX_PNBDX_DATX(a,b) "DTX_PNBDX_DATX"
+#define busnum_CAVM_DTX_PNBDX_DATX(a,b) (a)
+#define arguments_CAVM_DTX_PNBDX_DATX(a,b) (a),(b),-1,-1
+
+/**
+ * Register (RSL) dtx_pnbd#_ena#
+ *
+ * INTERNAL: DTX PNBD Data Enable Register
+ */
+union cavm_dtx_pnbdx_enax
+{
+    uint64_t u;
+    struct cavm_dtx_pnbdx_enax_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_36_63        : 28;
+        uint64_t ena                   : 36; /**< [ 35:  0](R/W) Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                                 buses. Normally only one block will drive each bit. */
+#else /* Word 0 - Little Endian */
+        uint64_t ena                   : 36; /**< [ 35:  0](R/W) Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                                 buses. Normally only one block will drive each bit. */
+        uint64_t reserved_36_63        : 28;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_pnbdx_enax_s cn; */
+};
+typedef union cavm_dtx_pnbdx_enax cavm_dtx_pnbdx_enax_t;
+
+static inline uint64_t CAVM_DTX_PNBDX_ENAX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_PNBDX_ENAX(unsigned long a, unsigned long b)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
+        return 0x87e0fee90020ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
+    __cavm_csr_fatal("DTX_PNBDX_ENAX", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_PNBDX_ENAX(a,b) cavm_dtx_pnbdx_enax_t
+#define bustype_CAVM_DTX_PNBDX_ENAX(a,b) CSR_TYPE_RSL
+#define basename_CAVM_DTX_PNBDX_ENAX(a,b) "DTX_PNBDX_ENAX"
+#define busnum_CAVM_DTX_PNBDX_ENAX(a,b) (a)
+#define arguments_CAVM_DTX_PNBDX_ENAX(a,b) (a),(b),-1,-1
+
+/**
+ * Register (RSL) dtx_pnbd#_sel#
+ *
+ * INTERNAL: DTX PNBD Select Register
+ */
+union cavm_dtx_pnbdx_selx
+{
+    uint64_t u;
+    struct cavm_dtx_pnbdx_selx_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_24_63        : 40;
+        uint64_t value                 : 24; /**< [ 23:  0](R/W) Debug select. Selects which signals to drive onto low/high 36-bit debug buses. */
+#else /* Word 0 - Little Endian */
+        uint64_t value                 : 24; /**< [ 23:  0](R/W) Debug select. Selects which signals to drive onto low/high 36-bit debug buses. */
+        uint64_t reserved_24_63        : 40;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_pnbdx_selx_s cn; */
+};
+typedef union cavm_dtx_pnbdx_selx cavm_dtx_pnbdx_selx_t;
+
+static inline uint64_t CAVM_DTX_PNBDX_SELX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_PNBDX_SELX(unsigned long a, unsigned long b)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
+        return 0x87e0fee90000ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
+    __cavm_csr_fatal("DTX_PNBDX_SELX", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_PNBDX_SELX(a,b) cavm_dtx_pnbdx_selx_t
+#define bustype_CAVM_DTX_PNBDX_SELX(a,b) CSR_TYPE_RSL
+#define basename_CAVM_DTX_PNBDX_SELX(a,b) "DTX_PNBDX_SELX"
+#define busnum_CAVM_DTX_PNBDX_SELX(a,b) (a)
+#define arguments_CAVM_DTX_PNBDX_SELX(a,b) (a),(b),-1,-1
+
+/**
  * Register (RSL) dtx_prach_bcst_rsp
  *
- * DTX PRACH Control Register
+ * INTERNAL: DTX PRACH Control Register
  */
 union cavm_dtx_prach_bcst_rsp
 {
@@ -13202,7 +14920,7 @@ static inline uint64_t CAVM_DTX_PRACH_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_prach_ctl
  *
- * DTX PRACH Control Register
+ * INTERNAL: DTX PRACH Control Register
  */
 union cavm_dtx_prach_ctl
 {
@@ -13227,7 +14945,29 @@ union cavm_dtx_prach_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_prach_ctl_s cn; */
+    /* struct cavm_dtx_prach_ctl_s cn9; */
+    /* struct cavm_dtx_prach_ctl_s cnf95xxp1; */
+    struct cavm_dtx_prach_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_prach_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_prach_ctl cavm_dtx_prach_ctl_t;
 
@@ -13251,7 +14991,7 @@ static inline uint64_t CAVM_DTX_PRACH_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_prach_dat#
  *
- * DTX PRACH Raw Data Register
+ * INTERNAL: DTX PRACH Raw Data Register
  */
 union cavm_dtx_prach_datx
 {
@@ -13291,7 +15031,7 @@ static inline uint64_t CAVM_DTX_PRACH_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_prach_ena#
  *
- * DTX PRACH Data Enable Register
+ * INTERNAL: DTX PRACH Data Enable Register
  */
 union cavm_dtx_prach_enax
 {
@@ -13331,7 +15071,7 @@ static inline uint64_t CAVM_DTX_PRACH_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_prach_sel#
  *
- * DTX PRACH Select Register
+ * INTERNAL: DTX PRACH Select Register
  */
 union cavm_dtx_prach_selx
 {
@@ -13369,7 +15109,7 @@ static inline uint64_t CAVM_DTX_PRACH_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_psm_bcst_rsp
  *
- * DTX PSM Control Register
+ * INTERNAL: DTX PSM Control Register
  */
 union cavm_dtx_psm_bcst_rsp
 {
@@ -13408,7 +15148,7 @@ static inline uint64_t CAVM_DTX_PSM_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_psm_ctl
  *
- * DTX PSM Control Register
+ * INTERNAL: DTX PSM Control Register
  */
 union cavm_dtx_psm_ctl
 {
@@ -13433,7 +15173,29 @@ union cavm_dtx_psm_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_psm_ctl_s cn; */
+    /* struct cavm_dtx_psm_ctl_s cn9; */
+    /* struct cavm_dtx_psm_ctl_s cnf95xxp1; */
+    struct cavm_dtx_psm_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_psm_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_psm_ctl cavm_dtx_psm_ctl_t;
 
@@ -13457,7 +15219,7 @@ static inline uint64_t CAVM_DTX_PSM_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_psm_dat#
  *
- * DTX PSM Raw Data Register
+ * INTERNAL: DTX PSM Raw Data Register
  */
 union cavm_dtx_psm_datx
 {
@@ -13497,7 +15259,7 @@ static inline uint64_t CAVM_DTX_PSM_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_psm_ena#
  *
- * DTX PSM Data Enable Register
+ * INTERNAL: DTX PSM Data Enable Register
  */
 union cavm_dtx_psm_enax
 {
@@ -13537,7 +15299,7 @@ static inline uint64_t CAVM_DTX_PSM_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_psm_sel#
  *
- * DTX PSM Select Register
+ * INTERNAL: DTX PSM Select Register
  */
 union cavm_dtx_psm_selx
 {
@@ -13575,7 +15337,7 @@ static inline uint64_t CAVM_DTX_PSM_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_ptp_bcst_rsp
  *
- * DTX PTP Control Register
+ * INTERNAL: DTX PTP Control Register
  */
 union cavm_dtx_ptp_bcst_rsp
 {
@@ -13612,12 +15374,35 @@ static inline uint64_t CAVM_DTX_PTP_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_ptp_ctl
  *
- * DTX PTP Control Register
+ * INTERNAL: DTX PTP Control Register
  */
 union cavm_dtx_ptp_ctl
 {
     uint64_t u;
     struct cavm_dtx_ptp_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ptp_ctl_s cn9; */
+    /* struct cavm_dtx_ptp_ctl_s cn96xx; */
+    /* struct cavm_dtx_ptp_ctl_s cn98xx; */
+    struct cavm_dtx_ptp_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -13636,8 +15421,9 @@ union cavm_dtx_ptp_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_ptp_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_ptp_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_ptp_ctl_s loki; */
 };
 typedef union cavm_dtx_ptp_ctl cavm_dtx_ptp_ctl_t;
 
@@ -13659,7 +15445,7 @@ static inline uint64_t CAVM_DTX_PTP_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_ptp_dat#
  *
- * DTX PTP Raw Data Register
+ * INTERNAL: DTX PTP Raw Data Register
  */
 union cavm_dtx_ptp_datx
 {
@@ -13697,7 +15483,7 @@ static inline uint64_t CAVM_DTX_PTP_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_ptp_ena#
  *
- * DTX PTP Data Enable Register
+ * INTERNAL: DTX PTP Data Enable Register
  */
 union cavm_dtx_ptp_enax
 {
@@ -13735,7 +15521,7 @@ static inline uint64_t CAVM_DTX_PTP_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_ptp_sel#
  *
- * DTX PTP Select Register
+ * INTERNAL: DTX PTP Select Register
  */
 union cavm_dtx_ptp_selx
 {
@@ -13771,7 +15557,7 @@ static inline uint64_t CAVM_DTX_PTP_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_rad_bcst_rsp
  *
- * DTX RAD Control Register
+ * INTERNAL: DTX RAD Control Register
  */
 union cavm_dtx_rad_bcst_rsp
 {
@@ -13808,7 +15594,7 @@ static inline uint64_t CAVM_DTX_RAD_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_rad_ctl
  *
- * DTX RAD Control Register
+ * INTERNAL: DTX RAD Control Register
  */
 union cavm_dtx_rad_ctl
 {
@@ -13819,15 +15605,15 @@ union cavm_dtx_rad_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -13855,7 +15641,7 @@ static inline uint64_t CAVM_DTX_RAD_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_rad_dat#
  *
- * DTX RAD Raw Data Register
+ * INTERNAL: DTX RAD Raw Data Register
  */
 union cavm_dtx_rad_datx
 {
@@ -13893,7 +15679,7 @@ static inline uint64_t CAVM_DTX_RAD_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_rad_ena#
  *
- * DTX RAD Data Enable Register
+ * INTERNAL: DTX RAD Data Enable Register
  */
 union cavm_dtx_rad_enax
 {
@@ -13931,7 +15717,7 @@ static inline uint64_t CAVM_DTX_RAD_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_rad_sel#
  *
- * DTX RAD Select Register
+ * INTERNAL: DTX RAD Select Register
  */
 union cavm_dtx_rad_selx
 {
@@ -13967,7 +15753,7 @@ static inline uint64_t CAVM_DTX_RAD_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_rdec_bcst_rsp
  *
- * DTX RDEC Control Register
+ * INTERNAL: DTX RDEC Control Register
  */
 union cavm_dtx_rdec_bcst_rsp
 {
@@ -14006,7 +15792,7 @@ static inline uint64_t CAVM_DTX_RDEC_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_rdec_ctl
  *
- * DTX RDEC Control Register
+ * INTERNAL: DTX RDEC Control Register
  */
 union cavm_dtx_rdec_ctl
 {
@@ -14031,7 +15817,29 @@ union cavm_dtx_rdec_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_rdec_ctl_s cn; */
+    /* struct cavm_dtx_rdec_ctl_s cn9; */
+    /* struct cavm_dtx_rdec_ctl_s cnf95xxp1; */
+    struct cavm_dtx_rdec_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_rdec_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_rdec_ctl cavm_dtx_rdec_ctl_t;
 
@@ -14055,7 +15863,7 @@ static inline uint64_t CAVM_DTX_RDEC_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_rdec_dat#
  *
- * DTX RDEC Raw Data Register
+ * INTERNAL: DTX RDEC Raw Data Register
  */
 union cavm_dtx_rdec_datx
 {
@@ -14095,7 +15903,7 @@ static inline uint64_t CAVM_DTX_RDEC_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_rdec_ena#
  *
- * DTX RDEC Data Enable Register
+ * INTERNAL: DTX RDEC Data Enable Register
  */
 union cavm_dtx_rdec_enax
 {
@@ -14135,7 +15943,7 @@ static inline uint64_t CAVM_DTX_RDEC_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_rdec_sel#
  *
- * DTX RDEC Select Register
+ * INTERNAL: DTX RDEC Select Register
  */
 union cavm_dtx_rdec_selx
 {
@@ -14173,7 +15981,7 @@ static inline uint64_t CAVM_DTX_RDEC_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_ree#_bcst_rsp
  *
- * DTX REE Control Register
+ * INTERNAL: DTX REE Control Register
  */
 union cavm_dtx_reex_bcst_rsp
 {
@@ -14209,7 +16017,7 @@ static inline uint64_t CAVM_DTX_REEX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_ree#_ctl
  *
- * DTX REE Control Register
+ * INTERNAL: DTX REE Control Register
  */
 union cavm_dtx_reex_ctl
 {
@@ -14220,14 +16028,14 @@ union cavm_dtx_reex_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
@@ -14255,7 +16063,7 @@ static inline uint64_t CAVM_DTX_REEX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_ree#_dat#
  *
- * DTX REE Raw Data Register
+ * INTERNAL: DTX REE Raw Data Register
  */
 union cavm_dtx_reex_datx
 {
@@ -14293,7 +16101,7 @@ static inline uint64_t CAVM_DTX_REEX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ree#_ena#
  *
- * DTX REE Data Enable Register
+ * INTERNAL: DTX REE Data Enable Register
  */
 union cavm_dtx_reex_enax
 {
@@ -14331,7 +16139,7 @@ static inline uint64_t CAVM_DTX_REEX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_ree#_sel#
  *
- * DTX REE Select Register
+ * INTERNAL: DTX REE Select Register
  */
 union cavm_dtx_reex_selx
 {
@@ -14367,7 +16175,7 @@ static inline uint64_t CAVM_DTX_REEX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_rfoe#_bcst_rsp
  *
- * DTX RFOE Control Register
+ * INTERNAL: DTX RFOE Control Register
  */
 union cavm_dtx_rfoex_bcst_rsp
 {
@@ -14405,7 +16213,7 @@ static inline uint64_t CAVM_DTX_RFOEX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_rfoe#_ctl
  *
- * DTX RFOE Control Register
+ * INTERNAL: DTX RFOE Control Register
  */
 union cavm_dtx_rfoex_ctl
 {
@@ -14430,7 +16238,29 @@ union cavm_dtx_rfoex_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_rfoex_ctl_s cn; */
+    /* struct cavm_dtx_rfoex_ctl_s cn9; */
+    /* struct cavm_dtx_rfoex_ctl_s cnf95xxp1; */
+    struct cavm_dtx_rfoex_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_rfoex_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_rfoex_ctl cavm_dtx_rfoex_ctl_t;
 
@@ -14453,7 +16283,7 @@ static inline uint64_t CAVM_DTX_RFOEX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_rfoe#_dat#
  *
- * DTX RFOE Raw Data Register
+ * INTERNAL: DTX RFOE Raw Data Register
  */
 union cavm_dtx_rfoex_datx
 {
@@ -14493,7 +16323,7 @@ static inline uint64_t CAVM_DTX_RFOEX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_rfoe#_ena#
  *
- * DTX RFOE Data Enable Register
+ * INTERNAL: DTX RFOE Data Enable Register
  */
 union cavm_dtx_rfoex_enax
 {
@@ -14533,7 +16363,7 @@ static inline uint64_t CAVM_DTX_RFOEX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_rfoe#_sel#
  *
- * DTX RFOE Select Register
+ * INTERNAL: DTX RFOE Select Register
  */
 union cavm_dtx_rfoex_selx
 {
@@ -14571,7 +16401,7 @@ static inline uint64_t CAVM_DTX_RFOEX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_rgx#_bcst_rsp
  *
- * DTX RGX Control Register
+ * INTERNAL: DTX RGX Control Register
  */
 union cavm_dtx_rgxx_bcst_rsp
 {
@@ -14607,7 +16437,7 @@ static inline uint64_t CAVM_DTX_RGXX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_rgx#_ctl
  *
- * DTX RGX Control Register
+ * INTERNAL: DTX RGX Control Register
  */
 union cavm_dtx_rgxx_ctl
 {
@@ -14618,15 +16448,15 @@ union cavm_dtx_rgxx_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -14653,7 +16483,7 @@ static inline uint64_t CAVM_DTX_RGXX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_rgx#_dat#
  *
- * DTX RGX Raw Data Register
+ * INTERNAL: DTX RGX Raw Data Register
  */
 union cavm_dtx_rgxx_datx
 {
@@ -14691,7 +16521,7 @@ static inline uint64_t CAVM_DTX_RGXX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_rgx#_ena#
  *
- * DTX RGX Data Enable Register
+ * INTERNAL: DTX RGX Data Enable Register
  */
 union cavm_dtx_rgxx_enax
 {
@@ -14729,7 +16559,7 @@ static inline uint64_t CAVM_DTX_RGXX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_rgx#_sel#
  *
- * DTX RGX Select Register
+ * INTERNAL: DTX RGX Select Register
  */
 union cavm_dtx_rgxx_selx
 {
@@ -14765,7 +16595,7 @@ static inline uint64_t CAVM_DTX_RGXX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_rmap#_bcst_rsp
  *
- * DTX RMAP Control Register
+ * INTERNAL: DTX RMAP Control Register
  */
 union cavm_dtx_rmapx_bcst_rsp
 {
@@ -14803,7 +16633,7 @@ static inline uint64_t CAVM_DTX_RMAPX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_rmap#_ctl
  *
- * DTX RMAP Control Register
+ * INTERNAL: DTX RMAP Control Register
  */
 union cavm_dtx_rmapx_ctl
 {
@@ -14828,7 +16658,29 @@ union cavm_dtx_rmapx_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_rmapx_ctl_s cn; */
+    /* struct cavm_dtx_rmapx_ctl_s cn9; */
+    /* struct cavm_dtx_rmapx_ctl_s cnf95xxp1; */
+    struct cavm_dtx_rmapx_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_rmapx_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_rmapx_ctl cavm_dtx_rmapx_ctl_t;
 
@@ -14851,7 +16703,7 @@ static inline uint64_t CAVM_DTX_RMAPX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_rmap#_dat#
  *
- * DTX RMAP Raw Data Register
+ * INTERNAL: DTX RMAP Raw Data Register
  */
 union cavm_dtx_rmapx_datx
 {
@@ -14891,7 +16743,7 @@ static inline uint64_t CAVM_DTX_RMAPX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_rmap#_ena#
  *
- * DTX RMAP Data Enable Register
+ * INTERNAL: DTX RMAP Data Enable Register
  */
 union cavm_dtx_rmapx_enax
 {
@@ -14931,7 +16783,7 @@ static inline uint64_t CAVM_DTX_RMAPX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_rmap#_sel#
  *
- * DTX RMAP Select Register
+ * INTERNAL: DTX RMAP Select Register
  */
 union cavm_dtx_rmapx_selx
 {
@@ -14969,7 +16821,7 @@ static inline uint64_t CAVM_DTX_RMAPX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_rnm_bcst_rsp
  *
- * DTX RNM Control Register
+ * INTERNAL: DTX RNM Control Register
  */
 union cavm_dtx_rnm_bcst_rsp
 {
@@ -15008,7 +16860,7 @@ static inline uint64_t CAVM_DTX_RNM_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_rnm_ctl
  *
- * DTX RNM Control Register
+ * INTERNAL: DTX RNM Control Register
  */
 union cavm_dtx_rnm_ctl
 {
@@ -15019,22 +16871,25 @@ union cavm_dtx_rnm_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_rnm_ctl_s cn8; */
-    struct cavm_dtx_rnm_ctl_cn9
+    /* struct cavm_dtx_rnm_ctl_s cn9; */
+    /* struct cavm_dtx_rnm_ctl_s cn96xx; */
+    /* struct cavm_dtx_rnm_ctl_s cn98xx; */
+    struct cavm_dtx_rnm_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -15053,7 +16908,9 @@ union cavm_dtx_rnm_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xxp1;
+    /* struct cavm_dtx_rnm_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_rnm_ctl_s loki; */
 };
 typedef union cavm_dtx_rnm_ctl cavm_dtx_rnm_ctl_t;
 
@@ -15077,7 +16934,7 @@ static inline uint64_t CAVM_DTX_RNM_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_rnm_dat#
  *
- * DTX RNM Raw Data Register
+ * INTERNAL: DTX RNM Raw Data Register
  */
 union cavm_dtx_rnm_datx
 {
@@ -15117,7 +16974,7 @@ static inline uint64_t CAVM_DTX_RNM_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_rnm_ena#
  *
- * DTX RNM Data Enable Register
+ * INTERNAL: DTX RNM Data Enable Register
  */
 union cavm_dtx_rnm_enax
 {
@@ -15157,7 +17014,7 @@ static inline uint64_t CAVM_DTX_RNM_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_rnm_sel#
  *
- * DTX RNM Select Register
+ * INTERNAL: DTX RNM Select Register
  */
 union cavm_dtx_rnm_selx
 {
@@ -15195,7 +17052,7 @@ static inline uint64_t CAVM_DTX_RNM_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_rst_bcst_rsp
  *
- * DTX RST Control Register
+ * INTERNAL: DTX RST Control Register
  */
 union cavm_dtx_rst_bcst_rsp
 {
@@ -15230,7 +17087,7 @@ static inline uint64_t CAVM_DTX_RST_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_rst_ctl
  *
- * DTX RST Control Register
+ * INTERNAL: DTX RST Control Register
  */
 union cavm_dtx_rst_ctl
 {
@@ -15241,22 +17098,25 @@ union cavm_dtx_rst_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_rst_ctl_s cn8; */
-    struct cavm_dtx_rst_ctl_cn9
+    /* struct cavm_dtx_rst_ctl_s cn9; */
+    /* struct cavm_dtx_rst_ctl_s cn96xx; */
+    /* struct cavm_dtx_rst_ctl_s cn98xx; */
+    struct cavm_dtx_rst_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -15275,7 +17135,9 @@ union cavm_dtx_rst_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xxp1;
+    /* struct cavm_dtx_rst_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_rst_ctl_s loki; */
 };
 typedef union cavm_dtx_rst_ctl cavm_dtx_rst_ctl_t;
 
@@ -15295,7 +17157,7 @@ static inline uint64_t CAVM_DTX_RST_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_rst_dat#
  *
- * DTX RST Raw Data Register
+ * INTERNAL: DTX RST Raw Data Register
  */
 union cavm_dtx_rst_datx
 {
@@ -15333,7 +17195,7 @@ static inline uint64_t CAVM_DTX_RST_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_rst_ena#
  *
- * DTX RST Data Enable Register
+ * INTERNAL: DTX RST Data Enable Register
  */
 union cavm_dtx_rst_enax
 {
@@ -15371,7 +17233,7 @@ static inline uint64_t CAVM_DTX_RST_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_rst_sel#
  *
- * DTX RST Select Register
+ * INTERNAL: DTX RST Select Register
  */
 union cavm_dtx_rst_selx
 {
@@ -15407,7 +17269,7 @@ static inline uint64_t CAVM_DTX_RST_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_rvu_bcst_rsp
  *
- * DTX RVU Control Register
+ * INTERNAL: DTX RVU Control Register
  */
 union cavm_dtx_rvu_bcst_rsp
 {
@@ -15444,12 +17306,35 @@ static inline uint64_t CAVM_DTX_RVU_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_rvu_ctl
  *
- * DTX RVU Control Register
+ * INTERNAL: DTX RVU Control Register
  */
 union cavm_dtx_rvu_ctl
 {
     uint64_t u;
     struct cavm_dtx_rvu_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_rvu_ctl_s cn9; */
+    /* struct cavm_dtx_rvu_ctl_s cn96xx; */
+    /* struct cavm_dtx_rvu_ctl_s cn98xx; */
+    struct cavm_dtx_rvu_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -15468,8 +17353,9 @@ union cavm_dtx_rvu_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_rvu_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_rvu_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_rvu_ctl_s loki; */
 };
 typedef union cavm_dtx_rvu_ctl cavm_dtx_rvu_ctl_t;
 
@@ -15491,7 +17377,7 @@ static inline uint64_t CAVM_DTX_RVU_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_rvu_dat#
  *
- * DTX RVU Raw Data Register
+ * INTERNAL: DTX RVU Raw Data Register
  */
 union cavm_dtx_rvu_datx
 {
@@ -15529,7 +17415,7 @@ static inline uint64_t CAVM_DTX_RVU_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_rvu_ena#
  *
- * DTX RVU Data Enable Register
+ * INTERNAL: DTX RVU Data Enable Register
  */
 union cavm_dtx_rvu_enax
 {
@@ -15567,7 +17453,7 @@ static inline uint64_t CAVM_DTX_RVU_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_rvu_sel#
  *
- * DTX RVU Select Register
+ * INTERNAL: DTX RVU Select Register
  */
 union cavm_dtx_rvu_selx
 {
@@ -15603,7 +17489,7 @@ static inline uint64_t CAVM_DTX_RVU_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_sata#_bcst_rsp
  *
- * DTX SATA Control Register
+ * INTERNAL: DTX SATA Control Register
  */
 union cavm_dtx_satax_bcst_rsp
 {
@@ -15643,7 +17529,7 @@ static inline uint64_t CAVM_DTX_SATAX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_sata#_ctl
  *
- * DTX SATA Control Register
+ * INTERNAL: DTX SATA Control Register
  */
 union cavm_dtx_satax_ctl
 {
@@ -15654,41 +17540,21 @@ union cavm_dtx_satax_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_satax_ctl_s cn8; */
-    struct cavm_dtx_satax_ctl_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_5_63         : 59;
-        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
-        uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
-                                                                 registers.  For diagnostic use only. */
-        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-#else /* Word 0 - Little Endian */
-        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
-                                                                 registers.  For diagnostic use only. */
-        uint64_t reserved_2_3          : 2;
-        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
-        uint64_t reserved_5_63         : 59;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_dtx_satax_ctl_s cn; */
 };
 typedef union cavm_dtx_satax_ctl cavm_dtx_satax_ctl_t;
 
@@ -15713,7 +17579,7 @@ static inline uint64_t CAVM_DTX_SATAX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_sata#_dat#
  *
- * DTX SATA Raw Data Register
+ * INTERNAL: DTX SATA Raw Data Register
  */
 union cavm_dtx_satax_datx
 {
@@ -15755,7 +17621,7 @@ static inline uint64_t CAVM_DTX_SATAX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_sata#_ena#
  *
- * DTX SATA Data Enable Register
+ * INTERNAL: DTX SATA Data Enable Register
  */
 union cavm_dtx_satax_enax
 {
@@ -15797,7 +17663,7 @@ static inline uint64_t CAVM_DTX_SATAX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_sata#_sel#
  *
- * DTX SATA Select Register
+ * INTERNAL: DTX SATA Select Register
  */
 union cavm_dtx_satax_selx
 {
@@ -15837,7 +17703,7 @@ static inline uint64_t CAVM_DTX_SATAX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_sli#_bcst_rsp
  *
- * DTX SLI Control Register
+ * INTERNAL: DTX SLI Control Register
  */
 union cavm_dtx_slix_bcst_rsp
 {
@@ -15873,7 +17739,7 @@ static inline uint64_t CAVM_DTX_SLIX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_sli#_ctl
  *
- * DTX SLI Control Register
+ * INTERNAL: DTX SLI Control Register
  */
 union cavm_dtx_slix_ctl
 {
@@ -15884,15 +17750,15 @@ union cavm_dtx_slix_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -15919,7 +17785,7 @@ static inline uint64_t CAVM_DTX_SLIX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_sli#_dat#
  *
- * DTX SLI Raw Data Register
+ * INTERNAL: DTX SLI Raw Data Register
  */
 union cavm_dtx_slix_datx
 {
@@ -15957,7 +17823,7 @@ static inline uint64_t CAVM_DTX_SLIX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_sli#_ena#
  *
- * DTX SLI Data Enable Register
+ * INTERNAL: DTX SLI Data Enable Register
  */
 union cavm_dtx_slix_enax
 {
@@ -15995,7 +17861,7 @@ static inline uint64_t CAVM_DTX_SLIX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_sli#_sel#
  *
- * DTX SLI Select Register
+ * INTERNAL: DTX SLI Select Register
  */
 union cavm_dtx_slix_selx
 {
@@ -16031,7 +17897,7 @@ static inline uint64_t CAVM_DTX_SLIX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_smmu#_bcst_rsp
  *
- * DTX SMMU Control Register
+ * INTERNAL: DTX SMMU Control Register
  */
 union cavm_dtx_smmux_bcst_rsp
 {
@@ -16067,12 +17933,35 @@ static inline uint64_t CAVM_DTX_SMMUX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_smmu#_ctl
  *
- * DTX SMMU Control Register
+ * INTERNAL: DTX SMMU Control Register
  */
 union cavm_dtx_smmux_ctl
 {
     uint64_t u;
     struct cavm_dtx_smmux_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_smmux_ctl_s cn9; */
+    /* struct cavm_dtx_smmux_ctl_s cn96xx; */
+    /* struct cavm_dtx_smmux_ctl_s cn98xx; */
+    struct cavm_dtx_smmux_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -16091,8 +17980,9 @@ union cavm_dtx_smmux_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_smmux_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_smmux_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_smmux_ctl_s loki; */
 };
 typedef union cavm_dtx_smmux_ctl cavm_dtx_smmux_ctl_t;
 
@@ -16113,7 +18003,7 @@ static inline uint64_t CAVM_DTX_SMMUX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_smmu#_dat#
  *
- * DTX SMMU Raw Data Register
+ * INTERNAL: DTX SMMU Raw Data Register
  */
 union cavm_dtx_smmux_datx
 {
@@ -16151,7 +18041,7 @@ static inline uint64_t CAVM_DTX_SMMUX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_smmu#_ena#
  *
- * DTX SMMU Data Enable Register
+ * INTERNAL: DTX SMMU Data Enable Register
  */
 union cavm_dtx_smmux_enax
 {
@@ -16189,7 +18079,7 @@ static inline uint64_t CAVM_DTX_SMMUX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_smmu#_sel#
  *
- * DTX SMMU Select Register
+ * INTERNAL: DTX SMMU Select Register
  */
 union cavm_dtx_smmux_selx
 {
@@ -16225,7 +18115,7 @@ static inline uint64_t CAVM_DTX_SMMUX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_smmus#_bcst_rsp
  *
- * DTX SMMUS Control Register
+ * INTERNAL: DTX SMMUS Control Register
  */
 union cavm_dtx_smmusx_bcst_rsp
 {
@@ -16267,12 +18157,35 @@ static inline uint64_t CAVM_DTX_SMMUSX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_smmus#_ctl
  *
- * DTX SMMUS Control Register
+ * INTERNAL: DTX SMMUS Control Register
  */
 union cavm_dtx_smmusx_ctl
 {
     uint64_t u;
     struct cavm_dtx_smmusx_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_smmusx_ctl_s cn9; */
+    /* struct cavm_dtx_smmusx_ctl_s cn96xx; */
+    /* struct cavm_dtx_smmusx_ctl_s cn98xx; */
+    struct cavm_dtx_smmusx_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -16291,8 +18204,9 @@ union cavm_dtx_smmusx_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_smmusx_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_smmusx_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_smmusx_ctl_s loki; */
 };
 typedef union cavm_dtx_smmusx_ctl cavm_dtx_smmusx_ctl_t;
 
@@ -16319,7 +18233,7 @@ static inline uint64_t CAVM_DTX_SMMUSX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_smmus#_dat#
  *
- * DTX SMMUS Raw Data Register
+ * INTERNAL: DTX SMMUS Raw Data Register
  */
 union cavm_dtx_smmusx_datx
 {
@@ -16363,7 +18277,7 @@ static inline uint64_t CAVM_DTX_SMMUSX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_smmus#_ena#
  *
- * DTX SMMUS Data Enable Register
+ * INTERNAL: DTX SMMUS Data Enable Register
  */
 union cavm_dtx_smmusx_enax
 {
@@ -16407,7 +18321,7 @@ static inline uint64_t CAVM_DTX_SMMUSX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_smmus#_sel#
  *
- * DTX SMMUS Select Register
+ * INTERNAL: DTX SMMUS Select Register
  */
 union cavm_dtx_smmusx_selx
 {
@@ -16449,7 +18363,7 @@ static inline uint64_t CAVM_DTX_SMMUSX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_sso_bcst_rsp
  *
- * DTX SSO Control Register
+ * INTERNAL: DTX SSO Control Register
  */
 union cavm_dtx_sso_bcst_rsp
 {
@@ -16488,7 +18402,7 @@ static inline uint64_t CAVM_DTX_SSO_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_sso_ctl
  *
- * DTX SSO Control Register
+ * INTERNAL: DTX SSO Control Register
  */
 union cavm_dtx_sso_ctl
 {
@@ -16499,22 +18413,25 @@ union cavm_dtx_sso_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_sso_ctl_s cn8; */
-    struct cavm_dtx_sso_ctl_cn9
+    /* struct cavm_dtx_sso_ctl_s cn9; */
+    /* struct cavm_dtx_sso_ctl_s cn96xx; */
+    /* struct cavm_dtx_sso_ctl_s cn98xx; */
+    struct cavm_dtx_sso_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -16533,7 +18450,9 @@ union cavm_dtx_sso_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xxp1;
+    /* struct cavm_dtx_sso_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_sso_ctl_s loki; */
 };
 typedef union cavm_dtx_sso_ctl cavm_dtx_sso_ctl_t;
 
@@ -16557,7 +18476,7 @@ static inline uint64_t CAVM_DTX_SSO_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_sso_dat#
  *
- * DTX SSO Raw Data Register
+ * INTERNAL: DTX SSO Raw Data Register
  */
 union cavm_dtx_sso_datx
 {
@@ -16597,7 +18516,7 @@ static inline uint64_t CAVM_DTX_SSO_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_sso_ena#
  *
- * DTX SSO Data Enable Register
+ * INTERNAL: DTX SSO Data Enable Register
  */
 union cavm_dtx_sso_enax
 {
@@ -16637,7 +18556,7 @@ static inline uint64_t CAVM_DTX_SSO_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_sso_sel#
  *
- * DTX SSO Select Register
+ * INTERNAL: DTX SSO Select Register
  */
 union cavm_dtx_sso_selx
 {
@@ -16675,7 +18594,7 @@ static inline uint64_t CAVM_DTX_SSO_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_tdec_bcst_rsp
  *
- * DTX TDEC Control Register
+ * INTERNAL: DTX TDEC Control Register
  */
 union cavm_dtx_tdec_bcst_rsp
 {
@@ -16714,7 +18633,7 @@ static inline uint64_t CAVM_DTX_TDEC_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_tdec_ctl
  *
- * DTX TDEC Control Register
+ * INTERNAL: DTX TDEC Control Register
  */
 union cavm_dtx_tdec_ctl
 {
@@ -16739,7 +18658,29 @@ union cavm_dtx_tdec_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_tdec_ctl_s cn; */
+    /* struct cavm_dtx_tdec_ctl_s cn9; */
+    /* struct cavm_dtx_tdec_ctl_s cnf95xxp1; */
+    struct cavm_dtx_tdec_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_tdec_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_tdec_ctl cavm_dtx_tdec_ctl_t;
 
@@ -16763,7 +18704,7 @@ static inline uint64_t CAVM_DTX_TDEC_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_tdec_dat#
  *
- * DTX TDEC Raw Data Register
+ * INTERNAL: DTX TDEC Raw Data Register
  */
 union cavm_dtx_tdec_datx
 {
@@ -16803,7 +18744,7 @@ static inline uint64_t CAVM_DTX_TDEC_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_tdec_ena#
  *
- * DTX TDEC Data Enable Register
+ * INTERNAL: DTX TDEC Data Enable Register
  */
 union cavm_dtx_tdec_enax
 {
@@ -16843,7 +18784,7 @@ static inline uint64_t CAVM_DTX_TDEC_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_tdec_sel#
  *
- * DTX TDEC Select Register
+ * INTERNAL: DTX TDEC Select Register
  */
 union cavm_dtx_tdec_selx
 {
@@ -16881,7 +18822,7 @@ static inline uint64_t CAVM_DTX_TDEC_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_tim_bcst_rsp
  *
- * DTX TIM Control Register
+ * INTERNAL: DTX TIM Control Register
  */
 union cavm_dtx_tim_bcst_rsp
 {
@@ -16920,7 +18861,7 @@ static inline uint64_t CAVM_DTX_TIM_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_tim_ctl
  *
- * DTX TIM Control Register
+ * INTERNAL: DTX TIM Control Register
  */
 union cavm_dtx_tim_ctl
 {
@@ -16931,22 +18872,25 @@ union cavm_dtx_tim_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_tim_ctl_s cn8; */
-    struct cavm_dtx_tim_ctl_cn9
+    /* struct cavm_dtx_tim_ctl_s cn9; */
+    /* struct cavm_dtx_tim_ctl_s cn96xx; */
+    /* struct cavm_dtx_tim_ctl_s cn98xx; */
+    struct cavm_dtx_tim_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -16965,7 +18909,9 @@ union cavm_dtx_tim_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xxp1;
+    /* struct cavm_dtx_tim_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_tim_ctl_s loki; */
 };
 typedef union cavm_dtx_tim_ctl cavm_dtx_tim_ctl_t;
 
@@ -16989,7 +18935,7 @@ static inline uint64_t CAVM_DTX_TIM_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_tim_dat#
  *
- * DTX TIM Raw Data Register
+ * INTERNAL: DTX TIM Raw Data Register
  */
 union cavm_dtx_tim_datx
 {
@@ -17029,7 +18975,7 @@ static inline uint64_t CAVM_DTX_TIM_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_tim_ena#
  *
- * DTX TIM Data Enable Register
+ * INTERNAL: DTX TIM Data Enable Register
  */
 union cavm_dtx_tim_enax
 {
@@ -17069,7 +19015,7 @@ static inline uint64_t CAVM_DTX_TIM_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_tim_sel#
  *
- * DTX TIM Select Register
+ * INTERNAL: DTX TIM Select Register
  */
 union cavm_dtx_tim_selx
 {
@@ -17107,7 +19053,7 @@ static inline uint64_t CAVM_DTX_TIM_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_uaa#_bcst_rsp
  *
- * DTX UAA Control Register
+ * INTERNAL: DTX UAA Control Register
  */
 union cavm_dtx_uaax_bcst_rsp
 {
@@ -17145,7 +19091,7 @@ static inline uint64_t CAVM_DTX_UAAX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_uaa#_ctl
  *
- * DTX UAA Control Register
+ * INTERNAL: DTX UAA Control Register
  */
 union cavm_dtx_uaax_ctl
 {
@@ -17156,22 +19102,25 @@ union cavm_dtx_uaax_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_dtx_uaax_ctl_s cn8; */
-    struct cavm_dtx_uaax_ctl_cn9
+    /* struct cavm_dtx_uaax_ctl_s cn9; */
+    /* struct cavm_dtx_uaax_ctl_s cn96xx; */
+    /* struct cavm_dtx_uaax_ctl_s cn98xx; */
+    struct cavm_dtx_uaax_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -17190,7 +19139,9 @@ union cavm_dtx_uaax_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } cn9;
+    } cnf95xxp1;
+    /* struct cavm_dtx_uaax_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_uaax_ctl_s loki; */
 };
 typedef union cavm_dtx_uaax_ctl cavm_dtx_uaax_ctl_t;
 
@@ -17213,7 +19164,7 @@ static inline uint64_t CAVM_DTX_UAAX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_uaa#_dat#
  *
- * DTX UAA Raw Data Register
+ * INTERNAL: DTX UAA Raw Data Register
  */
 union cavm_dtx_uaax_datx
 {
@@ -17253,7 +19204,7 @@ static inline uint64_t CAVM_DTX_UAAX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_uaa#_ena#
  *
- * DTX UAA Data Enable Register
+ * INTERNAL: DTX UAA Data Enable Register
  */
 union cavm_dtx_uaax_enax
 {
@@ -17293,7 +19244,7 @@ static inline uint64_t CAVM_DTX_UAAX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_uaa#_sel#
  *
- * DTX UAA Select Register
+ * INTERNAL: DTX UAA Select Register
  */
 union cavm_dtx_uaax_selx
 {
@@ -17329,9 +19280,205 @@ static inline uint64_t CAVM_DTX_UAAX_SELX(unsigned long a, unsigned long b)
 #define arguments_CAVM_DTX_UAAX_SELX(a,b) (a),(b),-1,-1
 
 /**
+ * Register (RSL) dtx_ulfe_bcst_rsp
+ *
+ * INTERNAL: DTX ULFE Control Register
+ */
+union cavm_dtx_ulfe_bcst_rsp
+{
+    uint64_t u;
+    struct cavm_dtx_ulfe_bcst_rsp_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_1_63         : 63;
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable this DTX instance as the responder to DTX broadcast read/write operations. */
+#else /* Word 0 - Little Endian */
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable this DTX instance as the responder to DTX broadcast read/write operations. */
+        uint64_t reserved_1_63         : 63;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ulfe_bcst_rsp_s cn; */
+};
+typedef union cavm_dtx_ulfe_bcst_rsp cavm_dtx_ulfe_bcst_rsp_t;
+
+#define CAVM_DTX_ULFE_BCST_RSP CAVM_DTX_ULFE_BCST_RSP_FUNC()
+static inline uint64_t CAVM_DTX_ULFE_BCST_RSP_FUNC(void) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_ULFE_BCST_RSP_FUNC(void)
+{
+    if (cavm_is_model(OCTEONTX_LOKI))
+        return 0x87e0fee08080ll;
+    __cavm_csr_fatal("DTX_ULFE_BCST_RSP", 0, 0, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_ULFE_BCST_RSP cavm_dtx_ulfe_bcst_rsp_t
+#define bustype_CAVM_DTX_ULFE_BCST_RSP CSR_TYPE_RSL
+#define basename_CAVM_DTX_ULFE_BCST_RSP "DTX_ULFE_BCST_RSP"
+#define busnum_CAVM_DTX_ULFE_BCST_RSP 0
+#define arguments_CAVM_DTX_ULFE_BCST_RSP -1,-1,-1,-1
+
+/**
+ * Register (RSL) dtx_ulfe_ctl
+ *
+ * INTERNAL: DTX ULFE Control Register
+ */
+union cavm_dtx_ulfe_ctl
+{
+    uint64_t u;
+    struct cavm_dtx_ulfe_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ulfe_ctl_s cn; */
+};
+typedef union cavm_dtx_ulfe_ctl cavm_dtx_ulfe_ctl_t;
+
+#define CAVM_DTX_ULFE_CTL CAVM_DTX_ULFE_CTL_FUNC()
+static inline uint64_t CAVM_DTX_ULFE_CTL_FUNC(void) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_ULFE_CTL_FUNC(void)
+{
+    if (cavm_is_model(OCTEONTX_LOKI))
+        return 0x87e0fee08060ll;
+    __cavm_csr_fatal("DTX_ULFE_CTL", 0, 0, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_ULFE_CTL cavm_dtx_ulfe_ctl_t
+#define bustype_CAVM_DTX_ULFE_CTL CSR_TYPE_RSL
+#define basename_CAVM_DTX_ULFE_CTL "DTX_ULFE_CTL"
+#define busnum_CAVM_DTX_ULFE_CTL 0
+#define arguments_CAVM_DTX_ULFE_CTL -1,-1,-1,-1
+
+/**
+ * Register (RSL) dtx_ulfe_dat#
+ *
+ * INTERNAL: DTX ULFE Raw Data Register
+ */
+union cavm_dtx_ulfe_datx
+{
+    uint64_t u;
+    struct cavm_dtx_ulfe_datx_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_36_63        : 28;
+        uint64_t raw                   : 36; /**< [ 35:  0](RO/H) Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                                 ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
+#else /* Word 0 - Little Endian */
+        uint64_t raw                   : 36; /**< [ 35:  0](RO/H) Raw debug data captured by the DTX before the ENA is applied. This gives the
+                                                                 ability to peek into blocks during an OCLA capture without OCLA reconfiguration. */
+        uint64_t reserved_36_63        : 28;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ulfe_datx_s cn; */
+};
+typedef union cavm_dtx_ulfe_datx cavm_dtx_ulfe_datx_t;
+
+static inline uint64_t CAVM_DTX_ULFE_DATX(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_ULFE_DATX(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee08040ll + 8ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_ULFE_DATX", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_ULFE_DATX(a) cavm_dtx_ulfe_datx_t
+#define bustype_CAVM_DTX_ULFE_DATX(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_ULFE_DATX(a) "DTX_ULFE_DATX"
+#define busnum_CAVM_DTX_ULFE_DATX(a) (a)
+#define arguments_CAVM_DTX_ULFE_DATX(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) dtx_ulfe_ena#
+ *
+ * INTERNAL: DTX ULFE Data Enable Register
+ */
+union cavm_dtx_ulfe_enax
+{
+    uint64_t u;
+    struct cavm_dtx_ulfe_enax_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_36_63        : 28;
+        uint64_t ena                   : 36; /**< [ 35:  0](R/W) Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                                 buses. Normally only one block will drive each bit. */
+#else /* Word 0 - Little Endian */
+        uint64_t ena                   : 36; /**< [ 35:  0](R/W) Output enable vector of which bits to drive onto the low/high 36-bit debug
+                                                                 buses. Normally only one block will drive each bit. */
+        uint64_t reserved_36_63        : 28;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ulfe_enax_s cn; */
+};
+typedef union cavm_dtx_ulfe_enax cavm_dtx_ulfe_enax_t;
+
+static inline uint64_t CAVM_DTX_ULFE_ENAX(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_ULFE_ENAX(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee08020ll + 8ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_ULFE_ENAX", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_ULFE_ENAX(a) cavm_dtx_ulfe_enax_t
+#define bustype_CAVM_DTX_ULFE_ENAX(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_ULFE_ENAX(a) "DTX_ULFE_ENAX"
+#define busnum_CAVM_DTX_ULFE_ENAX(a) (a)
+#define arguments_CAVM_DTX_ULFE_ENAX(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) dtx_ulfe_sel#
+ *
+ * INTERNAL: DTX ULFE Select Register
+ */
+union cavm_dtx_ulfe_selx
+{
+    uint64_t u;
+    struct cavm_dtx_ulfe_selx_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_24_63        : 40;
+        uint64_t value                 : 24; /**< [ 23:  0](R/W) Debug select. Selects which signals to drive onto low/high 36-bit debug buses. */
+#else /* Word 0 - Little Endian */
+        uint64_t value                 : 24; /**< [ 23:  0](R/W) Debug select. Selects which signals to drive onto low/high 36-bit debug buses. */
+        uint64_t reserved_24_63        : 40;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_ulfe_selx_s cn; */
+};
+typedef union cavm_dtx_ulfe_selx cavm_dtx_ulfe_selx_t;
+
+static inline uint64_t CAVM_DTX_ULFE_SELX(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_DTX_ULFE_SELX(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
+        return 0x87e0fee08000ll + 8ll * ((a) & 0x1);
+    __cavm_csr_fatal("DTX_ULFE_SELX", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_DTX_ULFE_SELX(a) cavm_dtx_ulfe_selx_t
+#define bustype_CAVM_DTX_ULFE_SELX(a) CSR_TYPE_RSL
+#define basename_CAVM_DTX_ULFE_SELX(a) "DTX_ULFE_SELX"
+#define busnum_CAVM_DTX_ULFE_SELX(a) (a)
+#define arguments_CAVM_DTX_ULFE_SELX(a) (a),-1,-1,-1
+
+/**
  * Register (RSL) dtx_usbdrd#_bcst_rsp
  *
- * DTX USBDRD Control Register
+ * INTERNAL: DTX USBDRD Control Register
  */
 union cavm_dtx_usbdrdx_bcst_rsp
 {
@@ -17373,7 +19520,7 @@ static inline uint64_t CAVM_DTX_USBDRDX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_usbdrd#_ctl
  *
- * DTX USBDRD Control Register
+ * INTERNAL: DTX USBDRD Control Register
  */
 union cavm_dtx_usbdrdx_ctl
 {
@@ -17384,41 +19531,21 @@ union cavm_dtx_usbdrdx_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_usbdrdx_ctl_s cn8; */
-    struct cavm_dtx_usbdrdx_ctl_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_5_63         : 59;
-        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
-        uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
-                                                                 registers.  For diagnostic use only. */
-        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-#else /* Word 0 - Little Endian */
-        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
-                                                                 registers.  For diagnostic use only. */
-        uint64_t reserved_2_3          : 2;
-        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
-        uint64_t reserved_5_63         : 59;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_dtx_usbdrdx_ctl_s cn; */
 };
 typedef union cavm_dtx_usbdrdx_ctl cavm_dtx_usbdrdx_ctl_t;
 
@@ -17445,7 +19572,7 @@ static inline uint64_t CAVM_DTX_USBDRDX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_usbdrd#_dat#
  *
- * DTX USBDRD Raw Data Register
+ * INTERNAL: DTX USBDRD Raw Data Register
  */
 union cavm_dtx_usbdrdx_datx
 {
@@ -17489,7 +19616,7 @@ static inline uint64_t CAVM_DTX_USBDRDX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_usbdrd#_ena#
  *
- * DTX USBDRD Data Enable Register
+ * INTERNAL: DTX USBDRD Data Enable Register
  */
 union cavm_dtx_usbdrdx_enax
 {
@@ -17533,7 +19660,7 @@ static inline uint64_t CAVM_DTX_USBDRDX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_usbdrd#_sel#
  *
- * DTX USBDRD Select Register
+ * INTERNAL: DTX USBDRD Select Register
  */
 union cavm_dtx_usbdrdx_selx
 {
@@ -17575,7 +19702,7 @@ static inline uint64_t CAVM_DTX_USBDRDX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_vdec_bcst_rsp
  *
- * DTX VDEC Control Register
+ * INTERNAL: DTX VDEC Control Register
  */
 union cavm_dtx_vdec_bcst_rsp
 {
@@ -17614,7 +19741,7 @@ static inline uint64_t CAVM_DTX_VDEC_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_vdec_ctl
  *
- * DTX VDEC Control Register
+ * INTERNAL: DTX VDEC Control Register
  */
 union cavm_dtx_vdec_ctl
 {
@@ -17639,7 +19766,29 @@ union cavm_dtx_vdec_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_vdec_ctl_s cn; */
+    /* struct cavm_dtx_vdec_ctl_s cn9; */
+    /* struct cavm_dtx_vdec_ctl_s cnf95xxp1; */
+    struct cavm_dtx_vdec_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_vdec_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_vdec_ctl cavm_dtx_vdec_ctl_t;
 
@@ -17663,7 +19812,7 @@ static inline uint64_t CAVM_DTX_VDEC_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_vdec_dat#
  *
- * DTX VDEC Raw Data Register
+ * INTERNAL: DTX VDEC Raw Data Register
  */
 union cavm_dtx_vdec_datx
 {
@@ -17703,7 +19852,7 @@ static inline uint64_t CAVM_DTX_VDEC_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_vdec_ena#
  *
- * DTX VDEC Data Enable Register
+ * INTERNAL: DTX VDEC Data Enable Register
  */
 union cavm_dtx_vdec_enax
 {
@@ -17743,7 +19892,7 @@ static inline uint64_t CAVM_DTX_VDEC_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_vdec_sel#
  *
- * DTX VDEC Select Register
+ * INTERNAL: DTX VDEC Select Register
  */
 union cavm_dtx_vdec_selx
 {
@@ -17781,7 +19930,7 @@ static inline uint64_t CAVM_DTX_VDEC_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_xcp#_bcst_rsp
  *
- * DTX XCP Control Register
+ * INTERNAL: DTX XCP Control Register
  */
 union cavm_dtx_xcpx_bcst_rsp
 {
@@ -17817,12 +19966,35 @@ static inline uint64_t CAVM_DTX_XCPX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_xcp#_ctl
  *
- * DTX XCP Control Register
+ * INTERNAL: DTX XCP Control Register
  */
 union cavm_dtx_xcpx_ctl
 {
     uint64_t u;
     struct cavm_dtx_xcpx_ctl_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_dtx_xcpx_ctl_s cn9; */
+    /* struct cavm_dtx_xcpx_ctl_s cn96xx; */
+    /* struct cavm_dtx_xcpx_ctl_s cn98xx; */
+    struct cavm_dtx_xcpx_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_5_63         : 59;
@@ -17841,8 +20013,9 @@ union cavm_dtx_xcpx_ctl
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_dtx_xcpx_ctl_s cn; */
+    } cnf95xxp1;
+    /* struct cavm_dtx_xcpx_ctl_s cnf95xxp2; */
+    /* struct cavm_dtx_xcpx_ctl_s loki; */
 };
 typedef union cavm_dtx_xcpx_ctl cavm_dtx_xcpx_ctl_t;
 
@@ -17863,7 +20036,7 @@ static inline uint64_t CAVM_DTX_XCPX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_xcp#_dat#
  *
- * DTX XCP Raw Data Register
+ * INTERNAL: DTX XCP Raw Data Register
  */
 union cavm_dtx_xcpx_datx
 {
@@ -17901,7 +20074,7 @@ static inline uint64_t CAVM_DTX_XCPX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_xcp#_ena#
  *
- * DTX XCP Data Enable Register
+ * INTERNAL: DTX XCP Data Enable Register
  */
 union cavm_dtx_xcpx_enax
 {
@@ -17939,7 +20112,7 @@ static inline uint64_t CAVM_DTX_XCPX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_xcp#_sel#
  *
- * DTX XCP Select Register
+ * INTERNAL: DTX XCP Select Register
  */
 union cavm_dtx_xcpx_selx
 {
@@ -17975,7 +20148,7 @@ static inline uint64_t CAVM_DTX_XCPX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_xcv_bcst_rsp
  *
- * DTX XCV Control Register
+ * INTERNAL: DTX XCV Control Register
  */
 union cavm_dtx_xcv_bcst_rsp
 {
@@ -18012,7 +20185,7 @@ static inline uint64_t CAVM_DTX_XCV_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_xcv_ctl
  *
- * DTX XCV Control Register
+ * INTERNAL: DTX XCV Control Register
  */
 union cavm_dtx_xcv_ctl
 {
@@ -18023,15 +20196,15 @@ union cavm_dtx_xcv_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
@@ -18059,7 +20232,7 @@ static inline uint64_t CAVM_DTX_XCV_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_xcv_dat#
  *
- * DTX XCV Raw Data Register
+ * INTERNAL: DTX XCV Raw Data Register
  */
 union cavm_dtx_xcv_datx
 {
@@ -18097,7 +20270,7 @@ static inline uint64_t CAVM_DTX_XCV_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_xcv_ena#
  *
- * DTX XCV Data Enable Register
+ * INTERNAL: DTX XCV Data Enable Register
  */
 union cavm_dtx_xcv_enax
 {
@@ -18135,7 +20308,7 @@ static inline uint64_t CAVM_DTX_XCV_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_xcv_sel#
  *
- * DTX XCV Select Register
+ * INTERNAL: DTX XCV Select Register
  */
 union cavm_dtx_xcv_selx
 {
@@ -18171,7 +20344,7 @@ static inline uint64_t CAVM_DTX_XCV_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_xsx_bcst_rsp
  *
- * DTX XSX Control Register
+ * INTERNAL: DTX XSX Control Register
  */
 union cavm_dtx_xsx_bcst_rsp
 {
@@ -18210,7 +20383,7 @@ static inline uint64_t CAVM_DTX_XSX_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_xsx_ctl
  *
- * DTX XSX Control Register
+ * INTERNAL: DTX XSX Control Register
  */
 union cavm_dtx_xsx_ctl
 {
@@ -18235,7 +20408,29 @@ union cavm_dtx_xsx_ctl
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_xsx_ctl_s cn; */
+    /* struct cavm_dtx_xsx_ctl_s cn9; */
+    /* struct cavm_dtx_xsx_ctl_s cnf95xxp1; */
+    struct cavm_dtx_xsx_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+#else /* Word 0 - Little Endian */
+        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dtx_xsx_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_dtx_xsx_ctl cavm_dtx_xsx_ctl_t;
 
@@ -18259,7 +20454,7 @@ static inline uint64_t CAVM_DTX_XSX_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_xsx_dat#
  *
- * DTX XSX Raw Data Register
+ * INTERNAL: DTX XSX Raw Data Register
  */
 union cavm_dtx_xsx_datx
 {
@@ -18299,7 +20494,7 @@ static inline uint64_t CAVM_DTX_XSX_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_xsx_ena#
  *
- * DTX XSX Data Enable Register
+ * INTERNAL: DTX XSX Data Enable Register
  */
 union cavm_dtx_xsx_enax
 {
@@ -18339,7 +20534,7 @@ static inline uint64_t CAVM_DTX_XSX_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_xsx_sel#
  *
- * DTX XSX Select Register
+ * INTERNAL: DTX XSX Select Register
  */
 union cavm_dtx_xsx_selx
 {
@@ -18377,7 +20572,7 @@ static inline uint64_t CAVM_DTX_XSX_SELX(unsigned long a)
 /**
  * Register (RSL) dtx_zip#_bcst_rsp
  *
- * DTX ZIP Control Register
+ * INTERNAL: DTX ZIP Control Register
  */
 union cavm_dtx_zipx_bcst_rsp
 {
@@ -18399,8 +20594,8 @@ typedef union cavm_dtx_zipx_bcst_rsp cavm_dtx_zipx_bcst_rsp_t;
 static inline uint64_t CAVM_DTX_ZIPX_BCST_RSP(unsigned long a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_DTX_ZIPX_BCST_RSP(unsigned long a)
 {
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x87e0fe9c0080ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_CN98XX) && (a==0))
+        return 0x87e0fe9c0080ll + 0x8000ll * ((a) & 0x0);
     __cavm_csr_fatal("DTX_ZIPX_BCST_RSP", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -18413,7 +20608,7 @@ static inline uint64_t CAVM_DTX_ZIPX_BCST_RSP(unsigned long a)
 /**
  * Register (RSL) dtx_zip#_ctl
  *
- * DTX ZIP Control Register
+ * INTERNAL: DTX ZIP Control Register
  */
 union cavm_dtx_zipx_ctl
 {
@@ -18424,14 +20619,14 @@ union cavm_dtx_zipx_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
                                                                  registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
@@ -18445,8 +20640,8 @@ typedef union cavm_dtx_zipx_ctl cavm_dtx_zipx_ctl_t;
 static inline uint64_t CAVM_DTX_ZIPX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_DTX_ZIPX_CTL(unsigned long a)
 {
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
-        return 0x87e0fe9c0060ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_CN98XX) && (a==0))
+        return 0x87e0fe9c0060ll + 0x8000ll * ((a) & 0x0);
     __cavm_csr_fatal("DTX_ZIPX_CTL", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -18459,7 +20654,7 @@ static inline uint64_t CAVM_DTX_ZIPX_CTL(unsigned long a)
 /**
  * Register (RSL) dtx_zip#_dat#
  *
- * DTX ZIP Raw Data Register
+ * INTERNAL: DTX ZIP Raw Data Register
  */
 union cavm_dtx_zipx_datx
 {
@@ -18483,8 +20678,8 @@ typedef union cavm_dtx_zipx_datx cavm_dtx_zipx_datx_t;
 static inline uint64_t CAVM_DTX_ZIPX_DATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_DTX_ZIPX_DATX(unsigned long a, unsigned long b)
 {
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=1)))
-        return 0x87e0fe9c0040ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_CN98XX) && ((a==0) && (b<=1)))
+        return 0x87e0fe9c0040ll + 0x8000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("DTX_ZIPX_DATX", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -18497,7 +20692,7 @@ static inline uint64_t CAVM_DTX_ZIPX_DATX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_zip#_ena#
  *
- * DTX ZIP Data Enable Register
+ * INTERNAL: DTX ZIP Data Enable Register
  */
 union cavm_dtx_zipx_enax
 {
@@ -18521,8 +20716,8 @@ typedef union cavm_dtx_zipx_enax cavm_dtx_zipx_enax_t;
 static inline uint64_t CAVM_DTX_ZIPX_ENAX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_DTX_ZIPX_ENAX(unsigned long a, unsigned long b)
 {
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=1)))
-        return 0x87e0fe9c0020ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_CN98XX) && ((a==0) && (b<=1)))
+        return 0x87e0fe9c0020ll + 0x8000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("DTX_ZIPX_ENAX", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -18535,7 +20730,7 @@ static inline uint64_t CAVM_DTX_ZIPX_ENAX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_zip#_sel#
  *
- * DTX ZIP Select Register
+ * INTERNAL: DTX ZIP Select Register
  */
 union cavm_dtx_zipx_selx
 {
@@ -18557,8 +20752,8 @@ typedef union cavm_dtx_zipx_selx cavm_dtx_zipx_selx_t;
 static inline uint64_t CAVM_DTX_ZIPX_SELX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_DTX_ZIPX_SELX(unsigned long a, unsigned long b)
 {
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=1)))
-        return 0x87e0fe9c0000ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_CN98XX) && ((a==0) && (b<=1)))
+        return 0x87e0fe9c0000ll + 0x8000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("DTX_ZIPX_SELX", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -18571,7 +20766,7 @@ static inline uint64_t CAVM_DTX_ZIPX_SELX(unsigned long a, unsigned long b)
 /**
  * Register (RSL) dtx_zip_bcst_rsp
  *
- * DTX ZIP Control Register
+ * INTERNAL: DTX ZIP Control Register
  */
 union cavm_dtx_zip_bcst_rsp
 {
@@ -18610,7 +20805,7 @@ static inline uint64_t CAVM_DTX_ZIP_BCST_RSP_FUNC(void)
 /**
  * Register (RSL) dtx_zip_ctl
  *
- * DTX ZIP Control Register
+ * INTERNAL: DTX ZIP Control Register
  */
 union cavm_dtx_zip_ctl
 {
@@ -18621,41 +20816,21 @@ union cavm_dtx_zip_ctl
         uint64_t reserved_5_63         : 59;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
 #else /* Word 0 - Little Endian */
         uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DAT(0..1) registers.
-                                                                 For diagnostic use only. */
+        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_xxx_ENA(0..1) instead of normal block
+                                                                 debug data. Not applicable when software directly reads the DTX_xxx_DAT(0..1)
+                                                                 registers.  For diagnostic use only. */
         uint64_t reserved_2_3          : 2;
         uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dtx_zip_ctl_s cn8; */
-    struct cavm_dtx_zip_ctl_cn9
-    {
-#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_5_63         : 59;
-        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
-        uint64_t reserved_2_3          : 2;
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
-                                                                 registers.  For diagnostic use only. */
-        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-#else /* Word 0 - Little Endian */
-        uint64_t swap                  : 1;  /**< [  0:  0](R/W) Swap the high and low 36-bit debug bus outputs. */
-        uint64_t echoen                : 1;  /**< [  1:  1](R/W) Drive debug bus with the value in DTX_MIO_ENA(0..1) instead of normal block
-                                                                 debug data. Not applicable when software directly reads the DTX_MIO_DAT(0..1)
-                                                                 registers.  For diagnostic use only. */
-        uint64_t reserved_2_3          : 2;
-        uint64_t active                : 1;  /**< [  4:  4](R/W) Force block's gated clocks on, so that the state of idle signals may be captured. */
-        uint64_t reserved_5_63         : 59;
-#endif /* Word 0 - End */
-    } cn9;
+    /* struct cavm_dtx_zip_ctl_s cn; */
 };
 typedef union cavm_dtx_zip_ctl cavm_dtx_zip_ctl_t;
 
@@ -18679,7 +20854,7 @@ static inline uint64_t CAVM_DTX_ZIP_CTL_FUNC(void)
 /**
  * Register (RSL) dtx_zip_dat#
  *
- * DTX ZIP Raw Data Register
+ * INTERNAL: DTX ZIP Raw Data Register
  */
 union cavm_dtx_zip_datx
 {
@@ -18719,7 +20894,7 @@ static inline uint64_t CAVM_DTX_ZIP_DATX(unsigned long a)
 /**
  * Register (RSL) dtx_zip_ena#
  *
- * DTX ZIP Data Enable Register
+ * INTERNAL: DTX ZIP Data Enable Register
  */
 union cavm_dtx_zip_enax
 {
@@ -18759,7 +20934,7 @@ static inline uint64_t CAVM_DTX_ZIP_ENAX(unsigned long a)
 /**
  * Register (RSL) dtx_zip_sel#
  *
- * DTX ZIP Select Register
+ * INTERNAL: DTX ZIP Select Register
  */
 union cavm_dtx_zip_selx
 {

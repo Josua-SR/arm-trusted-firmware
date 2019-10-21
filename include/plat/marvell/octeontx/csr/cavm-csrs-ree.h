@@ -838,11 +838,7 @@ union cavm_ree_res_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
         uint64_t doneint               : 1;  /**< [191:191] Done interrupt has been set. This bit is copied from the corresponding REE
                                                                  instruction REE_INST_S[DONEINT] on job completion (after the interrupt has been
-                                                                 signaled).
-
-                                                                 Internal:
-                                                                 FIXME need to check with REE team about the utility of this bit in the
-                                                                 output. Seems like this overlaps with other done indicators. */
+                                                                 signaled). */
         uint64_t reserved_129_190      : 62;
         uint64_t ree_err               : 1;  /**< [128:128] Indicates load of payload data received an NCB error response. */
 #else /* Word 2 - Little Endian */
@@ -850,11 +846,7 @@ union cavm_ree_res_s
         uint64_t reserved_129_190      : 62;
         uint64_t doneint               : 1;  /**< [191:191] Done interrupt has been set. This bit is copied from the corresponding REE
                                                                  instruction REE_INST_S[DONEINT] on job completion (after the interrupt has been
-                                                                 signaled).
-
-                                                                 Internal:
-                                                                 FIXME need to check with REE team about the utility of this bit in the
-                                                                 output. Seems like this overlaps with other done indicators. */
+                                                                 signaled). */
 #endif /* Word 2 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
         uint64_t reserved_192_255      : 64;
@@ -2279,6 +2271,8 @@ static inline uint64_t CAVM_REEX_AF_CORE_RESET(unsigned long a)
  * Register (RVU_PF_BAR0) ree#_af_crdt_halt_ncb_req_pc
  *
  * REE Data FIFO Credit Halt NCB Load Requests Counter Register
+ * Internal:
+ * if (ddf__csri.dma_req_denied) REE_AF_CRDT_HALT_NCB_REQ_PC++
  */
 union cavm_reex_af_crdt_halt_ncb_req_pc
 {
@@ -2743,6 +2737,8 @@ static inline uint64_t CAVM_REEX_AF_INST_LATENCY_PC(unsigned long a)
  * Register (RVU_PF_BAR0) ree#_af_inst_req_pc
  *
  * REE AF Instruction Request Performance Counter Register
+ * Internal:
+ * if (ncbi__csri.ncbi_stat.ld_instr_sent) REE_AF_INST_REQ_PC += ncbi__csri.ncbi_stat.ld_instr_cnt
  */
 union cavm_reex_af_inst_req_pc
 {
@@ -3299,6 +3295,8 @@ static inline uint64_t CAVM_REEX_AF_RD_LATENCY_PC(unsigned long a)
  * Register (RVU_PF_BAR0) ree#_af_rd_req_pc
  *
  * REE AF Read Request Performance Counter Register
+ * Internal:
+ * if (ncbi__csri.ncbi_stat.ld_sent) REE_AF_RD_REQ_PC += ncbi__csri.ncbi_stat.ld_sent
  */
 union cavm_reex_af_rd_req_pc
 {
@@ -3334,6 +3332,10 @@ static inline uint64_t CAVM_REEX_AF_RD_REQ_PC(unsigned long a)
  * Register (RVU_PF_BAR0) ree#_af_reex_active_jobs_pc
  *
  * REE AF REEX Active Jobs Counter Register
+ * Internal:
+ * if (fjm__csri_full_job_in_valid || fjm__csri_full_job_out_valid)
+ * REE_AF_REEX_ACTIVE_JOBS_PC += (fjm__csri_full_job_in_valid -
+ * fjm__csri_full_job_out_valid)
  */
 union cavm_reex_af_reex_active_jobs_pc
 {
@@ -3408,6 +3410,9 @@ static inline uint64_t CAVM_REEX_AF_REEX_RD_LATENCY_PC(unsigned long a)
  * Register (RVU_PF_BAR0) ree#_af_reex_rd_req_pc
  *
  * REE AF REEX Read Request Performance Counter Register
+ * Internal:
+ * if (ncbi__csri.ncbi_stat.ld_sent && (ncbi__csri.ncbi_stat.ld_sent_tag ==
+ * ree_defs::REE_RSP_REEX) REE_AF_REEX_RD_REQ_PC++
  */
 union cavm_reex_af_reex_rd_req_pc
 {

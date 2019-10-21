@@ -55,7 +55,7 @@
  * Enumeration cpc_wakeup_mode_e
  *
  * CPC Wakeup Mode Enumeration
- * Enumerates Wakeup modes of the power control firmware.
+ * Enumerates wakeup modes of the power control firmware.
  */
 #define CAVM_CPC_WAKEUP_MODE_E_FAST_WAKE_FAST_SLEEP (2)
 #define CAVM_CPC_WAKEUP_MODE_E_FAST_WAKE_OFF (0)
@@ -167,7 +167,7 @@ union cavm_cpc_bp_test2_enable_s
  *
  * CPC DVFS Configuration Structure
  * This structure contains the DVFS configuration options to be used
- * by the power control firmware.  These options are board specific,
+ * by the power control firmware.  These options are board-specific,
  * and are stored in the manufacturing config region of the board flash.
  * The CAVM init phase reads this data from the flash and passes the
  * structure to the SCP_BL1 firmware.  The full documentation is in
@@ -180,12 +180,10 @@ union cavm_cpc_dvfs_config_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t dvfs_config_version   : 16; /**< [ 63: 48] Version field for this data structure.  Default value 0x9300. */
-        uint64_t rclk_freq_min         : 16; /**< [ 47: 32] Minimum Core clock (RCLK) frequency in MHz. DVFS control will vary the
+        uint64_t rclk_freq_min         : 16; /**< [ 47: 32] Minimum core clock (RCLK) frequency in MHz. DVFS control will vary the
                                                                  actual RCLK frequency depending on Tj, power budget, and system load;
-                                                                 this sets the lower bound.  Default value 500MHz.  WARNING- setting
-                                                                 this above 500MHz may result in excess power consumption and sudden
-                                                                 thermal shutdown. */
-        uint64_t rclk_freq_max         : 16; /**< [ 31: 16] Maximum Core clock (RCLK) frequency in MHz. DVFS control will vary the
+                                                                 this sets the lower bound.  Default value 500MHz. */
+        uint64_t rclk_freq_max         : 16; /**< [ 31: 16] Maximum core clock (RCLK) frequency in MHz. DVFS control will vary the
                                                                  actual RCLK frequency depending on Tj, power budget, and system load;
                                                                  this sets an upper bound.  If fuses indicate the part supports a lower
                                                                  frequency, the fuse value is used. */
@@ -200,37 +198,35 @@ union cavm_cpc_dvfs_config_s
                                                                  VRM_TEMP_HIGH. The default value is the Marvell
                                                                  recommended maximum operating temperature of the chip. Values
                                                                  between 0 and 140 degrees Celsius. */
-        uint64_t rclk_freq_max         : 16; /**< [ 31: 16] Maximum Core clock (RCLK) frequency in MHz. DVFS control will vary the
+        uint64_t rclk_freq_max         : 16; /**< [ 31: 16] Maximum core clock (RCLK) frequency in MHz. DVFS control will vary the
                                                                  actual RCLK frequency depending on Tj, power budget, and system load;
                                                                  this sets an upper bound.  If fuses indicate the part supports a lower
                                                                  frequency, the fuse value is used. */
-        uint64_t rclk_freq_min         : 16; /**< [ 47: 32] Minimum Core clock (RCLK) frequency in MHz. DVFS control will vary the
+        uint64_t rclk_freq_min         : 16; /**< [ 47: 32] Minimum core clock (RCLK) frequency in MHz. DVFS control will vary the
                                                                  actual RCLK frequency depending on Tj, power budget, and system load;
-                                                                 this sets the lower bound.  Default value 500MHz.  WARNING- setting
-                                                                 this above 500MHz may result in excess power consumption and sudden
-                                                                 thermal shutdown. */
+                                                                 this sets the lower bound.  Default value 500MHz. */
         uint64_t dvfs_config_version   : 16; /**< [ 63: 48] Version field for this data structure.  Default value 0x9300. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
         uint64_t vrm_temp_trip         : 16; /**< [127:112] Temperature in degrees C where THERMAL_TRIP_N is asserted. When the chip reaches
-                                                                 this temperature THERMAL_TRIP_N will assert, signalling the board
+                                                                 this temperature THERMAL_TRIP_N will assert, signaling the board
                                                                  to emergency power off. The default value is the Marvell recommended
                                                                  maximum temperature of the chip. */
-        uint64_t vdd_sys_tolerance     : 16; /**< [111: 96] The +/- control tolerance of the vdd_sys supply as measured at the
-                                                                 Chip in mV.   Default is +/-8mV. Doesn't apply to CN8XXX chips. */
-        uint64_t vdd_core_tolerance    : 16; /**< [ 95: 80] The +/- control tolerance of the vdd_core supply as measured at the
-                                                                 Chip in mV.   Default is +/-8mV. Doesn't apply to CN8XXX chips. */
+        uint64_t vdd_sys_tolerance     : 16; /**< [111: 96] The +/- control tolerance of the VDD_SYS supply as measured at the
+                                                                 chip in mV.   Default is +/-8mV. Doesn't apply to CN8XXX chips. */
+        uint64_t vdd_core_tolerance    : 16; /**< [ 95: 80] The +/- control tolerance of the VDDC supply as measured at the
+                                                                 chip in mV.   Default is +/-8mV. Doesn't apply to CN8XXX chips. */
         uint64_t cptclk_freq           : 16; /**< [ 79: 64] Cryptographic accelerator clock (CPTCLK) frequency in MHz. If fuses
                                                                  indicate the part supports a lower frequency, the fuse value is used. */
 #else /* Word 1 - Little Endian */
         uint64_t cptclk_freq           : 16; /**< [ 79: 64] Cryptographic accelerator clock (CPTCLK) frequency in MHz. If fuses
                                                                  indicate the part supports a lower frequency, the fuse value is used. */
-        uint64_t vdd_core_tolerance    : 16; /**< [ 95: 80] The +/- control tolerance of the vdd_core supply as measured at the
-                                                                 Chip in mV.   Default is +/-8mV. Doesn't apply to CN8XXX chips. */
-        uint64_t vdd_sys_tolerance     : 16; /**< [111: 96] The +/- control tolerance of the vdd_sys supply as measured at the
-                                                                 Chip in mV.   Default is +/-8mV. Doesn't apply to CN8XXX chips. */
+        uint64_t vdd_core_tolerance    : 16; /**< [ 95: 80] The +/- control tolerance of the VDDC supply as measured at the
+                                                                 chip in mV.   Default is +/-8mV. Doesn't apply to CN8XXX chips. */
+        uint64_t vdd_sys_tolerance     : 16; /**< [111: 96] The +/- control tolerance of the VDD_SYS supply as measured at the
+                                                                 chip in mV.   Default is +/-8mV. Doesn't apply to CN8XXX chips. */
         uint64_t vrm_temp_trip         : 16; /**< [127:112] Temperature in degrees C where THERMAL_TRIP_N is asserted. When the chip reaches
-                                                                 this temperature THERMAL_TRIP_N will assert, signalling the board
+                                                                 this temperature THERMAL_TRIP_N will assert, signaling the board
                                                                  to emergency power off. The default value is the Marvell recommended
                                                                  maximum temperature of the chip. */
 #endif /* Word 1 - End */
@@ -238,7 +234,7 @@ union cavm_cpc_dvfs_config_s
         uint64_t sclk_freq             : 16; /**< [191:176] Coprocessor clock (SCLK) frequency in MHz. */
         uint64_t dvfs_thermal_hot      : 16; /**< [175:160] SCP firmware will assert the THERMAL_HOT_L pin when the highest
                                                                  observed temperature on the chip is at or above this value. This
-                                                                 value is recommended to be 10 degrees Celsius below VRM_TEMP_HIGH.
+                                                                 value is recommended to be 10 degrees Celsius below [VRM_TEMP_HIGH].
                                                                  The default value is the Marvell recommended maximum temperature of
                                                                  the chip minus 10. */
         uint64_t dvfs_power_control_mode : 16;/**< [159:144] The operating mode of the DVFS (Dynamic Frequency Voltage Scaling)
@@ -254,7 +250,7 @@ union cavm_cpc_dvfs_config_s
                                                                  power control code.  Enumerated by CPC_DVFS_MODE_E. */
         uint64_t dvfs_thermal_hot      : 16; /**< [175:160] SCP firmware will assert the THERMAL_HOT_L pin when the highest
                                                                  observed temperature on the chip is at or above this value. This
-                                                                 value is recommended to be 10 degrees Celsius below VRM_TEMP_HIGH.
+                                                                 value is recommended to be 10 degrees Celsius below [VRM_TEMP_HIGH].
                                                                  The default value is the Marvell recommended maximum temperature of
                                                                  the chip minus 10. */
         uint64_t sclk_freq             : 16; /**< [191:176] Coprocessor clock (SCLK) frequency in MHz. */
@@ -263,73 +259,79 @@ union cavm_cpc_dvfs_config_s
         uint64_t active_threshold      : 16; /**< [255:240] The percentage of maximum IPC at which a core is considered active.
                                                                  Encoded as percent * 1000.  Range 0.001% to 32.7%.  Default 1%. */
         uint64_t dvfs_thermal_hot_backoff : 16;/**< [239:224] The percentage that the DVFS control should attempt to reduce the chip
-                                                                 power when the board asserts THERMAL_HOT.  A value of 30 means reduce
+                                                                 power when the board asserts [DVFS_THERMAL_HOT].  A value of 30 means reduce
                                                                  power 30%, etc.  Default is 50. */
-        uint64_t reserved_208_223      : 16;
+        uint64_t avs_safemode_enable   : 1;  /**< [223:223] When avs_safemode is enabled, rclk and cptclk go to min speed when AVS failures are detected. */
+        uint64_t reserved_218_222      : 5;
+        uint64_t twsi_slave_addr       : 7;  /**< [217:211] The I2C address of the TWSI slave controller. */
+        uint64_t twsi_slave_bus        : 3;  /**< [210:208] The TWSI controller number that processes TWSI slave transactions from chip side. */
         uint64_t wakeup_mode           : 2;  /**< [207:206] Enumerated by CPC_WAKEUP_MODE_E. Default FAST_WAKE_SLOW_SLEEP. */
         uint64_t force_secondary_boot  : 1;  /**< [205:205] Force the next reboot to use the secondary boot device. */
         uint64_t mcp_disable           : 1;  /**< [204:204] Instructs SCP firmware to not start the MCP. */
-        uint64_t scp_uart_num          : 4;  /**< [203:200] Selects which uart SCP will use for the SCP CLI and logging.  0xf selects no logging. */
+        uint64_t scp_uart_num          : 4;  /**< [203:200] Selects which UART SCP will use for the SCP CLI and logging.  0xF selects no logging. */
         uint64_t failsafe_timeout      : 8;  /**< [199:192] This timeout detects boot failures in when booting from the
                                                                  primary boot device, and causes a reboot from secondary.  In seconds. */
 #else /* Word 3 - Little Endian */
         uint64_t failsafe_timeout      : 8;  /**< [199:192] This timeout detects boot failures in when booting from the
                                                                  primary boot device, and causes a reboot from secondary.  In seconds. */
-        uint64_t scp_uart_num          : 4;  /**< [203:200] Selects which uart SCP will use for the SCP CLI and logging.  0xf selects no logging. */
+        uint64_t scp_uart_num          : 4;  /**< [203:200] Selects which UART SCP will use for the SCP CLI and logging.  0xF selects no logging. */
         uint64_t mcp_disable           : 1;  /**< [204:204] Instructs SCP firmware to not start the MCP. */
         uint64_t force_secondary_boot  : 1;  /**< [205:205] Force the next reboot to use the secondary boot device. */
         uint64_t wakeup_mode           : 2;  /**< [207:206] Enumerated by CPC_WAKEUP_MODE_E. Default FAST_WAKE_SLOW_SLEEP. */
-        uint64_t reserved_208_223      : 16;
+        uint64_t twsi_slave_bus        : 3;  /**< [210:208] The TWSI controller number that processes TWSI slave transactions from chip side. */
+        uint64_t twsi_slave_addr       : 7;  /**< [217:211] The I2C address of the TWSI slave controller. */
+        uint64_t reserved_218_222      : 5;
+        uint64_t avs_safemode_enable   : 1;  /**< [223:223] When avs_safemode is enabled, rclk and cptclk go to min speed when AVS failures are detected. */
         uint64_t dvfs_thermal_hot_backoff : 16;/**< [239:224] The percentage that the DVFS control should attempt to reduce the chip
-                                                                 power when the board asserts THERMAL_HOT.  A value of 30 means reduce
+                                                                 power when the board asserts [DVFS_THERMAL_HOT].  A value of 30 means reduce
                                                                  power 30%, etc.  Default is 50. */
         uint64_t active_threshold      : 16; /**< [255:240] The percentage of maximum IPC at which a core is considered active.
                                                                  Encoded as percent * 1000.  Range 0.001% to 32.7%.  Default 1%. */
 #endif /* Word 3 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
-        uint64_t dspclk_freq_min       : 16; /**< [319:304] Maximum dsp clock (DSPCLK) frequency in MHz.  SCP firmware will vary
+        uint64_t dspclk_freq_min       : 16; /**< [319:304] Minimum DSP clock (DSPCLK) frequency in MHz.  SCP firmware will vary
                                                                  the actual DSPCLK frequency between min and max based on SCMI messages
                                                                  from the AP. CNF9XXX chips only. */
-        uint64_t dspclk_freq_max       : 16; /**< [303:288] Maximum dsp clock (DSPCLK) frequency in MHz.  SCP firmware will vary
+        uint64_t dspclk_freq_max       : 16; /**< [303:288] Maximum DSP clock (DSPCLK) frequency in MHz.  SCP firmware will vary
                                                                  the actual DSPCLK frequency between min and max based on SCMI messages
                                                                  from the AP. CNF9XXX chips only. */
-        uint64_t bclk_freq_min         : 16; /**< [287:272] Minimum bphy clock (BCLK) frequency in MHz.  SCP firmware will vary
+        uint64_t bclk_freq_min         : 16; /**< [287:272] Minimum BPHY clock (BCLK) frequency in MHz.  SCP firmware will vary
                                                                  the actual BCLK frequency between min and max based on SCMI messages
                                                                  from the AP. CNF9XXX chips only. */
-        uint64_t bclk_freq_max         : 16; /**< [271:256] Maximum bphy clock (BCLK) frequency in MHz.  SCP firmware will vary
+        uint64_t bclk_freq_max         : 16; /**< [271:256] Maximum BPHY clock (BCLK) frequency in MHz.  SCP firmware will vary
                                                                  the actual BCLK frequency between min and max based on SCMI messages
                                                                  from the AP. CNF9XXX chips only. */
 #else /* Word 4 - Little Endian */
-        uint64_t bclk_freq_max         : 16; /**< [271:256] Maximum bphy clock (BCLK) frequency in MHz.  SCP firmware will vary
+        uint64_t bclk_freq_max         : 16; /**< [271:256] Maximum BPHY clock (BCLK) frequency in MHz.  SCP firmware will vary
                                                                  the actual BCLK frequency between min and max based on SCMI messages
                                                                  from the AP. CNF9XXX chips only. */
-        uint64_t bclk_freq_min         : 16; /**< [287:272] Minimum bphy clock (BCLK) frequency in MHz.  SCP firmware will vary
+        uint64_t bclk_freq_min         : 16; /**< [287:272] Minimum BPHY clock (BCLK) frequency in MHz.  SCP firmware will vary
                                                                  the actual BCLK frequency between min and max based on SCMI messages
                                                                  from the AP. CNF9XXX chips only. */
-        uint64_t dspclk_freq_max       : 16; /**< [303:288] Maximum dsp clock (DSPCLK) frequency in MHz.  SCP firmware will vary
+        uint64_t dspclk_freq_max       : 16; /**< [303:288] Maximum DSP clock (DSPCLK) frequency in MHz.  SCP firmware will vary
                                                                  the actual DSPCLK frequency between min and max based on SCMI messages
                                                                  from the AP. CNF9XXX chips only. */
-        uint64_t dspclk_freq_min       : 16; /**< [319:304] Maximum dsp clock (DSPCLK) frequency in MHz.  SCP firmware will vary
+        uint64_t dspclk_freq_min       : 16; /**< [319:304] Minimum DSP clock (DSPCLK) frequency in MHz.  SCP firmware will vary
                                                                  the actual DSPCLK frequency between min and max based on SCMI messages
                                                                  from the AP. CNF9XXX chips only. */
 #endif /* Word 4 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
-        uint64_t vdd_sys_compensation  : 16; /**< [383:368] A multiplication factor that is applied to the requested vdd_sys voltage.  Default 1.000.
+        uint64_t vdd_sys_compensation  : 16; /**< [383:368] A multiplication factor that is applied to the requested VDD_SYS voltage.  Default 1.000.
                                                                  Encoded as factor * 1000. */
-        uint64_t vdd_core_compensation : 16; /**< [367:352] A multiplication factor that is applied to the requested vdd_core voltage.  Default 1.000.
+        uint64_t vdd_core_compensation : 16; /**< [367:352] A multiplication factor that is applied to the requested VDDC voltage.  Default 1.000.
                                                                  Encoded as factor * 1000. */
-        uint64_t vdd_sys_ripple        : 16; /**< [351:336] The +/- ripple of the vdd_sys supply as measured at the
+        uint64_t vdd_sys_ripple        : 16; /**< [351:336] The +/- ripple of the VDD_SYS supply as measured at the
                                                                  Chip in mV.   Default is +/-8 mV. Doesn't apply to CN8XXX chips. */
-        uint64_t vdd_core_ripple       : 16; /**< [335:320] The +/- ripple of the vdd_core supply as measured at the
+        uint64_t vdd_core_ripple       : 16; /**< [335:320] The +/- ripple of the VDDC supply as measured at the
                                                                  Chip in mV.   Default is +/-8 mV. Doesn't apply to CN8XXX chips. */
 #else /* Word 5 - Little Endian */
-        uint64_t vdd_core_ripple       : 16; /**< [335:320] The +/- ripple of the vdd_core supply as measured at the
+        uint64_t vdd_core_ripple       : 16; /**< [335:320] The +/- ripple of the VDDC supply as measured at the
                                                                  Chip in mV.   Default is +/-8 mV. Doesn't apply to CN8XXX chips. */
-        uint64_t vdd_sys_ripple        : 16; /**< [351:336] The +/- ripple of the vdd_sys supply as measured at the
+        uint64_t vdd_sys_ripple        : 16; /**< [351:336] The +/- ripple of the VDD_SYS supply as measured at the
                                                                  Chip in mV.   Default is +/-8 mV. Doesn't apply to CN8XXX chips. */
-        uint64_t vdd_core_compensation : 16; /**< [367:352] A multiplication factor that is applied to the requested vdd_core voltage.  Default 1.000.
+        uint64_t vdd_core_compensation : 16; /**< [367:352] A multiplication factor that is applied to the requested VDDC voltage.  Default 1.000.
                                                                  Encoded as factor * 1000. */
-        uint64_t vdd_sys_compensation  : 16; /**< [383:368] A multiplication factor that is applied to the requested vdd_sys voltage.  Default 1.000.
+        uint64_t vdd_sys_compensation  : 16; /**< [383:368] A multiplication factor that is applied to the requested VDD_SYS voltage.  Default 1.000.
                                                                  Encoded as factor * 1000. */
 #endif /* Word 5 - End */
     } s;
@@ -1125,7 +1127,7 @@ static inline uint64_t CAVM_CPC_ROM_MEMX(unsigned long a)
  *
  * This register is only accessible to the requestor(s) permitted with CPC_PERMIT.
  *
- * This register is reset on chip reset & scp_reset
+ * This register is reset on chip reset and scp_reset.
  */
 union cavm_cpc_scp_boot_rom_limit
 {

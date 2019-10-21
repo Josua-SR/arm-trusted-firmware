@@ -11353,7 +11353,7 @@ union cavm_nixx_af_lfx_rx_cfg
     } cn96xxp1;
     /* struct cavm_nixx_af_lfx_rx_cfg_s cn96xxp3; */
     /* struct cavm_nixx_af_lfx_rx_cfg_s cn98xx; */
-    struct cavm_nixx_af_lfx_rx_cfg_cnf95xx
+    struct cavm_nixx_af_lfx_rx_cfg_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_42_63        : 22;
@@ -11466,8 +11466,9 @@ union cavm_nixx_af_lfx_rx_cfg
         uint64_t len_ol3               : 1;  /**< [ 41: 41](R/W) Outer L3 length error check enable. See NIX_RX_PERRCODE_E::OL3_LEN. */
         uint64_t reserved_42_63        : 22;
 #endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_nixx_af_lfx_rx_cfg_cnf95xx loki; */
+    } cnf95xxp1;
+    /* struct cavm_nixx_af_lfx_rx_cfg_s cnf95xxp2; */
+    /* struct cavm_nixx_af_lfx_rx_cfg_s loki; */
 };
 typedef union cavm_nixx_af_lfx_rx_cfg cavm_nixx_af_lfx_rx_cfg_t;
 
@@ -11712,8 +11713,44 @@ union cavm_nixx_af_lfx_rx_ipsec_cfg1
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_nixx_af_lfx_rx_ipsec_cfg1_s cn9; */
-    /* struct cavm_nixx_af_lfx_rx_ipsec_cfg1_s cn96xx; */
-    /* struct cavm_nixx_af_lfx_rx_ipsec_cfg1_s cn98xx; */
+    /* struct cavm_nixx_af_lfx_rx_ipsec_cfg1_s cn96xxp1; */
+    struct cavm_nixx_af_lfx_rx_ipsec_cfg1_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_37_63        : 27;
+        uint64_t sa_idx_w              : 5;  /**< [ 36: 32](R/W) Security association index width. Number of lower bits from the SPI field
+                                                                 of an IPSEC packet that provide the packet's SA index. The SA index is
+                                                                 computed as follows:
+                                                                 \<pre\>
+                                                                 SPI\<31:0\> = packet's 32-bit IPSEC SPI field; // see NIX_AF_RX_DEF_IPSEC()
+                                                                 SA_index = SPI & ((1 \<\< [SA_IDX_W]) - 1);
+                                                                 \</pre\>
+
+                                                                 Must be greater than zero.
+
+                                                                 If the packet's SA index is greater than [SA_IDX_MAX], the packet uses the
+                                                                 IPSEC software fast-path (NIX_WQE_HDR_S[WQE_TYPE]/NIX_CQE_HDR_S[CQE_TYPE] =
+                                                                 NIX_XQE_TYPE_E::RX_IPSECS). */
+        uint64_t sa_idx_max            : 32; /**< [ 31:  0](R/W) Maximum SA index recognized by hardware for the LF. See [SA_IDX_W]. */
+#else /* Word 0 - Little Endian */
+        uint64_t sa_idx_max            : 32; /**< [ 31:  0](R/W) Maximum SA index recognized by hardware for the LF. See [SA_IDX_W]. */
+        uint64_t sa_idx_w              : 5;  /**< [ 36: 32](R/W) Security association index width. Number of lower bits from the SPI field
+                                                                 of an IPSEC packet that provide the packet's SA index. The SA index is
+                                                                 computed as follows:
+                                                                 \<pre\>
+                                                                 SPI\<31:0\> = packet's 32-bit IPSEC SPI field; // see NIX_AF_RX_DEF_IPSEC()
+                                                                 SA_index = SPI & ((1 \<\< [SA_IDX_W]) - 1);
+                                                                 \</pre\>
+
+                                                                 Must be greater than zero.
+
+                                                                 If the packet's SA index is greater than [SA_IDX_MAX], the packet uses the
+                                                                 IPSEC software fast-path (NIX_WQE_HDR_S[WQE_TYPE]/NIX_CQE_HDR_S[CQE_TYPE] =
+                                                                 NIX_XQE_TYPE_E::RX_IPSECS). */
+        uint64_t reserved_37_63        : 27;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_nixx_af_lfx_rx_ipsec_cfg1_cn96xxp3 cn98xx; */
     struct cavm_nixx_af_lfx_rx_ipsec_cfg1_cnf95xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -20048,17 +20085,45 @@ union cavm_nixx_af_seb_cfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_1_63         : 63;
-        uint64_t sg_ndc_sel            : 1;  /**< [  0:  0](R/W) SEB NIX_SEND_SG_S NDC select register
-                                                                   0 = SEB NIX_SEND_SG_S requests are serviced by NIX-RX's NDC.
-                                                                   1 = SEB NIX_SEND_SG_S requests are serviced by NIX-TX's NDC. */
+        uint64_t sg_ndc_sel            : 1;  /**< [  0:  0](R/W) NDC select for reading TX packet data specified by NIX_SEND_SG_S:
+                                                                 0 = TX packet data is read using the NIX RX NDC.
+                                                                 1 = TX packet data is read using the NIX TX NDC.
+
+                                                                 Should be clear for most use cases, especially when SQEs can overflow NDC's
+                                                                 cache (or are not allocated to NDC).
+
+                                                                 For use cases where SQEs are allocated and do not overflow NDC's cache,
+                                                                 setting this bit may increase the maximum bidirectional NIX data rate,
+                                                                 especially at coprocessor clock frequencies below 1 GHz with an average
+                                                                 packet size above 300 bytes. */
 #else /* Word 0 - Little Endian */
-        uint64_t sg_ndc_sel            : 1;  /**< [  0:  0](R/W) SEB NIX_SEND_SG_S NDC select register
-                                                                   0 = SEB NIX_SEND_SG_S requests are serviced by NIX-RX's NDC.
-                                                                   1 = SEB NIX_SEND_SG_S requests are serviced by NIX-TX's NDC. */
+        uint64_t sg_ndc_sel            : 1;  /**< [  0:  0](R/W) NDC select for reading TX packet data specified by NIX_SEND_SG_S:
+                                                                 0 = TX packet data is read using the NIX RX NDC.
+                                                                 1 = TX packet data is read using the NIX TX NDC.
+
+                                                                 Should be clear for most use cases, especially when SQEs can overflow NDC's
+                                                                 cache (or are not allocated to NDC).
+
+                                                                 For use cases where SQEs are allocated and do not overflow NDC's cache,
+                                                                 setting this bit may increase the maximum bidirectional NIX data rate,
+                                                                 especially at coprocessor clock frequencies below 1 GHz with an average
+                                                                 packet size above 300 bytes. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_seb_cfg_s cn; */
+    /* struct cavm_nixx_af_seb_cfg_s cn9; */
+    /* struct cavm_nixx_af_seb_cfg_s cn96xx; */
+    /* struct cavm_nixx_af_seb_cfg_s cn98xx; */
+    struct cavm_nixx_af_seb_cfg_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_1_63         : 63;
+        uint64_t sg_ndc_sel            : 1;  /**< [  0:  0](R/W) For diagnostic use only. Must be set to one for normal operation. */
+#else /* Word 0 - Little Endian */
+        uint64_t sg_ndc_sel            : 1;  /**< [  0:  0](R/W) For diagnostic use only. Must be set to one for normal operation. */
+        uint64_t reserved_1_63         : 63;
+#endif /* Word 0 - End */
+    } loki;
 };
 typedef union cavm_nixx_af_seb_cfg cavm_nixx_af_seb_cfg_t;
 
@@ -21215,7 +21280,13 @@ union cavm_nixx_af_sqm_dbg_ctl_status
     struct cavm_nixx_af_sqm_dbg_ctl_status_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_26_63        : 38;
+        uint64_t reserved_28_63        : 36;
+        uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Conservatively limits SQE prefetches.
+                                                                 Internal:
+                                                                 Bug fix for 37300. */
+        uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enables Sticky Engine use.
+                                                                 Internal:
+                                                                 Performance optimization for one SMQ configurations. */
         uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on SQE reads by engine.
                                                                  Internal:
                                                                  Performance optimization that reduced DSE's SQE read miss rate. */
@@ -21267,7 +21338,13 @@ union cavm_nixx_af_sqm_dbg_ctl_status
         uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on SQE reads by engine.
                                                                  Internal:
                                                                  Performance optimization that reduced DSE's SQE read miss rate. */
-        uint64_t reserved_26_63        : 38;
+        uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enables Sticky Engine use.
+                                                                 Internal:
+                                                                 Performance optimization for one SMQ configurations. */
+        uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Conservatively limits SQE prefetches.
+                                                                 Internal:
+                                                                 Bug fix for 37300. */
+        uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_nixx_af_sqm_dbg_ctl_status_s cn9; */
@@ -21297,7 +21374,64 @@ union cavm_nixx_af_sqm_dbg_ctl_status
         uint64_t reserved_22_63        : 42;
 #endif /* Word 0 - End */
     } cn96xxp1;
-    /* struct cavm_nixx_af_sqm_dbg_ctl_status_s cn96xxp3; */
+    struct cavm_nixx_af_sqm_dbg_ctl_status_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_26_63        : 38;
+        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on SQE reads by engine.
+                                                                 Internal:
+                                                                 Performance optimization that reduced DSE's SQE read miss rate. */
+        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable multi Q to Single Q transition in the engine while in sticky mode.
+                                                                 Internal:
+                                                                 This handles for the corner case where the SMQ linked-list transitions from 2Q
+                                                                 to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
+                                                                 details. */
+        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
+                                                                 specified by the engine. This sacrifices DWRR fairness in certain cases, but
+                                                                 guarantees linked-list correctness for certain dynamic sticky to non-sticky
+                                                                 transitions.
+
+                                                                 Internal:
+                                                                 See bug 36650 for more details. */
+        uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
+        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
+        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
+        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
+#else /* Word 0 - Little Endian */
+        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset */
+        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
+        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
+        uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
+        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
+                                                                 specified by the engine. This sacrifices DWRR fairness in certain cases, but
+                                                                 guarantees linked-list correctness for certain dynamic sticky to non-sticky
+                                                                 transitions.
+
+                                                                 Internal:
+                                                                 See bug 36650 for more details. */
+        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable multi Q to Single Q transition in the engine while in sticky mode.
+                                                                 Internal:
+                                                                 This handles for the corner case where the SMQ linked-list transitions from 2Q
+                                                                 to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
+                                                                 details. */
+        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on SQE reads by engine.
+                                                                 Internal:
+                                                                 Performance optimization that reduced DSE's SQE read miss rate. */
+        uint64_t reserved_26_63        : 38;
+#endif /* Word 0 - End */
+    } cn96xxp3;
     /* struct cavm_nixx_af_sqm_dbg_ctl_status_s cn98xx; */
     /* struct cavm_nixx_af_sqm_dbg_ctl_status_cn96xxp1 cnf95xxp1; */
     struct cavm_nixx_af_sqm_dbg_ctl_status_cnf95xxp2
@@ -21334,7 +21468,7 @@ union cavm_nixx_af_sqm_dbg_ctl_status
         uint64_t reserved_26_63        : 38;
 #endif /* Word 0 - End */
     } cnf95xxp2;
-    /* struct cavm_nixx_af_sqm_dbg_ctl_status_s loki; */
+    /* struct cavm_nixx_af_sqm_dbg_ctl_status_cn96xxp3 loki; */
 };
 typedef union cavm_nixx_af_sqm_dbg_ctl_status cavm_nixx_af_sqm_dbg_ctl_status_t;
 

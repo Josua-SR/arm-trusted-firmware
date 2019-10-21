@@ -1199,7 +1199,23 @@ union cavm_oclax_gen_ctl
     struct cavm_oclax_gen_ctl_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_7_63         : 57;
+        uint64_t reserved_9_63         : 55;
+        uint64_t trace_wrap            : 1;  /**< [  8:  8](R/W) Reserved.
+                                                                 Internal:
+                                                                 Trace FIFO wrapping modes. Only valid if OCLA()_GEN_CTL[TRACE_EN] is set.
+                                                                 0 = FIFO stops writing to new entries when full.
+                                                                 1 = FIFO overwrites oldest entry when full.
+
+                                                                 Note: this feature is only available in ROC_OCLA which is OCLA(6). */
+        uint64_t trace_en              : 1;  /**< [  7:  7](R/W) Reserved.
+                                                                 Internal:
+                                                                 Enable FSM state tracing for debug. When set, any FSM transitions are detected and stored
+                                                                 in a FIFO that writes new entries when OCLA()_STATE_SET[FSM0_ENA] or
+                                                                 OCLA()_STATE_SET[FSM1_ENA] have been set.
+                                                                 To read the FIFO, OCLA()_STATE_INT[FSM0_ENA] and OCLA()_STATE_INT[FSM1_ENA] must be
+                                                                 written to halt FSM state changes. The FIFO entries can be read in OCLA()_TRACE_FIFO().
+
+                                                                 Note: this feature is only available in ROC_OCLA which is OCLA(6). */
         uint64_t mcdtrig               : 3;  /**< [  6:  4](R/W) Enable MCD triggering. For each bit corresponding to the three MCDs:
                                                                  0 = MCD does not cause trigger.
                                                                  1 = When the corresponding MCD is received it will cause
@@ -1233,7 +1249,23 @@ union cavm_oclax_gen_ctl
                                                                  0 = MCD does not cause trigger.
                                                                  1 = When the corresponding MCD is received it will cause
                                                                  triggering and set OCLA()_STATE_SET[TRIG]. */
-        uint64_t reserved_7_63         : 57;
+        uint64_t trace_en              : 1;  /**< [  7:  7](R/W) Reserved.
+                                                                 Internal:
+                                                                 Enable FSM state tracing for debug. When set, any FSM transitions are detected and stored
+                                                                 in a FIFO that writes new entries when OCLA()_STATE_SET[FSM0_ENA] or
+                                                                 OCLA()_STATE_SET[FSM1_ENA] have been set.
+                                                                 To read the FIFO, OCLA()_STATE_INT[FSM0_ENA] and OCLA()_STATE_INT[FSM1_ENA] must be
+                                                                 written to halt FSM state changes. The FIFO entries can be read in OCLA()_TRACE_FIFO().
+
+                                                                 Note: this feature is only available in ROC_OCLA which is OCLA(6). */
+        uint64_t trace_wrap            : 1;  /**< [  8:  8](R/W) Reserved.
+                                                                 Internal:
+                                                                 Trace FIFO wrapping modes. Only valid if OCLA()_GEN_CTL[TRACE_EN] is set.
+                                                                 0 = FIFO stops writing to new entries when full.
+                                                                 1 = FIFO overwrites oldest entry when full.
+
+                                                                 Note: this feature is only available in ROC_OCLA which is OCLA(6). */
+        uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } s;
     struct cavm_oclax_gen_ctl_cn8
@@ -1277,6 +1309,80 @@ union cavm_oclax_gen_ctl
     struct cavm_oclax_gen_ctl_cn9
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_9_63         : 55;
+        uint64_t trace_wrap            : 1;  /**< [  8:  8](R/W) Reserved.
+                                                                 Internal:
+                                                                 Trace FIFO wrapping modes. Only valid if OCLA()_GEN_CTL[TRACE_EN] is set.
+                                                                 0 = FIFO stops writing to new entries when full.
+                                                                 1 = FIFO overwrites oldest entry when full.
+
+                                                                 Note: this feature is only available in ROC_OCLA which is OCLA(6). */
+        uint64_t trace_en              : 1;  /**< [  7:  7](R/W) Reserved.
+                                                                 Internal:
+                                                                 Enable FSM state tracing for debug. When set, any FSM transitions are detected and stored
+                                                                 in a FIFO that writes new entries when OCLA()_STATE_SET[FSM0_ENA] or
+                                                                 OCLA()_STATE_SET[FSM1_ENA] have been set.
+                                                                 To read the FIFO, OCLA()_STATE_INT[FSM0_ENA] and OCLA()_STATE_INT[FSM1_ENA] must be
+                                                                 written to halt FSM state changes. The FIFO entries can be read in OCLA()_TRACE_FIFO().
+
+                                                                 Note: this feature is only available in ROC_OCLA which is OCLA(6). */
+        uint64_t mcdtrig               : 3;  /**< [  6:  4](R/W) Enable MCD triggering. For each bit corresponding to the three MCDs:
+                                                                 0 = MCD does not cause trigger.
+                                                                 1 = When the corresponding MCD is received it will cause
+                                                                 triggering and set OCLA()_STATE_SET[TRIG]. */
+        uint64_t exten                 : 1;  /**< [  3:  3](R/W) Enable external triggering.
+                                                                 0 = External triggering ignored.
+                                                                 1 = When the external trigger pin selected with GPIO_PIN_SEL_E::OCLA_EXT_TRIGGER
+                                                                 is high it will cause
+                                                                 triggering and set OCLA()_STATE_SET[TRIG]. The external device must de-assert the
+                                                                 signal (it is not edge sensitive.) */
+        uint64_t den                   : 1;  /**< [  2:  2](R/W) Enable data bus and counter clocking. When set, the OCLA inbound data bus may be used and
+                                                                 counters may increment. When clear, the bus is always zero and internal flops may be clock
+                                                                 gated off to save power. Must be set for normal operation. Note this will clear
+                                                                 on a software OCLA()_SFT_RST[RESET] reset. */
+        uint64_t stt                   : 1;  /**< [  1:  1](R/W) Store to DRAM directly, bypassing LLC. */
+        uint64_t force_ncbi_clken      : 1;  /**< [  0:  0](R/W) If set, force the NCBI conditional clocks always on. Note this effects ROC OCLA only.
+                                                                 For diagnostic use only. */
+#else /* Word 0 - Little Endian */
+        uint64_t force_ncbi_clken      : 1;  /**< [  0:  0](R/W) If set, force the NCBI conditional clocks always on. Note this effects ROC OCLA only.
+                                                                 For diagnostic use only. */
+        uint64_t stt                   : 1;  /**< [  1:  1](R/W) Store to DRAM directly, bypassing LLC. */
+        uint64_t den                   : 1;  /**< [  2:  2](R/W) Enable data bus and counter clocking. When set, the OCLA inbound data bus may be used and
+                                                                 counters may increment. When clear, the bus is always zero and internal flops may be clock
+                                                                 gated off to save power. Must be set for normal operation. Note this will clear
+                                                                 on a software OCLA()_SFT_RST[RESET] reset. */
+        uint64_t exten                 : 1;  /**< [  3:  3](R/W) Enable external triggering.
+                                                                 0 = External triggering ignored.
+                                                                 1 = When the external trigger pin selected with GPIO_PIN_SEL_E::OCLA_EXT_TRIGGER
+                                                                 is high it will cause
+                                                                 triggering and set OCLA()_STATE_SET[TRIG]. The external device must de-assert the
+                                                                 signal (it is not edge sensitive.) */
+        uint64_t mcdtrig               : 3;  /**< [  6:  4](R/W) Enable MCD triggering. For each bit corresponding to the three MCDs:
+                                                                 0 = MCD does not cause trigger.
+                                                                 1 = When the corresponding MCD is received it will cause
+                                                                 triggering and set OCLA()_STATE_SET[TRIG]. */
+        uint64_t trace_en              : 1;  /**< [  7:  7](R/W) Reserved.
+                                                                 Internal:
+                                                                 Enable FSM state tracing for debug. When set, any FSM transitions are detected and stored
+                                                                 in a FIFO that writes new entries when OCLA()_STATE_SET[FSM0_ENA] or
+                                                                 OCLA()_STATE_SET[FSM1_ENA] have been set.
+                                                                 To read the FIFO, OCLA()_STATE_INT[FSM0_ENA] and OCLA()_STATE_INT[FSM1_ENA] must be
+                                                                 written to halt FSM state changes. The FIFO entries can be read in OCLA()_TRACE_FIFO().
+
+                                                                 Note: this feature is only available in ROC_OCLA which is OCLA(6). */
+        uint64_t trace_wrap            : 1;  /**< [  8:  8](R/W) Reserved.
+                                                                 Internal:
+                                                                 Trace FIFO wrapping modes. Only valid if OCLA()_GEN_CTL[TRACE_EN] is set.
+                                                                 0 = FIFO stops writing to new entries when full.
+                                                                 1 = FIFO overwrites oldest entry when full.
+
+                                                                 Note: this feature is only available in ROC_OCLA which is OCLA(6). */
+        uint64_t reserved_9_63         : 55;
+#endif /* Word 0 - End */
+    } cn9;
+    struct cavm_oclax_gen_ctl_cn96xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_7_63         : 57;
         uint64_t mcdtrig               : 3;  /**< [  6:  4](R/W) Enable MCD triggering. For each bit corresponding to the three MCDs:
                                                                  0 = MCD does not cause trigger.
@@ -1315,7 +1421,10 @@ union cavm_oclax_gen_ctl
                                                                  triggering and set OCLA()_STATE_SET[TRIG]. */
         uint64_t reserved_7_63         : 57;
 #endif /* Word 0 - End */
-    } cn9;
+    } cn96xx;
+    /* struct cavm_oclax_gen_ctl_cn9 cn98xx; */
+    /* struct cavm_oclax_gen_ctl_cn96xx cnf95xx; */
+    /* struct cavm_oclax_gen_ctl_cn96xx loki; */
 };
 typedef union cavm_oclax_gen_ctl cavm_oclax_gen_ctl_t;
 
@@ -2853,5 +2962,103 @@ static inline uint64_t CAVM_OCLAX_TIME(unsigned long a)
 #define device_bar_CAVM_OCLAX_TIME(a) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_OCLAX_TIME(a) (a)
 #define arguments_CAVM_OCLAX_TIME(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) ocla#_trace_fifo#
+ *
+ * OCLA Trace FIFO Entry Register
+ * Reserved.
+ * Internal:
+ * This register reads the contents of the Trace FIFO.
+ *
+ * Note: this CSR only exists in ROC_OCLA which is OCLA(6) in CN98XX.
+ */
+union cavm_oclax_trace_fifox
+{
+    uint64_t u;
+    struct cavm_oclax_trace_fifox_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_40_63        : 24;
+        uint64_t fsm1_state            : 4;  /**< [ 39: 36](RO/H) FSM1 state. */
+        uint64_t fsm0_state            : 4;  /**< [ 35: 32](RO/H) FSM0 state. */
+        uint64_t cycle                 : 32; /**< [ 31:  0](RO/H) Cycle at which this entry was written, from OCLA()_TIME. */
+#else /* Word 0 - Little Endian */
+        uint64_t cycle                 : 32; /**< [ 31:  0](RO/H) Cycle at which this entry was written, from OCLA()_TIME. */
+        uint64_t fsm0_state            : 4;  /**< [ 35: 32](RO/H) FSM0 state. */
+        uint64_t fsm1_state            : 4;  /**< [ 39: 36](RO/H) FSM1 state. */
+        uint64_t reserved_40_63        : 24;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_oclax_trace_fifox_s cn; */
+};
+typedef union cavm_oclax_trace_fifox cavm_oclax_trace_fifox_t;
+
+static inline uint64_t CAVM_OCLAX_TRACE_FIFOX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_OCLAX_TRACE_FIFOX(unsigned long a, unsigned long b)
+{
+    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=6) && (b<=1023)))
+        return 0x87e0b0010000ll + 0x1000000ll * ((a) & 0x7) + 8ll * ((b) & 0x3ff);
+    __cavm_csr_fatal("OCLAX_TRACE_FIFOX", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_OCLAX_TRACE_FIFOX(a,b) cavm_oclax_trace_fifox_t
+#define bustype_CAVM_OCLAX_TRACE_FIFOX(a,b) CSR_TYPE_RSL
+#define basename_CAVM_OCLAX_TRACE_FIFOX(a,b) "OCLAX_TRACE_FIFOX"
+#define device_bar_CAVM_OCLAX_TRACE_FIFOX(a,b) 0x0 /* PF_BAR0 */
+#define busnum_CAVM_OCLAX_TRACE_FIFOX(a,b) (a)
+#define arguments_CAVM_OCLAX_TRACE_FIFOX(a,b) (a),(b),-1,-1
+
+/**
+ * Register (RSL) ocla#_trace_fifo_state
+ *
+ * OCLA Trace FIFO State Register
+ * Reserved.
+ * Internal:
+ * This register reads the state of the Trace FIFO and should be used to access
+ * the OCLA()_TRACE_FIFO() in correct order. The last valid entry will be TAIL-1,
+ * then TAIL-2, and so on until DEPTH is reached. This may require the index to
+ * loop around. If DEPTH is 0 then all FIFO entries are invalid.
+ *
+ * These register fields must be cleared before starting the next
+ * trace capture.
+ *
+ * Note: this CSR only exists in ROC_OCLA which is OCLA(6) in CN98XX.
+ */
+union cavm_oclax_trace_fifo_state
+{
+    uint64_t u;
+    struct cavm_oclax_trace_fifo_state_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_25_63        : 39;
+        uint64_t tail                  : 10; /**< [ 24: 15](R/W/H) Current FIFO tail pointer. */
+        uint64_t wraps                 : 4;  /**< [ 14: 11](R/W/H) Number of times FIFO has wrapped since trigger. Locks at 7. */
+        uint64_t depth                 : 11; /**< [ 10:  0](R/W/H) Current trace FIFO depth. Max is 1024. */
+#else /* Word 0 - Little Endian */
+        uint64_t depth                 : 11; /**< [ 10:  0](R/W/H) Current trace FIFO depth. Max is 1024. */
+        uint64_t wraps                 : 4;  /**< [ 14: 11](R/W/H) Number of times FIFO has wrapped since trigger. Locks at 7. */
+        uint64_t tail                  : 10; /**< [ 24: 15](R/W/H) Current FIFO tail pointer. */
+        uint64_t reserved_25_63        : 39;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_oclax_trace_fifo_state_s cn; */
+};
+typedef union cavm_oclax_trace_fifo_state cavm_oclax_trace_fifo_state_t;
+
+static inline uint64_t CAVM_OCLAX_TRACE_FIFO_STATE(unsigned long a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_OCLAX_TRACE_FIFO_STATE(unsigned long a)
+{
+    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=6))
+        return 0x87e0b0018000ll + 0x1000000ll * ((a) & 0x7);
+    __cavm_csr_fatal("OCLAX_TRACE_FIFO_STATE", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_OCLAX_TRACE_FIFO_STATE(a) cavm_oclax_trace_fifo_state_t
+#define bustype_CAVM_OCLAX_TRACE_FIFO_STATE(a) CSR_TYPE_RSL
+#define basename_CAVM_OCLAX_TRACE_FIFO_STATE(a) "OCLAX_TRACE_FIFO_STATE"
+#define device_bar_CAVM_OCLAX_TRACE_FIFO_STATE(a) 0x0 /* PF_BAR0 */
+#define busnum_CAVM_OCLAX_TRACE_FIFO_STATE(a) (a)
+#define arguments_CAVM_OCLAX_TRACE_FIFO_STATE(a) (a),-1,-1,-1
 
 #endif /* __CAVM_CSRS_OCLA_H__ */

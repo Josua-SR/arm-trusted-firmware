@@ -198,29 +198,29 @@
  */
 #define CAVM_SSO_WA_E_ADDWQ (3)
 #define CAVM_SSO_WA_E_CPT (2)
-#define CAVM_SSO_WA_E_CPTX(a) (2 + 7 * (a))
+#define CAVM_SSO_WA_E_CPTX(a) (2 + 8 * (a))
 #define CAVM_SSO_WA_E_CPT0 (2)
 #define CAVM_SSO_WA_E_CPT1 (4)
 #define CAVM_SSO_WA_E_DDF (0xc)
 #define CAVM_SSO_WA_E_DFA (5)
 #define CAVM_SSO_WA_E_DPI_CN8 (6)
 #define CAVM_SSO_WA_E_DPI_CN9 (4)
-#define CAVM_SSO_WA_E_DPIX(a) (4 + 6 * (a))
+#define CAVM_SSO_WA_E_DPIX(a) (4 + 7 * (a))
 #define CAVM_SSO_WA_E_HNA (7)
 #define CAVM_SSO_WA_E_IOBN (0)
 #define CAVM_SSO_WA_E_NIXRX (1)
-#define CAVM_SSO_WA_E_NIXRXX(a) (1 + 7 * (a))
+#define CAVM_SSO_WA_E_NIXRXX(a) (1 + 8 * (a))
 #define CAVM_SSO_WA_E_NIXTX (5)
-#define CAVM_SSO_WA_E_NIXTXX(a) (5 + 6 * (a))
+#define CAVM_SSO_WA_E_NIXTXX(a) (5 + 7 * (a))
 #define CAVM_SSO_WA_E_PKI (1)
 #define CAVM_SSO_WA_E_PKO (8)
 #define CAVM_SSO_WA_E_PSM (8)
 #define CAVM_SSO_WA_E_RAD (9)
+#define CAVM_SSO_WA_E_REEX(a) (8 + 5 * (a))
 #define CAVM_SSO_WA_E_TIM_CN8 (0xa)
 #define CAVM_SSO_WA_E_TIM_CN9 (6)
 #define CAVM_SSO_WA_E_ZIP_CN8 (0xb)
 #define CAVM_SSO_WA_E_ZIP_CN9 (7)
-#define CAVM_SSO_WA_E_ZIPX(a) (7 + 5 * (a))
 
 /**
  * Register (NCB) sso_active_cycles0
@@ -667,15 +667,15 @@ union cavm_sso_af_aw_inp_ctl
     struct cavm_sso_af_aw_inp_ctl_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_13_63        : 51;
-        uint64_t wa_dis                : 13; /**< [ 12:  0](R/W) Add-work input disable.  Each bit corresponds to a hardware input queue, and if
+        uint64_t reserved_14_63        : 50;
+        uint64_t wa_dis                : 14; /**< [ 13:  0](R/W) Add-work input disable.  Each bit corresponds to a hardware input queue, and if
                                                                  set add-works from the corresponding coprocessor will be dropped.
                                                                  Bit numbers enumerated by SSO_WA_E. */
 #else /* Word 0 - Little Endian */
-        uint64_t wa_dis                : 13; /**< [ 12:  0](R/W) Add-work input disable.  Each bit corresponds to a hardware input queue, and if
+        uint64_t wa_dis                : 14; /**< [ 13:  0](R/W) Add-work input disable.  Each bit corresponds to a hardware input queue, and if
                                                                  set add-works from the corresponding coprocessor will be dropped.
                                                                  Bit numbers enumerated by SSO_WA_E. */
-        uint64_t reserved_13_63        : 51;
+        uint64_t reserved_14_63        : 50;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_sso_af_aw_inp_ctl_s cn9; */
@@ -5533,8 +5533,8 @@ union cavm_sso_af_unmap_info
     struct cavm_sso_af_unmap_info_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_44_63        : 20;
-        uint64_t wqp0_src              : 12; /**< [ 43: 32](RO/H) Illegal WQP0 error source. This field is updated when
+        uint64_t reserved_45_63        : 19;
+        uint64_t wqp0_src              : 13; /**< [ 44: 32](RO/H) Illegal WQP0 error source. This field is updated when
                                                                  SSO_AF_ERR0[ADDWQ_DROPPED_WQP0] error occurs, and is held until
                                                                  SSO_AF_ERR0[ADDWQ_DROPPED_WQP0] is cleared.
                                                                  \<6\> = ZIP.
@@ -5591,7 +5591,7 @@ union cavm_sso_af_unmap_info
         uint64_t ggrp_multi            : 1;  /**< [ 31: 31](RO/H) PF_FUNC map had double-hit error. Set when SSO_AF_ERR0[GGRP_MULTI] is set
                                                                  and held until SSO_AF_ERR0[AW_UNMAP], SSO_AF_ERR0[AW_MULTI],
                                                                  SSO_AF_ERR0[GGRP_UNMAP], and SSO_AF_ERR0[GGRP_MULTI] are cleared. */
-        uint64_t wqp0_src              : 12; /**< [ 43: 32](RO/H) Illegal WQP0 error source. This field is updated when
+        uint64_t wqp0_src              : 13; /**< [ 44: 32](RO/H) Illegal WQP0 error source. This field is updated when
                                                                  SSO_AF_ERR0[ADDWQ_DROPPED_WQP0] error occurs, and is held until
                                                                  SSO_AF_ERR0[ADDWQ_DROPPED_WQP0] is cleared.
                                                                  \<6\> = ZIP.
@@ -5601,7 +5601,7 @@ union cavm_sso_af_unmap_info
                                                                  \<2\> = ADDWQ.
                                                                  \<1\> = CPT.
                                                                  \<0\> = NIXRX. */
-        uint64_t reserved_44_63        : 20;
+        uint64_t reserved_45_63        : 19;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_sso_af_unmap_info_s cn9; */
@@ -5682,16 +5682,17 @@ union cavm_sso_af_unmap_info
     struct cavm_sso_af_unmap_info_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_44_63        : 20;
-        uint64_t wqp0_src              : 12; /**< [ 43: 32](RO/H) Illegal WQP0 error source. This field is updated when
+        uint64_t reserved_45_63        : 19;
+        uint64_t wqp0_src              : 13; /**< [ 44: 32](RO/H) Illegal WQP0 error source. This field is updated when
                                                                  SSO_AF_ERR0[ADDWQ_DROPPED_WQP0] error occurs, and is held until
                                                                  SSO_AF_ERR0[ADDWQ_DROPPED_WQP0] is cleared.
-                                                                 \<11\> = ZIP1.
-                                                                 \<10\> = NIXTX1.
-                                                                 \<9\> = DPI1.
-                                                                 \<8\> = CPT1.
-                                                                 \<7\> = NIXRX1.
-                                                                 \<6\> = ZIP0.
+                                                                 \<12\> = REE1.
+                                                                 \<11\> = NIXTX1.
+                                                                 \<10\> = DPI1.
+                                                                 \<9\> = CPT1.
+                                                                 \<8\> = NIXRX1.
+                                                                 \<7\> = REE0
+                                                                 \<6\> = ZIP.
                                                                  \<5\> = TIM.
                                                                  \<4\> = NIXTX0.
                                                                  \<3\> = DPI0.
@@ -5745,22 +5746,23 @@ union cavm_sso_af_unmap_info
         uint64_t ggrp_multi            : 1;  /**< [ 31: 31](RO/H) PF_FUNC map had double-hit error. Set when SSO_AF_ERR0[GGRP_MULTI] is set
                                                                  and held until SSO_AF_ERR0[AW_UNMAP], SSO_AF_ERR0[AW_MULTI],
                                                                  SSO_AF_ERR0[GGRP_UNMAP], and SSO_AF_ERR0[GGRP_MULTI] are cleared. */
-        uint64_t wqp0_src              : 12; /**< [ 43: 32](RO/H) Illegal WQP0 error source. This field is updated when
+        uint64_t wqp0_src              : 13; /**< [ 44: 32](RO/H) Illegal WQP0 error source. This field is updated when
                                                                  SSO_AF_ERR0[ADDWQ_DROPPED_WQP0] error occurs, and is held until
                                                                  SSO_AF_ERR0[ADDWQ_DROPPED_WQP0] is cleared.
-                                                                 \<11\> = ZIP1.
-                                                                 \<10\> = NIXTX1.
-                                                                 \<9\> = DPI1.
-                                                                 \<8\> = CPT1.
-                                                                 \<7\> = NIXRX1.
-                                                                 \<6\> = ZIP0.
+                                                                 \<12\> = REE1.
+                                                                 \<11\> = NIXTX1.
+                                                                 \<10\> = DPI1.
+                                                                 \<9\> = CPT1.
+                                                                 \<8\> = NIXRX1.
+                                                                 \<7\> = REE0
+                                                                 \<6\> = ZIP.
                                                                  \<5\> = TIM.
                                                                  \<4\> = NIXTX0.
                                                                  \<3\> = DPI0.
                                                                  \<2\> = ADDWQ.
                                                                  \<1\> = CPT0.
                                                                  \<0\> = NIXRX0. */
-        uint64_t reserved_44_63        : 20;
+        uint64_t reserved_45_63        : 19;
 #endif /* Word 0 - End */
     } cn98xx;
     struct cavm_sso_af_unmap_info_cnf95xx

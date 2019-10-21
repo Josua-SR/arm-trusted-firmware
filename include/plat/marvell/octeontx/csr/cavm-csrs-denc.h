@@ -542,7 +542,144 @@ union cavm_denc_epdcch_dci_cfg_s
         uint64_t ereg_w3               : 64; /**< [447:384] Bits [255:192] of EREG_indicator. See [EREG_W0]. */
 #endif /* Word 6 - End */
     } cnf95xxp2;
-    /* struct cavm_denc_epdcch_dci_cfg_s_cnf95xxp2 loki; */
+    struct cavm_denc_epdcch_dci_cfg_s_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_56_63        : 8;
+        uint64_t start                 : 4;  /**< [ 55: 52] Resource mapping for this EPDCCH starts from the [START] symbol and
+                                                                 continues until the last symbol in the second slot. Valid range is
+                                                                 [0x0, 0xD]. */
+        uint64_t reserved_46_51        : 6;
+        uint64_t rm_e                  : 14; /**< [ 45: 32] The size of the output after rate matching.
+
+                                                                 The size should be set to 2 x 9 x N_ECCE_EREG x N_EPDCCH_ECCE, where
+                                                                 N_ECCE_EREG is the number of EREGs per ECCE (either 4 or 8), and
+                                                                 N_EPDCCH_ECCE is the number of ECCEs per EPDCCH.  For example, with 8
+                                                                 ECCEs and 4 EREGs per ECCE, [RM_E] = 2 x 9 x 4 x 8 = 0x240.
+
+                                                                 This size assumes that there are 9 REs per EREG. DENC automatically
+                                                                 reduces the rate-matched size accordingly when an EREG has fewer than
+                                                                 9 REs. */
+        uint64_t crc_msk_en            : 1;  /**< [ 31: 31] When set to 0, no CRC scrambling is performed.
+
+                                                                 When set to 1, the computed CRC is scrambled by XORing it with
+                                                                 [CRC_MASK]. This only applies when [BYPS_CRC] = 0.
+
+                                                                 Should be set to 1 for PBCH and E-PDCCH use cases. */
+        uint64_t byps_crc              : 1;  /**< [ 30: 30] When set to 0, append a 16-bit CRC with polynomial g_CRC16.
+
+                                                                 When set to 1, no CRC is appended. */
+        uint64_t reserved_27_29        : 3;
+        uint64_t k                     : 10; /**< [ 26: 17] The size (in bits) of the input block to the encoder, including the
+                                                                 CRC.
+
+                                                                 Note that if DENC is calculating the CRC ([BYPS_CRC] = 0), then the actual
+                                                                 read DMA input only contains ([K] - 16) bits. */
+        uint64_t enable                : 1;  /**< [ 16: 16] When set to 0, all output bits for this task are forced to zero.
+                                                                 When set to 1, enable normal processing. */
+        uint64_t reserved_0_15         : 16;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0_15         : 16;
+        uint64_t enable                : 1;  /**< [ 16: 16] When set to 0, all output bits for this task are forced to zero.
+                                                                 When set to 1, enable normal processing. */
+        uint64_t k                     : 10; /**< [ 26: 17] The size (in bits) of the input block to the encoder, including the
+                                                                 CRC.
+
+                                                                 Note that if DENC is calculating the CRC ([BYPS_CRC] = 0), then the actual
+                                                                 read DMA input only contains ([K] - 16) bits. */
+        uint64_t reserved_27_29        : 3;
+        uint64_t byps_crc              : 1;  /**< [ 30: 30] When set to 0, append a 16-bit CRC with polynomial g_CRC16.
+
+                                                                 When set to 1, no CRC is appended. */
+        uint64_t crc_msk_en            : 1;  /**< [ 31: 31] When set to 0, no CRC scrambling is performed.
+
+                                                                 When set to 1, the computed CRC is scrambled by XORing it with
+                                                                 [CRC_MASK]. This only applies when [BYPS_CRC] = 0.
+
+                                                                 Should be set to 1 for PBCH and E-PDCCH use cases. */
+        uint64_t rm_e                  : 14; /**< [ 45: 32] The size of the output after rate matching.
+
+                                                                 The size should be set to 2 x 9 x N_ECCE_EREG x N_EPDCCH_ECCE, where
+                                                                 N_ECCE_EREG is the number of EREGs per ECCE (either 4 or 8), and
+                                                                 N_EPDCCH_ECCE is the number of ECCEs per EPDCCH.  For example, with 8
+                                                                 ECCEs and 4 EREGs per ECCE, [RM_E] = 2 x 9 x 4 x 8 = 0x240.
+
+                                                                 This size assumes that there are 9 REs per EREG. DENC automatically
+                                                                 reduces the rate-matched size accordingly when an EREG has fewer than
+                                                                 9 REs. */
+        uint64_t reserved_46_51        : 6;
+        uint64_t start                 : 4;  /**< [ 55: 52] Resource mapping for this EPDCCH starts from the [START] symbol and
+                                                                 continues until the last symbol in the second slot. Valid range is
+                                                                 [0x0, 0xD]. */
+        uint64_t reserved_56_63        : 8;
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t reserved_127          : 1;
+        uint64_t c_init                : 31; /**< [126: 96] The initialization value, C_init, for the scrambler. */
+        uint64_t reserved_94_95        : 2;
+        uint64_t gain                  : 14; /**< [ 93: 80] eDCI gain. The gain applied to the modulated symbols. */
+        uint64_t crc_msk               : 16; /**< [ 79: 64] CRC mask used to scramble CRC when [CRC_MSK_EN] = 1.  This field
+                                                                 must be populated in MSB-first order. */
+#else /* Word 1 - Little Endian */
+        uint64_t crc_msk               : 16; /**< [ 79: 64] CRC mask used to scramble CRC when [CRC_MSK_EN] = 1.  This field
+                                                                 must be populated in MSB-first order. */
+        uint64_t gain                  : 14; /**< [ 93: 80] eDCI gain. The gain applied to the modulated symbols. */
+        uint64_t reserved_94_95        : 2;
+        uint64_t c_init                : 31; /**< [126: 96] The initialization value, C_init, for the scrambler. */
+        uint64_t reserved_127          : 1;
+#endif /* Word 1 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
+        uint64_t reserved_144_191      : 48;
+        uint64_t edci                  : 16; /**< [143:128] The eDCI number used to tag all modulated symbols associated with this
+                                                                 eDCI. */
+#else /* Word 2 - Little Endian */
+        uint64_t edci                  : 16; /**< [143:128] The eDCI number used to tag all modulated symbols associated with this
+                                                                 eDCI. */
+        uint64_t reserved_144_191      : 48;
+#endif /* Word 2 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
+        uint64_t ereg_w0               : 64; /**< [255:192] Bits [63:0] of the EREG_indicator array.
+
+                                                                 If EREG_indicator\<k\> = 1, then the k-th EREG can be used by this eDCI,
+                                                                 where:
+
+                                                                 _ k = 16j + m,
+
+                                                                 _ j = 0,..., 15 (maximum of 16 RBs per EPDCCH set).
+
+                                                                 _ m = 0,..., 15 (16 EREGs per RB).
+
+                                                                 I.e., bit (16j+m) maps to the m-th EREG in the j-th RB. */
+#else /* Word 3 - Little Endian */
+        uint64_t ereg_w0               : 64; /**< [255:192] Bits [63:0] of the EREG_indicator array.
+
+                                                                 If EREG_indicator\<k\> = 1, then the k-th EREG can be used by this eDCI,
+                                                                 where:
+
+                                                                 _ k = 16j + m,
+
+                                                                 _ j = 0,..., 15 (maximum of 16 RBs per EPDCCH set).
+
+                                                                 _ m = 0,..., 15 (16 EREGs per RB).
+
+                                                                 I.e., bit (16j+m) maps to the m-th EREG in the j-th RB. */
+#endif /* Word 3 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
+        uint64_t ereg_w1               : 64; /**< [319:256] Bits [127:64] of EREG_indicator. See [EREG_W0]. */
+#else /* Word 4 - Little Endian */
+        uint64_t ereg_w1               : 64; /**< [319:256] Bits [127:64] of EREG_indicator. See [EREG_W0]. */
+#endif /* Word 4 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
+        uint64_t ereg_w2               : 64; /**< [383:320] Bits [191:128] of EREG_indicator. See [EREG_W0]. */
+#else /* Word 5 - Little Endian */
+        uint64_t ereg_w2               : 64; /**< [383:320] Bits [191:128] of EREG_indicator. See [EREG_W0]. */
+#endif /* Word 5 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 6 - Big Endian */
+        uint64_t ereg_w3               : 64; /**< [447:384] Bits [255:192] of EREG_indicator. See [EREG_W0]. */
+#else /* Word 6 - Little Endian */
+        uint64_t ereg_w3               : 64; /**< [447:384] Bits [255:192] of EREG_indicator. See [EREG_W0]. */
+#endif /* Word 6 - End */
+    } loki;
 };
 
 /**
@@ -1300,7 +1437,271 @@ union cavm_denc_generic_task_cfg_s
         uint64_t reserved_376_383      : 8;
 #endif /* Word 5 - End */
     } cnf95xxp2;
-    /* struct cavm_denc_generic_task_cfg_s_cnf95xxp2 loki; */
+    struct cavm_denc_generic_task_cfg_s_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t out_by_o              : 2;  /**< [ 63: 62] Output data byte order.  See Baseband PHY (BPHY): Data Packing section
+                                                                 for details. */
+        uint64_t out_bi_o              : 1;  /**< [ 61: 61] Output data bit order.  See Baseband PHY (BPHY): Data Packing section
+                                                                 for details. */
+        uint64_t in_by_o               : 2;  /**< [ 60: 59] Input data byte order.  See Baseband PHY (BPHY): Data Packing section
+                                                                 for details. */
+        uint64_t in_bi_o               : 1;  /**< [ 58: 58] Input data bit order.  See Baseband PHY (BPHY): Data Packing section
+                                                                 for details. */
+        uint64_t reserved_56_57        : 2;
+        uint64_t crc_select            : 3;  /**< [ 55: 53] Select which CRC polynomial to use:
+                                                                 0x0: CRC8.
+                                                                 0x1: CRC16.
+                                                                 0x2: CRC24A.
+                                                                 0x3: CRC24B. */
+        uint64_t byps_seg              : 1;  /**< [ 52: 52] When set to 0, the output is segmented, with extra padding inserted.
+                                                                 See [SEG_PAD] for more details.
+
+                                                                 When set to 1, the output bits are written contiguously with no extra
+                                                                 padding inserted to segment the output. */
+        uint64_t byps_scram            : 1;  /**< [ 51: 51] When set to 0, perform scrambling on the output.
+                                                                 When set to 1, no scrambling is done. */
+        uint64_t byps_rm               : 1;  /**< [ 50: 50] When set to 0, perform rate matching.
+                                                                 When set to 1, no rate matching and no scrambling are performed. The
+                                                                 output size is 3 * [K] bits. */
+        uint64_t qm                    : 4;  /**< [ 49: 46] Modulation order:
+                                                                 0x1 = BPSK.
+                                                                 0x2 = QPSK.
+                                                                 0x4 = 16-QAM.
+                                                                 0x6 = 64-QAM.
+                                                                 0x8 = 256-QAM.
+                                                                 0xA = 1024-QAM.
+
+                                                                 Must be set to 0x2 for PBCH and E-PDCCH. */
+        uint64_t rm_e                  : 14; /**< [ 45: 32] The size of the output after rate matching.
+
+                                                                 PBCH:
+                                                                 * 0x780 for normal CP.
+                                                                 * 0x6c0 for extended CP.
+
+                                                                 For E-PDCCH DCI, there must be 72 bits per ECCE.
+                                                                 E.g., For 8 ECCEs, [RM_E] = 8 x 72 = 0x240.
+
+                                                                 For R-PDCCH, any value in [0x1, 0x3FFF]. */
+        uint64_t crc_msk_en            : 1;  /**< [ 31: 31] When set to 0, no CRC scrambling is performed.
+
+                                                                 When set to 1, the computed CRC is scrambled by XORing it with
+                                                                 [CRC_MSK]. This only applies when [BYPS_CRC] = 0.
+
+                                                                 Should be set to 1 for PBCH and E-PDCCH use cases. */
+        uint64_t byps_crc              : 1;  /**< [ 30: 30] When set to 0, append a 16-bit CRC with polynomial g_CRC16.
+
+                                                                 When set to 1, no CRC is appended. */
+        uint64_t k                     : 13; /**< [ 29: 17] The size (in bits) of the input block to the encoder, including the
+                                                                 CRC.
+
+                                                                 Note that if DENC is calculating the CRC ([BYPS_CRC] = 0), then the actual
+                                                                 read DMA input only contains ([K] - 16) bits.
+
+                                                                 For PBCH mode, [K] must be set to 0x28 bits. */
+        uint64_t enable                : 1;  /**< [ 16: 16] When set to 0, all output bits for this task are forced to zero.
+                                                                 When set to 1, enable normal processing. */
+        uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job should have a unique ID. */
+#else /* Word 0 - Little Endian */
+        uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job should have a unique ID. */
+        uint64_t enable                : 1;  /**< [ 16: 16] When set to 0, all output bits for this task are forced to zero.
+                                                                 When set to 1, enable normal processing. */
+        uint64_t k                     : 13; /**< [ 29: 17] The size (in bits) of the input block to the encoder, including the
+                                                                 CRC.
+
+                                                                 Note that if DENC is calculating the CRC ([BYPS_CRC] = 0), then the actual
+                                                                 read DMA input only contains ([K] - 16) bits.
+
+                                                                 For PBCH mode, [K] must be set to 0x28 bits. */
+        uint64_t byps_crc              : 1;  /**< [ 30: 30] When set to 0, append a 16-bit CRC with polynomial g_CRC16.
+
+                                                                 When set to 1, no CRC is appended. */
+        uint64_t crc_msk_en            : 1;  /**< [ 31: 31] When set to 0, no CRC scrambling is performed.
+
+                                                                 When set to 1, the computed CRC is scrambled by XORing it with
+                                                                 [CRC_MSK]. This only applies when [BYPS_CRC] = 0.
+
+                                                                 Should be set to 1 for PBCH and E-PDCCH use cases. */
+        uint64_t rm_e                  : 14; /**< [ 45: 32] The size of the output after rate matching.
+
+                                                                 PBCH:
+                                                                 * 0x780 for normal CP.
+                                                                 * 0x6c0 for extended CP.
+
+                                                                 For E-PDCCH DCI, there must be 72 bits per ECCE.
+                                                                 E.g., For 8 ECCEs, [RM_E] = 8 x 72 = 0x240.
+
+                                                                 For R-PDCCH, any value in [0x1, 0x3FFF]. */
+        uint64_t qm                    : 4;  /**< [ 49: 46] Modulation order:
+                                                                 0x1 = BPSK.
+                                                                 0x2 = QPSK.
+                                                                 0x4 = 16-QAM.
+                                                                 0x6 = 64-QAM.
+                                                                 0x8 = 256-QAM.
+                                                                 0xA = 1024-QAM.
+
+                                                                 Must be set to 0x2 for PBCH and E-PDCCH. */
+        uint64_t byps_rm               : 1;  /**< [ 50: 50] When set to 0, perform rate matching.
+                                                                 When set to 1, no rate matching and no scrambling are performed. The
+                                                                 output size is 3 * [K] bits. */
+        uint64_t byps_scram            : 1;  /**< [ 51: 51] When set to 0, perform scrambling on the output.
+                                                                 When set to 1, no scrambling is done. */
+        uint64_t byps_seg              : 1;  /**< [ 52: 52] When set to 0, the output is segmented, with extra padding inserted.
+                                                                 See [SEG_PAD] for more details.
+
+                                                                 When set to 1, the output bits are written contiguously with no extra
+                                                                 padding inserted to segment the output. */
+        uint64_t crc_select            : 3;  /**< [ 55: 53] Select which CRC polynomial to use:
+                                                                 0x0: CRC8.
+                                                                 0x1: CRC16.
+                                                                 0x2: CRC24A.
+                                                                 0x3: CRC24B. */
+        uint64_t reserved_56_57        : 2;
+        uint64_t in_bi_o               : 1;  /**< [ 58: 58] Input data bit order.  See Baseband PHY (BPHY): Data Packing section
+                                                                 for details. */
+        uint64_t in_by_o               : 2;  /**< [ 60: 59] Input data byte order.  See Baseband PHY (BPHY): Data Packing section
+                                                                 for details. */
+        uint64_t out_bi_o              : 1;  /**< [ 61: 61] Output data bit order.  See Baseband PHY (BPHY): Data Packing section
+                                                                 for details. */
+        uint64_t out_by_o              : 2;  /**< [ 63: 62] Output data byte order.  See Baseband PHY (BPHY): Data Packing section
+                                                                 for details. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t reserved_127          : 1;
+        uint64_t c_init                : 31; /**< [126: 96] The initialization value, C_init, for the scrambler. */
+        uint64_t symb_align            : 2;  /**< [ 95: 94] Select the aligment and interleaving for output bits.
+                                                                 0x0: Bypass mode. Bits are written consecutively, with no per-symbol
+                                                                 alignment.
+                                                                 0x1: Byte alignment for [QM] \< 0xA. Every [QM] bits are aligned to a byte
+                                                                 boundary.
+                                                                 0x2: Interleaved byte alignment for [QM] = 0xA. For each symbol, the five
+                                                                 even bits are packed in one byte, and the five odd bits are packed
+                                                                 in the next byte.
+                                                                 0x3: Consecutive byte alignment for [QM] = 0xA. For each symbol, bits 0-4
+                                                                 are written in one byte and bits 5-9 are written in the next byte. */
+        uint64_t reserved_88_93        : 6;
+        uint64_t crc_msk               : 24; /**< [ 87: 64] CRC mask used to scramble CRC when [CRC_MSK_EN] = 1.  This field
+                                                                 must be populated in MSB-first order. */
+#else /* Word 1 - Little Endian */
+        uint64_t crc_msk               : 24; /**< [ 87: 64] CRC mask used to scramble CRC when [CRC_MSK_EN] = 1.  This field
+                                                                 must be populated in MSB-first order. */
+        uint64_t reserved_88_93        : 6;
+        uint64_t symb_align            : 2;  /**< [ 95: 94] Select the aligment and interleaving for output bits.
+                                                                 0x0: Bypass mode. Bits are written consecutively, with no per-symbol
+                                                                 alignment.
+                                                                 0x1: Byte alignment for [QM] \< 0xA. Every [QM] bits are aligned to a byte
+                                                                 boundary.
+                                                                 0x2: Interleaved byte alignment for [QM] = 0xA. For each symbol, the five
+                                                                 even bits are packed in one byte, and the five odd bits are packed
+                                                                 in the next byte.
+                                                                 0x3: Consecutive byte alignment for [QM] = 0xA. For each symbol, bits 0-4
+                                                                 are written in one byte and bits 5-9 are written in the next byte. */
+        uint64_t c_init                : 31; /**< [126: 96] The initialization value, C_init, for the scrambler. */
+        uint64_t reserved_127          : 1;
+#endif /* Word 1 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
+        uint64_t reserved_189_191      : 3;
+        uint64_t seg3_syms             : 13; /**< [188:176] See [SEG_PAD] */
+        uint64_t reserved_173_175      : 3;
+        uint64_t seg2_syms             : 13; /**< [172:160] See [SEG_PAD] */
+        uint64_t reserved_157_159      : 3;
+        uint64_t seg1_syms             : 13; /**< [156:144] See [SEG_PAD] */
+        uint64_t reserved_141_143      : 3;
+        uint64_t seg0_syms             : 13; /**< [140:128] See [SEG_PAD] */
+#else /* Word 2 - Little Endian */
+        uint64_t seg0_syms             : 13; /**< [140:128] See [SEG_PAD] */
+        uint64_t reserved_141_143      : 3;
+        uint64_t seg1_syms             : 13; /**< [156:144] See [SEG_PAD] */
+        uint64_t reserved_157_159      : 3;
+        uint64_t seg2_syms             : 13; /**< [172:160] See [SEG_PAD] */
+        uint64_t reserved_173_175      : 3;
+        uint64_t seg3_syms             : 13; /**< [188:176] See [SEG_PAD] */
+        uint64_t reserved_189_191      : 3;
+#endif /* Word 2 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
+        uint64_t reserved_253_255      : 3;
+        uint64_t seg7_syms             : 13; /**< [252:240] See [SEG_PAD] */
+        uint64_t reserved_237_239      : 3;
+        uint64_t seg6_syms             : 13; /**< [236:224] See [SEG_PAD] */
+        uint64_t reserved_221_223      : 3;
+        uint64_t seg5_syms             : 13; /**< [220:208] See [SEG_PAD] */
+        uint64_t reserved_205_207      : 3;
+        uint64_t seg4_syms             : 13; /**< [204:192] See [SEG_PAD] */
+#else /* Word 3 - Little Endian */
+        uint64_t seg4_syms             : 13; /**< [204:192] See [SEG_PAD] */
+        uint64_t reserved_205_207      : 3;
+        uint64_t seg5_syms             : 13; /**< [220:208] See [SEG_PAD] */
+        uint64_t reserved_221_223      : 3;
+        uint64_t seg6_syms             : 13; /**< [236:224] See [SEG_PAD] */
+        uint64_t reserved_237_239      : 3;
+        uint64_t seg7_syms             : 13; /**< [252:240] See [SEG_PAD] */
+        uint64_t reserved_253_255      : 3;
+#endif /* Word 3 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
+        uint64_t reserved_317_319      : 3;
+        uint64_t seg11_syms            : 13; /**< [316:304] See [SEG_PAD] */
+        uint64_t reserved_301_303      : 3;
+        uint64_t seg10_syms            : 13; /**< [300:288] See [SEG_PAD] */
+        uint64_t reserved_285_287      : 3;
+        uint64_t seg9_syms             : 13; /**< [284:272] See [SEG_PAD] */
+        uint64_t reserved_269_271      : 3;
+        uint64_t seg8_syms             : 13; /**< [268:256] See [SEG_PAD] */
+#else /* Word 4 - Little Endian */
+        uint64_t seg8_syms             : 13; /**< [268:256] See [SEG_PAD] */
+        uint64_t reserved_269_271      : 3;
+        uint64_t seg9_syms             : 13; /**< [284:272] See [SEG_PAD] */
+        uint64_t reserved_285_287      : 3;
+        uint64_t seg10_syms            : 13; /**< [300:288] See [SEG_PAD] */
+        uint64_t reserved_301_303      : 3;
+        uint64_t seg11_syms            : 13; /**< [316:304] See [SEG_PAD] */
+        uint64_t reserved_317_319      : 3;
+#endif /* Word 4 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
+        uint64_t reserved_376_383      : 8;
+        uint64_t sym_per_seg           : 24; /**< [375:352] When [SEG_PAD] = 1, specifies the total number of symbols in all
+                                                                 segments.  Each segment is padded to this size.
+
+                                                                 Note that when [SEG_PAD] = 1 and [SYMB_ALIGN] = 0x0, [SYM_PER_SEG] must be
+                                                                 set such that ([QM] x [SYM_PER_SEG]) % 128 = 0.
+
+                                                                 When [SEG_PAD] = 1 and [SYMB_ALIGN] = 0x1, [SYM_PER_SEG] must be
+                                                                 set such that (8 x [SYM_PER_SEG]) % 128 = 0.
+
+                                                                 When [SEG_PAD] = 1 and [SYMB_ALIGN] = 0x2 or 0x3, [SYM_PER_SEG] must be
+                                                                 set such that (16 x [SYM_PER_SEG]) % 128 = 0. */
+        uint64_t seg_pad               : 1;  /**< [351:351] Segment padding mode:
+                                                                 0: Pad each segment to the next multiple of 128-bit words after
+                                                                 writing [SEGx_SYMS].
+                                                                 1: Pad all segments to contain a total of [SYM_PER_SEG] symbols.
+                                                                 See [SYM_PER_SEG] for more details. */
+        uint64_t reserved_349_350      : 2;
+        uint64_t seg13_syms            : 13; /**< [348:336] See [SEG_PAD] */
+        uint64_t reserved_333_335      : 3;
+        uint64_t seg12_syms            : 13; /**< [332:320] See [SEG_PAD] */
+#else /* Word 5 - Little Endian */
+        uint64_t seg12_syms            : 13; /**< [332:320] See [SEG_PAD] */
+        uint64_t reserved_333_335      : 3;
+        uint64_t seg13_syms            : 13; /**< [348:336] See [SEG_PAD] */
+        uint64_t reserved_349_350      : 2;
+        uint64_t seg_pad               : 1;  /**< [351:351] Segment padding mode:
+                                                                 0: Pad each segment to the next multiple of 128-bit words after
+                                                                 writing [SEGx_SYMS].
+                                                                 1: Pad all segments to contain a total of [SYM_PER_SEG] symbols.
+                                                                 See [SYM_PER_SEG] for more details. */
+        uint64_t sym_per_seg           : 24; /**< [375:352] When [SEG_PAD] = 1, specifies the total number of symbols in all
+                                                                 segments.  Each segment is padded to this size.
+
+                                                                 Note that when [SEG_PAD] = 1 and [SYMB_ALIGN] = 0x0, [SYM_PER_SEG] must be
+                                                                 set such that ([QM] x [SYM_PER_SEG]) % 128 = 0.
+
+                                                                 When [SEG_PAD] = 1 and [SYMB_ALIGN] = 0x1, [SYM_PER_SEG] must be
+                                                                 set such that (8 x [SYM_PER_SEG]) % 128 = 0.
+
+                                                                 When [SEG_PAD] = 1 and [SYMB_ALIGN] = 0x2 or 0x3, [SYM_PER_SEG] must be
+                                                                 set such that (16 x [SYM_PER_SEG]) % 128 = 0. */
+        uint64_t reserved_376_383      : 8;
+#endif /* Word 5 - End */
+    } loki;
 };
 
 /**
@@ -1451,7 +1852,75 @@ union cavm_denc_pdcch_dci_cfg_s
         uint64_t reserved_94_127       : 34;
 #endif /* Word 1 - End */
     } cnf95xxp2;
-    /* struct cavm_denc_pdcch_dci_cfg_s_cnf95xxp2 loki; */
+    struct cavm_denc_pdcch_dci_cfg_s_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t cce                   : 7;  /**< [ 63: 57] CCE index. Valid range is [0x0, 0x57]. */
+        uint64_t reserved_46_56        : 11;
+        uint64_t rm_e                  : 14; /**< [ 45: 32] The size of the output after rate matching.
+
+                                                                 For PDCCH DCI, there must be 72 bits per CCE.
+                                                                 E.g., For 8 CCEs, [RM_E] = 8 x 72 = 0x240.
+
+                                                                 For R-PDCCH, any value in [0x1, 0x3FFF]. */
+        uint64_t crc_msk_en            : 1;  /**< [ 31: 31] When set to 0, no CRC scrambling is performed.
+
+                                                                 When set to 1, the computed CRC is scrambled by XORing it with
+                                                                 [CRC_MASK]. This only applies when [BYPS_CRC] = 0.
+
+                                                                 Should be set to 1 for PBCH and E-PDCCH use cases. */
+        uint64_t byps_crc              : 1;  /**< [ 30: 30] When set to 0, append a 16-bit CRC with polynomial g_CRC16.
+
+                                                                 When set to 1, no CRC is appended. */
+        uint64_t reserved_27_29        : 3;
+        uint64_t k                     : 10; /**< [ 26: 17] The size (in bits) of the input block to the encoder, including the
+                                                                 CRC.
+
+                                                                 Note that if DENC is calculating the CRC ([BYPS_CRC] = 0), then the actual
+                                                                 read DMA input only contains ([K] - 16) bits. */
+        uint64_t enable                : 1;  /**< [ 16: 16] When set to 0, all output bits for this task are forced to zero.
+                                                                 When set to 1, enable normal processing. */
+        uint64_t reserved_0_15         : 16;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0_15         : 16;
+        uint64_t enable                : 1;  /**< [ 16: 16] When set to 0, all output bits for this task are forced to zero.
+                                                                 When set to 1, enable normal processing. */
+        uint64_t k                     : 10; /**< [ 26: 17] The size (in bits) of the input block to the encoder, including the
+                                                                 CRC.
+
+                                                                 Note that if DENC is calculating the CRC ([BYPS_CRC] = 0), then the actual
+                                                                 read DMA input only contains ([K] - 16) bits. */
+        uint64_t reserved_27_29        : 3;
+        uint64_t byps_crc              : 1;  /**< [ 30: 30] When set to 0, append a 16-bit CRC with polynomial g_CRC16.
+
+                                                                 When set to 1, no CRC is appended. */
+        uint64_t crc_msk_en            : 1;  /**< [ 31: 31] When set to 0, no CRC scrambling is performed.
+
+                                                                 When set to 1, the computed CRC is scrambled by XORing it with
+                                                                 [CRC_MASK]. This only applies when [BYPS_CRC] = 0.
+
+                                                                 Should be set to 1 for PBCH and E-PDCCH use cases. */
+        uint64_t rm_e                  : 14; /**< [ 45: 32] The size of the output after rate matching.
+
+                                                                 For PDCCH DCI, there must be 72 bits per CCE.
+                                                                 E.g., For 8 CCEs, [RM_E] = 8 x 72 = 0x240.
+
+                                                                 For R-PDCCH, any value in [0x1, 0x3FFF]. */
+        uint64_t reserved_46_56        : 11;
+        uint64_t cce                   : 7;  /**< [ 63: 57] CCE index. Valid range is [0x0, 0x57]. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t reserved_94_127       : 34;
+        uint64_t gain                  : 14; /**< [ 93: 80] DCI gain. The gain applied to the modulated symbols for this DCI. */
+        uint64_t crc_msk               : 16; /**< [ 79: 64] CRC mask used to scramble CRC when [CRC_MSK_EN] = 1.  This field
+                                                                 must be populated in MSB-first order. */
+#else /* Word 1 - Little Endian */
+        uint64_t crc_msk               : 16; /**< [ 79: 64] CRC mask used to scramble CRC when [CRC_MSK_EN] = 1.  This field
+                                                                 must be populated in MSB-first order. */
+        uint64_t gain                  : 14; /**< [ 93: 80] DCI gain. The gain applied to the modulated symbols for this DCI. */
+        uint64_t reserved_94_127       : 34;
+#endif /* Word 1 - End */
+    } loki;
 };
 
 /**

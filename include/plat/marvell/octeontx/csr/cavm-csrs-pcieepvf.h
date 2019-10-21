@@ -3349,7 +3349,37 @@ union cavm_pcieepvfx_tph_req_cap
         uint32_t reserved_27_31        : 5;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pcieepvfx_tph_req_cap_s cn; */
+    /* struct cavm_pcieepvfx_tph_req_cap_s cn9; */
+    /* struct cavm_pcieepvfx_tph_req_cap_s cn96xxp1; */
+    struct cavm_pcieepvfx_tph_req_cap_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_27_31        : 5;
+        uint32_t sts                   : 11; /**< [ 26: 16](RO) ST table size. */
+        uint32_t reserved_11_15        : 5;
+        uint32_t stl1                  : 1;  /**< [ 10: 10](RO) Steering tag table location bit 1. */
+        uint32_t stl0                  : 1;  /**< [  9:  9](RO) Steering tag table location bit 0. */
+        uint32_t ext                   : 1;  /**< [  8:  8](RO) Extended TPH requester supported. */
+        uint32_t reserved_3_7          : 5;
+        uint32_t ds                    : 1;  /**< [  2:  2](RO) Device specific mode supported. */
+        uint32_t intv                  : 1;  /**< [  1:  1](RO) Interrupt vector mode supported. */
+        uint32_t tph_req_no_st_mode    : 1;  /**< [  0:  0](RO) No ST mode supported. */
+#else /* Word 0 - Little Endian */
+        uint32_t tph_req_no_st_mode    : 1;  /**< [  0:  0](RO) No ST mode supported. */
+        uint32_t intv                  : 1;  /**< [  1:  1](RO) Interrupt vector mode supported. */
+        uint32_t ds                    : 1;  /**< [  2:  2](RO) Device specific mode supported. */
+        uint32_t reserved_3_7          : 5;
+        uint32_t ext                   : 1;  /**< [  8:  8](RO) Extended TPH requester supported. */
+        uint32_t stl0                  : 1;  /**< [  9:  9](RO) Steering tag table location bit 0. */
+        uint32_t stl1                  : 1;  /**< [ 10: 10](RO) Steering tag table location bit 1. */
+        uint32_t reserved_11_15        : 5;
+        uint32_t sts                   : 11; /**< [ 26: 16](RO) ST table size. */
+        uint32_t reserved_27_31        : 5;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pcieepvfx_tph_req_cap_cn96xxp3 cn98xx; */
+    /* struct cavm_pcieepvfx_tph_req_cap_s cnf95xx; */
+    /* struct cavm_pcieepvfx_tph_req_cap_cn96xxp3 loki; */
 };
 typedef union cavm_pcieepvfx_tph_req_cap cavm_pcieepvfx_tph_req_cap_t;
 

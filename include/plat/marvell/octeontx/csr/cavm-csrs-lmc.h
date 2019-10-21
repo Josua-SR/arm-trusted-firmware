@@ -15735,7 +15735,10 @@ static inline uint64_t CAVM_LMCX_NS_CTL(unsigned long a)
  * 0x9: mem_msb = mem_adr[34].
  * 0xA: mem_msb = mem_adr[35].
  * 0xB: mem_msb = mem_adr[36].
- * 0xC-0xF = Reserved.
+ * 0xC: mem_msb = mem_adr[37].
+ * 0xD: mem_msb = mem_adr[38].
+ * 0xE: mem_msb = mem_adr[39].
+ * 0xF: mem_msb = mem_adr[40].
  *
  * For example, for a DIMM made of Samsung's K4B1G0846C-ZCF7 1Gb (16M * 8 bit * 8 bank)
  * parts, the column address width = 10; so with 10b of col, 3b of bus, 3b of bank, row_lsb = 16.

@@ -164,6 +164,67 @@ union cavm_pciercx_ack_timer
                                                                  The value is determined from Tables 3-4 of the PCIe 3.0 specification and divided by 4,
                                                                  since the Mac is architected to process 4 symbols per pipe clock.  The value is adjusted
                                                                  internally depending on the link speed to generate a value to corresponding to the
+                                                                 appropriate value in Tables 3-4, 3-5, and 3-6.  Note that the value read will
+                                                                 always reflect the Table 3-4 value regardless of current link speed.
+
+                                                                 If the user changes this value, they should refer to the PCIe specification
+                                                                 for the correct value. */
+        uint32_t rtltl                 : 16; /**< [ 15:  0](R/W/H) Round trip latency time limit. The ACK/NAK latency timer expires when it reaches this
+                                                                 limit. This value is set correctly by the hardware out of reset or when the negotiated
+                                                                 link width or payload size changes.
+
+                                                                 The value is determined from Tables 3-7 of the PCIe 3.0 specification and divided by 4,
+                                                                 since the Mac is architected to process 4 symbols per pipe clock.  The value is adjusted
+                                                                 internally depending on the link speed to generate a value to corresponding to the
+                                                                 appropriate value in Tables 3-7, 3-8, 3-9.  Note that the value read will
+                                                                 always reflect the Table 3-7 value regardless of current link speed.
+
+                                                                 The limit must reflect the round trip latency from requester to completer. If there
+                                                                 is a change in the payload size or link width, the controller will override any
+                                                                 value that you have written to this register field, and reset the
+                                                                 field back to the specification-defined value. */
+#else /* Word 0 - Little Endian */
+        uint32_t rtltl                 : 16; /**< [ 15:  0](R/W/H) Round trip latency time limit. The ACK/NAK latency timer expires when it reaches this
+                                                                 limit. This value is set correctly by the hardware out of reset or when the negotiated
+                                                                 link width or payload size changes.
+
+                                                                 The value is determined from Tables 3-7 of the PCIe 3.0 specification and divided by 4,
+                                                                 since the Mac is architected to process 4 symbols per pipe clock.  The value is adjusted
+                                                                 internally depending on the link speed to generate a value to corresponding to the
+                                                                 appropriate value in Tables 3-7, 3-8, 3-9.  Note that the value read will
+                                                                 always reflect the Table 3-7 value regardless of current link speed.
+
+                                                                 The limit must reflect the round trip latency from requester to completer. If there
+                                                                 is a change in the payload size or link width, the controller will override any
+                                                                 value that you have written to this register field, and reset the
+                                                                 field back to the specification-defined value. */
+        uint32_t rtl                   : 16; /**< [ 31: 16](R/W/H) Replay time limit. The replay timer expires when it reaches this limit. The PCI Express
+                                                                 bus initiates a replay upon reception of a NAK or when the replay timer expires. This
+                                                                 value is set correctly by the hardware out of reset or when the negotiated link width or
+                                                                 payload size changes.
+
+                                                                 The value is determined from Tables 3-4 of the PCIe 3.0 specification and divided by 4,
+                                                                 since the Mac is architected to process 4 symbols per pipe clock.  The value is adjusted
+                                                                 internally depending on the link speed to generate a value to corresponding to the
+                                                                 appropriate value in Tables 3-4, 3-5, and 3-6.  Note that the value read will
+                                                                 always reflect the Table 3-4 value regardless of current link speed.
+
+                                                                 If the user changes this value, they should refer to the PCIe specification
+                                                                 for the correct value. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pciercx_ack_timer_cn96xxp3 cn98xx; */
+    struct cavm_pciercx_ack_timer_cnf95xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t rtl                   : 16; /**< [ 31: 16](R/W/H) Replay time limit. The replay timer expires when it reaches this limit. The PCI Express
+                                                                 bus initiates a replay upon reception of a NAK or when the replay timer expires. This
+                                                                 value is set correctly by the hardware out of reset or when the negotiated link width or
+                                                                 payload size changes.
+
+                                                                 The value is determined from Tables 3-4 of the PCIe 3.0 specification and divided by 4,
+                                                                 since the Mac is architected to process 4 symbols per pipe clock.  The value is adjusted
+                                                                 internally depending on the link speed to generate a value to corresponding to the
                                                                  approporiate value in Tables 3-4, 3-5, and 3-6.  Note that the value read will
                                                                  always reflect the Table 3-4 value regardless of current link speed.
 
@@ -212,9 +273,7 @@ union cavm_pciercx_ack_timer
                                                                  If the user changes this value, they should refer to the PCIe specification
                                                                  for the correct value. */
 #endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_pciercx_ack_timer_cn96xxp3 cn98xx; */
-    /* struct cavm_pciercx_ack_timer_cn96xxp3 cnf95xx; */
+    } cnf95xx;
     /* struct cavm_pciercx_ack_timer_cn96xxp3 loki; */
 };
 typedef union cavm_pciercx_ack_timer cavm_pciercx_ack_timer_t;
@@ -7593,7 +7652,7 @@ union cavm_pciercx_cfg121
                                                                  TLPs.  For more details, refer to PCIERC()_CFG127. */
         uint32_t einj4_en              : 1;  /**< [  4:  4](R/W) FC credit update error injection enable.  Enables insertion of errors into
                                                                  Updated FCs. See PCIERC()_CFG126. */
-        uint32_t einj3_en              : 1;  /**< [  3:  3](R/W) Symbol datak mask or sync header error enable.  Enables data masking of special
+        uint32_t einj3_en              : 1;  /**< [  3:  3](R/W) Symbol data mask or sync header error enable.  Enables data masking of special
                                                                  symbols or the breaking of the sync header.  See PCIERC()_CFG125. */
         uint32_t einj2_en              : 1;  /**< [  2:  2](R/W) DLLP error injection enable.  enables insertion of DLLP errors.
                                                                  See PCIERC()_CFG124. */
@@ -7610,7 +7669,7 @@ union cavm_pciercx_cfg121
                                                                  See PCIERC()_CFG123. */
         uint32_t einj2_en              : 1;  /**< [  2:  2](R/W) DLLP error injection enable.  enables insertion of DLLP errors.
                                                                  See PCIERC()_CFG124. */
-        uint32_t einj3_en              : 1;  /**< [  3:  3](R/W) Symbol datak mask or sync header error enable.  Enables data masking of special
+        uint32_t einj3_en              : 1;  /**< [  3:  3](R/W) Symbol data mask or sync header error enable.  Enables data masking of special
                                                                  symbols or the breaking of the sync header.  See PCIERC()_CFG125. */
         uint32_t einj4_en              : 1;  /**< [  4:  4](R/W) FC credit update error injection enable.  Enables insertion of errors into
                                                                  Updated FCs. See PCIERC()_CFG126. */
@@ -9299,14 +9358,14 @@ union cavm_pciercx_cfg154
                                                                  at same cycle time in SKPOS state.
                                                                  0x28 = When a 2-block timeout occurs for SKP OS in SKPOS state.
                                                                  0x29 = When receiving consecutive OS blocks within a data stream in SKPOS state.n.
-                                                                 0x2A = When Phy status error was detected in SKPOS state.
+                                                                 0x2A = When PHY status error was detected in SKPOS state.
                                                                  0x2B = When not all active lanes receiving EIOS starting at
                                                                  same cycle time in EIOS state.
                                                                  0x2C = When at least one symbol from the first 4 symbols
                                                                  is not EIOS Symbol in EIOS state (CX_NB=2 only).
                                                                  0x2D = When not all active lanes receiving EIEOS starting
                                                                  at same cycle time in EIEOS state.
-                                                                 0x2E = When not full 16 eieos symbols are received in EIEOS state.
+                                                                 0x2E = When not full 16 EIEOS symbols are received in EIEOS state.
 
                                                                  All other values not listed above are reserved. */
 #else /* Word 0 - Little Endian */
@@ -9344,14 +9403,14 @@ union cavm_pciercx_cfg154
                                                                  at same cycle time in SKPOS state.
                                                                  0x28 = When a 2-block timeout occurs for SKP OS in SKPOS state.
                                                                  0x29 = When receiving consecutive OS blocks within a data stream in SKPOS state.n.
-                                                                 0x2A = When Phy status error was detected in SKPOS state.
+                                                                 0x2A = When PHY status error was detected in SKPOS state.
                                                                  0x2B = When not all active lanes receiving EIOS starting at
                                                                  same cycle time in EIOS state.
                                                                  0x2C = When at least one symbol from the first 4 symbols
                                                                  is not EIOS Symbol in EIOS state (CX_NB=2 only).
                                                                  0x2D = When not all active lanes receiving EIEOS starting
                                                                  at same cycle time in EIEOS state.
-                                                                 0x2E = When not full 16 eieos symbols are received in EIEOS state.
+                                                                 0x2E = When not full 16 EIEOS symbols are received in EIEOS state.
 
                                                                  All other values not listed above are reserved. */
         uint32_t framing_err           : 1;  /**< [  7:  7](R/W1C) Framing error.
@@ -15058,6 +15117,73 @@ union cavm_pciercx_dev_ctl2
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_16_31        : 16;
         uint32_t eetpb                 : 1;  /**< [ 15: 15](R/W) End-end TLP prefix blocking.
+                                                                 Writable when PCIERC_DEV_CAP2[EETPS] is set. */
+        uint32_t obffe                 : 2;  /**< [ 14: 13](R/W) Optimized buffer flush fill (OBFF) enabled. */
+        uint32_t tag10b_req_en         : 1;  /**< [ 12: 12](R/W/H) 10-bit tag requester enabled.
+
+                                                                 For UPEM, this bit is R/W and can be set to enable 10-bit
+                                                                 tag requester enable.
+
+                                                                 For BPEM, this bit is RO and cannot be written. */
+        uint32_t reserved_11           : 1;
+        uint32_t ltre                  : 1;  /**< [ 10: 10](RO) Latency tolerance reporting (LTR) mechanism enable. (not supported). */
+        uint32_t id0_cp                : 1;  /**< [  9:  9](R/W) ID based ordering completion enable (not supported). */
+        uint32_t id0_rq                : 1;  /**< [  8:  8](R/W) ID based ordering request enable. */
+        uint32_t atom_op_eb            : 1;  /**< [  7:  7](R/W) AtomicOp egress blocking. */
+        uint32_t atom_op               : 1;  /**< [  6:  6](R/W) AtomicOp requester enable. */
+        uint32_t ari                   : 1;  /**< [  5:  5](R/W) Alternate routing ID forwarding supported. */
+        uint32_t ctd                   : 1;  /**< [  4:  4](R/W) Completion timeout disable. */
+        uint32_t ctv                   : 4;  /**< [  3:  0](R/W) Completion timeout value.
+                                                                 0x0 = Default range: 16 ms to 55 ms.
+                                                                 0x1 = 50 us to 100 us.
+                                                                 0x2 = 1 ms to 10 ms.
+                                                                 0x3 = 16 ms to 55 ms.
+                                                                 0x6 = 65 ms to 210 ms.
+                                                                 0x9 = 260 ms to 900 ms.
+                                                                 0xA = 1 s to 3.5 s.
+                                                                 0xD = 4 s to 13 s (not supported).
+                                                                 0xE = 17 s to 64 s (not supported).
+
+                                                                 Values not defined are reserved. */
+#else /* Word 0 - Little Endian */
+        uint32_t ctv                   : 4;  /**< [  3:  0](R/W) Completion timeout value.
+                                                                 0x0 = Default range: 16 ms to 55 ms.
+                                                                 0x1 = 50 us to 100 us.
+                                                                 0x2 = 1 ms to 10 ms.
+                                                                 0x3 = 16 ms to 55 ms.
+                                                                 0x6 = 65 ms to 210 ms.
+                                                                 0x9 = 260 ms to 900 ms.
+                                                                 0xA = 1 s to 3.5 s.
+                                                                 0xD = 4 s to 13 s (not supported).
+                                                                 0xE = 17 s to 64 s (not supported).
+
+                                                                 Values not defined are reserved. */
+        uint32_t ctd                   : 1;  /**< [  4:  4](R/W) Completion timeout disable. */
+        uint32_t ari                   : 1;  /**< [  5:  5](R/W) Alternate routing ID forwarding supported. */
+        uint32_t atom_op               : 1;  /**< [  6:  6](R/W) AtomicOp requester enable. */
+        uint32_t atom_op_eb            : 1;  /**< [  7:  7](R/W) AtomicOp egress blocking. */
+        uint32_t id0_rq                : 1;  /**< [  8:  8](R/W) ID based ordering request enable. */
+        uint32_t id0_cp                : 1;  /**< [  9:  9](R/W) ID based ordering completion enable (not supported). */
+        uint32_t ltre                  : 1;  /**< [ 10: 10](RO) Latency tolerance reporting (LTR) mechanism enable. (not supported). */
+        uint32_t reserved_11           : 1;
+        uint32_t tag10b_req_en         : 1;  /**< [ 12: 12](R/W/H) 10-bit tag requester enabled.
+
+                                                                 For UPEM, this bit is R/W and can be set to enable 10-bit
+                                                                 tag requester enable.
+
+                                                                 For BPEM, this bit is RO and cannot be written. */
+        uint32_t obffe                 : 2;  /**< [ 14: 13](R/W) Optimized buffer flush fill (OBFF) enabled. */
+        uint32_t eetpb                 : 1;  /**< [ 15: 15](R/W) End-end TLP prefix blocking.
+                                                                 Writable when PCIERC_DEV_CAP2[EETPS] is set. */
+        uint32_t reserved_16_31        : 16;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pciercx_dev_ctl2_cn96xxp3 cn98xx; */
+    struct cavm_pciercx_dev_ctl2_cnf95xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_16_31        : 16;
+        uint32_t eetpb                 : 1;  /**< [ 15: 15](R/W) End-end TLP prefix blocking.
                                                                  Writeable when PCIERC_DEV_CAP2[EETPS] is set. */
         uint32_t obffe                 : 2;  /**< [ 14: 13](R/W) Optimized buffer flush fill (OBFF) enabled. */
         uint32_t tag10b_req_en         : 1;  /**< [ 12: 12](R/W/H) 10-bit tag requester enabled.
@@ -15118,9 +15244,7 @@ union cavm_pciercx_dev_ctl2
                                                                  Writeable when PCIERC_DEV_CAP2[EETPS] is set. */
         uint32_t reserved_16_31        : 16;
 #endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_pciercx_dev_ctl2_cn96xxp3 cn98xx; */
-    /* struct cavm_pciercx_dev_ctl2_cn96xxp3 cnf95xx; */
+    } cnf95xx;
     /* struct cavm_pciercx_dev_ctl2_cn96xxp3 loki; */
 };
 typedef union cavm_pciercx_dev_ctl2 cavm_pciercx_dev_ctl2_t;
@@ -17958,7 +18082,69 @@ union cavm_pciercx_link_cap
         uint32_t pnum                  : 8;  /**< [ 31: 24](RO/WRSL) Port number, writable through PEM()_CFG_TBL(). */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pciercx_link_cap_s cn; */
+    /* struct cavm_pciercx_link_cap_s cn9; */
+    /* struct cavm_pciercx_link_cap_s cn96xxp1; */
+    struct cavm_pciercx_link_cap_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t pnum                  : 8;  /**< [ 31: 24](RO/WRSL) Port number, writable through PEM()_CFG_TBL(). */
+        uint32_t reserved_23           : 1;
+        uint32_t aspm                  : 1;  /**< [ 22: 22](RO/WRSL) ASPM optionality compliance. */
+        uint32_t lbnc                  : 1;  /**< [ 21: 21](RO/WRSL) Link bandwidth notification capability. */
+        uint32_t dllarc                : 1;  /**< [ 20: 20](RO) Data link layer active reporting capable. Set to one for root complex devices and 0 for
+                                                                 endpoint devices. */
+        uint32_t sderc                 : 1;  /**< [ 19: 19](RO/WRSL) Surprise down error reporting capable.  Set to one for root complex devices and 0 for
+                                                                 endpoint devices. */
+        uint32_t cpm                   : 1;  /**< [ 18: 18](RO) Clock power management. Set to 0 for root complex devices. */
+        uint32_t l1el                  : 3;  /**< [ 17: 15](RO/WRSL) L1 exit latency. The default value is the value that software specifies during hardware
+                                                                 configuration, writable through PEM()_CFG_TBL(). */
+        uint32_t l0el                  : 3;  /**< [ 14: 12](RO/WRSL) L0s exit latency. The default value is the value that software
+                                                                 specifies during hardware configuration, writable through PEM()_CFG_TBL(). */
+        uint32_t aslpms                : 2;  /**< [ 11: 10](RO/WRSL) Active state link PM support. Only L1 is supported (L0s not supported).
+                                                                 Writable through PEM()_CFG_TBL(). */
+        uint32_t mlw                   : 6;  /**< [  9:  4](RO/WRSL/H) Maximum link width.  Legal encodings are 0x1 (l lane), 0x2 (2 lanes), 0x4 (4 lanes),
+                                                                 0x8 (8 lanes), and 0x10 (16 lanes).  Some encodings may not be legal for all PEMs.
+                                                                 This field is writable through PEM()_CFG_TBL(). */
+        uint32_t mls                   : 4;  /**< [  3:  0](RO/WRSL) Maximum link speed.
+
+                                                                 0x1 = 2.5 GHz supported.
+                                                                 0x2 = 5.0 GHz and 2.5 GHz supported.
+                                                                 0x3 = 8.0 GHz, 5.0 GHz and 2.5 GHz supported.
+                                                                 0x4 = 16.0 GHz, 8.0 GHz, 5.0 GHz, and 2.5 GHz supported.
+
+                                                                 This field is writable through PEM()_CFG_TBL(). */
+#else /* Word 0 - Little Endian */
+        uint32_t mls                   : 4;  /**< [  3:  0](RO/WRSL) Maximum link speed.
+
+                                                                 0x1 = 2.5 GHz supported.
+                                                                 0x2 = 5.0 GHz and 2.5 GHz supported.
+                                                                 0x3 = 8.0 GHz, 5.0 GHz and 2.5 GHz supported.
+                                                                 0x4 = 16.0 GHz, 8.0 GHz, 5.0 GHz, and 2.5 GHz supported.
+
+                                                                 This field is writable through PEM()_CFG_TBL(). */
+        uint32_t mlw                   : 6;  /**< [  9:  4](RO/WRSL/H) Maximum link width.  Legal encodings are 0x1 (l lane), 0x2 (2 lanes), 0x4 (4 lanes),
+                                                                 0x8 (8 lanes), and 0x10 (16 lanes).  Some encodings may not be legal for all PEMs.
+                                                                 This field is writable through PEM()_CFG_TBL(). */
+        uint32_t aslpms                : 2;  /**< [ 11: 10](RO/WRSL) Active state link PM support. Only L1 is supported (L0s not supported).
+                                                                 Writable through PEM()_CFG_TBL(). */
+        uint32_t l0el                  : 3;  /**< [ 14: 12](RO/WRSL) L0s exit latency. The default value is the value that software
+                                                                 specifies during hardware configuration, writable through PEM()_CFG_TBL(). */
+        uint32_t l1el                  : 3;  /**< [ 17: 15](RO/WRSL) L1 exit latency. The default value is the value that software specifies during hardware
+                                                                 configuration, writable through PEM()_CFG_TBL(). */
+        uint32_t cpm                   : 1;  /**< [ 18: 18](RO) Clock power management. Set to 0 for root complex devices. */
+        uint32_t sderc                 : 1;  /**< [ 19: 19](RO/WRSL) Surprise down error reporting capable.  Set to one for root complex devices and 0 for
+                                                                 endpoint devices. */
+        uint32_t dllarc                : 1;  /**< [ 20: 20](RO) Data link layer active reporting capable. Set to one for root complex devices and 0 for
+                                                                 endpoint devices. */
+        uint32_t lbnc                  : 1;  /**< [ 21: 21](RO/WRSL) Link bandwidth notification capability. */
+        uint32_t aspm                  : 1;  /**< [ 22: 22](RO/WRSL) ASPM optionality compliance. */
+        uint32_t reserved_23           : 1;
+        uint32_t pnum                  : 8;  /**< [ 31: 24](RO/WRSL) Port number, writable through PEM()_CFG_TBL(). */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pciercx_link_cap_cn96xxp3 cn98xx; */
+    /* struct cavm_pciercx_link_cap_s cnf95xx; */
+    /* struct cavm_pciercx_link_cap_cn96xxp3 loki; */
 };
 typedef union cavm_pciercx_link_cap cavm_pciercx_link_cap_t;
 
@@ -22148,7 +22334,29 @@ union cavm_pciercx_ptm_ctl
         uint32_t reserved_16_31        : 16;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pciercx_ptm_ctl_s cn; */
+    /* struct cavm_pciercx_ptm_ctl_s cn9; */
+    /* struct cavm_pciercx_ptm_ctl_s cn96xxp1; */
+    struct cavm_pciercx_ptm_ctl_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_16_31        : 16;
+        uint32_t eff_gran              : 8;  /**< [ 15:  8](R/W) PTM effective granularity. */
+        uint32_t reserved_2_7          : 6;
+        uint32_t rt_sel                : 1;  /**< [  1:  1](R/W) PTM root select. When set this time source is the PTM root.
+                                                                 Writable only when PCIERC_PTM_CAP[RTC] is set. */
+        uint32_t en                    : 1;  /**< [  0:  0](R/W) PTM enable. When set, this function is permitted to participate in the PTM mechanism. */
+#else /* Word 0 - Little Endian */
+        uint32_t en                    : 1;  /**< [  0:  0](R/W) PTM enable. When set, this function is permitted to participate in the PTM mechanism. */
+        uint32_t rt_sel                : 1;  /**< [  1:  1](R/W) PTM root select. When set this time source is the PTM root.
+                                                                 Writable only when PCIERC_PTM_CAP[RTC] is set. */
+        uint32_t reserved_2_7          : 6;
+        uint32_t eff_gran              : 8;  /**< [ 15:  8](R/W) PTM effective granularity. */
+        uint32_t reserved_16_31        : 16;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pciercx_ptm_ctl_cn96xxp3 cn98xx; */
+    /* struct cavm_pciercx_ptm_ctl_s cnf95xx; */
+    /* struct cavm_pciercx_ptm_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_pciercx_ptm_ctl cavm_pciercx_ptm_ctl_t;
 
@@ -22308,7 +22516,39 @@ union cavm_pciercx_ptm_res_ctl
         uint32_t reserved_2_31         : 30;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pciercx_ptm_res_ctl_s cn; */
+    /* struct cavm_pciercx_ptm_res_ctl_s cn9; */
+    /* struct cavm_pciercx_ptm_res_ctl_s cn96xxp1; */
+    struct cavm_pciercx_ptm_res_ctl_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_2_31         : 30;
+        uint32_t pd_byterev            : 1;  /**< [  1:  1](R/W) PTM requester propagation delay byte reverse
+
+                                                                 0 = The PTM propagation delay word in the PTM response
+                                                                 message is implemented as high order byte first.
+
+                                                                 1 = The PTM propagation delay word in the PTM response
+                                                                 message is implemented as low order byte first, which is not
+                                                                 in accordance with the PCI-SIG interpretation. */
+        uint32_t pres_ctx_vld          : 1;  /**< [  0:  0](RO/WRSL/H) PTM responder control context valid - PTM local timing is valid.
+                                                                 A speed change or aux_clk_active will set this bit low. */
+#else /* Word 0 - Little Endian */
+        uint32_t pres_ctx_vld          : 1;  /**< [  0:  0](RO/WRSL/H) PTM responder control context valid - PTM local timing is valid.
+                                                                 A speed change or aux_clk_active will set this bit low. */
+        uint32_t pd_byterev            : 1;  /**< [  1:  1](R/W) PTM requester propagation delay byte reverse
+
+                                                                 0 = The PTM propagation delay word in the PTM response
+                                                                 message is implemented as high order byte first.
+
+                                                                 1 = The PTM propagation delay word in the PTM response
+                                                                 message is implemented as low order byte first, which is not
+                                                                 in accordance with the PCI-SIG interpretation. */
+        uint32_t reserved_2_31         : 30;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pciercx_ptm_res_ctl_cn96xxp3 cn98xx; */
+    /* struct cavm_pciercx_ptm_res_ctl_s cnf95xx; */
+    /* struct cavm_pciercx_ptm_res_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_pciercx_ptm_res_ctl cavm_pciercx_ptm_res_ctl_t;
 
@@ -24536,7 +24776,49 @@ union cavm_pciercx_ras_einj_en
         uint32_t reserved_7_31         : 25;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pciercx_ras_einj_en_s cn; */
+    /* struct cavm_pciercx_ras_einj_en_s cn9; */
+    /* struct cavm_pciercx_ras_einj_en_s cn96xxp1; */
+    struct cavm_pciercx_ras_einj_en_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_7_31         : 25;
+        uint32_t einj6_en              : 1;  /**< [  6:  6](R/W) Specific TLP error injection enable.  Enables insertion of errors into the
+                                                                 packet selected.  For more details, refer to PCIERC_RAS_EINJ_CTL6CMPP0. */
+        uint32_t einj5_en              : 1;  /**< [  5:  5](R/W) TLP duplicate/nullify error injection enable.  Enables insertion of duplicate/nullified
+                                                                 TLPs.  For more details, refer to PCIERC_RAS_EINJ_CTL5. */
+        uint32_t einj4_en              : 1;  /**< [  4:  4](R/W) FC credit update error injection enable.  Enables insertion of errors into
+                                                                 Updated FCs. See PCIERC_RAS_EINJ_CTL4. */
+        uint32_t einj3_en              : 1;  /**< [  3:  3](R/W) Symbol data mask or sync header error enable.  Enables data masking of special
+                                                                 symbols or the breaking of the sync header.  See PCIERC_RAS_EINJ_CTL3. */
+        uint32_t einj2_en              : 1;  /**< [  2:  2](R/W) DLLP error injection enable.  enables insertion of DLLP errors.
+                                                                 See PCIERC_RAS_EINJ_CTL2. */
+        uint32_t einj1_en              : 1;  /**< [  1:  1](R/W) Sequence number error injection enable.  Enables insertion of errors into
+                                                                 sequence numbers.
+                                                                 See PCIERC_RAS_EINJ_CTL1. */
+        uint32_t einj0_en              : 1;  /**< [  0:  0](R/W) CRC error injection enable.  Enables insertion of errors into various CRC.
+                                                                 See PCIERC_RAS_EINJ_CTL0. */
+#else /* Word 0 - Little Endian */
+        uint32_t einj0_en              : 1;  /**< [  0:  0](R/W) CRC error injection enable.  Enables insertion of errors into various CRC.
+                                                                 See PCIERC_RAS_EINJ_CTL0. */
+        uint32_t einj1_en              : 1;  /**< [  1:  1](R/W) Sequence number error injection enable.  Enables insertion of errors into
+                                                                 sequence numbers.
+                                                                 See PCIERC_RAS_EINJ_CTL1. */
+        uint32_t einj2_en              : 1;  /**< [  2:  2](R/W) DLLP error injection enable.  enables insertion of DLLP errors.
+                                                                 See PCIERC_RAS_EINJ_CTL2. */
+        uint32_t einj3_en              : 1;  /**< [  3:  3](R/W) Symbol data mask or sync header error enable.  Enables data masking of special
+                                                                 symbols or the breaking of the sync header.  See PCIERC_RAS_EINJ_CTL3. */
+        uint32_t einj4_en              : 1;  /**< [  4:  4](R/W) FC credit update error injection enable.  Enables insertion of errors into
+                                                                 Updated FCs. See PCIERC_RAS_EINJ_CTL4. */
+        uint32_t einj5_en              : 1;  /**< [  5:  5](R/W) TLP duplicate/nullify error injection enable.  Enables insertion of duplicate/nullified
+                                                                 TLPs.  For more details, refer to PCIERC_RAS_EINJ_CTL5. */
+        uint32_t einj6_en              : 1;  /**< [  6:  6](R/W) Specific TLP error injection enable.  Enables insertion of errors into the
+                                                                 packet selected.  For more details, refer to PCIERC_RAS_EINJ_CTL6CMPP0. */
+        uint32_t reserved_7_31         : 25;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pciercx_ras_einj_en_cn96xxp3 cn98xx; */
+    /* struct cavm_pciercx_ras_einj_en_s cnf95xx; */
+    /* struct cavm_pciercx_ras_einj_en_cn96xxp3 loki; */
 };
 typedef union cavm_pciercx_ras_einj_en cavm_pciercx_ras_einj_en_t;
 
@@ -25716,7 +25998,149 @@ union cavm_pciercx_ras_sd_l1ltssm
                                                                  0x8-0xF = idle_to_rlock_transitioned. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pciercx_ras_sd_l1ltssm_s cn; */
+    /* struct cavm_pciercx_ras_sd_l1ltssm_s cn9; */
+    /* struct cavm_pciercx_ras_sd_l1ltssm_s cn96xxp1; */
+    struct cavm_pciercx_ras_sd_l1ltssm_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t ltssm_var             : 16; /**< [ 31: 16](RO/H) LTSSM variable.
+                                                                 Indicates internal LTSSM variables defined in the PCI
+                                                                 Express base specification.
+                                                                 0x0 = directed_speed change.
+                                                                 0x1 = changed_speed_recovery.
+                                                                 0x2 = successful_speed_negotiation.
+                                                                 0x3 = upconfigure_capable; Set to one if both ports advertised
+                                                                 the UpConfigure capability in the last Config.Complete.
+                                                                 0x4 = select_deemphasis.
+                                                                 0x5 = start_equalization_w_preset.
+                                                                 0x6 = equalization_done_8GT_data_rate.
+                                                                 0x7 = equalization_done_16GT_data_rate.
+                                                                 0x8-0xF = idle_to_rlock_transitioned. */
+        uint32_t lane_rev              : 1;  /**< [ 15: 15](RO/H) Lane reversal operation.
+                                                                 Receiver detected lane reversal. */
+        uint32_t reserved_11_14        : 4;
+        uint32_t pipe_pwr_dwn          : 3;  /**< [ 10:  8](RO/H) PIPE:PowerDown.
+                                                                 Indicates PIPE PowerDown signal. */
+        uint32_t framing_err           : 1;  /**< [  7:  7](R/W1C/H) Framing error.
+                                                                 Indicates framing error detection status. */
+        uint32_t framing_err_ptr       : 7;  /**< [  6:  0](RO/H) First framing error pointer.
+                                                                 Identifies the first framing error using the following
+                                                                 encoding. The field contents are only valid value when
+                                                                 [FRAMING_ERR] = 1.
+
+                                                                 Received unexpected framing token:
+                                                                 0x1 = When non-STP/SDP/IDL token was received and it
+                                                                 was not in TLP/DLLP reception.
+                                                                 0x02 = When current token was not a valid EDB token and
+                                                                 previous token was an EDB. (128/256 bit core only).
+                                                                 0x03 = When SDP token was received but not expected.
+                                                                 0x04 = When STP token was received but not expected.
+                                                                 0x05 = When EDS token was expected but not received or
+                                                                 whenever an EDS token was received but not expected.
+                                                                 0x06 = When a framing error was detected in the deskew
+                                                                 block while a packet has been in progress in token_finder.
+                                                                 Received Unexpected STP Token
+                                                                 0x11 = When framing CRC in STP token did not match.
+                                                                 0x12 = When framing parity in STP token did not match.
+                                                                 0x13 = When framing TLP length in STP token was
+                                                                 smaller than 5 DWORDs.
+
+                                                                 \<page\>
+
+                                                                 Received unexpected block:
+                                                                 0x21 = When receiving an OS block following SDS in datastream state.n.
+                                                                 0x22 = When data block followed by OS block different.
+                                                                 from SKP, EI, EIE in datastream state.
+                                                                 0x23 = When block with an undefined block type in datastream state.
+                                                                 0x24 = When data stream without data over three cycles in datastream state.
+                                                                 0x25 = When OS block during data stream in datastream state.
+                                                                 0x26 = When RxStatus error was detected in datastream state.
+                                                                 0x27 = When not all active lanes receiving SKP OS starting
+                                                                 at same cycle time in SKPOS state.
+                                                                 0x28 = When a two-block timeout occurs for SKP OS in SKPOS state.
+                                                                 0x29 = When receiving consecutive OS blocks within a data stream in SKPOS state.n.
+                                                                 0x2A = When PHY status error was detected in SKPOS state.
+                                                                 0x2B = When not all active lanes receiving EIOS starting at
+                                                                 same cycle time in EIOS state.
+                                                                 0x2C = When at least one symbol from the first 4 symbols
+                                                                 is not EIOS symbol in EIOS state (CX_NB=2 only).
+                                                                 0x2D = When not all active lanes receiving EIEOS starting
+                                                                 at same cycle time in EIEOS state.
+                                                                 0x2E = When not full 16 EIEOS symbols are received in EIEOS state.
+
+                                                                 All other values not listed above are reserved. */
+#else /* Word 0 - Little Endian */
+        uint32_t framing_err_ptr       : 7;  /**< [  6:  0](RO/H) First framing error pointer.
+                                                                 Identifies the first framing error using the following
+                                                                 encoding. The field contents are only valid value when
+                                                                 [FRAMING_ERR] = 1.
+
+                                                                 Received unexpected framing token:
+                                                                 0x1 = When non-STP/SDP/IDL token was received and it
+                                                                 was not in TLP/DLLP reception.
+                                                                 0x02 = When current token was not a valid EDB token and
+                                                                 previous token was an EDB. (128/256 bit core only).
+                                                                 0x03 = When SDP token was received but not expected.
+                                                                 0x04 = When STP token was received but not expected.
+                                                                 0x05 = When EDS token was expected but not received or
+                                                                 whenever an EDS token was received but not expected.
+                                                                 0x06 = When a framing error was detected in the deskew
+                                                                 block while a packet has been in progress in token_finder.
+                                                                 Received Unexpected STP Token
+                                                                 0x11 = When framing CRC in STP token did not match.
+                                                                 0x12 = When framing parity in STP token did not match.
+                                                                 0x13 = When framing TLP length in STP token was
+                                                                 smaller than 5 DWORDs.
+
+                                                                 \<page\>
+
+                                                                 Received unexpected block:
+                                                                 0x21 = When receiving an OS block following SDS in datastream state.n.
+                                                                 0x22 = When data block followed by OS block different.
+                                                                 from SKP, EI, EIE in datastream state.
+                                                                 0x23 = When block with an undefined block type in datastream state.
+                                                                 0x24 = When data stream without data over three cycles in datastream state.
+                                                                 0x25 = When OS block during data stream in datastream state.
+                                                                 0x26 = When RxStatus error was detected in datastream state.
+                                                                 0x27 = When not all active lanes receiving SKP OS starting
+                                                                 at same cycle time in SKPOS state.
+                                                                 0x28 = When a two-block timeout occurs for SKP OS in SKPOS state.
+                                                                 0x29 = When receiving consecutive OS blocks within a data stream in SKPOS state.n.
+                                                                 0x2A = When PHY status error was detected in SKPOS state.
+                                                                 0x2B = When not all active lanes receiving EIOS starting at
+                                                                 same cycle time in EIOS state.
+                                                                 0x2C = When at least one symbol from the first 4 symbols
+                                                                 is not EIOS symbol in EIOS state (CX_NB=2 only).
+                                                                 0x2D = When not all active lanes receiving EIEOS starting
+                                                                 at same cycle time in EIEOS state.
+                                                                 0x2E = When not full 16 EIEOS symbols are received in EIEOS state.
+
+                                                                 All other values not listed above are reserved. */
+        uint32_t framing_err           : 1;  /**< [  7:  7](R/W1C/H) Framing error.
+                                                                 Indicates framing error detection status. */
+        uint32_t pipe_pwr_dwn          : 3;  /**< [ 10:  8](RO/H) PIPE:PowerDown.
+                                                                 Indicates PIPE PowerDown signal. */
+        uint32_t reserved_11_14        : 4;
+        uint32_t lane_rev              : 1;  /**< [ 15: 15](RO/H) Lane reversal operation.
+                                                                 Receiver detected lane reversal. */
+        uint32_t ltssm_var             : 16; /**< [ 31: 16](RO/H) LTSSM variable.
+                                                                 Indicates internal LTSSM variables defined in the PCI
+                                                                 Express base specification.
+                                                                 0x0 = directed_speed change.
+                                                                 0x1 = changed_speed_recovery.
+                                                                 0x2 = successful_speed_negotiation.
+                                                                 0x3 = upconfigure_capable; Set to one if both ports advertised
+                                                                 the UpConfigure capability in the last Config.Complete.
+                                                                 0x4 = select_deemphasis.
+                                                                 0x5 = start_equalization_w_preset.
+                                                                 0x6 = equalization_done_8GT_data_rate.
+                                                                 0x7 = equalization_done_16GT_data_rate.
+                                                                 0x8-0xF = idle_to_rlock_transitioned. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pciercx_ras_sd_l1ltssm_cn96xxp3 cn98xx; */
+    /* struct cavm_pciercx_ras_sd_l1ltssm_s cnf95xx; */
+    /* struct cavm_pciercx_ras_sd_l1ltssm_cn96xxp3 loki; */
 };
 typedef union cavm_pciercx_ras_sd_l1ltssm cavm_pciercx_ras_sd_l1ltssm_t;
 
@@ -25780,7 +26204,43 @@ union cavm_pciercx_ras_sd_statusl2
         uint32_t reserved_28_31        : 4;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pciercx_ras_sd_statusl2_s cn; */
+    /* struct cavm_pciercx_ras_sd_statusl2_s cn9; */
+    /* struct cavm_pciercx_ras_sd_statusl2_s cn96xxp1; */
+    struct cavm_pciercx_ras_sd_statusl2_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_28_31        : 4;
+        uint32_t fc_init2              : 1;  /**< [ 27: 27](RO) Indicates the core is in FC_INIT2(VC0) state. */
+        uint32_t fc_init1              : 1;  /**< [ 26: 26](RO) Indicates the core is in FC_INIT1(VC0) state. */
+        uint32_t dlcmsm                : 2;  /**< [ 25: 24](RO/H) Indicates the current DLCMSM.
+                                                                 0x0 = DL_INACTIVE.
+                                                                 0x1 = DL_FC_INIT.
+                                                                 0x2 = Reserved.
+                                                                 0x3 = DL_ACTIVE. */
+        uint32_t rx_ack_seq_no         : 12; /**< [ 23: 12](RO/H) RX ACK sequence number.
+                                                                 Indicates the ACK sequence number which is updated by receiving
+                                                                 ACK/NAK DLLP. */
+        uint32_t tx_ack_seq_no         : 12; /**< [ 11:  0](RO/H) TX ACK sequence number.
+                                                                 Indicates next transmit sequence number for transmit TLP. */
+#else /* Word 0 - Little Endian */
+        uint32_t tx_ack_seq_no         : 12; /**< [ 11:  0](RO/H) TX ACK sequence number.
+                                                                 Indicates next transmit sequence number for transmit TLP. */
+        uint32_t rx_ack_seq_no         : 12; /**< [ 23: 12](RO/H) RX ACK sequence number.
+                                                                 Indicates the ACK sequence number which is updated by receiving
+                                                                 ACK/NAK DLLP. */
+        uint32_t dlcmsm                : 2;  /**< [ 25: 24](RO/H) Indicates the current DLCMSM.
+                                                                 0x0 = DL_INACTIVE.
+                                                                 0x1 = DL_FC_INIT.
+                                                                 0x2 = Reserved.
+                                                                 0x3 = DL_ACTIVE. */
+        uint32_t fc_init1              : 1;  /**< [ 26: 26](RO) Indicates the core is in FC_INIT1(VC0) state. */
+        uint32_t fc_init2              : 1;  /**< [ 27: 27](RO) Indicates the core is in FC_INIT2(VC0) state. */
+        uint32_t reserved_28_31        : 4;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pciercx_ras_sd_statusl2_cn96xxp3 cn98xx; */
+    /* struct cavm_pciercx_ras_sd_statusl2_s cnf95xx; */
+    /* struct cavm_pciercx_ras_sd_statusl2_cn96xxp3 loki; */
 };
 typedef union cavm_pciercx_ras_sd_statusl2 cavm_pciercx_ras_sd_statusl2_t;
 
@@ -28729,7 +29189,8 @@ union cavm_pciercx_ucor_err_msk
         uint32_t reserved_26_31        : 6;
 #endif /* Word 0 - End */
     } s;
-    struct cavm_pciercx_ucor_err_msk_cn
+    /* struct cavm_pciercx_ucor_err_msk_s cn9; */
+    struct cavm_pciercx_ucor_err_msk_cn96xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_26_31        : 6;
@@ -28776,7 +29237,58 @@ union cavm_pciercx_ucor_err_msk
         uint32_t tpbem                 : 1;  /**< [ 25: 25](R/W) TLP prefix blocked error mask. */
         uint32_t reserved_26_31        : 6;
 #endif /* Word 0 - End */
-    } cn;
+    } cn96xxp1;
+    struct cavm_pciercx_ucor_err_msk_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_26_31        : 6;
+        uint32_t tpbem                 : 1;  /**< [ 25: 25](R/W) TLP prefix blocked error mask. */
+        uint32_t uatombm               : 1;  /**< [ 24: 24](R/W) Unsupported AtomicOp egress blocked mask. */
+        uint32_t reserved_23           : 1;
+        uint32_t uciem                 : 1;  /**< [ 22: 22](R/W) Uncorrectable internal error mask. */
+        uint32_t avm                   : 1;  /**< [ 21: 21](R/W) ACS violation mask. */
+        uint32_t urem                  : 1;  /**< [ 20: 20](R/W) Unsupported request error mask. */
+        uint32_t ecrcem                : 1;  /**< [ 19: 19](R/W) ECRC error mask. */
+        uint32_t mtlpm                 : 1;  /**< [ 18: 18](R/W) Malformed TLP mask. */
+        uint32_t rom                   : 1;  /**< [ 17: 17](R/W) Receiver overflow mask. */
+        uint32_t ucm                   : 1;  /**< [ 16: 16](R/W) Unexpected completion mask. */
+        uint32_t cam                   : 1;  /**< [ 15: 15](R/W) Completer abort mask. */
+        uint32_t ctm                   : 1;  /**< [ 14: 14](R/W) Completion timeout mask. */
+        uint32_t fcpem                 : 1;  /**< [ 13: 13](R/W) Flow control protocol error mask. */
+        uint32_t ptlpm                 : 1;  /**< [ 12: 12](R/W) Poisoned TLP mask. */
+        uint32_t reserved_6_11         : 6;
+        uint32_t sdem                  : 1;  /**< [  5:  5](R/W) Surprise down error mask. Writable when PCIERC_LINK_CAP[SDERC] is set.
+                                                                 When PCIERC_LINK_CAP[SDERC] is clear, will always read as clear. */
+        uint32_t dlpem                 : 1;  /**< [  4:  4](R/W) Data link protocol error mask. */
+        uint32_t reserved_1_3          : 3;
+        uint32_t reserved_0            : 1;
+#else /* Word 0 - Little Endian */
+        uint32_t reserved_0            : 1;
+        uint32_t reserved_1_3          : 3;
+        uint32_t dlpem                 : 1;  /**< [  4:  4](R/W) Data link protocol error mask. */
+        uint32_t sdem                  : 1;  /**< [  5:  5](R/W) Surprise down error mask. Writable when PCIERC_LINK_CAP[SDERC] is set.
+                                                                 When PCIERC_LINK_CAP[SDERC] is clear, will always read as clear. */
+        uint32_t reserved_6_11         : 6;
+        uint32_t ptlpm                 : 1;  /**< [ 12: 12](R/W) Poisoned TLP mask. */
+        uint32_t fcpem                 : 1;  /**< [ 13: 13](R/W) Flow control protocol error mask. */
+        uint32_t ctm                   : 1;  /**< [ 14: 14](R/W) Completion timeout mask. */
+        uint32_t cam                   : 1;  /**< [ 15: 15](R/W) Completer abort mask. */
+        uint32_t ucm                   : 1;  /**< [ 16: 16](R/W) Unexpected completion mask. */
+        uint32_t rom                   : 1;  /**< [ 17: 17](R/W) Receiver overflow mask. */
+        uint32_t mtlpm                 : 1;  /**< [ 18: 18](R/W) Malformed TLP mask. */
+        uint32_t ecrcem                : 1;  /**< [ 19: 19](R/W) ECRC error mask. */
+        uint32_t urem                  : 1;  /**< [ 20: 20](R/W) Unsupported request error mask. */
+        uint32_t avm                   : 1;  /**< [ 21: 21](R/W) ACS violation mask. */
+        uint32_t uciem                 : 1;  /**< [ 22: 22](R/W) Uncorrectable internal error mask. */
+        uint32_t reserved_23           : 1;
+        uint32_t uatombm               : 1;  /**< [ 24: 24](R/W) Unsupported AtomicOp egress blocked mask. */
+        uint32_t tpbem                 : 1;  /**< [ 25: 25](R/W) TLP prefix blocked error mask. */
+        uint32_t reserved_26_31        : 6;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pciercx_ucor_err_msk_cn96xxp3 cn98xx; */
+    /* struct cavm_pciercx_ucor_err_msk_cn96xxp1 cnf95xx; */
+    /* struct cavm_pciercx_ucor_err_msk_cn96xxp3 loki; */
 };
 typedef union cavm_pciercx_ucor_err_msk cavm_pciercx_ucor_err_msk_t;
 

@@ -740,7 +740,80 @@ union cavm_ndcx_af_bp_testx
                                                                  BP_TEST\<3.60\> = Reserved. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_ndcx_af_bp_testx_s cn; */
+    /* struct cavm_ndcx_af_bp_testx_s cn9; */
+    /* struct cavm_ndcx_af_bp_testx_s cn96xx; */
+    struct cavm_ndcx_af_bp_testx_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode along with NDC_AF_BP_TEST_ENABLE. For diagnostic use only.
+                                                                 Internal:
+                                                                 Once a bit is set, random backpressure is generated
+                                                                 at the corresponding point to allow for more frequent backpressure.
+                                                                 BP_TEST\<0.63\> = bp_prt_cmd_xbar    = Ports (0..5) CMD FIFO.
+                                                                 BP_TEST\<0.62\> = bp_prt_data_xbar   = Ports (0..5) DATA FIFO.
+                                                                 BP_TEST\<0.61\> = bp_xbar_bank_req   = Xbar towards the bank request FIFOs.
+                                                                 BP_TEST\<0.60\> = bp_ncb_cmn_intf    = Ncb common interface to banks.
+                                                                 BP_TEST\<1.63\> = bp_ncb_cmn_p0      = ncb_cmn module port 0.
+                                                                 BP_TEST\<1.62\> = bp_ncb_cmn_p1      = ncb_cmn module port 1.
+                                                                 BP_TEST\<1.61\> = bp_ncb_cmn_p2      = ncb_cmn module port 2.
+                                                                 BP_TEST\<1.60\> = bp_ncb_cmn_p3      = ncb_cmn module port 3.
+                                                                 BP_TEST\<2.63\> = bp_bk_cmd_req      = Bank command request FIFO.
+                                                                 BP_TEST\<2.62\> = bp_bk_data_req     = Bank data request FIFO.
+                                                                 BP_TEST\<2.61\> = bp_bk_pend_req     = Pending request FIFO.
+                                                                 BP_TEST\<2.60\> = bp_bk_arb          = Bank mem Arbiter.
+                                                                 BP_TEST\<3.63\> = bp_bk_ncb_req      = NCBI request interface.
+                                                                 BP_TEST\<3.62\> = bp_bk_port_rsp     = Bank response.
+                                                                 BP_TEST\<3.61\> = bp_bk_ncbo_ld_rsp  = Bank Load response.
+                                                                 BP_TEST\<3.60\> = bp_bk_arb_rsp_crd  = Bank mem Arbiter response credit.
+                                                                 BP_TEST\<4.63\> = bp_bk_arb_csr      = Bank mem Arbiter CSR request.
+                                                                 BP_TEST\<4.62\> = bp_bk_arb_ncb      = Bank mem Arbiter NCB request.
+                                                                 BP_TEST\<4.61\> = bp_bk_arb_ptr_wr   = Bank mem Arbiter port write request.
+                                                                 BP_TEST\<4.60\> = bp_bk_arb_ptr_rd   = Bank mem Arbiter port read request. */
+        uint64_t reserved_24_59        : 36;
+        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
+                                                                 Internal:
+                                                                 There are 2 backpressure configuration bits per enable, with the two bits
+                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
+                                                                 0x3=25% of the time. */
+        uint64_t reserved_12_15        : 4;
+        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
+#else /* Word 0 - Little Endian */
+        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
+        uint64_t reserved_12_15        : 4;
+        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
+                                                                 Internal:
+                                                                 There are 2 backpressure configuration bits per enable, with the two bits
+                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
+                                                                 0x3=25% of the time. */
+        uint64_t reserved_24_59        : 36;
+        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode along with NDC_AF_BP_TEST_ENABLE. For diagnostic use only.
+                                                                 Internal:
+                                                                 Once a bit is set, random backpressure is generated
+                                                                 at the corresponding point to allow for more frequent backpressure.
+                                                                 BP_TEST\<0.63\> = bp_prt_cmd_xbar    = Ports (0..5) CMD FIFO.
+                                                                 BP_TEST\<0.62\> = bp_prt_data_xbar   = Ports (0..5) DATA FIFO.
+                                                                 BP_TEST\<0.61\> = bp_xbar_bank_req   = Xbar towards the bank request FIFOs.
+                                                                 BP_TEST\<0.60\> = bp_ncb_cmn_intf    = Ncb common interface to banks.
+                                                                 BP_TEST\<1.63\> = bp_ncb_cmn_p0      = ncb_cmn module port 0.
+                                                                 BP_TEST\<1.62\> = bp_ncb_cmn_p1      = ncb_cmn module port 1.
+                                                                 BP_TEST\<1.61\> = bp_ncb_cmn_p2      = ncb_cmn module port 2.
+                                                                 BP_TEST\<1.60\> = bp_ncb_cmn_p3      = ncb_cmn module port 3.
+                                                                 BP_TEST\<2.63\> = bp_bk_cmd_req      = Bank command request FIFO.
+                                                                 BP_TEST\<2.62\> = bp_bk_data_req     = Bank data request FIFO.
+                                                                 BP_TEST\<2.61\> = bp_bk_pend_req     = Pending request FIFO.
+                                                                 BP_TEST\<2.60\> = bp_bk_arb          = Bank mem Arbiter.
+                                                                 BP_TEST\<3.63\> = bp_bk_ncb_req      = NCBI request interface.
+                                                                 BP_TEST\<3.62\> = bp_bk_port_rsp     = Bank response.
+                                                                 BP_TEST\<3.61\> = bp_bk_ncbo_ld_rsp  = Bank Load response.
+                                                                 BP_TEST\<3.60\> = bp_bk_arb_rsp_crd  = Bank mem Arbiter response credit.
+                                                                 BP_TEST\<4.63\> = bp_bk_arb_csr      = Bank mem Arbiter CSR request.
+                                                                 BP_TEST\<4.62\> = bp_bk_arb_ncb      = Bank mem Arbiter NCB request.
+                                                                 BP_TEST\<4.61\> = bp_bk_arb_ptr_wr   = Bank mem Arbiter port write request.
+                                                                 BP_TEST\<4.60\> = bp_bk_arb_ptr_rd   = Bank mem Arbiter port read request. */
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_ndcx_af_bp_testx_s cnf95xx; */
+    /* struct cavm_ndcx_af_bp_testx_s loki; */
 };
 typedef union cavm_ndcx_af_bp_testx cavm_ndcx_af_bp_testx_t;
 
@@ -751,8 +824,8 @@ static inline uint64_t CAVM_NDCX_AF_BP_TESTX(unsigned long a, unsigned long b)
         return 0x8400c0000200ll + 0x10000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && ((a<=5) && (b<=3)))
         return 0x8400c0000200ll + 0x10000000ll * ((a) & 0x7) + 8ll * ((b) & 0x3);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=5) && (b<=3)))
-        return 0x8400c0000200ll + 0x10000000ll * ((a) & 0x7) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=5) && (b<=4)))
+        return 0x8400c0000200ll + 0x10000000ll * ((a) & 0x7) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=5) && (b<=3)))
         return 0x8400c0000200ll + 0x10000000ll * ((a) & 0x7) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=5) && (b<=3)))
@@ -995,7 +1068,10 @@ union cavm_ndcx_af_ctl
     struct cavm_ndcx_af_ctl_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_20_63        : 44;
+        uint64_t reserved_21_63        : 43;
+        uint64_t dis_inval_on_mask_pnd : 1;  /**< [ 20: 20](R/W) When set, invalidate requests will be ignored when pending read requests to the
+                                                                 same cache line are present in the bank pending FIFO.
+                                                                 For diagnostic use only. */
         uint64_t en_flush_on_inval     : 1;  /**< [ 19: 19](R/W) When set, invalidate requests will flush the corresponding entry back to
                                                                  coherent memory if the entry is dirty.
                                                                  For diagnostic use only. */
@@ -1113,7 +1189,10 @@ union cavm_ndcx_af_ctl
         uint64_t en_flush_on_inval     : 1;  /**< [ 19: 19](R/W) When set, invalidate requests will flush the corresponding entry back to
                                                                  coherent memory if the entry is dirty.
                                                                  For diagnostic use only. */
-        uint64_t reserved_20_63        : 44;
+        uint64_t dis_inval_on_mask_pnd : 1;  /**< [ 20: 20](R/W) When set, invalidate requests will be ignored when pending read requests to the
+                                                                 same cache line are present in the bank pending FIFO.
+                                                                 For diagnostic use only. */
+        uint64_t reserved_21_63        : 43;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_ndcx_af_ctl_s cn9; */
@@ -1309,23 +1388,45 @@ union cavm_ndcx_af_ctl
         uint64_t reserved_20_63        : 44;
 #endif /* Word 0 - End */
     } cn96xxp3;
-    /* struct cavm_ndcx_af_ctl_cn96xxp3 cn98xx; */
-    /* struct cavm_ndcx_af_ctl_cn96xxp1 cnf95xxp1; */
-    struct cavm_ndcx_af_ctl_cnf95xxp2
+    struct cavm_ndcx_af_ctl_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_14_63        : 50;
+        uint64_t reserved_21_63        : 43;
+        uint64_t dis_inval_on_mask_pnd : 1;  /**< [ 20: 20](R/W) When set, invalidate requests will be ignored when pending read requests to the
+                                                                 same cache line are present in the bank pending FIFO.
+                                                                 For diagnostic use only. */
+        uint64_t en_flush_on_inval     : 1;  /**< [ 19: 19](R/W) When set, invalidate requests will flush the corresponding entry back to
+                                                                 coherent memory if the entry is dirty.
+                                                                 For diagnostic use only. */
+        uint64_t dis_byp_on_inval_miss : 1;  /**< [ 18: 18](R/W) For diagnostic use only.
+                                                                 Internal:
+                                                                 When set, cause read miss + invalidate operations to allocate a
+                                                                 cache entry, which could result in flushing a dirty entry.  When clear
+                                                                 clear, read miss + invalidate operations will be treated as bypassed reads and
+                                                                 will not allocate a cache entry nor initiate any flushes.  See the description
+                                                                 of [DIS_INVAL_ON_BUSY] for more information about interactions between read miss
+                                                                 and invalidate requests. */
+        uint64_t dis_inval_on_busy     : 1;  /**< [ 17: 17](R/W) For diagnostic use only.
+                                                                 Internal:
+                                                                 When set, disable invalidate operations whenever the invalidate is
+                                                                 requested for a Read Hit where a prior read miss to the same cache line has not
+                                                                 yet been filled from coherent memory.  If the reset value of this bit is one,
+                                                                 that indicated that the design does not support invalidates when an entry is
+                                                                 busy (i.e., waiting for a fill to complete).  In that case, setting the bit to
+                                                                 zero will have no effect. */
+        uint64_t dis_inval             : 1;  /**< [ 16: 16](R/W) When one, disable all invalidate operations. For diagnostic use only. */
+        uint64_t reserved_14_15        : 2;
         uint64_t dis_sync_mods         : 1;  /**< [ 13: 13](R/W) For diagnostic use only.
                                                                  Internal:
-                                                                 Setting this bit will disable TBD late fixes introduced to
+                                                                 When set, disable TBD late fixes introduced to
                                                                  resolve issues with FLR.SYNC operations.  As the design team
                                                                  adds consumers of this bit, the description will be updated. */
         uint64_t dis_unjam_w3a         : 1;  /**< [ 12: 12](R/W) For diagnostic use only.
                                                                  Internal:
-                                                                 "Setting this bit will disable the fix for McBuggin #36640.
+                                                                 When set, disable the fix for McBuggin 36640.
                                                                  In short, the deadlock unjam mechanism will be disabled, such that
                                                                  the particular deadlock described in the bug becomes possible again;
-                                                                 however, any inadvertent bug introduced by the fix could be avoided." */
+                                                                 however, any inadvertent bug introduced by the fix could be avoided. */
         uint64_t perf_mode             : 4;  /**< [ 11:  8](R/W) For diagnostic use only.
                                                                  Internal:
                                                                  These bits will eventually be used to limit performance
@@ -1401,13 +1502,140 @@ union cavm_ndcx_af_ctl
                                                                  mode(s) avoid triggering bugs fixed late in the design cycle. */
         uint64_t dis_unjam_w3a         : 1;  /**< [ 12: 12](R/W) For diagnostic use only.
                                                                  Internal:
-                                                                 "Setting this bit will disable the fix for McBuggin #36640.
+                                                                 When set, disable the fix for McBuggin 36640.
                                                                  In short, the deadlock unjam mechanism will be disabled, such that
                                                                  the particular deadlock described in the bug becomes possible again;
-                                                                 however, any inadvertent bug introduced by the fix could be avoided." */
+                                                                 however, any inadvertent bug introduced by the fix could be avoided. */
         uint64_t dis_sync_mods         : 1;  /**< [ 13: 13](R/W) For diagnostic use only.
                                                                  Internal:
-                                                                 Setting this bit will disable TBD late fixes introduced to
+                                                                 When set, disable TBD late fixes introduced to
+                                                                 resolve issues with FLR.SYNC operations.  As the design team
+                                                                 adds consumers of this bit, the description will be updated. */
+        uint64_t reserved_14_15        : 2;
+        uint64_t dis_inval             : 1;  /**< [ 16: 16](R/W) When one, disable all invalidate operations. For diagnostic use only. */
+        uint64_t dis_inval_on_busy     : 1;  /**< [ 17: 17](R/W) For diagnostic use only.
+                                                                 Internal:
+                                                                 When set, disable invalidate operations whenever the invalidate is
+                                                                 requested for a Read Hit where a prior read miss to the same cache line has not
+                                                                 yet been filled from coherent memory.  If the reset value of this bit is one,
+                                                                 that indicated that the design does not support invalidates when an entry is
+                                                                 busy (i.e., waiting for a fill to complete).  In that case, setting the bit to
+                                                                 zero will have no effect. */
+        uint64_t dis_byp_on_inval_miss : 1;  /**< [ 18: 18](R/W) For diagnostic use only.
+                                                                 Internal:
+                                                                 When set, cause read miss + invalidate operations to allocate a
+                                                                 cache entry, which could result in flushing a dirty entry.  When clear
+                                                                 clear, read miss + invalidate operations will be treated as bypassed reads and
+                                                                 will not allocate a cache entry nor initiate any flushes.  See the description
+                                                                 of [DIS_INVAL_ON_BUSY] for more information about interactions between read miss
+                                                                 and invalidate requests. */
+        uint64_t en_flush_on_inval     : 1;  /**< [ 19: 19](R/W) When set, invalidate requests will flush the corresponding entry back to
+                                                                 coherent memory if the entry is dirty.
+                                                                 For diagnostic use only. */
+        uint64_t dis_inval_on_mask_pnd : 1;  /**< [ 20: 20](R/W) When set, invalidate requests will be ignored when pending read requests to the
+                                                                 same cache line are present in the bank pending FIFO.
+                                                                 For diagnostic use only. */
+        uint64_t reserved_21_63        : 43;
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_ndcx_af_ctl_cn96xxp1 cnf95xxp1; */
+    struct cavm_ndcx_af_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_14_63        : 50;
+        uint64_t dis_sync_mods         : 1;  /**< [ 13: 13](R/W) For diagnostic use only.
+                                                                 Internal:
+                                                                 When set, disable TBD late fixes introduced to
+                                                                 resolve issues with FLR.SYNC operations.  As the design team
+                                                                 adds consumers of this bit, the description will be updated. */
+        uint64_t dis_unjam_w3a         : 1;  /**< [ 12: 12](R/W) For diagnostic use only.
+                                                                 Internal:
+                                                                 When set, disable the fix for McBuggin 36640.
+                                                                 In short, the deadlock unjam mechanism will be disabled, such that
+                                                                 the particular deadlock described in the bug becomes possible again;
+                                                                 however, any inadvertent bug introduced by the fix could be avoided. */
+        uint64_t perf_mode             : 4;  /**< [ 11:  8](R/W) For diagnostic use only.
+                                                                 Internal:
+                                                                 These bits will eventually be used to limit performance
+                                                                 -- in some TBD manner -- in hopes that the lower-performance
+                                                                 mode(s) avoid triggering bugs fixed late in the design cycle. */
+        uint64_t reserved_5_7          : 3;
+        uint64_t lock_dis              : 1;  /**< [  4:  4](R/W) Lock disabled. When set, NDC will not execute any command with lock bit set and report an error
+                                                                 back to port if command has lock bit set. Unlock command is not effected by this CSR.
+                                                                 When cleared NDC will process any command with lock bit set. */
+        uint64_t way_select_dis        : 1;  /**< [  3:  3](R/W) Way select disable. Should be clear for normal operation.
+
+                                                                 When clear, the way selected on a cache miss is based on the corresponding
+                                                                 NIX_*[*WAY_MASK]/NPA_*[*WAY_MASK]; if way mask bit N is clear, any of NDC
+                                                                 ways 4*N through 4*N+3 may be selected, otherwise these ways are excluded
+                                                                 from selection.
+
+                                                                 When set on a cache miss with NIX_*[*WAY_MASK]/NPA_*[*WAY_MASK] != 0xFFFF,
+                                                                 NDC ignores the way mask and allows any way to be selected/allocated.
+
+                                                                 Requests with NIX_*[*WAY_MASK]/NPA_*[*WAY_MASK] == 0xFFFF bypass the
+                                                                 NDC cache and are not affected by this bit. */
+        uint64_t reserved_2            : 1;
+        uint64_t hash_dis              : 1;  /**< [  1:  1](R/W) Hash disable. When set, the address hash function defined by NDC_AF_HASH()
+                                                                 is not used.
+
+                                                                 For diagnostic use only. May only be modified when NDC is idle and has no
+                                                                 cached data.
+
+                                                                 Internal:
+                                                                 When set, iova \<18:15\> select the bank and \<14:13\> select the index within
+                                                                 bank. */
+        uint64_t byp_only              : 1;  /**< [  0:  0](R/W) Bypass only.
+                                                                 0 = Bypass only mode is disabled and NDC will steer port requests based on command
+                                                                 bits, either to cache, for cache accesses or to LLC for bypass accesses.
+                                                                 1 = All requests will be directed to LLC, similar to bypass operation. Software
+                                                                 must not use the NDC LOCK feature. */
+#else /* Word 0 - Little Endian */
+        uint64_t byp_only              : 1;  /**< [  0:  0](R/W) Bypass only.
+                                                                 0 = Bypass only mode is disabled and NDC will steer port requests based on command
+                                                                 bits, either to cache, for cache accesses or to LLC for bypass accesses.
+                                                                 1 = All requests will be directed to LLC, similar to bypass operation. Software
+                                                                 must not use the NDC LOCK feature. */
+        uint64_t hash_dis              : 1;  /**< [  1:  1](R/W) Hash disable. When set, the address hash function defined by NDC_AF_HASH()
+                                                                 is not used.
+
+                                                                 For diagnostic use only. May only be modified when NDC is idle and has no
+                                                                 cached data.
+
+                                                                 Internal:
+                                                                 When set, iova \<18:15\> select the bank and \<14:13\> select the index within
+                                                                 bank. */
+        uint64_t reserved_2            : 1;
+        uint64_t way_select_dis        : 1;  /**< [  3:  3](R/W) Way select disable. Should be clear for normal operation.
+
+                                                                 When clear, the way selected on a cache miss is based on the corresponding
+                                                                 NIX_*[*WAY_MASK]/NPA_*[*WAY_MASK]; if way mask bit N is clear, any of NDC
+                                                                 ways 4*N through 4*N+3 may be selected, otherwise these ways are excluded
+                                                                 from selection.
+
+                                                                 When set on a cache miss with NIX_*[*WAY_MASK]/NPA_*[*WAY_MASK] != 0xFFFF,
+                                                                 NDC ignores the way mask and allows any way to be selected/allocated.
+
+                                                                 Requests with NIX_*[*WAY_MASK]/NPA_*[*WAY_MASK] == 0xFFFF bypass the
+                                                                 NDC cache and are not affected by this bit. */
+        uint64_t lock_dis              : 1;  /**< [  4:  4](R/W) Lock disabled. When set, NDC will not execute any command with lock bit set and report an error
+                                                                 back to port if command has lock bit set. Unlock command is not effected by this CSR.
+                                                                 When cleared NDC will process any command with lock bit set. */
+        uint64_t reserved_5_7          : 3;
+        uint64_t perf_mode             : 4;  /**< [ 11:  8](R/W) For diagnostic use only.
+                                                                 Internal:
+                                                                 These bits will eventually be used to limit performance
+                                                                 -- in some TBD manner -- in hopes that the lower-performance
+                                                                 mode(s) avoid triggering bugs fixed late in the design cycle. */
+        uint64_t dis_unjam_w3a         : 1;  /**< [ 12: 12](R/W) For diagnostic use only.
+                                                                 Internal:
+                                                                 When set, disable the fix for McBuggin 36640.
+                                                                 In short, the deadlock unjam mechanism will be disabled, such that
+                                                                 the particular deadlock described in the bug becomes possible again;
+                                                                 however, any inadvertent bug introduced by the fix could be avoided. */
+        uint64_t dis_sync_mods         : 1;  /**< [ 13: 13](R/W) For diagnostic use only.
+                                                                 Internal:
+                                                                 When set, disable TBD late fixes introduced to
                                                                  resolve issues with FLR.SYNC operations.  As the design team
                                                                  adds consumers of this bit, the description will be updated. */
         uint64_t reserved_14_63        : 50;
