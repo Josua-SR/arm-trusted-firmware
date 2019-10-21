@@ -91,7 +91,7 @@ unsigned int plat_configure_rid(void)
 	val |= MIDR_REVISION(midr) & 0x3;
 
 	/* program major pass */
-	val |= MIDR_VARIANT(midr) & 0x3;
+	val |= (MIDR_VARIANT(midr) & 0x3) << 2;
 
 	return val;
 }
