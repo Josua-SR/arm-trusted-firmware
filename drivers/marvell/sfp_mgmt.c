@@ -747,7 +747,7 @@ int sfp_get_fec_capability(int cgx_id, int lmac_id)
 	case SFP_TRANS_TYPE_100G_ER4:
 	case SFP_TRANS_TYPE_100G_ACC:
 	case SFP_TRANS_TYPE_100G_CR4:
-		fec = SFP_FEC_MODE_RS;
+		fec = SFP_FEC_MODE_RS_FIRECODE;
 		break;
 	default:
 		fec = SFP_FEC_MODE_NONE;
@@ -1034,6 +1034,7 @@ int sfp_validate_user_options(int cgx_id, int lmac_id)
 	cgx_lmac_config_t *lmac_cfg;
 	phy_config_t *phy;
 	sfp_cap_info_t *cap_info = &sfp_cap_info[cgx_id][lmac_id];
+	char *fec_str[3] = {"none", "baser", "rs"};
 
 	debug_sfp_mgmt("%s: %d:%d\n", __func__, cgx_id, lmac_id);
 
@@ -1078,10 +1079,10 @@ int sfp_validate_user_options(int cgx_id, int lmac_id)
 			 */
 			if ((cap_info->fec_type & lmac_cfg->fec) == 0) {
 				ERROR("%s: %d:%d User has configured\t"
-				"FEC to be %d,\t"
-				"but module's FEC cap is %d\n", __func__,
-					cgx_id, lmac_id, lmac_cfg->fec,
-					cap_info->fec_type);
+				"FEC to be %s,\t"
+				"but module's FEC cap is %s\n", __func__,
+					cgx_id, lmac_id, fec_str[lmac_cfg->fec],
+					fec_str[cap_info->fec_type]);
 				return 0;
 			}
 		}
