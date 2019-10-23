@@ -33,6 +33,13 @@
 /* Fixed flash offset for storage of lmac params */
 #define	SPI_NVDATA_OFFSET 0xFD0000
 
+enum cmd_param {
+	IGNORE = 0,
+	LMAC_MODE,
+	FEC,
+	PHY_MOD,
+};
+
 extern uint32_t spi_mode;
 
 static void cgx_fdt_get_spi_bus_cs(int *bus, int *cs)
@@ -110,6 +117,8 @@ int cgx_read_flash_fec(int cgx_id, int lmac_id, int *fec)
 	if (!ptr->s.valid || !ptr->s.fec_valid || ptr->s.cgx_id != cgx_id ||
 	    ptr->s.lmac_id != lmac_id || ptr->s.qlm_mode != lmac->mode_idx)
 		return -1;
+	if (!ptr->s.ignore)
+		return -1;
 
 	*fec = ptr->s.fec_type;
 	return 0;
@@ -134,13 +143,64 @@ int cgx_read_flash_phy_mod(int cgx_id, int lmac_id, int *phy_mod)
 	if (!ptr->s.valid || !ptr->s.mod_valid || ptr->s.cgx_id != cgx_id ||
 	    ptr->s.lmac_id != lmac_id || ptr->s.qlm_mode != lmac->mode_idx)
 		return -1;
-
+	if (!ptr->s.ignore)
+		return -1;
 	*phy_mod = ptr->s.mod_type;
 	return 0;
 }
 
-static int cgx_update_flash_lmac_params(int cgx_id, int lmac_id, int fec,
-				  int phy_mod)
+int cgx_read_flash_ignore(int cgx_id, int lmac_id, int *ignore)
+{
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+	cgx_lmac_flash_ctx_t *ptr;
+	cgx_lmac_flash_ctx_t fctx[MAX_CGX * MAX_LMAC_PER_CGX];
+	int ret;
+
+	cgx = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+	lmac = &cgx->lmac_cfg[lmac_id];
+
+	ret = cgx_read_flash_lmac_params((uint8_t *)fctx, sizeof(fctx));
+	if (ret < 0)
+		return -1;
+	ptr = &fctx[cgx_id * MAX_LMAC_PER_CGX + lmac_id];
+
+	if (!ptr->s.valid || !ptr->s.mod_valid || ptr->s.cgx_id != cgx_id ||
+	    ptr->s.lmac_id != lmac_id || ptr->s.qlm_mode != lmac->mode_idx)
+		return -1;
+	*ignore = ptr->s.ignore ? 0 : 1;
+	return 0;
+}
+
+int cgx_read_flash_mode_param(int cgx_id, int lmac_id, int *qlm_mode,
+			      int *lmac_mode)
+{
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+	cgx_lmac_flash_ctx_t *ptr;
+	cgx_lmac_flash_ctx_t fctx[MAX_CGX * MAX_LMAC_PER_CGX];
+	int ret;
+
+	cgx = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+	lmac = &cgx->lmac_cfg[lmac_id];
+
+	ret = cgx_read_flash_lmac_params((uint8_t *)fctx, sizeof(fctx));
+	if (ret < 0)
+		return -1;
+	ptr = &fctx[cgx_id * MAX_LMAC_PER_CGX + lmac_id];
+
+	if (!ptr->s.valid || !ptr->s.mod_valid || ptr->s.cgx_id != cgx_id ||
+	    ptr->s.lmac_id != lmac_id || ptr->s.qlm_mode != lmac->mode_idx)
+		return -1;
+	if (!ptr->s.ignore)
+		return -1;
+	*qlm_mode = ptr->s.qlm_mode;
+	*lmac_mode = ptr->s.lmac_mode;
+	return 0;
+}
+
+static int cgx_update_flash_lmac_params(int cgx_id, int lmac_id, int cmd,
+					int arg)
 {
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
@@ -164,14 +224,18 @@ static int cgx_update_flash_lmac_params(int cgx_id, int lmac_id, int fec,
 	ptr->s.cgx_id = cgx_id;
 	ptr->s.lmac_id = lmac_id;
 	ptr->s.qlm_mode = lmac->mode_idx;
-	if (fec != 0xF) {
-		ptr->s.fec_type = fec;
+	if (cmd == FEC) {
+		ptr->s.fec_type = arg & 0x3;
 		ptr->s.fec_valid = 1;
 	}
-	if (phy_mod != 0xF) {
-		ptr->s.mod_type = phy_mod;
+	if (cmd == PHY_MOD) {
+		ptr->s.mod_type = arg & 0x1;
 		ptr->s.mod_valid = 1;
 	}
+	if (cmd == LMAC_MODE)
+		ptr->s.lmac_mode = arg & 0xff;
+	if (cmd == IGNORE)
+		ptr->s.ignore = (arg & 0x1) ? 0 : 1;
 
 	err = spi_nor_erase(SPI_NVDATA_OFFSET, SPI_ADDRESSING_24BIT, spi_con,
 			    cs);
@@ -188,13 +252,24 @@ static int cgx_update_flash_lmac_params(int cgx_id, int lmac_id, int fec,
 	return 0;
 }
 
+int cgx_update_flash_mode_param(int cgx_id, int lmac_id, int lmac_mode)
+{
+	return cgx_update_flash_lmac_params(cgx_id, lmac_id, LMAC_MODE,
+					    lmac_mode);
+}
+
+int cgx_update_flash_ignore_param(int cgx_id, int lmac_id, int ignore)
+{
+	return cgx_update_flash_lmac_params(cgx_id, lmac_id, IGNORE, ignore);
+}
+
 int cgx_update_flash_fec_param(int cgx_id, int lmac_id, int fec)
 {
-	return cgx_update_flash_lmac_params(cgx_id, lmac_id, fec, 0xF);
+	return cgx_update_flash_lmac_params(cgx_id, lmac_id, FEC, fec);
 }
 
 int cgx_update_flash_phy_mod_param(int cgx_id, int lmac_id, int phy_mod)
 {
-	return cgx_update_flash_lmac_params(cgx_id, lmac_id, 0xF, phy_mod);
+	return cgx_update_flash_lmac_params(cgx_id, lmac_id, PHY_MOD, phy_mod);
 }
 

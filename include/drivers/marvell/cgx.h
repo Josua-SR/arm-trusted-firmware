@@ -188,20 +188,21 @@ typedef union cgx_lmac_context {
 } cgx_lmac_context_t;
 
 /* Flash handling for lmac params */
-typedef struct cgx_lmac_flash_ctx {
+typedef union cgx_lmac_flash_ctx {
 	uint64_t u64;
 	struct cgx_lmac_flash_ctx_s {
 		uint64_t valid:1;
 		uint64_t cgx_id:3;
 		uint64_t lmac_id:3;
-		uint64_t rsvd1:1;
+		uint64_t ignore:1;
 		uint64_t qlm_mode:8;
 		uint64_t fec_valid:1;
 		uint64_t fec_type:2;
 		uint64_t mod_valid:1;
 		uint64_t mod_type:1;
-		uint64_t rsvd2:3;
-		uint64_t rsvd3:40;
+		uint64_t rsvd1:3;
+		uint64_t lmac_mode:8;
+		uint64_t rsvd2:32;
 	} s;
 } cgx_lmac_flash_ctx_t;
 
@@ -225,6 +226,8 @@ extern int spi_nor_erase(uint32_t addr, int addr_len, int spi_con, int cs);
 
 int cgx_update_flash_fec_param(int cgx_id, int lmac_id, int fec);
 int cgx_update_flash_phy_mod_param(int cgx_id, int lmac_id, int phy_mod);
+int cgx_update_flash_mode_param(int cgx_id, int lmac_id, int lmac_mode);
+int cgx_update_flash_ignore_param(int cgx_id, int lmac_id, int ignore);
 
 
 /* CGX driver APIs */
@@ -258,5 +261,9 @@ void cgx_fw_intf_shutdown(void);
 
 int cgx_read_flash_fec(int cgx_id, int lmac_id, int *fec);
 int cgx_set_fec_type(int cgx_id, int lmac_id, int req_fec);
+
+int cgx_read_flash_ignore(int cgx_id, int lmac_id, int *ignore);
+int cgx_read_flash_mode_param(int cgx_id, int lmac_id, int *qlm_mode,
+			      int *lmac_mode);
 
 #endif
