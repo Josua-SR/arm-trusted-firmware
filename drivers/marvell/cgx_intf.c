@@ -1238,13 +1238,25 @@ static gser_qlm_eye_t eye;
 static int do_eye(int qlm, int qlm_lane)
 {
 	int x, y, width, height, last_color, level, deltay, deltax, dy, dx;
-	int dist, color;
+	int dist, color, max_lane;
 	int eye_area = 0;
 	int eye_width = 0;
 	int eye_height = 0;
 	int qlm_idx;
 	const qlm_ops_t *qlm_ops;
 	char color_str[] = "\33[40m"; /* Note: This is modified, not constant */
+
+	if (qlm >= MAX_QLM || qlm < 0) {
+		WARN("%d not in range, available QLM0-%d\n", qlm, MAX_QLM - 1);
+		return -1;
+	}
+
+	max_lane = plat_octeontx_scfg->qlm_max_lane_num[qlm];
+	if (qlm_lane >= max_lane || qlm_lane < 0) {
+		WARN("%d not in range, available for QLM%d lanes are 0-%d\n",
+				qlm_lane, qlm, max_lane - 1);
+		return -1;
+	}
 
 	qlm_idx = qlm;
 	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
@@ -1283,8 +1295,7 @@ static int do_eye(int qlm, int qlm_lane)
 			eye_height = height;
 	}
 
-	debug_cgx_intf("\nEye Diagram for QLM %d, Lane %d\n",
-			qlm_idx, qlm_lane);
+	printf("\nEye Diagram for QLM %d, Lane %d\n", qlm_idx, qlm_lane);
 
 	last_color = -1;
 	for (y = 0; y < eye.height; y++) {
@@ -1306,15 +1317,15 @@ static int do_eye(int qlm, int qlm_lane)
 				color = 0;
 			if (color != last_color) {
 				color_str[3] = '0' + color;
-				debug_cgx_intf("%s", color_str);
+				printf("%s", color_str);
 				last_color = color;
 			}
-			debug_cgx_intf("%c", '0' + level);
+			printf("%c", '0' + level);
 		}
-		debug_cgx_intf("\33[0m\n");
+		printf("\33[0m\n");
 		last_color = -1;
 	}
-	debug_cgx_intf("\nEye Width %d, Height %d, Area %d\n",
+	printf("\nEye Width %d, Height %d, Area %d\n",
 		eye_width, eye_height, eye_area);
 
 	return 0;
