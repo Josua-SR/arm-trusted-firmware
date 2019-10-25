@@ -1480,7 +1480,7 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 							cgx_id, lmac_id, 1));
 				ret = cgx_handle_mode_change(cgx_id, lmac_id,
 						&scratchx1.s.mode_change_args);
-				mode = __builtin_ffs(scratchx1.s.mode_change_args.mode) - 1;
+				mode = cgx_get_lmac_type_for_req_mode(scratchx1.s.mode_change_args.mode);
 				if (!cgx_get_error_type(cgx_id, lmac_id)) {
 					if (cgx_update_flash_mode_param(cgx_id,
 					    lmac_id, mode))

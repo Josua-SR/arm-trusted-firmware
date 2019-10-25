@@ -1354,6 +1354,57 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 	return 1;
 }
 
+static void cgx_fill_lmac_attributes(int cgx_idx, int lmac_idx)
+{
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+
+	cgx = &(plat_octeontx_bcfg->cgx_cfg[cgx_idx]);
+	lmac = &cgx->lmac_cfg[lmac_idx];
+
+	/* Reset the attributes before updating for each mode */
+	lmac->use_training = 0;
+	cgx->usxgmii_mode = 0;
+	lmac->sgmii_1000x_mode = 0;
+	lmac->autoneg_dis = 0;
+
+	switch (lmac->mode_idx) {
+	case QLM_MODE_10G_KR:
+	case QLM_MODE_40G_KR4:
+		lmac->use_training = 1;
+		break;
+	case QLM_MODE_USXGMII_1X1:
+	case QLM_MODE_USXGMII_2X1:
+	case QLM_MODE_USXGMII_4X1:
+		cgx->usxgmii_mode = 1;	/* set USXGMII for this CGX */
+	case QLM_MODE_XFI:
+	case QLM_MODE_SFI:
+	case QLM_MODE_XLAUI:
+	case QLM_MODE_XLAUI_C2M:
+	case QLM_MODE_RXAUI:
+	case QLM_MODE_XAUI:
+	/* Fixed speed option. consider as AN disabled cases */
+	case QLM_MODE_20GAUI_C2C:
+	case QLM_MODE_25GAUI_C2C:
+	case QLM_MODE_25GAUI_C2M:
+	case QLM_MODE_25GAUI_2_C2C:
+	case QLM_MODE_40GAUI_2_C2C:
+	case QLM_MODE_50GAUI_2_C2C:
+	case QLM_MODE_50GAUI_2_C2M:
+	case QLM_MODE_50GAUI_4_C2C:
+	case QLM_MODE_80GAUI_4_C2C:
+	case QLM_MODE_CAUI_4_C2C:
+	case QLM_MODE_CAUI_4_C2M:
+		/* FIXME : always disable AN for USXGMII for now */
+		lmac->autoneg_dis = 1;
+	break;
+	case QLM_MODE_1G_X:
+		lmac->sgmii_1000x_mode = 1;
+		lmac->autoneg_dis = 1;
+	break;
+	}
+}
+
 /* This API brings up SGMII/QSGMII link. This function to be called
  * after the PHY is up (only when link is up).
  */
@@ -2289,8 +2340,11 @@ void cgx_lmac_init_link(int cgx_id, int lmac_id)
  */
 void cgx_hw_init(int cgx_id)
 {
-	int lmac_id;
+	int lmac_id, qlm_mode, lmac_type;
+	int baud_rate, flags = 0, lane, ret;
+	qlm_state_lane_t state;
 	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
 	cavm_cgxx_cmrx_config_t cmr_config;
 
 	debug_cgx("%s: %d\n", __func__, cgx_id);
@@ -2316,9 +2370,34 @@ void cgx_hw_init(int cgx_id)
 		 * for each LMAC
 		 */
 		for (lmac_id = 0; lmac_id < MAX_LMAC_PER_CGX; lmac_id++) {
-			if (cgx->lmac_cfg[lmac_id].lmac_enable)
+			lmac = &cgx->lmac_cfg[lmac_id];
+			if (lmac->lmac_enable)	{
+				ret = cgx_read_flash_mode_param(cgx_id, lmac_id, &qlm_mode, &lmac_type);
+				if (!ret) {
+					/* Update the board config structure with QLM/LMAC
+					 * mode from flash if ignoreflash parameter
+					 * not set by user
+					 */
+					lmac->mode_idx = qlm_mode;
+					lmac->mode = lmac_type;
+
+					/* Update PCS attributes based on each mode */
+					cgx_fill_lmac_attributes(cgx_id, lmac_id);
+					/* Configure SerDes for new QLM mode */
+					baud_rate = plat_octeontx_get_baud_rate_qlm_mode(qlm_mode);
+					state = qlm_build_state(qlm_mode, baud_rate, flags);
+					if (qlm_mode == QLM_MODE_50GAUI_4_C2C ||
+						qlm_mode == QLM_MODE_25GAUI_2_C2C)
+						lane = -1;
+					else
+						lane = lmac->rev_lane;
+					qlm_set_mode_gsern(lmac->qlm, lane,
+								qlm_mode, baud_rate, flags);
+					GSERN_CSR_WRITE(CAVM_GSERNX_LANEX_SCRATCHX(
+								lmac->qlm, lmac->lane, 0), state.u);
+				}
 				cgx_lmac_init(cgx_id, lmac_id);
-			else
+			} else
 				debug_cgx("%s LMAC%d not enabled\n", __func__, lmac_id);
 
 			/* enable CMR INT for notifications to kernel cmds/evt */

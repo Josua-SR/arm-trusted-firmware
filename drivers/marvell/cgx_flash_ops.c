@@ -175,25 +175,21 @@ int cgx_read_flash_ignore(int cgx_id, int lmac_id, int *ignore)
 int cgx_read_flash_mode_param(int cgx_id, int lmac_id, int *qlm_mode,
 			      int *lmac_mode)
 {
-	cgx_config_t *cgx;
-	cgx_lmac_config_t *lmac;
 	cgx_lmac_flash_ctx_t *ptr;
 	cgx_lmac_flash_ctx_t fctx[MAX_CGX * MAX_LMAC_PER_CGX];
 	int ret;
-
-	cgx = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
-	lmac = &cgx->lmac_cfg[lmac_id];
 
 	ret = cgx_read_flash_lmac_params((uint8_t *)fctx, sizeof(fctx));
 	if (ret < 0)
 		return -1;
 	ptr = &fctx[cgx_id * MAX_LMAC_PER_CGX + lmac_id];
 
-	if (!ptr->s.valid || !ptr->s.mod_valid || ptr->s.cgx_id != cgx_id ||
-	    ptr->s.lmac_id != lmac_id || ptr->s.qlm_mode != lmac->mode_idx)
+	if (!ptr->s.valid || ptr->s.cgx_id != cgx_id ||
+	    ptr->s.lmac_id != lmac_id) {
+		debug_cgx_flash("%s: %d:%d invalid param\n", __func__, cgx_id, lmac_id);
 		return -1;
-	if (!ptr->s.ignore)
-		return -1;
+	}
+
 	*qlm_mode = ptr->s.qlm_mode;
 	*lmac_mode = ptr->s.lmac_mode;
 	return 0;
@@ -237,6 +233,9 @@ static int cgx_update_flash_lmac_params(int cgx_id, int lmac_id, int cmd,
 	if (cmd == IGNORE)
 		ptr->s.ignore = (arg & 0x1) ? 0 : 1;
 
+	debug_cgx_flash("%s flash valid %d cgx%d lmac%d qmode %x mode %x\n",
+			__func__, ptr->s.valid, ptr->s.cgx_id, ptr->s.lmac_id,
+			ptr->s.qlm_mode, ptr->s.lmac_mode);
 	err = spi_nor_erase(SPI_NVDATA_OFFSET, SPI_ADDRESSING_24BIT, spi_con,
 			    cs);
 	if (err < 0) {
