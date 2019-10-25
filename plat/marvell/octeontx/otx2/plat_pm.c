@@ -13,7 +13,7 @@
 #include <errno.h>
 #include <platform_def.h>
 #include <platform_setup.h>
-#include <platform.h>
+#include <plat/common/platform.h>
 #include <octeontx_common.h>
 #include <timers.h>
 #include <gicv3_setup.h>

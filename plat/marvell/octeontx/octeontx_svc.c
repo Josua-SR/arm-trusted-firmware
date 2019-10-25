@@ -6,11 +6,11 @@
  */
 
 #include <debug.h>
-#include <psci.h>
+#include <lib/psci/psci.h>
 #include <runtime_svc.h>
 #include <octeontx_svc.h>
 #include <stdint.h>
-#include <uuid.h>
+#include <tools_share/uuid.h>
 #include <string.h>
 #include <octeontx_common.h>
 #include <gpio_octeontx.h>

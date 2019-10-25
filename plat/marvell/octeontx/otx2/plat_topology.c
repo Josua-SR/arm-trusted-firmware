@@ -8,7 +8,7 @@
 #include <arch.h>
 #include <platform_def.h>
 #include <platform_setup.h>
-#include <psci.h>
+#include <lib/psci/psci.h>
 
 /*******************************************************************************
  * This function returns the Cavium default topology tree information.

@@ -5,10 +5,10 @@
  * license agreement.
  */
 
-#include <auth_mod.h>
-#include <crypto_mod.h>
+#include <drivers/auth/auth_mod.h>
+#include <drivers/auth/crypto_mod.h>
 #include <platform_def.h>
-#include <tbbr_oid.h>
+#include <tools_share/tbbr_oid.h>
 #include <stddef.h>
 
 /*

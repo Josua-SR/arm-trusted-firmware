@@ -9,12 +9,12 @@
 #include <assert.h>
 #include <bl_common.h>
 #include <context.h>
-#include <context_mgmt.h>
+#include <lib/el3_runtime/context_mgmt.h>
 #include <debug.h>
 #include <mmio.h>
-#include <platform.h>
+#include <plat/common/platform.h>
 #include <platform_def.h>
-#include <psci.h>
+#include <lib/psci/psci.h>
 #include <octeontx_legacy_pwrc.h>
 #include <octeontx_common.h>
 #include <plat_board_cfg.h>

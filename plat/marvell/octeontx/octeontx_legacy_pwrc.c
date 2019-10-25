@@ -7,7 +7,7 @@
 
 #include <bakery_lock.h>
 #include <mmio.h>
-#include <platform.h>
+#include <plat/common/platform.h>
 #include <octeontx_legacy_pwrc.h>
 #include <octeontx_common.h>
 #include <arch_helpers.h>

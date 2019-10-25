@@ -8,7 +8,7 @@
 #include <arch.h>
 #include <stdio.h>
 #include <debug.h>
-#include <delay_timer.h>
+#include <drivers/delay_timer.h>
 #include <platform_def.h>
 #include <octeontx_common.h>
 #include <plat_board_cfg.h>
@@ -16,7 +16,6 @@
 #include <cgx_intf.h>
 #include <phy_marvell.h>
 #include <phy_mgmt.h>
-#include <pubsub.h>
 #include <smi.h>
 #include <string.h>
 

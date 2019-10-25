@@ -10,7 +10,7 @@
 #include <stddef.h>
 #include <assert.h>
 #include <platform_def.h>
-#include <delay_timer.h>
+#include <drivers/delay_timer.h>
 #include <stdio.h>
 #include <octeontx_common.h>
 #include <twsi_core.h>

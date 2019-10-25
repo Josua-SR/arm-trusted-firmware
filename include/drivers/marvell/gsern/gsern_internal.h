@@ -11,7 +11,7 @@
 #include <gsern.h>
 #include <octeontx_common.h>
 #include <debug.h>
-#include <delay_timer.h>
+#include <drivers/delay_timer.h>
 #include <plat_scfg.h>
 #include <plat_board_cfg.h>
 #include <octeontx_utils.h>

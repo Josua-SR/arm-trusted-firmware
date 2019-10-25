@@ -33,12 +33,12 @@
 #include <assert.h>
 #include <bl_common.h>
 #include <desc_image_load.h>
-#include <console.h>
-#include <pl011.h>
-#include <platform.h>
+#include <drivers/console.h>
+#include <drivers/arm/pl011.h>
+#include <plat/common/platform.h>
 #include <platform_def.h>
 #include <string.h>
-#include <xlat_tables_v2.h>
+#include <lib/xlat_tables/xlat_tables_v2.h>
 #include <octeontx_common.h>
 #include <octeontx_board_cfg.h>
 #include <stdio.h>
@@ -56,9 +56,9 @@
 
 #if ENABLE_ATTESTATION_SERVICE
 #include <octeontx_attestation.h>
-#include <auth/auth_mod.h>
+#include <drivers/auth/auth_mod.h>
 #include <plat_octeontx.h>
-#include <tbbr_oid.h>
+#include <tools_share/tbbr_oid.h>
 #include <octeontx_utils.h>
 #include <octeontx_io_storage.h>
 /* these are required for 'decode_hash_digest()' */

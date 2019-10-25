@@ -10,16 +10,16 @@
 #include <arch_helpers.h>
 #include <assert.h>
 #include <debug.h>
-#include <psci.h>
+#include <lib/psci/psci.h>
 #include <errno.h>
-#include <gic_common.h>
-#include <gicv3.h>
-#include <platform.h>
+#include <drivers/arm/gic_common.h>
+#include <drivers/arm/gicv3.h>
+#include <plat/common/platform.h>
 #include <platform_def.h>
 #include <plat_scfg.h>
 #include <runtime_svc.h>
-#include <interrupt_mgmt.h>
-#include <context_mgmt.h>
+#include <bl31/interrupt_mgmt.h>
+#include <lib/el3_runtime/context_mgmt.h>
 #include <string.h>
 
 #include <octeontx_ecam.h>

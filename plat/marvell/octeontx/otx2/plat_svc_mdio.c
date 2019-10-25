@@ -8,7 +8,7 @@
 #include <debug.h>
 #include <octeontx_common.h>
 #include <stdint.h>
-#include <uuid.h>
+#include <tools_share/uuid.h>
 #include <rvu.h>
 #include <plat_board_cfg.h>
 #include <cgx.h>

@@ -31,13 +31,13 @@
 #include <assert.h>
 #include <bl_common.h>		/* For ARRAY_SIZE */
 #include <debug.h>
-#include <firmware_image_package.h>
-#include <io_driver.h>
-#include <io_fip.h>
-#include <io_spi.h>
-#include <io_mmc.h>
-#include <io_memmap.h>
-#include <io_storage.h>
+#include <tools_share/firmware_image_package.h>
+#include <drivers/io/io_driver.h>
+#include <drivers/io/io_fip.h>
+#include <drivers/io/io_spi.h>
+#include <drivers/io/io_mmc.h>
+#include <drivers/io/io_memmap.h>
+#include <drivers/io/io_storage.h>
 #include <platform_def.h>
 #include <string.h>
 #include <octeontx_common.h>

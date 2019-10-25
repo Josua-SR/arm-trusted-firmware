@@ -11,7 +11,7 @@
 #include <platform_svc.h>
 #include <octeontx_common.h>
 #include <stdint.h>
-#include <uuid.h>
+#include <tools_share/uuid.h>
 #include <bphy.h>
 #include <rvu.h>
 #include <plat_scmi.h>

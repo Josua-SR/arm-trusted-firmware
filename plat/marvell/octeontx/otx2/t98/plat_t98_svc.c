@@ -11,7 +11,7 @@
 #include <platform_svc.h>
 #include <octeontx_common.h>
 #include <stdint.h>
-#include <uuid.h>
+#include <tools_share/uuid.h>
 #include <rvu.h>
 
 uintptr_t plat_octeontx_svc_smc_handler(uint32_t smc_fid,

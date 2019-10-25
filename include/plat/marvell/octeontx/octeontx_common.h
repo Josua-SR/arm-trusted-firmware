@@ -10,7 +10,7 @@
 
 #include <debug.h>
 #include <stdint.h>
-#include <xlat_tables_v2.h>
+#include <lib/xlat_tables/xlat_tables_v2.h>
 #include <arch_helpers.h>
 #include <stddef.h>
 

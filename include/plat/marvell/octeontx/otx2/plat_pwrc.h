@@ -9,7 +9,7 @@
 #define __PLAT_PWRC_H__
 
 #include <cdefs.h>
-#include <psci.h>
+#include <lib/psci/psci.h>
 
 /* SCMI related defines */
 

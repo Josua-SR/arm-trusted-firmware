@@ -14,7 +14,7 @@
 #include <octeontx_common.h>
 #include <hw_timers.h>
 #include <octeontx_sata.h>
-#include <delay_timer.h>
+#include <drivers/delay_timer.h>
 #include <string.h>
 #include <plat_scfg.h>
 #include <octeontx_dram.h>

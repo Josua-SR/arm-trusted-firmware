@@ -6,7 +6,7 @@
  */
 
 #include <debug.h>
-#include <platform.h>
+#include <plat/common/platform.h>
 #include <platform_def.h>
 #include <platform_dt.h>
 #include <platform_setup.h>

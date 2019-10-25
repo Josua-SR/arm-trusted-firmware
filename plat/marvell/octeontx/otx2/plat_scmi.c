@@ -10,7 +10,7 @@
 #include <limits.h>
 #include <assert.h>
 #include <debug.h>
-#include <delay_timer.h>
+#include <drivers/delay_timer.h>
 #include <mmio.h>
 #include <plat_board_cfg.h>
 #include <octeontx_common.h>

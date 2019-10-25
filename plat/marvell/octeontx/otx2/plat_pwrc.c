@@ -11,7 +11,7 @@
 #include <plat_pwrc.h>
 #include <platform_def.h>
 #include <platform_setup.h>
-#include <platform.h>
+#include <plat/common/platform.h>
 #include <string.h>
 #include <octeontx_common.h>
 #include <octeontx_utils.h>

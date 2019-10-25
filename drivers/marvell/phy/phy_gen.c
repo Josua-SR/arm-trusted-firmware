@@ -12,7 +12,7 @@
 #include <string.h>
 #include <platform_def.h>
 #include <timers.h>
-#include <delay_timer.h>
+#include <drivers/delay_timer.h>
 #include <platform_def.h>
 #include <octeontx_common.h>
 #include <plat_board_cfg.h>

@@ -32,7 +32,7 @@
 #ifndef __OCTEONTX_LEGACY_PWRC_H__
 #define __OCTEONTX_LEGACY_PWRC_H__
 
-#include <psci.h>
+#include <lib/psci/psci.h>
 
 #ifndef __ASSEMBLY__
 

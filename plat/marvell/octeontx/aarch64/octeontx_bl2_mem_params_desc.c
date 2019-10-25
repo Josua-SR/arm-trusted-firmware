@@ -7,7 +7,7 @@
 
 #include <bl_common.h>
 #include <desc_image_load.h>
-#include <platform.h>
+#include <plat/common/platform.h>
 #include <platform_def.h>
 
 

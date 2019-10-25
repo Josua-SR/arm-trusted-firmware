@@ -21,10 +21,10 @@
 #undef GICD_TYPER
 #undef GICD_IIDR
 
-#include <gic_common.h>
-#include <gicv3.h>
-#include <platform.h>
-#include <interrupt_mgmt.h>
+#include <drivers/arm/gic_common.h>
+#include <drivers/arm/gicv3.h>
+#include <plat/common/platform.h>
+#include <bl31/interrupt_mgmt.h>
 
 #if IMAGE_BL31
 /* The GICv3 driver only needs to be initialized in EL3 */

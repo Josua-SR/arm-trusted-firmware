@@ -11,8 +11,8 @@
 #include <assert_macros.S>
 #include <cpu_macros.S>
 #include <bl_common.h>
-#include <pl011.h>
-#include <console.h>
+#include <drivers/arm/pl011.h>
+#include <drivers/console.h>
 
 	.globl	plat_report_exception
 

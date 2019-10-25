@@ -11,11 +11,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <spi.h>
-#include <delay_timer.h>
+#include <drivers/delay_timer.h>
 #include <octeontx_common.h>
-#include <io_storage.h>
+#include <drivers/io/io_storage.h>
 #include <assert.h>
-#include <io_driver.h>
+#include <drivers/io/io_driver.h>
 #include <debug.h>
 #include <plat_board_cfg.h>
 

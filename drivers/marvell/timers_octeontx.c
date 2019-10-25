@@ -8,12 +8,12 @@
 /* Timer driver which implements hw_timers.h API for OcteonTX (CN8xxx and CN9xxx) */
 
 #include <bl_common.h>
-#include <interrupt_mgmt.h>
+#include <bl31/interrupt_mgmt.h>
 #include <stdio.h>
 #include <octeontx_common.h>
 #include <octeontx_utils.h>
 #include <hw_timers.h>
-#include <delay_timer.h>
+#include <drivers/delay_timer.h>
 #include <octeontx_irqs_def.h>
 #include <octeontx_ehf.h>
 #include <timers_octeontx.h>

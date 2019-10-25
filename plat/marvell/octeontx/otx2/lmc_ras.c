@@ -16,16 +16,16 @@
 #include <octeontx_common.h>
 #include <plat_otx2_configuration.h>
 #include <debug.h>
-#include <interrupt_mgmt.h>
+#include <bl31/interrupt_mgmt.h>
 #include <plat_board_cfg.h>
 #include <octeontx_security.h>
 #include <octeontx_dram.h>
 #include <octeontx_utils.h>
-#include <uuid.h>
-#include <platform.h>
+#include <tools_share/uuid.h>
+#include <plat/common/platform.h>
 #include <lmc_ras.h>
 #include <timers.h>
-#include <delay_timer.h>
+#include <drivers/delay_timer.h>
 #include <octeontx_ehf.h>
 
 /* DEBUG_RAS requires DEBUG, 0/1 dis/enables DEBUG=1 RAS chatter */

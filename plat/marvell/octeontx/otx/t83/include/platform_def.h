@@ -9,9 +9,9 @@
 #define __PLATFORM_DEF_H__
 
 #include <arch.h>
-#include <common_def.h>
+#include <plat/common/common_def.h>
 #include <tbbr_img_def.h>
-#include <xlat_tables_v2.h>
+#include <lib/xlat_tables/xlat_tables_v2.h>
 
 /*******************************************************************************
  * Generic platform constants

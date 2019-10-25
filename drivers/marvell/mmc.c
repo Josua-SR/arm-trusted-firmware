@@ -12,16 +12,16 @@
 #include <string.h>
 #include <platform_def.h>
 #include <octeontx_common.h>
-#include <io_storage.h>
+#include <drivers/io/io_storage.h>
 #include <assert.h>
-#include <io_driver.h>
+#include <drivers/io/io_driver.h>
 #include <debug.h>
 #include <plat_board_cfg.h>
 #include <octeontx_security.h>
 #include <octeontx_utils.h>
-#include <delay_timer.h>
+#include <drivers/delay_timer.h>
 
-#include <io_mmc.h>
+#include <drivers/io/io_mmc.h>
 #include <mmc.h>
 
 static file_state_t mmc_current_file = { 0 };

@@ -7,7 +7,7 @@
 
 #include <arch.h>
 #include <platform_def.h>
-#include <psci.h>
+#include <lib/psci/psci.h>
 
 static const unsigned char plat_octeontx_power_domain_tree_desc[] = {
 	/* No of root nodes */

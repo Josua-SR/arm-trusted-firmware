@@ -10,8 +10,8 @@
 #include <asm_macros.S>
 #include <assert_macros.S>
 #include <cpu_macros.S>
-#include <pl011.h>
-#include <console.h>
+#include <drivers/arm/pl011.h>
+#include <drivers/console.h>
 
 	/* Global functions */
 	.globl	plat_is_my_cpu_primary

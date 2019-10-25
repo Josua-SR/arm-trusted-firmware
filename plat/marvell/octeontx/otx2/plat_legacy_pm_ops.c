@@ -5,7 +5,7 @@
  * https://spdx.org/licenses
  */
 
-#include <psci.h>
+#include <lib/psci/psci.h>
 #include <debug.h>
 #include <octeontx_common.h>
 #include <octeontx_legacy_pm.h>

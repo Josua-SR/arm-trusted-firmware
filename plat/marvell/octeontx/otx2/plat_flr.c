@@ -10,7 +10,7 @@
 #include <context.h>
 #include <octeontx_common.h>
 #include <octeontx_utils.h>
-#include <platform.h>
+#include <plat/common/platform.h>
 #include <platform_def.h>
 #include <platform_setup.h>
 #include <plat_flr.h>

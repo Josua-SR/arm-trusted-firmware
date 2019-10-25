@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <debug.h>
-#include <delay_timer.h>
+#include <drivers/delay_timer.h>
 #include <platform_def.h>
 #include <platform_dt.h>
 #include <octeontx_common.h>

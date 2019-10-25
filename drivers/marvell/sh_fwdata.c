@@ -15,7 +15,7 @@
 #include <plat_board_cfg.h>
 #include <rvu.h>
 #include <sh_fwdata.h>
-#include <platform.h>
+#include <plat/common/platform.h>
 #include <assert.h>
 #include <debug.h>
 #include <octeontx_utils.h>

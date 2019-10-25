@@ -13,7 +13,7 @@
 #include <assert.h>
 #include <octeontx_common.h>
 #include <hw_timers.h>
-#include <delay_timer.h>
+#include <drivers/delay_timer.h>
 #include <string.h>
 #include <plat_board_cfg.h>
 #include <cgx.h>

@@ -14,7 +14,7 @@
 #include <platform_def.h>
 #include <timers.h>
 #include <octeontx_common.h>
-#include <delay_timer.h>
+#include <drivers/delay_timer.h>
 #include <plat_board_cfg.h>
 #include <smi.h>
 #include <cgx_intf.h>
