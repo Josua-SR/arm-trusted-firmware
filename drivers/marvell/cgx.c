@@ -740,7 +740,7 @@ static void cgx_set_autoneg(int cgx_id, int lmac_id)
 
 		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spu_dbg_control_t,
 			CAVM_CGXX_SPU_DBG_CONTROL(cgx_id),
-			an_nonce_match_dis, 1);
+			an_nonce_match_dis, 0);
 		/* optionally set an_arb_link_chk_en. For CN9XXX pass 1, better
 		 * not to set it due to errata #34763 for LMAC types with
 		 * RS-FEC enabled
