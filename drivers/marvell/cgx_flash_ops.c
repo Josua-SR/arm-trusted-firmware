@@ -114,7 +114,7 @@ int cgx_read_flash_fec(int cgx_id, int lmac_id, int *fec)
 		return -1;
 	ptr = &fctx[cgx_id * MAX_LMAC_PER_CGX + lmac_id];
 
-	if (!ptr->s.valid || !ptr->s.fec_valid || ptr->s.cgx_id != cgx_id ||
+	if (ptr->s.invalid || ptr->s.fec_invalid || ptr->s.cgx_id != cgx_id ||
 	    ptr->s.lmac_id != lmac_id || ptr->s.qlm_mode != lmac->mode_idx)
 		return -1;
 	if (!ptr->s.ignore)
@@ -140,7 +140,7 @@ int cgx_read_flash_phy_mod(int cgx_id, int lmac_id, int *phy_mod)
 		return -1;
 	ptr = &fctx[cgx_id * MAX_LMAC_PER_CGX + lmac_id];
 
-	if (!ptr->s.valid || !ptr->s.mod_valid || ptr->s.cgx_id != cgx_id ||
+	if (ptr->s.invalid || ptr->s.mod_invalid || ptr->s.cgx_id != cgx_id ||
 	    ptr->s.lmac_id != lmac_id || ptr->s.qlm_mode != lmac->mode_idx)
 		return -1;
 	if (!ptr->s.ignore)
@@ -165,7 +165,7 @@ int cgx_read_flash_ignore(int cgx_id, int lmac_id, int *ignore)
 		return -1;
 	ptr = &fctx[cgx_id * MAX_LMAC_PER_CGX + lmac_id];
 
-	if (!ptr->s.valid || !ptr->s.mod_valid || ptr->s.cgx_id != cgx_id ||
+	if (ptr->s.invalid || ptr->s.cgx_id != cgx_id ||
 	    ptr->s.lmac_id != lmac_id || ptr->s.qlm_mode != lmac->mode_idx)
 		return -1;
 	*ignore = ptr->s.ignore ? 0 : 1;
@@ -184,7 +184,7 @@ int cgx_read_flash_mode_param(int cgx_id, int lmac_id, int *qlm_mode,
 		return -1;
 	ptr = &fctx[cgx_id * MAX_LMAC_PER_CGX + lmac_id];
 
-	if (!ptr->s.valid || ptr->s.cgx_id != cgx_id ||
+	if (ptr->s.invalid || ptr->s.cgx_id != cgx_id ||
 	    ptr->s.lmac_id != lmac_id) {
 		debug_cgx_flash("%s: %d:%d invalid param\n", __func__, cgx_id, lmac_id);
 		return -1;
@@ -216,26 +216,46 @@ static int cgx_update_flash_lmac_params(int cgx_id, int lmac_id, int cmd,
 		return -1;
 	}
 	ptr = &fctx[cgx_id * MAX_LMAC_PER_CGX + lmac_id];
-	ptr->s.valid = 1;
+	/* As flash erase sets all bits to 1, use 0 to mark any
+	 * param as valid, applies to mod_invalid and fec_invalid too.
+	 */
+	ptr->s.invalid = 0;
 	ptr->s.cgx_id = cgx_id;
 	ptr->s.lmac_id = lmac_id;
 	ptr->s.qlm_mode = lmac->mode_idx;
+	/* Now that flash lmac mode is in use while booting whenever entry
+	 * is made valid so store it along with qlm mode otherwise lmac init
+	 * will fail on next reboot [reads 0xff for lmac mode]
+	 * if only fec or phy_mod is changed.
+	 */
+	ptr->s.lmac_mode = lmac->mode;
 	if (cmd == FEC) {
 		ptr->s.fec_type = arg & 0x3;
-		ptr->s.fec_valid = 1;
+		ptr->s.fec_invalid = 0;
 	}
 	if (cmd == PHY_MOD) {
 		ptr->s.mod_type = arg & 0x1;
-		ptr->s.mod_valid = 1;
+		ptr->s.mod_invalid = 0;
 	}
-	if (cmd == LMAC_MODE)
+	if (cmd == LMAC_MODE) {
 		ptr->s.lmac_mode = arg & 0xff;
+		if (lmac->phy_present && lmac->phy_config.init &&
+		    lmac->phy_config.valid) {
+			ptr->s.mod_invalid = 0;
+			ptr->s.mod_type = lmac->phy_config.mod_type;
+		}
+		ptr->s.fec_invalid = 0;
+		ptr->s.fec_type = lmac->fec;
+	}
 	if (cmd == IGNORE)
 		ptr->s.ignore = (arg & 0x1) ? 0 : 1;
 
-	debug_cgx_flash("%s flash valid %d cgx%d lmac%d qmode %x mode %x\n",
-			__func__, ptr->s.valid, ptr->s.cgx_id, ptr->s.lmac_id,
-			ptr->s.qlm_mode, ptr->s.lmac_mode);
+	debug_cgx_flash("%s flash invalid %d cgx%d lmac%d qmode %x mode %x\n",
+			__func__, ptr->s.invalid, ptr->s.cgx_id,
+			ptr->s.lmac_id, ptr->s.qlm_mode, ptr->s.lmac_mode);
+	debug_cgx_flash("%s fec invalid %d type%x mod invalid%d type%x\n",
+			__func__, ptr->s.fec_invalid, ptr->s.fec_type,
+			ptr->s.mod_invalid, ptr->s.mod_type);
 	err = spi_nor_erase(SPI_NVDATA_OFFSET, SPI_ADDRESSING_24BIT, spi_con,
 			    cs);
 	if (err < 0) {

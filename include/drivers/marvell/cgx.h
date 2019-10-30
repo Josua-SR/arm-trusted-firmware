@@ -191,14 +191,14 @@ typedef union cgx_lmac_context {
 typedef union cgx_lmac_flash_ctx {
 	uint64_t u64;
 	struct cgx_lmac_flash_ctx_s {
-		uint64_t valid:1;
+		uint64_t invalid:1;
 		uint64_t cgx_id:3;
 		uint64_t lmac_id:3;
 		uint64_t ignore:1;
 		uint64_t qlm_mode:8;
-		uint64_t fec_valid:1;
+		uint64_t fec_invalid:1;
 		uint64_t fec_type:2;
-		uint64_t mod_valid:1;
+		uint64_t mod_invalid:1;
 		uint64_t mod_type:1;
 		uint64_t rsvd1:3;
 		uint64_t lmac_mode:8;
