@@ -172,11 +172,11 @@ static void populate_platform_args_for_bl31(void)
 	if (!(auth_img_flags[img_id] & IMG_FLAG_AUTHENTICATED)) {
 		ERROR("Image ID %u is not authenticated\n", img_id);
 	} else {
-		img_desc_ptr = &cot_desc_ptr[img_id];
+		img_desc_ptr = cot_desc_ptr[img_id];
 		assert(img_desc_ptr->parent);
 
 		/* parent image has authentication signature stored within */
-		img_desc_ptr = &cot_desc_ptr[img_desc_ptr->parent->img_id];
+		img_desc_ptr = cot_desc_ptr[img_desc_ptr->parent->img_id];
 
 		auth_param = &img_desc_ptr->authenticated_data[0];
 		assert(!strcmp(auth_param->type_desc->cookie,
@@ -198,11 +198,11 @@ static void populate_platform_args_for_bl31(void)
 	if (!(auth_img_flags[img_id] & IMG_FLAG_AUTHENTICATED)) {
 		ERROR("Image ID %u is not authenticated\n", img_id);
 	} else {
-		img_desc_ptr = &cot_desc_ptr[img_id];
+		img_desc_ptr = cot_desc_ptr[img_id];
 		assert(img_desc_ptr->parent);
 
 		/* parent image has authentication signature stored within */
-		img_desc_ptr = &cot_desc_ptr[img_desc_ptr->parent->img_id];
+		img_desc_ptr = cot_desc_ptr[img_desc_ptr->parent->img_id];
 
 		auth_param = &img_desc_ptr->authenticated_data[0];
 		assert(!strcmp(auth_param->type_desc->cookie,
@@ -265,7 +265,7 @@ static void populate_platform_args_for_bl31(void)
 		 */
 		comp_str = comp_str_buf;
 		comp_str[MAX_COMP_ID_STR_LEN - 1] = 0;
-		strncpy(comp_str, (char *)prop, MAX_COMP_ID_STR_LEN - 1);
+		strlcpy(comp_str, (char *)prop, MAX_COMP_ID_STR_LEN - 1);
 		separator = strchr(comp_str, ':');
 		if (separator == NULL) {
 			ERROR("Invalid image list property\n");

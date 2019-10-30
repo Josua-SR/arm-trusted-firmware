@@ -101,8 +101,6 @@ WORKAROUND_CVE_2017_5715	:=	0
 EL3_EXCEPTION_HANDLING	:=       1
 
 ifeq (${SECURE_BOOT},1)
-    include drivers/auth/mbedtls/mbedtls_common.mk
-
     ifeq (${ARM_ROTPK_LOCATION}, regs)
         ARM_ROTPK_LOCATION_ID = ARM_ROTPK_REGS_ID
     else
@@ -131,6 +129,8 @@ ifeq (${SECURE_BOOT},1)
 
     CRYPTO_LIB_MK := drivers/auth/mbedtls/mbedtls_crypto.mk
     IMG_PARSER_LIB_MK := drivers/auth/mbedtls/mbedtls_x509.mk
+
+    include drivers/auth/mbedtls/mbedtls_common.mk
 
     $(info Including ${CRYPTO_LIB_MK})
     include ${CRYPTO_LIB_MK}

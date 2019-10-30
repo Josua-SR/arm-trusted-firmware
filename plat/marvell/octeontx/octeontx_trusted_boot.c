@@ -264,3 +264,8 @@ int plat_get_crypt_key(unsigned char **key, unsigned int *key_len)
 	*key_len = (unsigned int)sizeof(aes_key);
 	return 0;
 }
+
+int plat_get_mbedtls_heap(void **heap_addr, size_t *heap_size)
+{
+	return get_mbedtls_heap_helper(heap_addr, heap_size);
+}
