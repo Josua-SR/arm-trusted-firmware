@@ -1,0 +1,275 @@
+Software Attestation
+====================
+
+This document describes use and testing of the Software Attestation feature.
+NOTE: This feature is only available in the CN96xx platform.
+
+The reader is assumed to be familiar with the following documents:
+
+   - Octeon TX2 Software Attestation specification
+   - Octeon TX2 SDK Trusted-Mode Boot feature
+
+Table of contents
+-----------------
+
+   #. :ref:`Definitions <Definitions-label>`
+   #. :ref:`Requirements to establish Software Attestation <Requirements-label>`
+   #. :ref:`Creating the Trusted-Mode Boot image <Creating-Trusted-label>`
+   #. :ref:`Booting the Trusted-Mode Boot image <Booting-Trusted-label>`
+   #. :ref:`Testing Software Attestation <Testing-label>`
+   #. :ref:`Generating Software Attestation Signing File <Generating-Signing-label>`
+
+.. _Definitions-label:
+
+Definitions
+-----------
+::
+
+  <install_dir>              - directory into which all source files were copied
+  <attestation_signing_file> - used in the Trusted-Mode Boot build procedure,
+                               this contains signing data for the Software Attestation information
+  <release-id>               - specifies the software release in the Trusted-Mode Boot build procedure (see Release Notes)
+                               NOTE: this can be obtained from the sources archive filename.
+                                     For a sources archive named 'sources-sdk-base-ABC.XYX.tar.bz2',
+                                     the release-id is 'ABC.XYZ'.
+  <fuse_data>                - data obtained from a Trusted-Mode build used to program adapter fuses
+
+.. _Requirements-label:
+
+Requirements to establish Software Attestation
+----------------------------------------------
+
+Software Attestation is dependent upon the Octeon Trusted-Mode Boot feature.
+
+Additionally, the following components must be procured:
+
+   - private signing key (in DER format)
+   - signing certificate (in DER format)
+   - secret passphrase
+
+The signing certificate and private key are standard components of Public
+Key Cryptography.  These should be generated in a manner consistent with the
+organization's Information Technology practices.
+
+The secret passphrase can be any ASCII text.
+
+These items are used to generate the <attestation_signing_file>, which is
+used as part of the Trusted-Mode Boot build.
+
+Details of how to generate a unique <attestation_signing_file> are described in
+the section :ref:`Generating Software Attestation Signing File <Generating-Signing-label>`, below.
+
+A default <attestation_signing_file> exists in the Trusted-Mode Boot build,
+for demonstration purposes only.
+
+This default data should be used to verify the Trusted-Mode Boot configuration
+prior to generating a unique <attestation_signing_file>.
+
+.. _Creating-Trusted-label:
+
+Creating the Trusted-Mode Boot image
+------------------------------------
+
+A Trusted-Mode Boot image can be created using the following steps::
+
+  $ cd <install_dir>/sdk-base
+  $ script -c "./scripts/ci/compile.sh --bsne cn96xx -r <release-id>" make.log
+
+Afterward, certain information (i.e. <fuse_data>) must be extracted from the
+build procedure in order to use the Trusted-Mode Boot image.  This information
+will be used in the subsequent step :ref:`Booting the Trusted-Mode Boot image <Booting-Trusted-label>`.
+To obtain this information, use the following::
+
+  $ grep FUSF_ROTPK <install_dir>/sdk-base/make.log
+
+    NOTE: this will display information as follows:
+
+    FUSF_ROTPK[0]: <hex_value>
+    FUSF_ROTPK[1]: <hex_value>
+    FUSF_ROTPK[2]: <hex_value>
+    FUSF_ROTPK[3]: <hex_value>
+
+  $ grep FUSF_SW <attestation_signing_file>
+
+    NOTE: this will display information as follows:
+
+    * FUSF_SW2: <hex_value>
+    * FUSF_SW3: <hex_value>
+    * FUSF_SW4: <hex_value>
+    * FUSF_SW5: <hex_value>
+
+
+The default (sample) <attestation_signing_file> is located at::
+
+    <install_dir>/cn96xx-release-output/build/arm-trusted-firmware-custom/plat/marvell/octeontx/otx2/t96/include/attestation_signing_key.h
+
+However, if a unique <attestation_signing_file> was used in the build,
+specify its location instead.
+
+The Trusted-Mode Boot image can be found at the following location::
+
+  <install_dir>/cn96xx-release-output/images/octeontx-bootfs-uboot.img
+
+This image can be installed using the standard update procedure.
+
+.. _Booting-Trusted-label:
+
+Booting the Trusted-Mode Boot image
+-----------------------------------
+
+In order to boot the Trusted-Mode Boot image, the board must first be configured
+to do so (see the User's Guide for details).
+
+Next, various fuses in the board must be set (i.e. blown).
+The following procudure describes a "soft-blow" technique, which allows the use
+of Trusted-Mode Boot for testing purposes, and is NOT suitable to a production
+environment (i.e. the fuses will only retain their value until the board is
+power-cycled).
+
+Procedure::
+
+   a. Power-cycle the host; perform the remaining steps using the serial console
+   b. Select 'B' to display the "Boot Menu"
+   c. At the Boot Menu prompt, select 'D' to enter "Diagnostics"
+      NOTE: this may result in a restart where the user is again prompted to
+            "Press 'B' ... for boot menu" (there will only be a single restart).
+            Continue with step 'b' above
+   d. Once loaded, the diagnostics will present a "Main Menu";
+      select option 17, for "Trusted Boot options", which will display the
+      "Trusted Boot Menu".
+   e. Select option 7 for "Soft blow SHA256 of the Root-of-Trust Public Key..."
+   f. refer to the <fuse_data> information obtained in the step
+      'Creating the Trusted-Mode Boot image' and enter the values for each of
+      FUSF_ROTPK[n].  After all four (4) values are entered,
+      the "Trusted Boot Menu" will again be displayed.
+   g. Select option 11, "Soft blow Software Fuses (SW)"
+      For the first two options, enter the value '0', as follows:
+
+          (INS)FUSF_SW(0)[31:0] (0 - 4294967295) [0]: 0 <Enter>
+          (INS)FUSF_SW(0-1)[Non-secure NV counter] (0 - 96) [0]: 0 <Enter>
+
+      Refer to the <fuse_data> information obtained in the step
+      'Creating the Trusted-Mode Boot image' and enter the values for each of
+      FUSF_SW2..FUSF_SW5.
+
+      Enter the value '0' when prompted for FUSF_SW(6..7).
+      After all values have been entered, the "Trusted Boot Menu" will again
+      be displayed.
+   h. Select option 14, "Main menu", then select option 18, "Reboot"
+   i. After rebooting, select 'B' to display the "Boot Menu".
+
+      NOTE: above the boot menu prompt, the following text should be displayed,
+      which will verify that Trusted-Mode Boot has been configured properly.
+
+      "Trust: Enabled, Secure Boot"
+
+   j. Select 'N' to boot normally, which will boot U-Boot as usual.
+
+.. _Testing-label:
+
+Testing Software Attestation
+----------------------------
+
+Testing the Software Attestation consists of the following steps:
+
+   - Executing the U-Boot 'attest' command
+   - Retrieving the attestation signed image and signature
+   - Authenticating the attestation signed image
+
+The 'attest' command must be executed from U-Boot.  For example, at the
+U-Boot prompt, issue the following command::
+
+   CN3380_250SV> attest abcd
+
+   NOTE: the 'abcd' is the Nonce value
+   (refer to Octeon TX2 Software Attestation specification)
+
+The signed image, entitled "Attestation [signed] Image", will be output on
+the console, followed by the signature, entitled "Authentication signature".
+These items will be output as hexadecimal dumps and must be saved to separate
+text files (i.e. image.txt and image.sig.txt).
+
+To authenticate the attestation signed image, convert the saved text files
+(i.e. image.txt and image.sig.txt) into binary files.  For example::
+
+   $ xxd -r image.txt > image.bin
+   $ xxd -r image.sig.txt > image.bin.sig
+
+Then, obtain the public key for the private signing key.
+
+NOTE: If the default <attestation_signing_file> was used, the private
+signing key exists as::
+
+    <install_dir>/cn96xx-release-output/build/arm-trusted-firmware-custom/tools/attestation_signing/example-attestation-signing-key.der
+
+To obtain the public key from the private key, use the following command::
+
+   $ openssl pkey -in <signing_key> -inform DER -pubout -out key.pub
+
+The public key will exist in 'key.pub'.
+
+Finally, use OpenSSL to perform the authentication using the following command::
+
+   $ openssl dgst -sha256 -verify key.pub -signature image.bin.sig image.bin
+
+The authentication status will be displayed as one of the following::
+
+   "Verified OK":          success
+   "Verification Failure": failure
+
+Similarly, the x509 certificate included in the attestation information can
+be verified.  This will have been output on the console as a hexadecimal dump
+entitled "Certificate".  Save this data as a text file (cert.txt) then
+validate it using the following::
+
+   $ xxd -r cert.txt > cert.bin
+   $ openssl x509 -in cert.bin -inform DER -noout -text
+
+.. _Generating-Signing-label:
+
+Generating Software Attestation Signing File
+--------------------------------------------
+
+As previously mentioned, the <attestation_signing_file> contains signing data
+for the Software Attestation feature.
+
+This section describes how to generate and use this file.
+
+The script to create the <attestation_signing_file> can be found in the build
+directory, after having created a Trusted-Mode Boot image.  The script is
+located at::
+
+   <install_dir>/cn96xx-release-output/build/arm-trusted-firmware-custom/tools/attest_signing/encrypt_signing_key.sh
+
+Assemble all the required signing components and the aforementioned script into
+a work directory (i.e. <work_dir>).
+For requirements, see section :ref:`Requirements to establish Software Attestation <Requirements-label>`.
+
+Change to the <work_dir> directory and execute the following command::
+
+   $ sh encrypt_signing_key.sh <signing_key> <cert_file> [passphrase]
+
+     where:
+       <signing_key>: the private key used to sign the attestation information
+       <cert_file>:   the certificate included in the attestation information
+       [passphrase]:  arbitrary ASCII text used as input to the pseudo-random-
+                      key-generator (PRKG)
+
+   NOTE: execute the script without arguments for a description of usage.
+
+Upon completion, the script will have generated 'attestation_signing_key.h'.
+This is the <attestation_signing_file> which must be used in the
+Trusted-Mode Boot build procedure.
+
+To use the newly created <attestation_signing_file>, export its location via::
+
+   $ export ATTESTATION_SIGNING_KEY_FILE="<path_to_attestation_signing_file>"
+
+   NOTE: use quotations and specify the complete file path.
+
+Finally, [re]build the Trusted-Mode Boot image as per the section entitled
+:ref:`Creating the Trusted-Mode Boot image <Creating-Trusted-label>`, making sure to do so from an
+environment that includes the exported 'ATTESTATION_SIGNING_KEY_FILE' variable.
+After installing the new Trusted-Mode Boot image, proceed with the section
+entitled :ref:`Booting the Trusted-Mode Boot image <Booting-Trusted-label>`.
+
