@@ -34,6 +34,7 @@ PLAT_BL_COMMON_SOURCES	+=	plat/marvell/octeontx/otx2/t98/plat_t98_setup.c		\
 				drivers/marvell/gser_internal.c			\
 				drivers/marvell/gsern/gsern_eye.c		\
 				drivers/marvell/qlm/qlm_gsern.c		\
+				drivers/marvell/qlm/qlm.c			\
 				plat/marvell/octeontx/otx2/plat_setup.c		\
 
 BL2_SOURCES		+=	plat/marvell/octeontx/otx2/t98/plat_t98_ecam.c		\

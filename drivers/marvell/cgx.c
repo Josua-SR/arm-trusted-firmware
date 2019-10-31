@@ -2399,7 +2399,7 @@ void cgx_hw_init(int cgx_id)
 					/* Update PCS attributes based on each mode */
 					cgx_fill_lmac_attributes(cgx_id, lmac_id);
 					/* Configure SerDes for new QLM mode */
-					baud_rate = plat_octeontx_get_baud_rate_qlm_mode(qlm_mode);
+					baud_rate = qlm_get_mode_strmap(qlm_mode).baud_rate;
 					state = qlm_build_state(qlm_mode, baud_rate, flags);
 					if (qlm_mode == QLM_MODE_50GAUI_4_C2C ||
 						qlm_mode == QLM_MODE_25GAUI_2_C2C)

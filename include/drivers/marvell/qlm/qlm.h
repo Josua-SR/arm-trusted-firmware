@@ -159,6 +159,13 @@ typedef struct {
 	uint32_t data[64][128]; /* Error count at location, saturates as max */
 } gser_qlm_eye_t;
 
+struct qlm_mode_strmap_s {
+	int mode;
+	int baud_rate;
+	char *bdk_str;
+	char *linux_str;
+};
+
 /* QLM APIs */
 
 /*
@@ -183,6 +190,8 @@ static inline qlm_state_lane_t qlm_build_state(qlm_modes_t mode, int baud_mhz,
 	state.s.cgx = (mode >= QLM_MODE_SGMII) && (mode < QLM_MODE_LAST);
 	return state;
 }
+
+const struct qlm_mode_strmap_s qlm_get_mode_strmap(int qlm_mode);
 
 /* QLM platform specific API */
 

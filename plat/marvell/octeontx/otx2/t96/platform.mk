@@ -34,9 +34,9 @@ PLAT_BL_COMMON_SOURCES	+=	plat/marvell/octeontx/otx2/t96/plat_t96_setup.c		\
 				drivers/marvell/gser_internal.c			\
 				drivers/marvell/gsern/gsern_eye.c		\
 				drivers/marvell/qlm/qlm_gsern.c		\
+				drivers/marvell/qlm/qlm.c			\
 				plat/marvell/octeontx/otx2/plat_setup.c		\
 				plat/marvell/octeontx/otx2/plat_svc_mdio.c	\
-				plat/marvell/octeontx/otx2/plat_board_cfg.c			\
 
 BL2_SOURCES		+=	plat/marvell/octeontx/otx2/t96/plat_t96_ecam.c		\
 				drivers/marvell/sh_fwdata.c		\
@@ -44,6 +44,7 @@ BL2_SOURCES		+=	plat/marvell/octeontx/otx2/t96/plat_t96_ecam.c		\
 				plat/marvell/octeontx/otx2/plat_npc_mcam_profile.c	\
 				plat/marvell/octeontx/otx2/aarch64/plat_octeontx_common.S	\
 				plat/marvell/octeontx/otx2/aarch64/plat_helpers.S		\
+				plat/marvell/octeontx/otx2/plat_board_cfg.c			\
 				plat/marvell/octeontx/otx2/plat_scfg.c				\
 
 BL31_LIBS               +=      lib/libphy/libphy_88x5113.a     \

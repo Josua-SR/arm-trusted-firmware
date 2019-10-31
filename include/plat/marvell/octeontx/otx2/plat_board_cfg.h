@@ -111,6 +111,4 @@ typedef struct plat_octeontx_board_cfg {
 
 extern plat_octeontx_board_cfg_t * const plat_octeontx_bcfg;
 
-int plat_octeontx_get_baud_rate_qlm_mode(int qlm_mode);
-
 #endif /* __PLAT_BOARD_CFG_H__ */
