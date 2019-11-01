@@ -129,7 +129,6 @@ struct ecam_init_callback plat_init_callbacks[] = {
  * you want to hide or ECAM_ALL_INSTANCES
  * if all the instances are hidden
  */
- */
 struct secure_devices secure_devs[] = {
 	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_GIC, ECAM_ALL_INSTANCES},
 	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_GTI, ECAM_ALL_INSTANCES},
