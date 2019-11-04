@@ -2,16 +2,17 @@ Software Attestation
 ====================
 
 This document describes use and testing of the Software Attestation feature.
+
 NOTE: This feature is only available in the CN96xx platform.
 
 The reader is assumed to be familiar with the following documents:
 
-   - Octeon TX2 Software Attestation specification
    - Octeon TX2 SDK Trusted-Mode Boot feature
 
 Table of contents
 -----------------
 
+   #. :ref:`Overview <Overview-label>`
    #. :ref:`Definitions <Definitions-label>`
    #. :ref:`Requirements to establish Software Attestation <Requirements-label>`
    #. :ref:`Creating the Trusted-Mode Boot image <Creating-Trusted-label>`
@@ -19,20 +20,41 @@ Table of contents
    #. :ref:`Testing Software Attestation <Testing-label>`
    #. :ref:`Generating Software Attestation Signing File <Generating-Signing-label>`
 
+.. _Overview-label:
+
+Overview
+--------
+
+Software Attestation provides a mechanism by which the version and authenticity
+of the software running on the adapter can be verified.
+A query is sent to the device and a signed attestation file is returned with an
+inventory of the secure software components running on the adapter.
+
+Since there are insecure components between the originator of the request and
+the secure components on the adapter, the query includes a "challenge nonce"
+(random data), that is integrated into the signed attestation file.
+This ensures that the signed attestation file is authentic and that there is no
+'man-in-the-middle' spoofing the attestation request.
+
+The query to generate the attestation file is implemented by the U-Boot command
+'attest'.
+
 .. _Definitions-label:
 
 Definitions
 -----------
 ::
 
+  attestation file           - the inventory of software components currently running on the adapter
+                               NOTE: this data is signed.
+  <attestation_signing_file> - Used in the Trusted-Mode Boot build procedure,
+                               this contains signing data for the attestation file.
+  <fuse_data>                - data obtained from a Trusted-Mode build used to program adapter fuses
   <install_dir>              - directory into which all source files were copied
-  <attestation_signing_file> - used in the Trusted-Mode Boot build procedure,
-                               this contains signing data for the Software Attestation information
   <release-id>               - specifies the software release in the Trusted-Mode Boot build procedure (see Release Notes)
                                NOTE: this can be obtained from the sources archive filename.
                                      For a sources archive named 'sources-sdk-base-ABC.XYX.tar.bz2',
                                      the release-id is 'ABC.XYZ'.
-  <fuse_data>                - data obtained from a Trusted-Mode build used to program adapter fuses
 
 .. _Requirements-label:
 
