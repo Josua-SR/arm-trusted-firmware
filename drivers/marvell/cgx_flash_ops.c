@@ -114,8 +114,9 @@ int cgx_read_flash_fec(int cgx_id, int lmac_id, int *fec)
 		return -1;
 	ptr = &fctx[cgx_id * MAX_LMAC_PER_CGX + lmac_id];
 
-	if (ptr->s.invalid || ptr->s.fec_invalid || ptr->s.cgx_id != cgx_id ||
-	    ptr->s.lmac_id != lmac_id || ptr->s.qlm_mode != lmac->mode_idx)
+	if ((ptr->s.status != 0x2) || ptr->s.fec_invalid ||
+	    ptr->s.cgx_id != cgx_id || ptr->s.lmac_id != lmac_id ||
+	    ptr->s.qlm_mode != lmac->mode_idx)
 		return -1;
 	if (!ptr->s.ignore)
 		return -1;
@@ -140,8 +141,9 @@ int cgx_read_flash_phy_mod(int cgx_id, int lmac_id, int *phy_mod)
 		return -1;
 	ptr = &fctx[cgx_id * MAX_LMAC_PER_CGX + lmac_id];
 
-	if (ptr->s.invalid || ptr->s.mod_invalid || ptr->s.cgx_id != cgx_id ||
-	    ptr->s.lmac_id != lmac_id || ptr->s.qlm_mode != lmac->mode_idx)
+	if ((ptr->s.status != 0x2) || ptr->s.mod_invalid ||
+	    ptr->s.cgx_id != cgx_id || ptr->s.lmac_id != lmac_id ||
+	    ptr->s.qlm_mode != lmac->mode_idx)
 		return -1;
 	if (!ptr->s.ignore)
 		return -1;
@@ -165,7 +167,7 @@ int cgx_read_flash_ignore(int cgx_id, int lmac_id, int *ignore)
 		return -1;
 	ptr = &fctx[cgx_id * MAX_LMAC_PER_CGX + lmac_id];
 
-	if (ptr->s.invalid || ptr->s.cgx_id != cgx_id ||
+	if ((ptr->s.status != 0x2) || ptr->s.cgx_id != cgx_id ||
 	    ptr->s.lmac_id != lmac_id || ptr->s.qlm_mode != lmac->mode_idx)
 		return -1;
 	*ignore = ptr->s.ignore ? 0 : 1;
@@ -184,7 +186,7 @@ int cgx_read_flash_mode_param(int cgx_id, int lmac_id, int *qlm_mode,
 		return -1;
 	ptr = &fctx[cgx_id * MAX_LMAC_PER_CGX + lmac_id];
 
-	if (ptr->s.invalid || ptr->s.cgx_id != cgx_id ||
+	if ((ptr->s.status != 0x2) || ptr->s.cgx_id != cgx_id ||
 	    ptr->s.lmac_id != lmac_id) {
 		debug_cgx_flash("%s: %d:%d invalid param\n", __func__, cgx_id, lmac_id);
 		return -1;
@@ -216,10 +218,14 @@ static int cgx_update_flash_lmac_params(int cgx_id, int lmac_id, int cmd,
 		return -1;
 	}
 	ptr = &fctx[cgx_id * MAX_LMAC_PER_CGX + lmac_id];
-	/* As flash erase sets all bits to 1, use 0 to mark any
-	 * param as valid, applies to mod_invalid and fec_invalid too.
+	/* As flash erase sets all bits to 1, use 0x2 to mark
+	 * param as valid, using 0 makes lmac mode read success for
+	 * CGX0 LMAC0 if previous status of flash has all 0's. To avoid
+	 * such corner cases, change name from invalid to status with
+	 * size increase 1-bit to 2-bit and use only 0x2 as valid and
+	 * others as invalid.
 	 */
-	ptr->s.invalid = 0;
+	ptr->s.status = 0x2;
 	ptr->s.cgx_id = cgx_id;
 	ptr->s.lmac_id = lmac_id;
 	ptr->s.qlm_mode = lmac->mode_idx;
@@ -231,10 +237,16 @@ static int cgx_update_flash_lmac_params(int cgx_id, int lmac_id, int cmd,
 	ptr->s.lmac_mode = lmac->mode;
 	if (cmd == FEC) {
 		ptr->s.fec_type = arg & 0x3;
+		/* As flash erase sets all bits to 1, use 0 to mark
+		 * param fec_invalid as valid.
+		 */
 		ptr->s.fec_invalid = 0;
 	}
 	if (cmd == PHY_MOD) {
 		ptr->s.mod_type = arg & 0x1;
+		/* As flash erase sets all bits to 1, use 0 to mark
+		 * param mod_invalid as valid.
+		 */
 		ptr->s.mod_invalid = 0;
 	}
 	if (cmd == LMAC_MODE) {
