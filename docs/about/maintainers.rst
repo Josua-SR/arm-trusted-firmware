@@ -137,7 +137,7 @@ Marvell platform ports and SoC drivers
 :M: Konstantin Porotchkin <kostap@marvell.com>
 :G: `kostapr`_
 :F: docs/marvell/
-:F: plat/marvell/
+:F: plat/marvell/armada/
 :F: drivers/marvell/
 :F: tools/marvell/
 
