@@ -1905,14 +1905,21 @@ void cgx_set_supported_link_modes(int cgx_id, int lmac_id)
 	 */
 	if ((lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_SGMII) ||
 		(lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
-		(lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R))
-		lmac_cfg->supported_link_modes &=
-			((1 << CGX_MODE_1000_BASEX_BIT) |
-			(1 << CGX_MODE_10G_C2C_BIT) |
-			(1 << CGX_MODE_10G_C2M_BIT) |
-			(1 << CGX_MODE_10G_KR_BIT) |
-			(1 << CGX_MODE_20G_C2C_BIT));
-	else if ((lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_FIFTYG_R) ||
+		(lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R)) {
+		uint64_t modes_allowed = (1 << CGX_MODE_1000_BASEX_BIT) |
+					 (1 << CGX_MODE_10G_C2C_BIT) |
+					 (1 << CGX_MODE_10G_C2M_BIT) |
+					 (1 << CGX_MODE_10G_KR_BIT) |
+					 (1 << CGX_MODE_20G_C2C_BIT);
+
+		if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "cn33", 4))
+			modes_allowed |= (1 << CGX_MODE_25G_2_C2C_BIT) |
+					 (1 << CGX_MODE_50G_C2C_BIT)   |
+					 (1 << CGX_MODE_50G_4_C2C_BIT);
+
+		lmac_cfg->supported_link_modes &= modes_allowed;
+
+	} else if ((lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_FIFTYG_R) ||
 		 (lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R)) {
 		switch (lmac_cfg->mode_idx) {
 		case QLM_MODE_XLAUI:
