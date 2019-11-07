@@ -98,6 +98,7 @@ enum cgx_cmd_id {
 	CGX_CMD_PRBS,
 	CGX_CMD_DISPLAY_EYE, /* = 27 */
 	CGX_CMD_GET_PHY_FEC_STATS,
+	CGX_CMD_DISPLAY_SERDES, /* = 29 */
 };
 
 /* async event ids */
@@ -401,8 +402,10 @@ struct cgx_prbs_args {
 	uint64_t time:39;
 };
 
-/* command argument to be passed for cmd ID - CGX_CMD_DISPLAY_EYE */
-struct cgx_display_eye_args {
+/* command argument to be passed for cmd ID - CGX_CMD_DISPLAY_EYE or
+ * CGX_CMD_DISPLAY_SERDES
+ */
+struct cgx_display_args {
 	uint64_t reserved1:8; /* start from bit 8 */
 	uint64_t qlm:8;
 	uint64_t lane:47;
@@ -422,7 +425,8 @@ union cgx_cmd_s {
 	/* any other arg for command id * like : mtu, dmac filtering control */
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
 	struct cgx_prbs_args prbs_args;
-	struct cgx_display_eye_args dsp_eye_args;
+	struct cgx_display_args dsp_eye_args;
+	struct cgx_display_args dsp_serdes_args;
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 };
 

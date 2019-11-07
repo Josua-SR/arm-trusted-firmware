@@ -873,8 +873,24 @@ int qlm_gserr_get_tune_lane_tx(int qlm, int lane, int *tx_cmain, int *tx_cpre, i
  * @param show_tx  Display TX parameters
  * @param show_rx  Display RX parameters
  */
-void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_rx)
+/*
+ * Modified in qlm-gserr.patch applied by gsern-update script in SDK
+ */
+//void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_rx)
+//{
+void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_rx, char *buf, int size)
 {
+#define printf(...) \
+	do {								\
+		if (buf == NULL) {					\
+			printf(__VA_ARGS__);				\
+		} else {						\
+			int _chars = snprintf(buf, size, __VA_ARGS__);	\
+			buf += _chars;					\
+			size -= _chars;					\
+		}							\
+	} while(0)
+
 	printf("N0.GSERR%d Lane %d:\n", qlm, qlm_lane);
 	if (show_tx)
 	{
@@ -1005,6 +1021,7 @@ void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 		printf("	TAP1=%d, TAP2=%d, TAP3=%d, TAP4=%d, TAP5=%d, TAP6=%d, TAP7=%d, TAP8=%d\n",
 			tap1_val, tap2_val, tap3_val, tap4_val, tap5_val, tap6_val, tap7_val, tap8_val);
 	}
+#undef printf
 }
 
 /**

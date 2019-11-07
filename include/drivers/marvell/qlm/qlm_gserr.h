@@ -199,7 +199,8 @@ int qlm__gserr_rx_equalization(int qlm, int qlm_lane);
  * @param show_tx  Display TX parameters
  * @param show_rx  Display RX parameters
  */
-void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_rx);
+void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx,
+				bool show_rx, char *buf, int size);
 
 /**
  * Capture an eye diagram for the given QLM lane. The output data is written

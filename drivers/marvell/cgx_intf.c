@@ -1063,7 +1063,9 @@ static int do_prbs(int qlm, int mode, int time)
 	int errors;
 	int time_left, delay;
 	int cgx_id;
+#ifdef DEBUG_ATF_CGX_INTF
 	int qlm_idx;
+#endif /* DEBUG_ATF_CGX_INTF */
 	cgx_config_t *cgx_cfg;
 	const qlm_ops_t *qlm_ops;
 	const int DISPLAY_INTERVAL = 5;
@@ -1088,7 +1090,9 @@ static int do_prbs(int qlm, int mode, int time)
 	debug_cgx_intf("Start PRBS-%d on QLM%d (CGX %d), end in %d sec\n",
 		mode, qlm, cgx_id, time);
 
+#ifdef DEBUG_ATF_CGX_INTF
 	qlm_idx = qlm;
+#endif /* DEBUG_ATF_CGX_INTF */
 	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
 	if (qlm_ops == NULL) {
 		WARN("%s:get_qlm_ops failed %d\n",
@@ -1235,7 +1239,7 @@ static uint64_t log10(uint64_t num)
 /* This structure has over 32KiB and cannot be stored on stack */
 static gser_qlm_eye_t eye;
 
-static int do_eye(int qlm, int qlm_lane)
+static int do_eye(int qlm, int qlm_lane, int show_data)
 {
 	int x, y, width, height, last_color, level, deltay, deltax, dy, dx;
 	int dist, color, max_lane;
@@ -1266,8 +1270,28 @@ static int do_eye(int qlm, int qlm_lane)
 		return -1;
 	}
 
-	if (qlm_ops->qlm_eye_capture(qlm, qlm_lane, 1 /* = show_data */, &eye))
+	if (qlm_ops->qlm_eye_capture(qlm, qlm_lane, show_data, &eye))
 		return -1;
+
+	if (!show_data) {
+		eye.type = qlm_ops->type;
+		memcpy((void *)(SERDES_EYE_DATA_BASE), &eye,
+				sizeof(gser_qlm_eye_t));
+
+		return 0;
+	}
+
+	if (qlm_ops->type == QLM_GSERN_TYPE) {
+		uint64_t data;
+		for (y = 0; y < eye.height; y++) {
+			for (x = 0; x < eye.width; x++) {
+				data = eye.data[y][x] + eye.data[y][x + 64];
+				if (data > UINT32_MAX)
+					data = UINT32_MAX;
+				eye.data[y][x] = data;
+			}
+		}
+	}
 
 	/* Calculate the max eye width */
 	for (y = 0; y < eye.height; y++) {
@@ -1330,6 +1354,42 @@ static int do_eye(int qlm, int qlm_lane)
 
 	return 0;
 }
+
+static int do_serdes_settings(int qlm, int qlm_lane, int show_data)
+{
+	int max_lane;
+	const qlm_ops_t *qlm_ops;
+
+	if (qlm >= MAX_QLM || qlm < 0) {
+		WARN("%d not in range, available QLM0-%d\n", qlm, MAX_QLM - 1);
+		return -1;
+	}
+
+	max_lane = plat_octeontx_scfg->qlm_max_lane_num[qlm];
+	if (qlm_lane >= max_lane || qlm_lane < 0) {
+		WARN("%d not in range, available for QLM%d lanes are 0-%d\n",
+				qlm_lane, qlm, max_lane - 1);
+		return -1;
+	}
+
+	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+	if (qlm_ops == NULL) {
+		WARN("%s:get_qlm_ops failed %d\n",
+			__func__, qlm);
+		return -1;
+	}
+
+	if (show_data) {
+		qlm_ops->qlm_display_settings(qlm, qlm_lane, 1, 1, NULL, 0);
+	} else {
+		qlm_ops->qlm_display_settings(qlm, qlm_lane, 1, 1,
+				(char *)(SERDES_SETTINGS_DATA_BASE),
+				SERDES_SETTINGS_DATA_SIZE);
+	}
+
+	return 0;
+}
+
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 
 /* Note : this function executes with lock acquired */
@@ -1375,6 +1435,7 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
 		(request_id == CGX_CMD_PRBS) ||
 		(request_id == CGX_CMD_DISPLAY_EYE) ||
+		(request_id == CGX_CMD_DISPLAY_SERDES) ||
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 		(request_id == CGX_CMD_GET_FW_VER)) {
 		switch (request_id) {
@@ -1434,7 +1495,14 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 
 		case CGX_CMD_DISPLAY_EYE:
 			do_eye(scratchx1.s.dsp_eye_args.qlm,
-				scratchx1.s.dsp_eye_args.lane);
+				scratchx1.s.dsp_eye_args.lane,
+				1 /* = show_data */);
+			break;
+
+		case CGX_CMD_DISPLAY_SERDES:
+			do_serdes_settings(scratchx1.s.dsp_serdes_args.qlm,
+				scratchx1.s.dsp_serdes_args.lane,
+				1 /* = show_data */);
 			break;
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 		}

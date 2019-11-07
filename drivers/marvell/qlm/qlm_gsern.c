@@ -660,8 +660,24 @@ int qlm_calculate_fom_gsern(int qlm, int qlm_lane, int fom_type)
  * @param show_tx  Display TX parameters
  * @param show_rx  Display RX parameters
  */
-void qlm_display_settings_gsern(int qlm, int qlm_lane, bool show_tx, bool show_rx)
+/*
+ * Modified in qlm-gsern.patch applied by gsern-update script in SDK
+ */
+//void qlm_display_settings_gsern(int qlm, int qlm_lane, bool show_tx, bool show_rx)
+//{
+void qlm_display_settings_gsern(int qlm, int qlm_lane, bool show_tx, bool show_rx, char *buf, int size)
 {
+#define printf(...) \
+	do {								\
+		if (buf == NULL) {					\
+			printf(__VA_ARGS__);				\
+		} else {						\
+			int _chars = snprintf(buf, size, __VA_ARGS__);	\
+			buf += _chars;					\
+			size -= _chars;					\
+		}							\
+	} while(0)
+
 	if (show_rx)
 	{
 		bool is_pcie = false;
@@ -762,6 +778,7 @@ void qlm_display_settings_gsern(int qlm, int qlm_lane, bool show_tx, bool show_r
 			rx_5a_bsts.s.ctlez_adapt_status, rx_6_bsts.s.ctlelte_adapt_status, rx_5_bsts.s.ctle_adapt_status);
 		printf("	VGA_ADAPT_STATUS=%d, AFEOS_ADAPT_STATUS=%d, DFE_ADAPT_STATUS=%d\n",
 			   rx_5_bsts.s.vga_adapt_status, rx_8_bsts.s.afeos_adapt_status, rx_5_bsts.s.dfe_adapt_status);
+#if 0
 		int sensor = gser_is_model(OCTEONTX_CNF95XX) ? 2 : 9;
 		GSER_CSR_INIT(temp_conv_result, CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
 		if (temp_conv_result.s.temp_valid)
@@ -771,6 +788,7 @@ void qlm_display_settings_gsern(int qlm, int qlm_lane, bool show_tx, bool show_r
 		}
 		else
 			printf("	TEMPERATURE=Unavailable\n");
+#endif
 	}
 	if (show_tx)
 	{
@@ -825,6 +843,7 @@ void qlm_display_settings_gsern(int qlm, int qlm_lane, bool show_tx, bool show_r
 		printf("	LD_RECEIVER_RDY=%d, FIFO_PSH_POP_OS=%d\n",
 			train_0_bcfg.s.ld_receiver_rdy, lt_bsts.s.fifo_psh_pop_os);
 	}
+#undef printf
 }
 
 /**
@@ -1052,7 +1071,7 @@ int qlm_rx_equalization_gsern(int qlm, int qlm_lane)
 		/* Print our the Rx equalization setting if QLM tracing is enabled */
 		if (gser_trace_enables & (1ull << GSER_TRACE_ENABLE_QLM))
 		{
-			qlm_display_settings_gsern(qlm, lane, 0, 1);
+			qlm_display_settings_gsern(qlm, lane, 0, 1, NULL, 0);
 		}
 	}
 

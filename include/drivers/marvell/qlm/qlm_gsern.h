@@ -174,8 +174,8 @@ int qlm_get_tune_lane_tx_gsern(int qlm, int lane, int *tx_cmain, int *tx_cpre,
  * @param show_tx  Display TX parameters
  * @param show_rx  Display RX parameters
  */
-void qlm_display_settings_gsern(
-	int qlm, int qlm_lane, bool show_tx, bool show_rx);
+void qlm_display_settings_gsern(int qlm, int qlm_lane, bool show_tx,
+				bool show_rx, char *buf, int size);
 
 /*
  * Some QLM speeds need to override the default tuning parameters

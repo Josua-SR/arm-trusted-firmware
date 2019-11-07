@@ -245,14 +245,21 @@ int gsern_eye_capture(int qlm, int lane, int show_data, gser_qlm_eye_t *eye_data
 					v, t, errors_tr_ones, errors_nt_ones,
 					errors_tr_zeros, errors_nt_zeros);
 			}
-			uint64_t total_ones = errors_nt_ones + errors_tr_ones;
-			if (total_ones > UINT32_MAX)
-				total_ones = UINT32_MAX;
-			uint64_t total_zeros = errors_nt_zeros + errors_tr_zeros;
-			if (total_zeros > UINT32_MAX)
-				total_zeros = UINT32_MAX;
-			eye_data->data[v_height - v - 1][t] = total_ones;
-			eye_data->data[v_height + v - 1][t] = total_zeros;
+/*
+ * Modified in gsern-eye.patch applied by gsern-update script in SDK
+ */
+//			uint64_t total_ones = errors_nt_ones + errors_tr_ones;
+//			if (total_ones > UINT32_MAX)
+//				total_ones = UINT32_MAX;
+//			uint64_t total_zeros = errors_nt_zeros + errors_tr_zeros;
+//			if (total_zeros > UINT32_MAX)
+//				total_zeros = UINT32_MAX;
+//			eye_data->data[v_height - v - 1][t] = total_ones;
+//			eye_data->data[v_height + v - 1][t] = total_zeros;
+			eye_data->data[v_height - v - 1][t] = errors_nt_ones;
+			eye_data->data[v_height - v - 1][t + 64] = errors_tr_ones;
+			eye_data->data[v_height + v - 1][t] = errors_nt_zeros;
+			eye_data->data[v_height + v - 1][t + 64] = errors_tr_zeros;
 		}
 	}
 fail:

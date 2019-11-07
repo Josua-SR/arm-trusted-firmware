@@ -8,9 +8,6 @@
 #ifndef __PHY_MGMT_H__
 #define __PHY_MGMT_H__
 
-/* Define DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS to enable diagnostic cmds */
-#undef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
-
 /* IEEE 802.3 spec CLAUSE 45 MDIO access
  * PMA/PMD control reg bits 6 & 13 determine
  * speed sel

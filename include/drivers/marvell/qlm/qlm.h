@@ -8,6 +8,8 @@
 #ifndef _QLM_H_
 #define _QLM_H_
 
+#include <cassert.h>
+
 /* Default value of QLM-VOLTAGE.N0 property */
 #define QLM_DEFAULT_VOLTAGE	900
 
@@ -163,7 +165,13 @@ typedef struct {
 	int width;              /* Width in the x direction (time) */
 	int height;             /* Height in the y direction (voltage) */
 	uint32_t data[64][128]; /* Error count at location, saturates as max */
+	qlm_type_t type;
 } gser_qlm_eye_t;
+
+#ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
+CASSERT(SERDES_EYE_DATA_SIZE >= sizeof(gser_qlm_eye_t),
+	assert_serdes_eye_data_size_to_small);
+#endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 
 struct qlm_mode_strmap_s {
 	int mode;
@@ -219,7 +227,7 @@ typedef struct {
 			int *tx_unused);
 	int (*qlm_rx_equalization)(int qlm, int qlm_lane);
 	void (*qlm_display_settings)(int qlm, int qlm_lane, bool show_tx,
-			bool show_rx);
+			bool show_rx, char *buf, int size);
 	int (*qlm_eye_capture)(int qlm, int lane, int show_data,
 			gser_qlm_eye_t *eye_data);
 } qlm_ops_t;
