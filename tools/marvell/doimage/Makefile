@@ -1,11 +1,15 @@
 #
-# Copyright (C) 2018 Marvell International Ltd.
+# Copyright (C) 2019 Marvell International Ltd.
 #
 # SPDX-License-Identifier:     BSD-3-Clause
 # https://spdx.org/licenses
 
-PROJECT = doimage
-OBJECTS = doimage.o
+SERVER = doimage_server
+CLIENT = doimage_client
+STANDALONE = doimage
+SERVER_OBJECTS = server.o
+CLIENT_OBJECTS = image.o client.o
+STANDALONE_OBJECTS = doimage.o
 
 HOSTCCFLAGS = -Wall -Werror
 ifeq (${DEBUG},1)
@@ -14,6 +18,7 @@ else
   HOSTCCFLAGS += -O2
 endif
 
+# TODO: always build with mbedTLS once it is updated on Docker to v2.8.0
 ifeq (${MARVELL_SECURE_BOOT},1)
 DOIMAGE_CC_FLAGS := -DCONFIG_MVEBU_SECURE_BOOT
 DOIMAGE_LD_FLAGS := -lconfig -lmbedtls -lmbedcrypto -lmbedx509
@@ -30,19 +35,27 @@ RM := rm -rf
 
 .PHONY: all clean
 
-all: ${PROJECT}
+all: ${STANDALONE}
 
-${PROJECT}: ${OBJECTS} Makefile
+server: ${SERVER} ${CLIENT}
+
+${STANDALONE}: ${STANDALONE_OBJECTS} Makefile
 	@echo "  HOSTLD  $@"
-	${Q}${HOSTCC} ${OBJECTS} ${DOIMAGE_LD_FLAGS} -o $@
+	${Q}${HOSTCC} ${STANDALONE_OBJECTS} ${DOIMAGE_LD_FLAGS} -o $@
 	@echo
 	@echo "Built $@ successfully"
 	@echo
+
+${CLIENT}: ${CLIENT_OBJECTS} Makefile
+	${Q}${HOSTCC} ${CLIENT_OBJECTS} ${DOIMAGE_LD_FLAGS} -o $@
+
+${SERVER}: ${SERVER_OBJECTS} Makefile
+	${Q}${HOSTCC} ${SERVER_OBJECTS} ${DOIMAGE_LD_FLAGS} -o $@
 
 %.o: %.c Makefile
 	@echo "  HOSTCC  $<"
 	${Q}${HOSTCC} -c ${HOSTCCFLAGS} ${INCLUDE_PATHS} $< -o $@
 
 clean:
-	${Q}${RM} ${PROJECT}
-	${Q}${RM} ${OBJECTS}
+	${Q}${RM} ${CLIENT} ${SERVER} ${STANDALONE}
+	${Q}${RM} ${CLIENT_OBJECTS} ${SERVER_OBJECTS} ${STANDALONE_OBJECTS}
