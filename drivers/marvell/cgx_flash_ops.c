@@ -100,14 +100,9 @@ static int cgx_read_flash_lmac_params(uint8_t *buf, int buflen)
 
 int cgx_read_flash_fec(int cgx_id, int lmac_id, int *fec)
 {
-	cgx_config_t *cgx;
-	cgx_lmac_config_t *lmac;
 	cgx_lmac_flash_ctx_t *ptr;
 	cgx_lmac_flash_ctx_t fctx[MAX_CGX * MAX_LMAC_PER_CGX];
 	int ret;
-
-	cgx = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
-	lmac = &cgx->lmac_cfg[lmac_id];
 
 	ret = cgx_read_flash_lmac_params((uint8_t *)fctx, sizeof(fctx));
 	if (ret < 0)
@@ -115,8 +110,7 @@ int cgx_read_flash_fec(int cgx_id, int lmac_id, int *fec)
 	ptr = &fctx[cgx_id * MAX_LMAC_PER_CGX + lmac_id];
 
 	if ((ptr->s.status != 0x2) || ptr->s.fec_invalid ||
-	    ptr->s.cgx_id != cgx_id || ptr->s.lmac_id != lmac_id ||
-	    ptr->s.qlm_mode != lmac->mode_idx)
+	    ptr->s.cgx_id != cgx_id || ptr->s.lmac_id != lmac_id)
 		return -1;
 	if (!ptr->s.ignore)
 		return -1;
@@ -127,14 +121,9 @@ int cgx_read_flash_fec(int cgx_id, int lmac_id, int *fec)
 
 int cgx_read_flash_phy_mod(int cgx_id, int lmac_id, int *phy_mod)
 {
-	cgx_config_t *cgx;
-	cgx_lmac_config_t *lmac;
 	cgx_lmac_flash_ctx_t *ptr;
 	cgx_lmac_flash_ctx_t fctx[MAX_CGX * MAX_LMAC_PER_CGX];
 	int ret;
-
-	cgx = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
-	lmac = &cgx->lmac_cfg[lmac_id];
 
 	ret = cgx_read_flash_lmac_params((uint8_t *)fctx, sizeof(fctx));
 	if (ret < 0)
@@ -142,8 +131,7 @@ int cgx_read_flash_phy_mod(int cgx_id, int lmac_id, int *phy_mod)
 	ptr = &fctx[cgx_id * MAX_LMAC_PER_CGX + lmac_id];
 
 	if ((ptr->s.status != 0x2) || ptr->s.mod_invalid ||
-	    ptr->s.cgx_id != cgx_id || ptr->s.lmac_id != lmac_id ||
-	    ptr->s.qlm_mode != lmac->mode_idx)
+	    ptr->s.cgx_id != cgx_id || ptr->s.lmac_id != lmac_id)
 		return -1;
 	if (!ptr->s.ignore)
 		return -1;
