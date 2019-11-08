@@ -30,6 +30,8 @@
 #define ECAM_PROD_SHIFT		8
 #define ECAM_INVALID_DEV_ID	((ECAM_INVALID_PROD_ID << ECAM_PROD_SHIFT) | \
 					ECAM_INVALID_PCC_IDL_ID)
+#define ECAM_DEV_ID(pid, did) ((pid << ECAM_PROD_SHIFT) | did)
+#define ECAM_PROD_DEV_ID(did) ECAM_DEV_ID(CAVM_PCC_PROD_E_GEN, did)
 
 /* PCCPF_XXX_E_CAP_HDR fields description */
 #define ECAM_PCCPF_XXX_E_CAP_HDR_PCIEID_SHIFT	ULL(0)
@@ -102,6 +104,7 @@
 #define ECAM_PCCPF_XXX_BARXL_LBAB_MASK	ULL(0xffff0000)
 
 #define ECAM_ALL_INSTANCES	0xFFFFFFFF
+#define ECAM_CUSTOM_INSTANCE	0x80000000
 
 /*
  * Structure for secure/non-secure settings

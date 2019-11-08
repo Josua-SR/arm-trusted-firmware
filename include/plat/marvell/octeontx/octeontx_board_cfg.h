@@ -24,6 +24,15 @@ typedef union mcu_twsi {
 	} s;
 } mcu_twsi_t;
 
+typedef union slave_twsi {
+	uint32_t u;
+	struct slave_twsi_s {
+		uint32_t int_addr	: 8; /* TWSI Internal Address */
+		uint32_t bus		: 8; /* TWSI bus */
+		uint32_t addr		: 8; /* TWSI slave address */
+	} s;
+} slave_twsi_t;
+
 typedef struct board_cfg {
 	char board_model[64];
 	int bmc_boot_twsi_bus;
@@ -38,7 +47,8 @@ typedef struct board_cfg {
 #endif
 	boot_device_conf_t boot_dev;
 	mcu_twsi_t mcu_twsi;
-  
+	slave_twsi_t slave_twsi;
+
 } board_cfg_t;
 
 #endif /* __OCTEONTX_BOARD_CFG_H__ */

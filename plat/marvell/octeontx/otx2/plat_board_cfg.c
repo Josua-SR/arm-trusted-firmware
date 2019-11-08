@@ -1874,6 +1874,23 @@ static void octeontx2_fill_qlm_details(const void *fdt)
 	plat_octeontx_bcfg->qlm_voltage = voltage;
 }
 
+static void octeontx2_fill_twsi_slave_details(const void *fdt)
+{
+	int twssl_bus, twssl_addr;
+
+	twssl_bus = octeontx2_fdtbdk_get_num(
+		fdt, "SCP-TWSI-SLAVE-BUS.N0", 10);
+
+	plat_octeontx_bcfg->bcfg.slave_twsi.s.bus = twssl_bus;
+
+	twssl_addr = octeontx2_fdtbdk_get_num(
+		fdt, "SCP-TWSI-SLAVE-ADDR.N0", 16);
+	if (twssl_addr == -1)
+		twssl_addr = 0x77;
+
+	plat_octeontx_bcfg->bcfg.slave_twsi.s.addr = twssl_addr;
+}
+
 int plat_octeontx_fill_board_details(void)
 {
 	const void *fdt = fdt_ptr;
@@ -1899,6 +1916,8 @@ int plat_octeontx_fill_board_details(void)
 
 	octeontx2_fill_cgx_details(fdt);
 	octeontx2_fill_qlm_details(fdt);
+
+	octeontx2_fill_twsi_slave_details(fdt);
 
 	return 0;
 }
