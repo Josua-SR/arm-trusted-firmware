@@ -91,6 +91,7 @@ static int spi_config_cn9xxx(uint64_t spi_clk, uint32_t mode, int cpol,
 	mpi_cfg.s.cshi = !!(mode & SPI_CS_HIGH);
 	mpi_cfg.s.lsbfirst = !!(mode & SPI_LSB_FIRST);
 	mpi_cfg.s.wireor = !!(mode & SPI_3WIRE);
+	mpi_cfg.s.tritx = 1;
 	mpi_cfg.s.idlelo = cpha != cpol;
 	mpi_cfg.s.enable = 1;
 	CSR_WRITE(CAVM_MPIX_CFG(spi_con), mpi_cfg.u);
