@@ -1187,6 +1187,9 @@ static inline uint64_t CAVM_NPC_AF_DBG_DATAX(unsigned long a)
  * NPC AF Debug Result Registers
  * These registers contain the result data of the last packet/lookup whose debug
  * information is captured by NPC_AF_DBG_CTL[INTF_DBG,LKUP_DBG].
+ *
+ * Internal:
+ * FIXME - add note about coherency of data in continuous packet capture mode.
  */
 union cavm_npc_af_dbg_resultx
 {
@@ -3060,8 +3063,8 @@ typedef union cavm_npc_af_match_statx_ext cavm_npc_af_match_statx_ext_t;
 static inline uint64_t CAVM_NPC_AF_MATCH_STATX_EXT(unsigned long a) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_NPC_AF_MATCH_STATX_EXT(unsigned long a)
 {
-    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=2047))
-        return 0x840068000078ll + 0x100ll * ((a) & 0x7ff);
+    if (cavm_is_model(OCTEONTX_CN98XX) && (a<=4095))
+        return 0x840068000078ll + 0x100ll * ((a) & 0xfff);
     __cavm_csr_fatal("NPC_AF_MATCH_STATX_EXT", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3195,6 +3198,23 @@ union cavm_npc_af_mcam_dbg
         uint64_t miss                  : 1;  /**< [ 16: 16](RO/H) MCAM miss. When set, [HIT_BANK] and [HIT_ENTRY] are not valid. */
         uint64_t reserved_14_15        : 2;
         uint64_t hit_bank              : 2;  /**< [ 13: 12](RO/H) MCAM hit bank index. */
+        uint64_t hit_entry             : 12; /**< [ 11:  0](RO/H) MCAM hit entry index. */
+#else /* Word 0 - Little Endian */
+        uint64_t hit_entry             : 12; /**< [ 11:  0](RO/H) MCAM hit entry index. */
+        uint64_t hit_bank              : 2;  /**< [ 13: 12](RO/H) MCAM hit bank index. */
+        uint64_t reserved_14_15        : 2;
+        uint64_t miss                  : 1;  /**< [ 16: 16](RO/H) MCAM miss. When set, [HIT_BANK] and [HIT_ENTRY] are not valid. */
+        uint64_t reserved_17_63        : 47;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_npc_af_mcam_dbg_s cn9; */
+    struct cavm_npc_af_mcam_dbg_cn96xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_17_63        : 47;
+        uint64_t miss                  : 1;  /**< [ 16: 16](RO/H) MCAM miss. When set, [HIT_BANK] and [HIT_ENTRY] are not valid. */
+        uint64_t reserved_14_15        : 2;
+        uint64_t hit_bank              : 2;  /**< [ 13: 12](RO/H) MCAM hit bank index. */
         uint64_t reserved_10_11        : 2;
         uint64_t hit_entry             : 10; /**< [  9:  0](RO/H) MCAM hit entry index. */
 #else /* Word 0 - Little Endian */
@@ -3205,8 +3225,10 @@ union cavm_npc_af_mcam_dbg
         uint64_t miss                  : 1;  /**< [ 16: 16](RO/H) MCAM miss. When set, [HIT_BANK] and [HIT_ENTRY] are not valid. */
         uint64_t reserved_17_63        : 47;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_npc_af_mcam_dbg_s cn; */
+    } cn96xx;
+    /* struct cavm_npc_af_mcam_dbg_s cn98xx; */
+    /* struct cavm_npc_af_mcam_dbg_cn96xx cnf95xx; */
+    /* struct cavm_npc_af_mcam_dbg_cn96xx loki; */
 };
 typedef union cavm_npc_af_mcam_dbg cavm_npc_af_mcam_dbg_t;
 
@@ -3225,6 +3247,87 @@ static inline uint64_t CAVM_NPC_AF_MCAM_DBG_FUNC(void)
 #define device_bar_CAVM_NPC_AF_MCAM_DBG 0x0 /* RVU_BAR0 */
 #define busnum_CAVM_NPC_AF_MCAM_DBG 0
 #define arguments_CAVM_NPC_AF_MCAM_DBG -1,-1,-1,-1
+
+/**
+ * Register (RVU_PF_BAR0) npc_af_mcam_pwr_cfg
+ *
+ * INTERNAL: NPC AF MCAM Power Configuration Register
+ */
+union cavm_npc_af_mcam_pwr_cfg
+{
+    uint64_t u;
+    struct cavm_npc_af_mcam_pwr_cfg_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_1_63         : 63;
+        uint64_t dis_pwr_save          : 1;  /**< [  0:  0](R/W) Diagnostic mode.  When set disables the MCAM power saving feature. */
+#else /* Word 0 - Little Endian */
+        uint64_t dis_pwr_save          : 1;  /**< [  0:  0](R/W) Diagnostic mode.  When set disables the MCAM power saving feature. */
+        uint64_t reserved_1_63         : 63;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_npc_af_mcam_pwr_cfg_s cn; */
+};
+typedef union cavm_npc_af_mcam_pwr_cfg cavm_npc_af_mcam_pwr_cfg_t;
+
+#define CAVM_NPC_AF_MCAM_PWR_CFG CAVM_NPC_AF_MCAM_PWR_CFG_FUNC()
+static inline uint64_t CAVM_NPC_AF_MCAM_PWR_CFG_FUNC(void) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NPC_AF_MCAM_PWR_CFG_FUNC(void)
+{
+    if (cavm_is_model(OCTEONTX_CN98XX))
+        return 0x840063005000ll;
+    __cavm_csr_fatal("NPC_AF_MCAM_PWR_CFG", 0, 0, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_NPC_AF_MCAM_PWR_CFG cavm_npc_af_mcam_pwr_cfg_t
+#define bustype_CAVM_NPC_AF_MCAM_PWR_CFG CSR_TYPE_RVU_PF_BAR0
+#define basename_CAVM_NPC_AF_MCAM_PWR_CFG "NPC_AF_MCAM_PWR_CFG"
+#define device_bar_CAVM_NPC_AF_MCAM_PWR_CFG 0x0 /* RVU_BAR0 */
+#define busnum_CAVM_NPC_AF_MCAM_PWR_CFG 0
+#define arguments_CAVM_NPC_AF_MCAM_PWR_CFG -1,-1,-1,-1
+
+/**
+ * Register (RVU_PF_BAR0) npc_af_mcam_pwr_intf#_bank#
+ *
+ * NPC AF MCAM Power Interface Register
+ */
+union cavm_npc_af_mcam_pwr_intfx_bankx
+{
+    uint64_t u;
+    struct cavm_npc_af_mcam_pwr_intfx_bankx_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_16_63        : 48;
+        uint64_t dis_subbnk            : 16; /**< [ 15:  0](R/W) To save power on the MCAM matching logic, the system can constrain which
+                                                                 sub-banks are searched per-interface. Each DISABLE bit cooresponds to disabling
+                                                                 that subset of entries as follows: DISABLE\<i\> will not search MCAM entries
+                                                                 (i\<\<8+255) .. (i\<\<8). */
+#else /* Word 0 - Little Endian */
+        uint64_t dis_subbnk            : 16; /**< [ 15:  0](R/W) To save power on the MCAM matching logic, the system can constrain which
+                                                                 sub-banks are searched per-interface. Each DISABLE bit cooresponds to disabling
+                                                                 that subset of entries as follows: DISABLE\<i\> will not search MCAM entries
+                                                                 (i\<\<8+255) .. (i\<\<8). */
+        uint64_t reserved_16_63        : 48;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_npc_af_mcam_pwr_intfx_bankx_s cn; */
+};
+typedef union cavm_npc_af_mcam_pwr_intfx_bankx cavm_npc_af_mcam_pwr_intfx_bankx_t;
+
+static inline uint64_t CAVM_NPC_AF_MCAM_PWR_INTFX_BANKX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NPC_AF_MCAM_PWR_INTFX_BANKX(unsigned long a, unsigned long b)
+{
+    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=3) && (b<=3)))
+        return 0x840063004000ll + 0x10ll * ((a) & 0x3) + 0x100ll * ((b) & 0x3);
+    __cavm_csr_fatal("NPC_AF_MCAM_PWR_INTFX_BANKX", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_NPC_AF_MCAM_PWR_INTFX_BANKX(a,b) cavm_npc_af_mcam_pwr_intfx_bankx_t
+#define bustype_CAVM_NPC_AF_MCAM_PWR_INTFX_BANKX(a,b) CSR_TYPE_RVU_PF_BAR0
+#define basename_CAVM_NPC_AF_MCAM_PWR_INTFX_BANKX(a,b) "NPC_AF_MCAM_PWR_INTFX_BANKX"
+#define device_bar_CAVM_NPC_AF_MCAM_PWR_INTFX_BANKX(a,b) 0x0 /* RVU_BAR0 */
+#define busnum_CAVM_NPC_AF_MCAM_PWR_INTFX_BANKX(a,b) (a)
+#define arguments_CAVM_NPC_AF_MCAM_PWR_INTFX_BANKX(a,b) (a),(b),-1,-1
 
 /**
  * Register (RVU_PF_BAR0) npc_af_mcam_scrub_ctl

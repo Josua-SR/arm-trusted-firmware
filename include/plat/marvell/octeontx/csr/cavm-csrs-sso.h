@@ -501,7 +501,8 @@ union cavm_sso_af_aw_cfg
         uint64_t reserved_6_63         : 58;
 #endif /* Word 0 - End */
     } s;
-    struct cavm_sso_af_aw_cfg_cn
+    /* struct cavm_sso_af_aw_cfg_s cn9; */
+    struct cavm_sso_af_aw_cfg_cn96xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_9_63         : 55;
@@ -526,7 +527,41 @@ union cavm_sso_af_aw_cfg
         uint64_t reserved_8            : 1;
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
-    } cn;
+    } cn96xxp1;
+    struct cavm_sso_af_aw_cfg_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_9_63         : 55;
+        uint64_t reserved_8            : 1;
+        uint64_t reserved_7            : 1;
+        uint64_t reserved_6            : 1;
+        uint64_t ocla_bp               : 1;  /**< [  5:  5](R/W) Reserved.
+                                                                 Internal:
+                                                                 OCLA backpressure enable. When OCLA FIFOs are near full, allow OCLA to backpressure AW pipeline. */
+        uint64_t reserved_4            : 1;
+        uint64_t reserved_3            : 1;
+        uint64_t reserved_2            : 1;
+        uint64_t reserved_1            : 1;
+        uint64_t reserved_0            : 1;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0            : 1;
+        uint64_t reserved_1            : 1;
+        uint64_t reserved_2            : 1;
+        uint64_t reserved_3            : 1;
+        uint64_t reserved_4            : 1;
+        uint64_t ocla_bp               : 1;  /**< [  5:  5](R/W) Reserved.
+                                                                 Internal:
+                                                                 OCLA backpressure enable. When OCLA FIFOs are near full, allow OCLA to backpressure AW pipeline. */
+        uint64_t reserved_6            : 1;
+        uint64_t reserved_7            : 1;
+        uint64_t reserved_8            : 1;
+        uint64_t reserved_9_63         : 55;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_sso_af_aw_cfg_cn96xxp3 cn98xx; */
+    /* struct cavm_sso_af_aw_cfg_cn96xxp1 cnf95xxp1; */
+    /* struct cavm_sso_af_aw_cfg_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_sso_af_aw_cfg_cn96xxp3 loki; */
 };
 typedef union cavm_sso_af_aw_cfg cavm_sso_af_aw_cfg_t;
 
@@ -6379,7 +6414,88 @@ union cavm_sso_af_ws_cfg
         uint64_t reserved_56_63        : 8;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_af_ws_cfg_s cn; */
+    /* struct cavm_sso_af_ws_cfg_s cn9; */
+    /* struct cavm_sso_af_ws_cfg_s cn96xxp1; */
+    struct cavm_sso_af_ws_cfg_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_56_63        : 8;
+        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Reserved.
+                                                                 Internal:
+                                                                 Enable OCLA backpressure stalls. For diagnostic use only.
+                                                                 \<55\> = NCBB input fifo stall (ncbo).
+                                                                 \<54\> = Work-slot response. (arbrsp).
+                                                                 \<53\> = Reserved.
+                                                                 \<52\> = Work-slot SWTAG response. (arbs).
+                                                                 \<51\> = Work-slot access to get-work engine. (arbgw).
+                                                                 \<50\> = Reserved.
+                                                                 \<49\> = Reserved.
+                                                                 \<48\> = Work-slot pushes to AQ, CQ, DQ. (arbq). */
+        uint64_t reserved_31_47        : 17;
+        uint64_t bp_interval           : 3;  /**< [ 30: 28](R/W) Coprocessor-clock cycles between each 16 cycle interval of HWS backpressure.
+                                                                 For diagnostic use only.
+                                                                 0x0 = Disable this backpressure mechanism.
+                                                                 0x1 =   64 cycles.
+                                                                 0x2 =  128 cycles.
+                                                                 0x3 =  256 cycles.
+                                                                 0x4 =  512 cycles.
+                                                                 0x5 = 1024 cycles.
+                                                                 0x6 = 2048 cycles.
+                                                                 0x7 = 4096 cycles. */
+        uint64_t reserved_10_27        : 18;
+        uint64_t dq_opt_ena            : 1;  /**< [  9:  9](R/W) Enable early DQ push optimization. */
+        uint64_t force_ncbi_clk_en     : 1;  /**< [  8:  8](R/W) Force NCBI conditional clocks on. For diagnostic use only. */
+        uint64_t sai_flush             : 1;  /**< [  7:  7](R/W1) When written with one, send a pulse to invalidate the GW cache
+                                                                 inside the cores.  Reads as zero. For diagnostic use only. */
+        uint64_t aw_clk_dis            : 1;  /**< [  6:  6](R/W) Reserved. */
+        uint64_t gw_clk_dis            : 1;  /**< [  5:  5](R/W) Reserved. */
+        uint64_t disable_pw            : 1;  /**< [  4:  4](R/W) Reserved. */
+        uint64_t issue_step_en         : 1;  /**< [  3:  3](R/W) Enable single-stepping issue unit, 1 command at a time. For diagnostic use only. */
+        uint64_t ncbo_step_en          : 1;  /**< [  2:  2](R/W) Enable single-stepping commands from NCBO, once per 32 clocks. For diagnostic use only. */
+        uint64_t soc_ccam_dis          : 1;  /**< [  1:  1](R/W) Disable power saving SOC conditional CAM. */
+        uint64_t sso_cclk_dis          : 1;  /**< [  0:  0](R/W) Disable power saving SSO conditional clocking, */
+#else /* Word 0 - Little Endian */
+        uint64_t sso_cclk_dis          : 1;  /**< [  0:  0](R/W) Disable power saving SSO conditional clocking, */
+        uint64_t soc_ccam_dis          : 1;  /**< [  1:  1](R/W) Disable power saving SOC conditional CAM. */
+        uint64_t ncbo_step_en          : 1;  /**< [  2:  2](R/W) Enable single-stepping commands from NCBO, once per 32 clocks. For diagnostic use only. */
+        uint64_t issue_step_en         : 1;  /**< [  3:  3](R/W) Enable single-stepping issue unit, 1 command at a time. For diagnostic use only. */
+        uint64_t disable_pw            : 1;  /**< [  4:  4](R/W) Reserved. */
+        uint64_t gw_clk_dis            : 1;  /**< [  5:  5](R/W) Reserved. */
+        uint64_t aw_clk_dis            : 1;  /**< [  6:  6](R/W) Reserved. */
+        uint64_t sai_flush             : 1;  /**< [  7:  7](R/W1) When written with one, send a pulse to invalidate the GW cache
+                                                                 inside the cores.  Reads as zero. For diagnostic use only. */
+        uint64_t force_ncbi_clk_en     : 1;  /**< [  8:  8](R/W) Force NCBI conditional clocks on. For diagnostic use only. */
+        uint64_t dq_opt_ena            : 1;  /**< [  9:  9](R/W) Enable early DQ push optimization. */
+        uint64_t reserved_10_27        : 18;
+        uint64_t bp_interval           : 3;  /**< [ 30: 28](R/W) Coprocessor-clock cycles between each 16 cycle interval of HWS backpressure.
+                                                                 For diagnostic use only.
+                                                                 0x0 = Disable this backpressure mechanism.
+                                                                 0x1 =   64 cycles.
+                                                                 0x2 =  128 cycles.
+                                                                 0x3 =  256 cycles.
+                                                                 0x4 =  512 cycles.
+                                                                 0x5 = 1024 cycles.
+                                                                 0x6 = 2048 cycles.
+                                                                 0x7 = 4096 cycles. */
+        uint64_t reserved_31_47        : 17;
+        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Reserved.
+                                                                 Internal:
+                                                                 Enable OCLA backpressure stalls. For diagnostic use only.
+                                                                 \<55\> = NCBB input fifo stall (ncbo).
+                                                                 \<54\> = Work-slot response. (arbrsp).
+                                                                 \<53\> = Reserved.
+                                                                 \<52\> = Work-slot SWTAG response. (arbs).
+                                                                 \<51\> = Work-slot access to get-work engine. (arbgw).
+                                                                 \<50\> = Reserved.
+                                                                 \<49\> = Reserved.
+                                                                 \<48\> = Work-slot pushes to AQ, CQ, DQ. (arbq). */
+        uint64_t reserved_56_63        : 8;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_sso_af_ws_cfg_cn96xxp3 cn98xx; */
+    /* struct cavm_sso_af_ws_cfg_s cnf95xxp1; */
+    /* struct cavm_sso_af_ws_cfg_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_sso_af_ws_cfg_cn96xxp3 loki; */
 };
 typedef union cavm_sso_af_ws_cfg cavm_sso_af_ws_cfg_t;
 

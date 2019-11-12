@@ -3436,7 +3436,7 @@ static inline uint64_t CAVM_IOBNX_DOMX_BUSX_STREAMS(unsigned long a, unsigned lo
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=1) && (b<=6) && (c<=255)))
         return 0x87e0f0040000ll + 0x1000000ll * ((a) & 0x1) + 0x800ll * ((b) & 0x7) + 8ll * ((c) & 0xff);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=2) && (b<=6) && (c<=255)))
+    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=2) && (b<=7) && (c<=255)))
         return 0x87e0f0040000ll + 0x1000000ll * ((a) & 0x3) + 0x800ll * ((b) & 0x7) + 8ll * ((c) & 0xff);
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) && (b<=6) && (c<=255)))
         return 0x87e0f0040000ll + 0x1000000ll * ((a) & 0x0) + 0x800ll * ((b) & 0x7) + 8ll * ((c) & 0xff);
@@ -3541,7 +3541,7 @@ static inline uint64_t CAVM_IOBNX_DOMX_DEVX_STREAMS(unsigned long a, unsigned lo
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=1) && (b<=6) && (c<=31)))
         return 0x87e0f0010000ll + 0x1000000ll * ((a) & 0x1) + 0x100ll * ((b) & 0x7) + 8ll * ((c) & 0x1f);
-    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=2) && (b<=6) && (c<=31)))
+    if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=2) && (b<=7) && (c<=31)))
         return 0x87e0f0010000ll + 0x1000000ll * ((a) & 0x3) + 0x100ll * ((b) & 0x7) + 8ll * ((c) & 0x1f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) && (b<=6) && (c<=31)))
         return 0x87e0f0010000ll + 0x1000000ll * ((a) & 0x0) + 0x100ll * ((b) & 0x7) + 8ll * ((c) & 0x1f);

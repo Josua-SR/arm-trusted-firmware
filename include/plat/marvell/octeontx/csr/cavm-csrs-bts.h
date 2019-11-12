@@ -945,12 +945,12 @@ static inline uint64_t CAVM_BTS_MSIX_VECX_CTL(unsigned long a)
 /**
  * Register (RSL) bts_pd1pps_div_cfg0
  *
- * BTS PD bank 1PPS Divider Configuration 0 Register
+ * BTS PD Bank 1PPS Divider Configuration 0 Register
  * This register configures the clock divider used to generate the PD_1PPS
  * signal derived from the 30.72 MHz clock (BTS_BFN_CLK). This signal is
  * used by the clock generation block to control RFP timing.
  *
- * This register configures the clock divder used to generate the
+ * This register configures the clock divider used to generate the
  * PD_BFN_1PPS signal derived from the 30.72 MHz clock (BTS_BFN_CLK).
  *
  * When [FREE_RUN]=1, the initial alignment depends on when [DIVIDER_EN] is written
@@ -1019,7 +1019,7 @@ static inline uint64_t CAVM_BTS_PD1PPS_DIV_CFG0_FUNC(void)
 /**
  * Register (RSL) bts_pd1pps_div_cfg1
  *
- * BTS PD bank 1PPS Divider Configuration 1 Register
+ * BTS PD Bank 1PPS Divider Configuration 1 Register
  * This register configures the clock divider used to generate the PD_1PPS
  * signal derived from the 30.72 MHz clock (BTS_BFN_CLK). This signal is
  * used by the clock generation block to control RFP timing.
@@ -1351,7 +1351,7 @@ static inline uint64_t CAVM_BTS_PDBFN_DIV_CFG0_FUNC(void)
  * Register (RSL) bts_pdbfn_div_cfg1
  *
  * BTS 30.72 MHz Divider Configuration 1 Register
- * This register configures the clock divder used to generate the PD_BFN_1PPS
+ * This register configures the clock divider used to generate the PD_BFN_1PPS
  * signal derived from the 30.72 MHz clock (BTS_BFN_CLK).
  *
  * When enabled, the divider counts from 0 to [DIVIDER_TC], and then resets
@@ -1641,21 +1641,21 @@ union cavm_bts_pll_ctl
 
                                                                  To generate a 491 MHz clock from  a 30.72 MHz reference (i.e., when
                                                                  [REF_CLK_SEL]=0x1), set [CLKF] to 0x20 and [PS_EN] to 0x0. This results in an
-                                                                 overall 16x multplier.
+                                                                 overall 16x multiplier.
 
                                                                  To generate a 500 MHz clock from  a 100 MHz reference (i.e., when
                                                                  [REF_CLK_SEL]=0x2), set [CLKF] to 0x0A and [PS_EN] to 0x0. This results in an
-                                                                 overall 5x multplier. */
+                                                                 overall 5x multiplier. */
 #else /* Word 0 - Little Endian */
         uint64_t clkf                  : 9;  /**< [  8:  0](R/W) PLL multiplier. PLL out frequency = PLL in clk(MHz)/2 * [CLKF] / (1\<\<[PS_EN])
 
                                                                  To generate a 491 MHz clock from  a 30.72 MHz reference (i.e., when
                                                                  [REF_CLK_SEL]=0x1), set [CLKF] to 0x20 and [PS_EN] to 0x0. This results in an
-                                                                 overall 16x multplier.
+                                                                 overall 16x multiplier.
 
                                                                  To generate a 500 MHz clock from  a 100 MHz reference (i.e., when
                                                                  [REF_CLK_SEL]=0x2), set [CLKF] to 0x0A and [PS_EN] to 0x0. This results in an
-                                                                 overall 5x multplier. */
+                                                                 overall 5x multiplier. */
         uint64_t reserved_9_10         : 2;
         uint64_t en                    : 1;  /**< [ 11: 11](R/W) PLL enable. Rising edge causes a 1 clock ref_clk pulse on pll_update signal. */
         uint64_t reserved_12_17        : 6;

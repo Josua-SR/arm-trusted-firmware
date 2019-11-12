@@ -34,7 +34,7 @@
  * CPC Power Control Mode Enumeration
  * Enumerates major modes of the power control firmware.
  */
-#define CAVM_CPC_DVFS_MODE_E_DVFS_OFF (5)
+#define CAVM_CPC_DVFS_MODE_E_DVFS (5)
 #define CAVM_CPC_DVFS_MODE_E_EFFICIENT_OPERATION (3)
 #define CAVM_CPC_DVFS_MODE_E_MANUAL_CONTROL (4)
 #define CAVM_CPC_DVFS_MODE_E_POWER_CAPPED (1)
@@ -187,17 +187,13 @@ union cavm_cpc_dvfs_config_s
                                                                  actual RCLK frequency depending on Tj, power budget, and system load;
                                                                  this sets an upper bound.  If fuses indicate the part supports a lower
                                                                  frequency, the fuse value is used. */
-        uint64_t vrm_temp_high         : 16; /**< [ 15:  0] Temperature where throttling is applied to the chip. Chip
-                                                                 performance will be greatly reduced to keep the temperature below
-                                                                 VRM_TEMP_HIGH. The default value is the Marvell
-                                                                 recommended maximum operating temperature of the chip. Values
-                                                                 between 0 and 140 degrees Celsius. */
+        uint64_t vrm_temp_high         : 16; /**< [ 15:  0] The chip_overtemp_limit. In modes other than MANUAL_CONTROL and DVFS,
+                                                                 RCLK is throttled when the maximum die temp gets within 10C
+                                                                 of chip_overtemp_limit.  Values between 0 and 140 degrees Celsius. */
 #else /* Word 0 - Little Endian */
-        uint64_t vrm_temp_high         : 16; /**< [ 15:  0] Temperature where throttling is applied to the chip. Chip
-                                                                 performance will be greatly reduced to keep the temperature below
-                                                                 VRM_TEMP_HIGH. The default value is the Marvell
-                                                                 recommended maximum operating temperature of the chip. Values
-                                                                 between 0 and 140 degrees Celsius. */
+        uint64_t vrm_temp_high         : 16; /**< [ 15:  0] The chip_overtemp_limit. In modes other than MANUAL_CONTROL and DVFS,
+                                                                 RCLK is throttled when the maximum die temp gets within 10C
+                                                                 of chip_overtemp_limit.  Values between 0 and 140 degrees Celsius. */
         uint64_t rclk_freq_max         : 16; /**< [ 31: 16] Maximum core clock (RCLK) frequency in MHz. DVFS control will vary the
                                                                  actual RCLK frequency depending on Tj, power budget, and system load;
                                                                  this sets an upper bound.  If fuses indicate the part supports a lower
@@ -213,18 +209,18 @@ union cavm_cpc_dvfs_config_s
                                                                  to emergency power off. The default value is the Marvell recommended
                                                                  maximum temperature of the chip. */
         uint64_t vdd_sys_tolerance     : 16; /**< [111: 96] The +/- control tolerance of the VDD_SYS supply as measured at the
-                                                                 chip in mV.   Default is +/-8mV. Doesn't apply to CN8XXX chips. */
+                                                                 chip in mV.   Default is +/-29mV. Doesn't apply to CN8XXX chips. */
         uint64_t vdd_core_tolerance    : 16; /**< [ 95: 80] The +/- control tolerance of the VDDC supply as measured at the
-                                                                 chip in mV.   Default is +/-8mV. Doesn't apply to CN8XXX chips. */
+                                                                 chip in mV.   Default is +/-29mV. Doesn't apply to CN8XXX chips. */
         uint64_t cptclk_freq           : 16; /**< [ 79: 64] Cryptographic accelerator clock (CPTCLK) frequency in MHz. If fuses
                                                                  indicate the part supports a lower frequency, the fuse value is used. */
 #else /* Word 1 - Little Endian */
         uint64_t cptclk_freq           : 16; /**< [ 79: 64] Cryptographic accelerator clock (CPTCLK) frequency in MHz. If fuses
                                                                  indicate the part supports a lower frequency, the fuse value is used. */
         uint64_t vdd_core_tolerance    : 16; /**< [ 95: 80] The +/- control tolerance of the VDDC supply as measured at the
-                                                                 chip in mV.   Default is +/-8mV. Doesn't apply to CN8XXX chips. */
+                                                                 chip in mV.   Default is +/-29mV. Doesn't apply to CN8XXX chips. */
         uint64_t vdd_sys_tolerance     : 16; /**< [111: 96] The +/- control tolerance of the VDD_SYS supply as measured at the
-                                                                 chip in mV.   Default is +/-8mV. Doesn't apply to CN8XXX chips. */
+                                                                 chip in mV.   Default is +/-29mV. Doesn't apply to CN8XXX chips. */
         uint64_t vrm_temp_trip         : 16; /**< [127:112] Temperature in degrees C where THERMAL_TRIP_N is asserted. When the chip reaches
                                                                  this temperature THERMAL_TRIP_N will assert, signaling the board
                                                                  to emergency power off. The default value is the Marvell recommended
@@ -233,8 +229,9 @@ union cavm_cpc_dvfs_config_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
         uint64_t sclk_freq             : 16; /**< [191:176] Coprocessor clock (SCLK) frequency in MHz. */
         uint64_t dvfs_thermal_hot      : 16; /**< [175:160] SCP firmware will assert the THERMAL_HOT_L pin when the highest
-                                                                 observed temperature on the chip is at or above this value. This
-                                                                 value is recommended to be 10 degrees Celsius below [VRM_TEMP_HIGH].
+                                                                 observed temperature on the chip is at or above this value.  Used for
+                                                                 simple on-off fan control.  Recommended value is 20 degrees Celsius
+                                                                 below [VRM_TEMP_HIGH].
                                                                  The default value is the Marvell recommended maximum temperature of
                                                                  the chip minus 10. */
         uint64_t dvfs_power_control_mode : 16;/**< [159:144] The operating mode of the DVFS (Dynamic Frequency Voltage Scaling)
@@ -249,8 +246,9 @@ union cavm_cpc_dvfs_config_s
         uint64_t dvfs_power_control_mode : 16;/**< [159:144] The operating mode of the DVFS (Dynamic Frequency Voltage Scaling)
                                                                  power control code.  Enumerated by CPC_DVFS_MODE_E. */
         uint64_t dvfs_thermal_hot      : 16; /**< [175:160] SCP firmware will assert the THERMAL_HOT_L pin when the highest
-                                                                 observed temperature on the chip is at or above this value. This
-                                                                 value is recommended to be 10 degrees Celsius below [VRM_TEMP_HIGH].
+                                                                 observed temperature on the chip is at or above this value.  Used for
+                                                                 simple on-off fan control.  Recommended value is 20 degrees Celsius
+                                                                 below [VRM_TEMP_HIGH].
                                                                  The default value is the Marvell recommended maximum temperature of
                                                                  the chip minus 10. */
         uint64_t sclk_freq             : 16; /**< [191:176] Coprocessor clock (SCLK) frequency in MHz. */
@@ -320,15 +318,9 @@ union cavm_cpc_dvfs_config_s
                                                                  Encoded as factor * 1000. */
         uint64_t vdd_core_compensation : 16; /**< [367:352] A multiplication factor that is applied to the requested VDDC voltage.  Default 1.000.
                                                                  Encoded as factor * 1000. */
-        uint64_t vdd_sys_ripple        : 16; /**< [351:336] The +/- ripple of the VDD_SYS supply as measured at the
-                                                                 Chip in mV.   Default is +/-8 mV. Doesn't apply to CN8XXX chips. */
-        uint64_t vdd_core_ripple       : 16; /**< [335:320] The +/- ripple of the VDDC supply as measured at the
-                                                                 Chip in mV.   Default is +/-8 mV. Doesn't apply to CN8XXX chips. */
+        uint64_t reserved_320_351      : 32;
 #else /* Word 5 - Little Endian */
-        uint64_t vdd_core_ripple       : 16; /**< [335:320] The +/- ripple of the VDDC supply as measured at the
-                                                                 Chip in mV.   Default is +/-8 mV. Doesn't apply to CN8XXX chips. */
-        uint64_t vdd_sys_ripple        : 16; /**< [351:336] The +/- ripple of the VDD_SYS supply as measured at the
-                                                                 Chip in mV.   Default is +/-8 mV. Doesn't apply to CN8XXX chips. */
+        uint64_t reserved_320_351      : 32;
         uint64_t vdd_core_compensation : 16; /**< [367:352] A multiplication factor that is applied to the requested VDDC voltage.  Default 1.000.
                                                                  Encoded as factor * 1000. */
         uint64_t vdd_sys_compensation  : 16; /**< [383:368] A multiplication factor that is applied to the requested VDD_SYS voltage.  Default 1.000.

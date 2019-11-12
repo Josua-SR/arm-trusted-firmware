@@ -3278,7 +3278,84 @@ union cavm_npa_af_gen_cfg
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_npa_af_gen_cfg_s cn; */
+    /* struct cavm_npa_af_gen_cfg_s cn9; */
+    /* struct cavm_npa_af_gen_cfg_s cn96xxp1; */
+    struct cavm_npa_af_gen_cfg_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_16_63        : 48;
+        uint64_t ratem1                : 4;  /**< [ 15: 12](R/W) Limit peak alloc/frees to once per [RATEM1]+1 clock cycles to ensure all
+                                                                 alloc/frees are slower. For diagnostic use only.
+
+                                                                 Internal:
+                                                                 Used for OCLA visibility. */
+        uint64_t reserved_11           : 1;
+        uint64_t ocla_bp               : 1;  /**< [ 10: 10](R/W) Reserved.
+                                                                 Internal:
+                                                                 OCLA backpressure enable. When OCLA FIFOs are near full, allow OCLA to backpressure
+                                                                 alloc/frees. See also [RATEM1]. */
+        uint64_t reserved_5_9          : 5;
+        uint64_t force_intf_clk_en     : 1;  /**< [  4:  4](R/W) Force clock enables on interface buses between blocks. For diagnostic use only. */
+        uint64_t force_cond_clk_en     : 1;  /**< [  3:  3](R/W) Force clock enables within block. For diagnostic use only. */
+        uint64_t reserved_2            : 1;
+        uint64_t af_be                 : 1;  /**< [  1:  1](R/W) Admin function big-endian select. Specifies endianness of all admin queue
+                                                                 instructions, results and associated structures stored in LLC/DRAM:
+
+                                                                 0 = Little-endian. All AF software data structures are in byte invariant
+                                                                 little-endian format (LE8) with the following ordering within each 64-bit
+                                                                 word: \<7:0\> at byte address 0, \<15:8\> at address 1, ..., \<63:56\> at address
+                                                                 0x7.
+
+                                                                 1 = Big-endian. All AF software data structures are in byte invariant
+                                                                 big-endian format (BE8) with the following ordering within each 64-bit
+                                                                 word: \<63:56\> at byte address 0, \<55:48\> at address 1, ..., \<7:0\> at
+                                                                 address 0x7.
+
+                                                                 The affected data structures are:
+                                                                 * NPA_AQ_INST_S.
+                                                                 * NPA_AQ_RES_S.
+                                                                 * Software context READ/WRITE/INIT data following NPA_AQ_RES_S. */
+        uint64_t reserved_0            : 1;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0            : 1;
+        uint64_t af_be                 : 1;  /**< [  1:  1](R/W) Admin function big-endian select. Specifies endianness of all admin queue
+                                                                 instructions, results and associated structures stored in LLC/DRAM:
+
+                                                                 0 = Little-endian. All AF software data structures are in byte invariant
+                                                                 little-endian format (LE8) with the following ordering within each 64-bit
+                                                                 word: \<7:0\> at byte address 0, \<15:8\> at address 1, ..., \<63:56\> at address
+                                                                 0x7.
+
+                                                                 1 = Big-endian. All AF software data structures are in byte invariant
+                                                                 big-endian format (BE8) with the following ordering within each 64-bit
+                                                                 word: \<63:56\> at byte address 0, \<55:48\> at address 1, ..., \<7:0\> at
+                                                                 address 0x7.
+
+                                                                 The affected data structures are:
+                                                                 * NPA_AQ_INST_S.
+                                                                 * NPA_AQ_RES_S.
+                                                                 * Software context READ/WRITE/INIT data following NPA_AQ_RES_S. */
+        uint64_t reserved_2            : 1;
+        uint64_t force_cond_clk_en     : 1;  /**< [  3:  3](R/W) Force clock enables within block. For diagnostic use only. */
+        uint64_t force_intf_clk_en     : 1;  /**< [  4:  4](R/W) Force clock enables on interface buses between blocks. For diagnostic use only. */
+        uint64_t reserved_5_9          : 5;
+        uint64_t ocla_bp               : 1;  /**< [ 10: 10](R/W) Reserved.
+                                                                 Internal:
+                                                                 OCLA backpressure enable. When OCLA FIFOs are near full, allow OCLA to backpressure
+                                                                 alloc/frees. See also [RATEM1]. */
+        uint64_t reserved_11           : 1;
+        uint64_t ratem1                : 4;  /**< [ 15: 12](R/W) Limit peak alloc/frees to once per [RATEM1]+1 clock cycles to ensure all
+                                                                 alloc/frees are slower. For diagnostic use only.
+
+                                                                 Internal:
+                                                                 Used for OCLA visibility. */
+        uint64_t reserved_16_63        : 48;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_npa_af_gen_cfg_cn96xxp3 cn98xx; */
+    /* struct cavm_npa_af_gen_cfg_s cnf95xxp1; */
+    /* struct cavm_npa_af_gen_cfg_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_npa_af_gen_cfg_cn96xxp3 loki; */
 };
 typedef union cavm_npa_af_gen_cfg cavm_npa_af_gen_cfg_t;
 

@@ -10167,7 +10167,13 @@ union cavm_lmcx_ext_config
                                                                  DIMM1 instead of DIMM0.
                                                                  Intended to be used for the case of DIMM1 having bigger rank/s
                                                                  than DIMM0. This bit has priority over [DIMM_SEL_INVERT_OFF]. */
-        uint64_t coalesce_address_mode : 1;  /**< [ 53: 53](R/W) When set to one, LMC coalesces the LLC+LMC internal address mapping
+        uint64_t coalesce_address_mode : 1;  /**< [ 53: 53](R/W) Reserved.
+                                                                 Internal:
+                                                                 CNXXXX only supports 1 DIMM. This field needs to be 0.
+                                                                 [COALESCE_ADDRESS_MODE] feature is intended for different sized DIMMs application.
+                                                                 It does not support different size ranks within the same DIMM.
+
+                                                                 When set to one, LMC coalesces the LLC+LMC internal address mapping
                                                                  to create a uniform memory space that is free from holes in
                                                                  between ranks. When different size DIMMs are used, the DIMM with
                                                                  the higher capacity is mapped to the lower address space. */
@@ -10352,7 +10358,13 @@ union cavm_lmcx_ext_config
                                                                  0x1 = 1 Chip ID  (2H 3DS).
                                                                  0x2 = 2 Chip IDs (4H 3DS).
                                                                  0x3 = 3 Chip IDs (8H 3DS). */
-        uint64_t coalesce_address_mode : 1;  /**< [ 53: 53](R/W) When set to one, LMC coalesces the LLC+LMC internal address mapping
+        uint64_t coalesce_address_mode : 1;  /**< [ 53: 53](R/W) Reserved.
+                                                                 Internal:
+                                                                 CNXXXX only supports 1 DIMM. This field needs to be 0.
+                                                                 [COALESCE_ADDRESS_MODE] feature is intended for different sized DIMMs application.
+                                                                 It does not support different size ranks within the same DIMM.
+
+                                                                 When set to one, LMC coalesces the LLC+LMC internal address mapping
                                                                  to create a uniform memory space that is free from holes in
                                                                  between ranks. When different size DIMMs are used, the DIMM with
                                                                  the higher capacity is mapped to the lower address space. */
@@ -10762,6 +10774,155 @@ union cavm_lmcx_ext_config2
         uint64_t reserved_61_63        : 3;
 #endif /* Word 0 - End */
     } cn9;
+    /* struct cavm_lmcx_ext_config2_cn9 cn96xx; */
+    struct cavm_lmcx_ext_config2_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_61_63        : 3;
+        uint64_t mds_gear_up           : 1;  /**< [ 60: 60](R/W) Reserved.
+                                                                 Internal:
+                                                                 Officially not supporting MDS DIMM, must be set to 0.
+                                                                 Enable 5:4 host gear up mode for MDS DIMMs, and offset the CAS latency by
+                                                                 +28. This field is only valid when [MDS_EN] is one. */
+        uint64_t mds_en                : 1;  /**< [ 59: 59](R/W) Reserved.
+                                                                 Internal:
+                                                                 Officially not supporting MDS DIMM, must be set to 0.
+
+                                                                 This field enables MDS DIMM support.
+                                                                 This field affects some timing parameters, see LMC()_MODEREG_PARAMS0[CL] and
+                                                                 LMC()_MODEREG_PARAMS0[CWL]. */
+        uint64_t ba0_hash_sel          : 35; /**< [ 58: 24](R/W) This field configures bank 0 hashing by selecting which bits of the LLC-LMC
+                                                                 address\<34:0\> to perform the XOR operations to.
+
+                                                                 For x4 or x8 DRAM, it is recommended to set [BA0_HASH_SEL]\<2\> = 1.
+                                                                 For x16 DRAM, it is recommended to set [BA0_HASH_SEL]\<1\> = 1. */
+        uint64_t reserved_22_23        : 2;
+        uint64_t sref_auto_idle_thres  : 5;  /**< [ 21: 17](R/W) Self-refresh idle threshold.
+                                                                 Enter self-refresh mode after the memory controller has been idle for
+                                                                 2^([SREF_AUTO_IDLE_THRES]-1) * TREFI.
+                                                                 Where TREFI time is controlled by LMC()_CONFIG[REF_ZQCS_INT]\<6:0\>.
+
+                                                                 Only valid and legal to be nonzero when LMC()_EXT_CONFIG2[SREF_AUTO_ENABLE] is
+                                                                 set.
+
+                                                                 Internal:
+                                                                 "0x0 = Automatic self refresh interval is actually controlled by
+                                                                 2^(2+LMC()_CONFIG[IDLEPOWER]) CK cycles instead. Self refresh has priority
+                                                                 over precharge power-down. However, Bug #35016 config can violate DRAM spec.
+                                                                 Please see http://mcbuggin.caveonetworks.com/bug/35016." */
+        uint64_t sref_auto_enable      : 1;  /**< [ 16: 16](R/W) Enable automatic self-refresh mode.
+                                                                 This field should only be set after initialization. */
+        uint64_t delay_unload_r3       : 1;  /**< [ 15: 15](R/W) Reserved, MBZ.
+                                                                 Internal:
+                                                                 When set, unload the PHY silo one cycle later for Rank 0 reads.
+                                                                 Setting this field has priority over LMC()_CONFIG[EARLY_UNLOAD_D1_R1]. */
+        uint64_t delay_unload_r2       : 1;  /**< [ 14: 14](R/W) Reserved, MBZ.
+                                                                 Internal:
+                                                                 When set, unload the PHY silo one cycle later for Rank 0 reads.
+                                                                 Setting this field has priority over LMC()_CONFIG[EARLY_UNLOAD_D1_R0]. */
+        uint64_t delay_unload_r1       : 1;  /**< [ 13: 13](R/W) Reserved, MBZ.
+                                                                 Internal:
+                                                                 When set, unload the PHY silo one cycle later for Rank 0 reads.
+                                                                 Setting this field has priority over LMC()_CONFIG[EARLY_UNLOAD_D0_R1]. */
+        uint64_t delay_unload_r0       : 1;  /**< [ 12: 12](R/W) Reserved, MBZ.
+                                                                 Internal:
+                                                                 When set, unload the PHY silo one cycle later for Rank 0 reads.
+                                                                 Setting this field has priority over LMC()_CONFIG[EARLY_UNLOAD_D0_R0]. */
+        uint64_t early_dqx             : 3;  /**< [ 11:  9](R/W) Set nonzero to send DQx signals 'X' CK cycles earlier for the case when the
+                                                                 shortest DQx lines have a larger delay than the CK line.
+                                                                 0x0 = Disabled.
+                                                                 0x1-0x3 = Number of cycles earlier that DQx signals are sent. */
+        uint64_t row_col_switch        : 1;  /**< [  8:  8](R/W) When set, the memory address bit position that represents bit 4 of the COLUMN
+                                                                 address (bit 5 in 32-bit mode) becomes the low order DDR ROW address bit.
+                                                                 The upper DDR COLUMN address portion is selected using LMC()_CONFIG[ROW_LSB]
+                                                                 (and LMC()_DUAL_MEMCFG[ROW_LSB] for dual-memory configuration). */
+        uint64_t throttle_wr           : 4;  /**< [  7:  4](R/W) When set, throttle 1/16th of available command bandwidth by limiting IFB usage.
+                                                                 0x0 = Full bandwidth,    32 IFBs available.
+                                                                 0x1 = 1/16th bandwidth,   2 IFBs available.
+                                                                 0x2 = 2/16th bandwidth,   4 IFBs available.
+                                                                 ...
+                                                                 0xF = 15/16th bandwidth, 30 IFBs available. */
+        uint64_t throttle_rd           : 4;  /**< [  3:  0](R/W) When set, throttle 1/16th of available command bandwidth by limiting IFB usage.
+                                                                 0x0 = Full bandwidth,    32 IFBs available.
+                                                                 0x1 = 1/16th bandwidth,   2 IFBs available.
+                                                                 0x2 = 2/16th bandwidth,   4 IFBs available.
+                                                                 ...
+                                                                 0xF = 15/16th bandwidth, 30 IFBs available. */
+#else /* Word 0 - Little Endian */
+        uint64_t throttle_rd           : 4;  /**< [  3:  0](R/W) When set, throttle 1/16th of available command bandwidth by limiting IFB usage.
+                                                                 0x0 = Full bandwidth,    32 IFBs available.
+                                                                 0x1 = 1/16th bandwidth,   2 IFBs available.
+                                                                 0x2 = 2/16th bandwidth,   4 IFBs available.
+                                                                 ...
+                                                                 0xF = 15/16th bandwidth, 30 IFBs available. */
+        uint64_t throttle_wr           : 4;  /**< [  7:  4](R/W) When set, throttle 1/16th of available command bandwidth by limiting IFB usage.
+                                                                 0x0 = Full bandwidth,    32 IFBs available.
+                                                                 0x1 = 1/16th bandwidth,   2 IFBs available.
+                                                                 0x2 = 2/16th bandwidth,   4 IFBs available.
+                                                                 ...
+                                                                 0xF = 15/16th bandwidth, 30 IFBs available. */
+        uint64_t row_col_switch        : 1;  /**< [  8:  8](R/W) When set, the memory address bit position that represents bit 4 of the COLUMN
+                                                                 address (bit 5 in 32-bit mode) becomes the low order DDR ROW address bit.
+                                                                 The upper DDR COLUMN address portion is selected using LMC()_CONFIG[ROW_LSB]
+                                                                 (and LMC()_DUAL_MEMCFG[ROW_LSB] for dual-memory configuration). */
+        uint64_t early_dqx             : 3;  /**< [ 11:  9](R/W) Set nonzero to send DQx signals 'X' CK cycles earlier for the case when the
+                                                                 shortest DQx lines have a larger delay than the CK line.
+                                                                 0x0 = Disabled.
+                                                                 0x1-0x3 = Number of cycles earlier that DQx signals are sent. */
+        uint64_t delay_unload_r0       : 1;  /**< [ 12: 12](R/W) Reserved, MBZ.
+                                                                 Internal:
+                                                                 When set, unload the PHY silo one cycle later for Rank 0 reads.
+                                                                 Setting this field has priority over LMC()_CONFIG[EARLY_UNLOAD_D0_R0]. */
+        uint64_t delay_unload_r1       : 1;  /**< [ 13: 13](R/W) Reserved, MBZ.
+                                                                 Internal:
+                                                                 When set, unload the PHY silo one cycle later for Rank 0 reads.
+                                                                 Setting this field has priority over LMC()_CONFIG[EARLY_UNLOAD_D0_R1]. */
+        uint64_t delay_unload_r2       : 1;  /**< [ 14: 14](R/W) Reserved, MBZ.
+                                                                 Internal:
+                                                                 When set, unload the PHY silo one cycle later for Rank 0 reads.
+                                                                 Setting this field has priority over LMC()_CONFIG[EARLY_UNLOAD_D1_R0]. */
+        uint64_t delay_unload_r3       : 1;  /**< [ 15: 15](R/W) Reserved, MBZ.
+                                                                 Internal:
+                                                                 When set, unload the PHY silo one cycle later for Rank 0 reads.
+                                                                 Setting this field has priority over LMC()_CONFIG[EARLY_UNLOAD_D1_R1]. */
+        uint64_t sref_auto_enable      : 1;  /**< [ 16: 16](R/W) Enable automatic self-refresh mode.
+                                                                 This field should only be set after initialization. */
+        uint64_t sref_auto_idle_thres  : 5;  /**< [ 21: 17](R/W) Self-refresh idle threshold.
+                                                                 Enter self-refresh mode after the memory controller has been idle for
+                                                                 2^([SREF_AUTO_IDLE_THRES]-1) * TREFI.
+                                                                 Where TREFI time is controlled by LMC()_CONFIG[REF_ZQCS_INT]\<6:0\>.
+
+                                                                 Only valid and legal to be nonzero when LMC()_EXT_CONFIG2[SREF_AUTO_ENABLE] is
+                                                                 set.
+
+                                                                 Internal:
+                                                                 "0x0 = Automatic self refresh interval is actually controlled by
+                                                                 2^(2+LMC()_CONFIG[IDLEPOWER]) CK cycles instead. Self refresh has priority
+                                                                 over precharge power-down. However, Bug #35016 config can violate DRAM spec.
+                                                                 Please see http://mcbuggin.caveonetworks.com/bug/35016." */
+        uint64_t reserved_22_23        : 2;
+        uint64_t ba0_hash_sel          : 35; /**< [ 58: 24](R/W) This field configures bank 0 hashing by selecting which bits of the LLC-LMC
+                                                                 address\<34:0\> to perform the XOR operations to.
+
+                                                                 For x4 or x8 DRAM, it is recommended to set [BA0_HASH_SEL]\<2\> = 1.
+                                                                 For x16 DRAM, it is recommended to set [BA0_HASH_SEL]\<1\> = 1. */
+        uint64_t mds_en                : 1;  /**< [ 59: 59](R/W) Reserved.
+                                                                 Internal:
+                                                                 Officially not supporting MDS DIMM, must be set to 0.
+
+                                                                 This field enables MDS DIMM support.
+                                                                 This field affects some timing parameters, see LMC()_MODEREG_PARAMS0[CL] and
+                                                                 LMC()_MODEREG_PARAMS0[CWL]. */
+        uint64_t mds_gear_up           : 1;  /**< [ 60: 60](R/W) Reserved.
+                                                                 Internal:
+                                                                 Officially not supporting MDS DIMM, must be set to 0.
+                                                                 Enable 5:4 host gear up mode for MDS DIMMs, and offset the CAS latency by
+                                                                 +28. This field is only valid when [MDS_EN] is one. */
+        uint64_t reserved_61_63        : 3;
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_lmcx_ext_config2_cn9 cnf95xx; */
+    /* struct cavm_lmcx_ext_config2_cn9 loki; */
 };
 typedef union cavm_lmcx_ext_config2 cavm_lmcx_ext_config2_t;
 
@@ -22520,7 +22681,190 @@ union cavm_lmcx_ref_config
 #endif /* Word 0 - End */
     } cn96xxp1;
     /* struct cavm_lmcx_ref_config_s cn96xxp3; */
-    /* struct cavm_lmcx_ref_config_s cn98xx; */
+    struct cavm_lmcx_ref_config_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_32_63        : 32;
+        uint64_t ref_stagger           : 1;  /**< [ 31: 31](R/W) When set, refresh commands to all package ranks are staggered by TRFC. The default
+                                                                 behavior is to send a refresh command to all package ranks and wait TRFC.
+                                                                 Asserting this bit forces LMC to stagger refresh command by waiting TRFC for each rank.
+                                                                 For 3DS DIMMs, this mode will refresh all logical ranks for one package rank before moving
+                                                                 to the next package rank. Note, software is responsible for determining whether staggering
+                                                                 refresh by TRFC (and TRFC_dlr) is greater than TREFI which would cause refresh to never catch up.
+
+                                                                 It is not recommended to use this mode with 8H 3DS, fine granularity refresh mode, or extended
+                                                                 temperature mode. This mode cannot be combined with LMC()_REF_CONFIG[PAIR_REF_MODE]. */
+        uint64_t zqcs_rankmask1        : 4;  /**< [ 30: 27](R/W) Selects which ranks get ZQCS command when servicing the second pair refresh. */
+        uint64_t zqcs_rankmask0        : 4;  /**< [ 26: 23](R/W) Selects which ranks get ZQCS command when servicing the first pair refresh. */
+        uint64_t pair_zqcs             : 1;  /**< [ 22: 22](R/W) When set, uses LMC()_REF_CONFIG[ZQCS_RANKMASK0] and LMC()_REF_CONFIG[ZQCS_RANKMASK1]
+                                                                 to select which ranks get ZQCS command on the pair refresh interval that expires
+                                                                 the ZQCS count. Ranks selected by [ZQCS_RANKMASK0] get serviced on first pair refresh
+                                                                 then [ZQCS_RANKMASK1] get serviced on second pair refresh. Note [ZQCS_RANKMASK0] and
+                                                                 [ZQCS_RANKMASK1] should be mutually exclusive.
+
+                                                                 If not set, all available ranks get ZQCS commands on the first pair refresh.
+
+                                                                 This bit can only be asserted if LMC()_REF_CONFIG[PAIR_REF_MODE] is non-zero. */
+        uint64_t ref_rank_all          : 1;  /**< [ 21: 21](R/W) Reserved.
+                                                                 Internal:
+                                                                 When set, cycles through all ranks during the refresh sequence disregarding rank
+                                                                 availability status. For diagnostic use only. */
+        uint64_t pair_ref_mode         : 2;  /**< [ 20: 19](R/W) Selects the refresh mode.
+                                                                 0x0 = All ranks get refreshed together at the end of TREFI and all traffic is halted.
+                                                                 0x1 = Refreshes for rank0 and rank1 are staggered during the TREFI window. At
+                                                                 TREFI/2, rank1 is refreshed
+                                                                 while allowing traffic to rank0. At TREFI, rank0 is refreshed while allowing
+                                                                 traffic to rank1.
+                                                                 0x2 = Refreshes for rank0 and rank1 are staggered during the TREFI window. All
+                                                                 traffic is halted whenever each rank is refreshed. */
+        uint64_t ref_block             : 1;  /**< [ 18: 18](R/W) When set, LMC is blocked to initiate any refresh sequence. LMC then only
+                                                                 allows refresh sequence to start when LMC()_REF_STATUS[REF_COUNT0] or
+                                                                 LMC()_REF_STATUS[REF_COUNT1] has reached the maximum value of 0x7. */
+        uint64_t fgrm_trefi_div        : 2;  /**< [ 17: 16](R/W) Divides TREFI base programmed in LMC()_CONFIG[REF_ZQCS_INT].
+                                                                 This CSR can only be used if LMC()_MODEREG_PARAMS3[FGRM] is set.
+
+                                                                 0x0 = TREFI.
+                                                                 0x1 = TREFI/2.
+                                                                 0x2 = TREFI/4.
+                                                                 0x3 = TREFI/8.
+
+                                                                 If changing refresh rate with FGRM set to on-the-fly, this must be programmed at
+                                                                 the same time as LMC()_REF_CONFIG[OTF_REF_MODE]. */
+        uint64_t otf_ref_mode          : 2;  /**< [ 15: 14](R/W) Refresh mode for on-the-fly refresh. This CSR must be programmed to switch
+                                                                 to the modes between 1X/2X or 1X/4X as set by LMC()_MODEREG_PARAMS3[FGRM].
+                                                                 0x0 = REF 1X.
+                                                                 0x1 = REF 2X.
+                                                                 0x2 = REF 4x.
+
+                                                                 The status of the mode switch can be read back in LMC()_REF_STATUS[OTF_REF_STATUS]. */
+        uint64_t fgrm_trfc_dlr         : 7;  /**< [ 13:  7](R/W) Indicates tRFC_DLR2 or tRFC_DLR4 constraints for Fine-Granularity Refresh.
+                                                                 Set this field as follows:
+
+                                                                 _ RNDUP[tRFC_DLRx(ns) / (8 * TCYC(ns))]
+
+                                                                 where tRFC_DLR2 or tRFC_DLR4 is from the JEDEC 3D stacked SDRAM spec, and TCYC(ns) is the DDR clock
+                                                                 frequency (not data rate).
+
+                                                                 TYP = 90-120 ns.
+
+                                                                 0x0 = reserved.
+                                                                 0x1 = 8 TCYC.
+                                                                 0x2 = 16 TCYC.
+                                                                 0x3 = 24 TCYC.
+                                                                 0x4 = 32 TCYC.
+                                                                 ...
+                                                                 0x7E = 1008 TCYC.
+                                                                 0x7F = 1016 TCYC. */
+        uint64_t fgrm_trfc             : 7;  /**< [  6:  0](R/W) Indicates TRFC2 or TRFC4 constraints for Fine-Granularity Refresh.
+                                                                 Set this field as follows:
+
+                                                                 _ RNDUP[TRFCx(ns) / (8 * TCYC(ns))]
+
+                                                                 where TRFC2 or TRFC4 is from the JEDEC DDR4 spec, and TCYC(ns) is the DDR clock
+                                                                 frequency (not data rate).
+
+                                                                 TYP = 90-350 ns
+
+                                                                 0x0 = reserved.
+                                                                 0x1 = 8 TCYC.
+                                                                 0x2 = 16 TCYC.
+                                                                 0x3 = 24 TCYC.
+                                                                 0x4 = 32 TCYC.
+                                                                 ...
+                                                                 0x7E = 1008 TCYC.
+                                                                 0x7F = 1016 TCYC. */
+#else /* Word 0 - Little Endian */
+        uint64_t fgrm_trfc             : 7;  /**< [  6:  0](R/W) Indicates TRFC2 or TRFC4 constraints for Fine-Granularity Refresh.
+                                                                 Set this field as follows:
+
+                                                                 _ RNDUP[TRFCx(ns) / (8 * TCYC(ns))]
+
+                                                                 where TRFC2 or TRFC4 is from the JEDEC DDR4 spec, and TCYC(ns) is the DDR clock
+                                                                 frequency (not data rate).
+
+                                                                 TYP = 90-350 ns
+
+                                                                 0x0 = reserved.
+                                                                 0x1 = 8 TCYC.
+                                                                 0x2 = 16 TCYC.
+                                                                 0x3 = 24 TCYC.
+                                                                 0x4 = 32 TCYC.
+                                                                 ...
+                                                                 0x7E = 1008 TCYC.
+                                                                 0x7F = 1016 TCYC. */
+        uint64_t fgrm_trfc_dlr         : 7;  /**< [ 13:  7](R/W) Indicates tRFC_DLR2 or tRFC_DLR4 constraints for Fine-Granularity Refresh.
+                                                                 Set this field as follows:
+
+                                                                 _ RNDUP[tRFC_DLRx(ns) / (8 * TCYC(ns))]
+
+                                                                 where tRFC_DLR2 or tRFC_DLR4 is from the JEDEC 3D stacked SDRAM spec, and TCYC(ns) is the DDR clock
+                                                                 frequency (not data rate).
+
+                                                                 TYP = 90-120 ns.
+
+                                                                 0x0 = reserved.
+                                                                 0x1 = 8 TCYC.
+                                                                 0x2 = 16 TCYC.
+                                                                 0x3 = 24 TCYC.
+                                                                 0x4 = 32 TCYC.
+                                                                 ...
+                                                                 0x7E = 1008 TCYC.
+                                                                 0x7F = 1016 TCYC. */
+        uint64_t otf_ref_mode          : 2;  /**< [ 15: 14](R/W) Refresh mode for on-the-fly refresh. This CSR must be programmed to switch
+                                                                 to the modes between 1X/2X or 1X/4X as set by LMC()_MODEREG_PARAMS3[FGRM].
+                                                                 0x0 = REF 1X.
+                                                                 0x1 = REF 2X.
+                                                                 0x2 = REF 4x.
+
+                                                                 The status of the mode switch can be read back in LMC()_REF_STATUS[OTF_REF_STATUS]. */
+        uint64_t fgrm_trefi_div        : 2;  /**< [ 17: 16](R/W) Divides TREFI base programmed in LMC()_CONFIG[REF_ZQCS_INT].
+                                                                 This CSR can only be used if LMC()_MODEREG_PARAMS3[FGRM] is set.
+
+                                                                 0x0 = TREFI.
+                                                                 0x1 = TREFI/2.
+                                                                 0x2 = TREFI/4.
+                                                                 0x3 = TREFI/8.
+
+                                                                 If changing refresh rate with FGRM set to on-the-fly, this must be programmed at
+                                                                 the same time as LMC()_REF_CONFIG[OTF_REF_MODE]. */
+        uint64_t ref_block             : 1;  /**< [ 18: 18](R/W) When set, LMC is blocked to initiate any refresh sequence. LMC then only
+                                                                 allows refresh sequence to start when LMC()_REF_STATUS[REF_COUNT0] or
+                                                                 LMC()_REF_STATUS[REF_COUNT1] has reached the maximum value of 0x7. */
+        uint64_t pair_ref_mode         : 2;  /**< [ 20: 19](R/W) Selects the refresh mode.
+                                                                 0x0 = All ranks get refreshed together at the end of TREFI and all traffic is halted.
+                                                                 0x1 = Refreshes for rank0 and rank1 are staggered during the TREFI window. At
+                                                                 TREFI/2, rank1 is refreshed
+                                                                 while allowing traffic to rank0. At TREFI, rank0 is refreshed while allowing
+                                                                 traffic to rank1.
+                                                                 0x2 = Refreshes for rank0 and rank1 are staggered during the TREFI window. All
+                                                                 traffic is halted whenever each rank is refreshed. */
+        uint64_t ref_rank_all          : 1;  /**< [ 21: 21](R/W) Reserved.
+                                                                 Internal:
+                                                                 When set, cycles through all ranks during the refresh sequence disregarding rank
+                                                                 availability status. For diagnostic use only. */
+        uint64_t pair_zqcs             : 1;  /**< [ 22: 22](R/W) When set, uses LMC()_REF_CONFIG[ZQCS_RANKMASK0] and LMC()_REF_CONFIG[ZQCS_RANKMASK1]
+                                                                 to select which ranks get ZQCS command on the pair refresh interval that expires
+                                                                 the ZQCS count. Ranks selected by [ZQCS_RANKMASK0] get serviced on first pair refresh
+                                                                 then [ZQCS_RANKMASK1] get serviced on second pair refresh. Note [ZQCS_RANKMASK0] and
+                                                                 [ZQCS_RANKMASK1] should be mutually exclusive.
+
+                                                                 If not set, all available ranks get ZQCS commands on the first pair refresh.
+
+                                                                 This bit can only be asserted if LMC()_REF_CONFIG[PAIR_REF_MODE] is non-zero. */
+        uint64_t zqcs_rankmask0        : 4;  /**< [ 26: 23](R/W) Selects which ranks get ZQCS command when servicing the first pair refresh. */
+        uint64_t zqcs_rankmask1        : 4;  /**< [ 30: 27](R/W) Selects which ranks get ZQCS command when servicing the second pair refresh. */
+        uint64_t ref_stagger           : 1;  /**< [ 31: 31](R/W) When set, refresh commands to all package ranks are staggered by TRFC. The default
+                                                                 behavior is to send a refresh command to all package ranks and wait TRFC.
+                                                                 Asserting this bit forces LMC to stagger refresh command by waiting TRFC for each rank.
+                                                                 For 3DS DIMMs, this mode will refresh all logical ranks for one package rank before moving
+                                                                 to the next package rank. Note, software is responsible for determining whether staggering
+                                                                 refresh by TRFC (and TRFC_dlr) is greater than TREFI which would cause refresh to never catch up.
+
+                                                                 It is not recommended to use this mode with 8H 3DS, fine granularity refresh mode, or extended
+                                                                 temperature mode. This mode cannot be combined with LMC()_REF_CONFIG[PAIR_REF_MODE]. */
+        uint64_t reserved_32_63        : 32;
+#endif /* Word 0 - End */
+    } cn98xx;
     /* struct cavm_lmcx_ref_config_cn96xxp1 cnf95xx; */
     /* struct cavm_lmcx_ref_config_cn96xxp1 loki; */
 };

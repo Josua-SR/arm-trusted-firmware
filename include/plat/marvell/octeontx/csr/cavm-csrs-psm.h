@@ -63,6 +63,10 @@
 #define CAVM_PSM_SET0_MABDID_E_PRCH_MABDID (0)
 #define CAVM_PSM_SET0_MABDID_E_RDEC_MABDID (2)
 #define CAVM_PSM_SET0_MABDID_E_RMAPX_MABDID(a) (7 + 3 * (a))
+#define CAVM_PSM_SET0_MABDID_E_RSVD1X_MABDID(a) (8 + 8 * (a))
+#define CAVM_PSM_SET0_MABDID_E_RSVD2_MABDID (0xf)
+#define CAVM_PSM_SET0_MABDID_E_RSVD3_MABDID (0x18)
+#define CAVM_PSM_SET0_MABDID_E_RSVD4_MABDID (0x19)
 #define CAVM_PSM_SET0_MABDID_E_TDEC_MABDID (0xc)
 #define CAVM_PSM_SET0_MABDID_E_ULFE_MABDID (1)
 #define CAVM_PSM_SET0_MABDID_E_VDEC_MABDID (0xe)
@@ -1297,7 +1301,8 @@ static inline uint64_t CAVM_PSM_BP_TEST_FUNC(void)
 /**
  * Register (NCB) psm_cmd_dma#_addr
  *
- * PHY Scheduler Command-List DMA Address Registers
+ * INTERNAL: PHY Scheduler Command-List DMA Address Registers
+ *
  * This register sets the location in memory from which a command-list
  * DMA operation will be performed.
  */
@@ -1341,7 +1346,8 @@ static inline uint64_t CAVM_PSM_CMD_DMAX_ADDR(unsigned long a)
 /**
  * Register (NCB) psm_cmd_dma#_ctrl
  *
- * PHY Scheduler Command-List DMA Control Registers
+ * INTERNAL: PHY Scheduler Command-List DMA Control Registers
+ *
  * This register configures and initiates the command-list DMA operation.
  */
 union cavm_psm_cmd_dmax_ctrl
@@ -1388,7 +1394,8 @@ static inline uint64_t CAVM_PSM_CMD_DMAX_CTRL(unsigned long a)
 /**
  * Register (NCB) psm_cmd_dma_status
  *
- * PHY Scheduler Command-List DMA Status Register
+ * INTERNAL: PHY Scheduler Command-List DMA Status Register
+ *
  * This register indicates which command-list DMA channels are active.
  */
 union cavm_psm_cmd_dma_status

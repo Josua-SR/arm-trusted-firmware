@@ -395,7 +395,38 @@ union cavm_avs_io_ctl
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_avs_io_ctl_s cn; */
+    /* struct cavm_avs_io_ctl_s cn9; */
+    /* struct cavm_avs_io_ctl_s cn96xxp1; */
+    struct cavm_avs_io_ctl_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_4_63         : 60;
+        uint64_t drive                 : 2;  /**< [  3:  2](R/W) AVS bus pin output drive strength.
+                                                                 0x0 = 2 mA.
+                                                                 0x1 = 4 mA.
+                                                                 0x2 = 8 mA.
+                                                                 0x3 = 16 mA. */
+        uint64_t reserved_1            : 1;
+        uint64_t slew                  : 1;  /**< [  0:  0](R/W) AVS bus pins output slew rate control.
+                                                                 0 = High slew rate.
+                                                                 1 = Low slew rate. */
+#else /* Word 0 - Little Endian */
+        uint64_t slew                  : 1;  /**< [  0:  0](R/W) AVS bus pins output slew rate control.
+                                                                 0 = High slew rate.
+                                                                 1 = Low slew rate. */
+        uint64_t reserved_1            : 1;
+        uint64_t drive                 : 2;  /**< [  3:  2](R/W) AVS bus pin output drive strength.
+                                                                 0x0 = 2 mA.
+                                                                 0x1 = 4 mA.
+                                                                 0x2 = 8 mA.
+                                                                 0x3 = 16 mA. */
+        uint64_t reserved_4_63         : 60;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_avs_io_ctl_cn96xxp3 cn98xx; */
+    /* struct cavm_avs_io_ctl_s cnf95xxp1; */
+    /* struct cavm_avs_io_ctl_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_avs_io_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_avs_io_ctl cavm_avs_io_ctl_t;
 

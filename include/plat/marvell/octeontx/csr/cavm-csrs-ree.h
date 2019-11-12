@@ -990,9 +990,9 @@ union cavm_reex_af_active_pc
     struct cavm_reex_af_active_pc_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Count of conditional coprocessor-clock cycles since reset. */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Count of conditional coprocessor-clock (csclk) cycles since reset. */
 #else /* Word 0 - Little Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Count of conditional coprocessor-clock cycles since reset. */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Count of conditional coprocessor-clock (csclk) cycles since reset. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_reex_af_active_pc_s cn; */
@@ -2281,10 +2281,10 @@ union cavm_reex_af_crdt_halt_ncb_req_pc
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Performance counter. Number of cycles REE can't issue NCB load-requests of jobs' data,
-                                                                 due lack of data-FIFO credits, which located at SJD. */
+                                                                 due lack of data-FIFO credits, located at SJD. */
 #else /* Word 0 - Little Endian */
         uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Performance counter. Number of cycles REE can't issue NCB load-requests of jobs' data,
-                                                                 due lack of data-FIFO credits, which located at SJD. */
+                                                                 due lack of data-FIFO credits, located at SJD. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_reex_af_crdt_halt_ncb_req_pc_s cn; */
@@ -2687,13 +2687,15 @@ static inline uint64_t CAVM_REEX_AF_GRACEFUL_DIS_STATUS(unsigned long a)
  *
  * REE AF Instruction Latency Counter Register
  * Internal:
- * Hardware increments outstanding counter when NCB load request is sent for an LF
- * instruction.
- * Hardware decrements outstanding counter when either stdn is received for descriptor
- * write or if instruction indicated to send to SSO, then after we send SSO request.
+ * Hardware increments outstanding counter (inst_inflight_cnt) when NCB load request
+ * is sent for an LF instruction.
+ * Hardware decrements outstanding counter when hwjid is freed, or instruction is
+ * dropped due to error.
+ * Note that hwjid is freed either when stdn is received for descriptor write,
+ * or if instruction is marked for SSO - after SSO request is sent.
  *
- * This register is incremented by the outstanding counter value each cycle
- * outstaniding count!=0.
+ * This register is incremented by the outstanding counter value (inst_inflight_cnt)
+ * each cycle outstaniding count!=0.
  * Note: For error cases where we drop instructions count is decremented at the point
  * error was detected.
  */
@@ -2703,15 +2705,17 @@ union cavm_reex_af_inst_latency_pc
     struct cavm_reex_af_inst_latency_pc_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Number of cycles waiting for an instruction to complete (i.e., have the REE_RES_S
-                                                                 result committed to memory).  Incremented every coprocessor-clock by the
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Accumulated number of cycles waiting for an instruction to complete
+                                                                 (i.e., have the REE_RES_S result committed to memory).
+                                                                 Incremented every coprocessor-clock by the
                                                                  number of instructions active in that cycle. This may be divided by
-                                                                 REE_AF_RD_REQ_PC to determine the average hardware instruction latency. */
+                                                                 REE_AF_INST_REQ_PC to determine the average hardware instruction latency. */
 #else /* Word 0 - Little Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Number of cycles waiting for an instruction to complete (i.e., have the REE_RES_S
-                                                                 result committed to memory).  Incremented every coprocessor-clock by the
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Accumulated number of cycles waiting for an instruction to complete
+                                                                 (i.e., have the REE_RES_S result committed to memory).
+                                                                 Incremented every coprocessor-clock by the
                                                                  number of instructions active in that cycle. This may be divided by
-                                                                 REE_AF_RD_REQ_PC to determine the average hardware instruction latency. */
+                                                                 REE_AF_INST_REQ_PC to determine the average hardware instruction latency. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_reex_af_inst_latency_pc_s cn; */
@@ -2746,9 +2750,9 @@ union cavm_reex_af_inst_req_pc
     struct cavm_reex_af_inst_req_pc_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Number of instructions (REE_INST_S) that have started processing. */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Accumulated number of instructions (REE_INST_S) that have started processing. */
 #else /* Word 0 - Little Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Number of instructions (REE_INST_S) that have started processing. */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Accumulated number of instructions (REE_INST_S) that have started processing. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_reex_af_inst_req_pc_s cn; */
@@ -3263,13 +3267,13 @@ union cavm_reex_af_rd_latency_pc
     struct cavm_reex_af_rd_latency_pc_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Number of cycles waiting for NCB read returns. Incremented every
-                                                                 coprocessor-clock by the number of read transactions outstanding in that cycle. This
-                                                                 may be divided by REE_AF_RD_REQ_PC to determine the average read latency. */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Accumulated number of cycles, waiting for pending NCB read requests. Incremented every
+                                                                 coprocessor-clock (sclk) cycle, by the number of current outstanding reads (ncb_rd_inflight_cnt).
+                                                                 This may be divided by REE_AF_RD_REQ_PC to determine the average read latency. */
 #else /* Word 0 - Little Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Number of cycles waiting for NCB read returns. Incremented every
-                                                                 coprocessor-clock by the number of read transactions outstanding in that cycle. This
-                                                                 may be divided by REE_AF_RD_REQ_PC to determine the average read latency. */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Accumulated number of cycles, waiting for pending NCB read requests. Incremented every
+                                                                 coprocessor-clock (sclk) cycle, by the number of current outstanding reads (ncb_rd_inflight_cnt).
+                                                                 This may be divided by REE_AF_RD_REQ_PC to determine the average read latency. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_reex_af_rd_latency_pc_s cn; */
@@ -3304,9 +3308,9 @@ union cavm_reex_af_rd_req_pc
     struct cavm_reex_af_rd_req_pc_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Number of NCB read requests issued. */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Accumulated number of NCB read requests issued (all reads). */
 #else /* Word 0 - Little Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Number of NCB read requests issued. */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Accumulated number of NCB read requests issued (all reads). */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_reex_af_rd_req_pc_s cn; */
@@ -3343,9 +3347,13 @@ union cavm_reex_af_reex_active_jobs_pc
     struct cavm_reex_af_reex_active_jobs_pc_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Performance counter. Number of active jobs existing in REEX. */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Performance counter. Number of active jobs existing in REEX.
+                                                                 The counter is incremented when a full job (desc and data) has been pushed to REEX.
+                                                                 The counter is decremented when a full result (desc and matches) has been read from REEX. */
 #else /* Word 0 - Little Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Performance counter. Number of active jobs existing in REEX. */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Performance counter. Number of active jobs existing in REEX.
+                                                                 The counter is incremented when a full job (desc and data) has been pushed to REEX.
+                                                                 The counter is decremented when a full result (desc and matches) has been read from REEX. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_reex_af_reex_active_jobs_pc_s cn; */
@@ -3378,13 +3386,13 @@ union cavm_reex_af_reex_rd_latency_pc
     struct cavm_reex_af_reex_rd_latency_pc_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Number of cycles waiting for NCB REEX-read returns. Incremented every
-                                                                 coprocessor-clock by the number of REEX read transactions outstanding in that cycle. This
-                                                                 may be divided by REE_AF_REEX_RD_REQ_PC to determine the average read latency. */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Accumulated number of cycles waiting for NCB REEX-read requests. Incremented every
+                                                                 coprocessor-clock (sclk) by the current outstanding REEX reads (ncb_rxp_rd_inflight_cnt).
+                                                                 This may be divided by REE_AF_REEX_RD_REQ_PC to determine the average read latency. */
 #else /* Word 0 - Little Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Number of cycles waiting for NCB REEX-read returns. Incremented every
-                                                                 coprocessor-clock by the number of REEX read transactions outstanding in that cycle. This
-                                                                 may be divided by REE_AF_REEX_RD_REQ_PC to determine the average read latency. */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Accumulated number of cycles waiting for NCB REEX-read requests. Incremented every
+                                                                 coprocessor-clock (sclk) by the current outstanding REEX reads (ncb_rxp_rd_inflight_cnt).
+                                                                 This may be divided by REE_AF_REEX_RD_REQ_PC to determine the average read latency. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_reex_af_reex_rd_latency_pc_s cn; */
@@ -3420,9 +3428,9 @@ union cavm_reex_af_reex_rd_req_pc
     struct cavm_reex_af_reex_rd_req_pc_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Number of NCB REEX-read requests issued. */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Accumulated number of NCB REEX-read requests issued (Graph reads). */
 #else /* Word 0 - Little Endian */
-        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Number of NCB REEX-read requests issued. */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Accumulated number of NCB REEX-read requests issued (Graph reads). */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_reex_af_reex_rd_req_pc_s cn; */

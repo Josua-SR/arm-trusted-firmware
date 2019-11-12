@@ -6323,7 +6323,277 @@ union cavm_nix_send_ext_s
         uint64_t reserved_114_127      : 14;
 #endif /* Word 1 - End */
     } s;
-    /* struct cavm_nix_send_ext_s_s cn; */
+    /* struct cavm_nix_send_ext_s_s cn9; */
+    /* struct cavm_nix_send_ext_s_s cn96xxp1; */
+    struct cavm_nix_send_ext_s_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t subdc                 : 4;  /**< [ 63: 60] Subdescriptor code. Indicates send extended header. Enumerated by NIX_SUBDC_E::EXT. */
+        uint64_t mark_en               : 1;  /**< [ 59: 59] Enable for packet shaper marking. When one, NIX_COLORRESULT_E::YELLOW and
+                                                                 NIX_COLORRESULT_E::RED_SEND packets will be marked as specified by
+                                                                 [MARKFORM] and [MARKPTR].
+
+                                                                 When [LSO] and [MARK_EN] are both set in the descriptor, NIX marks each LSO
+                                                                 segment independently, using [MARKPTR] and [MARKFORM] for every LSO
+                                                                 segment. */
+        uint64_t markform              : 7;  /**< [ 58: 52] Mark Format. When [MARK_EN] is set, the NIX_AF_MARK_FORMAT()_CTL register
+                                                                 which specifies how NIX will mark NIX_COLORRESULT_E::YELLOW and
+                                                                 NIX_COLORRESULT_E::RED_SEND packets. [MARKFORM] must be less than the size
+                                                                 of the NIX_AF_MARK_FORMAT()_CTL array. See also [MARK_EN]. */
+        uint64_t markptr               : 8;  /**< [ 51: 44] Mark pointer. When [MARK_EN] is set, byte offset from packet start to byte
+                                                                 to use for packet shaper marking. [MARKFORM] indirectly determines how this
+                                                                 offset is used, including whether and how an L2 or L3 header is marked. See
+                                                                 also [MARK_EN]. */
+        uint64_t shp_ra                : 2;  /**< [ 43: 42] Red algorithm. Enumerated by NIX_REDALG_E. Specifies handling of a packet that
+                                                                 traverses a RED MDQ through TL2 shaper. (A shaper is in RED state when
+                                                                 NIX_AF_TL*()_SHAPE_STATE[COLOR]=0x2.) Has no effect when the packet traverses no
+                                                                 shapers that are in the RED state. When [SHP_RA]!=STD, [SHP_RA] overrides the
+                                                                 NIX_AF_TL*()_SHAPE[RED_ALGO] settings in all MDQ through TL2 shapers traversed
+                                                                 by the packet. [SHP_RA] has no effect on the TL1 rate limiters. See
+                                                                 NIX_AF_TL*()_MD_DEBUG*[RED_ALGO_OVERRIDE].
+
+                                                                 When [LSO] is set in the descriptor, hardware applies [SHP_RA] to each LSO
+                                                                 segment. */
+        uint64_t shp_dis               : 1;  /**< [ 41: 41] Disables the shaper update and internal coloring algorithms used as
+                                                                 the packet traverses MDQ through TL2 shapers. [SHP_DIS]
+                                                                 has no effect on the L1 rate limiters.
+
+                                                                 When [SHP_DIS] is 0 enabled CIR and PIR counters are used and adjusted
+                                                                 per mode as the packet traverses through an enabled shaper. The
+                                                                 internal color of a packet can be any of NIX_COLORRESULT_E::GREEN,
+                                                                 NIX_COLORRESULT_E::YELLOW, NIX_COLORRESULT_E::RED_SEND, or
+                                                                 NIX_COLORRESULT_E::RED_DROP after a shaper, depending on the shaper state
+                                                                 and configuration.
+
+                                                                 When [SHP_DIS] is 1 no shaper can change the packet coloring from its
+                                                                 initial GREEN color and no CIR or PIR accumulators are adjusted in any
+                                                                 shaper as this packet traverses.
+
+                                                                 See NIX_AF_TL*()_MD_DEBUG*[PIR_DIS,CIR_DIS]. When [SHP_DIS] is set,
+                                                                 NIX_AF_TL*()_MD_DEBUG*[PIR_DIS,CIR_DIS] are both set. When [SHP_DIS] is
+                                                                 clear, NIX_AF_TL*()_MD_DEBUG*[PIR_DIS,CIR_DIS] are both cleared and
+                                                                 NIX_AF_TL*()_SHAPE[YELLOW_DISABLE,RED_DISABLE] determines the packet
+                                                                 coloring of the shaper.
+
+                                                                 When [LSO] is set, hardware applies [SHP_DIS] to each LSO segment. */
+        uint64_t shp_chg               : 9;  /**< [ 40: 32] Two's complement signed packet size adjustment. The packet size used for
+                                                                 shaper {a} (PIR_ACCUM and CIR_ACCUM) and DWRR scheduler {a} (RR_COUNT)
+                                                                 calculations at level {b} is:
+
+                                                                 _  (NIX_AF_{b}{a}_SHAPE[LENGTH_DISABLE] ? 0 : (NIX_AF_{b}{a}_MD*[LENGTH] + [SHP_CHG]))
+                                                                        + NIX_AF_{b}{a}_SHAPE[ADJUST]
+
+                                                                 where {b} = TL1, TL2, TL3, TL4, or MDQ and {a} selects one of the shapers
+                                                                 at the level selected by {b}.
+
+                                                                 [SHP_CHG] values -255 .. 255 are allowed. [SHP_CHG] value 0x100 (i.e. -256)
+                                                                 is reserved and must never be used.
+
+                                                                 [SHP_CHG] becomes NIX_AF_{b}m_MD*[ADJUST].
+
+                                                                 When [LSO] is set, hardware applies [SHP_CHG] to each LSO segment. */
+        uint64_t reserved_29_31        : 3;
+        uint64_t lso_format            : 5;  /**< [ 28: 24] Large send offload format. Valid when [LSO] is set and selects index {a}
+                                                                 (FORMAT) of NIX_AF_LSO_FORMAT()_FIELD(). */
+        uint64_t lso_sb                : 8;  /**< [ 23: 16] Start bytes when [LSO] set. Location of the start byte of the TCP message
+                                                                 payload, i.e. the size of the headers preceding the payload, excluding
+                                                                 optional VLAN bytes inserted by [VLAN*] and Vtag bytes
+                                                                 inserted by NIX_TX_VTAG_ACTION_S.
+
+                                                                 Must be nonzero and less than NIX_SEND_HDR_S[TOTAL], else the send
+                                                                 descriptor produces a single LSO packet. */
+        uint64_t tstmp                 : 1;  /**< [ 15: 15] PTP timestamp. Ignored unless a NIX_SEND_MEM_S is present in the send
+                                                                 descriptor with NIX_SEND_MEM_S[ALG] = NIX_SENDMEMALG_E::SETTSTMP. When set,
+                                                                 hardware writes the packet's timestamp (MIO_PTP_CLOCK_HI) to LF IOVA
+                                                                 NIX_SEND_MEM_S[ADDR] when the targeted CGX LMAC transmits the packet. See
+                                                                 also NIX_SENDMEMALG_E::SETTSTMP.
+
+                                                                 If NIX_SQ_CTX_S[CQ_ENA] and software wishes to receive a CQE on timestamp
+                                                                 completion, it must set NIX_SEND_HDR_S[PNC] = 1 and NIX_SEND_MEM_S[WMEM] =
+                                                                 1.
+
+                                                                 If NIX_SQ_CTX_S[SSO_ENA] and software wishes to add work to SSO on
+                                                                 timestamp completion, it must set NIX_SEND_MEM_S[WMEM] = 1 and include
+                                                                 NIX_SEND_WORK_S in the descriptor. */
+        uint64_t lso                   : 1;  /**< [ 14: 14] Large send offload. Ignored and treated as clear when
+                                                                 NIX_AF_LSO_CFG[ENABLE] is clear. When set along with
+                                                                 NIX_AF_LSO_CFG[ENABLE], the send descriptor is for one or more
+                                                                 packets of a TCP flow, and the related [LSO_*] fields are valid. */
+        uint64_t lso_mps               : 14; /**< [ 13:  0] When [LSO] set, maximum payload size in bytes per packet (e.g. maximum
+                                                                 TCP segment size). Must be not be less than 16.
+
+                                                                 The maximum LSO packet size is [LSO_SB] + [LSO_MPS], plus optional VLAN
+                                                                 bytes inserted by [VLAN*] and Vtag bytes inserted by
+                                                                 NIX_TX_VTAG_ACTION_S. This must not exceed NIX_AF_SMQ()_CFG[MAXLEN].
+
+                                                                 The number of LSO segments is (NIX_SEND_HDR_S[TOTAL]-[LSO_SB])/[LSO_MPS]
+                                                                 rounded up to the nearest integer, and should be less than or equal to 256.
+                                                                 Otherwise, NIX will terminate the LSO send operation after 256 segments. */
+#else /* Word 0 - Little Endian */
+        uint64_t lso_mps               : 14; /**< [ 13:  0] When [LSO] set, maximum payload size in bytes per packet (e.g. maximum
+                                                                 TCP segment size). Must be not be less than 16.
+
+                                                                 The maximum LSO packet size is [LSO_SB] + [LSO_MPS], plus optional VLAN
+                                                                 bytes inserted by [VLAN*] and Vtag bytes inserted by
+                                                                 NIX_TX_VTAG_ACTION_S. This must not exceed NIX_AF_SMQ()_CFG[MAXLEN].
+
+                                                                 The number of LSO segments is (NIX_SEND_HDR_S[TOTAL]-[LSO_SB])/[LSO_MPS]
+                                                                 rounded up to the nearest integer, and should be less than or equal to 256.
+                                                                 Otherwise, NIX will terminate the LSO send operation after 256 segments. */
+        uint64_t lso                   : 1;  /**< [ 14: 14] Large send offload. Ignored and treated as clear when
+                                                                 NIX_AF_LSO_CFG[ENABLE] is clear. When set along with
+                                                                 NIX_AF_LSO_CFG[ENABLE], the send descriptor is for one or more
+                                                                 packets of a TCP flow, and the related [LSO_*] fields are valid. */
+        uint64_t tstmp                 : 1;  /**< [ 15: 15] PTP timestamp. Ignored unless a NIX_SEND_MEM_S is present in the send
+                                                                 descriptor with NIX_SEND_MEM_S[ALG] = NIX_SENDMEMALG_E::SETTSTMP. When set,
+                                                                 hardware writes the packet's timestamp (MIO_PTP_CLOCK_HI) to LF IOVA
+                                                                 NIX_SEND_MEM_S[ADDR] when the targeted CGX LMAC transmits the packet. See
+                                                                 also NIX_SENDMEMALG_E::SETTSTMP.
+
+                                                                 If NIX_SQ_CTX_S[CQ_ENA] and software wishes to receive a CQE on timestamp
+                                                                 completion, it must set NIX_SEND_HDR_S[PNC] = 1 and NIX_SEND_MEM_S[WMEM] =
+                                                                 1.
+
+                                                                 If NIX_SQ_CTX_S[SSO_ENA] and software wishes to add work to SSO on
+                                                                 timestamp completion, it must set NIX_SEND_MEM_S[WMEM] = 1 and include
+                                                                 NIX_SEND_WORK_S in the descriptor. */
+        uint64_t lso_sb                : 8;  /**< [ 23: 16] Start bytes when [LSO] set. Location of the start byte of the TCP message
+                                                                 payload, i.e. the size of the headers preceding the payload, excluding
+                                                                 optional VLAN bytes inserted by [VLAN*] and Vtag bytes
+                                                                 inserted by NIX_TX_VTAG_ACTION_S.
+
+                                                                 Must be nonzero and less than NIX_SEND_HDR_S[TOTAL], else the send
+                                                                 descriptor produces a single LSO packet. */
+        uint64_t lso_format            : 5;  /**< [ 28: 24] Large send offload format. Valid when [LSO] is set and selects index {a}
+                                                                 (FORMAT) of NIX_AF_LSO_FORMAT()_FIELD(). */
+        uint64_t reserved_29_31        : 3;
+        uint64_t shp_chg               : 9;  /**< [ 40: 32] Two's complement signed packet size adjustment. The packet size used for
+                                                                 shaper {a} (PIR_ACCUM and CIR_ACCUM) and DWRR scheduler {a} (RR_COUNT)
+                                                                 calculations at level {b} is:
+
+                                                                 _  (NIX_AF_{b}{a}_SHAPE[LENGTH_DISABLE] ? 0 : (NIX_AF_{b}{a}_MD*[LENGTH] + [SHP_CHG]))
+                                                                        + NIX_AF_{b}{a}_SHAPE[ADJUST]
+
+                                                                 where {b} = TL1, TL2, TL3, TL4, or MDQ and {a} selects one of the shapers
+                                                                 at the level selected by {b}.
+
+                                                                 [SHP_CHG] values -255 .. 255 are allowed. [SHP_CHG] value 0x100 (i.e. -256)
+                                                                 is reserved and must never be used.
+
+                                                                 [SHP_CHG] becomes NIX_AF_{b}m_MD*[ADJUST].
+
+                                                                 When [LSO] is set, hardware applies [SHP_CHG] to each LSO segment. */
+        uint64_t shp_dis               : 1;  /**< [ 41: 41] Disables the shaper update and internal coloring algorithms used as
+                                                                 the packet traverses MDQ through TL2 shapers. [SHP_DIS]
+                                                                 has no effect on the L1 rate limiters.
+
+                                                                 When [SHP_DIS] is 0 enabled CIR and PIR counters are used and adjusted
+                                                                 per mode as the packet traverses through an enabled shaper. The
+                                                                 internal color of a packet can be any of NIX_COLORRESULT_E::GREEN,
+                                                                 NIX_COLORRESULT_E::YELLOW, NIX_COLORRESULT_E::RED_SEND, or
+                                                                 NIX_COLORRESULT_E::RED_DROP after a shaper, depending on the shaper state
+                                                                 and configuration.
+
+                                                                 When [SHP_DIS] is 1 no shaper can change the packet coloring from its
+                                                                 initial GREEN color and no CIR or PIR accumulators are adjusted in any
+                                                                 shaper as this packet traverses.
+
+                                                                 See NIX_AF_TL*()_MD_DEBUG*[PIR_DIS,CIR_DIS]. When [SHP_DIS] is set,
+                                                                 NIX_AF_TL*()_MD_DEBUG*[PIR_DIS,CIR_DIS] are both set. When [SHP_DIS] is
+                                                                 clear, NIX_AF_TL*()_MD_DEBUG*[PIR_DIS,CIR_DIS] are both cleared and
+                                                                 NIX_AF_TL*()_SHAPE[YELLOW_DISABLE,RED_DISABLE] determines the packet
+                                                                 coloring of the shaper.
+
+                                                                 When [LSO] is set, hardware applies [SHP_DIS] to each LSO segment. */
+        uint64_t shp_ra                : 2;  /**< [ 43: 42] Red algorithm. Enumerated by NIX_REDALG_E. Specifies handling of a packet that
+                                                                 traverses a RED MDQ through TL2 shaper. (A shaper is in RED state when
+                                                                 NIX_AF_TL*()_SHAPE_STATE[COLOR]=0x2.) Has no effect when the packet traverses no
+                                                                 shapers that are in the RED state. When [SHP_RA]!=STD, [SHP_RA] overrides the
+                                                                 NIX_AF_TL*()_SHAPE[RED_ALGO] settings in all MDQ through TL2 shapers traversed
+                                                                 by the packet. [SHP_RA] has no effect on the TL1 rate limiters. See
+                                                                 NIX_AF_TL*()_MD_DEBUG*[RED_ALGO_OVERRIDE].
+
+                                                                 When [LSO] is set in the descriptor, hardware applies [SHP_RA] to each LSO
+                                                                 segment. */
+        uint64_t markptr               : 8;  /**< [ 51: 44] Mark pointer. When [MARK_EN] is set, byte offset from packet start to byte
+                                                                 to use for packet shaper marking. [MARKFORM] indirectly determines how this
+                                                                 offset is used, including whether and how an L2 or L3 header is marked. See
+                                                                 also [MARK_EN]. */
+        uint64_t markform              : 7;  /**< [ 58: 52] Mark Format. When [MARK_EN] is set, the NIX_AF_MARK_FORMAT()_CTL register
+                                                                 which specifies how NIX will mark NIX_COLORRESULT_E::YELLOW and
+                                                                 NIX_COLORRESULT_E::RED_SEND packets. [MARKFORM] must be less than the size
+                                                                 of the NIX_AF_MARK_FORMAT()_CTL array. See also [MARK_EN]. */
+        uint64_t mark_en               : 1;  /**< [ 59: 59] Enable for packet shaper marking. When one, NIX_COLORRESULT_E::YELLOW and
+                                                                 NIX_COLORRESULT_E::RED_SEND packets will be marked as specified by
+                                                                 [MARKFORM] and [MARKPTR].
+
+                                                                 When [LSO] and [MARK_EN] are both set in the descriptor, NIX marks each LSO
+                                                                 segment independently, using [MARKPTR] and [MARKFORM] for every LSO
+                                                                 segment. */
+        uint64_t subdc                 : 4;  /**< [ 63: 60] Subdescriptor code. Indicates send extended header. Enumerated by NIX_SUBDC_E::EXT. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t reserved_114_127      : 14;
+        uint64_t vlan1_ins_ena         : 1;  /**< [113:113] VLAN 1 insert enable. See [VLAN0_INS_ENA]. */
+        uint64_t vlan0_ins_ena         : 1;  /**< [112:112] VLAN 0 insert enable. If set, NIX inserts a VLAN tag at byte offset
+                                                                 [VLAN0_INS_PTR] from the start of packet. The inserted VLAN tag consists of:
+                                                                 * 16-bit Ethertype given by NIX_AF_LF()_TX_CFG[VLAN0_INS_ETYPE], followed by
+                                                                 * 16-bit tag control information given by [VLAN0_INS_TCI].
+
+                                                                 Up to two VLAN tags may be inserted in a packet due to [VLAN0_INS_ENA] and
+                                                                 [VLAN1_INS_ENA]. If two VLAN tags are inserted:
+                                                                 * [VLAN0_INS_PTR] must be less than or equal to [VLAN1_INS_PTR].
+                                                                 * Hardware inserts VLAN 0 first and adjusts [VLAN1_INS_PTR] accordingly.
+                                                                 Thus, if the two pointers are equal in the descriptor, hardware inserts
+                                                                 VLAN 1 immediately after VLAN 0 in the packet.
+
+                                                                 A VLAN must not be inserted within an outer or inner L3/L4 header, but may be
+                                                                 inserted within an outer L4 payload.
+
+                                                                 The packet header is parsed by NPC after VLAN insertion. Note that the
+                                                                 resulting NIX_TX_VTAG_ACTION_S[VTAG0_OP,VTAG1_OP] may replace or insert
+                                                                 additional header bytes. Thus, Vtag may replace bytes that were inserted by
+                                                                 [VLAN0_INS_*,VLAN1_INS_*]. */
+        uint64_t vlan1_ins_tci         : 16; /**< [111: 96] VLAN 1 insert tag control information. See [VLAN1_INS_ENA]. */
+        uint64_t vlan1_ins_ptr         : 8;  /**< [ 95: 88] VLAN 1 insert pointer. Byte offset from packet start to first inserted VLAN byte when
+                                                                 [VLAN1_INS_ENA] is set. Must be even. */
+        uint64_t vlan0_ins_tci         : 16; /**< [ 87: 72] VLAN 0 insert tag control information. See [VLAN0_INS_ENA]. */
+        uint64_t vlan0_ins_ptr         : 8;  /**< [ 71: 64] VLAN 0 insert pointer. Byte offset from packet start to first inserted VLAN byte when
+                                                                 [VLAN0_INS_ENA] is set. Must be even. */
+#else /* Word 1 - Little Endian */
+        uint64_t vlan0_ins_ptr         : 8;  /**< [ 71: 64] VLAN 0 insert pointer. Byte offset from packet start to first inserted VLAN byte when
+                                                                 [VLAN0_INS_ENA] is set. Must be even. */
+        uint64_t vlan0_ins_tci         : 16; /**< [ 87: 72] VLAN 0 insert tag control information. See [VLAN0_INS_ENA]. */
+        uint64_t vlan1_ins_ptr         : 8;  /**< [ 95: 88] VLAN 1 insert pointer. Byte offset from packet start to first inserted VLAN byte when
+                                                                 [VLAN1_INS_ENA] is set. Must be even. */
+        uint64_t vlan1_ins_tci         : 16; /**< [111: 96] VLAN 1 insert tag control information. See [VLAN1_INS_ENA]. */
+        uint64_t vlan0_ins_ena         : 1;  /**< [112:112] VLAN 0 insert enable. If set, NIX inserts a VLAN tag at byte offset
+                                                                 [VLAN0_INS_PTR] from the start of packet. The inserted VLAN tag consists of:
+                                                                 * 16-bit Ethertype given by NIX_AF_LF()_TX_CFG[VLAN0_INS_ETYPE], followed by
+                                                                 * 16-bit tag control information given by [VLAN0_INS_TCI].
+
+                                                                 Up to two VLAN tags may be inserted in a packet due to [VLAN0_INS_ENA] and
+                                                                 [VLAN1_INS_ENA]. If two VLAN tags are inserted:
+                                                                 * [VLAN0_INS_PTR] must be less than or equal to [VLAN1_INS_PTR].
+                                                                 * Hardware inserts VLAN 0 first and adjusts [VLAN1_INS_PTR] accordingly.
+                                                                 Thus, if the two pointers are equal in the descriptor, hardware inserts
+                                                                 VLAN 1 immediately after VLAN 0 in the packet.
+
+                                                                 A VLAN must not be inserted within an outer or inner L3/L4 header, but may be
+                                                                 inserted within an outer L4 payload.
+
+                                                                 The packet header is parsed by NPC after VLAN insertion. Note that the
+                                                                 resulting NIX_TX_VTAG_ACTION_S[VTAG0_OP,VTAG1_OP] may replace or insert
+                                                                 additional header bytes. Thus, Vtag may replace bytes that were inserted by
+                                                                 [VLAN0_INS_*,VLAN1_INS_*]. */
+        uint64_t vlan1_ins_ena         : 1;  /**< [113:113] VLAN 1 insert enable. See [VLAN0_INS_ENA]. */
+        uint64_t reserved_114_127      : 14;
+#endif /* Word 1 - End */
+    } cn96xxp3;
+    /* struct cavm_nix_send_ext_s_cn96xxp3 cn98xx; */
+    /* struct cavm_nix_send_ext_s_s cnf95xxp1; */
+    /* struct cavm_nix_send_ext_s_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_nix_send_ext_s_cn96xxp3 loki; */
 };
 
 /**
