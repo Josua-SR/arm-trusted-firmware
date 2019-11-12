@@ -241,7 +241,8 @@ struct cgx_lnk_sts_s {
 	uint64_t an:1;		/* Current AN state : enabled/disabled */
 	uint64_t fec:2;		/* Current FEC type if enabled, if not 0 */
 	uint64_t port:8;	/* Share the current port info if required */
-	uint64_t reserved2:28;
+	uint64_t mode:8;	/* cgx_mode_t enum integer value */
+	uint64_t reserved2:20;
 };
 
 struct sh_fwd_base_s {

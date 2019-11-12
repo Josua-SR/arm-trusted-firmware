@@ -164,6 +164,34 @@ static int cgx_sfp_obtain_capabilities(int cgx_id, int lmac_id)
 	return 0;
 }
 
+static int cgx_get_mode_for_qlm_mode(int qlm_mode)
+{
+	int mode = -1;
+	uint64_t bitmask = 0;
+
+	for (int i = 0; i < ARRAY_SIZE(speed_mode_map); i++) {
+		if (qlm_mode == speed_mode_map[i].qlm_mode) {
+			bitmask = speed_mode_map[i].mode_bitmask;
+			break;
+		}
+	}
+	debug_cgx_intf("%s: mode 0x%llx qlm_mode %d\n", __func__,
+		       bitmask, qlm_mode);
+	if (bitmask)
+		mode = __builtin_ffsl(bitmask) - 1; /* enum starts at 0 */
+	return mode;
+}
+
+static void cgx_set_link_mode(int cgx_id, int lmac_id, int qlm_mode)
+{
+	union cgx_scratchx0 scratchx0;
+
+	scratchx0.u = CSR_READ(CAVM_CGXX_CMRX_SCRATCHX(cgx_id, lmac_id, 0));
+	scratchx0.s.link_sts.mode = cgx_get_mode_for_qlm_mode(qlm_mode);
+	CSR_WRITE(CAVM_CGXX_CMRX_SCRATCHX(cgx_id, lmac_id, 0), scratchx0.u);
+
+}
+
 static void cgx_set_link_state(int cgx_id, int lmac_id,
 					link_state_t *link, int err_type)
 {
@@ -1401,6 +1429,8 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 				link.s.fec = lmac->fec;
 				cgx_set_link_state(cgx_id, lmac_id, &link,
 					lmac_ctx->s.error_type);
+				cgx_set_link_mode(cgx_id, lmac_id,
+						  lmac->mode_idx);
 				break;
 			case CGX_CMD_GET_MAC_ADDR:
 				scratchx0.u = 0;
