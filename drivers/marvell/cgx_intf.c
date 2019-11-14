@@ -1972,6 +1972,7 @@ void cgx_set_supported_link_modes(int cgx_id, int lmac_id)
 			lmac_cfg->supported_link_modes &=
 				((1 << CGX_MODE_25G_2_C2C_BIT) |
 			(1 << CGX_MODE_50G_4_C2C_BIT) |
+			(1 << CGX_MODE_50G_C2C_BIT) |
 			(1 << CGX_MODE_10G_C2C_BIT) |
 			(1 << CGX_MODE_10G_C2M_BIT) |
 			(1 << CGX_MODE_10G_KR_BIT));

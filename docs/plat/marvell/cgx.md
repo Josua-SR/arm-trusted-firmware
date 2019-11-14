@@ -1212,7 +1212,11 @@ Turning off PAM4 means setting modulation type to NRZ.
 |    31             |    CGX_MODE_SGMII        |    ETHTOOL_LINK_MODE_1000BaseT_Half_BIT	    |    0x10			 |
 |    32             |    CGX_MODE_SGMII        |    ETHTOOL_LINK_MODE_1000BaseT_Full_BIT	    |    0x20			 |
 
-Mode/Speed change is restricted based on the physical port capability. Each port depending on whether it has PHY or no PHY, can support different MODES listed above. In addition, MODE change cannot be supported for MODES that require changes in number of lanes it uses. For Ex: run time, MODE change from XLAUI (which uses 4 lanes) cannot be changed to XFI(which uses 1 lane).
+Mode/Speed change is restricted based on the physical port capability. Each
+port depending on whether it has PHY or no PHY, can support different MODES
+listed above. In addition, MODE change from four-lane Ethernet (like 50G_4_C2C)
+to fewer-than-four-lane Ethernet (like 10G_*, 25G_*) and vice versa require that
+only LMAC0 is enabled for a given CGX; all other LMACs must remain disabled.
 
 Some of the valid use cases are listed here:
 * MODE change between 1G_X(1000 BASE-X)/10G_*/20G_*
