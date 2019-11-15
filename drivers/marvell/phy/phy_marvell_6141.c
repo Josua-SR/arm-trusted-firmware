@@ -26,6 +26,7 @@
 #include "mydInitialization.h"
 #include "mydFwImages.h"
 #include "mydHwSerdesCntl.h"
+#include "mydFEC.h"
 
 MYD_DEV marvell_6141_priv[MAX_CGX];
 
@@ -423,6 +424,49 @@ void phy_marvell_6141_supported_modes(int cgx_id, int lmac_id)
 			(1 << CGX_MODE_50G_4_C2C_BIT));
 }
 
+static int phy_marvell_6141_get_fec_stats(int cgx_id, int lmac_id)
+{
+	cgx_lmac_config_t *lmac_cfg;
+	phy_config_t *phy;
+	MYD_U16 lane;
+	MYD_STATUS status;
+	MYD_U32 cntr;
+	int i;
+	phy_fec_stats_t *s;
+
+	debug_phy_driver("%s: %d:%d\n", __func__, cgx_id, lmac_id);
+
+	lmac_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	lane = lmac_cfg->lane_to_sds & 3;
+	phy = &lmac_cfg->phy_config;
+	s = &phy->fec_stats;
+
+	struct {
+		MYD_STATUS (*func)(MYD_DEV_PTR, MYD_U16, MYD_U16, MYD_U16,
+				   MYD_U32 *);
+		unsigned    *cntr;
+	} table[] = {
+		{mydGetRsFecCorrectedCwCntr,	&s->rsfec_corr_cws},
+		{mydGetRsFecUnCorrectedCwCntr,	&s->rsfec_uncorr_cws},
+		{mydGetKrFecCorrectedBlkCntr,	&s->brfec_corr_blks},
+		{mydGetKrFecUnCorrectedBlkCntr,	&s->brfec_uncorr_blks},
+	};
+
+	for (i = 0; i < ARRAY_SIZE(table); i++) {
+		status = table[i].func(phy->priv, phy->addr, MYD_LINE_SIDE,
+				       lane, &cntr);
+		if (status == MYD_OK) {
+			*table[i].cntr = cntr;
+		} else {
+			ERROR("%s: %d:%d table entry %d function returned error\n",
+			      __func__, cgx_id, lmac_id, i);
+			return -1;
+		}
+	}
+
+	return 0;
+}
+
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
 static MYD_PRBS_SELECTOR_TYPE phy_marvell_6141_get_prbs_selector(int prbs)
 {
@@ -647,12 +691,14 @@ static uint64_t phy_marvell_6141_get_prbs_errors(int cgx_id, int lmac_id,
 phy_drv_t marvell_6141_drv = {
 		.drv_name		= "MARVELL-88X6141",
 		.drv_type		= PHY_MARVELL_6141,
-		.flags			= PHY_FLAG_SUPPORTS_CHANGING_MOD_TYPE,
+		.flags			= PHY_FLAG_SUPPORTS_CHANGING_MOD_TYPE |
+					  PHY_FLAG_HAS_FEC_STATS,
 		.probe			= phy_marvell_6141_probe,
 		.config			= phy_marvell_6141_config,
 		.reset			= phy_generic_reset,
 		.get_link_status	= phy_marvell_6141_get_link_status,
 		.set_supported_modes	= phy_marvell_6141_supported_modes,
+		.get_fec_stats		= phy_marvell_6141_get_fec_stats,
 		.shutdown		= phy_generic_shutdown,
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
 		.enable_prbs		= phy_marvell_6141_enable_prbs,

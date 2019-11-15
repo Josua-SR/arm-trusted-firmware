@@ -1503,6 +1503,12 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 						cgx_id, lmac_id, 0),
 						scratchx0.u);
 			break;
+			case CGX_CMD_GET_PHY_FEC_STATS:
+				ret = phy_get_fec_stats(cgx_id, lmac_id);
+				if (!ret)
+					sh_fwdata_update_phy_fec_stats(cgx_id,
+								       lmac_id);
+			break;
 #if defined(PLAT_t96)
 			case CGX_CMD_MODE_CHANGE:
 				/* Read the command arguments from SCRATCH(1) */

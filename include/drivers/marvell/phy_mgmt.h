@@ -49,6 +49,7 @@
 
 /* PHY flags */
 #define PHY_FLAG_SUPPORTS_CHANGING_MOD_TYPE 1
+#define PHY_FLAG_HAS_FEC_STATS              2
 
 /* PHY modulation types */
 typedef enum phy_mod_type {
@@ -121,6 +122,7 @@ typedef struct phy_drv {
 	void (*shutdown)(int cgx_id, int lmac_id); /* Function pointer to shutdown PHY */
 	/* Function pointer to obtain supported modes */
 	void (*set_supported_modes)(int cgx_id, int lmac_id);
+	int  (*get_fec_stats)(int cgx_id, int lmac_id);
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
 	/* Function pointer to enable prbs */
 	int (*enable_prbs)(
@@ -132,6 +134,13 @@ typedef struct phy_drv {
 		int cgx_id, int lmac_id, int host_side, int clear, int prbs);
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 } phy_drv_t;
+
+typedef struct phy_fec_stats {
+	unsigned int rsfec_corr_cws;    /* RS-FEC corrected code words */
+	unsigned int rsfec_uncorr_cws;  /* RS-FEC uncorrected code words */
+	unsigned int brfec_corr_blks;   /* BASE-R FEC corrected blocks */
+	unsigned int brfec_uncorr_blks; /* BASE-R FEC uncorrected blocks */
+} phy_fec_stats_t;
 
 typedef struct phy_config {
 	int type;
@@ -151,6 +160,7 @@ typedef struct phy_config {
 	int forceconfig;
 	int host_order;
 	int line_order;
+	phy_fec_stats_t fec_stats;
 #ifdef MARVELL_PHY_1548
 	phy_88e1548_media_mode_t marvell_88e1548_mode;
 	phy_88e1548_media_preference_t marvell_88e1548_media_pref;
@@ -170,6 +180,7 @@ void phy_set_switch(phy_config_t *phy, int enable);
 int phy_set_mod_type(int cgx_id, int lmac_id, phy_mod_type mod_type);
 void phy_set_supported_link_modes(int cgx_id, int lmac_id);
 void phy_reset(int cgx_id, int lmac_id);
+int phy_get_fec_stats(int cgx_id, int lmac_id);
 
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
 int phy_enable_prbs(int cgx_id, int lmac_id, int host_side, int prbs, int dir);

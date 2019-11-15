@@ -117,7 +117,7 @@ void sh_fwdata_update_supported_fec(int cgx_id, int lmac_id)
 	else
 		val = cgx_get_supported_fec_type(cgx_id, lmac_id);
 
-	if (fwdata->phy.mod_type == PHY_MOD_TYPE_PAM4)
+	if (fwdata->phy.misc.mod_type == PHY_MOD_TYPE_PAM4)
 		val = CGX_FEC_RS; /* PAM4 requires RS-FEC */
 
 	fwdata->supported_fec = val;
@@ -197,7 +197,7 @@ void sh_fwdata_update_phy_mod_type(int cgx_id, int lmac_id)
 	 */
 	WMB;
 
-	fwdata->phy.mod_type = phy->mod_type;
+	fwdata->phy.misc.mod_type = phy->mod_type;
 	/* Make sure that the write to phy_mod_type is done before indicating
 	 * to Linux that fwdata is valid.
 	 */
@@ -223,10 +223,67 @@ void sh_fwdata_update_phy_can_change_mod_type(int cgx_id, int lmac_id)
 	WMB;
 
 	if (phy->drv->flags & PHY_FLAG_SUPPORTS_CHANGING_MOD_TYPE)
-		fwdata->phy.can_change_mod_type = 1;
+		fwdata->phy.misc.can_change_mod_type = 1;
 	else
-		fwdata->phy.can_change_mod_type = 0;
+		fwdata->phy.misc.can_change_mod_type = 0;
 	/* Make sure that the write to phy.can_change_mod_type is done before
+	 * indicating to Linux that fwdata is valid.
+	 */
+	WMB;
+
+	fwdata->rw_valid = 1;
+}
+
+void sh_fwdata_update_phy_has_fec_stats(int cgx_id, int lmac_id)
+{
+	struct cgx_lmac_fwdata_s *fwdata;
+	phy_config_t *phy;
+	cgx_lmac_config_t *lmac_cfg;
+
+	lmac_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	phy = &lmac_cfg->phy_config;
+	fwdata = get_sh_cgx_fwdata_ptr(cgx_id, lmac_id);
+
+	fwdata->rw_valid = 0;
+	/* Make sure Linux kernel sees rw_valid is cleared before changing
+	 * other fields of fwdata.
+	 */
+	WMB;
+
+	if (phy->drv->flags & PHY_FLAG_HAS_FEC_STATS)
+		fwdata->phy.misc.has_fec_stats = 1;
+	else
+		fwdata->phy.misc.has_fec_stats = 0;
+	/* Make sure that the write to fwdata->phy.has_fec_stats is done before
+	 * indicating to Linux that fwdata is valid.
+	 */
+	WMB;
+
+	fwdata->rw_valid = 1;
+}
+
+void sh_fwdata_update_phy_fec_stats(int cgx_id, int lmac_id)
+{
+	struct cgx_lmac_fwdata_s *fwdata;
+	phy_config_t *phy;
+	cgx_lmac_config_t *lmac_cfg;
+
+	lmac_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	phy = &lmac_cfg->phy_config;
+	fwdata = get_sh_cgx_fwdata_ptr(cgx_id, lmac_id);
+
+	fwdata->rw_valid = 0;
+	/* Make sure Linux kernel sees rw_valid is cleared before changing
+	 * other fields of fwdata.
+	 */
+	WMB;
+
+	fwdata->phy.fec_stats.rsfec_corr_cws    = phy->fec_stats.rsfec_corr_cws;
+	fwdata->phy.fec_stats.rsfec_uncorr_cws  = phy->fec_stats.rsfec_uncorr_cws;
+	fwdata->phy.fec_stats.brfec_corr_blks   = phy->fec_stats.brfec_corr_blks;
+	fwdata->phy.fec_stats.brfec_uncorr_blks = phy->fec_stats.brfec_uncorr_blks;
+
+	/* Make sure that the writes to fwdate->phy.fec_stats are done before
 	 * indicating to Linux that fwdata is valid.
 	 */
 	WMB;

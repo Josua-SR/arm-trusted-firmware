@@ -86,6 +86,7 @@ void phy_probe(int cgx_id, int lmac_id)
 
 	sh_fwdata_update_phy_mod_type(cgx_id, lmac_id);
 	sh_fwdata_update_phy_can_change_mod_type(cgx_id, lmac_id);
+	sh_fwdata_update_phy_has_fec_stats(cgx_id, lmac_id);
 }
 
 void phy_config(int cgx_id, int lmac_id)
@@ -328,4 +329,35 @@ int phy_mdio_read(phy_config_t *phy, int mode, int devad, int reg)
 void phy_mdio_write(phy_config_t *phy, int mode, int devad, int reg, int val)
 {
 	smi_write(phy->mdio_bus, phy->addr, devad, mode, reg, val);
+}
+
+int phy_get_fec_stats(int cgx_id, int lmac_id)
+{
+	cgx_lmac_config_t *lmac = NULL;
+	phy_config_t *phy = NULL;
+	int ret;
+
+	debug_nw_mgmt("%s: %d:%d\n", __func__, cgx_id, lmac_id);
+
+	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	phy = &lmac->phy_config;
+
+	if (!lmac->phy_present)
+		return -1;
+
+	if (!(phy->drv->flags & PHY_FLAG_HAS_FEC_STATS))
+		return -1;
+
+	if (phy->mux_switch)
+		smi_set_switch(phy, 1); /* Enable the switch */
+
+	if (phy->valid && phy->drv->get_fec_stats)
+		ret = phy->drv->get_fec_stats(cgx_id, lmac_id);
+	else
+		ret = -1;
+
+	if (phy->mux_switch)
+		smi_set_switch(phy, 0); /* Disable the switch */
+
+	return ret;
 }

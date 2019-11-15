@@ -19,8 +19,17 @@ struct sfp_eeprom_s {
 };
 
 struct phy_s {
-	uint64_t can_change_mod_type : 1;
-	uint64_t mod_type            : 1;
+	struct {
+		uint64_t can_change_mod_type : 1;
+		uint64_t mod_type            : 1;
+		uint64_t has_fec_stats       : 1;
+	} misc;
+	struct {
+		uint32_t rsfec_corr_cws;
+		uint32_t rsfec_uncorr_cws;
+		uint32_t brfec_corr_blks;
+		uint32_t brfec_uncorr_blks;
+	} fec_stats;
 };
 
 struct cgx_lmac_fwdata_s {
@@ -39,7 +48,7 @@ struct cgx_lmac_fwdata_s {
 	/* Only applicable if SFP/QSFP slot is present */
 	struct sfp_eeprom_s sfp_eeprom;
 	struct phy_s phy;
-#define LMAC_FWDATA_RESERVED_MEM 1023
+#define LMAC_FWDATA_RESERVED_MEM 1021
 	uint64_t reserved[LMAC_FWDATA_RESERVED_MEM];
 
 };
@@ -82,6 +91,8 @@ void sh_fwdata_update_eeprom_data(int cgx_id, int lmac_id, uint16_t sff_id);
 void sh_fwdata_clear_eeprom_data(int cgx_id, int lmac_id, uint16_t sff_id);
 void sh_fwdata_update_phy_mod_type(int cgx_id, int lmac_id);
 void sh_fwdata_update_phy_can_change_mod_type(int cgx_id, int lmac_id);
+void sh_fwdata_update_phy_has_fec_stats(int cgx_id, int lmac_id);
+void sh_fwdata_update_phy_fec_stats(int cgx_id, int lmac_id);
 void sh_fwdata_set_supported_link_modes(int cgx_id, int lmac_id);
 
 #endif
