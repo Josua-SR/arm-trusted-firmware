@@ -1784,6 +1784,11 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 {
 	int qlm, lane, num_lanes;
 	uint64_t lane_mask;
+	uint64_t timeout_usec = 150000; /* 150ms */
+	uint64_t timeout;
+	uint64_t debounce_usec = 100000; /* 100ms */
+	uint64_t debounce_time;
+	int link_up = 1;
 	cgx_lmac_config_t *lmac;
 	cavm_cgxx_spux_int_t spux_int;
 	cavm_cgxx_spux_status1_t spux_status1;
@@ -1791,6 +1796,7 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 	cavm_cgxx_cmrx_config_t cmr_config;
 	cavm_cgxx_spux_br_status2_t br_status2;
 	cavm_cgxx_spux_control1_t spux_control1;
+	cavm_cgxx_smux_rx_ctl_t	smux_rx_ctl;
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
@@ -1961,132 +1967,122 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 		}
 	}
 
-	/* check the receive fault. latching high bit (stays
-	 * set until write 1 to clear by SW)
-	 */
-	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_status2_t,
-		CAVM_CGXX_SPUX_STATUS2(cgx_id, lmac_id),
-		rcvflt, 1);
+	/* Clear latching bits */
+	spux_status1.u = CSR_READ(CAVM_CGXX_SPUX_STATUS1(
+					cgx_id, lmac_id));
+	spux_status1.s.rcv_lnk = 1;
+	CSR_WRITE(CAVM_CGXX_SPUX_STATUS1(cgx_id, lmac_id),
+			spux_status1.u);
+
 	spux_status2.u = CSR_READ(CAVM_CGXX_SPUX_STATUS2(
 					cgx_id, lmac_id));
-	if (spux_status2.s.rcvflt) {
-		if (lmac->use_training)
-			cgx_restart_training(cgx_id, lmac_id);
-		debug_cgx("%s: %d:%d Receive Fault, retry training\n",
-			__func__, cgx_id, lmac_id);
-		cgx_set_error_type(cgx_id, lmac_id,
-					CGX_ERR_SPUX_RX_FAULT);
-		return -1;
-	}
+	spux_status2.s.rcvflt = 1;
+	CSR_WRITE(CAVM_CGXX_SPUX_STATUS2(cgx_id, lmac_id),
+			spux_status2.u);
 
-	/* Wait for link to be OK and no faults */
-	if (cgx_poll_for_csr(CAVM_CGXX_SMUX_RX_CTL(cgx_id, lmac_id),
-				CGX_SMUX_RX_STATUS_MASK, 0, -1)) {
-		/* restart AN */
-		cgx_restart_an(cgx_id, lmac_id);
-		debug_cgx("%s: %d:%d SMUX RX Link not OK\n",
-				__func__, cgx_id, lmac_id);
-		cgx_set_error_type(cgx_id, lmac_id,
-				CGX_ERR_SMUX_RX_LINK_NOT_OK);
-		return -1;
-	}
-
-	/* check Recv Fault */
-	spux_status2.u = CSR_READ(CAVM_CGXX_SPUX_STATUS2(
-					cgx_id, lmac_id));
-	if (spux_status2.s.rcvflt) {
-		/* restart AN */
-		cgx_restart_an(cgx_id, lmac_id);
-		debug_cgx("%s: %d:%d Receive Fault\n",
-			 __func__, cgx_id, lmac_id);
-		cgx_set_error_type(cgx_id, lmac_id,
-				CGX_ERR_SPUX_RX_FAULT);
-		return -1;
-	}
-
-	/* check receive link. latching low bit (stays
-	 * set until write 1 to set by SW)
+	/* For BASE-R modes, for stable link to be established
+	 * check if the link is error free upto 50ms
+	 * FIXME for USXGMII
 	 */
-	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_status1_t,
-		CAVM_CGXX_SPUX_STATUS1(cgx_id, lmac_id),
-		rcv_lnk, 1);
-	if (cgx_poll_for_csr(CAVM_CGXX_SPUX_STATUS1(cgx_id, lmac_id),
-				CGX_SMUX_PCS_RCV_LINK_MASK, 1, -1)) {
-		/* restart AN */
-		cgx_restart_an(cgx_id, lmac_id);
-		debug_cgx("%s: %d:%d SPU receive link down\n",
-				__func__, cgx_id, lmac_id);
-		cgx_set_error_type(cgx_id, lmac_id,
-				CGX_ERR_PCS_LINK_FAIL);
-		return -1;
-	}
-
-	/* for BASE-R modes, to establish stable link,
-	 * FIXME : loop for 100ms the following sequence in a
-	 * interval of 5 ms - this is proven to be very reliable.
-	 * For now, just check the ERR_BLKS and BER_CNT
-	 * after a delay of 10 ms
-	 */
-	if ((lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
+	if (((lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
 		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R) ||
 		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R) ||
 		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FIFTYG_R) ||
-		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R) ||
-		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_USXGMII)) {
-		/* Clear error counters and latched error bits */
-		if (strncmp(plat_octeontx_bcfg->bcfg.board_model, "asim-", 5)) {
-			/* Not implemented in ASIM */
-			CSR_WRITE(CAVM_CGXX_SPUX_BR_STATUS2(cgx_id, lmac_id), 0);
-			br_status2.u = CSR_READ(CAVM_CGXX_SPUX_BR_STATUS2(
-					cgx_id, lmac_id));
-			br_status2.s.latched_ber = 1;
-			br_status2.s.latched_lock = 1;
+		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R)) &&
+		(strncmp(plat_octeontx_bcfg->bcfg.board_model, "asim-", 5))) {
+		/* Wait up to 50ms for an error-free link */
+		timeout = gser_clock_get_count(GSER_CLOCK_TIME) + timeout_usec *
+			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+
+		while (1) {
+			link_up = 1;
+			debounce_time = gser_clock_get_count(GSER_CLOCK_TIME) + debounce_usec *
+					gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+			/* Clear the ERR_BLKS and BER_CNT */
 			CSR_WRITE(CAVM_CGXX_SPUX_BR_STATUS2(cgx_id, lmac_id),
-					br_status2.u);
+								0);
+			/* Verify link is up and error-free for the debounce
+			 * time
+			 */
+			while (link_up && (gser_clock_get_count(GSERN_CLOCK_TIME)
+					< debounce_time)) {
+				udelay(1);
+				spux_status1.u = CSR_READ(
+						CAVM_CGXX_SPUX_STATUS1(
+						cgx_id, lmac_id));
+				br_status2.u = CSR_READ(
+						CAVM_CGXX_SPUX_BR_STATUS2(
+						cgx_id, lmac_id));
+				smux_rx_ctl.u = CSR_READ(CAVM_CGXX_SMUX_RX_CTL(
+						cgx_id, lmac_id));
+
+				if ((spux_status1.s.rcv_lnk == 1) &&
+					(smux_rx_ctl.s.status == 0) &&
+					(br_status2.s.err_blks == 0) &&
+					(br_status2.s.ber_cnt == 0))
+					link_up = 1;
+				else
+					link_up = 0;
+
+			}
+
+			if (link_up)
+				break;
+
+			if (gser_clock_get_count(GSER_CLOCK_TIME) >= timeout) {
+				debug_cgx("%s: %d:%d Link error timeout %d\n",
+					__func__, cgx_id, lmac_id, timeout);
+				spux_status1.u = CSR_READ(
+						CAVM_CGXX_SPUX_STATUS1(
+							cgx_id, lmac_id));
+				br_status2.u = CSR_READ(
+						CAVM_CGXX_SPUX_BR_STATUS2(
+						cgx_id, lmac_id));
+				smux_rx_ctl.u = CSR_READ(CAVM_CGXX_SMUX_RX_CTL(
+						cgx_id, lmac_id));
+
+				if (spux_status1.s.rcv_lnk != 1)
+					debug_cgx("%s: %d:%d RCV_LNK timeout\n",
+						__func__, cgx_id, lmac_id);
+				else if (smux_rx_ctl.s.status == 1)
+					debug_cgx("%s: %d:%d Local fault\n",
+						__func__, cgx_id, lmac_id);
+				else if (smux_rx_ctl.s.status == 2)
+					debug_cgx("%s: %d:%d Remote fault\n",
+						__func__, cgx_id, lmac_id);
+				else if (br_status2.s.err_blks)
+					debug_cgx("%s: %d:%d error blocks %d\n",
+					__func__, cgx_id, lmac_id,
+						br_status2.s.err_blks);
+				else if (br_status2.s.ber_cnt)
+					debug_cgx("%s: %d:%d ber count %d\n",
+						__func__, cgx_id, lmac_id,
+						br_status2.s.ber_cnt);
+				else
+					debug_cgx("%s: %d:%d timeout waiting\t"
+						"for RX link to be stable %d\n",
+						__func__, cgx_id, lmac_id,
+						smux_rx_ctl.s.status);
+				return -1;
+			}
+
+			/* Clear the block error counters */
+			CSR_WRITE(CAVM_CGXX_SPUX_BR_STATUS2(
+						cgx_id, lmac_id), 0);
+
+			/* RCV_LNK is latching bit, so set it again */
+			spux_status1.u = CSR_READ(CAVM_CGXX_SPUX_STATUS1(
+						cgx_id, lmac_id));
+			spux_status1.s.rcv_lnk = 1;
+			CSR_WRITE(CAVM_CGXX_SPUX_STATUS1(cgx_id, lmac_id),
+						spux_status1.u);
 		}
-
-		udelay(CGX_SPUX_BR_RCV_LINK_DELAY); /* 10 ms wait */
-
-		spux_status1.u = CSR_READ(CAVM_CGXX_SPUX_STATUS1(
-					cgx_id, lmac_id));
-		if (!spux_status1.s.rcv_lnk) {
-			debug_cgx("%s: %d:%d SPU receive link down after 10 ms\n",
-					__func__, cgx_id, lmac_id);
-			cgx_set_error_type(cgx_id, lmac_id,
-					CGX_ERR_PCS_LINK_FAIL);
-			return -1;
-		}
-
-		/* Check for bit error rate*/
+		/* Write 1 to latched BER */
 		br_status2.u = CSR_READ(CAVM_CGXX_SPUX_BR_STATUS2(
-				cgx_id, lmac_id));
-		if (br_status2.s.latched_ber) {
-			debug_cgx("%s: %d:%d high bit-error rate latched\n",
-					__func__, cgx_id, lmac_id);
-			cgx_set_error_type(cgx_id, lmac_id,
-					CGX_ERR_SPUX_BER_FAIL);
-			return -1;
-		}
-
-		/* Bit error rate counter should be 0 for a stable link */
-		if (br_status2.s.ber_cnt) {
-			debug_cgx("%s: %d:%d bit-error-rate counter %d is high\n",
-					__func__, cgx_id, lmac_id,
-					br_status2.s.ber_cnt);
-			cgx_set_error_type(cgx_id, lmac_id,
-					CGX_ERR_SPUX_BER_FAIL);
-			return -1;
-		}
-
-		/* Errored blocks counter should be 0 for a stable link */
-		if (br_status2.s.err_blks) {
-			debug_cgx("%s: %d:%d errored-blocks counter %d is high\n",
-					__func__, cgx_id, lmac_id,
-					br_status2.s.err_blks);
-			cgx_set_error_type(cgx_id, lmac_id,
-					CGX_ERR_SPUX_BER_FAIL);
-			return -1;
-		}
+					cgx_id, lmac_id));
+		br_status2.s.latched_ber = 1;
+		CSR_WRITE(CAVM_CGXX_SPUX_BR_STATUS2(cgx_id, lmac_id),
+					br_status2.u);
 	}
 
 	/* enable Data Tx/Rx */
