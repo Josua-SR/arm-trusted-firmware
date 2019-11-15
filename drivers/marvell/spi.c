@@ -297,7 +297,10 @@ int spi_nor_read(uint8_t *buf, int buf_size, uint32_t addr,
 		/* Wait after configuration */
 		udelay(10);
 	} else {
-		cmd[0] = SPI_NOR_CMD_READ;
+		if (spi_mode & SPI_FORCE_4B_OPCODE)
+			cmd[0] = SPI_NOR_CMD_READ_4B;
+		else
+			cmd[0] = SPI_NOR_CMD_READ;
 		if (spi_xfer(cmd, NULL, len, spi_con, cs, 0))
 			return -1;
 
@@ -337,7 +340,10 @@ int spi_nor_write(uint8_t *buf, int buf_size, uint32_t addr,
 	if (spi_xfer(cmd, NULL, 1, spi_con, cs, 1))
 		return -1;
 
-	cmd[0] = SPI_NOR_CMD_PROGRAM;
+	if (spi_mode & SPI_FORCE_4B_OPCODE)
+		cmd[0] = SPI_NOR_CMD_PROGRAM_4B;
+	else
+		cmd[0] = SPI_NOR_CMD_PROGRAM;
 
 	for (i = 1; i <= (addr_len >> 3); i++)
 		cmd[i] = addr >> (addr_len - i * 8);
@@ -379,7 +385,10 @@ int spi_nor_erase(uint32_t addr, int addr_len, int spi_con, int cs)
 		return -1;
 	}
 
-	cmd[0] = SPI_NOR_CMD_ERASE;
+	if (spi_mode & SPI_FORCE_4B_OPCODE)
+		cmd[0] = SPI_NOR_CMD_ERASE_4B;
+	else
+		cmd[0] = SPI_NOR_CMD_ERASE;
 	for (i = 1; i <= (addr_len >> 3); i++)
 		cmd[i] = addr >> (addr_len - i * 8);
 

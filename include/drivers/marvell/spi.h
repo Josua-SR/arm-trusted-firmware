@@ -14,6 +14,7 @@
 #define	SPI_3WIRE		0x10		/* SI/SO signals shared */
 #define SPI_FORCE_X1_READ	0x20
 #define SPI_FORCE_LEGACY_MODE	0x40
+#define SPI_FORCE_4B_OPCODE	0x80
 
 #define PLL_REF_CLK_CN8XXX	50000000	/* 50 MHz */
 #define PLL_REF_CLK_CN9XXX	100000000	/* 100 MHz */
@@ -25,6 +26,7 @@
 #define MPI_MAX_DATA_CN9XXX	(144 * 8)
 
 #define SPI_NOR_CMD_READ		0x03
+#define SPI_NOR_CMD_READ_4B		0x13
 #define SPI_NOR_CMD_READ_FAST		0x0b
 #define SPI_NOR_CMD_QREAD		0x6b
 
@@ -32,8 +34,10 @@
 #define SPI_NOR_CMD_WRDI		0x04
 
 #define SPI_NOR_CMD_PROGRAM		0x02
+#define SPI_NOR_CMD_PROGRAM_4B		0x12
 
 #define SPI_NOR_CMD_ERASE		0x20
+#define SPI_NOR_CMD_ERASE_4B		0x21
 
 #define SPI_NOR_CMD_RDSR		0x5
 

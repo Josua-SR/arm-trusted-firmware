@@ -76,9 +76,41 @@ static void cgx_fdt_get_spi_bus_cs(int *bus, int *cs)
 	}
 }
 
+static void cgx_fdt_get_persist_offset(int *offset)
+{
+	const void *fdt = fdt_ptr;
+	const uint32_t *prop;
+	int node;
+	int poff = 0;
+
+	if (fdt_check_header(fdt))
+		return;
+	node = fdt_node_offset_by_compatible(fdt, -1, "spi-flash");
+	while (node > 0) {
+		if (fdt_getprop(fdt, node, "u-boot,env", NULL)) {
+			prop = fdt_getprop(fdt, node, "persist-offset", NULL);
+			if (prop)
+				poff = fdt32_to_cpu(*prop);
+			/* Need offset above 8MB after firmware image
+			 * and atleast 512 bytes below 256MB max flash size.
+			 * Also should not be in two 64K sectors reserved for
+			 * manufacturing data.
+			 */
+			if ((poff > 0x7FFFFF && poff <= 0xFDFF00) ||
+			    (poff > 0xFFFFFF && poff <= 0xFFFFF00))
+				*offset = poff;
+			debug_cgx_flash("\n persist offset %x\n",
+					*offset);
+			break;
+		}
+		node = fdt_node_offset_by_compatible(fdt, node, "spi-flash");
+	}
+}
+
 static int cgx_read_flash_lmac_params(uint8_t *buf, int buflen)
 {
 	int err = 0, spi_con, cs;
+	int offset = SPI_NVDATA_OFFSET, mode = SPI_ADDRESSING_24BIT;
 
 	cgx_fdt_get_spi_bus_cs(&spi_con, &cs);
 	if (spi_con == -1 || cs == -1)
@@ -90,11 +122,15 @@ static int cgx_read_flash_lmac_params(uint8_t *buf, int buflen)
 	}
 	spi_mode |= SPI_FORCE_X1_READ;
 
-	err = spi_nor_read(buf, buflen, SPI_NVDATA_OFFSET,
-			   SPI_ADDRESSING_24BIT, spi_con, cs);
+	cgx_fdt_get_persist_offset(&offset);
+	if (offset > 0xFFFFFF) {
+		mode = SPI_ADDRESSING_32BIT;
+		spi_mode |= SPI_FORCE_4B_OPCODE;
+	}
+	err = spi_nor_read(buf, buflen, offset, mode, spi_con, cs);
 	if (err < 0)
 		debug_cgx_flash("Read flash failed for lmac params\n");
-	spi_mode &= ~SPI_FORCE_X1_READ;
+	spi_mode &= ~(SPI_FORCE_X1_READ | SPI_FORCE_4B_OPCODE);
 	return err;
 }
 
@@ -193,6 +229,7 @@ static int cgx_update_flash_lmac_params(int cgx_id, int lmac_id, int cmd,
 	cgx_lmac_flash_ctx_t fctx[MAX_CGX * MAX_LMAC_PER_CGX];
 	cgx_lmac_flash_ctx_t *ptr;
 	int err, spi_con, cs;
+	int offset = SPI_NVDATA_OFFSET, mode = SPI_ADDRESSING_24BIT;
 
 	cgx = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
 	lmac = &cgx->lmac_cfg[lmac_id];
@@ -250,24 +287,29 @@ static int cgx_update_flash_lmac_params(int cgx_id, int lmac_id, int cmd,
 	if (cmd == IGNORE)
 		ptr->s.ignore = (arg & 0x1) ? 0 : 1;
 
-	debug_cgx_flash("%s flash invalid %d cgx%d lmac%d qmode %x mode %x\n",
-			__func__, ptr->s.invalid, ptr->s.cgx_id,
+	debug_cgx_flash("%s flash status %d cgx%d lmac%d qmode %x mode %x\n",
+			__func__, ptr->s.status, ptr->s.cgx_id,
 			ptr->s.lmac_id, ptr->s.qlm_mode, ptr->s.lmac_mode);
 	debug_cgx_flash("%s fec invalid %d type%x mod invalid%d type%x\n",
 			__func__, ptr->s.fec_invalid, ptr->s.fec_type,
 			ptr->s.mod_invalid, ptr->s.mod_type);
-	err = spi_nor_erase(SPI_NVDATA_OFFSET, SPI_ADDRESSING_24BIT, spi_con,
-			    cs);
+	cgx_fdt_get_persist_offset(&offset);
+	if (offset > 0xFFFFFF) {
+		mode = SPI_ADDRESSING_32BIT;
+		spi_mode |= SPI_FORCE_4B_OPCODE;
+	}
+	err = spi_nor_erase(offset, mode, spi_con, cs);
 	if (err < 0) {
 		debug_cgx_flash("Erase flash failed for lmac params\n");
 		return -1;
 	}
-	err = spi_nor_write((uint8_t *)fctx, sizeof(fctx), SPI_NVDATA_OFFSET,
-			    SPI_ADDRESSING_24BIT, spi_con, cs);
+	err = spi_nor_write((uint8_t *)fctx, sizeof(fctx), offset,
+			    mode, spi_con, cs);
 	if (err < 0) {
 		debug_cgx_flash("Write flash failed for lmac params\n");
 		return -1;
 	}
+	spi_mode &= ~SPI_FORCE_4B_OPCODE;
 	return 0;
 }
 
