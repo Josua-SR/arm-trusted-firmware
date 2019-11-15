@@ -42,6 +42,8 @@ static struct blk_entry block_map[] = {
 	{ 0 },
 };
 
+#define ROUND_DOWN(val, align)	((val) / (align) * (align))
+
 static inline uint64_t read_gp_reg(void *h, uint64_t *mask, uint8_t *r_id)
 {
 	/*
@@ -445,7 +447,8 @@ static int alias_handler(void *ctx_h, uintptr_t pa, uint64_t *mask,
 static int do_sel(void *ctx_h, uintptr_t pa, uint64_t *mask, uint8_t *rt_id,
 	uint8_t *rs_id, flr_operation_e op)
 {
-	int blk_id;
+	int blk_id, rc, is_sel;
+	uint64_t *addr;
 
 	/* Validate input args */
 	assert(pa != 0);
@@ -453,17 +456,53 @@ static int do_sel(void *ctx_h, uintptr_t pa, uint64_t *mask, uint8_t *rt_id,
 	assert(mask != NULL);
 	assert(rt_id != NULL);
 
+	/*
+	 * Trap mechanism doesn't compare some low bits which in case of
+	 * RVU_AF_BAR2_SEL register must be 0
+	 */
+	is_sel = TRAPADDR_LOW_BITS(pa) == 0;
+
 	/* Extract BLK from PA */
 	blk_id = RVU_AF_ADDR_S_BLK(pa);
 
 	/* Validate blk_id, handle access to not existing CSR */
-	if (is_block_disabled(blk_id))
+	if (is_sel && is_block_disabled(blk_id))
 		return -1;
 
-	update_value(ctx_h, &(blk_af_bar2_sel[blk_id].u), mask,
-			rt_id, rs_id, op);
+	if (!is_sel) {
+		/*
+		 * Simulate operation on real address if it is not
+		 * RVU_AF_BAR2_SEL register
+		 */
+		addr = (uint64_t *)pa;
+		rc = mmap_add_dynamic_region(ROUND_DOWN(pa, PAGE_SIZE),
+					     ROUND_DOWN(pa, PAGE_SIZE),
+					     PAGE_SIZE,
+					     MT_DEVICE | MT_RW | MT_SECURE);
+		if (rc) {
+			ERROR(
+				"Unable to map memory rc=%d, addr=0x%lx, size=0x%x\n",
+				rc, ROUND_DOWN(pa, PAGE_SIZE), PAGE_SIZE);
+			return rc;
+		}
+	} else {
+		addr = &(blk_af_bar2_sel[blk_id].u);
+	}
+
+	update_value(ctx_h, addr, mask, rt_id, rs_id, op);
 	INFO("%s: op 0x%x: blk_id=%d, blk_af_bar2_sel.u=0x%llx\n",
-	     __func__, op, blk_id, (blk_af_bar2_sel[blk_id].u & *mask));
+	     __func__, op, blk_id, (*addr & *mask));
+
+	if (!is_sel) {
+		rc = mmap_remove_dynamic_region(ROUND_DOWN(pa, PAGE_SIZE),
+						PAGE_SIZE);
+		if (rc) {
+			ERROR(
+				"Unable to remove mapped memory addr=0x%lx, size=0x%x\n",
+				ROUND_DOWN(pa, PAGE_SIZE), PAGE_SIZE);
+			return rc;
+		}
+	}
 
 	return 0;
 }

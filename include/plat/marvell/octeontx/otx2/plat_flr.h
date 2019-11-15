@@ -69,6 +69,15 @@
 #define CAVM_TRAPOPC_REGSET_MASK	ULL(0x1f)
 #define CAVM_TRAPOPC_REGSET(x)		(((x) >> CAVM_TRAPOPC_REGSET_SHIFT) & CAVM_TRAPOPC_REGSET_MASK)
 
+/*
+ * Trap registers doesn't compare low 7 bits which are required to
+ * distinguish RVU_AF_BAR2_SEL register
+ */
+#define TRAPADDR_LOW_BITS_SHIFT		ULL(0)
+#define TRAPADDR_LOW_BITS_MASK		ULL(0x7f)
+#define TRAPADDR_LOW_BITS(x)		(((x) >> TRAPADDR_LOW_BITS_SHIFT) \
+						& TRAPADDR_LOW_BITS_MASK)
+
 /* Trap registers (implementation-specific) */
 #define AP_CVM_TRAPOPC_EL3		S3_6_C11_C6_1
 #define AP_CVM_TRAPADDR_EL3(x)		S3_6_C11_C7_##x
