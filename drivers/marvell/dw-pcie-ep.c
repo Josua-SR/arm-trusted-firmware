@@ -64,17 +64,9 @@
 #define PCIE_MSIX_CAP_ID_NEXT_CTRL_REG		0xb0
 #define PCIE_MSIX_CAP_NEXT_OFFSET_MASK		0xff00
 
-#define PCIE_SPCIE_CAP_HEADER_REG		0x158
-#define PCIE_SPCIE_NEXT_OFFSET_MASK		0xfff00000
-#define PCIE_SPCIE_NEXT_OFFSET_OFFSET		20
-
 #define PCIE_LANE_EQ_CTRL01_REG			0x164
 #define PCIE_LANE_EQ_CTRL23_REG			0x168
 #define PCIE_LANE_EQ_SETTING			0x55555555
-
-#define PCIE_TPH_EXT_CAP_HDR_REG		0x1b8
-#define PCIE_TPH_REQ_NEXT_PTR_MASK		0xfff00000
-#define PCIE_TPH_REQ_NEXT_PTR_OFFSET		20
 
 #define PCIE_LINK_FLUSH_CONTROL_OFF_REG		0x8cc
 #define PCIE_AUTO_FLUSH_EN_MASK			0x1
@@ -163,24 +155,6 @@ void dw_pcie_configure(uintptr_t regs_base, uint32_t cap_speed)
 	reg = mmio_read_32(regs_base + PCIE_MSIX_CAP_ID_NEXT_CTRL_REG);
 	reg &= ~PCIE_MSIX_CAP_NEXT_OFFSET_MASK;
 	mmio_write_32(regs_base + PCIE_MSIX_CAP_ID_NEXT_CTRL_REG, reg);
-
-	/*
-	 * The below two configurations are intended to remove SRIOV capability
-	 * from the capability list, since we don't support it.
-	 * The capability list is a linked list where each capability points
-	 * to the next capability, so in the SRIOV capability need to set the previous
-	 * capability to point to the next capability and this way
-	 * the SRIOV capability will be skipped.
-	 */
-	reg = mmio_read_32(regs_base + PCIE_TPH_EXT_CAP_HDR_REG);
-	reg &= ~PCIE_TPH_REQ_NEXT_PTR_MASK;
-	reg |= 0x24c << PCIE_TPH_REQ_NEXT_PTR_OFFSET;
-	mmio_write_32(regs_base + PCIE_TPH_EXT_CAP_HDR_REG, reg);
-
-	reg = mmio_read_32(regs_base + PCIE_SPCIE_CAP_HEADER_REG);
-	reg &= ~PCIE_SPCIE_NEXT_OFFSET_MASK;
-	reg |= 0x1b8 << PCIE_SPCIE_NEXT_OFFSET_OFFSET;
-	mmio_write_32(regs_base + PCIE_SPCIE_CAP_HEADER_REG, reg);
 }
 
 int dw_pcie_link_up(uintptr_t regs_base, uint32_t cap_speed, int is_end_point)
