@@ -68,6 +68,12 @@ BLE_SOURCES		:=	drivers/mentor/i2c/mi2cv.c		\
 				$(MARVELL_DRV_BASE)/ccu.c		\
 				$(MARVELL_DRV_BASE)/io_win.c
 
+ifeq (${PCI_EP_SUPPORT}, 1)
+BLE_SOURCES		+=	$(MARVELL_COMMON_BASE)/pci_ep_setup.c	 \
+				$(MARVELL_DRV_BASE)/dw-pcie-ep.c	 \
+				$(MARVELL_DRV_BASE)/pcie-comphy-cp110.c
+endif
+
 BL1_SOURCES		+=	$(PLAT_COMMON_BASE)/aarch64/plat_helpers.S \
 				lib/cpus/aarch64/cortex_a72.S
 
