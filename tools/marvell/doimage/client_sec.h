@@ -19,6 +19,7 @@
 typedef struct _signage_server {
 	char server_name[MAX_HOSTNAME+1];
 	char server_port[MAX_PORT_LENGTH+1];
+	char ca_cert_file[MAX_FILENAME+1];
 } signage_server;
 
 extern signage_server server;

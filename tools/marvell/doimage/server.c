@@ -48,7 +48,6 @@ int main(void)
 #include <mbedtls/base64.h>
 #include <mbedtls/error.h>
 #include <mbedtls/entropy.h>
-#include <mbedtls/certs.h>
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/debug.h>
 #include <mbedtls/md.h>
@@ -220,25 +219,22 @@ static int server_start(void)
 #endif
 
 	/* 1. Load the certificates and private RSA key */
-	ret = mbedtls_x509_crt_parse(&srv_cert,
-				(const unsigned char *)mbedtls_test_srv_crt,
-				mbedtls_test_srv_crt_len);
+	ret = mbedtls_x509_crt_parse_file(&srv_cert,
+					  srv_sec_opt.server_cert_file);
 	if (ret) {
 		fprintf(stderr, "Failed to parse X509 server certificate!\n");
 		goto server_err;
 	}
 
-	ret = mbedtls_x509_crt_parse(&srv_cert,
-				(const unsigned char *)mbedtls_test_cas_pem,
-				mbedtls_test_cas_pem_len);
+	ret = mbedtls_x509_crt_parse_file(&srv_cert,
+					  srv_sec_opt.ca_cert_file);
 	if (ret) {
 		fprintf(stderr, "Failed to parse X509 CA certificate!\n");
 		goto server_err;
 	}
 
-	ret =  mbedtls_pk_parse_key(&pkey,
-				(const unsigned char *)mbedtls_test_srv_key,
-				mbedtls_test_srv_key_len, NULL, 0);
+	ret = mbedtls_pk_parse_keyfile(&pkey,
+				       srv_sec_opt.server_key_file, NULL);
 	if (ret) {
 		fprintf(stderr, "Failed to parse server private key!\n");
 		goto server_err;
@@ -564,6 +560,39 @@ static int parse_server_config_file(char *filename)
 			goto exit_parse;
 		}
 	}
+
+	/* Server certificate file name */
+	if (config_lookup_string(&sec_cfg, "server_cert_file",
+				 &cfg_string) != CONFIG_TRUE) {
+		fprintf(stderr, "The \"server_cert_file\" undefined!\n");
+		goto exit_parse;
+	}
+	if (verify_and_copy_file_name_entry("server_cert_file",
+					    cfg_string,
+					    srv_sec_opt.server_cert_file))
+		goto exit_parse;
+
+	/* Server key file name */
+	if (config_lookup_string(&sec_cfg, "server_key_file",
+				 &cfg_string) != CONFIG_TRUE) {
+		fprintf(stderr, "The \"server_key_file\" undefined!\n");
+		goto exit_parse;
+	}
+	if (verify_and_copy_file_name_entry("server_key_file",
+					    cfg_string,
+					    srv_sec_opt.server_key_file))
+		goto exit_parse;
+
+	/* CA certificate file name */
+	if (config_lookup_string(&sec_cfg, "ca_cert_file",
+				 &cfg_string) != CONFIG_TRUE) {
+		fprintf(stderr, "The \"ca_cert_file\" undefined!\n");
+		goto exit_parse;
+	}
+	if (verify_and_copy_file_name_entry("ca_cert_file",
+					    cfg_string,
+					    srv_sec_opt.ca_cert_file))
+		goto exit_parse;
 
 	/* Signage Server port */
 	if (config_lookup_int(&sec_cfg, "server_port",

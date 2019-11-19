@@ -355,6 +355,17 @@ int parse_sec_config_file(char *filename)
 						    element * 2 + 1);
 	}
 
+	/* CA certificate file name */
+	if (config_lookup_string(&sec_cfg, "ca_cert_file",
+				 &cfg_string) != CONFIG_TRUE) {
+		fprintf(stderr, "The \"ca_cert_file\" undefined!\n");
+		goto exit_parse;
+	}
+	if (verify_and_copy_file_name_entry("ca_cert_file",
+					    cfg_string,
+					    server.ca_cert_file))
+		goto exit_parse;
+
 	/* Signage Server name */
 	if (config_lookup_string(&sec_cfg, "server_name",
 				 &cfg_string) != CONFIG_TRUE) {

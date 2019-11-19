@@ -48,7 +48,6 @@ int main(void)
 #include <mbedtls/base64.h>
 #include <mbedtls/error.h>
 #include <mbedtls/entropy.h>
-#include <mbedtls/certs.h>
 #include <mbedtls/ctr_drbg.h>
 #include <mbedtls/debug.h>
 #include <mbedtls/md.h>
@@ -135,9 +134,7 @@ int create_rsa_signature(uint32_t		ctx_idx,
 	}
 
 	/* 1. Initialize certificates */
-	ret = mbedtls_x509_crt_parse(&ca_cert,
-				(const unsigned char *)mbedtls_test_cas_pem,
-				mbedtls_test_cas_pem_len);
+	ret = mbedtls_x509_crt_parse_file(&ca_cert, server.ca_cert_file);
 	if (ret) {
 		fprintf(stderr, "Failed to parse X509 certificate!\n");
 		goto sign_exit;
