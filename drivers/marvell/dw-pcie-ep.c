@@ -5,7 +5,7 @@
  * https://spdx.org/licenses
  */
 
-#include <mmio.h>
+#include <lib/mmio.h>
 #include <mvebu_def.h>
 
 #define PCIE_CFG_VENDOR			0x0
@@ -50,7 +50,7 @@
 #define PCIE_IATU_VIEWPORT		0x900
 #define PCIE_IATU_CR1			0x904
 #define PCIE_IATU_CR2			0x908
-#define  PCIE_IATU_CR2_EN		(0x1 << 31)
+#define PCIE_IATU_CR2_EN		0x80000000u
 #define PCIE_IATU_LOWER_BASE		0x90C
 #define PCIE_IATU_UPPER_BASE		0x910
 #define PCIE_IATU_LIMIT			0x914

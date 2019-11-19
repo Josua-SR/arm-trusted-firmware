@@ -6,9 +6,9 @@
  */
 
 #include "comphy.h"
-#include <debug.h>
-#include <delay_timer.h>
-#include <mmio.h>
+#include <common/debug.h>
+#include <drivers/delay_timer.h>
+#include <lib/mmio.h>
 #include <mvebu_def.h>
 #include "pci_ep.h"
 
