@@ -26,7 +26,6 @@
 #include <lmc_ras.h>
 #include <timers.h>
 #include <drivers/delay_timer.h>
-#include <octeontx_ehf.h>
 
 /* DEBUG_RAS requires DEBUG, 0/1 dis/enables DEBUG=1 RAS chatter */
 #define DEBUG_RAS (0 && DEBUG)
@@ -1053,7 +1052,8 @@ static int ras_init_mcc(int mcc)
 		vctl = vaddr + 0x8;
 
 		irq = MCC_SPI_IRQ(vec + mcc * 8);
-		rc = octeontx_ehf_register_irq_handler(irq, tx2_mcc_isr);
+		rc = register_interrupt_handler(INTR_TYPE_EL3, irq,
+						tx2_mcc_isr);
 		if (rc) {
 			debug_ras("e?%d tx2_mcc_isr(%x), mcc: %d\n",
 			     rc, irq, mcc);
@@ -1103,8 +1103,7 @@ static int ras_init_mccs(void)
 	uint64_t ctl = CAVM_GICD_SETSPI_SR | 1;
 
 	debug_ras("Registering MCC interrupt handlers\n");
-
-	rc = octeontx_ehf_register_irq_handler(irq, tx2_mdc_isr);
+	rc = register_interrupt_handler(INTR_TYPE_EL3, irq, tx2_mdc_isr);
 	if (rc) {
 		debug_ras("e?%d tx2_mdc_isr(%x)\n", rc, irq);
 		return rc;

@@ -15,7 +15,6 @@
 #include <hw_timers.h>
 #include <drivers/delay_timer.h>
 #include <octeontx_irqs_def.h>
-#include <octeontx_ehf.h>
 #include <timers_octeontx.h>
 
 #undef DEBUG_TIMERS
@@ -110,11 +109,15 @@ uint64_t plat_timer_irq_handler(uint32_t id, uint32_t flags, void *cookie)
 
 int plat_timer_register_irq(hw_timer_isr_t isr)
 {
+	uint32_t flags = 0;
 	int rc = 0;
 
 	timer_isr = isr;
-	rc = octeontx_ehf_register_irq_handler(SEC_TIMER_PPI_IRQ,
-						plat_timer_irq_handler);
+
+	set_interrupt_rm_flag(flags, SECURE);
+	rc = register_interrupt_handler(INTR_TYPE_EL3,
+			SEC_TIMER_PPI_IRQ,
+			plat_timer_irq_handler);
 	if (rc) {
 		printf("err %d while registering ARCH_PHYS_TIMER "
 		       "secure interrupt handler\n", rc);

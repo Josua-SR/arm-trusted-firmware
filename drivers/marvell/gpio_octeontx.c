@@ -26,7 +26,6 @@
 #include <bl31/interrupt_mgmt.h>
 
 #include <octeontx_ecam.h>
-#include <octeontx_ehf.h>
 #include <octeontx_svc.h>
 #include <octeontx_common.h>
 #include <gpio_octeontx.h>
@@ -415,8 +414,9 @@ int octeontx_register_gpio_handlers(void)
 	int i, rc = 0;
 
 	for (i = 0; i < GPIO_SPI_IRQS; i++) {
-		rc = octeontx_ehf_register_irq_handler(GPIO_SPI_IRQ(i),
-							gpio_irq_handler);
+		rc = register_interrupt_handler(INTR_TYPE_EL3,
+						GPIO_SPI_IRQ(i),
+						gpio_irq_handler);
 		if (rc) {
 			ERROR("err %d while registering GPIO IRQ secure interrupt handler\n",
 			      rc);

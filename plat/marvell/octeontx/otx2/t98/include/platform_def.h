@@ -178,10 +178,4 @@
 
 #define MAX_RVU_PFS		24
 
-/* Priority levels for OcteonTX platforms */
-#define PLAT_IRQ_PRI			0x30
-
-/* OcteonTX platforms use 3 upper bits of secure interrupt priority */
-#define OCTEONTX_PRI_BITS		3
-
 #endif

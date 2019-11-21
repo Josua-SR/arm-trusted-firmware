@@ -23,7 +23,6 @@
 #include <string.h>
 
 #include <octeontx_ecam.h>
-#include <octeontx_ehf.h>
 #include <octeontx_svc.h>
 #include <octeontx_common.h>
 #include <octeontx_utils.h>
@@ -199,7 +198,8 @@ static void gti_watchdog_set(uint64_t timeout_ms, uint64_t cores)
 			intr_hndlrs_registered = 1;
 
 		for (i = 0; i < GTI_CWD_SPI_IRQS; i++) {
-			rc = octeontx_ehf_register_irq_handler(
+
+			rc = register_interrupt_handler(INTR_TYPE_EL3,
 							GTI_CWD_SPI_IRQ(i),
 							gti_cwd_irq_handler);
 			if (rc) {

@@ -26,6 +26,18 @@
 #include <plat/common/platform.h>
 #include <bl31/interrupt_mgmt.h>
 
+/*
+ * It is number of all interrupts configured in GIC.
+ * Every GIC interrupt has to be defined in interrupt_array.
+ * There is one interrupt for secure timer, interrupts for GPIO and
+ * interrupts for BPHY.
+ */
+#define NUMBER_OF_GIC_INTERRUPTS	(1 + GPIO_SPI_IRQS + \
+					BPHY_PSM_IRQS_NUMBER + \
+					GTI_CWD_SPI_IRQS + \
+					MDC_SPI_IRQS + \
+					MCC_SPI_IRQS)
+
 #if IMAGE_BL31
 /* The GICv3 driver only needs to be initialized in EL3 */
 uintptr_t rdistif_base_addrs[PLATFORM_CORE_COUNT];
@@ -48,7 +60,7 @@ static void initialize_interrupt_array(interrupt_prop_t *intr_array)
 
 	/* Configure Secure Timer Interrupt */
 	intr_array[idx].intr_num = SEC_TIMER_PPI_IRQ;
-	intr_array[idx].intr_pri = PLAT_IRQ_PRI;
+	intr_array[idx].intr_pri = 0;
 	intr_array[idx].intr_grp = INTR_TYPE_EL3;
 	intr_array[idx].intr_cfg = GIC_INTR_CFG_LEVEL;
 	idx++;
@@ -56,7 +68,7 @@ static void initialize_interrupt_array(interrupt_prop_t *intr_array)
 	/* Configure GPIO IRQs */
 	for (i = 0; i < GPIO_SPI_IRQS; i++) {
 		intr_array[idx].intr_num = GPIO_SPI_IRQ(i);
-		intr_array[idx].intr_pri = PLAT_IRQ_PRI;
+		intr_array[idx].intr_pri = 0;
 		intr_array[idx].intr_grp = INTR_TYPE_EL3;
 		intr_array[idx].intr_cfg = GIC_INTR_CFG_EDGE;
 		idx++;
@@ -65,7 +77,7 @@ static void initialize_interrupt_array(interrupt_prop_t *intr_array)
 	/* Configure BPHY PSM IRQs */
 	for (i = 0; i < BPHY_PSM_IRQS_NUMBER; i++) {
 		intr_array[idx].intr_num = BPHY_PSM_IRQ(i);
-		intr_array[idx].intr_pri = PLAT_IRQ_PRI;
+		intr_array[idx].intr_pri = 0;
 		intr_array[idx].intr_grp = INTR_TYPE_EL3;
 		intr_array[idx].intr_cfg = GIC_INTR_CFG_EDGE;
 		idx++;
@@ -74,7 +86,7 @@ static void initialize_interrupt_array(interrupt_prop_t *intr_array)
 	/* Configure CWD GTI IRQs */
 	for (i = 0; i < GTI_CWD_SPI_IRQS; i++) {
 		intr_array[idx].intr_num = GTI_CWD_SPI_IRQ(i);
-		intr_array[idx].intr_pri = PLAT_IRQ_PRI;
+		intr_array[idx].intr_pri = 0;
 		intr_array[idx].intr_grp = INTR_TYPE_EL3;
 		intr_array[idx].intr_cfg = GIC_INTR_CFG_EDGE;
 		idx++;
@@ -83,7 +95,7 @@ static void initialize_interrupt_array(interrupt_prop_t *intr_array)
 	/* Configure all MCC LMCOE IRQs */
 	for (i = 0; i < MCC_SPI_IRQS; i++) {
 		intr_array[idx].intr_num = MCC_SPI_IRQ(i);
-		intr_array[idx].intr_pri = PLAT_IRQ_PRI;
+		intr_array[idx].intr_pri = 0;
 		intr_array[idx].intr_grp = INTR_TYPE_EL3;
 		intr_array[idx].intr_cfg = GIC_INTR_CFG_EDGE;
 		idx++;
@@ -92,7 +104,7 @@ static void initialize_interrupt_array(interrupt_prop_t *intr_array)
 	/* Configure all MDC IRQs */
 	for (i = 0; i < MDC_SPI_IRQS; i++) {
 		intr_array[idx].intr_num = MDC_SPI_IRQ();
-		intr_array[idx].intr_pri = PLAT_IRQ_PRI;
+		intr_array[idx].intr_pri = 0;
 		intr_array[idx].intr_grp = INTR_TYPE_EL3;
 		intr_array[idx].intr_cfg = GIC_INTR_CFG_EDGE;
 		idx++;

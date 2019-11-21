@@ -8,20 +8,6 @@
 #ifndef __GICV3_SETUP_H__
 #define __GICV3_SETUP_H__
 
-#include <octeontx_irqs_def.h>
-
-/*
- * It is number of all interrupts configured in GIC.
- * Every GIC interrupt has to be defined in interrupt_array.
- * There is one interrupt for secure timer, interrupts for GPIO and
- * interrupts for BPHY.
- */
-#define NUMBER_OF_GIC_INTERRUPTS	(1 + GPIO_SPI_IRQS + \
-					BPHY_PSM_IRQS_NUMBER + \
-					GTI_CWD_SPI_IRQS + \
-					MDC_SPI_IRQS + \
-					MCC_SPI_IRQS)
-
 void octeontx_gic_driver_init(void);
 void octeontx_gic_init(void);
 void octeontx_gic_pcpu_init(void);
