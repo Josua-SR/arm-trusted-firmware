@@ -25,6 +25,8 @@ DOIMAGE_LD_FLAGS := -lconfig -lmbedtls -lmbedcrypto -lmbedx509
 endif
 
 HOSTCCFLAGS += ${DOIMAGE_CC_FLAGS}
+SERVER_LD_FLAGS := -lconfig -lmbedtls -lmbedcrypto -lmbedx509
+CLIENT_LD_FLAGS := ${SERVER_LD_FLAGS}
 
 # Make soft links and include from local directory otherwise wrong headers
 # could get pulled in from firmware tree.
@@ -32,12 +34,18 @@ INCLUDE_PATHS = -I.
 
 HOSTCC ?= gcc
 RM := rm -rf
+Q = @
 
 .PHONY: all clean
 
 all: ${STANDALONE}
 
-server: ${SERVER} ${CLIENT}
+server:
+	@echo
+	@echo "  Building Client-Server"
+	@echo
+	${Q}${MAKE} ${SERVER}
+	${Q}${MAKE} ${CLIENT}
 
 ${STANDALONE}: ${STANDALONE_OBJECTS} Makefile
 	@echo "  HOSTLD  $@"
@@ -47,10 +55,10 @@ ${STANDALONE}: ${STANDALONE_OBJECTS} Makefile
 	@echo
 
 ${CLIENT}: ${CLIENT_OBJECTS} Makefile
-	${Q}${HOSTCC} ${CLIENT_OBJECTS} ${DOIMAGE_LD_FLAGS} -o $@
+	${Q}${HOSTCC} ${CLIENT_OBJECTS} ${CLIENT_LD_FLAGS} -o $@
 
 ${SERVER}: ${SERVER_OBJECTS} Makefile
-	${Q}${HOSTCC} ${SERVER_OBJECTS} ${DOIMAGE_LD_FLAGS} -o $@
+	${Q}${HOSTCC} ${SERVER_OBJECTS} ${SERVER_LD_FLAGS} -o $@
 
 %.o: %.c Makefile
 	@echo "  HOSTCC  $<"
