@@ -1817,7 +1817,7 @@ static void octeontx2_fill_cgx_details(const void *fdt)
 
 static void octeontx2_fill_qlm_details(const void *fdt)
 {
-	int qlm, lane, polarity, max_lanes, voltage, rx_ad;
+	int qlm, lane, polarity, max_lanes, voltage, rx_ad, refset;
 	char prop[64];
 
 	for (qlm = 0; qlm < plat_octeontx_scfg->gser_count; qlm++) {
@@ -1864,6 +1864,15 @@ static void octeontx2_fill_qlm_details(const void *fdt)
 			plat_octeontx_bcfg->qlm_cfg[qlm]
 				.lane_rx_prevga_gn_ovrd[lane] =
 					octeontx2_fdtbdk_get_num(fdt, prop, 10);
+
+			snprintf(prop, sizeof(prop),
+				"QLM-LANE-IDLE-REFSET-VALUE.N0.QLM%d.LANE%d",
+				qlm, lane);
+			refset = octeontx2_fdtbdk_get_num(fdt, prop, 10);
+			if (refset == -1)
+				refset = 3; /* Default value */
+			plat_octeontx_bcfg->qlm_cfg[qlm].lane_idle_refset[lane]
+				= refset;
 		}
 	}
 

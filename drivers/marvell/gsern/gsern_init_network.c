@@ -465,7 +465,7 @@ int gsern_init_network(int qlm, int qlm_lane, enum gsern_flags flags, enum gsern
 		c.s.rx_idle_lowf = 1;
 		c.s.idle_os_bitlen = 0;
 		c.s.idle_os_ovrd_en = 0;
-		c.s.refset = 3;
+		c.s.refset = gser_config_get_int(GSER_CONFIG_QLM_LANE_IDLE_REFSET_VALUE, qlm, qlm_lane);
 		c.s.idle_os_ovrd = 0;
 		c.s.en_idle_cal = 1;
 		c.s.rxelecidle = 0;

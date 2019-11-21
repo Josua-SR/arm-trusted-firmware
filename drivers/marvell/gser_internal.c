@@ -164,6 +164,8 @@ static int gser_get_lane_config(int prop, int qlm, int lane)
 	case GSER_CONFIG_QLM_TUNING_RX_PREVGA_GN_ADAPT:
 		return plat_octeontx_bcfg->qlm_cfg[qlm]
 						.lane_rx_prevga_gn_adapt[lane];
+	case GSER_CONFIG_QLM_LANE_IDLE_REFSET_VALUE:
+		return plat_octeontx_bcfg->qlm_cfg[qlm].lane_idle_refset[lane];
 	default:
 		WARN("Unknown property to read from BDK DT\n");
 		return -1;
@@ -184,6 +186,7 @@ int gser_config_get_int(int prop, ...)
 	case GSER_CONFIG_QLM_LANE_TX_POLARITY:
 	case GSER_CONFIG_QLM_TUNING_RX_PREVGA_GN_OVRD:
 	case GSER_CONFIG_QLM_TUNING_RX_PREVGA_GN_ADAPT:
+	case GSER_CONFIG_QLM_LANE_IDLE_REFSET_VALUE:
 		qlm = va_arg(vl, int);
 		lane = va_arg(vl, int);
 		ret = gser_get_lane_config(prop, qlm, lane);
