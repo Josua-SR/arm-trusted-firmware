@@ -13,7 +13,8 @@ ifeq (${MBEDTLS_DIR},)
   $(error Error: MBEDTLS_DIR not set)
 endif
 
-MBEDTLS_INC		=	-I${MBEDTLS_DIR}/include
+INCLUDES		+=	-I${MBEDTLS_DIR}/include		\
+				-Iinclude/drivers/auth/mbedtls
 
 # Specify mbed TLS configuration file
 MBEDTLS_CONFIG_FILE	:=	"<drivers/auth/mbedtls/mbedtls_config.h>"
@@ -28,7 +29,6 @@ LIBMBEDTLS_SRCS		:= $(addprefix ${MBEDTLS_DIR}/library/,	\
 					memory_buffer_alloc.c			\
 					oid.c 					\
 					platform.c 				\
-					platform_util.c				\
 					bignum.c				\
 					md.c					\
 					md_wrap.c				\
@@ -42,7 +42,6 @@ LIBMBEDTLS_SRCS		:= $(addprefix ${MBEDTLS_DIR}/library/,	\
 					ecp_curves.c				\
 					ecp.c					\
 					rsa.c					\
-					rsa_internal.c				\
 					x509.c 					\
 					x509_crt.c 				\
 					)
