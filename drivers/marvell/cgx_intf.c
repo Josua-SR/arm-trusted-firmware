@@ -919,11 +919,7 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 			/* Update the SCRATCHX register with the new link info to the
 			 * original lane
 			 */
-			if (!strncmp(plat_octeontx_bcfg->bcfg.board_model,
-					"ebb96", 5)) {
-				qlm_ops->qlm_set_state(
-						lmac->qlm, lmac->lane, state);
-			}
+			qlm_ops->qlm_set_state(lmac->qlm, lmac->lane, state);
 
 			/* Wait 5ms before bringing UP the CGX link */
 			mdelay(5);
