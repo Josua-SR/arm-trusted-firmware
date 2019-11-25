@@ -919,7 +919,9 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 			/* Update the SCRATCHX register with the new link info to the
 			 * original lane
 			 */
-			qlm_ops->qlm_set_state(lmac->qlm, lmac->lane, state);
+			if (qlm_ops->type == QLM_GSERN_TYPE)
+				qlm_ops->qlm_set_state(lmac->qlm, lmac->lane,
+							state);
 
 			/* Wait 5ms before bringing UP the CGX link */
 			mdelay(5);

@@ -2441,9 +2441,8 @@ void cgx_hw_init(int cgx_id)
 							qlm_mode, baud_rate,
 							flags);
 					if (qlm_ops->type == QLM_GSERN_TYPE)
-						CSR_WRITE(CAVM_GSERNX_LANEX_SCRATCHX(
-							lmac->qlm, lmac->lane, 0),
-							state.u);
+						qlm_ops->qlm_set_state(qlm,
+							    lmac->lane, state);
 				}
 				cgx_lmac_init(cgx_id, lmac_id);
 			} else
