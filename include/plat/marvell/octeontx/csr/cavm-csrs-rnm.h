@@ -662,6 +662,7 @@ union cavm_rnm_ctl_status
     } cn96xxp3;
     /* struct cavm_rnm_ctl_status_cn96xxp3 cn98xx; */
     /* struct cavm_rnm_ctl_status_cn96xxp1 cnf95xx; */
+    /* struct cavm_rnm_ctl_status_cn96xxp1 f95mm; */
     /* struct cavm_rnm_ctl_status_cn96xxp1 loki; */
 };
 typedef union cavm_rnm_ctl_status cavm_rnm_ctl_status_t;
@@ -896,14 +897,16 @@ union cavm_rnm_zucx_init_lfsrx
 };
 typedef union cavm_rnm_zucx_init_lfsrx cavm_rnm_zucx_init_lfsrx_t;
 
-static inline uint64_t CAVM_RNM_ZUCX_INIT_LFSRX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RNM_ZUCX_INIT_LFSRX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RNM_ZUCX_INIT_LFSRX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RNM_ZUCX_INIT_LFSRX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && ((a==0) && (b<=15)))
         return 0x87e00f000100ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=15)))
         return 0x87e00f000100ll + 0x400ll * ((a) & 0x1) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) && (b<=15)))
+        return 0x87e00f000100ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
         return 0x87e00f000100ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b<=15)))
         return 0x87e00f000100ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
@@ -946,14 +949,16 @@ union cavm_rnm_zucx_init_nlfx
 };
 typedef union cavm_rnm_zucx_init_nlfx cavm_rnm_zucx_init_nlfx_t;
 
-static inline uint64_t CAVM_RNM_ZUCX_INIT_NLFX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RNM_ZUCX_INIT_NLFX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RNM_ZUCX_INIT_NLFX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RNM_ZUCX_INIT_NLFX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && ((a==0) && (b<=1)))
         return 0x87e00f000200ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=1)))
         return 0x87e00f000200ll + 0x400ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) && (b<=1)))
+        return 0x87e00f000200ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1)))
         return 0x87e00f000200ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b<=1)))
         return 0x87e00f000200ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0x1);

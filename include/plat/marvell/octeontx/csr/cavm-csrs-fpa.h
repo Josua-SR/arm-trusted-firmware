@@ -230,8 +230,8 @@ union cavm_fpa_aurax_cfg
 };
 typedef union cavm_fpa_aurax_cfg cavm_fpa_aurax_cfg_t;
 
-static inline uint64_t CAVM_FPA_AURAX_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_AURAX_CFG(unsigned long a)
+static inline uint64_t CAVM_FPA_AURAX_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_AURAX_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=511))
         return 0x828040008110ll + 0x10000ll * ((a) & 0x1ff);
@@ -323,8 +323,8 @@ union cavm_fpa_aurax_cnt_levels
 };
 typedef union cavm_fpa_aurax_cnt_levels cavm_fpa_aurax_cnt_levels_t;
 
-static inline uint64_t CAVM_FPA_AURAX_CNT_LEVELS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_AURAX_CNT_LEVELS(unsigned long a)
+static inline uint64_t CAVM_FPA_AURAX_CNT_LEVELS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_AURAX_CNT_LEVELS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=511))
         return 0x828040008310ll + 0x10000ll * ((a) & 0x1ff);
@@ -363,8 +363,8 @@ union cavm_fpa_aurax_pool
 };
 typedef union cavm_fpa_aurax_pool cavm_fpa_aurax_pool_t;
 
-static inline uint64_t CAVM_FPA_AURAX_POOL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_AURAX_POOL(unsigned long a)
+static inline uint64_t CAVM_FPA_AURAX_POOL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_AURAX_POOL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=511))
         return 0x828040008100ll + 0x10000ll * ((a) & 0x1ff);
@@ -470,8 +470,8 @@ union cavm_fpa_aurax_pool_levels
 };
 typedef union cavm_fpa_aurax_pool_levels cavm_fpa_aurax_pool_levels_t;
 
-static inline uint64_t CAVM_FPA_AURAX_POOL_LEVELS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_AURAX_POOL_LEVELS(unsigned long a)
+static inline uint64_t CAVM_FPA_AURAX_POOL_LEVELS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_AURAX_POOL_LEVELS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=511))
         return 0x828040008300ll + 0x10000ll * ((a) & 0x1ff);
@@ -1513,8 +1513,8 @@ union cavm_fpa_pf_mapx
 };
 typedef union cavm_fpa_pf_mapx cavm_fpa_pf_mapx_t;
 
-static inline uint64_t CAVM_FPA_PF_MAPX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_PF_MAPX(unsigned long a)
+static inline uint64_t CAVM_FPA_PF_MAPX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_PF_MAPX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=39))
         return 0x828000001000ll + 8ll * ((a) & 0x3f);
@@ -1552,8 +1552,8 @@ union cavm_fpa_pf_msix_pbax
 };
 typedef union cavm_fpa_pf_msix_pbax cavm_fpa_pf_msix_pbax_t;
 
-static inline uint64_t CAVM_FPA_PF_MSIX_PBAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_PF_MSIX_PBAX(unsigned long a)
+static inline uint64_t CAVM_FPA_PF_MSIX_PBAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_PF_MSIX_PBAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
         return 0x8283000f0000ll + 8ll * ((a) & 0x0);
@@ -1610,8 +1610,8 @@ union cavm_fpa_pf_msix_vecx_addr
 };
 typedef union cavm_fpa_pf_msix_vecx_addr cavm_fpa_pf_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_FPA_PF_MSIX_VECX_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_PF_MSIX_VECX_ADDR(unsigned long a)
+static inline uint64_t CAVM_FPA_PF_MSIX_VECX_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_PF_MSIX_VECX_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x828300000000ll + 0x10ll * ((a) & 0x1);
@@ -1652,8 +1652,8 @@ union cavm_fpa_pf_msix_vecx_ctl
 };
 typedef union cavm_fpa_pf_msix_vecx_ctl cavm_fpa_pf_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_FPA_PF_MSIX_VECX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_PF_MSIX_VECX_CTL(unsigned long a)
+static inline uint64_t CAVM_FPA_PF_MSIX_VECX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_PF_MSIX_VECX_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x828300000008ll + 0x10ll * ((a) & 0x1);
@@ -1724,8 +1724,8 @@ union cavm_fpa_pf_vfx_gmctl
 };
 typedef union cavm_fpa_pf_vfx_gmctl cavm_fpa_pf_vfx_gmctl_t;
 
-static inline uint64_t CAVM_FPA_PF_VFX_GMCTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_PF_VFX_GMCTL(unsigned long a)
+static inline uint64_t CAVM_FPA_PF_VFX_GMCTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_PF_VFX_GMCTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x828040001000ll + 0x100000ll * ((a) & 0x1f);
@@ -1815,8 +1815,8 @@ union cavm_fpa_poolx_cfg
 };
 typedef union cavm_fpa_poolx_cfg cavm_fpa_poolx_cfg_t;
 
-static inline uint64_t CAVM_FPA_POOLX_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_POOLX_CFG(unsigned long a)
+static inline uint64_t CAVM_FPA_POOLX_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_POOLX_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x828040004100ll + 0x100000ll * ((a) & 0x1f);
@@ -1887,8 +1887,8 @@ union cavm_fpa_poolx_fpf_marks
 };
 typedef union cavm_fpa_poolx_fpf_marks cavm_fpa_poolx_fpf_marks_t;
 
-static inline uint64_t CAVM_FPA_POOLX_FPF_MARKS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_POOLX_FPF_MARKS(unsigned long a)
+static inline uint64_t CAVM_FPA_POOLX_FPF_MARKS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_POOLX_FPF_MARKS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x828040004110ll + 0x100000ll * ((a) & 0x1f);
@@ -1926,8 +1926,8 @@ union cavm_fpa_poolx_op_pc
 };
 typedef union cavm_fpa_poolx_op_pc cavm_fpa_poolx_op_pc_t;
 
-static inline uint64_t CAVM_FPA_POOLX_OP_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_POOLX_OP_PC(unsigned long a)
+static inline uint64_t CAVM_FPA_POOLX_OP_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_POOLX_OP_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x828040004280ll + 0x100000ll * ((a) & 0x1f);
@@ -1967,8 +1967,8 @@ union cavm_fpa_poolx_stack_addr
 };
 typedef union cavm_fpa_poolx_stack_addr cavm_fpa_poolx_stack_addr_t;
 
-static inline uint64_t CAVM_FPA_POOLX_STACK_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_POOLX_STACK_ADDR(unsigned long a)
+static inline uint64_t CAVM_FPA_POOLX_STACK_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_POOLX_STACK_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x828040004240ll + 0x100000ll * ((a) & 0x1f);
@@ -2006,8 +2006,8 @@ union cavm_fpa_poolx_stack_base
 };
 typedef union cavm_fpa_poolx_stack_base cavm_fpa_poolx_stack_base_t;
 
-static inline uint64_t CAVM_FPA_POOLX_STACK_BASE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_POOLX_STACK_BASE(unsigned long a)
+static inline uint64_t CAVM_FPA_POOLX_STACK_BASE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_POOLX_STACK_BASE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x828040004220ll + 0x100000ll * ((a) & 0x1f);
@@ -2047,8 +2047,8 @@ union cavm_fpa_poolx_stack_end
 };
 typedef union cavm_fpa_poolx_stack_end cavm_fpa_poolx_stack_end_t;
 
-static inline uint64_t CAVM_FPA_POOLX_STACK_END(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_POOLX_STACK_END(unsigned long a)
+static inline uint64_t CAVM_FPA_POOLX_STACK_END(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_POOLX_STACK_END(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x828040004230ll + 0x100000ll * ((a) & 0x1f);
@@ -2402,8 +2402,8 @@ union cavm_fpa_vfx_int
 };
 typedef union cavm_fpa_vfx_int cavm_fpa_vfx_int_t;
 
-static inline uint64_t CAVM_FPA_VFX_INT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VFX_INT(unsigned long a)
+static inline uint64_t CAVM_FPA_VFX_INT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VFX_INT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x828400000200ll + 0x400000ll * ((a) & 0x1f);
@@ -2456,8 +2456,8 @@ union cavm_fpa_vfx_int_ena_w1c
 };
 typedef union cavm_fpa_vfx_int_ena_w1c cavm_fpa_vfx_int_ena_w1c_t;
 
-static inline uint64_t CAVM_FPA_VFX_INT_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VFX_INT_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_FPA_VFX_INT_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VFX_INT_ENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x828400000230ll + 0x400000ll * ((a) & 0x1f);
@@ -2510,8 +2510,8 @@ union cavm_fpa_vfx_int_ena_w1s
 };
 typedef union cavm_fpa_vfx_int_ena_w1s cavm_fpa_vfx_int_ena_w1s_t;
 
-static inline uint64_t CAVM_FPA_VFX_INT_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VFX_INT_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_FPA_VFX_INT_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VFX_INT_ENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x828400000220ll + 0x400000ll * ((a) & 0x1f);
@@ -2564,8 +2564,8 @@ union cavm_fpa_vfx_int_w1s
 };
 typedef union cavm_fpa_vfx_int_w1s cavm_fpa_vfx_int_w1s_t;
 
-static inline uint64_t CAVM_FPA_VFX_INT_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VFX_INT_W1S(unsigned long a)
+static inline uint64_t CAVM_FPA_VFX_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VFX_INT_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x828400000210ll + 0x400000ll * ((a) & 0x1f);
@@ -2603,8 +2603,8 @@ union cavm_fpa_vfx_msix_pbax
 };
 typedef union cavm_fpa_vfx_msix_pbax cavm_fpa_vfx_msix_pbax_t;
 
-static inline uint64_t CAVM_FPA_VFX_MSIX_PBAX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VFX_MSIX_PBAX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_FPA_VFX_MSIX_PBAX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VFX_MSIX_PBAX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b==0)))
         return 0x8287000f0000ll + 0x100000ll * ((a) & 0x1f) + 8ll * ((b) & 0x0);
@@ -2649,8 +2649,8 @@ union cavm_fpa_vfx_msix_vecx_addr
 };
 typedef union cavm_fpa_vfx_msix_vecx_addr cavm_fpa_vfx_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_FPA_VFX_MSIX_VECX_ADDR(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VFX_MSIX_VECX_ADDR(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_FPA_VFX_MSIX_VECX_ADDR(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VFX_MSIX_VECX_ADDR(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b==0)))
         return 0x828700000000ll + 0x100000ll * ((a) & 0x1f) + 0x10ll * ((b) & 0x0);
@@ -2691,8 +2691,8 @@ union cavm_fpa_vfx_msix_vecx_ctl
 };
 typedef union cavm_fpa_vfx_msix_vecx_ctl cavm_fpa_vfx_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_FPA_VFX_MSIX_VECX_CTL(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VFX_MSIX_VECX_CTL(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_FPA_VFX_MSIX_VECX_CTL(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VFX_MSIX_VECX_CTL(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b==0)))
         return 0x828700000008ll + 0x100000ll * ((a) & 0x1f) + 0x10ll * ((b) & 0x0);
@@ -2728,8 +2728,8 @@ union cavm_fpa_vhaurax_cnt
 };
 typedef union cavm_fpa_vhaurax_cnt cavm_fpa_vhaurax_cnt_t;
 
-static inline uint64_t CAVM_FPA_VHAURAX_CNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VHAURAX_CNT(unsigned long a)
+static inline uint64_t CAVM_FPA_VHAURAX_CNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VHAURAX_CNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=511))
         return 0x828400020120ll + 0x40000ll * ((a) & 0x1ff);
@@ -2779,8 +2779,8 @@ union cavm_fpa_vhaurax_cnt_add
 };
 typedef union cavm_fpa_vhaurax_cnt_add cavm_fpa_vhaurax_cnt_add_t;
 
-static inline uint64_t CAVM_FPA_VHAURAX_CNT_ADD(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VHAURAX_CNT_ADD(unsigned long a)
+static inline uint64_t CAVM_FPA_VHAURAX_CNT_ADD(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VHAURAX_CNT_ADD(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=511))
         return 0x828400020128ll + 0x40000ll * ((a) & 0x1ff);
@@ -2820,8 +2820,8 @@ union cavm_fpa_vhaurax_cnt_limit
 };
 typedef union cavm_fpa_vhaurax_cnt_limit cavm_fpa_vhaurax_cnt_limit_t;
 
-static inline uint64_t CAVM_FPA_VHAURAX_CNT_LIMIT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VHAURAX_CNT_LIMIT(unsigned long a)
+static inline uint64_t CAVM_FPA_VHAURAX_CNT_LIMIT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VHAURAX_CNT_LIMIT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=511))
         return 0x828400020130ll + 0x40000ll * ((a) & 0x1ff);
@@ -2861,8 +2861,8 @@ union cavm_fpa_vhaurax_cnt_threshold
 };
 typedef union cavm_fpa_vhaurax_cnt_threshold cavm_fpa_vhaurax_cnt_threshold_t;
 
-static inline uint64_t CAVM_FPA_VHAURAX_CNT_THRESHOLD(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VHAURAX_CNT_THRESHOLD(unsigned long a)
+static inline uint64_t CAVM_FPA_VHAURAX_CNT_THRESHOLD(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VHAURAX_CNT_THRESHOLD(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=511))
         return 0x828400020140ll + 0x40000ll * ((a) & 0x1ff);
@@ -2913,8 +2913,8 @@ union cavm_fpa_vhaurax_op_allocx
 };
 typedef union cavm_fpa_vhaurax_op_allocx cavm_fpa_vhaurax_op_allocx_t;
 
-static inline uint64_t CAVM_FPA_VHAURAX_OP_ALLOCX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VHAURAX_OP_ALLOCX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_FPA_VHAURAX_OP_ALLOCX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VHAURAX_OP_ALLOCX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=511) && (b==0)))
         return 0x828400030000ll + 0x40000ll * ((a) & 0x1ff) + 8ll * ((b) & 0x0);
@@ -2961,8 +2961,8 @@ union cavm_fpa_vhaurax_op_freex
 };
 typedef union cavm_fpa_vhaurax_op_freex cavm_fpa_vhaurax_op_freex_t;
 
-static inline uint64_t CAVM_FPA_VHAURAX_OP_FREEX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VHAURAX_OP_FREEX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_FPA_VHAURAX_OP_FREEX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VHAURAX_OP_FREEX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=511) && (b==0)))
         return 0x828400038000ll + 0x40000ll * ((a) & 0x1ff) + 8ll * ((b) & 0x0);
@@ -3004,8 +3004,8 @@ union cavm_fpa_vhpoolx_available
 };
 typedef union cavm_fpa_vhpoolx_available cavm_fpa_vhpoolx_available_t;
 
-static inline uint64_t CAVM_FPA_VHPOOLX_AVAILABLE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VHPOOLX_AVAILABLE(unsigned long a)
+static inline uint64_t CAVM_FPA_VHPOOLX_AVAILABLE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VHPOOLX_AVAILABLE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x828400004150ll + 0x400000ll * ((a) & 0x1f);
@@ -3044,8 +3044,8 @@ union cavm_fpa_vhpoolx_end_addr
 };
 typedef union cavm_fpa_vhpoolx_end_addr cavm_fpa_vhpoolx_end_addr_t;
 
-static inline uint64_t CAVM_FPA_VHPOOLX_END_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VHPOOLX_END_ADDR(unsigned long a)
+static inline uint64_t CAVM_FPA_VHPOOLX_END_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VHPOOLX_END_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x828400004210ll + 0x400000ll * ((a) & 0x1f);
@@ -3084,8 +3084,8 @@ union cavm_fpa_vhpoolx_start_addr
 };
 typedef union cavm_fpa_vhpoolx_start_addr cavm_fpa_vhpoolx_start_addr_t;
 
-static inline uint64_t CAVM_FPA_VHPOOLX_START_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VHPOOLX_START_ADDR(unsigned long a)
+static inline uint64_t CAVM_FPA_VHPOOLX_START_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VHPOOLX_START_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x828400004200ll + 0x400000ll * ((a) & 0x1f);
@@ -3125,8 +3125,8 @@ union cavm_fpa_vhpoolx_threshold
 };
 typedef union cavm_fpa_vhpoolx_threshold cavm_fpa_vhpoolx_threshold_t;
 
-static inline uint64_t CAVM_FPA_VHPOOLX_THRESHOLD(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FPA_VHPOOLX_THRESHOLD(unsigned long a)
+static inline uint64_t CAVM_FPA_VHPOOLX_THRESHOLD(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FPA_VHPOOLX_THRESHOLD(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x828400004160ll + 0x400000ll * ((a) & 0x1f);

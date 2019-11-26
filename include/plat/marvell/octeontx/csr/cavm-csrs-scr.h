@@ -896,6 +896,7 @@ union cavm_scr_write32_s
         uint64_t reserved_96_127       : 32;
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_scr_write32_s_cnf95xxp2 f95mm; */
     /* struct cavm_scr_write32_s_cn96xxp3 loki; */
 };
 

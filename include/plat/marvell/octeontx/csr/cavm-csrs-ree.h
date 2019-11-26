@@ -999,8 +999,8 @@ union cavm_reex_af_active_pc
 };
 typedef union cavm_reex_af_active_pc cavm_reex_af_active_pc_t;
 
-static inline uint64_t CAVM_REEX_AF_ACTIVE_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_ACTIVE_PC(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_ACTIVE_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_ACTIVE_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000450ll + 0x10000000ll * ((a) & 0x1);
@@ -1081,8 +1081,8 @@ union cavm_reex_af_aq_ctl_cfg
 };
 typedef union cavm_reex_af_aq_ctl_cfg cavm_reex_af_aq_ctl_cfg_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_CTL_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_CTL_CFG(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_CTL_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_CTL_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000118ll + 0x10000000ll * ((a) & 0x1);
@@ -1153,8 +1153,8 @@ union cavm_reex_af_aq_done
 };
 typedef union cavm_reex_af_aq_done cavm_reex_af_aq_done_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_DONE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_DONE(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_DONE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_DONE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000128ll + 0x10000000ll * ((a) & 0x1);
@@ -1199,8 +1199,8 @@ union cavm_reex_af_aq_done_ack
 };
 typedef union cavm_reex_af_aq_done_ack cavm_reex_af_aq_done_ack_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_DONE_ACK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_DONE_ACK(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_DONE_ACK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_DONE_ACK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000130ll + 0x10000000ll * ((a) & 0x1);
@@ -1255,8 +1255,8 @@ union cavm_reex_af_aq_done_int
 };
 typedef union cavm_reex_af_aq_done_int cavm_reex_af_aq_done_int_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000150ll + 0x10000000ll * ((a) & 0x1);
@@ -1295,8 +1295,8 @@ union cavm_reex_af_aq_done_int_ena_w1c
 };
 typedef union cavm_reex_af_aq_done_int_ena_w1c cavm_reex_af_aq_done_int_ena_w1c_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT_ENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000170ll + 0x10000000ll * ((a) & 0x1);
@@ -1335,8 +1335,8 @@ union cavm_reex_af_aq_done_int_ena_w1s
 };
 typedef union cavm_reex_af_aq_done_int_ena_w1s cavm_reex_af_aq_done_int_ena_w1s_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT_ENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000168ll + 0x10000000ll * ((a) & 0x1);
@@ -1391,8 +1391,8 @@ union cavm_reex_af_aq_done_int_w1s
 };
 typedef union cavm_reex_af_aq_done_int_w1s cavm_reex_af_aq_done_int_w1s_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT_W1S(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_DONE_INT_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000160ll + 0x10000000ll * ((a) & 0x1);
@@ -1437,8 +1437,8 @@ union cavm_reex_af_aq_doorbell
 };
 typedef union cavm_reex_af_aq_doorbell cavm_reex_af_aq_doorbell_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_DOORBELL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_DOORBELL(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_DOORBELL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_DOORBELL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000200ll + 0x10000000ll * ((a) & 0x1);
@@ -1499,8 +1499,8 @@ union cavm_reex_af_aq_ena
 };
 typedef union cavm_reex_af_aq_ena cavm_reex_af_aq_ena_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_ENA(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_ENA(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_ENA(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_ENA(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000180ll + 0x10000000ll * ((a) & 0x1);
@@ -1543,8 +1543,8 @@ union cavm_reex_af_aq_int
 };
 typedef union cavm_reex_af_aq_int cavm_reex_af_aq_int_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_INT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_INT(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_INT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_INT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140046020ll + 0x10000000ll * ((a) & 0x1);
@@ -1587,8 +1587,8 @@ union cavm_reex_af_aq_int_ena_w1c
 };
 typedef union cavm_reex_af_aq_int_ena_w1c cavm_reex_af_aq_int_ena_w1c_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_INT_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_INT_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_INT_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_INT_ENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140046038ll + 0x10000000ll * ((a) & 0x1);
@@ -1631,8 +1631,8 @@ union cavm_reex_af_aq_int_ena_w1s
 };
 typedef union cavm_reex_af_aq_int_ena_w1s cavm_reex_af_aq_int_ena_w1s_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_INT_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_INT_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_INT_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_INT_ENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140046030ll + 0x10000000ll * ((a) & 0x1);
@@ -1675,8 +1675,8 @@ union cavm_reex_af_aq_int_w1s
 };
 typedef union cavm_reex_af_aq_int_w1s cavm_reex_af_aq_int_w1s_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_INT_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_INT_W1S(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_INT_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140046028ll + 0x10000000ll * ((a) & 0x1);
@@ -1714,8 +1714,8 @@ union cavm_reex_af_aq_outstand_job
 };
 typedef union cavm_reex_af_aq_outstand_job cavm_reex_af_aq_outstand_job_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_OUTSTAND_JOB(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_OUTSTAND_JOB(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_OUTSTAND_JOB(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_OUTSTAND_JOB(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000220ll + 0x10000000ll * ((a) & 0x1);
@@ -1769,8 +1769,8 @@ union cavm_reex_af_aq_pp_wait
 };
 typedef union cavm_reex_af_aq_pp_wait cavm_reex_af_aq_pp_wait_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_PP_WAIT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_PP_WAIT(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_PP_WAIT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_PP_WAIT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000120ll + 0x10000000ll * ((a) & 0x1);
@@ -1826,8 +1826,8 @@ union cavm_reex_af_aq_sbuf_addr
 };
 typedef union cavm_reex_af_aq_sbuf_addr cavm_reex_af_aq_sbuf_addr_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_SBUF_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_SBUF_ADDR(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_SBUF_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_SBUF_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000110ll + 0x10000000ll * ((a) & 0x1);
@@ -1871,8 +1871,8 @@ union cavm_reex_af_aq_sbuf_ctl
 };
 typedef union cavm_reex_af_aq_sbuf_ctl cavm_reex_af_aq_sbuf_ctl_t;
 
-static inline uint64_t CAVM_REEX_AF_AQ_SBUF_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_AQ_SBUF_CTL(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_AQ_SBUF_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_AQ_SBUF_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000100ll + 0x10000000ll * ((a) & 0x1);
@@ -1909,8 +1909,8 @@ union cavm_reex_af_bar2_aliasx
 };
 typedef union cavm_reex_af_bar2_aliasx cavm_reex_af_bar2_aliasx_t;
 
-static inline uint64_t CAVM_REEX_AF_BAR2_ALIASX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_BAR2_ALIASX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_REEX_AF_BAR2_ALIASX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_BAR2_ALIASX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=131071)))
         return 0x840149100000ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x1ffff);
@@ -1952,8 +1952,8 @@ union cavm_reex_af_bar2_sel
 };
 typedef union cavm_reex_af_bar2_sel cavm_reex_af_bar2_sel_t;
 
-static inline uint64_t CAVM_REEX_AF_BAR2_SEL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_BAR2_SEL(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_BAR2_SEL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_BAR2_SEL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840149000000ll + 0x10000000ll * ((a) & 0x1);
@@ -1999,8 +1999,8 @@ union cavm_reex_af_blk_rst
 };
 typedef union cavm_reex_af_blk_rst cavm_reex_af_blk_rst_t;
 
-static inline uint64_t CAVM_REEX_AF_BLK_RST(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_BLK_RST(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_BLK_RST(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_BLK_RST(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140045000ll + 0x10000000ll * ((a) & 0x1);
@@ -2125,8 +2125,8 @@ union cavm_reex_af_bp_test
 };
 typedef union cavm_reex_af_bp_test cavm_reex_af_bp_test_t;
 
-static inline uint64_t CAVM_REEX_AF_BP_TEST(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_BP_TEST(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_BP_TEST(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_BP_TEST(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140003400ll + 0x10000000ll * ((a) & 0x1);
@@ -2173,8 +2173,8 @@ union cavm_reex_af_cmd_ctl
 };
 typedef union cavm_reex_af_cmd_ctl cavm_reex_af_cmd_ctl_t;
 
-static inline uint64_t CAVM_REEX_AF_CMD_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_CMD_CTL(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_CMD_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_CMD_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000000ll + 0x10000000ll * ((a) & 0x1);
@@ -2212,8 +2212,8 @@ union cavm_reex_af_constants
 };
 typedef union cavm_reex_af_constants cavm_reex_af_constants_t;
 
-static inline uint64_t CAVM_REEX_AF_CONSTANTS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_CONSTANTS(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_CONSTANTS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_CONSTANTS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400000a0ll + 0x10000000ll * ((a) & 0x1);
@@ -2252,8 +2252,8 @@ union cavm_reex_af_core_reset
 };
 typedef union cavm_reex_af_core_reset cavm_reex_af_core_reset_t;
 
-static inline uint64_t CAVM_REEX_AF_CORE_RESET(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_CORE_RESET(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_CORE_RESET(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_CORE_RESET(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000310ll + 0x10000000ll * ((a) & 0x1);
@@ -2291,8 +2291,8 @@ union cavm_reex_af_crdt_halt_ncb_req_pc
 };
 typedef union cavm_reex_af_crdt_halt_ncb_req_pc cavm_reex_af_crdt_halt_ncb_req_pc_t;
 
-static inline uint64_t CAVM_REEX_AF_CRDT_HALT_NCB_REQ_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_CRDT_HALT_NCB_REQ_PC(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_CRDT_HALT_NCB_REQ_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_CRDT_HALT_NCB_REQ_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000480ll + 0x10000000ll * ((a) & 0x1);
@@ -2364,8 +2364,8 @@ union cavm_reex_af_ctl_cfg
 };
 typedef union cavm_reex_af_ctl_cfg cavm_reex_af_ctl_cfg_t;
 
-static inline uint64_t CAVM_REEX_AF_CTL_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_CTL_CFG(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_CTL_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_CTL_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000560ll + 0x10000000ll * ((a) & 0x1);
@@ -2412,8 +2412,8 @@ union cavm_reex_af_dbg_quex_sta
 };
 typedef union cavm_reex_af_dbg_quex_sta cavm_reex_af_dbg_quex_sta_t;
 
-static inline uint64_t CAVM_REEX_AF_DBG_QUEX_STA(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_DBG_QUEX_STA(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_REEX_AF_DBG_QUEX_STA(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_DBG_QUEX_STA(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=35)))
         return 0x840140001800ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
@@ -2447,8 +2447,8 @@ union cavm_reex_af_eco
 };
 typedef union cavm_reex_af_eco cavm_reex_af_eco_t;
 
-static inline uint64_t CAVM_REEX_AF_ECO(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_ECO(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_ECO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_ECO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400005f0ll + 0x10000000ll * ((a) & 0x1);
@@ -2487,8 +2487,8 @@ union cavm_reex_af_em_base
 };
 typedef union cavm_reex_af_em_base cavm_reex_af_em_base_t;
 
-static inline uint64_t CAVM_REEX_AF_EM_BASE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_EM_BASE(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_EM_BASE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_EM_BASE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000300ll + 0x10000000ll * ((a) & 0x1);
@@ -2528,8 +2528,8 @@ union cavm_reex_af_em_pf_func
 };
 typedef union cavm_reex_af_em_pf_func cavm_reex_af_em_pf_func_t;
 
-static inline uint64_t CAVM_REEX_AF_EM_PF_FUNC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_EM_PF_FUNC(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_EM_PF_FUNC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_EM_PF_FUNC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000308ll + 0x10000000ll * ((a) & 0x1);
@@ -2574,8 +2574,8 @@ union cavm_reex_af_em_phys_en
 };
 typedef union cavm_reex_af_em_phys_en cavm_reex_af_em_phys_en_t;
 
-static inline uint64_t CAVM_REEX_AF_EM_PHYS_EN(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_EM_PHYS_EN(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_EM_PHYS_EN(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_EM_PHYS_EN(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400002f8ll + 0x10000000ll * ((a) & 0x1);
@@ -2623,8 +2623,8 @@ union cavm_reex_af_graceful_dis_ctl
 };
 typedef union cavm_reex_af_graceful_dis_ctl cavm_reex_af_graceful_dis_ctl_t;
 
-static inline uint64_t CAVM_REEX_AF_GRACEFUL_DIS_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_GRACEFUL_DIS_CTL(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_GRACEFUL_DIS_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_GRACEFUL_DIS_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140046100ll + 0x10000000ll * ((a) & 0x1);
@@ -2667,8 +2667,8 @@ union cavm_reex_af_graceful_dis_status
 };
 typedef union cavm_reex_af_graceful_dis_status cavm_reex_af_graceful_dis_status_t;
 
-static inline uint64_t CAVM_REEX_AF_GRACEFUL_DIS_STATUS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_GRACEFUL_DIS_STATUS(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_GRACEFUL_DIS_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_GRACEFUL_DIS_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140046110ll + 0x10000000ll * ((a) & 0x1);
@@ -2722,8 +2722,8 @@ union cavm_reex_af_inst_latency_pc
 };
 typedef union cavm_reex_af_inst_latency_pc cavm_reex_af_inst_latency_pc_t;
 
-static inline uint64_t CAVM_REEX_AF_INST_LATENCY_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_INST_LATENCY_PC(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_INST_LATENCY_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_INST_LATENCY_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000420ll + 0x10000000ll * ((a) & 0x1);
@@ -2759,8 +2759,8 @@ union cavm_reex_af_inst_req_pc
 };
 typedef union cavm_reex_af_inst_req_pc cavm_reex_af_inst_req_pc_t;
 
-static inline uint64_t CAVM_REEX_AF_INST_REQ_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_INST_REQ_PC(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_INST_REQ_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_INST_REQ_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000410ll + 0x10000000ll * ((a) & 0x1);
@@ -2824,8 +2824,8 @@ union cavm_reex_af_lf_rst
 };
 typedef union cavm_reex_af_lf_rst cavm_reex_af_lf_rst_t;
 
-static inline uint64_t CAVM_REEX_AF_LF_RST(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_LF_RST(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_LF_RST(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_LF_RST(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140043000ll + 0x10000000ll * ((a) & 0x1);
@@ -2867,8 +2867,8 @@ union cavm_reex_af_pf_func
 };
 typedef union cavm_reex_af_pf_func cavm_reex_af_pf_func_t;
 
-static inline uint64_t CAVM_REEX_AF_PF_FUNC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_PF_FUNC(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_PF_FUNC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_PF_FUNC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000210ll + 0x10000000ll * ((a) & 0x1);
@@ -2979,8 +2979,8 @@ union cavm_reex_af_quex_gcfg
 };
 typedef union cavm_reex_af_quex_gcfg cavm_reex_af_quex_gcfg_t;
 
-static inline uint64_t CAVM_REEX_AF_QUEX_GCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_QUEX_GCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_REEX_AF_QUEX_GCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_QUEX_GCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=35)))
         return 0x840140001a00ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
@@ -3019,8 +3019,8 @@ union cavm_reex_af_quex_gmctl
 };
 typedef union cavm_reex_af_quex_gmctl cavm_reex_af_quex_gmctl_t;
 
-static inline uint64_t CAVM_REEX_AF_QUEX_GMCTL(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_QUEX_GMCTL(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_REEX_AF_QUEX_GMCTL(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_QUEX_GMCTL(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=35)))
         return 0x840140000800ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
@@ -3071,8 +3071,8 @@ union cavm_reex_af_quex_sbuf_ctl
 };
 typedef union cavm_reex_af_quex_sbuf_ctl cavm_reex_af_quex_sbuf_ctl_t;
 
-static inline uint64_t CAVM_REEX_AF_QUEX_SBUF_CTL(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_QUEX_SBUF_CTL(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_REEX_AF_QUEX_SBUF_CTL(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_QUEX_SBUF_CTL(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=35)))
         return 0x840140001200ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
@@ -3115,8 +3115,8 @@ union cavm_reex_af_ras
 };
 typedef union cavm_reex_af_ras cavm_reex_af_ras_t;
 
-static inline uint64_t CAVM_REEX_AF_RAS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_RAS(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_RAS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_RAS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000980ll + 0x10000000ll * ((a) & 0x1);
@@ -3157,8 +3157,8 @@ union cavm_reex_af_ras_ena_w1c
 };
 typedef union cavm_reex_af_ras_ena_w1c cavm_reex_af_ras_ena_w1c_t;
 
-static inline uint64_t CAVM_REEX_AF_RAS_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_RAS_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_RAS_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_RAS_ENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000990ll + 0x10000000ll * ((a) & 0x1);
@@ -3199,8 +3199,8 @@ union cavm_reex_af_ras_ena_w1s
 };
 typedef union cavm_reex_af_ras_ena_w1s cavm_reex_af_ras_ena_w1s_t;
 
-static inline uint64_t CAVM_REEX_AF_RAS_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_RAS_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_RAS_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_RAS_ENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000998ll + 0x10000000ll * ((a) & 0x1);
@@ -3241,8 +3241,8 @@ union cavm_reex_af_ras_w1s
 };
 typedef union cavm_reex_af_ras_w1s cavm_reex_af_ras_w1s_t;
 
-static inline uint64_t CAVM_REEX_AF_RAS_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_RAS_W1S(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_RAS_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_RAS_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000988ll + 0x10000000ll * ((a) & 0x1);
@@ -3280,8 +3280,8 @@ union cavm_reex_af_rd_latency_pc
 };
 typedef union cavm_reex_af_rd_latency_pc cavm_reex_af_rd_latency_pc_t;
 
-static inline uint64_t CAVM_REEX_AF_RD_LATENCY_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_RD_LATENCY_PC(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_RD_LATENCY_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_RD_LATENCY_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000440ll + 0x10000000ll * ((a) & 0x1);
@@ -3317,8 +3317,8 @@ union cavm_reex_af_rd_req_pc
 };
 typedef union cavm_reex_af_rd_req_pc cavm_reex_af_rd_req_pc_t;
 
-static inline uint64_t CAVM_REEX_AF_RD_REQ_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_RD_REQ_PC(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_RD_REQ_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_RD_REQ_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000430ll + 0x10000000ll * ((a) & 0x1);
@@ -3360,8 +3360,8 @@ union cavm_reex_af_reex_active_jobs_pc
 };
 typedef union cavm_reex_af_reex_active_jobs_pc cavm_reex_af_reex_active_jobs_pc_t;
 
-static inline uint64_t CAVM_REEX_AF_REEX_ACTIVE_JOBS_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEX_ACTIVE_JOBS_PC(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEX_ACTIVE_JOBS_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEX_ACTIVE_JOBS_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000490ll + 0x10000000ll * ((a) & 0x1);
@@ -3399,8 +3399,8 @@ union cavm_reex_af_reex_rd_latency_pc
 };
 typedef union cavm_reex_af_reex_rd_latency_pc cavm_reex_af_reex_rd_latency_pc_t;
 
-static inline uint64_t CAVM_REEX_AF_REEX_RD_LATENCY_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEX_RD_LATENCY_PC(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEX_RD_LATENCY_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEX_RD_LATENCY_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000470ll + 0x10000000ll * ((a) & 0x1);
@@ -3437,8 +3437,8 @@ union cavm_reex_af_reex_rd_req_pc
 };
 typedef union cavm_reex_af_reex_rd_req_pc cavm_reex_af_reex_rd_req_pc_t;
 
-static inline uint64_t CAVM_REEX_AF_REEX_RD_REQ_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEX_RD_REQ_PC(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEX_RD_REQ_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEX_RD_REQ_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000460ll + 0x10000000ll * ((a) & 0x1);
@@ -3481,8 +3481,8 @@ union cavm_reex_af_reexm_capability_1
 };
 typedef union cavm_reex_af_reexm_capability_1 cavm_reex_af_reexm_capability_1_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_1(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008018ll + 0x10000000ll * ((a) & 0x1);
@@ -3527,8 +3527,8 @@ union cavm_reex_af_reexm_capability_2
 };
 typedef union cavm_reex_af_reexm_capability_2 cavm_reex_af_reexm_capability_2_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_2(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008020ll + 0x10000000ll * ((a) & 0x1);
@@ -3579,8 +3579,8 @@ union cavm_reex_af_reexm_capability_3
 };
 typedef union cavm_reex_af_reexm_capability_3 cavm_reex_af_reexm_capability_3_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_3(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008028ll + 0x10000000ll * ((a) & 0x1);
@@ -3631,8 +3631,8 @@ union cavm_reex_af_reexm_capability_4
 };
 typedef union cavm_reex_af_reexm_capability_4 cavm_reex_af_reexm_capability_4_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_4(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_4(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_4(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_4(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008030ll + 0x10000000ll * ((a) & 0x1);
@@ -3671,8 +3671,8 @@ union cavm_reex_af_reexm_capability_5
 };
 typedef union cavm_reex_af_reexm_capability_5 cavm_reex_af_reexm_capability_5_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_5(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_5(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_5(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_5(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008038ll + 0x10000000ll * ((a) & 0x1);
@@ -3713,8 +3713,8 @@ union cavm_reex_af_reexm_capability_6
 };
 typedef union cavm_reex_af_reexm_capability_6 cavm_reex_af_reexm_capability_6_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_6(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_6(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_6(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_6(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008040ll + 0x10000000ll * ((a) & 0x1);
@@ -3751,8 +3751,8 @@ union cavm_reex_af_reexm_capability_7
 };
 typedef union cavm_reex_af_reexm_capability_7 cavm_reex_af_reexm_capability_7_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_7(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_7(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_7(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_CAPABILITY_7(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008048ll + 0x10000000ll * ((a) & 0x1);
@@ -3790,8 +3790,8 @@ union cavm_reex_af_reexm_clstr_mask
 };
 typedef union cavm_reex_af_reexm_clstr_mask cavm_reex_af_reexm_clstr_mask_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_CLSTR_MASK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_CLSTR_MASK(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_CLSTR_MASK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_CLSTR_MASK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400080f0ll + 0x10000000ll * ((a) & 0x1);
@@ -3827,8 +3827,8 @@ union cavm_reex_af_reexm_core_clk_count
 };
 typedef union cavm_reex_af_reexm_core_clk_count cavm_reex_af_reexm_core_clk_count_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_CORE_CLK_COUNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_CORE_CLK_COUNT(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_CORE_CLK_COUNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_CORE_CLK_COUNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008080ll + 0x10000000ll * ((a) & 0x1);
@@ -3880,8 +3880,8 @@ union cavm_reex_af_reexm_ctrl
 };
 typedef union cavm_reex_af_reexm_ctrl cavm_reex_af_reexm_ctrl_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_CTRL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_CTRL(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_CTRL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_CTRL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400080c0ll + 0x10000000ll * ((a) & 0x1);
@@ -3919,8 +3919,8 @@ union cavm_reex_af_reexm_dos_count
 };
 typedef union cavm_reex_af_reexm_dos_count cavm_reex_af_reexm_dos_count_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_DOS_COUNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_DOS_COUNT(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_DOS_COUNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_DOS_COUNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008068ll + 0x10000000ll * ((a) & 0x1);
@@ -3958,8 +3958,8 @@ union cavm_reex_af_reexm_fifo_status_0
 };
 typedef union cavm_reex_af_reexm_fifo_status_0 cavm_reex_af_reexm_fifo_status_0_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_FIFO_STATUS_0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_FIFO_STATUS_0(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_FIFO_STATUS_0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_FIFO_STATUS_0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008058ll + 0x10000000ll * ((a) & 0x1);
@@ -3997,8 +3997,8 @@ union cavm_reex_af_reexm_fifo_status_1
 };
 typedef union cavm_reex_af_reexm_fifo_status_1 cavm_reex_af_reexm_fifo_status_1_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_FIFO_STATUS_1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_FIFO_STATUS_1(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_FIFO_STATUS_1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_FIFO_STATUS_1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008060ll + 0x10000000ll * ((a) & 0x1);
@@ -4041,8 +4041,8 @@ union cavm_reex_af_reexm_identifier
 };
 typedef union cavm_reex_af_reexm_identifier cavm_reex_af_reexm_identifier_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_IDENTIFIER(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_IDENTIFIER(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_IDENTIFIER(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_IDENTIFIER(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008000ll + 0x10000000ll * ((a) & 0x1);
@@ -4084,8 +4084,8 @@ union cavm_reex_af_reexm_intr_clstr_mask
 };
 typedef union cavm_reex_af_reexm_intr_clstr_mask cavm_reex_af_reexm_intr_clstr_mask_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_INTR_CLSTR_MASK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_INTR_CLSTR_MASK(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_INTR_CLSTR_MASK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_INTR_CLSTR_MASK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400080f8ll + 0x10000000ll * ((a) & 0x1);
@@ -4121,8 +4121,8 @@ union cavm_reex_af_reexm_job_byt_count_0
 };
 typedef union cavm_reex_af_reexm_job_byt_count_0 cavm_reex_af_reexm_job_byt_count_0_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_JOB_BYT_COUNT_0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_JOB_BYT_COUNT_0(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_JOB_BYT_COUNT_0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_JOB_BYT_COUNT_0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400080a0ll + 0x10000000ll * ((a) & 0x1);
@@ -4158,8 +4158,8 @@ union cavm_reex_af_reexm_job_byt_count_1
 };
 typedef union cavm_reex_af_reexm_job_byt_count_1 cavm_reex_af_reexm_job_byt_count_1_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_JOB_BYT_COUNT_1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_JOB_BYT_COUNT_1(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_JOB_BYT_COUNT_1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_JOB_BYT_COUNT_1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400080a8ll + 0x10000000ll * ((a) & 0x1);
@@ -4195,8 +4195,8 @@ union cavm_reex_af_reexm_job_count
 };
 typedef union cavm_reex_af_reexm_job_count cavm_reex_af_reexm_job_count_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_JOB_COUNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_JOB_COUNT(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_JOB_COUNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_JOB_COUNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008090ll + 0x10000000ll * ((a) & 0x1);
@@ -4232,8 +4232,8 @@ union cavm_reex_af_reexm_match_count
 };
 typedef union cavm_reex_af_reexm_match_count cavm_reex_af_reexm_match_count_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_MATCH_COUNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_MATCH_COUNT(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_MATCH_COUNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_MATCH_COUNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400080b8ll + 0x10000000ll * ((a) & 0x1);
@@ -4281,8 +4281,8 @@ union cavm_reex_af_reexm_max_latency_cnt
 };
 typedef union cavm_reex_af_reexm_max_latency_cnt cavm_reex_af_reexm_max_latency_cnt_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_MAX_LATENCY_CNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_MAX_LATENCY_CNT(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_MAX_LATENCY_CNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_MAX_LATENCY_CNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400080e0ll + 0x10000000ll * ((a) & 0x1);
@@ -4326,8 +4326,8 @@ union cavm_reex_af_reexm_max_match
 };
 typedef union cavm_reex_af_reexm_max_match cavm_reex_af_reexm_max_match_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_MAX_MATCH(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_MAX_MATCH(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_MAX_MATCH(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_MAX_MATCH(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400080c8ll + 0x10000000ll * ((a) & 0x1);
@@ -4369,8 +4369,8 @@ union cavm_reex_af_reexm_max_pre_cnt
 };
 typedef union cavm_reex_af_reexm_max_pre_cnt cavm_reex_af_reexm_max_pre_cnt_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_MAX_PRE_CNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_MAX_PRE_CNT(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_MAX_PRE_CNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_MAX_PRE_CNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400080d0ll + 0x10000000ll * ((a) & 0x1);
@@ -4412,8 +4412,8 @@ union cavm_reex_af_reexm_max_pthread_cnt
 };
 typedef union cavm_reex_af_reexm_max_pthread_cnt cavm_reex_af_reexm_max_pthread_cnt_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_MAX_PTHREAD_CNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_MAX_PTHREAD_CNT(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_MAX_PTHREAD_CNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_MAX_PTHREAD_CNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400080d8ll + 0x10000000ll * ((a) & 0x1);
@@ -4449,8 +4449,8 @@ union cavm_reex_af_reexm_response_count
 };
 typedef union cavm_reex_af_reexm_response_count cavm_reex_af_reexm_response_count_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_RESPONSE_COUNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_RESPONSE_COUNT(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_RESPONSE_COUNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_RESPONSE_COUNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400080b0ll + 0x10000000ll * ((a) & 0x1);
@@ -4487,8 +4487,8 @@ union cavm_reex_af_reexm_revision
 };
 typedef union cavm_reex_af_reexm_revision cavm_reex_af_reexm_revision_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_REVISION(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_REVISION(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_REVISION(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_REVISION(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008008ll + 0x10000000ll * ((a) & 0x1);
@@ -4524,8 +4524,8 @@ union cavm_reex_af_reexm_scratch
 };
 typedef union cavm_reex_af_reexm_scratch cavm_reex_af_reexm_scratch_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_SCRATCH(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_SCRATCH(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_SCRATCH(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400080e8ll + 0x10000000ll * ((a) & 0x1);
@@ -4579,8 +4579,8 @@ union cavm_reex_af_reexm_status
 };
 typedef union cavm_reex_af_reexm_status cavm_reex_af_reexm_status_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXM_STATUS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXM_STATUS(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXM_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXM_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008050ll + 0x10000000ll * ((a) & 0x1);
@@ -4619,8 +4619,8 @@ union cavm_reex_af_reexr_capability
 };
 typedef union cavm_reex_af_reexr_capability cavm_reex_af_reexr_capability_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXR_CAPABILITY(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXR_CAPABILITY(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXR_CAPABILITY(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXR_CAPABILITY(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008210ll + 0x10000000ll * ((a) & 0x1);
@@ -4657,8 +4657,8 @@ union cavm_reex_af_reexr_ck_sum_0
 };
 typedef union cavm_reex_af_reexr_ck_sum_0 cavm_reex_af_reexr_ck_sum_0_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXR_CK_SUM_0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXR_CK_SUM_0(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXR_CK_SUM_0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXR_CK_SUM_0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008280ll + 0x10000000ll * ((a) & 0x1);
@@ -4695,8 +4695,8 @@ union cavm_reex_af_reexr_ck_sum_1
 };
 typedef union cavm_reex_af_reexr_ck_sum_1 cavm_reex_af_reexr_ck_sum_1_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXR_CK_SUM_1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXR_CK_SUM_1(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXR_CK_SUM_1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXR_CK_SUM_1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008288ll + 0x10000000ll * ((a) & 0x1);
@@ -4733,8 +4733,8 @@ union cavm_reex_af_reexr_ck_sum_2
 };
 typedef union cavm_reex_af_reexr_ck_sum_2 cavm_reex_af_reexr_ck_sum_2_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXR_CK_SUM_2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXR_CK_SUM_2(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXR_CK_SUM_2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXR_CK_SUM_2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008290ll + 0x10000000ll * ((a) & 0x1);
@@ -4785,8 +4785,8 @@ union cavm_reex_af_reexr_ctrl
 };
 typedef union cavm_reex_af_reexr_ctrl cavm_reex_af_reexr_ctrl_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXR_CTRL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXR_CTRL(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXR_CTRL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXR_CTRL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400082c0ll + 0x10000000ll * ((a) & 0x1);
@@ -4824,8 +4824,8 @@ union cavm_reex_af_reexr_dscrd_count
 };
 typedef union cavm_reex_af_reexr_dscrd_count cavm_reex_af_reexr_dscrd_count_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXR_DSCRD_COUNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXR_DSCRD_COUNT(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXR_DSCRD_COUNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXR_DSCRD_COUNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400082a0ll + 0x10000000ll * ((a) & 0x1);
@@ -4862,8 +4862,8 @@ union cavm_reex_af_reexr_fifo_status
 };
 typedef union cavm_reex_af_reexr_fifo_status cavm_reex_af_reexr_fifo_status_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXR_FIFO_STATUS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXR_FIFO_STATUS(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXR_FIFO_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXR_FIFO_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008258ll + 0x10000000ll * ((a) & 0x1);
@@ -4906,8 +4906,8 @@ union cavm_reex_af_reexr_rof_metadata
 };
 typedef union cavm_reex_af_reexr_rof_metadata cavm_reex_af_reexr_rof_metadata_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXR_ROF_METADATA(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXR_ROF_METADATA(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXR_ROF_METADATA(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXR_ROF_METADATA(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400082b8ll + 0x10000000ll * ((a) & 0x1);
@@ -4948,8 +4948,8 @@ union cavm_reex_af_reexr_rof_revision
 };
 typedef union cavm_reex_af_reexr_rof_revision cavm_reex_af_reexr_rof_revision_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXR_ROF_REVISION(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXR_ROF_REVISION(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXR_ROF_REVISION(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXR_ROF_REVISION(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400082b0ll + 0x10000000ll * ((a) & 0x1);
@@ -4986,8 +4986,8 @@ union cavm_reex_af_reexr_rtru_count
 };
 typedef union cavm_reex_af_reexr_rtru_count cavm_reex_af_reexr_rtru_count_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXR_RTRU_COUNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXR_RTRU_COUNT(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXR_RTRU_COUNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXR_RTRU_COUNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400082a8ll + 0x10000000ll * ((a) & 0x1);
@@ -5038,8 +5038,8 @@ union cavm_reex_af_reexr_status
 };
 typedef union cavm_reex_af_reexr_status cavm_reex_af_reexr_status_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXR_STATUS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXR_STATUS(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXR_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXR_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008250ll + 0x10000000ll * ((a) & 0x1);
@@ -5098,8 +5098,8 @@ union cavm_reex_af_reexs_cluster_0
 };
 typedef union cavm_reex_af_reexs_cluster_0 cavm_reex_af_reexs_cluster_0_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_0(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008400ll + 0x10000000ll * ((a) & 0x1);
@@ -5158,8 +5158,8 @@ union cavm_reex_af_reexs_cluster_1
 };
 typedef union cavm_reex_af_reexs_cluster_1 cavm_reex_af_reexs_cluster_1_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_1(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008408ll + 0x10000000ll * ((a) & 0x1);
@@ -5218,8 +5218,8 @@ union cavm_reex_af_reexs_cluster_2
 };
 typedef union cavm_reex_af_reexs_cluster_2 cavm_reex_af_reexs_cluster_2_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_2(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008410ll + 0x10000000ll * ((a) & 0x1);
@@ -5278,8 +5278,8 @@ union cavm_reex_af_reexs_cluster_3
 };
 typedef union cavm_reex_af_reexs_cluster_3 cavm_reex_af_reexs_cluster_3_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_3(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008418ll + 0x10000000ll * ((a) & 0x1);
@@ -5338,8 +5338,8 @@ union cavm_reex_af_reexs_cluster_4
 };
 typedef union cavm_reex_af_reexs_cluster_4 cavm_reex_af_reexs_cluster_4_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_4(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_4(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_4(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_4(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008420ll + 0x10000000ll * ((a) & 0x1);
@@ -5398,8 +5398,8 @@ union cavm_reex_af_reexs_cluster_5
 };
 typedef union cavm_reex_af_reexs_cluster_5 cavm_reex_af_reexs_cluster_5_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_5(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_5(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_5(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_5(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008428ll + 0x10000000ll * ((a) & 0x1);
@@ -5458,8 +5458,8 @@ union cavm_reex_af_reexs_cluster_6
 };
 typedef union cavm_reex_af_reexs_cluster_6 cavm_reex_af_reexs_cluster_6_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_6(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_6(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_6(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_6(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008430ll + 0x10000000ll * ((a) & 0x1);
@@ -5518,8 +5518,8 @@ union cavm_reex_af_reexs_cluster_7
 };
 typedef union cavm_reex_af_reexs_cluster_7 cavm_reex_af_reexs_cluster_7_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_7(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_7(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_7(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXS_CLUSTER_7(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140008438ll + 0x10000000ll * ((a) & 0x1);
@@ -5570,8 +5570,8 @@ union cavm_reex_af_reexs_dp
 };
 typedef union cavm_reex_af_reexs_dp cavm_reex_af_reexs_dp_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXS_DP(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXS_DP(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXS_DP(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXS_DP(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400084f8ll + 0x10000000ll * ((a) & 0x1);
@@ -5618,8 +5618,8 @@ union cavm_reex_af_reexs_l2_cache
 };
 typedef union cavm_reex_af_reexs_l2_cache cavm_reex_af_reexs_l2_cache_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXS_L2_CACHE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXS_L2_CACHE(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXS_L2_CACHE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXS_L2_CACHE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400084c0ll + 0x10000000ll * ((a) & 0x1);
@@ -5662,8 +5662,8 @@ union cavm_reex_af_reexs_pe
 };
 typedef union cavm_reex_af_reexs_pe cavm_reex_af_reexs_pe_t;
 
-static inline uint64_t CAVM_REEX_AF_REEXS_PE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_REEXS_PE(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_REEXS_PE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_REEXS_PE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x8401400084e0ll + 0x10000000ll * ((a) & 0x1);
@@ -5708,8 +5708,8 @@ union cavm_reex_af_rvu_int
 };
 typedef union cavm_reex_af_rvu_int cavm_reex_af_rvu_int_t;
 
-static inline uint64_t CAVM_REEX_AF_RVU_INT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_RVU_INT(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_RVU_INT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_RVU_INT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140046000ll + 0x10000000ll * ((a) & 0x1);
@@ -5750,8 +5750,8 @@ union cavm_reex_af_rvu_int_ena_w1c
 };
 typedef union cavm_reex_af_rvu_int_ena_w1c cavm_reex_af_rvu_int_ena_w1c_t;
 
-static inline uint64_t CAVM_REEX_AF_RVU_INT_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_RVU_INT_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_RVU_INT_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_RVU_INT_ENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140046018ll + 0x10000000ll * ((a) & 0x1);
@@ -5792,8 +5792,8 @@ union cavm_reex_af_rvu_int_ena_w1s
 };
 typedef union cavm_reex_af_rvu_int_ena_w1s cavm_reex_af_rvu_int_ena_w1s_t;
 
-static inline uint64_t CAVM_REEX_AF_RVU_INT_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_RVU_INT_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_RVU_INT_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_RVU_INT_ENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140046010ll + 0x10000000ll * ((a) & 0x1);
@@ -5834,8 +5834,8 @@ union cavm_reex_af_rvu_int_w1s
 };
 typedef union cavm_reex_af_rvu_int_w1s cavm_reex_af_rvu_int_w1s_t;
 
-static inline uint64_t CAVM_REEX_AF_RVU_INT_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_RVU_INT_W1S(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_RVU_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_RVU_INT_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140046008ll + 0x10000000ll * ((a) & 0x1);
@@ -5893,8 +5893,8 @@ union cavm_reex_af_rvu_lf_cfg_debug
 };
 typedef union cavm_reex_af_rvu_lf_cfg_debug cavm_reex_af_rvu_lf_cfg_debug_t;
 
-static inline uint64_t CAVM_REEX_AF_RVU_LF_CFG_DEBUG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_RVU_LF_CFG_DEBUG(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_RVU_LF_CFG_DEBUG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_RVU_LF_CFG_DEBUG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140044000ll + 0x10000000ll * ((a) & 0x1);
@@ -5940,8 +5940,8 @@ union cavm_reex_af_throttle
 };
 typedef union cavm_reex_af_throttle cavm_reex_af_throttle_t;
 
-static inline uint64_t CAVM_REEX_AF_THROTTLE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_AF_THROTTLE(unsigned long a)
+static inline uint64_t CAVM_REEX_AF_THROTTLE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_AF_THROTTLE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140000010ll + 0x10000000ll * ((a) & 0x1);
@@ -6046,8 +6046,8 @@ union cavm_reex_lf_done
 };
 typedef union cavm_reex_lf_done cavm_reex_lf_done_t;
 
-static inline uint64_t CAVM_REEX_LF_DONE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_DONE(unsigned long a)
+static inline uint64_t CAVM_REEX_LF_DONE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_LF_DONE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840201400100ll + 0x100000ll * ((a) & 0x1);
@@ -6092,8 +6092,8 @@ union cavm_reex_lf_done_ack
 };
 typedef union cavm_reex_lf_done_ack cavm_reex_lf_done_ack_t;
 
-static inline uint64_t CAVM_REEX_LF_DONE_ACK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_DONE_ACK(unsigned long a)
+static inline uint64_t CAVM_REEX_LF_DONE_ACK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_LF_DONE_ACK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840201400110ll + 0x100000ll * ((a) & 0x1);
@@ -6148,8 +6148,8 @@ union cavm_reex_lf_done_int
 };
 typedef union cavm_reex_lf_done_int cavm_reex_lf_done_int_t;
 
-static inline uint64_t CAVM_REEX_LF_DONE_INT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_DONE_INT(unsigned long a)
+static inline uint64_t CAVM_REEX_LF_DONE_INT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_LF_DONE_INT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840201400120ll + 0x100000ll * ((a) & 0x1);
@@ -6188,8 +6188,8 @@ union cavm_reex_lf_done_int_ena_w1c
 };
 typedef union cavm_reex_lf_done_int_ena_w1c cavm_reex_lf_done_int_ena_w1c_t;
 
-static inline uint64_t CAVM_REEX_LF_DONE_INT_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_DONE_INT_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_REEX_LF_DONE_INT_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_LF_DONE_INT_ENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840201400140ll + 0x100000ll * ((a) & 0x1);
@@ -6228,8 +6228,8 @@ union cavm_reex_lf_done_int_ena_w1s
 };
 typedef union cavm_reex_lf_done_int_ena_w1s cavm_reex_lf_done_int_ena_w1s_t;
 
-static inline uint64_t CAVM_REEX_LF_DONE_INT_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_DONE_INT_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_REEX_LF_DONE_INT_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_LF_DONE_INT_ENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840201400138ll + 0x100000ll * ((a) & 0x1);
@@ -6284,8 +6284,8 @@ union cavm_reex_lf_done_int_w1s
 };
 typedef union cavm_reex_lf_done_int_w1s cavm_reex_lf_done_int_w1s_t;
 
-static inline uint64_t CAVM_REEX_LF_DONE_INT_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_DONE_INT_W1S(unsigned long a)
+static inline uint64_t CAVM_REEX_LF_DONE_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_LF_DONE_INT_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840201400130ll + 0x100000ll * ((a) & 0x1);
@@ -6338,8 +6338,8 @@ union cavm_reex_lf_done_wait
 };
 typedef union cavm_reex_lf_done_wait cavm_reex_lf_done_wait_t;
 
-static inline uint64_t CAVM_REEX_LF_DONE_WAIT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_DONE_WAIT(unsigned long a)
+static inline uint64_t CAVM_REEX_LF_DONE_WAIT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_LF_DONE_WAIT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840201400148ll + 0x100000ll * ((a) & 0x1);
@@ -6382,8 +6382,8 @@ union cavm_reex_lf_doorbell
 };
 typedef union cavm_reex_lf_doorbell cavm_reex_lf_doorbell_t;
 
-static inline uint64_t CAVM_REEX_LF_DOORBELL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_DOORBELL(unsigned long a)
+static inline uint64_t CAVM_REEX_LF_DOORBELL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_LF_DOORBELL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840201400400ll + 0x100000ll * ((a) & 0x1);
@@ -6444,8 +6444,8 @@ union cavm_reex_lf_ena
 };
 typedef union cavm_reex_lf_ena cavm_reex_lf_ena_t;
 
-static inline uint64_t CAVM_REEX_LF_ENA(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_ENA(unsigned long a)
+static inline uint64_t CAVM_REEX_LF_ENA(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_LF_ENA(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840201400010ll + 0x100000ll * ((a) & 0x1);
@@ -6500,8 +6500,8 @@ union cavm_reex_lf_misc_int
 };
 typedef union cavm_reex_lf_misc_int cavm_reex_lf_misc_int_t;
 
-static inline uint64_t CAVM_REEX_LF_MISC_INT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_MISC_INT(unsigned long a)
+static inline uint64_t CAVM_REEX_LF_MISC_INT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_LF_MISC_INT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840201400300ll + 0x100000ll * ((a) & 0x1);
@@ -6556,8 +6556,8 @@ union cavm_reex_lf_misc_int_ena_w1c
 };
 typedef union cavm_reex_lf_misc_int_ena_w1c cavm_reex_lf_misc_int_ena_w1c_t;
 
-static inline uint64_t CAVM_REEX_LF_MISC_INT_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_MISC_INT_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_REEX_LF_MISC_INT_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_LF_MISC_INT_ENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840201400330ll + 0x100000ll * ((a) & 0x1);
@@ -6612,8 +6612,8 @@ union cavm_reex_lf_misc_int_ena_w1s
 };
 typedef union cavm_reex_lf_misc_int_ena_w1s cavm_reex_lf_misc_int_ena_w1s_t;
 
-static inline uint64_t CAVM_REEX_LF_MISC_INT_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_MISC_INT_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_REEX_LF_MISC_INT_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_LF_MISC_INT_ENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840201400320ll + 0x100000ll * ((a) & 0x1);
@@ -6668,8 +6668,8 @@ union cavm_reex_lf_misc_int_w1s
 };
 typedef union cavm_reex_lf_misc_int_w1s cavm_reex_lf_misc_int_w1s_t;
 
-static inline uint64_t CAVM_REEX_LF_MISC_INT_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_MISC_INT_W1S(unsigned long a)
+static inline uint64_t CAVM_REEX_LF_MISC_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_LF_MISC_INT_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840201400310ll + 0x100000ll * ((a) & 0x1);
@@ -6707,8 +6707,8 @@ union cavm_reex_lf_outstand_job
 };
 typedef union cavm_reex_lf_outstand_job cavm_reex_lf_outstand_job_t;
 
-static inline uint64_t CAVM_REEX_LF_OUTSTAND_JOB(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_OUTSTAND_JOB(unsigned long a)
+static inline uint64_t CAVM_REEX_LF_OUTSTAND_JOB(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_LF_OUTSTAND_JOB(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840201400410ll + 0x100000ll * ((a) & 0x1);
@@ -6763,8 +6763,8 @@ union cavm_reex_lf_sbuf_addr
 };
 typedef union cavm_reex_lf_sbuf_addr cavm_reex_lf_sbuf_addr_t;
 
-static inline uint64_t CAVM_REEX_LF_SBUF_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_LF_SBUF_ADDR(unsigned long a)
+static inline uint64_t CAVM_REEX_LF_SBUF_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_LF_SBUF_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840201400020ll + 0x100000ll * ((a) & 0x1);
@@ -6812,8 +6812,8 @@ union cavm_reex_priv_af_int_cfg
 };
 typedef union cavm_reex_priv_af_int_cfg cavm_reex_priv_af_int_cfg_t;
 
-static inline uint64_t CAVM_REEX_PRIV_AF_INT_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_PRIV_AF_INT_CFG(unsigned long a)
+static inline uint64_t CAVM_REEX_PRIV_AF_INT_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_PRIV_AF_INT_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840140004000ll + 0x10000000ll * ((a) & 0x1);
@@ -6865,8 +6865,8 @@ union cavm_reex_priv_lfx_cfg
 };
 typedef union cavm_reex_priv_lfx_cfg cavm_reex_priv_lfx_cfg_t;
 
-static inline uint64_t CAVM_REEX_PRIV_LFX_CFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_PRIV_LFX_CFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_REEX_PRIV_LFX_CFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_PRIV_LFX_CFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=35)))
         return 0x840140041000ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
@@ -6916,8 +6916,8 @@ union cavm_reex_priv_lfx_int_cfg
 };
 typedef union cavm_reex_priv_lfx_int_cfg cavm_reex_priv_lfx_int_cfg_t;
 
-static inline uint64_t CAVM_REEX_PRIV_LFX_INT_CFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_REEX_PRIV_LFX_INT_CFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_REEX_PRIV_LFX_INT_CFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_REEX_PRIV_LFX_INT_CFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=1) && (b<=35)))
         return 0x840140042000ll + 0x10000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);

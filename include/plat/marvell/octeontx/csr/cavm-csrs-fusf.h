@@ -109,8 +109,8 @@ union cavm_fusf_bnk_datx
 };
 typedef union cavm_fusf_bnk_datx cavm_fusf_bnk_datx_t;
 
-static inline uint64_t CAVM_FUSF_BNK_DATX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FUSF_BNK_DATX(unsigned long a)
+static inline uint64_t CAVM_FUSF_BNK_DATX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FUSF_BNK_DATX(uint64_t a)
 {
     if (a<=1)
         return 0x87e004000120ll + 8ll * ((a) & 0x1);
@@ -400,6 +400,7 @@ union cavm_fusf_ctl
     } cn96xxp3;
     /* struct cavm_fusf_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_fusf_ctl_cn96xxp3 cnf95xx; */
+    /* struct cavm_fusf_ctl_cn96xxp3 f95mm; */
     /* struct cavm_fusf_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_fusf_ctl cavm_fusf_ctl_t;
@@ -478,8 +479,8 @@ union cavm_fusf_ekx
 };
 typedef union cavm_fusf_ekx cavm_fusf_ekx_t;
 
-static inline uint64_t CAVM_FUSF_EKX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FUSF_EKX(unsigned long a)
+static inline uint64_t CAVM_FUSF_EKX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FUSF_EKX(uint64_t a)
 {
     if (a<=3)
         return 0x87e0040000a0ll + 8ll * ((a) & 0x3);
@@ -513,8 +514,8 @@ union cavm_fusf_hukx
 };
 typedef union cavm_fusf_hukx cavm_fusf_hukx_t;
 
-static inline uint64_t CAVM_FUSF_HUKX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FUSF_HUKX(unsigned long a)
+static inline uint64_t CAVM_FUSF_HUKX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FUSF_HUKX(uint64_t a)
 {
     if (a<=1)
         return 0x87e004000090ll + 8ll * ((a) & 0x1);
@@ -835,8 +836,8 @@ union cavm_fusf_rotpkx
 };
 typedef union cavm_fusf_rotpkx cavm_fusf_rotpkx_t;
 
-static inline uint64_t CAVM_FUSF_ROTPKX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FUSF_ROTPKX(unsigned long a)
+static inline uint64_t CAVM_FUSF_ROTPKX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FUSF_ROTPKX(uint64_t a)
 {
     if (a<=3)
         return 0x87e004000060ll + 8ll * ((a) & 0x3);
@@ -870,8 +871,8 @@ union cavm_fusf_sskx
 };
 typedef union cavm_fusf_sskx cavm_fusf_sskx_t;
 
-static inline uint64_t CAVM_FUSF_SSKX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FUSF_SSKX(unsigned long a)
+static inline uint64_t CAVM_FUSF_SSKX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FUSF_SSKX(uint64_t a)
 {
     if (a<=1)
         return 0x87e004000080ll + 8ll * ((a) & 0x1);
@@ -905,8 +906,8 @@ union cavm_fusf_swx
 };
 typedef union cavm_fusf_swx cavm_fusf_swx_t;
 
-static inline uint64_t CAVM_FUSF_SWX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FUSF_SWX(unsigned long a)
+static inline uint64_t CAVM_FUSF_SWX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FUSF_SWX(uint64_t a)
 {
     if (a<=7)
         return 0x87e0040000c0ll + 8ll * ((a) & 0x7);

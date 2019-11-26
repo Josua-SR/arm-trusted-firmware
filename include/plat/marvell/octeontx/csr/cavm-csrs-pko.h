@@ -3237,8 +3237,8 @@ union cavm_pko_dqx_bytes
 };
 typedef union cavm_pko_dqx_bytes cavm_pko_dqx_bytes_t;
 
-static inline uint64_t CAVM_PKO_DQX_BYTES(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_BYTES(unsigned long a)
+static inline uint64_t CAVM_PKO_DQX_BYTES(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_DQX_BYTES(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x8540000000d8ll + 0x200ll * ((a) & 0xff);
@@ -3333,8 +3333,8 @@ union cavm_pko_dqx_cir
 };
 typedef union cavm_pko_dqx_cir cavm_pko_dqx_cir_t;
 
-static inline uint64_t CAVM_PKO_DQX_CIR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_CIR(unsigned long a)
+static inline uint64_t CAVM_PKO_DQX_CIR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_DQX_CIR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000280018ll + 0x200ll * ((a) & 0xff);
@@ -3371,8 +3371,8 @@ union cavm_pko_dqx_dropped_bytes
 };
 typedef union cavm_pko_dqx_dropped_bytes cavm_pko_dqx_dropped_bytes_t;
 
-static inline uint64_t CAVM_PKO_DQX_DROPPED_BYTES(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_DROPPED_BYTES(unsigned long a)
+static inline uint64_t CAVM_PKO_DQX_DROPPED_BYTES(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_DQX_DROPPED_BYTES(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x8540000000c8ll + 0x200ll * ((a) & 0xff);
@@ -3409,8 +3409,8 @@ union cavm_pko_dqx_dropped_packets
 };
 typedef union cavm_pko_dqx_dropped_packets cavm_pko_dqx_dropped_packets_t;
 
-static inline uint64_t CAVM_PKO_DQX_DROPPED_PACKETS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_DROPPED_PACKETS(unsigned long a)
+static inline uint64_t CAVM_PKO_DQX_DROPPED_PACKETS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_DQX_DROPPED_PACKETS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x8540000000c0ll + 0x200ll * ((a) & 0xff);
@@ -3450,8 +3450,8 @@ union cavm_pko_dqx_fifo
 };
 typedef union cavm_pko_dqx_fifo cavm_pko_dqx_fifo_t;
 
-static inline uint64_t CAVM_PKO_DQX_FIFO(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_FIFO(unsigned long a)
+static inline uint64_t CAVM_PKO_DQX_FIFO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_DQX_FIFO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000300078ll + 0x200ll * ((a) & 0xff);
@@ -3488,8 +3488,8 @@ union cavm_pko_dqx_packets
 };
 typedef union cavm_pko_dqx_packets cavm_pko_dqx_packets_t;
 
-static inline uint64_t CAVM_PKO_DQX_PACKETS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_PACKETS(unsigned long a)
+static inline uint64_t CAVM_PKO_DQX_PACKETS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_DQX_PACKETS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x8540000000d0ll + 0x200ll * ((a) & 0xff);
@@ -3617,8 +3617,8 @@ union cavm_pko_dqx_pick
 };
 typedef union cavm_pko_dqx_pick cavm_pko_dqx_pick_t;
 
-static inline uint64_t CAVM_PKO_DQX_PICK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_PICK(unsigned long a)
+static inline uint64_t CAVM_PKO_DQX_PICK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_DQX_PICK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000300070ll + 0x200ll * ((a) & 0xff);
@@ -3713,8 +3713,8 @@ union cavm_pko_dqx_pir
 };
 typedef union cavm_pko_dqx_pir cavm_pko_dqx_pir_t;
 
-static inline uint64_t CAVM_PKO_DQX_PIR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_PIR(unsigned long a)
+static inline uint64_t CAVM_PKO_DQX_PIR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_DQX_PIR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000280020ll + 0x200ll * ((a) & 0xff);
@@ -3756,8 +3756,8 @@ union cavm_pko_dqx_pointers
 };
 typedef union cavm_pko_dqx_pointers cavm_pko_dqx_pointers_t;
 
-static inline uint64_t CAVM_PKO_DQX_POINTERS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_POINTERS(unsigned long a)
+static inline uint64_t CAVM_PKO_DQX_POINTERS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_DQX_POINTERS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000280078ll + 0x200ll * ((a) & 0xff);
@@ -3794,8 +3794,8 @@ union cavm_pko_dqx_sched_state
 };
 typedef union cavm_pko_dqx_sched_state cavm_pko_dqx_sched_state_t;
 
-static inline uint64_t CAVM_PKO_DQX_SCHED_STATE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_SCHED_STATE(unsigned long a)
+static inline uint64_t CAVM_PKO_DQX_SCHED_STATE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_DQX_SCHED_STATE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000280028ll + 0x200ll * ((a) & 0xff);
@@ -3862,8 +3862,8 @@ union cavm_pko_dqx_schedule
 };
 typedef union cavm_pko_dqx_schedule cavm_pko_dqx_schedule_t;
 
-static inline uint64_t CAVM_PKO_DQX_SCHEDULE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_SCHEDULE(unsigned long a)
+static inline uint64_t CAVM_PKO_DQX_SCHEDULE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_DQX_SCHEDULE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000280008ll + 0x200ll * ((a) & 0xff);
@@ -3922,8 +3922,8 @@ union cavm_pko_dqx_shape
 };
 typedef union cavm_pko_dqx_shape cavm_pko_dqx_shape_t;
 
-static inline uint64_t CAVM_PKO_DQX_SHAPE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_SHAPE(unsigned long a)
+static inline uint64_t CAVM_PKO_DQX_SHAPE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_DQX_SHAPE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000280010ll + 0x200ll * ((a) & 0xff);
@@ -3975,8 +3975,8 @@ union cavm_pko_dqx_shape_state
 };
 typedef union cavm_pko_dqx_shape_state cavm_pko_dqx_shape_state_t;
 
-static inline uint64_t CAVM_PKO_DQX_SHAPE_STATE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_SHAPE_STATE(unsigned long a)
+static inline uint64_t CAVM_PKO_DQX_SHAPE_STATE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_DQX_SHAPE_STATE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000280030ll + 0x200ll * ((a) & 0xff);
@@ -4014,8 +4014,8 @@ union cavm_pko_dqx_topology
 };
 typedef union cavm_pko_dqx_topology cavm_pko_dqx_topology_t;
 
-static inline uint64_t CAVM_PKO_DQX_TOPOLOGY(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_DQX_TOPOLOGY(unsigned long a)
+static inline uint64_t CAVM_PKO_DQX_TOPOLOGY(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_DQX_TOPOLOGY(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000300000ll + 0x200ll * ((a) & 0xff);
@@ -4503,8 +4503,8 @@ union cavm_pko_formatx_ctl
 };
 typedef union cavm_pko_formatx_ctl cavm_pko_formatx_ctl_t;
 
-static inline uint64_t CAVM_PKO_FORMATX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_FORMATX_CTL(unsigned long a)
+static inline uint64_t CAVM_PKO_FORMATX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_FORMATX_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854000900800ll + 8ll * ((a) & 0x1f);
@@ -4931,8 +4931,8 @@ union cavm_pko_l1_sqx_cir
 };
 typedef union cavm_pko_l1_sqx_cir cavm_pko_l1_sqx_cir_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_CIR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_CIR(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_CIR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_CIR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854000000018ll + 0x200ll * ((a) & 0x1f);
@@ -4969,8 +4969,8 @@ union cavm_pko_l1_sqx_dropped_bytes
 };
 typedef union cavm_pko_l1_sqx_dropped_bytes cavm_pko_l1_sqx_dropped_bytes_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_DROPPED_BYTES(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_DROPPED_BYTES(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_DROPPED_BYTES(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_DROPPED_BYTES(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854000000088ll + 0x200ll * ((a) & 0x1f);
@@ -5007,8 +5007,8 @@ union cavm_pko_l1_sqx_dropped_packets
 };
 typedef union cavm_pko_l1_sqx_dropped_packets cavm_pko_l1_sqx_dropped_packets_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_DROPPED_PACKETS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_DROPPED_PACKETS(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_DROPPED_PACKETS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_DROPPED_PACKETS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854000000080ll + 0x200ll * ((a) & 0x1f);
@@ -5064,8 +5064,8 @@ union cavm_pko_l1_sqx_green
 };
 typedef union cavm_pko_l1_sqx_green cavm_pko_l1_sqx_green_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_GREEN(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_GREEN(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_GREEN(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_GREEN(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854000080058ll + 0x200ll * ((a) & 0x1f);
@@ -5101,8 +5101,8 @@ union cavm_pko_l1_sqx_green_bytes
 };
 typedef union cavm_pko_l1_sqx_green_bytes cavm_pko_l1_sqx_green_bytes_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_GREEN_BYTES(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_GREEN_BYTES(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_GREEN_BYTES(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_GREEN_BYTES(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x8540000000b8ll + 0x200ll * ((a) & 0x1f);
@@ -5138,8 +5138,8 @@ union cavm_pko_l1_sqx_green_packets
 };
 typedef union cavm_pko_l1_sqx_green_packets cavm_pko_l1_sqx_green_packets_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_GREEN_PACKETS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_GREEN_PACKETS(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_GREEN_PACKETS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_GREEN_PACKETS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x8540000000b0ll + 0x200ll * ((a) & 0x1f);
@@ -5205,8 +5205,8 @@ union cavm_pko_l1_sqx_link
 };
 typedef union cavm_pko_l1_sqx_link cavm_pko_l1_sqx_link_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_LINK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_LINK(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_LINK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_LINK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854000000038ll + 0x200ll * ((a) & 0x1f);
@@ -5334,8 +5334,8 @@ union cavm_pko_l1_sqx_pick
 };
 typedef union cavm_pko_l1_sqx_pick cavm_pko_l1_sqx_pick_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_PICK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_PICK(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_PICK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_PICK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854000080070ll + 0x200ll * ((a) & 0x1f);
@@ -5377,8 +5377,8 @@ union cavm_pko_l1_sqx_red
 };
 typedef union cavm_pko_l1_sqx_red cavm_pko_l1_sqx_red_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_RED(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_RED(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_RED(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_RED(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854000080068ll + 0x200ll * ((a) & 0x1f);
@@ -5415,8 +5415,8 @@ union cavm_pko_l1_sqx_red_bytes
 };
 typedef union cavm_pko_l1_sqx_red_bytes cavm_pko_l1_sqx_red_bytes_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_RED_BYTES(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_RED_BYTES(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_RED_BYTES(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_RED_BYTES(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854000000098ll + 0x200ll * ((a) & 0x1f);
@@ -5453,8 +5453,8 @@ union cavm_pko_l1_sqx_red_packets
 };
 typedef union cavm_pko_l1_sqx_red_packets cavm_pko_l1_sqx_red_packets_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_RED_PACKETS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_RED_PACKETS(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_RED_PACKETS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_RED_PACKETS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854000000090ll + 0x200ll * ((a) & 0x1f);
@@ -5500,8 +5500,8 @@ union cavm_pko_l1_sqx_schedule
 };
 typedef union cavm_pko_l1_sqx_schedule cavm_pko_l1_sqx_schedule_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_SCHEDULE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_SCHEDULE(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_SCHEDULE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_SCHEDULE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854000000008ll + 0x200ll * ((a) & 0x1f);
@@ -5553,8 +5553,8 @@ union cavm_pko_l1_sqx_shape
 };
 typedef union cavm_pko_l1_sqx_shape cavm_pko_l1_sqx_shape_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_SHAPE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_SHAPE(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_SHAPE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_SHAPE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854000000010ll + 0x200ll * ((a) & 0x1f);
@@ -5603,8 +5603,8 @@ union cavm_pko_l1_sqx_shape_state
 };
 typedef union cavm_pko_l1_sqx_shape_state cavm_pko_l1_sqx_shape_state_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_SHAPE_STATE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_SHAPE_STATE(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_SHAPE_STATE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_SHAPE_STATE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854000000030ll + 0x200ll * ((a) & 0x1f);
@@ -5690,8 +5690,8 @@ union cavm_pko_l1_sqx_sw_xoff
 };
 typedef union cavm_pko_l1_sqx_sw_xoff cavm_pko_l1_sqx_sw_xoff_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_SW_XOFF(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_SW_XOFF(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_SW_XOFF(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_SW_XOFF(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x8540000000e0ll + 0x200ll * ((a) & 0x1f);
@@ -5837,8 +5837,8 @@ union cavm_pko_l1_sqx_topology
 };
 typedef union cavm_pko_l1_sqx_topology cavm_pko_l1_sqx_topology_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_TOPOLOGY(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_TOPOLOGY(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_TOPOLOGY(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_TOPOLOGY(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854000080000ll + 0x200ll * ((a) & 0x1f);
@@ -5878,8 +5878,8 @@ union cavm_pko_l1_sqx_yellow
 };
 typedef union cavm_pko_l1_sqx_yellow cavm_pko_l1_sqx_yellow_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_YELLOW(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_YELLOW(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_YELLOW(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_YELLOW(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854000080060ll + 0x200ll * ((a) & 0x1f);
@@ -5916,8 +5916,8 @@ union cavm_pko_l1_sqx_yellow_bytes
 };
 typedef union cavm_pko_l1_sqx_yellow_bytes cavm_pko_l1_sqx_yellow_bytes_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_YELLOW_BYTES(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_YELLOW_BYTES(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_YELLOW_BYTES(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_YELLOW_BYTES(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x8540000000a8ll + 0x200ll * ((a) & 0x1f);
@@ -5954,8 +5954,8 @@ union cavm_pko_l1_sqx_yellow_packets
 };
 typedef union cavm_pko_l1_sqx_yellow_packets cavm_pko_l1_sqx_yellow_packets_t;
 
-static inline uint64_t CAVM_PKO_L1_SQX_YELLOW_PACKETS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L1_SQX_YELLOW_PACKETS(unsigned long a)
+static inline uint64_t CAVM_PKO_L1_SQX_YELLOW_PACKETS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L1_SQX_YELLOW_PACKETS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x8540000000a0ll + 0x200ll * ((a) & 0x1f);
@@ -6459,8 +6459,8 @@ union cavm_pko_l2_sqx_cir
 };
 typedef union cavm_pko_l2_sqx_cir cavm_pko_l2_sqx_cir_t;
 
-static inline uint64_t CAVM_PKO_L2_SQX_CIR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_CIR(unsigned long a)
+static inline uint64_t CAVM_PKO_L2_SQX_CIR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L2_SQX_CIR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000080018ll + 0x200ll * ((a) & 0xff);
@@ -6518,8 +6518,8 @@ union cavm_pko_l2_sqx_green
 };
 typedef union cavm_pko_l2_sqx_green cavm_pko_l2_sqx_green_t;
 
-static inline uint64_t CAVM_PKO_L2_SQX_GREEN(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_GREEN(unsigned long a)
+static inline uint64_t CAVM_PKO_L2_SQX_GREEN(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L2_SQX_GREEN(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000100058ll + 0x200ll * ((a) & 0xff);
@@ -6647,8 +6647,8 @@ union cavm_pko_l2_sqx_pick
 };
 typedef union cavm_pko_l2_sqx_pick cavm_pko_l2_sqx_pick_t;
 
-static inline uint64_t CAVM_PKO_L2_SQX_PICK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_PICK(unsigned long a)
+static inline uint64_t CAVM_PKO_L2_SQX_PICK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L2_SQX_PICK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000100070ll + 0x200ll * ((a) & 0xff);
@@ -6743,8 +6743,8 @@ union cavm_pko_l2_sqx_pir
 };
 typedef union cavm_pko_l2_sqx_pir cavm_pko_l2_sqx_pir_t;
 
-static inline uint64_t CAVM_PKO_L2_SQX_PIR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_PIR(unsigned long a)
+static inline uint64_t CAVM_PKO_L2_SQX_PIR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L2_SQX_PIR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000080020ll + 0x200ll * ((a) & 0xff);
@@ -6784,8 +6784,8 @@ union cavm_pko_l2_sqx_pointers
 };
 typedef union cavm_pko_l2_sqx_pointers cavm_pko_l2_sqx_pointers_t;
 
-static inline uint64_t CAVM_PKO_L2_SQX_POINTERS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_POINTERS(unsigned long a)
+static inline uint64_t CAVM_PKO_L2_SQX_POINTERS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L2_SQX_POINTERS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000080078ll + 0x200ll * ((a) & 0xff);
@@ -6827,8 +6827,8 @@ union cavm_pko_l2_sqx_red
 };
 typedef union cavm_pko_l2_sqx_red cavm_pko_l2_sqx_red_t;
 
-static inline uint64_t CAVM_PKO_L2_SQX_RED(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_RED(unsigned long a)
+static inline uint64_t CAVM_PKO_L2_SQX_RED(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L2_SQX_RED(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000100068ll + 0x200ll * ((a) & 0xff);
@@ -6864,8 +6864,8 @@ union cavm_pko_l2_sqx_sched_state
 };
 typedef union cavm_pko_l2_sqx_sched_state cavm_pko_l2_sqx_sched_state_t;
 
-static inline uint64_t CAVM_PKO_L2_SQX_SCHED_STATE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_SCHED_STATE(unsigned long a)
+static inline uint64_t CAVM_PKO_L2_SQX_SCHED_STATE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L2_SQX_SCHED_STATE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000080028ll + 0x200ll * ((a) & 0xff);
@@ -6931,8 +6931,8 @@ union cavm_pko_l2_sqx_schedule
 };
 typedef union cavm_pko_l2_sqx_schedule cavm_pko_l2_sqx_schedule_t;
 
-static inline uint64_t CAVM_PKO_L2_SQX_SCHEDULE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_SCHEDULE(unsigned long a)
+static inline uint64_t CAVM_PKO_L2_SQX_SCHEDULE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L2_SQX_SCHEDULE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000080008ll + 0x200ll * ((a) & 0xff);
@@ -7046,8 +7046,8 @@ union cavm_pko_l2_sqx_shape
 };
 typedef union cavm_pko_l2_sqx_shape cavm_pko_l2_sqx_shape_t;
 
-static inline uint64_t CAVM_PKO_L2_SQX_SHAPE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_SHAPE(unsigned long a)
+static inline uint64_t CAVM_PKO_L2_SQX_SHAPE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L2_SQX_SHAPE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000080010ll + 0x200ll * ((a) & 0xff);
@@ -7098,8 +7098,8 @@ union cavm_pko_l2_sqx_shape_state
 };
 typedef union cavm_pko_l2_sqx_shape_state cavm_pko_l2_sqx_shape_state_t;
 
-static inline uint64_t CAVM_PKO_L2_SQX_SHAPE_STATE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_SHAPE_STATE(unsigned long a)
+static inline uint64_t CAVM_PKO_L2_SQX_SHAPE_STATE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L2_SQX_SHAPE_STATE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000080030ll + 0x200ll * ((a) & 0xff);
@@ -7186,8 +7186,8 @@ union cavm_pko_l2_sqx_sw_xoff
 };
 typedef union cavm_pko_l2_sqx_sw_xoff cavm_pko_l2_sqx_sw_xoff_t;
 
-static inline uint64_t CAVM_PKO_L2_SQX_SW_XOFF(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_SW_XOFF(unsigned long a)
+static inline uint64_t CAVM_PKO_L2_SQX_SW_XOFF(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L2_SQX_SW_XOFF(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x8540000800e0ll + 0x200ll * ((a) & 0xff);
@@ -7241,8 +7241,8 @@ union cavm_pko_l2_sqx_topology
 };
 typedef union cavm_pko_l2_sqx_topology cavm_pko_l2_sqx_topology_t;
 
-static inline uint64_t CAVM_PKO_L2_SQX_TOPOLOGY(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_TOPOLOGY(unsigned long a)
+static inline uint64_t CAVM_PKO_L2_SQX_TOPOLOGY(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L2_SQX_TOPOLOGY(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000100000ll + 0x200ll * ((a) & 0xff);
@@ -7284,8 +7284,8 @@ union cavm_pko_l2_sqx_yellow
 };
 typedef union cavm_pko_l2_sqx_yellow cavm_pko_l2_sqx_yellow_t;
 
-static inline uint64_t CAVM_PKO_L2_SQX_YELLOW(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L2_SQX_YELLOW(unsigned long a)
+static inline uint64_t CAVM_PKO_L2_SQX_YELLOW(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L2_SQX_YELLOW(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000100060ll + 0x200ll * ((a) & 0xff);
@@ -7762,8 +7762,8 @@ union cavm_pko_l3_l2_sqx_channel
 };
 typedef union cavm_pko_l3_l2_sqx_channel cavm_pko_l3_l2_sqx_channel_t;
 
-static inline uint64_t CAVM_PKO_L3_L2_SQX_CHANNEL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_L2_SQX_CHANNEL(unsigned long a)
+static inline uint64_t CAVM_PKO_L3_L2_SQX_CHANNEL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L3_L2_SQX_CHANNEL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000080038ll + 0x200ll * ((a) & 0xff);
@@ -7858,8 +7858,8 @@ union cavm_pko_l3_sqx_cir
 };
 typedef union cavm_pko_l3_sqx_cir cavm_pko_l3_sqx_cir_t;
 
-static inline uint64_t CAVM_PKO_L3_SQX_CIR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_CIR(unsigned long a)
+static inline uint64_t CAVM_PKO_L3_SQX_CIR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L3_SQX_CIR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000100018ll + 0x200ll * ((a) & 0xff);
@@ -7907,8 +7907,8 @@ union cavm_pko_l3_sqx_green
 };
 typedef union cavm_pko_l3_sqx_green cavm_pko_l3_sqx_green_t;
 
-static inline uint64_t CAVM_PKO_L3_SQX_GREEN(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_GREEN(unsigned long a)
+static inline uint64_t CAVM_PKO_L3_SQX_GREEN(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L3_SQX_GREEN(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000180058ll + 0x200ll * ((a) & 0xff);
@@ -8036,8 +8036,8 @@ union cavm_pko_l3_sqx_pick
 };
 typedef union cavm_pko_l3_sqx_pick cavm_pko_l3_sqx_pick_t;
 
-static inline uint64_t CAVM_PKO_L3_SQX_PICK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_PICK(unsigned long a)
+static inline uint64_t CAVM_PKO_L3_SQX_PICK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L3_SQX_PICK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000180070ll + 0x200ll * ((a) & 0xff);
@@ -8132,8 +8132,8 @@ union cavm_pko_l3_sqx_pir
 };
 typedef union cavm_pko_l3_sqx_pir cavm_pko_l3_sqx_pir_t;
 
-static inline uint64_t CAVM_PKO_L3_SQX_PIR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_PIR(unsigned long a)
+static inline uint64_t CAVM_PKO_L3_SQX_PIR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L3_SQX_PIR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000100020ll + 0x200ll * ((a) & 0xff);
@@ -8175,8 +8175,8 @@ union cavm_pko_l3_sqx_pointers
 };
 typedef union cavm_pko_l3_sqx_pointers cavm_pko_l3_sqx_pointers_t;
 
-static inline uint64_t CAVM_PKO_L3_SQX_POINTERS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_POINTERS(unsigned long a)
+static inline uint64_t CAVM_PKO_L3_SQX_POINTERS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L3_SQX_POINTERS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000100078ll + 0x200ll * ((a) & 0xff);
@@ -8218,8 +8218,8 @@ union cavm_pko_l3_sqx_red
 };
 typedef union cavm_pko_l3_sqx_red cavm_pko_l3_sqx_red_t;
 
-static inline uint64_t CAVM_PKO_L3_SQX_RED(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_RED(unsigned long a)
+static inline uint64_t CAVM_PKO_L3_SQX_RED(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L3_SQX_RED(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000180068ll + 0x200ll * ((a) & 0xff);
@@ -8256,8 +8256,8 @@ union cavm_pko_l3_sqx_sched_state
 };
 typedef union cavm_pko_l3_sqx_sched_state cavm_pko_l3_sqx_sched_state_t;
 
-static inline uint64_t CAVM_PKO_L3_SQX_SCHED_STATE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_SCHED_STATE(unsigned long a)
+static inline uint64_t CAVM_PKO_L3_SQX_SCHED_STATE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L3_SQX_SCHED_STATE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000100028ll + 0x200ll * ((a) & 0xff);
@@ -8324,8 +8324,8 @@ union cavm_pko_l3_sqx_schedule
 };
 typedef union cavm_pko_l3_sqx_schedule cavm_pko_l3_sqx_schedule_t;
 
-static inline uint64_t CAVM_PKO_L3_SQX_SCHEDULE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_SCHEDULE(unsigned long a)
+static inline uint64_t CAVM_PKO_L3_SQX_SCHEDULE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L3_SQX_SCHEDULE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000100008ll + 0x200ll * ((a) & 0xff);
@@ -8383,8 +8383,8 @@ union cavm_pko_l3_sqx_shape
 };
 typedef union cavm_pko_l3_sqx_shape cavm_pko_l3_sqx_shape_t;
 
-static inline uint64_t CAVM_PKO_L3_SQX_SHAPE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_SHAPE(unsigned long a)
+static inline uint64_t CAVM_PKO_L3_SQX_SHAPE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L3_SQX_SHAPE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000100010ll + 0x200ll * ((a) & 0xff);
@@ -8436,8 +8436,8 @@ union cavm_pko_l3_sqx_shape_state
 };
 typedef union cavm_pko_l3_sqx_shape_state cavm_pko_l3_sqx_shape_state_t;
 
-static inline uint64_t CAVM_PKO_L3_SQX_SHAPE_STATE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_SHAPE_STATE(unsigned long a)
+static inline uint64_t CAVM_PKO_L3_SQX_SHAPE_STATE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L3_SQX_SHAPE_STATE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000100030ll + 0x200ll * ((a) & 0xff);
@@ -8524,8 +8524,8 @@ union cavm_pko_l3_sqx_sw_xoff
 };
 typedef union cavm_pko_l3_sqx_sw_xoff cavm_pko_l3_sqx_sw_xoff_t;
 
-static inline uint64_t CAVM_PKO_L3_SQX_SW_XOFF(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_SW_XOFF(unsigned long a)
+static inline uint64_t CAVM_PKO_L3_SQX_SW_XOFF(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L3_SQX_SW_XOFF(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x8540001000e0ll + 0x200ll * ((a) & 0xff);
@@ -8571,8 +8571,8 @@ union cavm_pko_l3_sqx_topology
 };
 typedef union cavm_pko_l3_sqx_topology cavm_pko_l3_sqx_topology_t;
 
-static inline uint64_t CAVM_PKO_L3_SQX_TOPOLOGY(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_TOPOLOGY(unsigned long a)
+static inline uint64_t CAVM_PKO_L3_SQX_TOPOLOGY(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L3_SQX_TOPOLOGY(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000180000ll + 0x200ll * ((a) & 0xff);
@@ -8612,8 +8612,8 @@ union cavm_pko_l3_sqx_yellow
 };
 typedef union cavm_pko_l3_sqx_yellow cavm_pko_l3_sqx_yellow_t;
 
-static inline uint64_t CAVM_PKO_L3_SQX_YELLOW(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_L3_SQX_YELLOW(unsigned long a)
+static inline uint64_t CAVM_PKO_L3_SQX_YELLOW(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_L3_SQX_YELLOW(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x854000180060ll + 0x200ll * ((a) & 0xff);
@@ -8847,8 +8847,8 @@ union cavm_pko_lutx
 };
 typedef union cavm_pko_lutx cavm_pko_lutx_t;
 
-static inline uint64_t CAVM_PKO_LUTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_LUTX(unsigned long a)
+static inline uint64_t CAVM_PKO_LUTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_LUTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=63) || ((a>=512)&&(a<=575)) || ((a>=1024)&&(a<=1151)) || ((a>=2048)&&(a<=2111)) || ((a>=2304)&&(a<=2367)) || ((a>=2560)&&(a<=2623)) || ((a>=2816)&&(a<=2879))))
         return 0x854000b00000ll + 8ll * ((a) & 0xfff);
@@ -9355,8 +9355,8 @@ union cavm_pko_macx_cfg
 };
 typedef union cavm_pko_macx_cfg cavm_pko_macx_cfg_t;
 
-static inline uint64_t CAVM_PKO_MACX_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_MACX_CFG(unsigned long a)
+static inline uint64_t CAVM_PKO_MACX_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_MACX_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=18))
         return 0x854000900000ll + 8ll * ((a) & 0x1f);
@@ -9392,8 +9392,8 @@ union cavm_pko_mci1_cred_cntx
 };
 typedef union cavm_pko_mci1_cred_cntx cavm_pko_mci1_cred_cntx_t;
 
-static inline uint64_t CAVM_PKO_MCI1_CRED_CNTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_MCI1_CRED_CNTX(unsigned long a)
+static inline uint64_t CAVM_PKO_MCI1_CRED_CNTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_MCI1_CRED_CNTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=18))
         return 0x854000a80100ll + 8ll * ((a) & 0x1f);
@@ -9433,8 +9433,8 @@ union cavm_pko_mci1_max_credx
 };
 typedef union cavm_pko_mci1_max_credx cavm_pko_mci1_max_credx_t;
 
-static inline uint64_t CAVM_PKO_MCI1_MAX_CREDX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_MCI1_MAX_CREDX(unsigned long a)
+static inline uint64_t CAVM_PKO_MCI1_MAX_CREDX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_MCI1_MAX_CREDX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=18))
         return 0x854000a80000ll + 8ll * ((a) & 0x1f);
@@ -9809,8 +9809,8 @@ union cavm_pko_pdm_dqx_minpad
 };
 typedef union cavm_pko_pdm_dqx_minpad cavm_pko_pdm_dqx_minpad_t;
 
-static inline uint64_t CAVM_PKO_PDM_DQX_MINPAD(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PDM_DQX_MINPAD(unsigned long a)
+static inline uint64_t CAVM_PKO_PDM_DQX_MINPAD(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_PDM_DQX_MINPAD(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x8540008f0000ll + 8ll * ((a) & 0xff);
@@ -14514,8 +14514,8 @@ union cavm_pko_pf_msix_pbax
 };
 typedef union cavm_pko_pf_msix_pbax cavm_pko_pf_msix_pbax_t;
 
-static inline uint64_t CAVM_PKO_PF_MSIX_PBAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PF_MSIX_PBAX(unsigned long a)
+static inline uint64_t CAVM_PKO_PF_MSIX_PBAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_PF_MSIX_PBAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
         return 0x8543000f0000ll + 8ll * ((a) & 0x0);
@@ -14572,8 +14572,8 @@ union cavm_pko_pf_msix_vecx_addr
 };
 typedef union cavm_pko_pf_msix_vecx_addr cavm_pko_pf_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_PKO_PF_MSIX_VECX_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PF_MSIX_VECX_ADDR(unsigned long a)
+static inline uint64_t CAVM_PKO_PF_MSIX_VECX_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_PF_MSIX_VECX_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=24))
         return 0x854300000000ll + 0x10ll * ((a) & 0x1f);
@@ -14614,8 +14614,8 @@ union cavm_pko_pf_msix_vecx_ctl
 };
 typedef union cavm_pko_pf_msix_vecx_ctl cavm_pko_pf_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_PKO_PF_MSIX_VECX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PF_MSIX_VECX_CTL(unsigned long a)
+static inline uint64_t CAVM_PKO_PF_MSIX_VECX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_PF_MSIX_VECX_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=24))
         return 0x854300000008ll + 0x10ll * ((a) & 0x1f);
@@ -14702,8 +14702,8 @@ union cavm_pko_pf_vfx_gmctl
 };
 typedef union cavm_pko_pf_vfx_gmctl cavm_pko_pf_vfx_gmctl_t;
 
-static inline uint64_t CAVM_PKO_PF_VFX_GMCTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PF_VFX_GMCTL(unsigned long a)
+static inline uint64_t CAVM_PKO_PF_VFX_GMCTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_PF_VFX_GMCTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854040001000ll + 0x100000ll * ((a) & 0x1f);
@@ -14745,8 +14745,8 @@ union cavm_pko_pf_vfx_gmctl_pdm_ro
 };
 typedef union cavm_pko_pf_vfx_gmctl_pdm_ro cavm_pko_pf_vfx_gmctl_pdm_ro_t;
 
-static inline uint64_t CAVM_PKO_PF_VFX_GMCTL_PDM_RO(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PF_VFX_GMCTL_PDM_RO(unsigned long a)
+static inline uint64_t CAVM_PKO_PF_VFX_GMCTL_PDM_RO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_PF_VFX_GMCTL_PDM_RO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854040011000ll + 0x100000ll * ((a) & 0x1f);
@@ -16173,8 +16173,8 @@ union cavm_pko_ptfx_status
 };
 typedef union cavm_pko_ptfx_status cavm_pko_ptfx_status_t;
 
-static inline uint64_t CAVM_PKO_PTFX_STATUS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PTFX_STATUS(unsigned long a)
+static inline uint64_t CAVM_PKO_PTFX_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_PTFX_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=19))
         return 0x854000900100ll + 8ll * ((a) & 0x1f);
@@ -16383,8 +16383,8 @@ union cavm_pko_ptgfx_cfg
 };
 typedef union cavm_pko_ptgfx_cfg cavm_pko_ptgfx_cfg_t;
 
-static inline uint64_t CAVM_PKO_PTGFX_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_PTGFX_CFG(unsigned long a)
+static inline uint64_t CAVM_PKO_PTGFX_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_PTGFX_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=5))
         return 0x854000900200ll + 8ll * ((a) & 0x7);
@@ -16490,8 +16490,8 @@ union cavm_pko_state_uid_in_usex_rd
 };
 typedef union cavm_pko_state_uid_in_usex_rd cavm_pko_state_uid_in_usex_rd_t;
 
-static inline uint64_t CAVM_PKO_STATE_UID_IN_USEX_RD(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_STATE_UID_IN_USEX_RD(unsigned long a)
+static inline uint64_t CAVM_PKO_STATE_UID_IN_USEX_RD(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_STATE_UID_IN_USEX_RD(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x854000900f00ll + 8ll * ((a) & 0x1);
@@ -16581,8 +16581,8 @@ union cavm_pko_txfx_pkt_cnt_rd
 };
 typedef union cavm_pko_txfx_pkt_cnt_rd cavm_pko_txfx_pkt_cnt_rd_t;
 
-static inline uint64_t CAVM_PKO_TXFX_PKT_CNT_RD(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_TXFX_PKT_CNT_RD(unsigned long a)
+static inline uint64_t CAVM_PKO_TXFX_PKT_CNT_RD(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_TXFX_PKT_CNT_RD(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=19))
         return 0x854000900e00ll + 8ll * ((a) & 0x1f);
@@ -16646,8 +16646,8 @@ union cavm_pko_vfx_dqx_fc_status
 };
 typedef union cavm_pko_vfx_dqx_fc_status cavm_pko_vfx_dqx_fc_status_t;
 
-static inline uint64_t CAVM_PKO_VFX_DQX_FC_STATUS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_VFX_DQX_FC_STATUS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKO_VFX_DQX_FC_STATUS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_VFX_DQX_FC_STATUS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b<=7)))
         return 0x854400000168ll + 0x100000ll * ((a) & 0x1f) + 0x20000ll * ((b) & 0x7);
@@ -16687,8 +16687,8 @@ union cavm_pko_vfx_dqx_mp_statex
 };
 typedef union cavm_pko_vfx_dqx_mp_statex cavm_pko_vfx_dqx_mp_statex_t;
 
-static inline uint64_t CAVM_PKO_VFX_DQX_MP_STATEX(unsigned long a, unsigned long b, unsigned long c) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_VFX_DQX_MP_STATEX(unsigned long a, unsigned long b, unsigned long c)
+static inline uint64_t CAVM_PKO_VFX_DQX_MP_STATEX(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_VFX_DQX_MP_STATEX(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b<=7) && (c<=3)))
         return 0x85407001fe00ll + 0x100000ll * ((a) & 0x1f) + 0x20000ll * ((b) & 0x7) + 8ll * ((c) & 0x3);
@@ -16772,8 +16772,8 @@ union cavm_pko_vfx_dqx_op_close
 };
 typedef union cavm_pko_vfx_dqx_op_close cavm_pko_vfx_dqx_op_close_t;
 
-static inline uint64_t CAVM_PKO_VFX_DQX_OP_CLOSE(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_VFX_DQX_OP_CLOSE(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKO_VFX_DQX_OP_CLOSE(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_VFX_DQX_OP_CLOSE(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b<=7)))
         return 0x854400001200ll + 0x100000ll * ((a) & 0x1f) + 0x20000ll * ((b) & 0x7);
@@ -16857,8 +16857,8 @@ union cavm_pko_vfx_dqx_op_open
 };
 typedef union cavm_pko_vfx_dqx_op_open cavm_pko_vfx_dqx_op_open_t;
 
-static inline uint64_t CAVM_PKO_VFX_DQX_OP_OPEN(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_VFX_DQX_OP_OPEN(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKO_VFX_DQX_OP_OPEN(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_VFX_DQX_OP_OPEN(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b<=7)))
         return 0x854400001100ll + 0x100000ll * ((a) & 0x1f) + 0x20000ll * ((b) & 0x7);
@@ -16940,8 +16940,8 @@ union cavm_pko_vfx_dqx_op_query
 };
 typedef union cavm_pko_vfx_dqx_op_query cavm_pko_vfx_dqx_op_query_t;
 
-static inline uint64_t CAVM_PKO_VFX_DQX_OP_QUERY(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_VFX_DQX_OP_QUERY(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKO_VFX_DQX_OP_QUERY(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_VFX_DQX_OP_QUERY(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b<=7)))
         return 0x854400001300ll + 0x100000ll * ((a) & 0x1f) + 0x20000ll * ((b) & 0x7);
@@ -16998,8 +16998,8 @@ union cavm_pko_vfx_dqx_op_sendx
 };
 typedef union cavm_pko_vfx_dqx_op_sendx cavm_pko_vfx_dqx_op_sendx_t;
 
-static inline uint64_t CAVM_PKO_VFX_DQX_OP_SENDX(unsigned long a, unsigned long b, unsigned long c) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_VFX_DQX_OP_SENDX(unsigned long a, unsigned long b, unsigned long c)
+static inline uint64_t CAVM_PKO_VFX_DQX_OP_SENDX(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_VFX_DQX_OP_SENDX(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b<=7) && (c==0)))
         return 0x854400001000ll + 0x100000ll * ((a) & 0x1f) + 0x20000ll * ((b) & 0x7) + 8ll * ((c) & 0x0);
@@ -17039,8 +17039,8 @@ union cavm_pko_vfx_dqx_pd_statex
 };
 typedef union cavm_pko_vfx_dqx_pd_statex cavm_pko_vfx_dqx_pd_statex_t;
 
-static inline uint64_t CAVM_PKO_VFX_DQX_PD_STATEX(unsigned long a, unsigned long b, unsigned long c) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_VFX_DQX_PD_STATEX(unsigned long a, unsigned long b, unsigned long c)
+static inline uint64_t CAVM_PKO_VFX_DQX_PD_STATEX(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_VFX_DQX_PD_STATEX(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b<=7) && (c<=3)))
         return 0x85407001ff00ll + 0x100000ll * ((a) & 0x1f) + 0x20000ll * ((b) & 0x7) + 8ll * ((c) & 0x3);
@@ -17127,8 +17127,8 @@ union cavm_pko_vfx_dqx_sw_xoff
 };
 typedef union cavm_pko_vfx_dqx_sw_xoff cavm_pko_vfx_dqx_sw_xoff_t;
 
-static inline uint64_t CAVM_PKO_VFX_DQX_SW_XOFF(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_VFX_DQX_SW_XOFF(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKO_VFX_DQX_SW_XOFF(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_VFX_DQX_SW_XOFF(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b<=7)))
         return 0x854400000100ll + 0x100000ll * ((a) & 0x1f) + 0x20000ll * ((b) & 0x7);
@@ -17176,8 +17176,8 @@ union cavm_pko_vfx_dqx_wm_cnt
 };
 typedef union cavm_pko_vfx_dqx_wm_cnt cavm_pko_vfx_dqx_wm_cnt_t;
 
-static inline uint64_t CAVM_PKO_VFX_DQX_WM_CNT(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_VFX_DQX_WM_CNT(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKO_VFX_DQX_WM_CNT(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_VFX_DQX_WM_CNT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b<=7)))
         return 0x854400000150ll + 0x100000ll * ((a) & 0x1f) + 0x20000ll * ((b) & 0x7);
@@ -17235,8 +17235,8 @@ union cavm_pko_vfx_dqx_wm_ctl
 };
 typedef union cavm_pko_vfx_dqx_wm_ctl cavm_pko_vfx_dqx_wm_ctl_t;
 
-static inline uint64_t CAVM_PKO_VFX_DQX_WM_CTL(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_VFX_DQX_WM_CTL(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKO_VFX_DQX_WM_CTL(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_VFX_DQX_WM_CTL(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b<=7)))
         return 0x854400000130ll + 0x100000ll * ((a) & 0x1f) + 0x20000ll * ((b) & 0x7);
@@ -17372,8 +17372,8 @@ union cavm_pko_vfx_dq_fc_config
 };
 typedef union cavm_pko_vfx_dq_fc_config cavm_pko_vfx_dq_fc_config_t;
 
-static inline uint64_t CAVM_PKO_VFX_DQ_FC_CONFIG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKO_VFX_DQ_FC_CONFIG(unsigned long a)
+static inline uint64_t CAVM_PKO_VFX_DQ_FC_CONFIG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKO_VFX_DQ_FC_CONFIG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x854400000160ll + 0x100000ll * ((a) & 0x1f);

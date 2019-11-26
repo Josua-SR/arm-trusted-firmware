@@ -1329,8 +1329,8 @@ union cavm_psm_cmd_dmax_addr
 };
 typedef union cavm_psm_cmd_dmax_addr cavm_psm_cmd_dmax_addr_t;
 
-static inline uint64_t CAVM_PSM_CMD_DMAX_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_CMD_DMAX_ADDR(unsigned long a)
+static inline uint64_t CAVM_PSM_CMD_DMAX_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_CMD_DMAX_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=7))
         return 0x8600010d0000ll + 0x100ll * ((a) & 0x7);
@@ -1377,8 +1377,8 @@ union cavm_psm_cmd_dmax_ctrl
 };
 typedef union cavm_psm_cmd_dmax_ctrl cavm_psm_cmd_dmax_ctrl_t;
 
-static inline uint64_t CAVM_PSM_CMD_DMAX_CTRL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_CMD_DMAX_CTRL(unsigned long a)
+static inline uint64_t CAVM_PSM_CMD_DMAX_CTRL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_CMD_DMAX_CTRL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=7))
         return 0x8600010d0010ll + 0x100ll * ((a) & 0x7);
@@ -1971,8 +1971,8 @@ union cavm_psm_djcntx_cfg
 };
 typedef union cavm_psm_djcntx_cfg cavm_psm_djcntx_cfg_t;
 
-static inline uint64_t CAVM_PSM_DJCNTX_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_DJCNTX_CFG(unsigned long a)
+static inline uint64_t CAVM_PSM_DJCNTX_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_DJCNTX_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=127))
         return 0x8600010f2000ll + 0x10ll * ((a) & 0x7f);
@@ -2142,8 +2142,8 @@ union cavm_psm_ecox
 };
 typedef union cavm_psm_ecox cavm_psm_ecox_t;
 
-static inline uint64_t CAVM_PSM_ECOX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_ECOX(unsigned long a)
+static inline uint64_t CAVM_PSM_ECOX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_ECOX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=3))
         return 0x8600010fffe0ll + 8ll * ((a) & 0x3);
@@ -2179,8 +2179,8 @@ union cavm_psm_errcap_queue_badcmdx
 };
 typedef union cavm_psm_errcap_queue_badcmdx cavm_psm_errcap_queue_badcmdx_t;
 
-static inline uint64_t CAVM_PSM_ERRCAP_QUEUE_BADCMDX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_ERRCAP_QUEUE_BADCMDX(unsigned long a)
+static inline uint64_t CAVM_PSM_ERRCAP_QUEUE_BADCMDX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_ERRCAP_QUEUE_BADCMDX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x8600010f8000ll + 8ll * ((a) & 0x1);
@@ -2528,8 +2528,8 @@ union cavm_psm_nonjob_rsrcx
 };
 typedef union cavm_psm_nonjob_rsrcx cavm_psm_nonjob_rsrcx_t;
 
-static inline uint64_t CAVM_PSM_NONJOB_RSRCX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_NONJOB_RSRCX(unsigned long a)
+static inline uint64_t CAVM_PSM_NONJOB_RSRCX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_NONJOB_RSRCX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=7))
         return 0x8600010c0000ll + 0x10ll * ((a) & 0x7);
@@ -2591,8 +2591,8 @@ union cavm_psm_queuex_cfg
 };
 typedef union cavm_psm_queuex_cfg cavm_psm_queuex_cfg_t;
 
-static inline uint64_t CAVM_PSM_QUEUEX_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_QUEUEX_CFG(unsigned long a)
+static inline uint64_t CAVM_PSM_QUEUEX_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_QUEUEX_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=127))
         return 0x860001001000ll + 0x10ll * ((a) & 0x7f);
@@ -2626,8 +2626,8 @@ union cavm_psm_queuex_cmd_hi
 };
 typedef union cavm_psm_queuex_cmd_hi cavm_psm_queuex_cmd_hi_t;
 
-static inline uint64_t CAVM_PSM_QUEUEX_CMD_HI(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_QUEUEX_CMD_HI(unsigned long a)
+static inline uint64_t CAVM_PSM_QUEUEX_CMD_HI(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_QUEUEX_CMD_HI(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=127))
         return 0x860001000008ll + 0x10ll * ((a) & 0x7f);
@@ -2670,8 +2670,8 @@ union cavm_psm_queuex_cmd_lo
 };
 typedef union cavm_psm_queuex_cmd_lo cavm_psm_queuex_cmd_lo_t;
 
-static inline uint64_t CAVM_PSM_QUEUEX_CMD_LO(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_QUEUEX_CMD_LO(unsigned long a)
+static inline uint64_t CAVM_PSM_QUEUEX_CMD_LO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_QUEUEX_CMD_LO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=127))
         return 0x860001000000ll + 0x10ll * ((a) & 0x7f);
@@ -2807,8 +2807,8 @@ union cavm_psm_queuex_info
 };
 typedef union cavm_psm_queuex_info cavm_psm_queuex_info_t;
 
-static inline uint64_t CAVM_PSM_QUEUEX_INFO(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_QUEUEX_INFO(unsigned long a)
+static inline uint64_t CAVM_PSM_QUEUEX_INFO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_QUEUEX_INFO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=127))
         return 0x860001005000ll + 0x10ll * ((a) & 0x7f);
@@ -2860,8 +2860,8 @@ union cavm_psm_queuex_ptr
 };
 typedef union cavm_psm_queuex_ptr cavm_psm_queuex_ptr_t;
 
-static inline uint64_t CAVM_PSM_QUEUEX_PTR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_QUEUEX_PTR(unsigned long a)
+static inline uint64_t CAVM_PSM_QUEUEX_PTR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_QUEUEX_PTR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=127))
         return 0x860001002000ll + 0x10ll * ((a) & 0x7f);
@@ -2897,8 +2897,8 @@ union cavm_psm_queuex_space
 };
 typedef union cavm_psm_queuex_space cavm_psm_queuex_space_t;
 
-static inline uint64_t CAVM_PSM_QUEUEX_SPACE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_QUEUEX_SPACE(unsigned long a)
+static inline uint64_t CAVM_PSM_QUEUEX_SPACE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_QUEUEX_SPACE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=127))
         return 0x860001003000ll + 0x10ll * ((a) & 0x7f);
@@ -2945,8 +2945,8 @@ union cavm_psm_queuex_timeout_cfg
 };
 typedef union cavm_psm_queuex_timeout_cfg cavm_psm_queuex_timeout_cfg_t;
 
-static inline uint64_t CAVM_PSM_QUEUEX_TIMEOUT_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_QUEUEX_TIMEOUT_CFG(unsigned long a)
+static inline uint64_t CAVM_PSM_QUEUEX_TIMEOUT_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_QUEUEX_TIMEOUT_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=127))
         return 0x860001004000ll + 0x10ll * ((a) & 0x7f);
@@ -2986,8 +2986,8 @@ union cavm_psm_queue_busy_stsx
 };
 typedef union cavm_psm_queue_busy_stsx cavm_psm_queue_busy_stsx_t;
 
-static inline uint64_t CAVM_PSM_QUEUE_BUSY_STSX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_QUEUE_BUSY_STSX(unsigned long a)
+static inline uint64_t CAVM_PSM_QUEUE_BUSY_STSX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_QUEUE_BUSY_STSX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x860001010300ll + 8ll * ((a) & 0x1);
@@ -3027,8 +3027,8 @@ union cavm_psm_queue_ena_w1cx
 };
 typedef union cavm_psm_queue_ena_w1cx cavm_psm_queue_ena_w1cx_t;
 
-static inline uint64_t CAVM_PSM_QUEUE_ENA_W1CX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_QUEUE_ENA_W1CX(unsigned long a)
+static inline uint64_t CAVM_PSM_QUEUE_ENA_W1CX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_QUEUE_ENA_W1CX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x860001010100ll + 8ll * ((a) & 0x1);
@@ -3070,8 +3070,8 @@ union cavm_psm_queue_ena_w1sx
 };
 typedef union cavm_psm_queue_ena_w1sx cavm_psm_queue_ena_w1sx_t;
 
-static inline uint64_t CAVM_PSM_QUEUE_ENA_W1SX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_QUEUE_ENA_W1SX(unsigned long a)
+static inline uint64_t CAVM_PSM_QUEUE_ENA_W1SX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_QUEUE_ENA_W1SX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x860001010000ll + 8ll * ((a) & 0x1);
@@ -3107,8 +3107,8 @@ union cavm_psm_queue_full_stsx
 };
 typedef union cavm_psm_queue_full_stsx cavm_psm_queue_full_stsx_t;
 
-static inline uint64_t CAVM_PSM_QUEUE_FULL_STSX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_QUEUE_FULL_STSX(unsigned long a)
+static inline uint64_t CAVM_PSM_QUEUE_FULL_STSX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_QUEUE_FULL_STSX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x860001010200ll + 8ll * ((a) & 0x1);
@@ -3147,8 +3147,8 @@ union cavm_psm_queue_ramx
 };
 typedef union cavm_psm_queue_ramx cavm_psm_queue_ramx_t;
 
-static inline uint64_t CAVM_PSM_QUEUE_RAMX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_QUEUE_RAMX(unsigned long a)
+static inline uint64_t CAVM_PSM_QUEUE_RAMX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_QUEUE_RAMX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=32767))
         return 0x860001100000ll + 8ll * ((a) & 0x7fff);
@@ -3235,8 +3235,8 @@ union cavm_psm_setx_errcap_mab_badcmd
 };
 typedef union cavm_psm_setx_errcap_mab_badcmd cavm_psm_setx_errcap_mab_badcmd_t;
 
-static inline uint64_t CAVM_PSM_SETX_ERRCAP_MAB_BADCMD(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SETX_ERRCAP_MAB_BADCMD(unsigned long a)
+static inline uint64_t CAVM_PSM_SETX_ERRCAP_MAB_BADCMD(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SETX_ERRCAP_MAB_BADCMD(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=2))
         return 0x8600010f9000ll + 0x10ll * ((a) & 0x3);
@@ -3277,8 +3277,8 @@ union cavm_psm_set0_grpx_cdt
 };
 typedef union cavm_psm_set0_grpx_cdt cavm_psm_set0_grpx_cdt_t;
 
-static inline uint64_t CAVM_PSM_SET0_GRPX_CDT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET0_GRPX_CDT(unsigned long a)
+static inline uint64_t CAVM_PSM_SET0_GRPX_CDT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET0_GRPX_CDT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=7))
         return 0x860001047400ll + 0x10ll * ((a) & 0x7);
@@ -3324,8 +3324,8 @@ union cavm_psm_set0_grpx_mask
 };
 typedef union cavm_psm_set0_grpx_mask cavm_psm_set0_grpx_mask_t;
 
-static inline uint64_t CAVM_PSM_SET0_GRPX_MASK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET0_GRPX_MASK(unsigned long a)
+static inline uint64_t CAVM_PSM_SET0_GRPX_MASK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET0_GRPX_MASK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=7))
         return 0x860001047000ll + 0x10ll * ((a) & 0x7);
@@ -3361,8 +3361,8 @@ union cavm_psm_set0_job_prix_reqx
 };
 typedef union cavm_psm_set0_job_prix_reqx cavm_psm_set0_job_prix_reqx_t;
 
-static inline uint64_t CAVM_PSM_SET0_JOB_PRIX_REQX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET0_JOB_PRIX_REQX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PSM_SET0_JOB_PRIX_REQX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET0_JOB_PRIX_REQX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=3) && (b<=1)))
         return 0x860001070000ll + 0x100ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
@@ -3400,8 +3400,8 @@ union cavm_psm_set0_job_prix_unservedx
 };
 typedef union cavm_psm_set0_job_prix_unservedx cavm_psm_set0_job_prix_unservedx_t;
 
-static inline uint64_t CAVM_PSM_SET0_JOB_PRIX_UNSERVEDX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET0_JOB_PRIX_UNSERVEDX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PSM_SET0_JOB_PRIX_UNSERVEDX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET0_JOB_PRIX_UNSERVEDX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=3) && (b<=1)))
         return 0x860001070400ll + 0x100ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
@@ -3547,8 +3547,8 @@ union cavm_psm_set0_mabfifox_ctrl
 };
 typedef union cavm_psm_set0_mabfifox_ctrl cavm_psm_set0_mabfifox_ctrl_t;
 
-static inline uint64_t CAVM_PSM_SET0_MABFIFOX_CTRL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET0_MABFIFOX_CTRL(unsigned long a)
+static inline uint64_t CAVM_PSM_SET0_MABFIFOX_CTRL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET0_MABFIFOX_CTRL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=25))
         return 0x860001080000ll + 0x10ll * ((a) & 0x1f);
@@ -3583,8 +3583,8 @@ union cavm_psm_set0_mabfifox_head_hi
 };
 typedef union cavm_psm_set0_mabfifox_head_hi cavm_psm_set0_mabfifox_head_hi_t;
 
-static inline uint64_t CAVM_PSM_SET0_MABFIFOX_HEAD_HI(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET0_MABFIFOX_HEAD_HI(unsigned long a)
+static inline uint64_t CAVM_PSM_SET0_MABFIFOX_HEAD_HI(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET0_MABFIFOX_HEAD_HI(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=25))
         return 0x860001081008ll + 0x10ll * ((a) & 0x1f);
@@ -3619,8 +3619,8 @@ union cavm_psm_set0_mabfifox_head_lo
 };
 typedef union cavm_psm_set0_mabfifox_head_lo cavm_psm_set0_mabfifox_head_lo_t;
 
-static inline uint64_t CAVM_PSM_SET0_MABFIFOX_HEAD_LO(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET0_MABFIFOX_HEAD_LO(unsigned long a)
+static inline uint64_t CAVM_PSM_SET0_MABFIFOX_HEAD_LO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET0_MABFIFOX_HEAD_LO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=25))
         return 0x860001081000ll + 0x10ll * ((a) & 0x1f);
@@ -3658,8 +3658,8 @@ union cavm_psm_set0_mabfifox_req_cnt
 };
 typedef union cavm_psm_set0_mabfifox_req_cnt cavm_psm_set0_mabfifox_req_cnt_t;
 
-static inline uint64_t CAVM_PSM_SET0_MABFIFOX_REQ_CNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET0_MABFIFOX_REQ_CNT(unsigned long a)
+static inline uint64_t CAVM_PSM_SET0_MABFIFOX_REQ_CNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET0_MABFIFOX_REQ_CNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=25))
         return 0x860001082000ll + 0x10ll * ((a) & 0x1f);
@@ -3742,8 +3742,8 @@ union cavm_psm_set0_mabqx_cdt_usage
 };
 typedef union cavm_psm_set0_mabqx_cdt_usage cavm_psm_set0_mabqx_cdt_usage_t;
 
-static inline uint64_t CAVM_PSM_SET0_MABQX_CDT_USAGE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET0_MABQX_CDT_USAGE(unsigned long a)
+static inline uint64_t CAVM_PSM_SET0_MABQX_CDT_USAGE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET0_MABQX_CDT_USAGE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x860001047c00ll + 0x10ll * ((a) & 0x1);
@@ -3780,8 +3780,8 @@ union cavm_psm_set0_mabqx_job_cdtx
 };
 typedef union cavm_psm_set0_mabqx_job_cdtx cavm_psm_set0_mabqx_job_cdtx_t;
 
-static inline uint64_t CAVM_PSM_SET0_MABQX_JOB_CDTX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET0_MABQX_JOB_CDTX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PSM_SET0_MABQX_JOB_CDTX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET0_MABQX_JOB_CDTX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=25)))
         return 0x860001044000ll + 0x1000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x1f);
@@ -3818,8 +3818,8 @@ union cavm_psm_set0_max_mabqx_job_cdtx
 };
 typedef union cavm_psm_set0_max_mabqx_job_cdtx cavm_psm_set0_max_mabqx_job_cdtx_t;
 
-static inline uint64_t CAVM_PSM_SET0_MAX_MABQX_JOB_CDTX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET0_MAX_MABQX_JOB_CDTX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PSM_SET0_MAX_MABQX_JOB_CDTX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET0_MAX_MABQX_JOB_CDTX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=25)))
         return 0x860001042000ll + 0x1000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x1f);
@@ -3857,8 +3857,8 @@ union cavm_psm_set0_rsrc_tblx
 };
 typedef union cavm_psm_set0_rsrc_tblx cavm_psm_set0_rsrc_tblx_t;
 
-static inline uint64_t CAVM_PSM_SET0_RSRC_TBLX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET0_RSRC_TBLX(unsigned long a)
+static inline uint64_t CAVM_PSM_SET0_RSRC_TBLX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET0_RSRC_TBLX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=255))
         return 0x860001040000ll + 0x10ll * ((a) & 0xff);
@@ -3899,8 +3899,8 @@ union cavm_psm_set1_grpx_cdt
 };
 typedef union cavm_psm_set1_grpx_cdt cavm_psm_set1_grpx_cdt_t;
 
-static inline uint64_t CAVM_PSM_SET1_GRPX_CDT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET1_GRPX_CDT(unsigned long a)
+static inline uint64_t CAVM_PSM_SET1_GRPX_CDT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET1_GRPX_CDT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=7))
         return 0x860001057400ll + 0x10ll * ((a) & 0x7);
@@ -3946,8 +3946,8 @@ union cavm_psm_set1_grpx_mask
 };
 typedef union cavm_psm_set1_grpx_mask cavm_psm_set1_grpx_mask_t;
 
-static inline uint64_t CAVM_PSM_SET1_GRPX_MASK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET1_GRPX_MASK(unsigned long a)
+static inline uint64_t CAVM_PSM_SET1_GRPX_MASK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET1_GRPX_MASK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=7))
         return 0x860001057000ll + 0x10ll * ((a) & 0x7);
@@ -3983,8 +3983,8 @@ union cavm_psm_set1_job_prix_reqx
 };
 typedef union cavm_psm_set1_job_prix_reqx cavm_psm_set1_job_prix_reqx_t;
 
-static inline uint64_t CAVM_PSM_SET1_JOB_PRIX_REQX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET1_JOB_PRIX_REQX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PSM_SET1_JOB_PRIX_REQX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET1_JOB_PRIX_REQX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=3) && (b<=1)))
         return 0x860001071000ll + 0x100ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
@@ -4022,8 +4022,8 @@ union cavm_psm_set1_job_prix_unservedx
 };
 typedef union cavm_psm_set1_job_prix_unservedx cavm_psm_set1_job_prix_unservedx_t;
 
-static inline uint64_t CAVM_PSM_SET1_JOB_PRIX_UNSERVEDX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET1_JOB_PRIX_UNSERVEDX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PSM_SET1_JOB_PRIX_UNSERVEDX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET1_JOB_PRIX_UNSERVEDX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=3) && (b<=1)))
         return 0x860001071400ll + 0x100ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
@@ -4169,8 +4169,8 @@ union cavm_psm_set1_mabfifox_ctrl
 };
 typedef union cavm_psm_set1_mabfifox_ctrl cavm_psm_set1_mabfifox_ctrl_t;
 
-static inline uint64_t CAVM_PSM_SET1_MABFIFOX_CTRL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET1_MABFIFOX_CTRL(unsigned long a)
+static inline uint64_t CAVM_PSM_SET1_MABFIFOX_CTRL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET1_MABFIFOX_CTRL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=41))
         return 0x860001090000ll + 0x10ll * ((a) & 0x3f);
@@ -4205,8 +4205,8 @@ union cavm_psm_set1_mabfifox_head_hi
 };
 typedef union cavm_psm_set1_mabfifox_head_hi cavm_psm_set1_mabfifox_head_hi_t;
 
-static inline uint64_t CAVM_PSM_SET1_MABFIFOX_HEAD_HI(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET1_MABFIFOX_HEAD_HI(unsigned long a)
+static inline uint64_t CAVM_PSM_SET1_MABFIFOX_HEAD_HI(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET1_MABFIFOX_HEAD_HI(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=41))
         return 0x860001091008ll + 0x10ll * ((a) & 0x3f);
@@ -4241,8 +4241,8 @@ union cavm_psm_set1_mabfifox_head_lo
 };
 typedef union cavm_psm_set1_mabfifox_head_lo cavm_psm_set1_mabfifox_head_lo_t;
 
-static inline uint64_t CAVM_PSM_SET1_MABFIFOX_HEAD_LO(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET1_MABFIFOX_HEAD_LO(unsigned long a)
+static inline uint64_t CAVM_PSM_SET1_MABFIFOX_HEAD_LO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET1_MABFIFOX_HEAD_LO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=41))
         return 0x860001091000ll + 0x10ll * ((a) & 0x3f);
@@ -4280,8 +4280,8 @@ union cavm_psm_set1_mabfifox_req_cnt
 };
 typedef union cavm_psm_set1_mabfifox_req_cnt cavm_psm_set1_mabfifox_req_cnt_t;
 
-static inline uint64_t CAVM_PSM_SET1_MABFIFOX_REQ_CNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET1_MABFIFOX_REQ_CNT(unsigned long a)
+static inline uint64_t CAVM_PSM_SET1_MABFIFOX_REQ_CNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET1_MABFIFOX_REQ_CNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=41))
         return 0x860001092000ll + 0x10ll * ((a) & 0x3f);
@@ -4364,8 +4364,8 @@ union cavm_psm_set1_mabqx_cdt_usage
 };
 typedef union cavm_psm_set1_mabqx_cdt_usage cavm_psm_set1_mabqx_cdt_usage_t;
 
-static inline uint64_t CAVM_PSM_SET1_MABQX_CDT_USAGE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET1_MABQX_CDT_USAGE(unsigned long a)
+static inline uint64_t CAVM_PSM_SET1_MABQX_CDT_USAGE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET1_MABQX_CDT_USAGE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x860001057c00ll + 0x10ll * ((a) & 0x1);
@@ -4402,8 +4402,8 @@ union cavm_psm_set1_mabqx_job_cdtx
 };
 typedef union cavm_psm_set1_mabqx_job_cdtx cavm_psm_set1_mabqx_job_cdtx_t;
 
-static inline uint64_t CAVM_PSM_SET1_MABQX_JOB_CDTX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET1_MABQX_JOB_CDTX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PSM_SET1_MABQX_JOB_CDTX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET1_MABQX_JOB_CDTX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=41)))
         return 0x860001054000ll + 0x1000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3f);
@@ -4440,8 +4440,8 @@ union cavm_psm_set1_max_mabqx_job_cdtx
 };
 typedef union cavm_psm_set1_max_mabqx_job_cdtx cavm_psm_set1_max_mabqx_job_cdtx_t;
 
-static inline uint64_t CAVM_PSM_SET1_MAX_MABQX_JOB_CDTX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET1_MAX_MABQX_JOB_CDTX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PSM_SET1_MAX_MABQX_JOB_CDTX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET1_MAX_MABQX_JOB_CDTX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=41)))
         return 0x860001052000ll + 0x1000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3f);
@@ -4479,8 +4479,8 @@ union cavm_psm_set1_rsrc_tblx
 };
 typedef union cavm_psm_set1_rsrc_tblx cavm_psm_set1_rsrc_tblx_t;
 
-static inline uint64_t CAVM_PSM_SET1_RSRC_TBLX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET1_RSRC_TBLX(unsigned long a)
+static inline uint64_t CAVM_PSM_SET1_RSRC_TBLX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET1_RSRC_TBLX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=255))
         return 0x860001050000ll + 0x10ll * ((a) & 0xff);
@@ -4521,8 +4521,8 @@ union cavm_psm_set2_grpx_cdt
 };
 typedef union cavm_psm_set2_grpx_cdt cavm_psm_set2_grpx_cdt_t;
 
-static inline uint64_t CAVM_PSM_SET2_GRPX_CDT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET2_GRPX_CDT(unsigned long a)
+static inline uint64_t CAVM_PSM_SET2_GRPX_CDT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET2_GRPX_CDT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=7))
         return 0x860001067400ll + 0x10ll * ((a) & 0x7);
@@ -4572,8 +4572,8 @@ union cavm_psm_set2_grpx_mask
 };
 typedef union cavm_psm_set2_grpx_mask cavm_psm_set2_grpx_mask_t;
 
-static inline uint64_t CAVM_PSM_SET2_GRPX_MASK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET2_GRPX_MASK(unsigned long a)
+static inline uint64_t CAVM_PSM_SET2_GRPX_MASK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET2_GRPX_MASK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=7))
         return 0x860001067000ll + 0x10ll * ((a) & 0x7);
@@ -4609,8 +4609,8 @@ union cavm_psm_set2_job_prix_reqx
 };
 typedef union cavm_psm_set2_job_prix_reqx cavm_psm_set2_job_prix_reqx_t;
 
-static inline uint64_t CAVM_PSM_SET2_JOB_PRIX_REQX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET2_JOB_PRIX_REQX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PSM_SET2_JOB_PRIX_REQX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET2_JOB_PRIX_REQX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=3) && (b<=1)))
         return 0x860001072000ll + 0x100ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
@@ -4648,8 +4648,8 @@ union cavm_psm_set2_job_prix_unservedx
 };
 typedef union cavm_psm_set2_job_prix_unservedx cavm_psm_set2_job_prix_unservedx_t;
 
-static inline uint64_t CAVM_PSM_SET2_JOB_PRIX_UNSERVEDX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET2_JOB_PRIX_UNSERVEDX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PSM_SET2_JOB_PRIX_UNSERVEDX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET2_JOB_PRIX_UNSERVEDX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=3) && (b<=1)))
         return 0x860001072400ll + 0x100ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
@@ -4795,8 +4795,8 @@ union cavm_psm_set2_mabfifox_ctrl
 };
 typedef union cavm_psm_set2_mabfifox_ctrl cavm_psm_set2_mabfifox_ctrl_t;
 
-static inline uint64_t CAVM_PSM_SET2_MABFIFOX_CTRL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET2_MABFIFOX_CTRL(unsigned long a)
+static inline uint64_t CAVM_PSM_SET2_MABFIFOX_CTRL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET2_MABFIFOX_CTRL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x8600010a0000ll + 0x10ll * ((a) & 0x1);
@@ -4831,8 +4831,8 @@ union cavm_psm_set2_mabfifox_head_hi
 };
 typedef union cavm_psm_set2_mabfifox_head_hi cavm_psm_set2_mabfifox_head_hi_t;
 
-static inline uint64_t CAVM_PSM_SET2_MABFIFOX_HEAD_HI(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET2_MABFIFOX_HEAD_HI(unsigned long a)
+static inline uint64_t CAVM_PSM_SET2_MABFIFOX_HEAD_HI(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET2_MABFIFOX_HEAD_HI(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x8600010a1008ll + 0x10ll * ((a) & 0x1);
@@ -4867,8 +4867,8 @@ union cavm_psm_set2_mabfifox_head_lo
 };
 typedef union cavm_psm_set2_mabfifox_head_lo cavm_psm_set2_mabfifox_head_lo_t;
 
-static inline uint64_t CAVM_PSM_SET2_MABFIFOX_HEAD_LO(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET2_MABFIFOX_HEAD_LO(unsigned long a)
+static inline uint64_t CAVM_PSM_SET2_MABFIFOX_HEAD_LO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET2_MABFIFOX_HEAD_LO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x8600010a1000ll + 0x10ll * ((a) & 0x1);
@@ -4906,8 +4906,8 @@ union cavm_psm_set2_mabfifox_req_cnt
 };
 typedef union cavm_psm_set2_mabfifox_req_cnt cavm_psm_set2_mabfifox_req_cnt_t;
 
-static inline uint64_t CAVM_PSM_SET2_MABFIFOX_REQ_CNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET2_MABFIFOX_REQ_CNT(unsigned long a)
+static inline uint64_t CAVM_PSM_SET2_MABFIFOX_REQ_CNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET2_MABFIFOX_REQ_CNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x8600010a2000ll + 0x10ll * ((a) & 0x1);
@@ -4990,8 +4990,8 @@ union cavm_psm_set2_mabqx_cdt_usage
 };
 typedef union cavm_psm_set2_mabqx_cdt_usage cavm_psm_set2_mabqx_cdt_usage_t;
 
-static inline uint64_t CAVM_PSM_SET2_MABQX_CDT_USAGE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET2_MABQX_CDT_USAGE(unsigned long a)
+static inline uint64_t CAVM_PSM_SET2_MABQX_CDT_USAGE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET2_MABQX_CDT_USAGE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x860001067c00ll + 0x10ll * ((a) & 0x1);
@@ -5028,8 +5028,8 @@ union cavm_psm_set2_mabqx_job_cdtx
 };
 typedef union cavm_psm_set2_mabqx_job_cdtx cavm_psm_set2_mabqx_job_cdtx_t;
 
-static inline uint64_t CAVM_PSM_SET2_MABQX_JOB_CDTX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET2_MABQX_JOB_CDTX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PSM_SET2_MABQX_JOB_CDTX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET2_MABQX_JOB_CDTX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
         return 0x860001064000ll + 0x1000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x1);
@@ -5066,8 +5066,8 @@ union cavm_psm_set2_max_mabqx_job_cdtx
 };
 typedef union cavm_psm_set2_max_mabqx_job_cdtx cavm_psm_set2_max_mabqx_job_cdtx_t;
 
-static inline uint64_t CAVM_PSM_SET2_MAX_MABQX_JOB_CDTX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET2_MAX_MABQX_JOB_CDTX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PSM_SET2_MAX_MABQX_JOB_CDTX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET2_MAX_MABQX_JOB_CDTX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
         return 0x860001062000ll + 0x1000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x1);
@@ -5105,8 +5105,8 @@ union cavm_psm_set2_rsrc_tblx
 };
 typedef union cavm_psm_set2_rsrc_tblx cavm_psm_set2_rsrc_tblx_t;
 
-static inline uint64_t CAVM_PSM_SET2_RSRC_TBLX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PSM_SET2_RSRC_TBLX(unsigned long a)
+static inline uint64_t CAVM_PSM_SET2_RSRC_TBLX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PSM_SET2_RSRC_TBLX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=255))
         return 0x860001060000ll + 0x10ll * ((a) & 0xff);

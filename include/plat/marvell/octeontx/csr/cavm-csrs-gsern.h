@@ -104,8 +104,8 @@ union cavm_gsernx_common_bias_bcfg
 };
 typedef union cavm_gsernx_common_bias_bcfg cavm_gsernx_common_bias_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_BIAS_BCFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_BIAS_BCFG(unsigned long a)
+static inline uint64_t CAVM_GSERNX_COMMON_BIAS_BCFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_BIAS_BCFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
         return 0x87e0900f0290ll + 0x1000000ll * ((a) & 0x7);
@@ -141,8 +141,8 @@ union cavm_gsernx_common_const
 };
 typedef union cavm_gsernx_common_const cavm_gsernx_common_const_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_CONST(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_CONST(unsigned long a)
+static inline uint64_t CAVM_GSERNX_COMMON_CONST(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_CONST(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
         return 0x87e0900f0080ll + 0x1000000ll * ((a) & 0x7);
@@ -186,8 +186,8 @@ union cavm_gsernx_common_const1
 };
 typedef union cavm_gsernx_common_const1 cavm_gsernx_common_const1_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_CONST1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_CONST1(unsigned long a)
+static inline uint64_t CAVM_GSERNX_COMMON_CONST1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_CONST1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
         return 0x87e0900f0100ll + 0x1000000ll * ((a) & 0x7);
@@ -225,8 +225,8 @@ union cavm_gsernx_common_eco
 };
 typedef union cavm_gsernx_common_eco cavm_gsernx_common_eco_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_ECO(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_ECO(unsigned long a)
+static inline uint64_t CAVM_GSERNX_COMMON_ECO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_ECO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
         return 0x87e0900f07b0ll + 0x1000000ll * ((a) & 0x7);
@@ -298,8 +298,8 @@ union cavm_gsernx_common_init_bsts
 };
 typedef union cavm_gsernx_common_init_bsts cavm_gsernx_common_init_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_INIT_BSTS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_INIT_BSTS(unsigned long a)
+static inline uint64_t CAVM_GSERNX_COMMON_INIT_BSTS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_INIT_BSTS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
         return 0x87e0900f04b0ll + 0x1000000ll * ((a) & 0x7);
@@ -381,8 +381,8 @@ union cavm_gsernx_common_pll_1_bcfg
 };
 typedef union cavm_gsernx_common_pll_1_bcfg cavm_gsernx_common_pll_1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_PLL_1_BCFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_PLL_1_BCFG(unsigned long a)
+static inline uint64_t CAVM_GSERNX_COMMON_PLL_1_BCFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_PLL_1_BCFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
         return 0x87e0900f0200ll + 0x1000000ll * ((a) & 0x7);
@@ -500,8 +500,8 @@ union cavm_gsernx_common_pll_2_bcfg
 };
 typedef union cavm_gsernx_common_pll_2_bcfg cavm_gsernx_common_pll_2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_PLL_2_BCFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_PLL_2_BCFG(unsigned long a)
+static inline uint64_t CAVM_GSERNX_COMMON_PLL_2_BCFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_PLL_2_BCFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
         return 0x87e0900f0210ll + 0x1000000ll * ((a) & 0x7);
@@ -604,8 +604,8 @@ union cavm_gsernx_common_refclk_bcfg
 };
 typedef union cavm_gsernx_common_refclk_bcfg cavm_gsernx_common_refclk_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_REFCLK_BCFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_REFCLK_BCFG(unsigned long a)
+static inline uint64_t CAVM_GSERNX_COMMON_REFCLK_BCFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_REFCLK_BCFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
         return 0x87e0900f0180ll + 0x1000000ll * ((a) & 0x7);
@@ -645,8 +645,8 @@ union cavm_gsernx_common_refclk_ctr
 };
 typedef union cavm_gsernx_common_refclk_ctr cavm_gsernx_common_refclk_ctr_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_REFCLK_CTR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_REFCLK_CTR(unsigned long a)
+static inline uint64_t CAVM_GSERNX_COMMON_REFCLK_CTR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_REFCLK_CTR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
         return 0x87e0900f06b0ll + 0x1000000ll * ((a) & 0x7);
@@ -689,8 +689,8 @@ union cavm_gsernx_common_rev
 };
 typedef union cavm_gsernx_common_rev cavm_gsernx_common_rev_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_REV(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_REV(unsigned long a)
+static inline uint64_t CAVM_GSERNX_COMMON_REV(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_REV(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
         return 0x87e0900f0000ll + 0x1000000ll * ((a) & 0x7);
@@ -794,8 +794,8 @@ union cavm_gsernx_common_rst_bcfg
 };
 typedef union cavm_gsernx_common_rst_bcfg cavm_gsernx_common_rst_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_RST_BCFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_RST_BCFG(unsigned long a)
+static inline uint64_t CAVM_GSERNX_COMMON_RST_BCFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_RST_BCFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
         return 0x87e0900f0310ll + 0x1000000ll * ((a) & 0x7);
@@ -841,8 +841,8 @@ union cavm_gsernx_common_rst_cnt0_bcfg
 };
 typedef union cavm_gsernx_common_rst_cnt0_bcfg cavm_gsernx_common_rst_cnt0_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_RST_CNT0_BCFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_RST_CNT0_BCFG(unsigned long a)
+static inline uint64_t CAVM_GSERNX_COMMON_RST_CNT0_BCFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_RST_CNT0_BCFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
         return 0x87e0900f0390ll + 0x1000000ll * ((a) & 0x7);
@@ -904,8 +904,8 @@ union cavm_gsernx_common_rst_cnt1_bcfg
 };
 typedef union cavm_gsernx_common_rst_cnt1_bcfg cavm_gsernx_common_rst_cnt1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_RST_CNT1_BCFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_RST_CNT1_BCFG(unsigned long a)
+static inline uint64_t CAVM_GSERNX_COMMON_RST_CNT1_BCFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_RST_CNT1_BCFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
         return 0x87e0900f03a0ll + 0x1000000ll * ((a) & 0x7);
@@ -973,8 +973,8 @@ union cavm_gsernx_common_rst_cnt2_bcfg
 };
 typedef union cavm_gsernx_common_rst_cnt2_bcfg cavm_gsernx_common_rst_cnt2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_RST_CNT2_BCFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_RST_CNT2_BCFG(unsigned long a)
+static inline uint64_t CAVM_GSERNX_COMMON_RST_CNT2_BCFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_RST_CNT2_BCFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
         return 0x87e0900f03b0ll + 0x1000000ll * ((a) & 0x7);
@@ -1022,8 +1022,8 @@ union cavm_gsernx_common_rst_rdy_bcfg
 };
 typedef union cavm_gsernx_common_rst_rdy_bcfg cavm_gsernx_common_rst_rdy_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_RST_RDY_BCFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_RST_RDY_BCFG(unsigned long a)
+static inline uint64_t CAVM_GSERNX_COMMON_RST_RDY_BCFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_RST_RDY_BCFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=7))
         return 0x87e0900f05b0ll + 0x1000000ll * ((a) & 0x7);
@@ -1059,8 +1059,8 @@ union cavm_gsernx_common_scratchx
 };
 typedef union cavm_gsernx_common_scratchx cavm_gsernx_common_scratchx_t;
 
-static inline uint64_t CAVM_GSERNX_COMMON_SCRATCHX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_COMMON_SCRATCHX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_COMMON_SCRATCHX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_COMMON_SCRATCHX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=1)))
         return 0x87e0900f09b0ll + 0x1000000ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
@@ -1118,8 +1118,8 @@ union cavm_gsernx_lanex_btsclk_cfg
 };
 typedef union cavm_gsernx_lanex_btsclk_cfg cavm_gsernx_lanex_btsclk_cfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_BTSCLK_CFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_BTSCLK_CFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_BTSCLK_CFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_BTSCLK_CFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900039c0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -1210,8 +1210,8 @@ union cavm_gsernx_lanex_cdrfsm_bcfg
 };
 typedef union cavm_gsernx_lanex_cdrfsm_bcfg cavm_gsernx_lanex_cdrfsm_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_CDRFSM_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_CDRFSM_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_CDRFSM_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_CDRFSM_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001e10ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -1427,8 +1427,8 @@ union cavm_gsernx_lanex_cgx_txeq_bcfg
 };
 typedef union cavm_gsernx_lanex_cgx_txeq_bcfg cavm_gsernx_lanex_cgx_txeq_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_CGX_TXEQ_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_CGX_TXEQ_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_CGX_TXEQ_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_CGX_TXEQ_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900035a0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -1467,8 +1467,8 @@ union cavm_gsernx_lanex_const
 };
 typedef union cavm_gsernx_lanex_const cavm_gsernx_lanex_const_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_CONST(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_CONST(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_CONST(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_CONST(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000100ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -1512,8 +1512,8 @@ union cavm_gsernx_lanex_eco
 };
 typedef union cavm_gsernx_lanex_eco cavm_gsernx_lanex_eco_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_ECO(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_ECO(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_ECO(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_ECO(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090003ac0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -1784,8 +1784,8 @@ union cavm_gsernx_lanex_eee_bcfg
 };
 typedef union cavm_gsernx_lanex_eee_bcfg cavm_gsernx_lanex_eee_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_EEE_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_EEE_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900037a0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -1870,8 +1870,8 @@ union cavm_gsernx_lanex_eee_rstp1_bcfg
 };
 typedef union cavm_gsernx_lanex_eee_rstp1_bcfg cavm_gsernx_lanex_eee_rstp1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTP1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTP1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTP1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTP1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900038a0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -1954,8 +1954,8 @@ union cavm_gsernx_lanex_eee_rstp2_bcfg
 };
 typedef union cavm_gsernx_lanex_eee_rstp2_bcfg cavm_gsernx_lanex_eee_rstp2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTP2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTP2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTP2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTP2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900038b0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -2038,8 +2038,8 @@ union cavm_gsernx_lanex_eee_rstshdn_bcfg
 };
 typedef union cavm_gsernx_lanex_eee_rstshdn_bcfg cavm_gsernx_lanex_eee_rstshdn_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTSHDN_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTSHDN_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTSHDN_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_EEE_RSTSHDN_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900038c0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -2113,8 +2113,8 @@ union cavm_gsernx_lanex_eye_ctl
 };
 typedef union cavm_gsernx_lanex_eye_ctl cavm_gsernx_lanex_eye_ctl_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_EYE_CTL(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_EYE_CTL(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_EYE_CTL(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_EYE_CTL(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900007b0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -2277,8 +2277,8 @@ union cavm_gsernx_lanex_eye_ctl_2
 };
 typedef union cavm_gsernx_lanex_eye_ctl_2 cavm_gsernx_lanex_eye_ctl_2_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_EYE_CTL_2(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_EYE_CTL_2(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_EYE_CTL_2(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_EYE_CTL_2(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900007c0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -2340,8 +2340,8 @@ union cavm_gsernx_lanex_eye_dat
 };
 typedef union cavm_gsernx_lanex_eye_dat cavm_gsernx_lanex_eye_dat_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_EYE_DAT(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_EYE_DAT(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_EYE_DAT(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_EYE_DAT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900007d0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -2403,8 +2403,8 @@ union cavm_gsernx_lanex_idledet_hys
 };
 typedef union cavm_gsernx_lanex_idledet_hys cavm_gsernx_lanex_idledet_hys_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_IDLEDET_HYS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_IDLEDET_HYS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_IDLEDET_HYS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_IDLEDET_HYS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001200ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -2470,8 +2470,8 @@ union cavm_gsernx_lanex_imapsel_bcfg
 };
 typedef union cavm_gsernx_lanex_imapsel_bcfg cavm_gsernx_lanex_imapsel_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_IMAPSEL_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_IMAPSEL_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_IMAPSEL_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_IMAPSEL_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001f10ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -2625,8 +2625,8 @@ union cavm_gsernx_lanex_init_bsts
 };
 typedef union cavm_gsernx_lanex_init_bsts cavm_gsernx_lanex_init_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_INIT_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_INIT_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_INIT_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_INIT_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000480ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -3345,8 +3345,8 @@ union cavm_gsernx_lanex_lt_bcfg
 };
 typedef union cavm_gsernx_lanex_lt_bcfg cavm_gsernx_lanex_lt_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_LT_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_LT_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_LT_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_LT_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000580ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -3408,8 +3408,8 @@ union cavm_gsernx_lanex_lt_bsts
 };
 typedef union cavm_gsernx_lanex_lt_bsts cavm_gsernx_lanex_lt_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_LT_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_LT_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_LT_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_LT_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000590ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -3525,8 +3525,8 @@ union cavm_gsernx_lanex_lt_prbs1_bcfg
 };
 typedef union cavm_gsernx_lanex_lt_prbs1_bcfg cavm_gsernx_lanex_lt_prbs1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_LT_PRBS1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000690ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -3600,8 +3600,8 @@ union cavm_gsernx_lanex_lt_prbs2_bcfg
 };
 typedef union cavm_gsernx_lanex_lt_prbs2_bcfg cavm_gsernx_lanex_lt_prbs2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_LT_PRBS2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_LT_PRBS2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_LT_PRBS2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_LT_PRBS2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900006a0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -3665,8 +3665,8 @@ union cavm_gsernx_lanex_lt_prbs_sts
 };
 typedef union cavm_gsernx_lanex_lt_prbs_sts cavm_gsernx_lanex_lt_prbs_sts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_LT_PRBS_STS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_LT_PRBS_STS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_LT_PRBS_STS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_LT_PRBS_STS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900006b0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -3705,8 +3705,8 @@ union cavm_gsernx_lanex_map0
 };
 typedef union cavm_gsernx_lanex_map0 cavm_gsernx_lanex_map0_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_MAP0(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_MAP0(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_MAP0(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_MAP0(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001f20ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -3745,8 +3745,8 @@ union cavm_gsernx_lanex_map1
 };
 typedef union cavm_gsernx_lanex_map1 cavm_gsernx_lanex_map1_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_MAP1(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_MAP1(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_MAP1(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_MAP1(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001f30ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -3792,8 +3792,8 @@ union cavm_gsernx_lanex_max_oob_add_count
 };
 typedef union cavm_gsernx_lanex_max_oob_add_count cavm_gsernx_lanex_max_oob_add_count_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_MAX_OOB_ADD_COUNT(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_MAX_OOB_ADD_COUNT(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_MAX_OOB_ADD_COUNT(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_MAX_OOB_ADD_COUNT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001660ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -4011,8 +4011,8 @@ union cavm_gsernx_lanex_ocx_txeq_bcfg
 };
 typedef union cavm_gsernx_lanex_ocx_txeq_bcfg cavm_gsernx_lanex_ocx_txeq_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_OCX_TXEQ_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_OCX_TXEQ_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_OCX_TXEQ_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_OCX_TXEQ_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900036a0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -4072,8 +4072,8 @@ union cavm_gsernx_lanex_patx
 };
 typedef union cavm_gsernx_lanex_patx cavm_gsernx_lanex_patx_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PATX(unsigned long a, unsigned long b, unsigned long c) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PATX(unsigned long a, unsigned long b, unsigned long c)
+static inline uint64_t CAVM_GSERNX_LANEX_PATX(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PATX(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4) && (c<=1)))
         return 0x87e090007ff0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7) + 8ll * ((c) & 0x1);
@@ -4137,8 +4137,8 @@ union cavm_gsernx_lanex_pat_ctrl
 };
 typedef union cavm_gsernx_lanex_pat_ctrl cavm_gsernx_lanex_pat_ctrl_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PAT_CTRL(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PAT_CTRL(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PAT_CTRL(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PAT_CTRL(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090007fd0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -4216,8 +4216,8 @@ union cavm_gsernx_lanex_pat_dat
 };
 typedef union cavm_gsernx_lanex_pat_dat cavm_gsernx_lanex_pat_dat_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PAT_DAT(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PAT_DAT(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PAT_DAT(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PAT_DAT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090007fe0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -4344,8 +4344,8 @@ union cavm_gsernx_lanex_pcie_pcs2_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_pcs2_bcfg cavm_gsernx_lanex_pcie_pcs2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002040ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -4542,8 +4542,8 @@ union cavm_gsernx_lanex_pcie_pcs3_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_pcs3_bcfg cavm_gsernx_lanex_pcie_pcs3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002050ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -4710,8 +4710,8 @@ union cavm_gsernx_lanex_pcie_pcs_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_pcs_bcfg cavm_gsernx_lanex_pcie_pcs_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002030ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -4865,8 +4865,8 @@ union cavm_gsernx_lanex_pcie_pcs_bsts
 };
 typedef union cavm_gsernx_lanex_pcie_pcs_bsts cavm_gsernx_lanex_pcie_pcs_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_PCS_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002b60ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -4988,8 +4988,8 @@ union cavm_gsernx_lanex_pcie_rstp1_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rstp1_bcfg cavm_gsernx_lanex_pcie_rstp1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002150ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -5097,8 +5097,8 @@ union cavm_gsernx_lanex_pcie_rstp1s0_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rstp1s0_bcfg cavm_gsernx_lanex_pcie_rstp1s0_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1S0_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1S0_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1S0_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1S0_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002160ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -5206,8 +5206,8 @@ union cavm_gsernx_lanex_pcie_rstp1s1_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rstp1s1_bcfg cavm_gsernx_lanex_pcie_rstp1s1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1S1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1S1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1S1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1S1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002170ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -5315,8 +5315,8 @@ union cavm_gsernx_lanex_pcie_rstp1s2_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rstp1s2_bcfg cavm_gsernx_lanex_pcie_rstp1s2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1S2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1S2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1S2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP1S2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002180ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -5424,8 +5424,8 @@ union cavm_gsernx_lanex_pcie_rstp2_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rstp2_bcfg cavm_gsernx_lanex_pcie_rstp2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTP2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002190ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -5533,8 +5533,8 @@ union cavm_gsernx_lanex_pcie_rstrate_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rstrate_bcfg cavm_gsernx_lanex_pcie_rstrate_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTRATE_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTRATE_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTRATE_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTRATE_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900021b0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -5643,8 +5643,8 @@ union cavm_gsernx_lanex_pcie_rstshdn_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rstshdn_bcfg cavm_gsernx_lanex_pcie_rstshdn_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTSHDN_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTSHDN_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTSHDN_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RSTSHDN_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900021a0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -5718,8 +5718,8 @@ union cavm_gsernx_lanex_pcie_rxeq1_1_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq1_1_bcfg cavm_gsernx_lanex_pcie_rxeq1_1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002420ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -5781,8 +5781,8 @@ union cavm_gsernx_lanex_pcie_rxeq1_2_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq1_2_bcfg cavm_gsernx_lanex_pcie_rxeq1_2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002430ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -5881,8 +5881,8 @@ union cavm_gsernx_lanex_pcie_rxeq1_3_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq1_3_bcfg cavm_gsernx_lanex_pcie_rxeq1_3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002440ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -5944,8 +5944,8 @@ union cavm_gsernx_lanex_pcie_rxeq1_4_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq1_4_bcfg cavm_gsernx_lanex_pcie_rxeq1_4_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_4_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_4_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_4_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_4_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002450ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -6001,8 +6001,8 @@ union cavm_gsernx_lanex_pcie_rxeq1_5_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq1_5_bcfg cavm_gsernx_lanex_pcie_rxeq1_5_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_5_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_5_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_5_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ1_5_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=3) && (b<=4)))
         return 0x87e090002520ll + 0x1000000ll * ((a) & 0x3) + 0x10000ll * ((b) & 0x7);
@@ -6074,8 +6074,8 @@ union cavm_gsernx_lanex_pcie_rxeq2_1_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq2_1_bcfg cavm_gsernx_lanex_pcie_rxeq2_1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002460ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -6137,8 +6137,8 @@ union cavm_gsernx_lanex_pcie_rxeq2_2_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq2_2_bcfg cavm_gsernx_lanex_pcie_rxeq2_2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002470ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -6237,8 +6237,8 @@ union cavm_gsernx_lanex_pcie_rxeq2_3_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq2_3_bcfg cavm_gsernx_lanex_pcie_rxeq2_3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002480ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -6300,8 +6300,8 @@ union cavm_gsernx_lanex_pcie_rxeq2_4_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq2_4_bcfg cavm_gsernx_lanex_pcie_rxeq2_4_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_4_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_4_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_4_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_4_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002490ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -6357,8 +6357,8 @@ union cavm_gsernx_lanex_pcie_rxeq2_5_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq2_5_bcfg cavm_gsernx_lanex_pcie_rxeq2_5_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_5_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_5_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_5_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ2_5_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=3) && (b<=4)))
         return 0x87e090002530ll + 0x1000000ll * ((a) & 0x3) + 0x10000ll * ((b) & 0x7);
@@ -6430,8 +6430,8 @@ union cavm_gsernx_lanex_pcie_rxeq3_1_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq3_1_bcfg cavm_gsernx_lanex_pcie_rxeq3_1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900024a0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -6493,8 +6493,8 @@ union cavm_gsernx_lanex_pcie_rxeq3_2_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq3_2_bcfg cavm_gsernx_lanex_pcie_rxeq3_2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900024b0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -6593,8 +6593,8 @@ union cavm_gsernx_lanex_pcie_rxeq3_3_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq3_3_bcfg cavm_gsernx_lanex_pcie_rxeq3_3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900024c0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -6656,8 +6656,8 @@ union cavm_gsernx_lanex_pcie_rxeq3_4_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq3_4_bcfg cavm_gsernx_lanex_pcie_rxeq3_4_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_4_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_4_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_4_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_4_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900024d0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -6713,8 +6713,8 @@ union cavm_gsernx_lanex_pcie_rxeq3_5_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq3_5_bcfg cavm_gsernx_lanex_pcie_rxeq3_5_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_5_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_5_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_5_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ3_5_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=3) && (b<=4)))
         return 0x87e090002540ll + 0x1000000ll * ((a) & 0x3) + 0x10000ll * ((b) & 0x7);
@@ -6786,8 +6786,8 @@ union cavm_gsernx_lanex_pcie_rxeq4_1_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq4_1_bcfg cavm_gsernx_lanex_pcie_rxeq4_1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900024e0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -6849,8 +6849,8 @@ union cavm_gsernx_lanex_pcie_rxeq4_2_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq4_2_bcfg cavm_gsernx_lanex_pcie_rxeq4_2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900024f0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -6949,8 +6949,8 @@ union cavm_gsernx_lanex_pcie_rxeq4_3_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq4_3_bcfg cavm_gsernx_lanex_pcie_rxeq4_3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002500ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7012,8 +7012,8 @@ union cavm_gsernx_lanex_pcie_rxeq4_4_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq4_4_bcfg cavm_gsernx_lanex_pcie_rxeq4_4_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_4_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_4_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_4_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_4_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002510ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7069,8 +7069,8 @@ union cavm_gsernx_lanex_pcie_rxeq4_5_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxeq4_5_bcfg cavm_gsernx_lanex_pcie_rxeq4_5_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_5_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_5_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_5_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXEQ4_5_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=3) && (b<=4)))
         return 0x87e090002550ll + 0x1000000ll * ((a) & 0x3) + 0x10000ll * ((b) & 0x7);
@@ -7143,8 +7143,8 @@ union cavm_gsernx_lanex_pcie_rxidl1a_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxidl1a_bcfg cavm_gsernx_lanex_pcie_rxidl1a_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL1A_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL1A_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL1A_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL1A_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900022c0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7219,8 +7219,8 @@ union cavm_gsernx_lanex_pcie_rxidl2a_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxidl2a_bcfg cavm_gsernx_lanex_pcie_rxidl2a_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL2A_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL2A_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL2A_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL2A_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900022e0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7295,8 +7295,8 @@ union cavm_gsernx_lanex_pcie_rxidl3a_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxidl3a_bcfg cavm_gsernx_lanex_pcie_rxidl3a_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL3A_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL3A_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL3A_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL3A_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002300ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7371,8 +7371,8 @@ union cavm_gsernx_lanex_pcie_rxidl4a_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxidl4a_bcfg cavm_gsernx_lanex_pcie_rxidl4a_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL4A_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL4A_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL4A_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDL4A_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002320ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7433,8 +7433,8 @@ union cavm_gsernx_lanex_pcie_rxidle1_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxidle1_bcfg cavm_gsernx_lanex_pcie_rxidle1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900022b0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7495,8 +7495,8 @@ union cavm_gsernx_lanex_pcie_rxidle2_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxidle2_bcfg cavm_gsernx_lanex_pcie_rxidle2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900022d0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7557,8 +7557,8 @@ union cavm_gsernx_lanex_pcie_rxidle3_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxidle3_bcfg cavm_gsernx_lanex_pcie_rxidle3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900022f0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7619,8 +7619,8 @@ union cavm_gsernx_lanex_pcie_rxidle4_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_rxidle4_bcfg cavm_gsernx_lanex_pcie_rxidle4_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE4_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE4_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE4_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_RXIDLE4_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002310ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7677,8 +7677,8 @@ union cavm_gsernx_lanex_pcie_txbias_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txbias_bcfg cavm_gsernx_lanex_pcie_txbias_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXBIAS_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXBIAS_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXBIAS_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXBIAS_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002a60ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7749,8 +7749,8 @@ union cavm_gsernx_lanex_pcie_txdrv_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txdrv_bcfg cavm_gsernx_lanex_pcie_txdrv_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXDRV_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXDRV_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXDRV_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXDRV_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002960ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7799,8 +7799,8 @@ union cavm_gsernx_lanex_pcie_txpst0_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst0_bcfg cavm_gsernx_lanex_pcie_txpst0_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST0_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST0_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST0_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST0_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002610ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7849,8 +7849,8 @@ union cavm_gsernx_lanex_pcie_txpst10_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst10_bcfg cavm_gsernx_lanex_pcie_txpst10_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST10_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST10_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST10_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST10_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900026b0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7899,8 +7899,8 @@ union cavm_gsernx_lanex_pcie_txpst11_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst11_bcfg cavm_gsernx_lanex_pcie_txpst11_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST11_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST11_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST11_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST11_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900026c0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7949,8 +7949,8 @@ union cavm_gsernx_lanex_pcie_txpst12_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst12_bcfg cavm_gsernx_lanex_pcie_txpst12_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST12_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST12_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST12_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST12_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900026d0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -7999,8 +7999,8 @@ union cavm_gsernx_lanex_pcie_txpst13_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst13_bcfg cavm_gsernx_lanex_pcie_txpst13_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST13_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST13_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST13_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST13_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900026e0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8049,8 +8049,8 @@ union cavm_gsernx_lanex_pcie_txpst14_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst14_bcfg cavm_gsernx_lanex_pcie_txpst14_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST14_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST14_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST14_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST14_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900026f0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8099,8 +8099,8 @@ union cavm_gsernx_lanex_pcie_txpst15_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst15_bcfg cavm_gsernx_lanex_pcie_txpst15_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST15_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST15_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST15_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST15_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002700ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8149,8 +8149,8 @@ union cavm_gsernx_lanex_pcie_txpst16_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst16_bcfg cavm_gsernx_lanex_pcie_txpst16_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST16_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST16_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST16_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST16_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002710ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8199,8 +8199,8 @@ union cavm_gsernx_lanex_pcie_txpst17_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst17_bcfg cavm_gsernx_lanex_pcie_txpst17_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST17_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST17_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST17_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST17_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002720ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8249,8 +8249,8 @@ union cavm_gsernx_lanex_pcie_txpst18_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst18_bcfg cavm_gsernx_lanex_pcie_txpst18_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST18_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST18_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST18_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST18_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002730ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8299,8 +8299,8 @@ union cavm_gsernx_lanex_pcie_txpst19_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst19_bcfg cavm_gsernx_lanex_pcie_txpst19_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST19_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST19_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST19_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST19_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002740ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8349,8 +8349,8 @@ union cavm_gsernx_lanex_pcie_txpst1_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst1_bcfg cavm_gsernx_lanex_pcie_txpst1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002620ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8399,8 +8399,8 @@ union cavm_gsernx_lanex_pcie_txpst20_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst20_bcfg cavm_gsernx_lanex_pcie_txpst20_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST20_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST20_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST20_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST20_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002750ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8449,8 +8449,8 @@ union cavm_gsernx_lanex_pcie_txpst21_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst21_bcfg cavm_gsernx_lanex_pcie_txpst21_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST21_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST21_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST21_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST21_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002760ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8499,8 +8499,8 @@ union cavm_gsernx_lanex_pcie_txpst2_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst2_bcfg cavm_gsernx_lanex_pcie_txpst2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002630ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8549,8 +8549,8 @@ union cavm_gsernx_lanex_pcie_txpst3_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst3_bcfg cavm_gsernx_lanex_pcie_txpst3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002640ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8599,8 +8599,8 @@ union cavm_gsernx_lanex_pcie_txpst4_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst4_bcfg cavm_gsernx_lanex_pcie_txpst4_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST4_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST4_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST4_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST4_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002650ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8649,8 +8649,8 @@ union cavm_gsernx_lanex_pcie_txpst5_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst5_bcfg cavm_gsernx_lanex_pcie_txpst5_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST5_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST5_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST5_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST5_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002660ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8699,8 +8699,8 @@ union cavm_gsernx_lanex_pcie_txpst6_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst6_bcfg cavm_gsernx_lanex_pcie_txpst6_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST6_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST6_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST6_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST6_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002670ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8749,8 +8749,8 @@ union cavm_gsernx_lanex_pcie_txpst7_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst7_bcfg cavm_gsernx_lanex_pcie_txpst7_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST7_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST7_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST7_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST7_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002680ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8799,8 +8799,8 @@ union cavm_gsernx_lanex_pcie_txpst8_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst8_bcfg cavm_gsernx_lanex_pcie_txpst8_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST8_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST8_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST8_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST8_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002690ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8849,8 +8849,8 @@ union cavm_gsernx_lanex_pcie_txpst9_bcfg
 };
 typedef union cavm_gsernx_lanex_pcie_txpst9_bcfg cavm_gsernx_lanex_pcie_txpst9_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST9_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST9_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST9_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCIE_TXPST9_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900026a0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -8979,8 +8979,8 @@ union cavm_gsernx_lanex_pcs_802p3_bcfg
 };
 typedef union cavm_gsernx_lanex_pcs_802p3_bcfg cavm_gsernx_lanex_pcs_802p3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PCS_802P3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PCS_802P3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PCS_802P3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PCS_802P3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900034a0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -9117,8 +9117,8 @@ union cavm_gsernx_lanex_pll_1_bcfg
 };
 typedef union cavm_gsernx_lanex_pll_1_bcfg cavm_gsernx_lanex_pll_1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PLL_1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PLL_1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PLL_1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PLL_1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000200ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -9232,8 +9232,8 @@ union cavm_gsernx_lanex_pll_2_bcfg
 };
 typedef union cavm_gsernx_lanex_pll_2_bcfg cavm_gsernx_lanex_pll_2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_PLL_2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_PLL_2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_PLL_2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_PLL_2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000210ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -9276,8 +9276,8 @@ union cavm_gsernx_lanex_rev
 };
 typedef union cavm_gsernx_lanex_rev cavm_gsernx_lanex_rev_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_REV(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_REV(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_REV(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_REV(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000000ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -9535,8 +9535,8 @@ union cavm_gsernx_lanex_rst1_bcfg
 };
 typedef union cavm_gsernx_lanex_rst1_bcfg cavm_gsernx_lanex_rst1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RST1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RST1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RST1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RST1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000310ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -9770,8 +9770,8 @@ union cavm_gsernx_lanex_rst2_bcfg
 };
 typedef union cavm_gsernx_lanex_rst2_bcfg cavm_gsernx_lanex_rst2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RST2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RST2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RST2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RST2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000320ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -9847,8 +9847,8 @@ union cavm_gsernx_lanex_rst_cnt1_bcfg
 };
 typedef union cavm_gsernx_lanex_rst_cnt1_bcfg cavm_gsernx_lanex_rst_cnt1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000330ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -9926,8 +9926,8 @@ union cavm_gsernx_lanex_rst_cnt2_bcfg
 };
 typedef union cavm_gsernx_lanex_rst_cnt2_bcfg cavm_gsernx_lanex_rst_cnt2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000340ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -10001,8 +10001,8 @@ union cavm_gsernx_lanex_rst_cnt3_bcfg
 };
 typedef union cavm_gsernx_lanex_rst_cnt3_bcfg cavm_gsernx_lanex_rst_cnt3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000350ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -10086,8 +10086,8 @@ union cavm_gsernx_lanex_rst_cnt4_bcfg
 };
 typedef union cavm_gsernx_lanex_rst_cnt4_bcfg cavm_gsernx_lanex_rst_cnt4_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT4_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT4_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT4_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT4_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000360ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -10147,8 +10147,8 @@ union cavm_gsernx_lanex_rst_cnt5_bcfg
 };
 typedef union cavm_gsernx_lanex_rst_cnt5_bcfg cavm_gsernx_lanex_rst_cnt5_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT5_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT5_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT5_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RST_CNT5_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000370ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -10236,8 +10236,8 @@ union cavm_gsernx_lanex_rstclkmsk_bcfg
 };
 typedef union cavm_gsernx_lanex_rstclkmsk_bcfg cavm_gsernx_lanex_rstclkmsk_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RSTCLKMSK_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RSTCLKMSK_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RSTCLKMSK_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RSTCLKMSK_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000470ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -10323,8 +10323,8 @@ union cavm_gsernx_lanex_rx_0_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_0_bcfg cavm_gsernx_lanex_rx_0_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_0_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_0_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_0_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_0_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000c60ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -10394,8 +10394,8 @@ union cavm_gsernx_lanex_rx_0_bsts
 };
 typedef union cavm_gsernx_lanex_rx_0_bsts cavm_gsernx_lanex_rx_0_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_0_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_0_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_0_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_0_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001760ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -10452,8 +10452,8 @@ union cavm_gsernx_lanex_rx_10_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_10_bcfg cavm_gsernx_lanex_rx_10_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_10_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_10_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_10_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_10_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000d10ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -10508,8 +10508,8 @@ union cavm_gsernx_lanex_rx_10_bsts
 };
 typedef union cavm_gsernx_lanex_rx_10_bsts cavm_gsernx_lanex_rx_10_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_10_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_10_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_10_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_10_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001810ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -10552,8 +10552,8 @@ union cavm_gsernx_lanex_rx_11_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_11_bcfg cavm_gsernx_lanex_rx_11_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_11_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_11_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_11_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_11_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000d20ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -10608,8 +10608,8 @@ union cavm_gsernx_lanex_rx_11_bsts
 };
 typedef union cavm_gsernx_lanex_rx_11_bsts cavm_gsernx_lanex_rx_11_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_11_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_11_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_11_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_11_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001820ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -10698,8 +10698,8 @@ union cavm_gsernx_lanex_rx_12_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_12_bcfg cavm_gsernx_lanex_rx_12_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_12_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_12_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_12_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_12_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000d30ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -10767,8 +10767,8 @@ union cavm_gsernx_lanex_rx_13_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_13_bcfg cavm_gsernx_lanex_rx_13_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_13_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_13_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_13_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_13_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000d40ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -10819,8 +10819,8 @@ union cavm_gsernx_lanex_rx_14_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_14_bcfg cavm_gsernx_lanex_rx_14_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_14_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_14_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_14_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_14_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000d50ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -10916,8 +10916,8 @@ union cavm_gsernx_lanex_rx_15_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_15_bcfg cavm_gsernx_lanex_rx_15_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_15_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_15_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_15_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_15_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000d60ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -10970,8 +10970,8 @@ union cavm_gsernx_lanex_rx_16_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_16_bcfg cavm_gsernx_lanex_rx_16_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_16_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_16_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_16_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_16_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000d70ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -11024,8 +11024,8 @@ union cavm_gsernx_lanex_rx_17_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_17_bcfg cavm_gsernx_lanex_rx_17_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_17_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_17_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_17_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_17_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000d80ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -11074,8 +11074,8 @@ union cavm_gsernx_lanex_rx_18_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_18_bcfg cavm_gsernx_lanex_rx_18_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_18_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_18_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_18_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_18_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000d90ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -11166,8 +11166,8 @@ union cavm_gsernx_lanex_rx_19_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_19_bcfg cavm_gsernx_lanex_rx_19_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_19_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_19_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_19_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_19_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000da0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -11249,8 +11249,8 @@ union cavm_gsernx_lanex_rx_1_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_1_bcfg cavm_gsernx_lanex_rx_1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000c70ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -11312,8 +11312,8 @@ union cavm_gsernx_lanex_rx_1_bsts
 };
 typedef union cavm_gsernx_lanex_rx_1_bsts cavm_gsernx_lanex_rx_1_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_1_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_1_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_1_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_1_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001770ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -11383,8 +11383,8 @@ union cavm_gsernx_lanex_rx_20_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_20_bcfg cavm_gsernx_lanex_rx_20_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_20_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_20_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_20_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_20_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000db0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -11458,8 +11458,8 @@ union cavm_gsernx_lanex_rx_21_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_21_bcfg cavm_gsernx_lanex_rx_21_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_21_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_21_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_21_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_21_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000dc0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -11502,8 +11502,8 @@ union cavm_gsernx_lanex_rx_22_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_22_bcfg cavm_gsernx_lanex_rx_22_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_22_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_22_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_22_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_22_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000dd0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -11590,8 +11590,8 @@ union cavm_gsernx_lanex_rx_23_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_23_bcfg cavm_gsernx_lanex_rx_23_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_23_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_23_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_23_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_23_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000de0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -11642,8 +11642,8 @@ union cavm_gsernx_lanex_rx_24_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_24_bcfg cavm_gsernx_lanex_rx_24_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_24_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_24_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_24_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_24_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000df0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -11696,8 +11696,8 @@ union cavm_gsernx_lanex_rx_25_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_25_bcfg cavm_gsernx_lanex_rx_25_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_25_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_25_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_25_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_25_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=3) && (b<=4)))
         return 0x87e090000e00ll + 0x1000000ll * ((a) & 0x3) + 0x10000ll * ((b) & 0x7);
@@ -11781,8 +11781,8 @@ union cavm_gsernx_lanex_rx_2_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_2_bcfg cavm_gsernx_lanex_rx_2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000c80ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -11853,8 +11853,8 @@ union cavm_gsernx_lanex_rx_2_bsts
 };
 typedef union cavm_gsernx_lanex_rx_2_bsts cavm_gsernx_lanex_rx_2_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_2_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_2_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_2_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_2_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001780ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -11937,8 +11937,8 @@ union cavm_gsernx_lanex_rx_3_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_3_bcfg cavm_gsernx_lanex_rx_3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000c90ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -12004,8 +12004,8 @@ union cavm_gsernx_lanex_rx_3_bsts
 };
 typedef union cavm_gsernx_lanex_rx_3_bsts cavm_gsernx_lanex_rx_3_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_3_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_3_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_3_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_3_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001790ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -12104,8 +12104,8 @@ union cavm_gsernx_lanex_rx_4_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_4_bcfg cavm_gsernx_lanex_rx_4_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_4_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_4_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_4_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_4_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000ca0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -12233,8 +12233,8 @@ union cavm_gsernx_lanex_rx_4_bsts
 };
 typedef union cavm_gsernx_lanex_rx_4_bsts cavm_gsernx_lanex_rx_4_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_4_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_4_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_4_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_4_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900017a0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -12401,8 +12401,8 @@ union cavm_gsernx_lanex_rx_5_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_5_bcfg cavm_gsernx_lanex_rx_5_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_5_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_5_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_5_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_5_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000cb0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -12457,8 +12457,8 @@ union cavm_gsernx_lanex_rx_5_bsts
 };
 typedef union cavm_gsernx_lanex_rx_5_bsts cavm_gsernx_lanex_rx_5_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_5_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_5_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_5_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_5_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900017b0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -12501,8 +12501,8 @@ union cavm_gsernx_lanex_rx_5a_bsts
 };
 typedef union cavm_gsernx_lanex_rx_5a_bsts cavm_gsernx_lanex_rx_5a_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_5A_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_5A_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_5A_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_5A_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900017c0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -12619,8 +12619,8 @@ union cavm_gsernx_lanex_rx_6_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_6_bcfg cavm_gsernx_lanex_rx_6_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_6_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_6_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_6_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_6_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000cc0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -12671,8 +12671,8 @@ union cavm_gsernx_lanex_rx_6_bsts
 };
 typedef union cavm_gsernx_lanex_rx_6_bsts cavm_gsernx_lanex_rx_6_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_6_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_6_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_6_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_6_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900017d0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -12751,8 +12751,8 @@ union cavm_gsernx_lanex_rx_6a_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_6a_bcfg cavm_gsernx_lanex_rx_6a_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_6A_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_6A_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_6A_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_6A_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000cd0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -12947,8 +12947,8 @@ union cavm_gsernx_lanex_rx_7_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_7_bcfg cavm_gsernx_lanex_rx_7_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_7_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_7_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_7_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_7_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000ce0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13021,8 +13021,8 @@ union cavm_gsernx_lanex_rx_7_bsts
 };
 typedef union cavm_gsernx_lanex_rx_7_bsts cavm_gsernx_lanex_rx_7_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_7_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_7_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_7_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_7_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900017e0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13116,8 +13116,8 @@ union cavm_gsernx_lanex_rx_8_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_8_bcfg cavm_gsernx_lanex_rx_8_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_8_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_8_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_8_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_8_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000cf0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13172,8 +13172,8 @@ union cavm_gsernx_lanex_rx_8_bsts
 };
 typedef union cavm_gsernx_lanex_rx_8_bsts cavm_gsernx_lanex_rx_8_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_8_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_8_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_8_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_8_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900017f0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13230,8 +13230,8 @@ union cavm_gsernx_lanex_rx_9_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_9_bcfg cavm_gsernx_lanex_rx_9_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_9_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_9_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_9_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_9_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000d00ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13274,8 +13274,8 @@ union cavm_gsernx_lanex_rx_9_bsts
 };
 typedef union cavm_gsernx_lanex_rx_9_bsts cavm_gsernx_lanex_rx_9_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_9_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_9_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_9_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_9_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001800ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13360,8 +13360,8 @@ union cavm_gsernx_lanex_rx_idle_cal_cfg
 };
 typedef union cavm_gsernx_lanex_rx_idle_cal_cfg cavm_gsernx_lanex_rx_idle_cal_cfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLE_CAL_CFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLE_CAL_CFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLE_CAL_CFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLE_CAL_CFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001640ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13404,8 +13404,8 @@ union cavm_gsernx_lanex_rx_idle_recal_cnt
 };
 typedef union cavm_gsernx_lanex_rx_idle_recal_cnt cavm_gsernx_lanex_rx_idle_recal_cnt_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLE_RECAL_CNT(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLE_RECAL_CNT(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLE_RECAL_CNT(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLE_RECAL_CNT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001650ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13475,8 +13475,8 @@ union cavm_gsernx_lanex_rx_idledet_1_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_idledet_1_bcfg cavm_gsernx_lanex_rx_idledet_1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLEDET_1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLEDET_1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLEDET_1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLEDET_1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001210ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13542,8 +13542,8 @@ union cavm_gsernx_lanex_rx_idledet_2_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_idledet_2_bcfg cavm_gsernx_lanex_rx_idledet_2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLEDET_2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLEDET_2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLEDET_2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLEDET_2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001220ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13588,8 +13588,8 @@ union cavm_gsernx_lanex_rx_idledet_bsts
 };
 typedef union cavm_gsernx_lanex_rx_idledet_bsts cavm_gsernx_lanex_rx_idledet_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLEDET_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLEDET_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLEDET_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_IDLEDET_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001230ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13657,8 +13657,8 @@ union cavm_gsernx_lanex_rx_itrim_0_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_itrim_0_bcfg cavm_gsernx_lanex_rx_itrim_0_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_0_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_0_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_0_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_0_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001ba0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13725,8 +13725,8 @@ union cavm_gsernx_lanex_rx_itrim_0_bsts
 };
 typedef union cavm_gsernx_lanex_rx_itrim_0_bsts cavm_gsernx_lanex_rx_itrim_0_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_0_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_0_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_0_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_0_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001cf0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13794,8 +13794,8 @@ union cavm_gsernx_lanex_rx_itrim_1_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_itrim_1_bcfg cavm_gsernx_lanex_rx_itrim_1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001bb0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13862,8 +13862,8 @@ union cavm_gsernx_lanex_rx_itrim_1_bsts
 };
 typedef union cavm_gsernx_lanex_rx_itrim_1_bsts cavm_gsernx_lanex_rx_itrim_1_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_1_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_1_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_1_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_1_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001d00ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13929,8 +13929,8 @@ union cavm_gsernx_lanex_rx_itrim_2_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_itrim_2_bcfg cavm_gsernx_lanex_rx_itrim_2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001bc0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -13995,8 +13995,8 @@ union cavm_gsernx_lanex_rx_itrim_2_bsts
 };
 typedef union cavm_gsernx_lanex_rx_itrim_2_bsts cavm_gsernx_lanex_rx_itrim_2_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_2_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_2_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_2_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_2_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001d10ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -14094,8 +14094,8 @@ union cavm_gsernx_lanex_rx_itrim_3_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_itrim_3_bcfg cavm_gsernx_lanex_rx_itrim_3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001bd0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -14195,8 +14195,8 @@ union cavm_gsernx_lanex_rx_itrim_4_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_itrim_4_bcfg cavm_gsernx_lanex_rx_itrim_4_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_4_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_4_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_4_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_4_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001be0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -14288,8 +14288,8 @@ union cavm_gsernx_lanex_rx_itrim_5_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_itrim_5_bcfg cavm_gsernx_lanex_rx_itrim_5_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_5_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_5_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_5_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ITRIM_5_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001bf0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -14369,8 +14369,8 @@ union cavm_gsernx_lanex_rx_margin_dbg_cnt
 };
 typedef union cavm_gsernx_lanex_rx_margin_dbg_cnt cavm_gsernx_lanex_rx_margin_dbg_cnt_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_DBG_CNT(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_DBG_CNT(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_DBG_CNT(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_DBG_CNT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001330ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -14426,8 +14426,8 @@ union cavm_gsernx_lanex_rx_margin_dbg_obs
 };
 typedef union cavm_gsernx_lanex_rx_margin_dbg_obs cavm_gsernx_lanex_rx_margin_dbg_obs_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_DBG_OBS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_DBG_OBS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_DBG_OBS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_DBG_OBS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001340ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -14493,8 +14493,8 @@ union cavm_gsernx_lanex_rx_margin_phy_cnt
 };
 typedef union cavm_gsernx_lanex_rx_margin_phy_cnt cavm_gsernx_lanex_rx_margin_phy_cnt_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_PHY_CNT(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_PHY_CNT(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_PHY_CNT(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_PHY_CNT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001440ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -14550,8 +14550,8 @@ union cavm_gsernx_lanex_rx_margin_phy_obs
 };
 typedef union cavm_gsernx_lanex_rx_margin_phy_obs cavm_gsernx_lanex_rx_margin_phy_obs_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_PHY_OBS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_PHY_OBS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_PHY_OBS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_MARGIN_PHY_OBS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001540ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -14637,8 +14637,8 @@ union cavm_gsernx_lanex_rx_os_1_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_os_1_bcfg cavm_gsernx_lanex_rx_os_1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001920ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -14709,8 +14709,8 @@ union cavm_gsernx_lanex_rx_os_1_bsts
 };
 typedef union cavm_gsernx_lanex_rx_os_1_bsts cavm_gsernx_lanex_rx_os_1_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_1_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_1_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_1_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_1_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001a60ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -14796,8 +14796,8 @@ union cavm_gsernx_lanex_rx_os_2_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_os_2_bcfg cavm_gsernx_lanex_rx_os_2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001930ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -14868,8 +14868,8 @@ union cavm_gsernx_lanex_rx_os_2_bsts
 };
 typedef union cavm_gsernx_lanex_rx_os_2_bsts cavm_gsernx_lanex_rx_os_2_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_2_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_2_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_2_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_2_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001a70ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -14955,8 +14955,8 @@ union cavm_gsernx_lanex_rx_os_3_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_os_3_bcfg cavm_gsernx_lanex_rx_os_3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001940ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -15027,8 +15027,8 @@ union cavm_gsernx_lanex_rx_os_3_bsts
 };
 typedef union cavm_gsernx_lanex_rx_os_3_bsts cavm_gsernx_lanex_rx_os_3_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_3_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_3_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_3_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_3_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001a80ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -15114,8 +15114,8 @@ union cavm_gsernx_lanex_rx_os_4_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_os_4_bcfg cavm_gsernx_lanex_rx_os_4_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_4_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_4_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_4_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_4_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001950ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -15186,8 +15186,8 @@ union cavm_gsernx_lanex_rx_os_4_bsts
 };
 typedef union cavm_gsernx_lanex_rx_os_4_bsts cavm_gsernx_lanex_rx_os_4_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_4_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_4_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_4_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_4_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001a90ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -15370,8 +15370,8 @@ union cavm_gsernx_lanex_rx_os_5_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_os_5_bcfg cavm_gsernx_lanex_rx_os_5_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_5_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_5_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_5_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_5_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001960ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -15462,8 +15462,8 @@ union cavm_gsernx_lanex_rx_os_5_bsts
 };
 typedef union cavm_gsernx_lanex_rx_os_5_bsts cavm_gsernx_lanex_rx_os_5_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_5_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_5_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_5_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_OS_5_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001aa0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -15579,8 +15579,8 @@ union cavm_gsernx_lanex_rx_qac_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_qac_bcfg cavm_gsernx_lanex_rx_qac_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_QAC_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_QAC_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_QAC_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_QAC_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000ff0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -15639,8 +15639,8 @@ union cavm_gsernx_lanex_rx_qac_bsts
 };
 typedef union cavm_gsernx_lanex_rx_qac_bsts cavm_gsernx_lanex_rx_qac_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_QAC_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_QAC_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_QAC_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_QAC_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001000ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -15923,8 +15923,8 @@ union cavm_gsernx_lanex_rx_st_bcfg
 };
 typedef union cavm_gsernx_lanex_rx_st_bcfg cavm_gsernx_lanex_rx_st_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ST_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_RX_ST_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ST_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_RX_ST_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090001100ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -16105,8 +16105,8 @@ union cavm_gsernx_lanex_sata_phy2_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_phy2_bcfg cavm_gsernx_lanex_sata_phy2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_PHY2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_PHY2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_PHY2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_PHY2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002ce0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -16353,8 +16353,8 @@ union cavm_gsernx_lanex_sata_phy_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_phy_bcfg cavm_gsernx_lanex_sata_phy_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_PHY_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_PHY_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_PHY_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_PHY_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002c60ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -16401,8 +16401,8 @@ union cavm_gsernx_lanex_sata_phy_bsts
 };
 typedef union cavm_gsernx_lanex_sata_phy_bsts cavm_gsernx_lanex_sata_phy_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_PHY_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_PHY_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_PHY_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_PHY_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900030e0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -16500,8 +16500,8 @@ union cavm_gsernx_lanex_sata_rxeq1_1_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxeq1_1_bcfg cavm_gsernx_lanex_sata_rxeq1_1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002f30ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -16565,8 +16565,8 @@ union cavm_gsernx_lanex_sata_rxeq1_2_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxeq1_2_bcfg cavm_gsernx_lanex_sata_rxeq1_2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002f40ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -16628,8 +16628,8 @@ union cavm_gsernx_lanex_sata_rxeq1_3_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxeq1_3_bcfg cavm_gsernx_lanex_sata_rxeq1_3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002f50ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -16685,8 +16685,8 @@ union cavm_gsernx_lanex_sata_rxeq1_4_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxeq1_4_bcfg cavm_gsernx_lanex_sata_rxeq1_4_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_4_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_4_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_4_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ1_4_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=3) && (b<=4)))
         return 0x87e090002fc0ll + 0x1000000ll * ((a) & 0x3) + 0x10000ll * ((b) & 0x7);
@@ -16782,8 +16782,8 @@ union cavm_gsernx_lanex_sata_rxeq2_1_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxeq2_1_bcfg cavm_gsernx_lanex_sata_rxeq2_1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002f60ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -16847,8 +16847,8 @@ union cavm_gsernx_lanex_sata_rxeq2_2_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxeq2_2_bcfg cavm_gsernx_lanex_sata_rxeq2_2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002f70ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -16910,8 +16910,8 @@ union cavm_gsernx_lanex_sata_rxeq2_3_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxeq2_3_bcfg cavm_gsernx_lanex_sata_rxeq2_3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002f80ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -16967,8 +16967,8 @@ union cavm_gsernx_lanex_sata_rxeq2_4_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxeq2_4_bcfg cavm_gsernx_lanex_sata_rxeq2_4_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_4_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_4_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_4_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ2_4_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=3) && (b<=4)))
         return 0x87e090002fd0ll + 0x1000000ll * ((a) & 0x3) + 0x10000ll * ((b) & 0x7);
@@ -17064,8 +17064,8 @@ union cavm_gsernx_lanex_sata_rxeq3_1_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxeq3_1_bcfg cavm_gsernx_lanex_sata_rxeq3_1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002f90ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -17129,8 +17129,8 @@ union cavm_gsernx_lanex_sata_rxeq3_2_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxeq3_2_bcfg cavm_gsernx_lanex_sata_rxeq3_2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002fa0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -17192,8 +17192,8 @@ union cavm_gsernx_lanex_sata_rxeq3_3_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxeq3_3_bcfg cavm_gsernx_lanex_sata_rxeq3_3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002fb0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -17249,8 +17249,8 @@ union cavm_gsernx_lanex_sata_rxeq3_4_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxeq3_4_bcfg cavm_gsernx_lanex_sata_rxeq3_4_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_4_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_4_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_4_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXEQ3_4_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a<=3) && (b<=4)))
         return 0x87e090002fe0ll + 0x1000000ll * ((a) & 0x3) + 0x10000ll * ((b) & 0x7);
@@ -17323,8 +17323,8 @@ union cavm_gsernx_lanex_sata_rxidl1a_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxidl1a_bcfg cavm_gsernx_lanex_sata_rxidl1a_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDL1A_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDL1A_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDL1A_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDL1A_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002df0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -17399,8 +17399,8 @@ union cavm_gsernx_lanex_sata_rxidl2a_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxidl2a_bcfg cavm_gsernx_lanex_sata_rxidl2a_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDL2A_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDL2A_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDL2A_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDL2A_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002e10ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -17475,8 +17475,8 @@ union cavm_gsernx_lanex_sata_rxidl3a_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxidl3a_bcfg cavm_gsernx_lanex_sata_rxidl3a_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDL3A_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDL3A_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDL3A_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDL3A_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002e30ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -17537,8 +17537,8 @@ union cavm_gsernx_lanex_sata_rxidle1_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxidle1_bcfg cavm_gsernx_lanex_sata_rxidle1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDLE1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDLE1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDLE1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDLE1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002de0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -17599,8 +17599,8 @@ union cavm_gsernx_lanex_sata_rxidle2_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxidle2_bcfg cavm_gsernx_lanex_sata_rxidle2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDLE2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDLE2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDLE2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDLE2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002e00ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -17661,8 +17661,8 @@ union cavm_gsernx_lanex_sata_rxidle3_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_rxidle3_bcfg cavm_gsernx_lanex_sata_rxidle3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDLE3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDLE3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDLE3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_RXIDLE3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090002e20ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -17725,8 +17725,8 @@ union cavm_gsernx_lanex_sata_txdrv1_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_txdrv1_bcfg cavm_gsernx_lanex_sata_txdrv1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_TXDRV1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_TXDRV1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_TXDRV1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_TXDRV1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900030b0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -17789,8 +17789,8 @@ union cavm_gsernx_lanex_sata_txdrv2_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_txdrv2_bcfg cavm_gsernx_lanex_sata_txdrv2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_TXDRV2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_TXDRV2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_TXDRV2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_TXDRV2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900030c0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -17853,8 +17853,8 @@ union cavm_gsernx_lanex_sata_txdrv3_bcfg
 };
 typedef union cavm_gsernx_lanex_sata_txdrv3_bcfg cavm_gsernx_lanex_sata_txdrv3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_TXDRV3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SATA_TXDRV3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_TXDRV3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SATA_TXDRV3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900030d0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -17914,8 +17914,8 @@ union cavm_gsernx_lanex_scope_0_dat
 };
 typedef union cavm_gsernx_lanex_scope_0_dat cavm_gsernx_lanex_scope_0_dat_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_0_DAT(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_0_DAT(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_0_DAT(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_0_DAT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000900ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -17963,8 +17963,8 @@ union cavm_gsernx_lanex_scope_1_dat
 };
 typedef union cavm_gsernx_lanex_scope_1_dat cavm_gsernx_lanex_scope_1_dat_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_1_DAT(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_1_DAT(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_1_DAT(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_1_DAT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000910ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -18106,8 +18106,8 @@ union cavm_gsernx_lanex_scope_ctl
 };
 typedef union cavm_gsernx_lanex_scope_ctl cavm_gsernx_lanex_scope_ctl_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_CTL(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_CTL(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_CTL(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_CTL(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900008d0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -18202,8 +18202,8 @@ union cavm_gsernx_lanex_scope_ctl_2
 };
 typedef union cavm_gsernx_lanex_scope_ctl_2 cavm_gsernx_lanex_scope_ctl_2_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_CTL_2(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_CTL_2(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_CTL_2(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_CTL_2(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900008e0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -18289,8 +18289,8 @@ union cavm_gsernx_lanex_scope_ctl_3
 };
 typedef union cavm_gsernx_lanex_scope_ctl_3 cavm_gsernx_lanex_scope_ctl_3_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_CTL_3(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_CTL_3(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_CTL_3(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SCOPE_CTL_3(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900008f0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -18326,8 +18326,8 @@ union cavm_gsernx_lanex_scratchx
 };
 typedef union cavm_gsernx_lanex_scratchx cavm_gsernx_lanex_scratchx_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SCRATCHX(unsigned long a, unsigned long b, unsigned long c) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SCRATCHX(unsigned long a, unsigned long b, unsigned long c)
+static inline uint64_t CAVM_GSERNX_LANEX_SCRATCHX(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SCRATCHX(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4) && (c<=1)))
         return 0x87e090003cc0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7) + 8ll * ((c) & 0x1);
@@ -18497,8 +18497,8 @@ union cavm_gsernx_lanex_srcmx_bcfg
 };
 typedef union cavm_gsernx_lanex_srcmx_bcfg cavm_gsernx_lanex_srcmx_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_SRCMX_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_SRCMX_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_SRCMX_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_SRCMX_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000a10ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -18889,8 +18889,8 @@ union cavm_gsernx_lanex_train_0_bcfg
 };
 typedef union cavm_gsernx_lanex_train_0_bcfg cavm_gsernx_lanex_train_0_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_0_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_0_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_0_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_0_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900032e0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -19141,8 +19141,8 @@ union cavm_gsernx_lanex_train_10_bcfg
 };
 typedef union cavm_gsernx_lanex_train_10_bcfg cavm_gsernx_lanex_train_10_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_10_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_10_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_10_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_10_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090003380ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -19261,8 +19261,8 @@ union cavm_gsernx_lanex_train_11_bcfg
 };
 typedef union cavm_gsernx_lanex_train_11_bcfg cavm_gsernx_lanex_train_11_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_11_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_11_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_11_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_11_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090003390ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -19483,8 +19483,8 @@ union cavm_gsernx_lanex_train_12_bcfg
 };
 typedef union cavm_gsernx_lanex_train_12_bcfg cavm_gsernx_lanex_train_12_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_12_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_12_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_12_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_12_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900033a0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -19799,8 +19799,8 @@ union cavm_gsernx_lanex_train_1_bcfg
 };
 typedef union cavm_gsernx_lanex_train_1_bcfg cavm_gsernx_lanex_train_1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900032f0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -19997,8 +19997,8 @@ union cavm_gsernx_lanex_train_2_bcfg
 };
 typedef union cavm_gsernx_lanex_train_2_bcfg cavm_gsernx_lanex_train_2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090003300ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -20671,8 +20671,8 @@ union cavm_gsernx_lanex_train_3_bcfg
 };
 typedef union cavm_gsernx_lanex_train_3_bcfg cavm_gsernx_lanex_train_3_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_3_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_3_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_3_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_3_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090003310ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -20985,8 +20985,8 @@ union cavm_gsernx_lanex_train_4_bcfg
 };
 typedef union cavm_gsernx_lanex_train_4_bcfg cavm_gsernx_lanex_train_4_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_4_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_4_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_4_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_4_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090003320ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -21195,8 +21195,8 @@ union cavm_gsernx_lanex_train_5_bcfg
 };
 typedef union cavm_gsernx_lanex_train_5_bcfg cavm_gsernx_lanex_train_5_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_5_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_5_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_5_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_5_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090003330ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -21483,8 +21483,8 @@ union cavm_gsernx_lanex_train_6_bcfg
 };
 typedef union cavm_gsernx_lanex_train_6_bcfg cavm_gsernx_lanex_train_6_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_6_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_6_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_6_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_6_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090003340ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -22097,8 +22097,8 @@ union cavm_gsernx_lanex_train_7_bcfg
 };
 typedef union cavm_gsernx_lanex_train_7_bcfg cavm_gsernx_lanex_train_7_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_7_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_7_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_7_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_7_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090003350ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -22275,8 +22275,8 @@ union cavm_gsernx_lanex_train_8_bcfg
 };
 typedef union cavm_gsernx_lanex_train_8_bcfg cavm_gsernx_lanex_train_8_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_8_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_8_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_8_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_8_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090003360ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -22415,8 +22415,8 @@ union cavm_gsernx_lanex_train_9_bcfg
 };
 typedef union cavm_gsernx_lanex_train_9_bcfg cavm_gsernx_lanex_train_9_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_9_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_9_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_9_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TRAIN_9_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090003370ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -22601,8 +22601,8 @@ union cavm_gsernx_lanex_tx_1_bcfg
 };
 typedef union cavm_gsernx_lanex_tx_1_bcfg cavm_gsernx_lanex_tx_1_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TX_1_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TX_1_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TX_1_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TX_1_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000b40ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -22653,8 +22653,8 @@ union cavm_gsernx_lanex_tx_bsts
 };
 typedef union cavm_gsernx_lanex_tx_bsts cavm_gsernx_lanex_tx_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TX_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TX_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TX_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TX_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000b60ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -22698,8 +22698,8 @@ union cavm_gsernx_lanex_tx_drv2_bcfg
 };
 typedef union cavm_gsernx_lanex_tx_drv2_bcfg cavm_gsernx_lanex_tx_drv2_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TX_DRV2_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TX_DRV2_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TX_DRV2_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TX_DRV2_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000b20ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -22820,8 +22820,8 @@ union cavm_gsernx_lanex_tx_drv_bcfg
 };
 typedef union cavm_gsernx_lanex_tx_drv_bcfg cavm_gsernx_lanex_tx_drv_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TX_DRV_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TX_DRV_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TX_DRV_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TX_DRV_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000b10ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -22906,8 +22906,8 @@ union cavm_gsernx_lanex_tx_drv_bsts
 };
 typedef union cavm_gsernx_lanex_tx_drv_bsts cavm_gsernx_lanex_tx_drv_bsts_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TX_DRV_BSTS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TX_DRV_BSTS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TX_DRV_BSTS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TX_DRV_BSTS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000b30ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -23065,8 +23065,8 @@ union cavm_gsernx_lanex_tx_rxd_bcfg
 };
 typedef union cavm_gsernx_lanex_tx_rxd_bcfg cavm_gsernx_lanex_tx_rxd_bcfg_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TX_RXD_BCFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TX_RXD_BCFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TX_RXD_BCFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TX_RXD_BCFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e090000b50ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);
@@ -23106,8 +23106,8 @@ union cavm_gsernx_lanex_txdivclk_ctr
 };
 typedef union cavm_gsernx_lanex_txdivclk_ctr cavm_gsernx_lanex_txdivclk_ctr_t;
 
-static inline uint64_t CAVM_GSERNX_LANEX_TXDIVCLK_CTR(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GSERNX_LANEX_TXDIVCLK_CTR(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GSERNX_LANEX_TXDIVCLK_CTR(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GSERNX_LANEX_TXDIVCLK_CTR(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=7) && (b<=4)))
         return 0x87e0900031e0ll + 0x1000000ll * ((a) & 0x7) + 0x10000ll * ((b) & 0x7);

@@ -371,8 +371,8 @@ union cavm_ncsi_cmd_sw_processx
 };
 typedef union cavm_ncsi_cmd_sw_processx cavm_ncsi_cmd_sw_processx_t;
 
-static inline uint64_t CAVM_NCSI_CMD_SW_PROCESSX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NCSI_CMD_SW_PROCESSX(unsigned long a)
+static inline uint64_t CAVM_NCSI_CMD_SW_PROCESSX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NCSI_CMD_SW_PROCESSX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a<=1))
         return 0x87e00b000620ll + 8ll * ((a) & 0x1);
@@ -1386,8 +1386,8 @@ union cavm_ncsi_mcp_aenx
 };
 typedef union cavm_ncsi_mcp_aenx cavm_ncsi_mcp_aenx_t;
 
-static inline uint64_t CAVM_NCSI_MCP_AENX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NCSI_MCP_AENX(unsigned long a)
+static inline uint64_t CAVM_NCSI_MCP_AENX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NCSI_MCP_AENX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a<=7))
         return 0x87e00b000540ll + 8ll * ((a) & 0x7);
@@ -1505,8 +1505,8 @@ union cavm_ncsi_mcp_cmdx
 };
 typedef union cavm_ncsi_mcp_cmdx cavm_ncsi_mcp_cmdx_t;
 
-static inline uint64_t CAVM_NCSI_MCP_CMDX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NCSI_MCP_CMDX(unsigned long a)
+static inline uint64_t CAVM_NCSI_MCP_CMDX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NCSI_MCP_CMDX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a<=7))
         return 0x87e00b000680ll + 8ll * ((a) & 0x7);
@@ -1552,8 +1552,8 @@ union cavm_ncsi_mcp_rspx
 };
 typedef union cavm_ncsi_mcp_rspx cavm_ncsi_mcp_rspx_t;
 
-static inline uint64_t CAVM_NCSI_MCP_RSPX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NCSI_MCP_RSPX(unsigned long a)
+static inline uint64_t CAVM_NCSI_MCP_RSPX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NCSI_MCP_RSPX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a<=25))
         return 0x87e00b000700ll + 8ll * ((a) & 0x1f);
@@ -1694,8 +1694,8 @@ union cavm_ncsi_msix_pbax
 };
 typedef union cavm_ncsi_msix_pbax cavm_ncsi_msix_pbax_t;
 
-static inline uint64_t CAVM_NCSI_MSIX_PBAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NCSI_MSIX_PBAX(unsigned long a)
+static inline uint64_t CAVM_NCSI_MSIX_PBAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NCSI_MSIX_PBAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
         return 0x87e00bff0000ll + 8ll * ((a) & 0x0);
@@ -1840,8 +1840,8 @@ union cavm_ncsi_msix_vecx_addr
 };
 typedef union cavm_ncsi_msix_vecx_addr cavm_ncsi_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_NCSI_MSIX_VECX_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NCSI_MSIX_VECX_ADDR(unsigned long a)
+static inline uint64_t CAVM_NCSI_MSIX_VECX_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NCSI_MSIX_VECX_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
         return 0x87e00bf00000ll + 0x10ll * ((a) & 0x0);
@@ -1898,8 +1898,8 @@ union cavm_ncsi_msix_vecx_ctl
 };
 typedef union cavm_ncsi_msix_vecx_ctl cavm_ncsi_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_NCSI_MSIX_VECX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NCSI_MSIX_VECX_CTL(unsigned long a)
+static inline uint64_t CAVM_NCSI_MSIX_VECX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NCSI_MSIX_VECX_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
         return 0x87e00bf00008ll + 0x10ll * ((a) & 0x0);
@@ -2571,8 +2571,8 @@ union cavm_ncsi_tx_frm_smacx_cam
 };
 typedef union cavm_ncsi_tx_frm_smacx_cam cavm_ncsi_tx_frm_smacx_cam_t;
 
-static inline uint64_t CAVM_NCSI_TX_FRM_SMACX_CAM(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NCSI_TX_FRM_SMACX_CAM(unsigned long a)
+static inline uint64_t CAVM_NCSI_TX_FRM_SMACX_CAM(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NCSI_TX_FRM_SMACX_CAM(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x87e00b000200ll + 8ll * ((a) & 0x1);
@@ -2905,8 +2905,8 @@ union cavm_ncsi_tx_ncp_permx_table_hi
 };
 typedef union cavm_ncsi_tx_ncp_permx_table_hi cavm_ncsi_tx_ncp_permx_table_hi_t;
 
-static inline uint64_t CAVM_NCSI_TX_NCP_PERMX_TABLE_HI(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NCSI_TX_NCP_PERMX_TABLE_HI(unsigned long a)
+static inline uint64_t CAVM_NCSI_TX_NCP_PERMX_TABLE_HI(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NCSI_TX_NCP_PERMX_TABLE_HI(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=15))
         return 0x87e00b000900ll + 8ll * ((a) & 0xf);
@@ -2947,8 +2947,8 @@ union cavm_ncsi_tx_ncp_permx_table_low
 };
 typedef union cavm_ncsi_tx_ncp_permx_table_low cavm_ncsi_tx_ncp_permx_table_low_t;
 
-static inline uint64_t CAVM_NCSI_TX_NCP_PERMX_TABLE_LOW(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NCSI_TX_NCP_PERMX_TABLE_LOW(unsigned long a)
+static inline uint64_t CAVM_NCSI_TX_NCP_PERMX_TABLE_LOW(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NCSI_TX_NCP_PERMX_TABLE_LOW(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=15))
         return 0x87e00b000a00ll + 8ll * ((a) & 0xf);

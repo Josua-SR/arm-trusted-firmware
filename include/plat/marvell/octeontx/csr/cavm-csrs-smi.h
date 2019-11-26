@@ -164,8 +164,8 @@ union cavm_smi_x_clk
 };
 typedef union cavm_smi_x_clk cavm_smi_x_clk_t;
 
-static inline uint64_t CAVM_SMI_X_CLK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SMI_X_CLK(unsigned long a)
+static inline uint64_t CAVM_SMI_X_CLK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SMI_X_CLK(uint64_t a)
 {
     if (a<=1)
         return 0x87e005003818ll + 0x80ll * ((a) & 0x1);
@@ -202,8 +202,8 @@ union cavm_smi_x_clken
 };
 typedef union cavm_smi_x_clken cavm_smi_x_clken_t;
 
-static inline uint64_t CAVM_SMI_X_CLKEN(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SMI_X_CLKEN(unsigned long a)
+static inline uint64_t CAVM_SMI_X_CLKEN(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SMI_X_CLKEN(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=1))
         return 0x87e005003830ll + 0x80ll * ((a) & 0x1);
@@ -267,8 +267,8 @@ union cavm_smi_x_cmd
 };
 typedef union cavm_smi_x_cmd cavm_smi_x_cmd_t;
 
-static inline uint64_t CAVM_SMI_X_CMD(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SMI_X_CMD(unsigned long a)
+static inline uint64_t CAVM_SMI_X_CMD(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SMI_X_CMD(uint64_t a)
 {
     if (a<=1)
         return 0x87e005003800ll + 0x80ll * ((a) & 0x1);
@@ -306,8 +306,8 @@ union cavm_smi_x_eco
 };
 typedef union cavm_smi_x_eco cavm_smi_x_eco_t;
 
-static inline uint64_t CAVM_SMI_X_ECO(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SMI_X_ECO(unsigned long a)
+static inline uint64_t CAVM_SMI_X_ECO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SMI_X_ECO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=1))
         return 0x87e005003828ll + 0x80ll * ((a) & 0x1);
@@ -348,8 +348,8 @@ union cavm_smi_x_en
 };
 typedef union cavm_smi_x_en cavm_smi_x_en_t;
 
-static inline uint64_t CAVM_SMI_X_EN(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SMI_X_EN(unsigned long a)
+static inline uint64_t CAVM_SMI_X_EN(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SMI_X_EN(uint64_t a)
 {
     if (a<=1)
         return 0x87e005003820ll + 0x80ll * ((a) & 0x1);
@@ -390,8 +390,8 @@ union cavm_smi_x_rd_dat
 };
 typedef union cavm_smi_x_rd_dat cavm_smi_x_rd_dat_t;
 
-static inline uint64_t CAVM_SMI_X_RD_DAT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SMI_X_RD_DAT(unsigned long a)
+static inline uint64_t CAVM_SMI_X_RD_DAT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SMI_X_RD_DAT(uint64_t a)
 {
     if (a<=1)
         return 0x87e005003810ll + 0x80ll * ((a) & 0x1);
@@ -434,8 +434,8 @@ union cavm_smi_x_wr_dat
 };
 typedef union cavm_smi_x_wr_dat cavm_smi_x_wr_dat_t;
 
-static inline uint64_t CAVM_SMI_X_WR_DAT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SMI_X_WR_DAT(unsigned long a)
+static inline uint64_t CAVM_SMI_X_WR_DAT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SMI_X_WR_DAT(uint64_t a)
 {
     if (a<=1)
         return 0x87e005003808ll + 0x80ll * ((a) & 0x1);

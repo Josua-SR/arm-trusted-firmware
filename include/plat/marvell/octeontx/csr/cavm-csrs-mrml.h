@@ -576,8 +576,8 @@ union cavm_mrml_msix_pbax
 };
 typedef union cavm_mrml_msix_pbax cavm_mrml_msix_pbax_t;
 
-static inline uint64_t CAVM_MRML_MSIX_PBAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MRML_MSIX_PBAX(unsigned long a)
+static inline uint64_t CAVM_MRML_MSIX_PBAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MRML_MSIX_PBAX(uint64_t a)
 {
     if (a==0)
         return 0x87e0fcff0000ll + 8ll * ((a) & 0x0);
@@ -716,12 +716,13 @@ union cavm_mrml_msix_vecx_addr
     } cn96xxp3;
     /* struct cavm_mrml_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_mrml_msix_vecx_addr_cn96xxp3 cnf95xx; */
+    /* struct cavm_mrml_msix_vecx_addr_cn96xxp3 f95mm; */
     /* struct cavm_mrml_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_mrml_msix_vecx_addr cavm_mrml_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_MRML_MSIX_VECX_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MRML_MSIX_VECX_ADDR(unsigned long a)
+static inline uint64_t CAVM_MRML_MSIX_VECX_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MRML_MSIX_VECX_ADDR(uint64_t a)
 {
     if (a==0)
         return 0x87e0fcf00000ll + 0x10ll * ((a) & 0x0);
@@ -774,8 +775,8 @@ union cavm_mrml_msix_vecx_ctl
 };
 typedef union cavm_mrml_msix_vecx_ctl cavm_mrml_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_MRML_MSIX_VECX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MRML_MSIX_VECX_CTL(unsigned long a)
+static inline uint64_t CAVM_MRML_MSIX_VECX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MRML_MSIX_VECX_CTL(uint64_t a)
 {
     if (a==0)
         return 0x87e0fcf00008ll + 0x10ll * ((a) & 0x0);
@@ -828,8 +829,8 @@ union cavm_mrml_ncbx_permit
 };
 typedef union cavm_mrml_ncbx_permit cavm_mrml_ncbx_permit_t;
 
-static inline uint64_t CAVM_MRML_NCBX_PERMIT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MRML_NCBX_PERMIT(unsigned long a)
+static inline uint64_t CAVM_MRML_NCBX_PERMIT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MRML_NCBX_PERMIT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x87e0fc020000ll + 8ll * ((a) & 0xff);
@@ -865,8 +866,8 @@ union cavm_mrml_ncbx_sdev
 };
 typedef union cavm_mrml_ncbx_sdev cavm_mrml_ncbx_sdev_t;
 
-static inline uint64_t CAVM_MRML_NCBX_SDEV(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MRML_NCBX_SDEV(unsigned long a)
+static inline uint64_t CAVM_MRML_NCBX_SDEV(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MRML_NCBX_SDEV(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=3))
         return 0x87e0fc000400ll + 8ll * ((a) & 0x3);
@@ -902,8 +903,8 @@ union cavm_mrml_ncbx_skill
 };
 typedef union cavm_mrml_ncbx_skill cavm_mrml_ncbx_skill_t;
 
-static inline uint64_t CAVM_MRML_NCBX_SKILL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MRML_NCBX_SKILL(unsigned long a)
+static inline uint64_t CAVM_MRML_NCBX_SKILL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MRML_NCBX_SKILL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=3))
         return 0x87e0fc000500ll + 8ll * ((a) & 0x3);
@@ -956,8 +957,8 @@ union cavm_mrml_rslx_permit
 };
 typedef union cavm_mrml_rslx_permit cavm_mrml_rslx_permit_t;
 
-static inline uint64_t CAVM_MRML_RSLX_PERMIT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MRML_RSLX_PERMIT(unsigned long a)
+static inline uint64_t CAVM_MRML_RSLX_PERMIT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MRML_RSLX_PERMIT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x87e0fc010000ll + 8ll * ((a) & 0xff);
@@ -1013,8 +1014,8 @@ union cavm_mrml_rslx_sdev
 };
 typedef union cavm_mrml_rslx_sdev cavm_mrml_rslx_sdev_t;
 
-static inline uint64_t CAVM_MRML_RSLX_SDEV(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MRML_RSLX_SDEV(unsigned long a)
+static inline uint64_t CAVM_MRML_RSLX_SDEV(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MRML_RSLX_SDEV(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=3))
         return 0x87e0fc000200ll + 8ll * ((a) & 0x3);
@@ -1058,8 +1059,8 @@ union cavm_mrml_rslx_skill
 };
 typedef union cavm_mrml_rslx_skill cavm_mrml_rslx_skill_t;
 
-static inline uint64_t CAVM_MRML_RSLX_SKILL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MRML_RSLX_SKILL(unsigned long a)
+static inline uint64_t CAVM_MRML_RSLX_SKILL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MRML_RSLX_SKILL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=3))
         return 0x87e0fc000300ll + 8ll * ((a) & 0x3);

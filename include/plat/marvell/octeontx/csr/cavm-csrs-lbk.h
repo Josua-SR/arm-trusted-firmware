@@ -75,8 +75,8 @@ union cavm_lbkx_bist_result
 };
 typedef union cavm_lbkx_bist_result cavm_lbkx_bist_result_t;
 
-static inline uint64_t CAVM_LBKX_BIST_RESULT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_BIST_RESULT(unsigned long a)
+static inline uint64_t CAVM_LBKX_BIST_RESULT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_BIST_RESULT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
         return 0x87e018000020ll + 0x1000000ll * ((a) & 0x0);
@@ -160,14 +160,16 @@ union cavm_lbkx_bp_test
 };
 typedef union cavm_lbkx_bp_test cavm_lbkx_bp_test_t;
 
-static inline uint64_t CAVM_LBKX_BP_TEST(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_BP_TEST(unsigned long a)
+static inline uint64_t CAVM_LBKX_BP_TEST(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_BP_TEST(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
         return 0x87e018000028ll + 0x1000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=3))
         return 0x87e018000028ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x87e018000028ll + 0x1000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x87e018000028ll + 0x1000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x87e018000028ll + 0x1000000ll * ((a) & 0x0);
@@ -203,8 +205,8 @@ union cavm_lbkx_chx_pkind
 };
 typedef union cavm_lbkx_chx_pkind cavm_lbkx_chx_pkind_t;
 
-static inline uint64_t CAVM_LBKX_CHX_PKIND(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_CHX_PKIND(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_LBKX_CHX_PKIND(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_CHX_PKIND(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b<=63)))
         return 0x87e018000200ll + 0x1000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3f);
@@ -215,6 +217,8 @@ static inline uint64_t CAVM_LBKX_CHX_PKIND(unsigned long a, unsigned long b)
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=3) && (b<=63)))
         return 0x87e018000200ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) && (b<=63)))
+        return 0x87e018000200ll + 0x1000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=63)))
         return 0x87e018000200ll + 0x1000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b<=63)))
         return 0x87e018000200ll + 0x1000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3f);
@@ -263,8 +267,8 @@ union cavm_lbkx_clk_gate_ctl
 };
 typedef union cavm_lbkx_clk_gate_ctl cavm_lbkx_clk_gate_ctl_t;
 
-static inline uint64_t CAVM_LBKX_CLK_GATE_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_CLK_GATE_CTL(unsigned long a)
+static inline uint64_t CAVM_LBKX_CLK_GATE_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_CLK_GATE_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
         return 0x87e018000008ll + 0x1000000ll * ((a) & 0x0);
@@ -275,6 +279,8 @@ static inline uint64_t CAVM_LBKX_CLK_GATE_CTL(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=3))
         return 0x87e018000008ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x87e018000008ll + 0x1000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x87e018000008ll + 0x1000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x87e018000008ll + 0x1000000ll * ((a) & 0x0);
@@ -524,12 +530,13 @@ union cavm_lbkx_const
     } cn98xx;
     /* struct cavm_lbkx_const_cn9 cnf95xxp1; */
     /* struct cavm_lbkx_const_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_lbkx_const_cn96xxp3 f95mm; */
     /* struct cavm_lbkx_const_cn96xxp3 loki; */
 };
 typedef union cavm_lbkx_const cavm_lbkx_const_t;
 
-static inline uint64_t CAVM_LBKX_CONST(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_CONST(unsigned long a)
+static inline uint64_t CAVM_LBKX_CONST(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_CONST(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
         return 0x87e018000010ll + 0x1000000ll * ((a) & 0x0);
@@ -540,6 +547,8 @@ static inline uint64_t CAVM_LBKX_CONST(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=3))
         return 0x87e018000010ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x87e018000010ll + 0x1000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x87e018000010ll + 0x1000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x87e018000010ll + 0x1000000ll * ((a) & 0x0);
@@ -574,8 +583,8 @@ union cavm_lbkx_const1
 };
 typedef union cavm_lbkx_const1 cavm_lbkx_const1_t;
 
-static inline uint64_t CAVM_LBKX_CONST1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_CONST1(unsigned long a)
+static inline uint64_t CAVM_LBKX_CONST1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_CONST1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
         return 0x87e018000018ll + 0x1000000ll * ((a) & 0x0);
@@ -586,6 +595,8 @@ static inline uint64_t CAVM_LBKX_CONST1(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=3))
         return 0x87e018000018ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x87e018000018ll + 0x1000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x87e018000018ll + 0x1000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x87e018000018ll + 0x1000000ll * ((a) & 0x0);
@@ -620,14 +631,16 @@ union cavm_lbkx_csclk_active_pc
 };
 typedef union cavm_lbkx_csclk_active_pc cavm_lbkx_csclk_active_pc_t;
 
-static inline uint64_t CAVM_LBKX_CSCLK_ACTIVE_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_CSCLK_ACTIVE_PC(unsigned long a)
+static inline uint64_t CAVM_LBKX_CSCLK_ACTIVE_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_CSCLK_ACTIVE_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
         return 0x87e018000030ll + 0x1000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=3))
         return 0x87e018000030ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x87e018000030ll + 0x1000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x87e018000030ll + 0x1000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x87e018000030ll + 0x1000000ll * ((a) & 0x0);
@@ -667,8 +680,8 @@ union cavm_lbkx_ecc_cfg
 };
 typedef union cavm_lbkx_ecc_cfg cavm_lbkx_ecc_cfg_t;
 
-static inline uint64_t CAVM_LBKX_ECC_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_ECC_CFG(unsigned long a)
+static inline uint64_t CAVM_LBKX_ECC_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_ECC_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
         return 0x87e018000060ll + 0x1000000ll * ((a) & 0x0);
@@ -716,8 +729,8 @@ union cavm_lbkx_err_int
 };
 typedef union cavm_lbkx_err_int cavm_lbkx_err_int_t;
 
-static inline uint64_t CAVM_LBKX_ERR_INT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_ERR_INT(unsigned long a)
+static inline uint64_t CAVM_LBKX_ERR_INT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_ERR_INT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
         return 0x87e018000040ll + 0x1000000ll * ((a) & 0x0);
@@ -787,8 +800,8 @@ union cavm_lbkx_err_int_ena_w1c
 };
 typedef union cavm_lbkx_err_int_ena_w1c cavm_lbkx_err_int_ena_w1c_t;
 
-static inline uint64_t CAVM_LBKX_ERR_INT_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_ERR_INT_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_LBKX_ERR_INT_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_ERR_INT_ENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
         return 0x87e018000050ll + 0x1000000ll * ((a) & 0x0);
@@ -858,8 +871,8 @@ union cavm_lbkx_err_int_ena_w1s
 };
 typedef union cavm_lbkx_err_int_ena_w1s cavm_lbkx_err_int_ena_w1s_t;
 
-static inline uint64_t CAVM_LBKX_ERR_INT_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_ERR_INT_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_LBKX_ERR_INT_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_ERR_INT_ENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
         return 0x87e018000058ll + 0x1000000ll * ((a) & 0x0);
@@ -929,8 +942,8 @@ union cavm_lbkx_err_int_w1s
 };
 typedef union cavm_lbkx_err_int_w1s cavm_lbkx_err_int_w1s_t;
 
-static inline uint64_t CAVM_LBKX_ERR_INT_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_ERR_INT_W1S(unsigned long a)
+static inline uint64_t CAVM_LBKX_ERR_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_ERR_INT_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
         return 0x87e018000048ll + 0x1000000ll * ((a) & 0x0);
@@ -969,8 +982,8 @@ union cavm_lbkx_msix_pbax
 };
 typedef union cavm_lbkx_msix_pbax cavm_lbkx_msix_pbax_t;
 
-static inline uint64_t CAVM_LBKX_MSIX_PBAX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_MSIX_PBAX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_LBKX_MSIX_PBAX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_MSIX_PBAX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b==0)))
         return 0x87e018ff0000ll + 0x1000000ll * ((a) & 0x0) + 8ll * ((b) & 0x0);
@@ -1029,8 +1042,8 @@ union cavm_lbkx_msix_vecx_addr
 };
 typedef union cavm_lbkx_msix_vecx_addr cavm_lbkx_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_LBKX_MSIX_VECX_ADDR(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_MSIX_VECX_ADDR(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_LBKX_MSIX_VECX_ADDR(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_MSIX_VECX_ADDR(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b==0)))
         return 0x87e018f00000ll + 0x1000000ll * ((a) & 0x0) + 0x10ll * ((b) & 0x0);
@@ -1073,8 +1086,8 @@ union cavm_lbkx_msix_vecx_ctl
 };
 typedef union cavm_lbkx_msix_vecx_ctl cavm_lbkx_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_LBKX_MSIX_VECX_CTL(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_MSIX_VECX_CTL(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_LBKX_MSIX_VECX_CTL(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_MSIX_VECX_CTL(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && ((a==0) && (b==0)))
         return 0x87e018f00008ll + 0x1000000ll * ((a) & 0x0) + 0x10ll * ((b) & 0x0);
@@ -1112,8 +1125,8 @@ union cavm_lbkx_sft_rst
 };
 typedef union cavm_lbkx_sft_rst cavm_lbkx_sft_rst_t;
 
-static inline uint64_t CAVM_LBKX_SFT_RST(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LBKX_SFT_RST(unsigned long a)
+static inline uint64_t CAVM_LBKX_SFT_RST(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LBKX_SFT_RST(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
         return 0x87e018000000ll + 0x1000000ll * ((a) & 0x0);
@@ -1124,6 +1137,8 @@ static inline uint64_t CAVM_LBKX_SFT_RST(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=3))
         return 0x87e018000000ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x87e018000000ll + 0x1000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x87e018000000ll + 0x1000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x87e018000000ll + 0x1000000ll * ((a) & 0x0);

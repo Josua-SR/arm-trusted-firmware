@@ -55,6 +55,7 @@
 #define CAVM_PCC_DEV_CON_E_GPIO_CN9 (0x78)
 #define CAVM_PCC_DEV_CON_E_GSERX(a) (0x1e0 + (a))
 #define CAVM_PCC_DEV_CON_E_GSERCX(a) (0x1c0 + (a))
+#define CAVM_PCC_DEV_CON_E_GSERJX(a) (0x1c0 + (a))
 #define CAVM_PCC_DEV_CON_E_GSERNX(a) (0x1f0 + (a))
 #define CAVM_PCC_DEV_CON_E_GSERPX(a) (0x1e0 + (a))
 #define CAVM_PCC_DEV_CON_E_GSERRX(a) (0x1f6 + (a))
@@ -213,6 +214,7 @@
 #define CAVM_PCC_DEV_IDL_E_GPIO (0xa)
 #define CAVM_PCC_DEV_IDL_E_GSER (0x25)
 #define CAVM_PCC_DEV_IDL_E_GSERC (0x3b)
+#define CAVM_PCC_DEV_IDL_E_GSERJ (0x3c)
 #define CAVM_PCC_DEV_IDL_E_GSERN (0x28)
 #define CAVM_PCC_DEV_IDL_E_GSERP (0x3a)
 #define CAVM_PCC_DEV_IDL_E_GSERR (0x39)
@@ -283,6 +285,7 @@
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_CN98XX(a) (0xe0 + (a))
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_CNF95XX_P1(a) (0xf0 + (a))
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_CNF95XX_P2(a) (0xe0 + (a))
+#define CAVM_PCC_DEV_IDL_E_SW_RSVDX_F95MM(a) (0xe0 + (a))
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_LOKI(a) (0xe0 + (a))
 #define CAVM_PCC_DEV_IDL_E_SW_RVU_AF_VF (0xf8)
 #define CAVM_PCC_DEV_IDL_E_SW_RVU_CPT_PF (0xfd)
@@ -383,6 +386,7 @@
 #define CAVM_PCC_PROD_E_CNF95XXN (0xb4)
 #define CAVM_PCC_PROD_E_GEN (0xa0)
 #define CAVM_PCC_PROD_E_LOKI (0xb4)
+#define CAVM_PCC_PROD_E_TITAN (0xb5)
 
 /**
  * Enumeration pcc_vendor_e
@@ -1879,6 +1883,7 @@ union cavm_pccpf_xxx_ea_cap_hdr
     } cn96xxp3;
     /* struct cavm_pccpf_xxx_ea_cap_hdr_cn96xxp3 cn98xx; */
     /* struct cavm_pccpf_xxx_ea_cap_hdr_cn96xxp3 cnf95xx; */
+    /* struct cavm_pccpf_xxx_ea_cap_hdr_cn96xxp3 f95mm; */
     /* struct cavm_pccpf_xxx_ea_cap_hdr_cn96xxp3 loki; */
 };
 typedef union cavm_pccpf_xxx_ea_cap_hdr cavm_pccpf_xxx_ea_cap_hdr_t;
@@ -1918,8 +1923,8 @@ union cavm_pccpf_xxx_ea_entryx
 };
 typedef union cavm_pccpf_xxx_ea_entryx cavm_pccpf_xxx_ea_entryx_t;
 
-static inline uint64_t CAVM_PCCPF_XXX_EA_ENTRYX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PCCPF_XXX_EA_ENTRYX(unsigned long a)
+static inline uint64_t CAVM_PCCPF_XXX_EA_ENTRYX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PCCPF_XXX_EA_ENTRYX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=19))
         return 0x9c + 4 * ((a) & 0x1f);
@@ -1999,6 +2004,7 @@ union cavm_pccpf_xxx_id
     } cn96xxp3;
     /* struct cavm_pccpf_xxx_id_cn96xxp3 cn98xx; */
     /* struct cavm_pccpf_xxx_id_cn96xxp3 cnf95xx; */
+    /* struct cavm_pccpf_xxx_id_cn96xxp3 f95mm; */
     /* struct cavm_pccpf_xxx_id_cn96xxp3 loki; */
 };
 typedef union cavm_pccpf_xxx_id cavm_pccpf_xxx_id_t;
@@ -3299,6 +3305,7 @@ union cavm_pccpf_xxx_subid
     } cn96xxp3;
     /* struct cavm_pccpf_xxx_subid_cn96xxp3 cn98xx; */
     /* struct cavm_pccpf_xxx_subid_cn96xxp3 cnf95xx; */
+    /* struct cavm_pccpf_xxx_subid_cn96xxp3 f95mm; */
     /* struct cavm_pccpf_xxx_subid_cn96xxp3 loki; */
 };
 typedef union cavm_pccpf_xxx_subid cavm_pccpf_xxx_subid_t;

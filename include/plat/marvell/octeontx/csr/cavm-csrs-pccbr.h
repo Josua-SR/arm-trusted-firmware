@@ -613,6 +613,7 @@ union cavm_pccbr_xxx_id
     } cn96xxp3;
     /* struct cavm_pccbr_xxx_id_cn96xxp3 cn98xx; */
     /* struct cavm_pccbr_xxx_id_cn96xxp3 cnf95xx; */
+    /* struct cavm_pccbr_xxx_id_cn96xxp3 f95mm; */
     /* struct cavm_pccbr_xxx_id_cn96xxp3 loki; */
 };
 typedef union cavm_pccbr_xxx_id cavm_pccbr_xxx_id_t;

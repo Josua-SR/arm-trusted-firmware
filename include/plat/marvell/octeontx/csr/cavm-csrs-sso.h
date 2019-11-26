@@ -65,86 +65,105 @@
 #define CAVM_SSO_OP_E_ADDWQ_CN96XX (8)
 #define CAVM_SSO_OP_E_ADDWQ_CN98XX (7)
 #define CAVM_SSO_OP_E_ADDWQ_CNF95XX (8)
+#define CAVM_SSO_OP_E_ADDWQ_F95MM (8)
 #define CAVM_SSO_OP_E_ADDWQ_LOKI (8)
 #define CAVM_SSO_OP_E_ALLOC_WE_CN96XX (0xc)
 #define CAVM_SSO_OP_E_ALLOC_WE_CN98XX (0xa)
 #define CAVM_SSO_OP_E_ALLOC_WE_CNF95XX (0xc)
+#define CAVM_SSO_OP_E_ALLOC_WE_F95MM (0xc)
 #define CAVM_SSO_OP_E_ALLOC_WE_LOKI (0xc)
 #define CAVM_SSO_OP_E_CLR_NSCHED_CN8 (7)
 #define CAVM_SSO_OP_E_CLR_NSCHED_CN96XX (0xa)
 #define CAVM_SSO_OP_E_CLR_NSCHED_CN98XX (0xb)
 #define CAVM_SSO_OP_E_CLR_NSCHED_CNF95XX (0xa)
+#define CAVM_SSO_OP_E_CLR_NSCHED_F95MM (0xa)
 #define CAVM_SSO_OP_E_CLR_NSCHED_LOKI (0xa)
 #define CAVM_SSO_OP_E_DESCH_CN8 (3)
 #define CAVM_SSO_OP_E_DESCH_CN96XX (6)
 #define CAVM_SSO_OP_E_DESCH_CN98XX (8)
 #define CAVM_SSO_OP_E_DESCH_CNF95XX (6)
+#define CAVM_SSO_OP_E_DESCH_F95MM (6)
 #define CAVM_SSO_OP_E_DESCH_LOKI (6)
 #define CAVM_SSO_OP_E_GET_WORK_CN96XX (0xb)
 #define CAVM_SSO_OP_E_GET_WORK_CN98XX (0xc)
 #define CAVM_SSO_OP_E_GET_WORK_CNF95XX (0xb)
+#define CAVM_SSO_OP_E_GET_WORK_F95MM (0xb)
 #define CAVM_SSO_OP_E_GET_WORK_LOKI (0xb)
 #define CAVM_SSO_OP_E_GWC_INVAL_CN96XX (0xd)
 #define CAVM_SSO_OP_E_GWC_INVAL_CN98XX (0x11)
 #define CAVM_SSO_OP_E_GWC_INVAL_CNF95XX (0xd)
+#define CAVM_SSO_OP_E_GWC_INVAL_F95MM (0xd)
 #define CAVM_SSO_OP_E_GWC_INVAL_LOKI (0xd)
 #define CAVM_SSO_OP_E_NOP_CN8 (0xf)
 #define CAVM_SSO_OP_E_NOP_CN96XX (0x13)
 #define CAVM_SSO_OP_E_NOP_CN98XX (0)
 #define CAVM_SSO_OP_E_NOP_CNF95XX (0x13)
+#define CAVM_SSO_OP_E_NOP_F95MM (0x13)
 #define CAVM_SSO_OP_E_NOP_LOKI (0x13)
 #define CAVM_SSO_OP_E_NOSCH_CN96XX (7)
 #define CAVM_SSO_OP_E_NOSCH_CN98XX (9)
 #define CAVM_SSO_OP_E_NOSCH_CNF95XX (7)
+#define CAVM_SSO_OP_E_NOSCH_F95MM (7)
 #define CAVM_SSO_OP_E_NOSCH_LOKI (7)
 #define CAVM_SSO_OP_E_RST (0x10)
 #define CAVM_SSO_OP_E_SWTAG_CN8 (0)
 #define CAVM_SSO_OP_E_SWTAG_CN96XX (0)
 #define CAVM_SSO_OP_E_SWTAG_CN98XX (1)
 #define CAVM_SSO_OP_E_SWTAG_CNF95XX (0)
+#define CAVM_SSO_OP_E_SWTAG_F95MM (0)
 #define CAVM_SSO_OP_E_SWTAG_LOKI (0)
 #define CAVM_SSO_OP_E_SWTAG_DESCH_CN8 (2)
 #define CAVM_SSO_OP_E_SWTAG_DESCH_CN96XX (3)
 #define CAVM_SSO_OP_E_SWTAG_DESCH_CN98XX (4)
 #define CAVM_SSO_OP_E_SWTAG_DESCH_CNF95XX (3)
+#define CAVM_SSO_OP_E_SWTAG_DESCH_F95MM (3)
 #define CAVM_SSO_OP_E_SWTAG_DESCH_LOKI (3)
 #define CAVM_SSO_OP_E_SWTAG_FLUSH_CN96XX (2)
 #define CAVM_SSO_OP_E_SWTAG_FLUSH_CN98XX (3)
 #define CAVM_SSO_OP_E_SWTAG_FLUSH_CNF95XX (2)
+#define CAVM_SSO_OP_E_SWTAG_FLUSH_F95MM (2)
 #define CAVM_SSO_OP_E_SWTAG_FLUSH_LOKI (2)
 #define CAVM_SSO_OP_E_SWTAG_FULL_CN8 (1)
 #define CAVM_SSO_OP_E_SWTAG_FULL_CN96XX (1)
 #define CAVM_SSO_OP_E_SWTAG_FULL_CN98XX (2)
 #define CAVM_SSO_OP_E_SWTAG_FULL_CNF95XX (1)
+#define CAVM_SSO_OP_E_SWTAG_FULL_F95MM (1)
 #define CAVM_SSO_OP_E_SWTAG_FULL_LOKI (1)
 #define CAVM_SSO_OP_E_SWTAG_NOSCH_CN96XX (4)
 #define CAVM_SSO_OP_E_SWTAG_NOSCH_CN98XX (5)
 #define CAVM_SSO_OP_E_SWTAG_NOSCH_CNF95XX (4)
+#define CAVM_SSO_OP_E_SWTAG_NOSCH_F95MM (4)
 #define CAVM_SSO_OP_E_SWTAG_NOSCH_LOKI (4)
 #define CAVM_SSO_OP_E_SWTAG_UNTAG_CN96XX (5)
 #define CAVM_SSO_OP_E_SWTAG_UNTAG_CN98XX (6)
 #define CAVM_SSO_OP_E_SWTAG_UNTAG_CNF95XX (5)
+#define CAVM_SSO_OP_E_SWTAG_UNTAG_F95MM (5)
 #define CAVM_SSO_OP_E_SWTAG_UNTAG_LOKI (5)
 #define CAVM_SSO_OP_E_SWTP_CLR_CN96XX (0xe)
 #define CAVM_SSO_OP_E_SWTP_CLR_CN98XX (0x12)
 #define CAVM_SSO_OP_E_SWTP_CLR_CNF95XX (0xe)
+#define CAVM_SSO_OP_E_SWTP_CLR_F95MM (0xe)
 #define CAVM_SSO_OP_E_SWTP_CLR_LOKI (0xe)
 #define CAVM_SSO_OP_E_SWTP_SET_CN96XX (0xf)
 #define CAVM_SSO_OP_E_SWTP_SET_CN98XX (0x13)
 #define CAVM_SSO_OP_E_SWTP_SET_CNF95XX (0xf)
+#define CAVM_SSO_OP_E_SWTP_SET_F95MM (0xf)
 #define CAVM_SSO_OP_E_SWTP_SET_LOKI (0xf)
 #define CAVM_SSO_OP_E_UPD_GRP_CN96XX (0x11)
 #define CAVM_SSO_OP_E_UPD_GRP_CN98XX (0xd)
 #define CAVM_SSO_OP_E_UPD_GRP_CNF95XX (0x11)
+#define CAVM_SSO_OP_E_UPD_GRP_F95MM (0x11)
 #define CAVM_SSO_OP_E_UPD_GRP_LOKI (0x11)
 #define CAVM_SSO_OP_E_UPD_WQP_CN96XX (0x12)
 #define CAVM_SSO_OP_E_UPD_WQP_CN98XX (0xe)
 #define CAVM_SSO_OP_E_UPD_WQP_CNF95XX (0x12)
+#define CAVM_SSO_OP_E_UPD_WQP_F95MM (0x12)
 #define CAVM_SSO_OP_E_UPD_WQP_LOKI (0x12)
 #define CAVM_SSO_OP_E_UPD_WQP_GRP_CN8 (5)
 #define CAVM_SSO_OP_E_UPD_WQP_GRP_CN96XX (9)
 #define CAVM_SSO_OP_E_UPD_WQP_GRP_CN98XX (0xf)
 #define CAVM_SSO_OP_E_UPD_WQP_GRP_CNF95XX (9)
+#define CAVM_SSO_OP_E_UPD_WQP_GRP_F95MM (9)
 #define CAVM_SSO_OP_E_UPD_WQP_GRP_LOKI (9)
 
 /**
@@ -561,6 +580,7 @@ union cavm_sso_af_aw_cfg
     /* struct cavm_sso_af_aw_cfg_cn96xxp3 cn98xx; */
     /* struct cavm_sso_af_aw_cfg_cn96xxp1 cnf95xxp1; */
     /* struct cavm_sso_af_aw_cfg_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_sso_af_aw_cfg_cn96xxp3 f95mm; */
     /* struct cavm_sso_af_aw_cfg_cn96xxp3 loki; */
 };
 typedef union cavm_sso_af_aw_cfg cavm_sso_af_aw_cfg_t;
@@ -602,8 +622,8 @@ union cavm_sso_af_aw_dropped_digestx
 };
 typedef union cavm_sso_af_aw_dropped_digestx cavm_sso_af_aw_dropped_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_AW_DROPPED_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_AW_DROPPED_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_AW_DROPPED_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_AW_DROPPED_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900c00ll + 8ll * ((a) & 0x3);
@@ -638,8 +658,8 @@ union cavm_sso_af_aw_dropped_digestx_w1s
 };
 typedef union cavm_sso_af_aw_dropped_digestx_w1s cavm_sso_af_aw_dropped_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_AW_DROPPED_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_AW_DROPPED_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_AW_DROPPED_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_AW_DROPPED_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900d00ll + 8ll * ((a) & 0x3);
@@ -730,6 +750,7 @@ union cavm_sso_af_aw_inp_ctl
     } cn96xx;
     /* struct cavm_sso_af_aw_inp_ctl_s cn98xx; */
     /* struct cavm_sso_af_aw_inp_ctl_cn96xx cnf95xx; */
+    /* struct cavm_sso_af_aw_inp_ctl_cn96xx f95mm; */
     /* struct cavm_sso_af_aw_inp_ctl_cn96xx loki; */
 };
 typedef union cavm_sso_af_aw_inp_ctl cavm_sso_af_aw_inp_ctl_t;
@@ -862,6 +883,7 @@ union cavm_sso_af_aw_read_arb
         uint64_t reserved_30_63        : 34;
 #endif /* Word 0 - End */
     } cnf95xx;
+    /* struct cavm_sso_af_aw_read_arb_cnf95xx f95mm; */
     /* struct cavm_sso_af_aw_read_arb_cnf95xx loki; */
 };
 typedef union cavm_sso_af_aw_read_arb cavm_sso_af_aw_read_arb_t;
@@ -951,6 +973,7 @@ union cavm_sso_af_aw_we
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_aw_we_s cnf95xx; */
+    /* struct cavm_sso_af_aw_we_s f95mm; */
     /* struct cavm_sso_af_aw_we_s loki; */
 };
 typedef union cavm_sso_af_aw_we cavm_sso_af_aw_we_t;
@@ -992,8 +1015,8 @@ union cavm_sso_af_awempty_digestx
 };
 typedef union cavm_sso_af_awempty_digestx cavm_sso_af_awempty_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_AWEMPTY_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_AWEMPTY_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_AWEMPTY_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_AWEMPTY_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900800ll + 8ll * ((a) & 0x3);
@@ -1028,8 +1051,8 @@ union cavm_sso_af_awempty_digestx_w1s
 };
 typedef union cavm_sso_af_awempty_digestx_w1s cavm_sso_af_awempty_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_AWEMPTY_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_AWEMPTY_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_AWEMPTY_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_AWEMPTY_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900900ll + 8ll * ((a) & 0x3);
@@ -1069,8 +1092,8 @@ union cavm_sso_af_bar2_aliasx
 };
 typedef union cavm_sso_af_bar2_aliasx cavm_sso_af_bar2_aliasx_t;
 
-static inline uint64_t CAVM_SSO_AF_BAR2_ALIASX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_BAR2_ALIASX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_BAR2_ALIASX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_BAR2_ALIASX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=131071))
         return 0x840079100000ll + 8ll * ((a) & 0x1ffff);
@@ -1151,8 +1174,8 @@ union cavm_sso_af_bfp_digestx
 };
 typedef union cavm_sso_af_bfp_digestx cavm_sso_af_bfp_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_BFP_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_BFP_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_BFP_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_BFP_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900200ll + 8ll * ((a) & 0x3);
@@ -1187,8 +1210,8 @@ union cavm_sso_af_bfp_digestx_w1s
 };
 typedef union cavm_sso_af_bfp_digestx_w1s cavm_sso_af_bfp_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_BFP_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_BFP_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_BFP_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_BFP_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900300ll + 8ll * ((a) & 0x3);
@@ -1223,8 +1246,8 @@ union cavm_sso_af_bfpn_digestx
 };
 typedef union cavm_sso_af_bfpn_digestx cavm_sso_af_bfpn_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_BFPN_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_BFPN_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_BFPN_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_BFPN_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900400ll + 8ll * ((a) & 0x3);
@@ -1259,8 +1282,8 @@ union cavm_sso_af_bfpn_digestx_w1s
 };
 typedef union cavm_sso_af_bfpn_digestx_w1s cavm_sso_af_bfpn_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_BFPN_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_BFPN_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_BFPN_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_BFPN_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900500ll + 8ll * ((a) & 0x3);
@@ -1619,6 +1642,7 @@ union cavm_sso_af_const
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_const_s cnf95xx; */
+    /* struct cavm_sso_af_const_s f95mm; */
     /* struct cavm_sso_af_const_s loki; */
 };
 typedef union cavm_sso_af_const cavm_sso_af_const_t;
@@ -1678,6 +1702,7 @@ union cavm_sso_af_const1
     /* struct cavm_sso_af_const1_s cn96xxp3; */
     /* struct cavm_sso_af_const1_s cn98xx; */
     /* struct cavm_sso_af_const1_cn96xxp1 cnf95xx; */
+    /* struct cavm_sso_af_const1_cn96xxp1 f95mm; */
     /* struct cavm_sso_af_const1_cn96xxp1 loki; */
 };
 typedef union cavm_sso_af_const1 cavm_sso_af_const1_t;
@@ -2357,8 +2382,8 @@ union cavm_sso_af_flr_aq_digestx
 };
 typedef union cavm_sso_af_flr_aq_digestx cavm_sso_af_flr_aq_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_FLR_AQ_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_FLR_AQ_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_FLR_AQ_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_FLR_AQ_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070901200ll + 8ll * ((a) & 0x3);
@@ -2393,8 +2418,8 @@ union cavm_sso_af_flr_aq_digestx_w1s
 };
 typedef union cavm_sso_af_flr_aq_digestx_w1s cavm_sso_af_flr_aq_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_FLR_AQ_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_FLR_AQ_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_FLR_AQ_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_FLR_AQ_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070901300ll + 8ll * ((a) & 0x3);
@@ -2429,8 +2454,8 @@ union cavm_sso_af_grpdis_digestx
 };
 typedef union cavm_sso_af_grpdis_digestx cavm_sso_af_grpdis_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_GRPDIS_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_GRPDIS_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_GRPDIS_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_GRPDIS_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900600ll + 8ll * ((a) & 0x3);
@@ -2465,8 +2490,8 @@ union cavm_sso_af_grpdis_digestx_w1s
 };
 typedef union cavm_sso_af_grpdis_digestx_w1s cavm_sso_af_grpdis_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_GRPDIS_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_GRPDIS_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_GRPDIS_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_GRPDIS_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900700ll + 8ll * ((a) & 0x3);
@@ -2681,6 +2706,8 @@ static inline uint64_t CAVM_SSO_AF_GWS_INV_FUNC(void)
         return 0x840070001060ll;
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x840070001060ll;
+    if (cavm_is_model(OCTEONTX_F95MM))
+        return 0x840070001060ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x840070001060ll;
     __cavm_csr_fatal("SSO_AF_GWS_INV", 0, 0, 0, 0, 0, 0, 0);
@@ -2792,12 +2819,13 @@ union cavm_sso_af_hwgrpx_aw_cfg
     /* struct cavm_sso_af_hwgrpx_aw_cfg_s cn96xxp3; */
     /* struct cavm_sso_af_hwgrpx_aw_cfg_s cn98xx; */
     /* struct cavm_sso_af_hwgrpx_aw_cfg_cn96xxp1 cnf95xx; */
+    /* struct cavm_sso_af_hwgrpx_aw_cfg_cn96xxp1 f95mm; */
     /* struct cavm_sso_af_hwgrpx_aw_cfg_cn96xxp1 loki; */
 };
 typedef union cavm_sso_af_hwgrpx_aw_cfg cavm_sso_af_hwgrpx_aw_cfg_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_CFG(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070200120ll + 0x1000ll * ((a) & 0xff);
@@ -2834,8 +2862,8 @@ union cavm_sso_af_hwgrpx_aw_fwd
 };
 typedef union cavm_sso_af_hwgrpx_aw_fwd cavm_sso_af_hwgrpx_aw_fwd_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_FWD(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_FWD(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_FWD(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_FWD(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS3_X) && (a<=255))
         return 0x840070200030ll + 0x1000ll * ((a) & 0xff);
@@ -2928,8 +2956,8 @@ union cavm_sso_af_hwgrpx_aw_status
 };
 typedef union cavm_sso_af_hwgrpx_aw_status cavm_sso_af_hwgrpx_aw_status_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_STATUS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_STATUS(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070200110ll + 0x1000ll * ((a) & 0xff);
@@ -2974,8 +3002,8 @@ union cavm_sso_af_hwgrpx_aw_tagspace
 };
 typedef union cavm_sso_af_hwgrpx_aw_tagspace cavm_sso_af_hwgrpx_aw_tagspace_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_TAGSPACE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_TAGSPACE(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_TAGSPACE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_AW_TAGSPACE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070200130ll + 0x1000ll * ((a) & 0xff);
@@ -3015,8 +3043,8 @@ union cavm_sso_af_hwgrpx_dq_pc
 };
 typedef union cavm_sso_af_hwgrpx_dq_pc cavm_sso_af_hwgrpx_dq_pc_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_DQ_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_DQ_PC(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_DQ_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_DQ_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x8400702000a0ll + 0x1000ll * ((a) & 0xff);
@@ -3054,8 +3082,8 @@ union cavm_sso_af_hwgrpx_ds_pc
 };
 typedef union cavm_sso_af_hwgrpx_ds_pc cavm_sso_af_hwgrpx_ds_pc_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_DS_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_DS_PC(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_DS_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_DS_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070200090ll + 0x1000ll * ((a) & 0xff);
@@ -3095,8 +3123,8 @@ union cavm_sso_af_hwgrpx_ext_pc
 };
 typedef union cavm_sso_af_hwgrpx_ext_pc cavm_sso_af_hwgrpx_ext_pc_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_EXT_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_EXT_PC(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_EXT_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_EXT_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070200060ll + 0x1000ll * ((a) & 0xff);
@@ -3214,12 +3242,13 @@ union cavm_sso_af_hwgrpx_iaq_thr
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_hwgrpx_iaq_thr_s cnf95xx; */
+    /* struct cavm_sso_af_hwgrpx_iaq_thr_s f95mm; */
     /* struct cavm_sso_af_hwgrpx_iaq_thr_s loki; */
 };
 typedef union cavm_sso_af_hwgrpx_iaq_thr cavm_sso_af_hwgrpx_iaq_thr_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_IAQ_THR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_IAQ_THR(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_IAQ_THR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_IAQ_THR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070200000ll + 0x1000ll * ((a) & 0xff);
@@ -3270,8 +3299,8 @@ union cavm_sso_af_hwgrpx_iu_accnt
 };
 typedef union cavm_sso_af_hwgrpx_iu_accnt cavm_sso_af_hwgrpx_iu_accnt_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_IU_ACCNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_IU_ACCNT(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_IU_ACCNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_IU_ACCNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070200230ll + 0x1000ll * ((a) & 0xff);
@@ -3311,8 +3340,8 @@ union cavm_sso_af_hwgrpx_page_cnt
 };
 typedef union cavm_sso_af_hwgrpx_page_cnt cavm_sso_af_hwgrpx_page_cnt_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_PAGE_CNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_PAGE_CNT(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_PAGE_CNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_PAGE_CNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070200100ll + 0x1000ll * ((a) & 0xff);
@@ -3379,8 +3408,8 @@ union cavm_sso_af_hwgrpx_pri
 };
 typedef union cavm_sso_af_hwgrpx_pri cavm_sso_af_hwgrpx_pri_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_PRI(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_PRI(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_PRI(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_PRI(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070200020ll + 0x1000ll * ((a) & 0xff);
@@ -3450,8 +3479,8 @@ union cavm_sso_af_hwgrpx_taq_thr
 };
 typedef union cavm_sso_af_hwgrpx_taq_thr cavm_sso_af_hwgrpx_taq_thr_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_TAQ_THR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_TAQ_THR(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_TAQ_THR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_TAQ_THR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070200010ll + 0x1000ll * ((a) & 0xff);
@@ -3489,8 +3518,8 @@ union cavm_sso_af_hwgrpx_ts_pc
 };
 typedef union cavm_sso_af_hwgrpx_ts_pc cavm_sso_af_hwgrpx_ts_pc_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_TS_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_TS_PC(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_TS_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_TS_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070200080ll + 0x1000ll * ((a) & 0xff);
@@ -3530,8 +3559,8 @@ union cavm_sso_af_hwgrpx_wa_pc
 };
 typedef union cavm_sso_af_hwgrpx_wa_pc cavm_sso_af_hwgrpx_wa_pc_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_WA_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_WA_PC(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_WA_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_WA_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070200070ll + 0x1000ll * ((a) & 0xff);
@@ -3571,8 +3600,8 @@ union cavm_sso_af_hwgrpx_ws_pc
 };
 typedef union cavm_sso_af_hwgrpx_ws_pc cavm_sso_af_hwgrpx_ws_pc_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_WS_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_WS_PC(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_WS_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_WS_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070200050ll + 0x1000ll * ((a) & 0xff);
@@ -3610,8 +3639,8 @@ union cavm_sso_af_hwgrpx_xaq_aura
 };
 typedef union cavm_sso_af_hwgrpx_xaq_aura cavm_sso_af_hwgrpx_xaq_aura_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_XAQ_AURA(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_XAQ_AURA(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_XAQ_AURA(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_XAQ_AURA(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070200140ll + 0x1000ll * ((a) & 0xff);
@@ -3655,8 +3684,8 @@ union cavm_sso_af_hwgrpx_xaq_limit
 };
 typedef union cavm_sso_af_hwgrpx_xaq_limit cavm_sso_af_hwgrpx_xaq_limit_t;
 
-static inline uint64_t CAVM_SSO_AF_HWGRPX_XAQ_LIMIT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWGRPX_XAQ_LIMIT(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWGRPX_XAQ_LIMIT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWGRPX_XAQ_LIMIT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070200220ll + 0x1000ll * ((a) & 0xff);
@@ -3697,14 +3726,16 @@ union cavm_sso_af_hwsx_arb
 };
 typedef union cavm_sso_af_hwsx_arb cavm_sso_af_hwsx_arb_t;
 
-static inline uint64_t CAVM_SSO_AF_HWSX_ARB(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWSX_ARB(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWSX_ARB(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWSX_ARB(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a<=51))
         return 0x840070400100ll + 0x1000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=75))
         return 0x840070400100ll + 0x1000ll * ((a) & 0x7f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=51))
+        return 0x840070400100ll + 0x1000ll * ((a) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=51))
         return 0x840070400100ll + 0x1000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=51))
         return 0x840070400100ll + 0x1000ll * ((a) & 0x3f);
@@ -3774,14 +3805,16 @@ union cavm_sso_af_hwsx_gmctl
 };
 typedef union cavm_sso_af_hwsx_gmctl cavm_sso_af_hwsx_gmctl_t;
 
-static inline uint64_t CAVM_SSO_AF_HWSX_GMCTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWSX_GMCTL(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWSX_GMCTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWSX_GMCTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a<=51))
         return 0x840070400200ll + 0x1000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=75))
         return 0x840070400200ll + 0x1000ll * ((a) & 0x7f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=51))
+        return 0x840070400200ll + 0x1000ll * ((a) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=51))
         return 0x840070400200ll + 0x1000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=51))
         return 0x840070400200ll + 0x1000ll * ((a) & 0x3f);
@@ -3819,14 +3852,16 @@ union cavm_sso_af_hwsx_inv
 };
 typedef union cavm_sso_af_hwsx_inv cavm_sso_af_hwsx_inv_t;
 
-static inline uint64_t CAVM_SSO_AF_HWSX_INV(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWSX_INV(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_HWSX_INV(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWSX_INV(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a<=51))
         return 0x840070400180ll + 0x1000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=75))
         return 0x840070400180ll + 0x1000ll * ((a) & 0x7f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=51))
+        return 0x840070400180ll + 0x1000ll * ((a) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=51))
         return 0x840070400180ll + 0x1000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=51))
         return 0x840070400180ll + 0x1000ll * ((a) & 0x3f);
@@ -3919,18 +3954,21 @@ union cavm_sso_af_hwsx_sx_grpmskx
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_hwsx_sx_grpmskx_s cnf95xx; */
+    /* struct cavm_sso_af_hwsx_sx_grpmskx_s f95mm; */
     /* struct cavm_sso_af_hwsx_sx_grpmskx_s loki; */
 };
 typedef union cavm_sso_af_hwsx_sx_grpmskx cavm_sso_af_hwsx_sx_grpmskx_t;
 
-static inline uint64_t CAVM_SSO_AF_HWSX_SX_GRPMSKX(unsigned long a, unsigned long b, unsigned long c) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_HWSX_SX_GRPMSKX(unsigned long a, unsigned long b, unsigned long c)
+static inline uint64_t CAVM_SSO_AF_HWSX_SX_GRPMSKX(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_HWSX_SX_GRPMSKX(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && ((a<=51) && (b<=1) && (c<=3)))
         return 0x840070400400ll + 0x1000ll * ((a) & 0x3f) + 0x20ll * ((b) & 0x1) + 8ll * ((c) & 0x3);
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=75) && (b<=1) && (c<=3)))
         return 0x840070400400ll + 0x1000ll * ((a) & 0x7f) + 0x20ll * ((b) & 0x1) + 8ll * ((c) & 0x3);
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=51) && (b<=1) && (c<=3)))
+        return 0x840070400400ll + 0x1000ll * ((a) & 0x3f) + 0x20ll * ((b) & 0x1) + 8ll * ((c) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=51) && (b<=1) && (c<=3)))
         return 0x840070400400ll + 0x1000ll * ((a) & 0x3f) + 0x20ll * ((b) & 0x1) + 8ll * ((c) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=51) && (b<=1) && (c<=3)))
         return 0x840070400400ll + 0x1000ll * ((a) & 0x3f) + 0x20ll * ((b) & 0x1) + 8ll * ((c) & 0x3);
@@ -3979,8 +4017,8 @@ union cavm_sso_af_ientx_grp
 };
 typedef union cavm_sso_af_ientx_grp cavm_sso_af_ientx_grp_t;
 
-static inline uint64_t CAVM_SSO_AF_IENTX_GRP(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_IENTX_GRP(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_IENTX_GRP(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_IENTX_GRP(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=8191))
         return 0x840070a20000ll + 8ll * ((a) & 0x1fff);
@@ -4062,12 +4100,13 @@ union cavm_sso_af_ientx_links
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_ientx_links_s cnf95xx; */
+    /* struct cavm_sso_af_ientx_links_s f95mm; */
     /* struct cavm_sso_af_ientx_links_s loki; */
 };
 typedef union cavm_sso_af_ientx_links cavm_sso_af_ientx_links_t;
 
-static inline uint64_t CAVM_SSO_AF_IENTX_LINKS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_IENTX_LINKS(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_IENTX_LINKS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_IENTX_LINKS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=8191))
         return 0x840070a60000ll + 8ll * ((a) & 0x1fff);
@@ -4112,8 +4151,8 @@ union cavm_sso_af_ientx_pendtag
 };
 typedef union cavm_sso_af_ientx_pendtag cavm_sso_af_ientx_pendtag_t;
 
-static inline uint64_t CAVM_SSO_AF_IENTX_PENDTAG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_IENTX_PENDTAG(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_IENTX_PENDTAG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_IENTX_PENDTAG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=8191))
         return 0x840070a40000ll + 8ll * ((a) & 0x1fff);
@@ -4163,12 +4202,13 @@ union cavm_sso_af_ientx_qlinks
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_ientx_qlinks_s cnf95xx; */
+    /* struct cavm_sso_af_ientx_qlinks_s f95mm; */
     /* struct cavm_sso_af_ientx_qlinks_s loki; */
 };
 typedef union cavm_sso_af_ientx_qlinks cavm_sso_af_ientx_qlinks_t;
 
-static inline uint64_t CAVM_SSO_AF_IENTX_QLINKS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_IENTX_QLINKS(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_IENTX_QLINKS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_IENTX_QLINKS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=8191))
         return 0x840070a80000ll + 8ll * ((a) & 0x1fff);
@@ -4219,8 +4259,8 @@ union cavm_sso_af_ientx_tag
 };
 typedef union cavm_sso_af_ientx_tag cavm_sso_af_ientx_tag_t;
 
-static inline uint64_t CAVM_SSO_AF_IENTX_TAG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_IENTX_TAG(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_IENTX_TAG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_IENTX_TAG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=8191))
         return 0x840070a00000ll + 8ll * ((a) & 0x1fff);
@@ -4257,8 +4297,8 @@ union cavm_sso_af_ientx_wqp
 };
 typedef union cavm_sso_af_ientx_wqp cavm_sso_af_ientx_wqp_t;
 
-static inline uint64_t CAVM_SSO_AF_IENTX_WQP(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_IENTX_WQP(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_IENTX_WQP(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_IENTX_WQP(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=8191))
         return 0x840070aa0000ll + 8ll * ((a) & 0x1fff);
@@ -4325,12 +4365,13 @@ union cavm_sso_af_ipl_confx
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_ipl_confx_s cnf95xx; */
+    /* struct cavm_sso_af_ipl_confx_s f95mm; */
     /* struct cavm_sso_af_ipl_confx_s loki; */
 };
 typedef union cavm_sso_af_ipl_confx cavm_sso_af_ipl_confx_t;
 
-static inline uint64_t CAVM_SSO_AF_IPL_CONFX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_IPL_CONFX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_IPL_CONFX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_IPL_CONFX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070880000ll + 8ll * ((a) & 0xff);
@@ -4397,12 +4438,13 @@ union cavm_sso_af_ipl_deschedx
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_ipl_deschedx_s cnf95xx; */
+    /* struct cavm_sso_af_ipl_deschedx_s f95mm; */
     /* struct cavm_sso_af_ipl_deschedx_s loki; */
 };
 typedef union cavm_sso_af_ipl_deschedx cavm_sso_af_ipl_deschedx_t;
 
-static inline uint64_t CAVM_SSO_AF_IPL_DESCHEDX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_IPL_DESCHEDX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_IPL_DESCHEDX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_IPL_DESCHEDX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070860000ll + 8ll * ((a) & 0xff);
@@ -4484,12 +4526,13 @@ union cavm_sso_af_ipl_freex
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_ipl_freex_s cnf95xx; */
+    /* struct cavm_sso_af_ipl_freex_s f95mm; */
     /* struct cavm_sso_af_ipl_freex_s loki; */
 };
 typedef union cavm_sso_af_ipl_freex cavm_sso_af_ipl_freex_t;
 
-static inline uint64_t CAVM_SSO_AF_IPL_FREEX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_IPL_FREEX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_IPL_FREEX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_IPL_FREEX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070800000ll + 8ll * ((a) & 0x3);
@@ -4555,12 +4598,13 @@ union cavm_sso_af_ipl_iaqx
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_ipl_iaqx_s cnf95xx; */
+    /* struct cavm_sso_af_ipl_iaqx_s f95mm; */
     /* struct cavm_sso_af_ipl_iaqx_s loki; */
 };
 typedef union cavm_sso_af_ipl_iaqx cavm_sso_af_ipl_iaqx_t;
 
-static inline uint64_t CAVM_SSO_AF_IPL_IAQX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_IPL_IAQX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_IPL_IAQX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_IPL_IAQX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070840000ll + 8ll * ((a) & 0xff);
@@ -4606,8 +4650,8 @@ union cavm_sso_af_iu_accntx_cfg
 };
 typedef union cavm_sso_af_iu_accntx_cfg cavm_sso_af_iu_accntx_cfg_t;
 
-static inline uint64_t CAVM_SSO_AF_IU_ACCNTX_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_IU_ACCNTX_CFG(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_IU_ACCNTX_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_IU_ACCNTX_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070050000ll + 8ll * ((a) & 0xff);
@@ -4643,8 +4687,8 @@ union cavm_sso_af_iu_accntx_rst
 };
 typedef union cavm_sso_af_iu_accntx_rst cavm_sso_af_iu_accntx_rst_t;
 
-static inline uint64_t CAVM_SSO_AF_IU_ACCNTX_RST(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_IU_ACCNTX_RST(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_IU_ACCNTX_RST(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_IU_ACCNTX_RST(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070060000ll + 8ll * ((a) & 0xff);
@@ -4760,6 +4804,7 @@ union cavm_sso_af_nos_cnt
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_nos_cnt_s cnf95xx; */
+    /* struct cavm_sso_af_nos_cnt_s f95mm; */
     /* struct cavm_sso_af_nos_cnt_s loki; */
 };
 typedef union cavm_sso_af_nos_cnt cavm_sso_af_nos_cnt_t;
@@ -4801,8 +4846,8 @@ union cavm_sso_af_npa_digestx
 };
 typedef union cavm_sso_af_npa_digestx cavm_sso_af_npa_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_NPA_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_NPA_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_NPA_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_NPA_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900000ll + 8ll * ((a) & 0x3);
@@ -4837,8 +4882,8 @@ union cavm_sso_af_npa_digestx_w1s
 };
 typedef union cavm_sso_af_npa_digestx_w1s cavm_sso_af_npa_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_NPA_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_NPA_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_NPA_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_NPA_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900100ll + 8ll * ((a) & 0x3);
@@ -4874,8 +4919,8 @@ union cavm_sso_af_poisonx
 };
 typedef union cavm_sso_af_poisonx cavm_sso_af_poisonx_t;
 
-static inline uint64_t CAVM_SSO_AF_POISONX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_POISONX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_POISONX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_POISONX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070002100ll + 8ll * ((a) & 0x3);
@@ -4910,8 +4955,8 @@ union cavm_sso_af_poisonx_w1s
 };
 typedef union cavm_sso_af_poisonx_w1s cavm_sso_af_poisonx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_POISONX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_POISONX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_POISONX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_POISONX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070002200ll + 8ll * ((a) & 0x3);
@@ -4947,8 +4992,8 @@ union cavm_sso_af_qctldis_digestx
 };
 typedef union cavm_sso_af_qctldis_digestx cavm_sso_af_qctldis_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_QCTLDIS_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_QCTLDIS_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_QCTLDIS_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_QCTLDIS_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900e00ll + 8ll * ((a) & 0x3);
@@ -4983,8 +5028,8 @@ union cavm_sso_af_qctldis_digestx_w1s
 };
 typedef union cavm_sso_af_qctldis_digestx_w1s cavm_sso_af_qctldis_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_QCTLDIS_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_QCTLDIS_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_QCTLDIS_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_QCTLDIS_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900f00ll + 8ll * ((a) & 0x3);
@@ -5237,8 +5282,8 @@ union cavm_sso_af_taqx_link
 };
 typedef union cavm_sso_af_taqx_link cavm_sso_af_taqx_link_t;
 
-static inline uint64_t CAVM_SSO_AF_TAQX_LINK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_TAQX_LINK(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_TAQX_LINK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_TAQX_LINK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=1279))
         return 0x840070c00000ll + 8ll * ((a) & 0x7ff);
@@ -5277,8 +5322,8 @@ union cavm_sso_af_taqx_waex_tag
 };
 typedef union cavm_sso_af_taqx_waex_tag cavm_sso_af_taqx_waex_tag_t;
 
-static inline uint64_t CAVM_SSO_AF_TAQX_WAEX_TAG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_TAQX_WAEX_TAG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_SSO_AF_TAQX_WAEX_TAG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_TAQX_WAEX_TAG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && ((a<=1279) && (b<=10)))
         return 0x840070e00000ll + 0x100ll * ((a) & 0x7ff) + 0x10ll * ((b) & 0xf);
@@ -5315,8 +5360,8 @@ union cavm_sso_af_taqx_waex_wqp
 };
 typedef union cavm_sso_af_taqx_waex_wqp cavm_sso_af_taqx_waex_wqp_t;
 
-static inline uint64_t CAVM_SSO_AF_TAQX_WAEX_WQP(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_TAQX_WAEX_WQP(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_SSO_AF_TAQX_WAEX_WQP(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_TAQX_WAEX_WQP(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && ((a<=1279) && (b<=10)))
         return 0x840070e00008ll + 0x100ll * ((a) & 0x7ff) + 0x10ll * ((b) & 0xf);
@@ -5471,8 +5516,8 @@ union cavm_sso_af_tiaqx_status
 };
 typedef union cavm_sso_af_tiaqx_status cavm_sso_af_tiaqx_status_t;
 
-static inline uint64_t CAVM_SSO_AF_TIAQX_STATUS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_TIAQX_STATUS(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_TIAQX_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_TIAQX_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x8400700c0000ll + 8ll * ((a) & 0xff);
@@ -5535,8 +5580,8 @@ union cavm_sso_af_toaqx_status
 };
 typedef union cavm_sso_af_toaqx_status cavm_sso_af_toaqx_status_t;
 
-static inline uint64_t CAVM_SSO_AF_TOAQX_STATUS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_TOAQX_STATUS(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_TOAQX_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_TOAQX_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x8400700d0000ll + 8ll * ((a) & 0xff);
@@ -5876,6 +5921,7 @@ union cavm_sso_af_unmap_info
         uint64_t reserved_40_63        : 24;
 #endif /* Word 0 - End */
     } cnf95xx;
+    /* struct cavm_sso_af_unmap_info_cnf95xx f95mm; */
     /* struct cavm_sso_af_unmap_info_cnf95xx loki; */
 };
 typedef union cavm_sso_af_unmap_info cavm_sso_af_unmap_info_t;
@@ -6073,6 +6119,7 @@ union cavm_sso_af_unmap_info3
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_unmap_info3_s cnf95xx; */
+    /* struct cavm_sso_af_unmap_info3_s f95mm; */
     /* struct cavm_sso_af_unmap_info3_s loki; */
 };
 typedef union cavm_sso_af_unmap_info3 cavm_sso_af_unmap_info3_t;
@@ -6163,8 +6210,8 @@ union cavm_sso_af_wqp0_digestx
 };
 typedef union cavm_sso_af_wqp0_digestx cavm_sso_af_wqp0_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_WQP0_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_WQP0_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_WQP0_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_WQP0_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900a00ll + 8ll * ((a) & 0x3);
@@ -6199,8 +6246,8 @@ union cavm_sso_af_wqp0_digestx_w1s
 };
 typedef union cavm_sso_af_wqp0_digestx_w1s cavm_sso_af_wqp0_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_WQP0_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_WQP0_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_WQP0_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_WQP0_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070900b00ll + 8ll * ((a) & 0x3);
@@ -6244,18 +6291,21 @@ union cavm_sso_af_ws_awe_digestx
     } cn96xx;
     /* struct cavm_sso_af_ws_awe_digestx_s cn98xx; */
     /* struct cavm_sso_af_ws_awe_digestx_cn96xx cnf95xx; */
+    /* struct cavm_sso_af_ws_awe_digestx_cn96xx f95mm; */
     /* struct cavm_sso_af_ws_awe_digestx_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_awe_digestx cavm_sso_af_ws_awe_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_WS_AWE_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_WS_AWE_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_WS_AWE_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_WS_AWE_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
         return 0x840070902400ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840070902400ll + 8ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x840070902400ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x840070902400ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902400ll + 8ll * ((a) & 0x0);
@@ -6306,18 +6356,21 @@ union cavm_sso_af_ws_awe_digestx_w1s
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_ws_awe_digestx_w1s_cn96xx cnf95xx; */
+    /* struct cavm_sso_af_ws_awe_digestx_w1s_cn96xx f95mm; */
     /* struct cavm_sso_af_ws_awe_digestx_w1s_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_awe_digestx_w1s cavm_sso_af_ws_awe_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_WS_AWE_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_WS_AWE_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_WS_AWE_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_WS_AWE_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
         return 0x840070902500ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840070902500ll + 8ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x840070902500ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x840070902500ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902500ll + 8ll * ((a) & 0x0);
@@ -6495,6 +6548,7 @@ union cavm_sso_af_ws_cfg
     /* struct cavm_sso_af_ws_cfg_cn96xxp3 cn98xx; */
     /* struct cavm_sso_af_ws_cfg_s cnf95xxp1; */
     /* struct cavm_sso_af_ws_cfg_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_sso_af_ws_cfg_cn96xxp3 f95mm; */
     /* struct cavm_sso_af_ws_cfg_cn96xxp3 loki; */
 };
 typedef union cavm_sso_af_ws_cfg cavm_sso_af_ws_cfg_t;
@@ -6583,18 +6637,21 @@ union cavm_sso_af_ws_gmulti_digestx
     } cn96xx;
     /* struct cavm_sso_af_ws_gmulti_digestx_s cn98xx; */
     /* struct cavm_sso_af_ws_gmulti_digestx_cn96xx cnf95xx; */
+    /* struct cavm_sso_af_ws_gmulti_digestx_cn96xx f95mm; */
     /* struct cavm_sso_af_ws_gmulti_digestx_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_gmulti_digestx cavm_sso_af_ws_gmulti_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_WS_GMULTI_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_WS_GMULTI_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_WS_GMULTI_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_WS_GMULTI_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
         return 0x840070902000ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840070902000ll + 8ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x840070902000ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x840070902000ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902000ll + 8ll * ((a) & 0x0);
@@ -6645,18 +6702,21 @@ union cavm_sso_af_ws_gmulti_digestx_w1s
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_ws_gmulti_digestx_w1s_cn96xx cnf95xx; */
+    /* struct cavm_sso_af_ws_gmulti_digestx_w1s_cn96xx f95mm; */
     /* struct cavm_sso_af_ws_gmulti_digestx_w1s_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_gmulti_digestx_w1s cavm_sso_af_ws_gmulti_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_WS_GMULTI_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_WS_GMULTI_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_WS_GMULTI_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_WS_GMULTI_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
         return 0x840070902100ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840070902100ll + 8ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x840070902100ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x840070902100ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902100ll + 8ll * ((a) & 0x0);
@@ -6700,18 +6760,21 @@ union cavm_sso_af_ws_gunmap_digestx
     } cn96xx;
     /* struct cavm_sso_af_ws_gunmap_digestx_s cn98xx; */
     /* struct cavm_sso_af_ws_gunmap_digestx_cn96xx cnf95xx; */
+    /* struct cavm_sso_af_ws_gunmap_digestx_cn96xx f95mm; */
     /* struct cavm_sso_af_ws_gunmap_digestx_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_gunmap_digestx cavm_sso_af_ws_gunmap_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_WS_GUNMAP_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_WS_GUNMAP_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_WS_GUNMAP_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_WS_GUNMAP_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
         return 0x840070902200ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840070902200ll + 8ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x840070902200ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x840070902200ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902200ll + 8ll * ((a) & 0x0);
@@ -6762,18 +6825,21 @@ union cavm_sso_af_ws_gunmap_digestx_w1s
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_ws_gunmap_digestx_w1s_cn96xx cnf95xx; */
+    /* struct cavm_sso_af_ws_gunmap_digestx_w1s_cn96xx f95mm; */
     /* struct cavm_sso_af_ws_gunmap_digestx_w1s_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_gunmap_digestx_w1s cavm_sso_af_ws_gunmap_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_WS_GUNMAP_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_WS_GUNMAP_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_WS_GUNMAP_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_WS_GUNMAP_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
         return 0x840070902300ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840070902300ll + 8ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x840070902300ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x840070902300ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902300ll + 8ll * ((a) & 0x0);
@@ -6817,18 +6883,21 @@ union cavm_sso_af_ws_gwi_digestx
     } cn96xx;
     /* struct cavm_sso_af_ws_gwi_digestx_s cn98xx; */
     /* struct cavm_sso_af_ws_gwi_digestx_cn96xx cnf95xx; */
+    /* struct cavm_sso_af_ws_gwi_digestx_cn96xx f95mm; */
     /* struct cavm_sso_af_ws_gwi_digestx_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_gwi_digestx cavm_sso_af_ws_gwi_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_WS_GWI_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_WS_GWI_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_WS_GWI_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_WS_GWI_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
         return 0x840070902600ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840070902600ll + 8ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x840070902600ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x840070902600ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902600ll + 8ll * ((a) & 0x0);
@@ -6879,18 +6948,21 @@ union cavm_sso_af_ws_gwi_digestx_w1s
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_ws_gwi_digestx_w1s_cn96xx cnf95xx; */
+    /* struct cavm_sso_af_ws_gwi_digestx_w1s_cn96xx f95mm; */
     /* struct cavm_sso_af_ws_gwi_digestx_w1s_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_gwi_digestx_w1s cavm_sso_af_ws_gwi_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_WS_GWI_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_WS_GWI_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_WS_GWI_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_WS_GWI_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
         return 0x840070902700ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840070902700ll + 8ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x840070902700ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x840070902700ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902700ll + 8ll * ((a) & 0x0);
@@ -6934,18 +7006,21 @@ union cavm_sso_af_ws_ne_digestx
     } cn96xx;
     /* struct cavm_sso_af_ws_ne_digestx_s cn98xx; */
     /* struct cavm_sso_af_ws_ne_digestx_cn96xx cnf95xx; */
+    /* struct cavm_sso_af_ws_ne_digestx_cn96xx f95mm; */
     /* struct cavm_sso_af_ws_ne_digestx_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_ne_digestx cavm_sso_af_ws_ne_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_WS_NE_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_WS_NE_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_WS_NE_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_WS_NE_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
         return 0x840070902800ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840070902800ll + 8ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x840070902800ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x840070902800ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902800ll + 8ll * ((a) & 0x0);
@@ -6996,18 +7071,21 @@ union cavm_sso_af_ws_ne_digestx_w1s
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_ws_ne_digestx_w1s_cn96xx cnf95xx; */
+    /* struct cavm_sso_af_ws_ne_digestx_w1s_cn96xx f95mm; */
     /* struct cavm_sso_af_ws_ne_digestx_w1s_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_ne_digestx_w1s cavm_sso_af_ws_ne_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_WS_NE_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_WS_NE_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_WS_NE_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_WS_NE_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
         return 0x840070902900ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840070902900ll + 8ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x840070902900ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x840070902900ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902900ll + 8ll * ((a) & 0x0);
@@ -7051,18 +7129,21 @@ union cavm_sso_af_ws_ni_digestx
     } cn96xx;
     /* struct cavm_sso_af_ws_ni_digestx_s cn98xx; */
     /* struct cavm_sso_af_ws_ni_digestx_cn96xx cnf95xx; */
+    /* struct cavm_sso_af_ws_ni_digestx_cn96xx f95mm; */
     /* struct cavm_sso_af_ws_ni_digestx_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_ni_digestx cavm_sso_af_ws_ni_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_WS_NI_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_WS_NI_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_WS_NI_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_WS_NI_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
         return 0x840070903000ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840070903000ll + 8ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x840070903000ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x840070903000ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070903000ll + 8ll * ((a) & 0x0);
@@ -7113,18 +7194,21 @@ union cavm_sso_af_ws_ni_digestx_w1s
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_af_ws_ni_digestx_w1s_cn96xx cnf95xx; */
+    /* struct cavm_sso_af_ws_ni_digestx_w1s_cn96xx f95mm; */
     /* struct cavm_sso_af_ws_ni_digestx_w1s_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_ni_digestx_w1s cavm_sso_af_ws_ni_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_WS_NI_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_WS_NI_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_WS_NI_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_WS_NI_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a==0))
         return 0x840070903100ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=1))
         return 0x840070903100ll + 8ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
+        return 0x840070903100ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x840070903100ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070903100ll + 8ll * ((a) & 0x0);
@@ -7162,8 +7246,8 @@ union cavm_sso_af_xaqx_gmctl
 };
 typedef union cavm_sso_af_xaqx_gmctl cavm_sso_af_xaqx_gmctl_t;
 
-static inline uint64_t CAVM_SSO_AF_XAQX_GMCTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_XAQX_GMCTL(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_XAQX_GMCTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_XAQX_GMCTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x8400700e0000ll + 8ll * ((a) & 0xff);
@@ -7209,8 +7293,8 @@ union cavm_sso_af_xaqx_head_next
 };
 typedef union cavm_sso_af_xaqx_head_next cavm_sso_af_xaqx_head_next_t;
 
-static inline uint64_t CAVM_SSO_AF_XAQX_HEAD_NEXT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_XAQX_HEAD_NEXT(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_XAQX_HEAD_NEXT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_XAQX_HEAD_NEXT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x8400700a0000ll + 8ll * ((a) & 0xff);
@@ -7258,8 +7342,8 @@ union cavm_sso_af_xaqx_head_ptr
 };
 typedef union cavm_sso_af_xaqx_head_ptr cavm_sso_af_xaqx_head_ptr_t;
 
-static inline uint64_t CAVM_SSO_AF_XAQX_HEAD_PTR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_XAQX_HEAD_PTR(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_XAQX_HEAD_PTR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_XAQX_HEAD_PTR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070080000ll + 8ll * ((a) & 0xff);
@@ -7306,8 +7390,8 @@ union cavm_sso_af_xaqx_tail_next
 };
 typedef union cavm_sso_af_xaqx_tail_next cavm_sso_af_xaqx_tail_next_t;
 
-static inline uint64_t CAVM_SSO_AF_XAQX_TAIL_NEXT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_XAQX_TAIL_NEXT(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_XAQX_TAIL_NEXT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_XAQX_TAIL_NEXT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x8400700b0000ll + 8ll * ((a) & 0xff);
@@ -7359,8 +7443,8 @@ union cavm_sso_af_xaqx_tail_ptr
 };
 typedef union cavm_sso_af_xaqx_tail_ptr cavm_sso_af_xaqx_tail_ptr_t;
 
-static inline uint64_t CAVM_SSO_AF_XAQX_TAIL_PTR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_XAQX_TAIL_PTR(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_XAQX_TAIL_PTR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_XAQX_TAIL_PTR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070090000ll + 8ll * ((a) & 0xff);
@@ -7469,8 +7553,8 @@ union cavm_sso_af_xaqdis_digestx
 };
 typedef union cavm_sso_af_xaqdis_digestx cavm_sso_af_xaqdis_digestx_t;
 
-static inline uint64_t CAVM_SSO_AF_XAQDIS_DIGESTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_XAQDIS_DIGESTX(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_XAQDIS_DIGESTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_XAQDIS_DIGESTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070901000ll + 8ll * ((a) & 0x3);
@@ -7505,8 +7589,8 @@ union cavm_sso_af_xaqdis_digestx_w1s
 };
 typedef union cavm_sso_af_xaqdis_digestx_w1s cavm_sso_af_xaqdis_digestx_w1s_t;
 
-static inline uint64_t CAVM_SSO_AF_XAQDIS_DIGESTX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_AF_XAQDIS_DIGESTX_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_AF_XAQDIS_DIGESTX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_AF_XAQDIS_DIGESTX_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x840070901100ll + 8ll * ((a) & 0x3);
@@ -9824,8 +9908,8 @@ union cavm_sso_grpx_ds_pc
 };
 typedef union cavm_sso_grpx_ds_pc cavm_sso_grpx_ds_pc_t;
 
-static inline uint64_t CAVM_SSO_GRPX_DS_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_GRPX_DS_PC(unsigned long a)
+static inline uint64_t CAVM_SSO_GRPX_DS_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_GRPX_DS_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860020001400ll + 0x100000ll * ((a) & 0x3f);
@@ -9865,8 +9949,8 @@ union cavm_sso_grpx_ext_pc
 };
 typedef union cavm_sso_grpx_ext_pc cavm_sso_grpx_ext_pc_t;
 
-static inline uint64_t CAVM_SSO_GRPX_EXT_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_GRPX_EXT_PC(unsigned long a)
+static inline uint64_t CAVM_SSO_GRPX_EXT_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_GRPX_EXT_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860020001100ll + 0x100000ll * ((a) & 0x3f);
@@ -9933,8 +10017,8 @@ union cavm_sso_grpx_iaq_thr
 };
 typedef union cavm_sso_grpx_iaq_thr cavm_sso_grpx_iaq_thr_t;
 
-static inline uint64_t CAVM_SSO_GRPX_IAQ_THR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_GRPX_IAQ_THR(unsigned long a)
+static inline uint64_t CAVM_SSO_GRPX_IAQ_THR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_GRPX_IAQ_THR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860020000000ll + 0x100000ll * ((a) & 0x3f);
@@ -10001,8 +10085,8 @@ union cavm_sso_grpx_pri
 };
 typedef union cavm_sso_grpx_pri cavm_sso_grpx_pri_t;
 
-static inline uint64_t CAVM_SSO_GRPX_PRI(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_GRPX_PRI(unsigned long a)
+static inline uint64_t CAVM_SSO_GRPX_PRI(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_GRPX_PRI(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860020000200ll + 0x100000ll * ((a) & 0x3f);
@@ -10064,8 +10148,8 @@ union cavm_sso_grpx_taq_thr
 };
 typedef union cavm_sso_grpx_taq_thr cavm_sso_grpx_taq_thr_t;
 
-static inline uint64_t CAVM_SSO_GRPX_TAQ_THR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_GRPX_TAQ_THR(unsigned long a)
+static inline uint64_t CAVM_SSO_GRPX_TAQ_THR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_GRPX_TAQ_THR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860020000100ll + 0x100000ll * ((a) & 0x3f);
@@ -10103,8 +10187,8 @@ union cavm_sso_grpx_ts_pc
 };
 typedef union cavm_sso_grpx_ts_pc cavm_sso_grpx_ts_pc_t;
 
-static inline uint64_t CAVM_SSO_GRPX_TS_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_GRPX_TS_PC(unsigned long a)
+static inline uint64_t CAVM_SSO_GRPX_TS_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_GRPX_TS_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860020001300ll + 0x100000ll * ((a) & 0x3f);
@@ -10144,8 +10228,8 @@ union cavm_sso_grpx_wa_pc
 };
 typedef union cavm_sso_grpx_wa_pc cavm_sso_grpx_wa_pc_t;
 
-static inline uint64_t CAVM_SSO_GRPX_WA_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_GRPX_WA_PC(unsigned long a)
+static inline uint64_t CAVM_SSO_GRPX_WA_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_GRPX_WA_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860020001200ll + 0x100000ll * ((a) & 0x3f);
@@ -10185,8 +10269,8 @@ union cavm_sso_grpx_ws_pc
 };
 typedef union cavm_sso_grpx_ws_pc cavm_sso_grpx_ws_pc_t;
 
-static inline uint64_t CAVM_SSO_GRPX_WS_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_GRPX_WS_PC(unsigned long a)
+static inline uint64_t CAVM_SSO_GRPX_WS_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_GRPX_WS_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860020001000ll + 0x100000ll * ((a) & 0x3f);
@@ -10230,8 +10314,8 @@ union cavm_sso_grpx_xaq_limit
 };
 typedef union cavm_sso_grpx_xaq_limit cavm_sso_grpx_xaq_limit_t;
 
-static inline uint64_t CAVM_SSO_GRPX_XAQ_LIMIT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_GRPX_XAQ_LIMIT(unsigned long a)
+static inline uint64_t CAVM_SSO_GRPX_XAQ_LIMIT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_GRPX_XAQ_LIMIT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860020000220ll + 0x100000ll * ((a) & 0x3f);
@@ -10432,8 +10516,8 @@ union cavm_sso_hwsx_arb
 };
 typedef union cavm_sso_hwsx_arb cavm_sso_hwsx_arb_t;
 
-static inline uint64_t CAVM_SSO_HWSX_ARB(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_HWSX_ARB(unsigned long a)
+static inline uint64_t CAVM_SSO_HWSX_ARB(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_HWSX_ARB(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x860040000100ll + 0x100000ll * ((a) & 0x1f);
@@ -10527,8 +10611,8 @@ union cavm_sso_hwsx_gmctl
 };
 typedef union cavm_sso_hwsx_gmctl cavm_sso_hwsx_gmctl_t;
 
-static inline uint64_t CAVM_SSO_HWSX_GMCTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_HWSX_GMCTL(unsigned long a)
+static inline uint64_t CAVM_SSO_HWSX_GMCTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_HWSX_GMCTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x860040000200ll + 0x100000ll * ((a) & 0x1f);
@@ -10595,8 +10679,8 @@ union cavm_sso_hwsx_sx_grpmskx
 };
 typedef union cavm_sso_hwsx_sx_grpmskx cavm_sso_hwsx_sx_grpmskx_t;
 
-static inline uint64_t CAVM_SSO_HWSX_SX_GRPMSKX(unsigned long a, unsigned long b, unsigned long c) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_HWSX_SX_GRPMSKX(unsigned long a, unsigned long b, unsigned long c)
+static inline uint64_t CAVM_SSO_HWSX_SX_GRPMSKX(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_HWSX_SX_GRPMSKX(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=31) && (b<=1) && (c==0)))
         return 0x860040001000ll + 0x100000ll * ((a) & 0x1f) + 0x20ll * ((b) & 0x1) + 8ll * ((c) & 0x0);
@@ -10645,8 +10729,8 @@ union cavm_sso_ientx_grp
 };
 typedef union cavm_sso_ientx_grp cavm_sso_ientx_grp_t;
 
-static inline uint64_t CAVM_SSO_IENTX_GRP(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_IENTX_GRP(unsigned long a)
+static inline uint64_t CAVM_SSO_IENTX_GRP(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_IENTX_GRP(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1023))
         return 0x8600a0020000ll + 8ll * ((a) & 0x3ff);
@@ -10693,8 +10777,8 @@ union cavm_sso_ientx_links
 };
 typedef union cavm_sso_ientx_links cavm_sso_ientx_links_t;
 
-static inline uint64_t CAVM_SSO_IENTX_LINKS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_IENTX_LINKS(unsigned long a)
+static inline uint64_t CAVM_SSO_IENTX_LINKS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_IENTX_LINKS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1023))
         return 0x8600a0060000ll + 8ll * ((a) & 0x3ff);
@@ -10739,8 +10823,8 @@ union cavm_sso_ientx_pendtag
 };
 typedef union cavm_sso_ientx_pendtag cavm_sso_ientx_pendtag_t;
 
-static inline uint64_t CAVM_SSO_IENTX_PENDTAG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_IENTX_PENDTAG(unsigned long a)
+static inline uint64_t CAVM_SSO_IENTX_PENDTAG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_IENTX_PENDTAG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1023))
         return 0x8600a0040000ll + 8ll * ((a) & 0x3ff);
@@ -10777,8 +10861,8 @@ union cavm_sso_ientx_qlinks
 };
 typedef union cavm_sso_ientx_qlinks cavm_sso_ientx_qlinks_t;
 
-static inline uint64_t CAVM_SSO_IENTX_QLINKS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_IENTX_QLINKS(unsigned long a)
+static inline uint64_t CAVM_SSO_IENTX_QLINKS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_IENTX_QLINKS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1023))
         return 0x8600a0080000ll + 8ll * ((a) & 0x3ff);
@@ -10829,8 +10913,8 @@ union cavm_sso_ientx_tag
 };
 typedef union cavm_sso_ientx_tag cavm_sso_ientx_tag_t;
 
-static inline uint64_t CAVM_SSO_IENTX_TAG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_IENTX_TAG(unsigned long a)
+static inline uint64_t CAVM_SSO_IENTX_TAG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_IENTX_TAG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1023))
         return 0x8600a0000000ll + 8ll * ((a) & 0x3ff);
@@ -10867,8 +10951,8 @@ union cavm_sso_ientx_wqp
 };
 typedef union cavm_sso_ientx_wqp cavm_sso_ientx_wqp_t;
 
-static inline uint64_t CAVM_SSO_IENTX_WQP(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_IENTX_WQP(unsigned long a)
+static inline uint64_t CAVM_SSO_IENTX_WQP(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_IENTX_WQP(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1023))
         return 0x8600a00a0000ll + 8ll * ((a) & 0x3ff);
@@ -10916,8 +11000,8 @@ union cavm_sso_ipl_confx
 };
 typedef union cavm_sso_ipl_confx cavm_sso_ipl_confx_t;
 
-static inline uint64_t CAVM_SSO_IPL_CONFX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_IPL_CONFX(unsigned long a)
+static inline uint64_t CAVM_SSO_IPL_CONFX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_IPL_CONFX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860080080000ll + 8ll * ((a) & 0x3f);
@@ -10965,8 +11049,8 @@ union cavm_sso_ipl_deschedx
 };
 typedef union cavm_sso_ipl_deschedx cavm_sso_ipl_deschedx_t;
 
-static inline uint64_t CAVM_SSO_IPL_DESCHEDX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_IPL_DESCHEDX(unsigned long a)
+static inline uint64_t CAVM_SSO_IPL_DESCHEDX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_IPL_DESCHEDX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860080060000ll + 8ll * ((a) & 0x3f);
@@ -11017,8 +11101,8 @@ union cavm_sso_ipl_freex
 };
 typedef union cavm_sso_ipl_freex cavm_sso_ipl_freex_t;
 
-static inline uint64_t CAVM_SSO_IPL_FREEX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_IPL_FREEX(unsigned long a)
+static inline uint64_t CAVM_SSO_IPL_FREEX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_IPL_FREEX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=4))
         return 0x860080000000ll + 8ll * ((a) & 0x7);
@@ -11065,8 +11149,8 @@ union cavm_sso_ipl_iaqx
 };
 typedef union cavm_sso_ipl_iaqx cavm_sso_ipl_iaqx_t;
 
-static inline uint64_t CAVM_SSO_IPL_IAQX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_IPL_IAQX(unsigned long a)
+static inline uint64_t CAVM_SSO_IPL_IAQX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_IPL_IAQX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860080040000ll + 8ll * ((a) & 0x3f);
@@ -11402,6 +11486,7 @@ union cavm_sso_lf_ggrp_int_cnt
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_lf_ggrp_int_cnt_s cnf95xx; */
+    /* struct cavm_sso_lf_ggrp_int_cnt_s f95mm; */
     /* struct cavm_sso_lf_ggrp_int_cnt_s loki; */
 };
 typedef union cavm_sso_lf_ggrp_int_cnt cavm_sso_lf_ggrp_int_cnt_t;
@@ -11629,6 +11714,7 @@ union cavm_sso_lf_ggrp_int_thr
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_lf_ggrp_int_thr_s cnf95xx; */
+    /* struct cavm_sso_lf_ggrp_int_thr_s f95mm; */
     /* struct cavm_sso_lf_ggrp_int_thr_s loki; */
 };
 typedef union cavm_sso_lf_ggrp_int_thr cavm_sso_lf_ggrp_int_thr_t;
@@ -11727,6 +11813,7 @@ union cavm_sso_lf_ggrp_misc_cnt
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_sso_lf_ggrp_misc_cnt_s cnf95xx; */
+    /* struct cavm_sso_lf_ggrp_misc_cnt_s f95mm; */
     /* struct cavm_sso_lf_ggrp_misc_cnt_s loki; */
 };
 typedef union cavm_sso_lf_ggrp_misc_cnt cavm_sso_lf_ggrp_misc_cnt_t;
@@ -12148,8 +12235,8 @@ union cavm_sso_pf_mapx
 };
 typedef union cavm_sso_pf_mapx cavm_sso_pf_mapx_t;
 
-static inline uint64_t CAVM_SSO_PF_MAPX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_PF_MAPX(unsigned long a)
+static inline uint64_t CAVM_SSO_PF_MAPX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_PF_MAPX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=71))
         return 0x860000004000ll + 8ll * ((a) & 0x7f);
@@ -12184,8 +12271,8 @@ union cavm_sso_pf_mbox_ena_w1cx
 };
 typedef union cavm_sso_pf_mbox_ena_w1cx cavm_sso_pf_mbox_ena_w1cx_t;
 
-static inline uint64_t CAVM_SSO_PF_MBOX_ENA_W1CX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_PF_MBOX_ENA_W1CX(unsigned long a)
+static inline uint64_t CAVM_SSO_PF_MBOX_ENA_W1CX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_PF_MBOX_ENA_W1CX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
         return 0x860000001480ll + 8ll * ((a) & 0x0);
@@ -12220,8 +12307,8 @@ union cavm_sso_pf_mbox_ena_w1sx
 };
 typedef union cavm_sso_pf_mbox_ena_w1sx cavm_sso_pf_mbox_ena_w1sx_t;
 
-static inline uint64_t CAVM_SSO_PF_MBOX_ENA_W1SX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_PF_MBOX_ENA_W1SX(unsigned long a)
+static inline uint64_t CAVM_SSO_PF_MBOX_ENA_W1SX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_PF_MBOX_ENA_W1SX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
         return 0x8600000014c0ll + 8ll * ((a) & 0x0);
@@ -12257,8 +12344,8 @@ union cavm_sso_pf_mbox_intx
 };
 typedef union cavm_sso_pf_mbox_intx cavm_sso_pf_mbox_intx_t;
 
-static inline uint64_t CAVM_SSO_PF_MBOX_INTX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_PF_MBOX_INTX(unsigned long a)
+static inline uint64_t CAVM_SSO_PF_MBOX_INTX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_PF_MBOX_INTX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
         return 0x860000001400ll + 8ll * ((a) & 0x0);
@@ -12293,8 +12380,8 @@ union cavm_sso_pf_mbox_int_w1sx
 };
 typedef union cavm_sso_pf_mbox_int_w1sx cavm_sso_pf_mbox_int_w1sx_t;
 
-static inline uint64_t CAVM_SSO_PF_MBOX_INT_W1SX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_PF_MBOX_INT_W1SX(unsigned long a)
+static inline uint64_t CAVM_SSO_PF_MBOX_INT_W1SX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_PF_MBOX_INT_W1SX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
         return 0x860000001440ll + 8ll * ((a) & 0x0);
@@ -12332,8 +12419,8 @@ union cavm_sso_pf_msix_pbax
 };
 typedef union cavm_sso_pf_msix_pbax cavm_sso_pf_msix_pbax_t;
 
-static inline uint64_t CAVM_SSO_PF_MSIX_PBAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_PF_MSIX_PBAX(unsigned long a)
+static inline uint64_t CAVM_SSO_PF_MSIX_PBAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_PF_MSIX_PBAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
         return 0x8607000f0000ll + 8ll * ((a) & 0x0);
@@ -12390,8 +12477,8 @@ union cavm_sso_pf_msix_vecx_addr
 };
 typedef union cavm_sso_pf_msix_vecx_addr cavm_sso_pf_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_SSO_PF_MSIX_VECX_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_PF_MSIX_VECX_ADDR(unsigned long a)
+static inline uint64_t CAVM_SSO_PF_MSIX_VECX_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_PF_MSIX_VECX_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=3))
         return 0x860700000000ll + 0x10ll * ((a) & 0x3);
@@ -12432,8 +12519,8 @@ union cavm_sso_pf_msix_vecx_ctl
 };
 typedef union cavm_sso_pf_msix_vecx_ctl cavm_sso_pf_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_SSO_PF_MSIX_VECX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_PF_MSIX_VECX_CTL(unsigned long a)
+static inline uint64_t CAVM_SSO_PF_MSIX_VECX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_PF_MSIX_VECX_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=3))
         return 0x860700000008ll + 0x10ll * ((a) & 0x3);
@@ -12479,8 +12566,8 @@ union cavm_sso_pf_vhgrpx_mboxx
 };
 typedef union cavm_sso_pf_vhgrpx_mboxx cavm_sso_pf_vhgrpx_mboxx_t;
 
-static inline uint64_t CAVM_SSO_PF_VHGRPX_MBOXX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_PF_VHGRPX_MBOXX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_SSO_PF_VHGRPX_MBOXX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_PF_VHGRPX_MBOXX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=63) && (b<=1)))
         return 0x860020000400ll + 0x100000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
@@ -12582,8 +12669,8 @@ union cavm_sso_priv_lfx_hwgrp_cfg
 };
 typedef union cavm_sso_priv_lfx_hwgrp_cfg cavm_sso_priv_lfx_hwgrp_cfg_t;
 
-static inline uint64_t CAVM_SSO_PRIV_LFX_HWGRP_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_PRIV_LFX_HWGRP_CFG(unsigned long a)
+static inline uint64_t CAVM_SSO_PRIV_LFX_HWGRP_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_PRIV_LFX_HWGRP_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070010000ll + 8ll * ((a) & 0xff);
@@ -12633,8 +12720,8 @@ union cavm_sso_priv_lfx_hwgrp_int_cfg
 };
 typedef union cavm_sso_priv_lfx_hwgrp_int_cfg cavm_sso_priv_lfx_hwgrp_int_cfg_t;
 
-static inline uint64_t CAVM_SSO_PRIV_LFX_HWGRP_INT_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_PRIV_LFX_HWGRP_INT_CFG(unsigned long a)
+static inline uint64_t CAVM_SSO_PRIV_LFX_HWGRP_INT_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_PRIV_LFX_HWGRP_INT_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=255))
         return 0x840070020000ll + 8ll * ((a) & 0xff);
@@ -12718,8 +12805,8 @@ union cavm_sso_taqx_link
 };
 typedef union cavm_sso_taqx_link cavm_sso_taqx_link_t;
 
-static inline uint64_t CAVM_SSO_TAQX_LINK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_TAQX_LINK(unsigned long a)
+static inline uint64_t CAVM_SSO_TAQX_LINK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_TAQX_LINK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=319))
         return 0x8600c0000000ll + 0x1000ll * ((a) & 0x1ff);
@@ -12758,8 +12845,8 @@ union cavm_sso_taqx_waex_tag
 };
 typedef union cavm_sso_taqx_waex_tag cavm_sso_taqx_waex_tag_t;
 
-static inline uint64_t CAVM_SSO_TAQX_WAEX_TAG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_TAQX_WAEX_TAG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_SSO_TAQX_WAEX_TAG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_TAQX_WAEX_TAG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=319) && (b<=10)))
         return 0x8600d0000000ll + 0x1000ll * ((a) & 0x1ff) + 0x10ll * ((b) & 0xf);
@@ -12796,8 +12883,8 @@ union cavm_sso_taqx_waex_wqp
 };
 typedef union cavm_sso_taqx_waex_wqp cavm_sso_taqx_waex_wqp_t;
 
-static inline uint64_t CAVM_SSO_TAQX_WAEX_WQP(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_TAQX_WAEX_WQP(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_SSO_TAQX_WAEX_WQP(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_TAQX_WAEX_WQP(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=319) && (b<=10)))
         return 0x8600d0000008ll + 0x1000ll * ((a) & 0x1ff) + 0x10ll * ((b) & 0xf);
@@ -12952,8 +13039,8 @@ union cavm_sso_tiaqx_status
 };
 typedef union cavm_sso_tiaqx_status cavm_sso_tiaqx_status_t;
 
-static inline uint64_t CAVM_SSO_TIAQX_STATUS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_TIAQX_STATUS(unsigned long a)
+static inline uint64_t CAVM_SSO_TIAQX_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_TIAQX_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x8600000c0000ll + 8ll * ((a) & 0x3f);
@@ -13016,8 +13103,8 @@ union cavm_sso_toaqx_status
 };
 typedef union cavm_sso_toaqx_status cavm_sso_toaqx_status_t;
 
-static inline uint64_t CAVM_SSO_TOAQX_STATUS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_TOAQX_STATUS(unsigned long a)
+static inline uint64_t CAVM_SSO_TOAQX_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_TOAQX_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x8600000d0000ll + 8ll * ((a) & 0x3f);
@@ -13230,8 +13317,8 @@ union cavm_sso_vfx_msix_pbax
 };
 typedef union cavm_sso_vfx_msix_pbax cavm_sso_vfx_msix_pbax_t;
 
-static inline uint64_t CAVM_SSO_VFX_MSIX_PBAX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VFX_MSIX_PBAX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_SSO_VFX_MSIX_PBAX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VFX_MSIX_PBAX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=63) && (b==0)))
         return 0x860c000f0000ll + 0x100000ll * ((a) & 0x3f) + 8ll * ((b) & 0x0);
@@ -13276,8 +13363,8 @@ union cavm_sso_vfx_msix_vecx_addr
 };
 typedef union cavm_sso_vfx_msix_vecx_addr cavm_sso_vfx_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_SSO_VFX_MSIX_VECX_ADDR(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VFX_MSIX_VECX_ADDR(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_SSO_VFX_MSIX_VECX_ADDR(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VFX_MSIX_VECX_ADDR(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=63) && (b==0)))
         return 0x860c00000000ll + 0x100000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x0);
@@ -13318,8 +13405,8 @@ union cavm_sso_vfx_msix_vecx_ctl
 };
 typedef union cavm_sso_vfx_msix_vecx_ctl cavm_sso_vfx_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_SSO_VFX_MSIX_VECX_CTL(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VFX_MSIX_VECX_CTL(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_SSO_VFX_MSIX_VECX_CTL(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VFX_MSIX_VECX_CTL(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=63) && (b==0)))
         return 0x860c00000008ll + 0x100000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x0);
@@ -13355,8 +13442,8 @@ union cavm_sso_vhgrpx_aq_cnt
 };
 typedef union cavm_sso_vhgrpx_aq_cnt cavm_sso_vhgrpx_aq_cnt_t;
 
-static inline uint64_t CAVM_SSO_VHGRPX_AQ_CNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VHGRPX_AQ_CNT(unsigned long a)
+static inline uint64_t CAVM_SSO_VHGRPX_AQ_CNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VHGRPX_AQ_CNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x8608000001c0ll + 0x100000ll * ((a) & 0x3f);
@@ -13394,8 +13481,8 @@ union cavm_sso_vhgrpx_aq_thr
 };
 typedef union cavm_sso_vhgrpx_aq_thr cavm_sso_vhgrpx_aq_thr_t;
 
-static inline uint64_t CAVM_SSO_VHGRPX_AQ_THR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VHGRPX_AQ_THR(unsigned long a)
+static inline uint64_t CAVM_SSO_VHGRPX_AQ_THR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VHGRPX_AQ_THR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x8608000001e0ll + 0x100000ll * ((a) & 0x3f);
@@ -13487,8 +13574,8 @@ union cavm_sso_vhgrpx_int
 };
 typedef union cavm_sso_vhgrpx_int cavm_sso_vhgrpx_int_t;
 
-static inline uint64_t CAVM_SSO_VHGRPX_INT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VHGRPX_INT(unsigned long a)
+static inline uint64_t CAVM_SSO_VHGRPX_INT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VHGRPX_INT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860800000100ll + 0x100000ll * ((a) & 0x3f);
@@ -13556,8 +13643,8 @@ union cavm_sso_vhgrpx_int_cnt
 };
 typedef union cavm_sso_vhgrpx_int_cnt cavm_sso_vhgrpx_int_cnt_t;
 
-static inline uint64_t CAVM_SSO_VHGRPX_INT_CNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VHGRPX_INT_CNT(unsigned long a)
+static inline uint64_t CAVM_SSO_VHGRPX_INT_CNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VHGRPX_INT_CNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860800000180ll + 0x100000ll * ((a) & 0x3f);
@@ -13609,8 +13696,8 @@ union cavm_sso_vhgrpx_int_ena_w1c
 };
 typedef union cavm_sso_vhgrpx_int_ena_w1c cavm_sso_vhgrpx_int_ena_w1c_t;
 
-static inline uint64_t CAVM_SSO_VHGRPX_INT_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VHGRPX_INT_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_SSO_VHGRPX_INT_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VHGRPX_INT_ENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860800000118ll + 0x100000ll * ((a) & 0x3f);
@@ -13662,8 +13749,8 @@ union cavm_sso_vhgrpx_int_ena_w1s
 };
 typedef union cavm_sso_vhgrpx_int_ena_w1s cavm_sso_vhgrpx_int_ena_w1s_t;
 
-static inline uint64_t CAVM_SSO_VHGRPX_INT_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VHGRPX_INT_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_VHGRPX_INT_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VHGRPX_INT_ENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860800000110ll + 0x100000ll * ((a) & 0x3f);
@@ -13733,8 +13820,8 @@ union cavm_sso_vhgrpx_int_thr
 };
 typedef union cavm_sso_vhgrpx_int_thr cavm_sso_vhgrpx_int_thr_t;
 
-static inline uint64_t CAVM_SSO_VHGRPX_INT_THR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VHGRPX_INT_THR(unsigned long a)
+static inline uint64_t CAVM_SSO_VHGRPX_INT_THR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VHGRPX_INT_THR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860800000140ll + 0x100000ll * ((a) & 0x3f);
@@ -13788,8 +13875,8 @@ union cavm_sso_vhgrpx_int_w1s
 };
 typedef union cavm_sso_vhgrpx_int_w1s cavm_sso_vhgrpx_int_w1s_t;
 
-static inline uint64_t CAVM_SSO_VHGRPX_INT_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VHGRPX_INT_W1S(unsigned long a)
+static inline uint64_t CAVM_SSO_VHGRPX_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VHGRPX_INT_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860800000108ll + 0x100000ll * ((a) & 0x3f);
@@ -13828,8 +13915,8 @@ union cavm_sso_vhgrpx_op_add_work0
 };
 typedef union cavm_sso_vhgrpx_op_add_work0 cavm_sso_vhgrpx_op_add_work0_t;
 
-static inline uint64_t CAVM_SSO_VHGRPX_OP_ADD_WORK0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VHGRPX_OP_ADD_WORK0(unsigned long a)
+static inline uint64_t CAVM_SSO_VHGRPX_OP_ADD_WORK0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VHGRPX_OP_ADD_WORK0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x862800000000ll + 0x100000ll * ((a) & 0x3f);
@@ -13870,8 +13957,8 @@ union cavm_sso_vhgrpx_op_add_work1
 };
 typedef union cavm_sso_vhgrpx_op_add_work1 cavm_sso_vhgrpx_op_add_work1_t;
 
-static inline uint64_t CAVM_SSO_VHGRPX_OP_ADD_WORK1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VHGRPX_OP_ADD_WORK1(unsigned long a)
+static inline uint64_t CAVM_SSO_VHGRPX_OP_ADD_WORK1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VHGRPX_OP_ADD_WORK1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x862800000008ll + 0x100000ll * ((a) & 0x3f);
@@ -13915,8 +14002,8 @@ union cavm_sso_vhgrpx_pf_mboxx
 };
 typedef union cavm_sso_vhgrpx_pf_mboxx cavm_sso_vhgrpx_pf_mboxx_t;
 
-static inline uint64_t CAVM_SSO_VHGRPX_PF_MBOXX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VHGRPX_PF_MBOXX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_SSO_VHGRPX_PF_MBOXX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VHGRPX_PF_MBOXX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=63) && (b<=1)))
         return 0x860800000200ll + 0x100000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
@@ -13958,8 +14045,8 @@ union cavm_sso_vhgrpx_qctl
 };
 typedef union cavm_sso_vhgrpx_qctl cavm_sso_vhgrpx_qctl_t;
 
-static inline uint64_t CAVM_SSO_VHGRPX_QCTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VHGRPX_QCTL(unsigned long a)
+static inline uint64_t CAVM_SSO_VHGRPX_QCTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VHGRPX_QCTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860800000010ll + 0x100000ll * ((a) & 0x3f);
@@ -13995,8 +14082,8 @@ union cavm_sso_vhgrpx_xaq_cnt
 };
 typedef union cavm_sso_vhgrpx_xaq_cnt cavm_sso_vhgrpx_xaq_cnt_t;
 
-static inline uint64_t CAVM_SSO_VHGRPX_XAQ_CNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_VHGRPX_XAQ_CNT(unsigned long a)
+static inline uint64_t CAVM_SSO_VHGRPX_XAQ_CNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_VHGRPX_XAQ_CNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x8608000001b0ll + 0x100000ll * ((a) & 0x3f);
@@ -14258,8 +14345,8 @@ union cavm_sso_xaqx_head_next
 };
 typedef union cavm_sso_xaqx_head_next cavm_sso_xaqx_head_next_t;
 
-static inline uint64_t CAVM_SSO_XAQX_HEAD_NEXT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_XAQX_HEAD_NEXT(unsigned long a)
+static inline uint64_t CAVM_SSO_XAQX_HEAD_NEXT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_XAQX_HEAD_NEXT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x8600000a0000ll + 8ll * ((a) & 0x3f);
@@ -14309,8 +14396,8 @@ union cavm_sso_xaqx_head_ptr
 };
 typedef union cavm_sso_xaqx_head_ptr cavm_sso_xaqx_head_ptr_t;
 
-static inline uint64_t CAVM_SSO_XAQX_HEAD_PTR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_XAQX_HEAD_PTR(unsigned long a)
+static inline uint64_t CAVM_SSO_XAQX_HEAD_PTR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_XAQX_HEAD_PTR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860000080000ll + 8ll * ((a) & 0x3f);
@@ -14357,8 +14444,8 @@ union cavm_sso_xaqx_tail_next
 };
 typedef union cavm_sso_xaqx_tail_next cavm_sso_xaqx_tail_next_t;
 
-static inline uint64_t CAVM_SSO_XAQX_TAIL_NEXT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_XAQX_TAIL_NEXT(unsigned long a)
+static inline uint64_t CAVM_SSO_XAQX_TAIL_NEXT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_XAQX_TAIL_NEXT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x8600000b0000ll + 8ll * ((a) & 0x3f);
@@ -14409,8 +14496,8 @@ union cavm_sso_xaqx_tail_ptr
 };
 typedef union cavm_sso_xaqx_tail_ptr cavm_sso_xaqx_tail_ptr_t;
 
-static inline uint64_t CAVM_SSO_XAQX_TAIL_PTR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SSO_XAQX_TAIL_PTR(unsigned long a)
+static inline uint64_t CAVM_SSO_XAQX_TAIL_PTR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SSO_XAQX_TAIL_PTR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x860000090000ll + 8ll * ((a) & 0x3f);

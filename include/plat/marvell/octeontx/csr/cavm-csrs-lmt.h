@@ -99,8 +99,8 @@ union cavm_lmt_lf_lmtlinex
 };
 typedef union cavm_lmt_lf_lmtlinex cavm_lmt_lf_lmtlinex_t;
 
-static inline uint64_t CAVM_LMT_LF_LMTLINEX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_LMT_LF_LMTLINEX(unsigned long a)
+static inline uint64_t CAVM_LMT_LF_LMTLINEX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_LMT_LF_LMTLINEX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=15))
         return 0x840200100000ll + 8ll * ((a) & 0xf);

@@ -247,6 +247,7 @@ union cavm_mio_emm_calb
     } cn96xxp3;
     /* struct cavm_mio_emm_calb_cn96xxp3 cn98xx; */
     /* struct cavm_mio_emm_calb_cn96xxp3 cnf95xx; */
+    /* struct cavm_mio_emm_calb_cn96xxp3 f95mm; */
     /* struct cavm_mio_emm_calb_cn96xxp3 loki; */
 };
 typedef union cavm_mio_emm_calb cavm_mio_emm_calb_t;
@@ -547,6 +548,42 @@ union cavm_mio_emm_debug
     /* struct cavm_mio_emm_debug_s cn96xxp3; */
     /* struct cavm_mio_emm_debug_s cn98xx; */
     /* struct cavm_mio_emm_debug_cn96xxp1 cnf95xx; */
+    struct cavm_mio_emm_debug_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_22_63        : 42;
+        uint64_t rdsync_rst            : 1;  /**< [ 21: 21](R/W) eMMC read syncronizer logic reset.
+                                                                 Must set/cleared only when [EMMC_CLK_DISABLE] is set.
+                                                                 For diagnostic use only. */
+        uint64_t emmc_clk_disable      : 1;  /**< [ 20: 20](R/W) Disable eMMC clock.
+                                                                 Required when MIO_EMM_TIMING[*_IN_TAP] changes. */
+        uint64_t dma_sm                : 4;  /**< [ 19: 16](RO) DMA state.
+                                                                 For diagnostic use only. */
+        uint64_t data_sm               : 4;  /**< [ 15: 12](RO) Data transfer state.
+                                                                 For diagnostic use only. */
+        uint64_t cmd_sm                : 4;  /**< [ 11:  8](RO) Command state.
+                                                                 For diagnostic use only. */
+        uint64_t reserved_1_7          : 7;
+        uint64_t clk_on                : 1;  /**< [  0:  0](R/W) Force eMMC related conditional clocks to always be on.
+                                                                 For diagnostic use only. */
+#else /* Word 0 - Little Endian */
+        uint64_t clk_on                : 1;  /**< [  0:  0](R/W) Force eMMC related conditional clocks to always be on.
+                                                                 For diagnostic use only. */
+        uint64_t reserved_1_7          : 7;
+        uint64_t cmd_sm                : 4;  /**< [ 11:  8](RO) Command state.
+                                                                 For diagnostic use only. */
+        uint64_t data_sm               : 4;  /**< [ 15: 12](RO) Data transfer state.
+                                                                 For diagnostic use only. */
+        uint64_t dma_sm                : 4;  /**< [ 19: 16](RO) DMA state.
+                                                                 For diagnostic use only. */
+        uint64_t emmc_clk_disable      : 1;  /**< [ 20: 20](R/W) Disable eMMC clock.
+                                                                 Required when MIO_EMM_TIMING[*_IN_TAP] changes. */
+        uint64_t rdsync_rst            : 1;  /**< [ 21: 21](R/W) eMMC read syncronizer logic reset.
+                                                                 Must set/cleared only when [EMMC_CLK_DISABLE] is set.
+                                                                 For diagnostic use only. */
+        uint64_t reserved_22_63        : 42;
+#endif /* Word 0 - End */
+    } f95mm;
     /* struct cavm_mio_emm_debug_s loki; */
 };
 typedef union cavm_mio_emm_debug cavm_mio_emm_debug_t;
@@ -983,6 +1020,7 @@ union cavm_mio_emm_dma_arg
     } cn96xxp3;
     /* struct cavm_mio_emm_dma_arg_cn96xxp3 cn98xx; */
     /* struct cavm_mio_emm_dma_arg_s cnf95xx; */
+    /* struct cavm_mio_emm_dma_arg_s f95mm; */
     /* struct cavm_mio_emm_dma_arg_cn96xxp3 loki; */
 };
 typedef union cavm_mio_emm_dma_arg cavm_mio_emm_dma_arg_t;
@@ -1802,6 +1840,7 @@ union cavm_mio_emm_io_ctl
     /* struct cavm_mio_emm_io_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_mio_emm_io_ctl_s cnf95xxp1; */
     /* struct cavm_mio_emm_io_ctl_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_mio_emm_io_ctl_cn96xxp3 f95mm; */
     /* struct cavm_mio_emm_io_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_mio_emm_io_ctl cavm_mio_emm_io_ctl_t;
@@ -2014,12 +2053,13 @@ union cavm_mio_emm_modex
     /* struct cavm_mio_emm_modex_s cn96xxp3; */
     /* struct cavm_mio_emm_modex_s cn98xx; */
     /* struct cavm_mio_emm_modex_s cnf95xx; */
+    /* struct cavm_mio_emm_modex_s f95mm; */
     /* struct cavm_mio_emm_modex_s loki; */
 };
 typedef union cavm_mio_emm_modex cavm_mio_emm_modex_t;
 
-static inline uint64_t CAVM_MIO_EMM_MODEX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MIO_EMM_MODEX(unsigned long a)
+static inline uint64_t CAVM_MIO_EMM_MODEX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MIO_EMM_MODEX(uint64_t a)
 {
     if (a<=3)
         return 0x87e009002008ll + 8ll * ((a) & 0x3);
@@ -2057,8 +2097,8 @@ union cavm_mio_emm_msix_pbax
 };
 typedef union cavm_mio_emm_msix_pbax cavm_mio_emm_msix_pbax_t;
 
-static inline uint64_t CAVM_MIO_EMM_MSIX_PBAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MIO_EMM_MSIX_PBAX(unsigned long a)
+static inline uint64_t CAVM_MIO_EMM_MSIX_PBAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MIO_EMM_MSIX_PBAX(uint64_t a)
 {
     if (a==0)
         return 0x87e009ff0000ll + 8ll * ((a) & 0x0);
@@ -2203,12 +2243,13 @@ union cavm_mio_emm_msix_vecx_addr
     } cn96xxp3;
     /* struct cavm_mio_emm_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_mio_emm_msix_vecx_addr_cn96xxp3 cnf95xx; */
+    /* struct cavm_mio_emm_msix_vecx_addr_cn96xxp3 f95mm; */
     /* struct cavm_mio_emm_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_mio_emm_msix_vecx_addr cavm_mio_emm_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_MIO_EMM_MSIX_VECX_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MIO_EMM_MSIX_VECX_ADDR(unsigned long a)
+static inline uint64_t CAVM_MIO_EMM_MSIX_VECX_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MIO_EMM_MSIX_VECX_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=8))
         return 0x87e009f00000ll + 0x10ll * ((a) & 0xf);
@@ -2263,8 +2304,8 @@ union cavm_mio_emm_msix_vecx_ctl
 };
 typedef union cavm_mio_emm_msix_vecx_ctl cavm_mio_emm_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_MIO_EMM_MSIX_VECX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MIO_EMM_MSIX_VECX_CTL(unsigned long a)
+static inline uint64_t CAVM_MIO_EMM_MSIX_VECX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MIO_EMM_MSIX_VECX_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=8))
         return 0x87e009f00008ll + 0x10ll * ((a) & 0xf);
@@ -3026,6 +3067,7 @@ union cavm_mio_emm_switch
     } cn96xxp3;
     /* struct cavm_mio_emm_switch_cn96xxp3 cn98xx; */
     /* struct cavm_mio_emm_switch_cn96xxp3 cnf95xx; */
+    /* struct cavm_mio_emm_switch_cn96xxp3 f95mm; */
     /* struct cavm_mio_emm_switch_cn96xxp3 loki; */
 };
 typedef union cavm_mio_emm_switch cavm_mio_emm_switch_t;

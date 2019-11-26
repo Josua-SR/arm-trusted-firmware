@@ -139,8 +139,8 @@ union cavm_pbus_dma_adrx
 };
 typedef union cavm_pbus_dma_adrx cavm_pbus_dma_adrx_t;
 
-static inline uint64_t CAVM_PBUS_DMA_ADRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PBUS_DMA_ADRX(unsigned long a)
+static inline uint64_t CAVM_PBUS_DMA_ADRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PBUS_DMA_ADRX(uint64_t a)
 {
     if (a<=1)
         return 0x87e001000110ll + 8ll * ((a) & 0x1);
@@ -309,8 +309,8 @@ union cavm_pbus_dma_cfgx
 };
 typedef union cavm_pbus_dma_cfgx cavm_pbus_dma_cfgx_t;
 
-static inline uint64_t CAVM_PBUS_DMA_CFGX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PBUS_DMA_CFGX(unsigned long a)
+static inline uint64_t CAVM_PBUS_DMA_CFGX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PBUS_DMA_CFGX(uint64_t a)
 {
     if (a<=1)
         return 0x87e001000100ll + 8ll * ((a) & 0x1);
@@ -397,8 +397,8 @@ union cavm_pbus_dma_timx
 };
 typedef union cavm_pbus_dma_timx cavm_pbus_dma_timx_t;
 
-static inline uint64_t CAVM_PBUS_DMA_TIMX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PBUS_DMA_TIMX(unsigned long a)
+static inline uint64_t CAVM_PBUS_DMA_TIMX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PBUS_DMA_TIMX(uint64_t a)
 {
     if (a<=1)
         return 0x87e001000120ll + 8ll * ((a) & 0x1);
@@ -746,8 +746,8 @@ union cavm_pbus_msix_pbax
 };
 typedef union cavm_pbus_msix_pbax cavm_pbus_msix_pbax_t;
 
-static inline uint64_t CAVM_PBUS_MSIX_PBAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PBUS_MSIX_PBAX(unsigned long a)
+static inline uint64_t CAVM_PBUS_MSIX_PBAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PBUS_MSIX_PBAX(uint64_t a)
 {
     if (a==0)
         return 0x87e001ff0000ll + 8ll * ((a) & 0x0);
@@ -892,12 +892,13 @@ union cavm_pbus_msix_vecx_addr
     } cn96xxp3;
     /* struct cavm_pbus_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_pbus_msix_vecx_addr_cn96xxp3 cnf95xx; */
+    /* struct cavm_pbus_msix_vecx_addr_cn96xxp3 f95mm; */
     /* struct cavm_pbus_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_pbus_msix_vecx_addr cavm_pbus_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_PBUS_MSIX_VECX_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PBUS_MSIX_VECX_ADDR(unsigned long a)
+static inline uint64_t CAVM_PBUS_MSIX_VECX_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PBUS_MSIX_VECX_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=3))
         return 0x87e001f00000ll + 0x10ll * ((a) & 0x3);
@@ -952,8 +953,8 @@ union cavm_pbus_msix_vecx_ctl
 };
 typedef union cavm_pbus_msix_vecx_ctl cavm_pbus_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_PBUS_MSIX_VECX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PBUS_MSIX_VECX_CTL(unsigned long a)
+static inline uint64_t CAVM_PBUS_MSIX_VECX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PBUS_MSIX_VECX_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=3))
         return 0x87e001f00008ll + 0x10ll * ((a) & 0x3);
@@ -1188,8 +1189,8 @@ union cavm_pbus_regx_cfg
 };
 typedef union cavm_pbus_regx_cfg cavm_pbus_regx_cfg_t;
 
-static inline uint64_t CAVM_PBUS_REGX_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PBUS_REGX_CFG(unsigned long a)
+static inline uint64_t CAVM_PBUS_REGX_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PBUS_REGX_CFG(uint64_t a)
 {
     if (a<=7)
         return 0x87e001000000ll + 8ll * ((a) & 0x7);
@@ -1290,8 +1291,8 @@ union cavm_pbus_regx_tim
 };
 typedef union cavm_pbus_regx_tim cavm_pbus_regx_tim_t;
 
-static inline uint64_t CAVM_PBUS_REGX_TIM(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PBUS_REGX_TIM(unsigned long a)
+static inline uint64_t CAVM_PBUS_REGX_TIM(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PBUS_REGX_TIM(uint64_t a)
 {
     if (a<=7)
         return 0x87e001000040ll + 8ll * ((a) & 0x7);

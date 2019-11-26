@@ -50,8 +50,8 @@ union cavm_apbrx_const
 };
 typedef union cavm_apbrx_const cavm_apbrx_const_t;
 
-static inline uint64_t CAVM_APBRX_CONST(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_APBRX_CONST(unsigned long a)
+static inline uint64_t CAVM_APBRX_CONST(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_APBRX_CONST(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=53))
         return 0x8fb000000000ll + 0x100000ll * ((a) & 0x3f);

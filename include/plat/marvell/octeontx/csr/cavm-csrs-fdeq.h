@@ -4774,8 +4774,8 @@ union cavm_fdeqx_control
 };
 typedef union cavm_fdeqx_control cavm_fdeqx_control_t;
 
-static inline uint64_t CAVM_FDEQX_CONTROL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FDEQX_CONTROL(unsigned long a)
+static inline uint64_t CAVM_FDEQX_CONTROL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FDEQX_CONTROL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043200000ll + 0x800000ll * ((a) & 0x1);
@@ -4838,8 +4838,8 @@ union cavm_fdeqx_error_source_register_0
 };
 typedef union cavm_fdeqx_error_source_register_0 cavm_fdeqx_error_source_register_0_t;
 
-static inline uint64_t CAVM_FDEQX_ERROR_SOURCE_REGISTER_0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FDEQX_ERROR_SOURCE_REGISTER_0(unsigned long a)
+static inline uint64_t CAVM_FDEQX_ERROR_SOURCE_REGISTER_0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FDEQX_ERROR_SOURCE_REGISTER_0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043200030ll + 0x800000ll * ((a) & 0x1);
@@ -4890,8 +4890,8 @@ union cavm_fdeqx_hab_status
 };
 typedef union cavm_fdeqx_hab_status cavm_fdeqx_hab_status_t;
 
-static inline uint64_t CAVM_FDEQX_HAB_STATUS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FDEQX_HAB_STATUS(unsigned long a)
+static inline uint64_t CAVM_FDEQX_HAB_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FDEQX_HAB_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043200018ll + 0x800000ll * ((a) & 0x1);
@@ -4952,8 +4952,8 @@ union cavm_fdeqx_jd_act_ue_num_for_hop
 };
 typedef union cavm_fdeqx_jd_act_ue_num_for_hop cavm_fdeqx_jd_act_ue_num_for_hop_t;
 
-static inline uint64_t CAVM_FDEQX_JD_ACT_UE_NUM_FOR_HOP(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FDEQX_JD_ACT_UE_NUM_FOR_HOP(unsigned long a)
+static inline uint64_t CAVM_FDEQX_JD_ACT_UE_NUM_FOR_HOP(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FDEQX_JD_ACT_UE_NUM_FOR_HOP(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043202040ll + 0x800000ll * ((a) & 0x1);
@@ -5032,8 +5032,8 @@ union cavm_fdeqx_jd_hrs_buffer_param_0
 };
 typedef union cavm_fdeqx_jd_hrs_buffer_param_0 cavm_fdeqx_jd_hrs_buffer_param_0_t;
 
-static inline uint64_t CAVM_FDEQX_JD_HRS_BUFFER_PARAM_0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FDEQX_JD_HRS_BUFFER_PARAM_0(unsigned long a)
+static inline uint64_t CAVM_FDEQX_JD_HRS_BUFFER_PARAM_0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FDEQX_JD_HRS_BUFFER_PARAM_0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043202010ll + 0x800000ll * ((a) & 0x1);
@@ -5100,8 +5100,8 @@ union cavm_fdeqx_jd_hrs_buffer_param_1
 };
 typedef union cavm_fdeqx_jd_hrs_buffer_param_1 cavm_fdeqx_jd_hrs_buffer_param_1_t;
 
-static inline uint64_t CAVM_FDEQX_JD_HRS_BUFFER_PARAM_1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FDEQX_JD_HRS_BUFFER_PARAM_1(unsigned long a)
+static inline uint64_t CAVM_FDEQX_JD_HRS_BUFFER_PARAM_1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FDEQX_JD_HRS_BUFFER_PARAM_1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043202018ll + 0x800000ll * ((a) & 0x1);
@@ -5214,8 +5214,8 @@ union cavm_fdeqx_jd_hrs_offset_per_ant
 };
 typedef union cavm_fdeqx_jd_hrs_offset_per_ant cavm_fdeqx_jd_hrs_offset_per_ant_t;
 
-static inline uint64_t CAVM_FDEQX_JD_HRS_OFFSET_PER_ANT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FDEQX_JD_HRS_OFFSET_PER_ANT(unsigned long a)
+static inline uint64_t CAVM_FDEQX_JD_HRS_OFFSET_PER_ANT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FDEQX_JD_HRS_OFFSET_PER_ANT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043202008ll + 0x800000ll * ((a) & 0x1);
@@ -5400,8 +5400,8 @@ union cavm_fdeqx_jd_hrs_sym_idx_for_tdce
 };
 typedef union cavm_fdeqx_jd_hrs_sym_idx_for_tdce cavm_fdeqx_jd_hrs_sym_idx_for_tdce_t;
 
-static inline uint64_t CAVM_FDEQX_JD_HRS_SYM_IDX_FOR_TDCE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FDEQX_JD_HRS_SYM_IDX_FOR_TDCE(unsigned long a)
+static inline uint64_t CAVM_FDEQX_JD_HRS_SYM_IDX_FOR_TDCE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FDEQX_JD_HRS_SYM_IDX_FOR_TDCE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043202028ll + 0x800000ll * ((a) & 0x1);
@@ -5634,8 +5634,8 @@ union cavm_fdeqx_jd_job_type_rs_param
 };
 typedef union cavm_fdeqx_jd_job_type_rs_param cavm_fdeqx_jd_job_type_rs_param_t;
 
-static inline uint64_t CAVM_FDEQX_JD_JOB_TYPE_RS_PARAM(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FDEQX_JD_JOB_TYPE_RS_PARAM(unsigned long a)
+static inline uint64_t CAVM_FDEQX_JD_JOB_TYPE_RS_PARAM(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FDEQX_JD_JOB_TYPE_RS_PARAM(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043202000ll + 0x800000ll * ((a) & 0x1);
@@ -5820,8 +5820,8 @@ union cavm_fdeqx_jd_rs_general_parameter
 };
 typedef union cavm_fdeqx_jd_rs_general_parameter cavm_fdeqx_jd_rs_general_parameter_t;
 
-static inline uint64_t CAVM_FDEQX_JD_RS_GENERAL_PARAMETER(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FDEQX_JD_RS_GENERAL_PARAMETER(unsigned long a)
+static inline uint64_t CAVM_FDEQX_JD_RS_GENERAL_PARAMETER(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FDEQX_JD_RS_GENERAL_PARAMETER(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043202020ll + 0x800000ll * ((a) & 0x1);
@@ -5860,8 +5860,8 @@ union cavm_fdeqx_jd_rs_sxbc_map_0
 };
 typedef union cavm_fdeqx_jd_rs_sxbc_map_0 cavm_fdeqx_jd_rs_sxbc_map_0_t;
 
-static inline uint64_t CAVM_FDEQX_JD_RS_SXBC_MAP_0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FDEQX_JD_RS_SXBC_MAP_0(unsigned long a)
+static inline uint64_t CAVM_FDEQX_JD_RS_SXBC_MAP_0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FDEQX_JD_RS_SXBC_MAP_0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043202030ll + 0x800000ll * ((a) & 0x1);
@@ -5900,8 +5900,8 @@ union cavm_fdeqx_jd_rs_sxbc_map_1
 };
 typedef union cavm_fdeqx_jd_rs_sxbc_map_1 cavm_fdeqx_jd_rs_sxbc_map_1_t;
 
-static inline uint64_t CAVM_FDEQX_JD_RS_SXBC_MAP_1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_FDEQX_JD_RS_SXBC_MAP_1(unsigned long a)
+static inline uint64_t CAVM_FDEQX_JD_RS_SXBC_MAP_1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_FDEQX_JD_RS_SXBC_MAP_1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043202038ll + 0x800000ll * ((a) & 0x1);

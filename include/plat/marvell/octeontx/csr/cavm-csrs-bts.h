@@ -411,8 +411,8 @@ union cavm_bts_ext_refx_div_cfg0
 };
 typedef union cavm_bts_ext_refx_div_cfg0 cavm_bts_ext_refx_div_cfg0_t;
 
-static inline uint64_t CAVM_BTS_EXT_REFX_DIV_CFG0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_BTS_EXT_REFX_DIV_CFG0(unsigned long a)
+static inline uint64_t CAVM_BTS_EXT_REFX_DIV_CFG0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_BTS_EXT_REFX_DIV_CFG0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=2))
         return 0x87e012000700ll + 0x10ll * ((a) & 0x3);
@@ -483,8 +483,8 @@ union cavm_bts_ext_refx_div_cfg1
 };
 typedef union cavm_bts_ext_refx_div_cfg1 cavm_bts_ext_refx_div_cfg1_t;
 
-static inline uint64_t CAVM_BTS_EXT_REFX_DIV_CFG1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_BTS_EXT_REFX_DIV_CFG1(unsigned long a)
+static inline uint64_t CAVM_BTS_EXT_REFX_DIV_CFG1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_BTS_EXT_REFX_DIV_CFG1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=2))
         return 0x87e012000708ll + 0x10ll * ((a) & 0x3);
@@ -771,8 +771,8 @@ union cavm_bts_msix_pbax
 };
 typedef union cavm_bts_msix_pbax cavm_bts_msix_pbax_t;
 
-static inline uint64_t CAVM_BTS_MSIX_PBAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_BTS_MSIX_PBAX(unsigned long a)
+static inline uint64_t CAVM_BTS_MSIX_PBAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_BTS_MSIX_PBAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a==0))
         return 0x87e012ff0000ll + 8ll * ((a) & 0x0);
@@ -883,12 +883,13 @@ union cavm_bts_msix_vecx_addr
     } cn96xxp3;
     /* struct cavm_bts_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_bts_msix_vecx_addr_cn96xxp3 cnf95xx; */
+    /* struct cavm_bts_msix_vecx_addr_cn96xxp3 f95mm; */
     /* struct cavm_bts_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_bts_msix_vecx_addr cavm_bts_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_BTS_MSIX_VECX_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_BTS_MSIX_VECX_ADDR(unsigned long a)
+static inline uint64_t CAVM_BTS_MSIX_VECX_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_BTS_MSIX_VECX_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a==0))
         return 0x87e012f00000ll + 0x10ll * ((a) & 0x0);
@@ -927,8 +928,8 @@ union cavm_bts_msix_vecx_ctl
 };
 typedef union cavm_bts_msix_vecx_ctl cavm_bts_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_BTS_MSIX_VECX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_BTS_MSIX_VECX_CTL(unsigned long a)
+static inline uint64_t CAVM_BTS_MSIX_VECX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_BTS_MSIX_VECX_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a==0))
         return 0x87e012f00008ll + 0x10ll * ((a) & 0x0);
@@ -1209,8 +1210,8 @@ union cavm_bts_pd_slicex_ctl
 };
 typedef union cavm_bts_pd_slicex_ctl cavm_bts_pd_slicex_ctl_t;
 
-static inline uint64_t CAVM_BTS_PD_SLICEX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_BTS_PD_SLICEX_CTL(unsigned long a)
+static inline uint64_t CAVM_BTS_PD_SLICEX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_BTS_PD_SLICEX_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=5))
         return 0x87e012000300ll + 8ll * ((a) & 0x7);
@@ -1258,8 +1259,8 @@ union cavm_bts_pd_slicex_status
 };
 typedef union cavm_bts_pd_slicex_status cavm_bts_pd_slicex_status_t;
 
-static inline uint64_t CAVM_BTS_PD_SLICEX_STATUS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_BTS_PD_SLICEX_STATUS(unsigned long a)
+static inline uint64_t CAVM_BTS_PD_SLICEX_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_BTS_PD_SLICEX_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=5))
         return 0x87e012000340ll + 8ll * ((a) & 0x7);
@@ -1687,6 +1688,7 @@ union cavm_bts_pll_ctl
     /* struct cavm_bts_pll_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_bts_pll_ctl_cn96xxp1 cnf95xxp1; */
     /* struct cavm_bts_pll_ctl_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_bts_pll_ctl_cn96xxp3 f95mm; */
     /* struct cavm_bts_pll_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_bts_pll_ctl cavm_bts_pll_ctl_t;
@@ -2077,6 +2079,7 @@ union cavm_bts_tp_mux_sel
     } cn96xxp3;
     /* struct cavm_bts_tp_mux_sel_cn96xxp3 cn98xx; */
     /* struct cavm_bts_tp_mux_sel_cn96xxp3 cnf95xx; */
+    /* struct cavm_bts_tp_mux_sel_cn96xxp3 f95mm; */
     /* struct cavm_bts_tp_mux_sel_cn96xxp3 loki; */
 };
 typedef union cavm_bts_tp_mux_sel cavm_bts_tp_mux_sel_t;

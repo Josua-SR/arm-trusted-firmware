@@ -213,6 +213,97 @@ union cavm_rfoe_ecpri_psw0_s
         uint64_t pswt                  : 2;  /**< [ 63: 62] PSW Type.  Enumerated by RFOE_RX_PSWT_E. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t seq_id                : 16; /**< [127:112] eCPRI SEQ_ID field from eCPRI Header when ECPRI_HDR_S[MSG_TYPE]==0, else 0x0. */
+        uint64_t reserved_110_111      : 2;
+        uint64_t err_sts               : 6;  /**< [109:104] Packet error status, 0 = no errors detected.  For non-zero:
+                                                                 *Bits(3..0) are the packet errpr status from MAC, enumerated by RFOE_RX_PKT_ERR_E.
+                                                                 *Bit(4) is the DMA ERROR status, indicating Late aperture failure, buffer
+                                                                 overflow, or length miscompare from packet header vs. payload.
+                                                                 *Bit(5) is the SEQ_ID error status. When set, indicates that a SEQ_ID miscompare
+                                                                 occured. Miscompare is pkt.SEQ_ID.subsequence_id != expected subsequence_id  OR
+                                                                 pkt.SEQ_ID.sequence_d != expected subseqeunce_id.
+
+                                                                 Internal:
+                                                                 Packet Error Status from x2p err field.  0 = no error detected. Values enumerated in
+                                                                 x2p2_p2x2_defs::x2p2_pkt_err_t */
+        uint64_t reserved_98_103       : 6;
+        uint64_t flow_id               : 10; /**< [ 97: 88] FLOW_ID calculated from ECPRI_HDR_S[PC_ID] when ECPRI_HDR_S[MSG_TYPE]==0, else 0x0. */
+        uint64_t ecpri_id              : 16; /**< [ 87: 72] ID field from eCPRI Header.  eCPRI packet bytes {4,5}, which are the PC_ID,
+                                                                 RTC_ID or other ID fields used for message types 0..7.
+
+                                                                 Internal:
+                                                                 detail:
+                                                                 *msg_type = (0..2) -   PC_ID or RTC_ID.
+                                                                 *msg_type = 3      -   upper two bytes of PC_ID.
+                                                                 *msg_type = 4      -   RMA_ID, ecpri byte5.
+                                                                 *msg_type = 5      -   Mesagurement ID, ecpri byte5.
+                                                                 *msg_type = 6      -   Reset ID.
+                                                                 *msg_type = 7      -   Event_id, ecpri byte 5.
+                                                                 *msg_type = 8..255 -   ecpri byte4, byte5. */
+        uint64_t msg_type              : 8;  /**< [ 71: 64] eCPRI Message Type field from eCPRI Header (ECPRI_HDR_S[MSG_TYPE]). */
+#else /* Word 1 - Little Endian */
+        uint64_t msg_type              : 8;  /**< [ 71: 64] eCPRI Message Type field from eCPRI Header (ECPRI_HDR_S[MSG_TYPE]). */
+        uint64_t ecpri_id              : 16; /**< [ 87: 72] ID field from eCPRI Header.  eCPRI packet bytes {4,5}, which are the PC_ID,
+                                                                 RTC_ID or other ID fields used for message types 0..7.
+
+                                                                 Internal:
+                                                                 detail:
+                                                                 *msg_type = (0..2) -   PC_ID or RTC_ID.
+                                                                 *msg_type = 3      -   upper two bytes of PC_ID.
+                                                                 *msg_type = 4      -   RMA_ID, ecpri byte5.
+                                                                 *msg_type = 5      -   Mesagurement ID, ecpri byte5.
+                                                                 *msg_type = 6      -   Reset ID.
+                                                                 *msg_type = 7      -   Event_id, ecpri byte 5.
+                                                                 *msg_type = 8..255 -   ecpri byte4, byte5. */
+        uint64_t flow_id               : 10; /**< [ 97: 88] FLOW_ID calculated from ECPRI_HDR_S[PC_ID] when ECPRI_HDR_S[MSG_TYPE]==0, else 0x0. */
+        uint64_t reserved_98_103       : 6;
+        uint64_t err_sts               : 6;  /**< [109:104] Packet error status, 0 = no errors detected.  For non-zero:
+                                                                 *Bits(3..0) are the packet errpr status from MAC, enumerated by RFOE_RX_PKT_ERR_E.
+                                                                 *Bit(4) is the DMA ERROR status, indicating Late aperture failure, buffer
+                                                                 overflow, or length miscompare from packet header vs. payload.
+                                                                 *Bit(5) is the SEQ_ID error status. When set, indicates that a SEQ_ID miscompare
+                                                                 occured. Miscompare is pkt.SEQ_ID.subsequence_id != expected subsequence_id  OR
+                                                                 pkt.SEQ_ID.sequence_d != expected subseqeunce_id.
+
+                                                                 Internal:
+                                                                 Packet Error Status from x2p err field.  0 = no error detected. Values enumerated in
+                                                                 x2p2_p2x2_defs::x2p2_pkt_err_t */
+        uint64_t reserved_110_111      : 2;
+        uint64_t seq_id                : 16; /**< [127:112] eCPRI SEQ_ID field from eCPRI Header when ECPRI_HDR_S[MSG_TYPE]==0, else 0x0. */
+#endif /* Word 1 - End */
+    } s;
+    /* struct cavm_rfoe_ecpri_psw0_s_s cn9; */
+    /* struct cavm_rfoe_ecpri_psw0_s_s f95mm; */
+    struct cavm_rfoe_ecpri_psw0_s_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t pswt                  : 2;  /**< [ 63: 62] PSW Type.  Enumerated by RFOE_RX_PSWT_E. */
+        uint64_t reserved_60_61        : 2;
+        uint64_t src_id                : 4;  /**< [ 59: 56] Packet source = {rfoe_inst[1:0],lmac_id[1:0]}. */
+        uint64_t reserved_54_55        : 2;
+        uint64_t jd_ptr_tmem           : 1;  /**< [ 53: 53] Target memory selection for job descriptor used by this packet/symbol.
+                                                                 0 = SMEM.
+                                                                 1 = LLC/DRAM.
+
+                                                                 Note that this will be zero for RoE subtype 0xFC packets. */
+        uint64_t jd_ptr                : 53; /**< [ 52:  0] Pointer to job descriptor used by this packet/symbol.
+                                                                 * All except RoE subtype=0xfc, job descriptor pointer corresponding to this packet status
+                                                                 * If RoE subtype=0xfc, this will be 0x0. */
+#else /* Word 0 - Little Endian */
+        uint64_t jd_ptr                : 53; /**< [ 52:  0] Pointer to job descriptor used by this packet/symbol.
+                                                                 * All except RoE subtype=0xfc, job descriptor pointer corresponding to this packet status
+                                                                 * If RoE subtype=0xfc, this will be 0x0. */
+        uint64_t jd_ptr_tmem           : 1;  /**< [ 53: 53] Target memory selection for job descriptor used by this packet/symbol.
+                                                                 0 = SMEM.
+                                                                 1 = LLC/DRAM.
+
+                                                                 Note that this will be zero for RoE subtype 0xFC packets. */
+        uint64_t reserved_54_55        : 2;
+        uint64_t src_id                : 4;  /**< [ 59: 56] Packet source = {rfoe_inst[1:0],lmac_id[1:0]}. */
+        uint64_t reserved_60_61        : 2;
+        uint64_t pswt                  : 2;  /**< [ 63: 62] PSW Type.  Enumerated by RFOE_RX_PSWT_E. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
         uint64_t seq_id                : 16; /**< [127:112] ECPRI_HDR_S[SEQ_ID] field from eCPRI Header when ECPRI_HDR_S[MSG_TYPE] == 0, else 0x0. */
         uint64_t reserved_110_111      : 2;
         uint64_t err_sts               : 6;  /**< [109:104] Packet error status, 0 = no errors detected.  For non-zero:
@@ -267,8 +358,7 @@ union cavm_rfoe_ecpri_psw0_s
         uint64_t reserved_110_111      : 2;
         uint64_t seq_id                : 16; /**< [127:112] ECPRI_HDR_S[SEQ_ID] field from eCPRI Header when ECPRI_HDR_S[MSG_TYPE] == 0, else 0x0. */
 #endif /* Word 1 - End */
-    } s;
-    /* struct cavm_rfoe_ecpri_psw0_s_s cn; */
+    } loki;
 };
 
 /**
@@ -280,6 +370,43 @@ union cavm_rfoe_ecpri_psw1_s
 {
     uint64_t u[2];
     struct cavm_rfoe_ecpri_psw1_s_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t ptp_timestamp         : 64; /**< [ 63:  0] PTP if present from CGX.  Undefined if RFOE_RX_CTRL[PTP_MODE(lmac)] == 0.
+                                                                 Internal:
+                                                                 Hardware writes 0 when PTP_MODE is 0 for this LMAC. */
+#else /* Word 0 - Little Endian */
+        uint64_t ptp_timestamp         : 64; /**< [ 63:  0] PTP if present from CGX.  Undefined if RFOE_RX_CTRL[PTP_MODE(lmac)] == 0.
+                                                                 Internal:
+                                                                 Hardware writes 0 when PTP_MODE is 0 for this LMAC. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t reserved_124_127      : 4;
+        uint64_t ptype                 : 4;  /**< [123:120] Type of processing applied to packet, as defined by  RFOE_RX_DIR_CTL_PKT_TYPE_E. */
+        uint64_t reserved_112_119      : 8;
+        uint64_t dec_num_syminc        : 8;  /**< [111:104] EDEC block sets this field to the number of sections in the packet with
+                                                                 ECPRI_SECTION_HDR_S[SYM_INC]==1 in the section header. */
+        uint64_t dec_num_sections      : 8;  /**< [103: 96] EDEC block sets this field to the total number of sections found in this packet. */
+        uint64_t dec_error             : 8;  /**< [ 95: 88] EDEC block sets this field */
+        uint64_t reserved_85_87        : 3;
+        uint64_t eindex                : 5;  /**< [ 84: 80] byte index to MSB of EtherType used for rx_direction_ctl lookup (non-VLAN EtherType) */
+        uint64_t ethertype             : 16; /**< [ 79: 64] EtherType pointed to by EINDEX */
+#else /* Word 1 - Little Endian */
+        uint64_t ethertype             : 16; /**< [ 79: 64] EtherType pointed to by EINDEX */
+        uint64_t eindex                : 5;  /**< [ 84: 80] byte index to MSB of EtherType used for rx_direction_ctl lookup (non-VLAN EtherType) */
+        uint64_t reserved_85_87        : 3;
+        uint64_t dec_error             : 8;  /**< [ 95: 88] EDEC block sets this field */
+        uint64_t dec_num_sections      : 8;  /**< [103: 96] EDEC block sets this field to the total number of sections found in this packet. */
+        uint64_t dec_num_syminc        : 8;  /**< [111:104] EDEC block sets this field to the number of sections in the packet with
+                                                                 ECPRI_SECTION_HDR_S[SYM_INC]==1 in the section header. */
+        uint64_t reserved_112_119      : 8;
+        uint64_t ptype                 : 4;  /**< [123:120] Type of processing applied to packet, as defined by  RFOE_RX_DIR_CTL_PKT_TYPE_E. */
+        uint64_t reserved_124_127      : 4;
+#endif /* Word 1 - End */
+    } s;
+    /* struct cavm_rfoe_ecpri_psw1_s_s cn9; */
+    /* struct cavm_rfoe_ecpri_psw1_s_s f95mm; */
+    struct cavm_rfoe_ecpri_psw1_s_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t ptp_timestamp         : 64; /**< [ 63:  0] PTP timestamp from CGX when the LMAC's RFOE()_RX_CTRL[RX_PTP_MODE] bit is
@@ -311,8 +438,7 @@ union cavm_rfoe_ecpri_psw1_s
         uint64_t ptype                 : 4;  /**< [123:120] Type of processing applied to packet, as defined by  RFOE_RX_DIR_CTL_PKT_TYPE_E. */
         uint64_t reserved_124_127      : 4;
 #endif /* Word 1 - End */
-    } s;
-    /* struct cavm_rfoe_ecpri_psw1_s_s cn; */
+    } loki;
 };
 
 /**
@@ -326,6 +452,22 @@ union cavm_rfoe_ecpri_seqid_rx_sync_s
     struct cavm_rfoe_ecpri_seqid_rx_sync_s_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t sof_match_value       : 16; /**< [ 31: 16] Value used to determine if SEQ_ID should trigger RX_SYNC. */
+        uint32_t sof_mask              : 16; /**< [ 15:  0] Defines bit for comparison. For each bit:
+                                                                 * 1 - use bit for RX_SYNC comparison
+                                                                 * 0 - ignore bit for RX_SYNC comparison */
+#else /* Word 0 - Little Endian */
+        uint32_t sof_mask              : 16; /**< [ 15:  0] Defines bit for comparison. For each bit:
+                                                                 * 1 - use bit for RX_SYNC comparison
+                                                                 * 0 - ignore bit for RX_SYNC comparison */
+        uint32_t sof_match_value       : 16; /**< [ 31: 16] Value used to determine if SEQ_ID should trigger RX_SYNC. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoe_ecpri_seqid_rx_sync_s_s cn9; */
+    /* struct cavm_rfoe_ecpri_seqid_rx_sync_s_s f95mm; */
+    struct cavm_rfoe_ecpri_seqid_rx_sync_s_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t sof_match_value       : 16; /**< [ 31: 16] Value used to determine if SEQ_ID should trigger RX Sync. */
         uint32_t sof_mask              : 16; /**< [ 15:  0] Defines bit for comparison. For each bit:
                                                                  * 1 - use bit for RX Sync comparison
@@ -336,8 +478,7 @@ union cavm_rfoe_ecpri_seqid_rx_sync_s
                                                                  * 0 - ignore bit for RX Sync comparison */
         uint32_t sof_match_value       : 16; /**< [ 31: 16] Value used to determine if SEQ_ID should trigger RX Sync. */
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rfoe_ecpri_seqid_rx_sync_s_s cn; */
+    } loki;
 };
 
 /**
@@ -506,6 +647,7 @@ union cavm_rfoe_fd_cstm_hdr_s
                                                                  RX - Unused from packet unless header is written. */
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_rfoe_fd_cstm_hdr_s_cnf95xxp2 f95mm; */
     struct cavm_rfoe_fd_cstm_hdr_s_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -948,6 +1090,125 @@ union cavm_rfoe_psw0_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t pswt                  : 2;  /**< [ 63: 62] PSW Type.  Enumerated by RFOE_RX_PSWT_E. */
+        uint64_t lmac_id               : 2;  /**< [ 61: 60] LMAC identifier from MAC that received the packet. */
+        uint64_t orderinfo_status      : 1;  /**< [ 59: 59] Sequence number and timestamp check status:
+                                                                 0 = Failed checks.
+                                                                 1 = Passed checks.
+
+                                                                 Notes:
+                                                                 * CHI ignored.  CHI has no seqnum or timestamp.
+                                                                 * ALT_PKT  ignored.  ALT_PKT has no seqnum or timestamp.
+                                                                 * RoE 0xfd subtype. AND of all segment results. If any segments fail, this will be 0.
+
+                                                                 Internal:
+                                                                 CHI and ALT_PKT types always set [ORDERINFO_STATUS] */
+        uint64_t jd_target_mem         : 1;  /**< [ 58: 58] Job descriptor pointer target memory.
+                                                                 0 = SMEM.
+                                                                 1 = LLC/DRAM.
+                                                                 If RoE subtype=0xfc, there is no job descriptor and this will be 0x0. */
+        uint64_t jd_ptr                : 53; /**< [ 57:  5] Pointer to job descriptor used by this packet/symbol.
+                                                                 * All except RoE subtype=0xfc, job descriptor pointer corresponding to this packet status
+                                                                 * If RoE subtype=0xfc, this will be 0x0. */
+        uint64_t dma_error             : 1;  /**< [  4:  4] DMA or header processing error. Possible errors include:
+                                                                 * Late aperture failure.
+                                                                 * Attempted to write past the end of the buffer.
+                                                                 * RoE length field did not match incoming packet. */
+        uint64_t pkt_err_sts           : 4;  /**< [  3:  0] Packet error status, enumerated by RFOE_RX_PKT_ERR_E.
+                                                                 Internal:
+                                                                 Packet Error Status from x2p err field.  0 = no error detected. Values enumerated in
+                                                                 x2p2_p2x2_defs::x2p2_pkt_err_t */
+#else /* Word 0 - Little Endian */
+        uint64_t pkt_err_sts           : 4;  /**< [  3:  0] Packet error status, enumerated by RFOE_RX_PKT_ERR_E.
+                                                                 Internal:
+                                                                 Packet Error Status from x2p err field.  0 = no error detected. Values enumerated in
+                                                                 x2p2_p2x2_defs::x2p2_pkt_err_t */
+        uint64_t dma_error             : 1;  /**< [  4:  4] DMA or header processing error. Possible errors include:
+                                                                 * Late aperture failure.
+                                                                 * Attempted to write past the end of the buffer.
+                                                                 * RoE length field did not match incoming packet. */
+        uint64_t jd_ptr                : 53; /**< [ 57:  5] Pointer to job descriptor used by this packet/symbol.
+                                                                 * All except RoE subtype=0xfc, job descriptor pointer corresponding to this packet status
+                                                                 * If RoE subtype=0xfc, this will be 0x0. */
+        uint64_t jd_target_mem         : 1;  /**< [ 58: 58] Job descriptor pointer target memory.
+                                                                 0 = SMEM.
+                                                                 1 = LLC/DRAM.
+                                                                 If RoE subtype=0xfc, there is no job descriptor and this will be 0x0. */
+        uint64_t orderinfo_status      : 1;  /**< [ 59: 59] Sequence number and timestamp check status:
+                                                                 0 = Failed checks.
+                                                                 1 = Passed checks.
+
+                                                                 Notes:
+                                                                 * CHI ignored.  CHI has no seqnum or timestamp.
+                                                                 * ALT_PKT  ignored.  ALT_PKT has no seqnum or timestamp.
+                                                                 * RoE 0xfd subtype. AND of all segment results. If any segments fail, this will be 0.
+
+                                                                 Internal:
+                                                                 CHI and ALT_PKT types always set [ORDERINFO_STATUS] */
+        uint64_t lmac_id               : 2;  /**< [ 61: 60] LMAC identifier from MAC that received the packet. */
+        uint64_t pswt                  : 2;  /**< [ 63: 62] PSW Type.  Enumerated by RFOE_RX_PSWT_E. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t rfoe_timestamp        : 32; /**< [127: 96] Timestamp sampled at packet arrival, formatted as
+                                                                 RFOE_TIMESTAMP_S. Sampled at SOP in header processing.
+                                                                 For 0xfd subtype, it is sampled at SOP of the EOS packet. */
+        uint64_t fd_antid              : 8;  /**< [ 95: 88] For RoE subtype=0xfd packets, this is the RFOE_FD_CSTM_HDR_S[ANTENNA]
+                                                                 field from the custom header. For other packets, this field is
+                                                                 reserved.
+
+                                                                 Internal:
+                                                                 - Others: 0. */
+        uint64_t fd_symbol             : 8;  /**< [ 87: 80] For RoE subtype=0xfd packets, this is the RFOE_FD_CSTM_HDR_S[SYMBOL]
+                                                                 field from the custom header. For other packets, this field is
+                                                                 reserved.
+
+                                                                 Internal:
+                                                                 - Others: 0. */
+        uint64_t roe_flowid            : 8;  /**< [ 79: 72] Flowid field extracted from RoE packet header. Undefined for CHI and ALT_PKT
+                                                                 packets.
+
+                                                                 Internal:
+                                                                 - CHI packets: value from RX_DIRECTION_CTL(first EtherType match)[FLOWID].
+                                                                 - ALT_PKT packets: value from RX_DIRECTION_CTL(3)[FLOWID]. */
+        uint64_t roe_subtype           : 8;  /**< [ 71: 64] RoE subtype field. Value is undefined for CHI, ALT_PKT, and Transparent packets.
+                                                                 Internal:
+                                                                 - CHI packets: value will be the upper byte of length field.  Packet byte 14.
+                                                                 - ALT_PKT: value will be the first byte of payload.   Packet byte 14.
+                                                                 - TRANSPARENT: value will be the first byte of payload.   Packet byte 14. */
+#else /* Word 1 - Little Endian */
+        uint64_t roe_subtype           : 8;  /**< [ 71: 64] RoE subtype field. Value is undefined for CHI, ALT_PKT, and Transparent packets.
+                                                                 Internal:
+                                                                 - CHI packets: value will be the upper byte of length field.  Packet byte 14.
+                                                                 - ALT_PKT: value will be the first byte of payload.   Packet byte 14.
+                                                                 - TRANSPARENT: value will be the first byte of payload.   Packet byte 14. */
+        uint64_t roe_flowid            : 8;  /**< [ 79: 72] Flowid field extracted from RoE packet header. Undefined for CHI and ALT_PKT
+                                                                 packets.
+
+                                                                 Internal:
+                                                                 - CHI packets: value from RX_DIRECTION_CTL(first EtherType match)[FLOWID].
+                                                                 - ALT_PKT packets: value from RX_DIRECTION_CTL(3)[FLOWID]. */
+        uint64_t fd_symbol             : 8;  /**< [ 87: 80] For RoE subtype=0xfd packets, this is the RFOE_FD_CSTM_HDR_S[SYMBOL]
+                                                                 field from the custom header. For other packets, this field is
+                                                                 reserved.
+
+                                                                 Internal:
+                                                                 - Others: 0. */
+        uint64_t fd_antid              : 8;  /**< [ 95: 88] For RoE subtype=0xfd packets, this is the RFOE_FD_CSTM_HDR_S[ANTENNA]
+                                                                 field from the custom header. For other packets, this field is
+                                                                 reserved.
+
+                                                                 Internal:
+                                                                 - Others: 0. */
+        uint64_t rfoe_timestamp        : 32; /**< [127: 96] Timestamp sampled at packet arrival, formatted as
+                                                                 RFOE_TIMESTAMP_S. Sampled at SOP in header processing.
+                                                                 For 0xfd subtype, it is sampled at SOP of the EOS packet. */
+#endif /* Word 1 - End */
+    } s;
+    /* struct cavm_rfoe_psw0_s_s cn9; */
+    /* struct cavm_rfoe_psw0_s_s f95mm; */
+    struct cavm_rfoe_psw0_s_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t pswt                  : 2;  /**< [ 63: 62] PSW Type.  Enumerated by RFOE_RX_PSWT_E. */
         uint64_t lmac_id               : 2;  /**< [ 61: 60] CGX LMAC that received the packet. */
         uint64_t orderinfo_status      : 1;  /**< [ 59: 59] Sequence number and timestamp check status:
                                                                  0 = Failed checks.
@@ -1064,8 +1325,7 @@ union cavm_rfoe_psw0_s
                                                                  RFOE_TIMESTAMP_S. Sampled at SOP in header processing.
                                                                  For 0xFD subtype, it is sampled at SOP of the EOS packet. */
 #endif /* Word 1 - End */
-    } s;
-    /* struct cavm_rfoe_psw0_s_s cn; */
+    } loki;
 };
 
 /**
@@ -1078,6 +1338,41 @@ union cavm_rfoe_psw1_s
 {
     uint64_t u[2];
     struct cavm_rfoe_psw1_s_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t ptp_timestamp         : 64; /**< [ 63:  0] PTP if present from CGX.  Undefined if RFOE_RX_CTRL[PTP_MODE(lmac)] == 0.
+                                                                 Internal:
+                                                                 Hardware writes 0 when PTP_MODE is 0 for this LMAC. */
+#else /* Word 0 - Little Endian */
+        uint64_t ptp_timestamp         : 64; /**< [ 63:  0] PTP if present from CGX.  Undefined if RFOE_RX_CTRL[PTP_MODE(lmac)] == 0.
+                                                                 Internal:
+                                                                 Hardware writes 0 when PTP_MODE is 0 for this LMAC. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t reserved_124_127      : 4;
+        uint64_t ptype                 : 4;  /**< [123:120] Type of processing applied to packet, as defined by  RFOE_RX_DIR_CTL_PKT_TYPE_E. */
+        uint64_t reserved_112_119      : 8;
+        uint64_t dec_num_syminc        : 8;  /**< [111:104] Reserved. */
+        uint64_t dec_num_sections      : 8;  /**< [103: 96] Reserved. */
+        uint64_t dec_error             : 8;  /**< [ 95: 88] Reserved. */
+        uint64_t reserved_85_87        : 3;
+        uint64_t eindex                : 5;  /**< [ 84: 80] byte index to MSB of EtherType used for rx_direction_ctl lookup (non-VLAN EtherType) */
+        uint64_t ethertype             : 16; /**< [ 79: 64] EtherType pointed to by EINDEX */
+#else /* Word 1 - Little Endian */
+        uint64_t ethertype             : 16; /**< [ 79: 64] EtherType pointed to by EINDEX */
+        uint64_t eindex                : 5;  /**< [ 84: 80] byte index to MSB of EtherType used for rx_direction_ctl lookup (non-VLAN EtherType) */
+        uint64_t reserved_85_87        : 3;
+        uint64_t dec_error             : 8;  /**< [ 95: 88] Reserved. */
+        uint64_t dec_num_sections      : 8;  /**< [103: 96] Reserved. */
+        uint64_t dec_num_syminc        : 8;  /**< [111:104] Reserved. */
+        uint64_t reserved_112_119      : 8;
+        uint64_t ptype                 : 4;  /**< [123:120] Type of processing applied to packet, as defined by  RFOE_RX_DIR_CTL_PKT_TYPE_E. */
+        uint64_t reserved_124_127      : 4;
+#endif /* Word 1 - End */
+    } s;
+    /* struct cavm_rfoe_psw1_s_s cn9; */
+    /* struct cavm_rfoe_psw1_s_s f95mm; */
+    struct cavm_rfoe_psw1_s_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t ptp_timestamp         : 64; /**< [ 63:  0] PTP timestamp from CGX when the LMAC's RFOE()_RX_CTRL[RX_PTP_MODE] bit is
@@ -1107,8 +1402,7 @@ union cavm_rfoe_psw1_s
         uint64_t ptype                 : 4;  /**< [123:120] Type of processing applied to packet, as defined by  RFOE_RX_DIR_CTL_PKT_TYPE_E. */
         uint64_t reserved_124_127      : 4;
 #endif /* Word 1 - End */
-    } s;
-    /* struct cavm_rfoe_psw1_s_s cn; */
+    } loki;
 };
 
 /**
@@ -1148,6 +1442,35 @@ union cavm_rfoe_tx_pkt_log_s
     struct cavm_rfoe_tx_pkt_log_s_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t ptp_timestamp         : 64; /**< [ 63:  0] This is the sampled value from the PTP timestamp bus, when the packet was
+                                                                 sent from the RFOE block. Packet loging is enabled when
+                                                                 RFOE()_AB()_TX_LMAC_CFG()[TX_PKT_LOG_EN] = 1, */
+#else /* Word 0 - Little Endian */
+        uint64_t ptp_timestamp         : 64; /**< [ 63:  0] This is the sampled value from the PTP timestamp bus, when the packet was
+                                                                 sent from the RFOE block. Packet loging is enabled when
+                                                                 RFOE()_AB()_TX_LMAC_CFG()[TX_PKT_LOG_EN] = 1, */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t reserved_86_127       : 42;
+        uint64_t tx_err                : 1;  /**< [ 85: 85] When set to 1, indicates the packet was sent to CGX with the error bit set. */
+        uint64_t drop                  : 1;  /**< [ 84: 84] When set to 1, indicates the packet was dropped by the RFOE block. */
+        uint64_t jobid                 : 16; /**< [ 83: 68] The AB Job ID for this packet. */
+        uint64_t rfoe_id               : 2;  /**< [ 67: 66] Instance of the RFOE block from which the packet was sent. */
+        uint64_t lmac_id               : 2;  /**< [ 65: 64] LMAC to which the packet was sent. */
+#else /* Word 1 - Little Endian */
+        uint64_t lmac_id               : 2;  /**< [ 65: 64] LMAC to which the packet was sent. */
+        uint64_t rfoe_id               : 2;  /**< [ 67: 66] Instance of the RFOE block from which the packet was sent. */
+        uint64_t jobid                 : 16; /**< [ 83: 68] The AB Job ID for this packet. */
+        uint64_t drop                  : 1;  /**< [ 84: 84] When set to 1, indicates the packet was dropped by the RFOE block. */
+        uint64_t tx_err                : 1;  /**< [ 85: 85] When set to 1, indicates the packet was sent to CGX with the error bit set. */
+        uint64_t reserved_86_127       : 42;
+#endif /* Word 1 - End */
+    } s;
+    /* struct cavm_rfoe_tx_pkt_log_s_s cn9; */
+    /* struct cavm_rfoe_tx_pkt_log_s_s f95mm; */
+    struct cavm_rfoe_tx_pkt_log_s_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t ptp_timestamp         : 64; /**< [ 63:  0] PTP timestamp value sampled when the packet was sent from the RFOE block. */
 #else /* Word 0 - Little Endian */
         uint64_t ptp_timestamp         : 64; /**< [ 63:  0] PTP timestamp value sampled when the packet was sent from the RFOE block. */
@@ -1167,8 +1490,7 @@ union cavm_rfoe_tx_pkt_log_s
         uint64_t tx_err                : 1;  /**< [ 85: 85] When set to 1, indicates the packet was sent to CGX with the error bit set. */
         uint64_t reserved_86_127       : 42;
 #endif /* Word 1 - End */
-    } s;
-    /* struct cavm_rfoe_tx_pkt_log_s_s cn; */
+    } loki;
 };
 
 /**
@@ -1192,11 +1514,13 @@ union cavm_rfoex_active_pc
 };
 typedef union cavm_rfoex_active_pc cavm_rfoex_active_pc_t;
 
-static inline uint64_t CAVM_RFOEX_ACTIVE_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_ACTIVE_PC(unsigned long a)
+static inline uint64_t CAVM_RFOEX_ACTIVE_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_ACTIVE_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01100ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001068ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001068ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_ACTIVE_PC", 1, a, 0, 0, 0, 0, 0);
@@ -1232,11 +1556,13 @@ union cavm_rfoex_eco
 };
 typedef union cavm_rfoex_eco cavm_rfoex_eco_t;
 
-static inline uint64_t CAVM_RFOEX_ECO(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_ECO(unsigned long a)
+static inline uint64_t CAVM_RFOEX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_ECO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d008f0ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100000900ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000900ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_ECO", 1, a, 0, 0, 0, 0, 0);
@@ -1277,11 +1603,13 @@ union cavm_rfoex_rx_apert_ddr_max
 };
 typedef union cavm_rfoex_rx_apert_ddr_max cavm_rfoex_rx_apert_ddr_max_t;
 
-static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MAX(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01838ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001838ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001838ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_DDR_MAX", 1, a, 0, 0, 0, 0, 0);
@@ -1316,11 +1644,13 @@ union cavm_rfoex_rx_apert_ddr_max_ena
 };
 typedef union cavm_rfoex_rx_apert_ddr_max_ena cavm_rfoex_rx_apert_ddr_max_ena_t;
 
-static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MAX_ENA(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MAX_ENA(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MAX_ENA(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MAX_ENA(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01858ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001858ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001858ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_DDR_MAX_ENA", 1, a, 0, 0, 0, 0, 0);
@@ -1361,11 +1691,13 @@ union cavm_rfoex_rx_apert_ddr_min
 };
 typedef union cavm_rfoex_rx_apert_ddr_min cavm_rfoex_rx_apert_ddr_min_t;
 
-static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MIN(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MIN(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MIN(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MIN(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01830ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001830ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001830ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_DDR_MIN", 1, a, 0, 0, 0, 0, 0);
@@ -1400,11 +1732,13 @@ union cavm_rfoex_rx_apert_ddr_min_ena
 };
 typedef union cavm_rfoex_rx_apert_ddr_min_ena cavm_rfoex_rx_apert_ddr_min_ena_t;
 
-static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MIN_ENA(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MIN_ENA(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MIN_ENA(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MIN_ENA(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01850ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001850ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001850ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_DDR_MIN_ENA", 1, a, 0, 0, 0, 0, 0);
@@ -1445,11 +1779,13 @@ union cavm_rfoex_rx_apert_smem_max
 };
 typedef union cavm_rfoex_rx_apert_smem_max cavm_rfoex_rx_apert_smem_max_t;
 
-static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MAX(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01828ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001828ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001828ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_SMEM_MAX", 1, a, 0, 0, 0, 0, 0);
@@ -1484,11 +1820,13 @@ union cavm_rfoex_rx_apert_smem_max_ena
 };
 typedef union cavm_rfoex_rx_apert_smem_max_ena cavm_rfoex_rx_apert_smem_max_ena_t;
 
-static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MAX_ENA(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MAX_ENA(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MAX_ENA(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MAX_ENA(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01848ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001848ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001848ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_SMEM_MAX_ENA", 1, a, 0, 0, 0, 0, 0);
@@ -1529,11 +1867,13 @@ union cavm_rfoex_rx_apert_smem_min
 };
 typedef union cavm_rfoex_rx_apert_smem_min cavm_rfoex_rx_apert_smem_min_t;
 
-static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MIN(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MIN(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MIN(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MIN(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01820ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001820ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001820ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_SMEM_MIN", 1, a, 0, 0, 0, 0, 0);
@@ -1568,11 +1908,13 @@ union cavm_rfoex_rx_apert_smem_min_ena
 };
 typedef union cavm_rfoex_rx_apert_smem_min_ena cavm_rfoex_rx_apert_smem_min_ena_t;
 
-static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MIN_ENA(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MIN_ENA(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MIN_ENA(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MIN_ENA(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01840ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001840ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001840ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_SMEM_MIN_ENA", 1, a, 0, 0, 0, 0, 0);
@@ -1683,15 +2025,18 @@ union cavm_rfoex_rx_cfg
         uint64_t reserved_21_63        : 43;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_rfoex_rx_cfg_cnf95xxp2 f95mm; */
     /* struct cavm_rfoex_rx_cfg_cnf95xxp2 loki; */
 };
 typedef union cavm_rfoex_rx_cfg cavm_rfoex_rx_cfg_t;
 
-static inline uint64_t CAVM_RFOEX_RX_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_CFG(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01008ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001008ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001008ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -1738,11 +2083,13 @@ union cavm_rfoex_rx_cgx_octs_statx
 };
 typedef union cavm_rfoex_rx_cgx_octs_statx cavm_rfoex_rx_cgx_octs_statx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_CGX_OCTS_STATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_CGX_OCTS_STATX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_CGX_OCTS_STATX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_CGX_OCTS_STATX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043d01de0ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100001de0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001de0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_CGX_OCTS_STATX", 2, a, b, 0, 0, 0, 0);
@@ -1787,11 +2134,13 @@ union cavm_rfoex_rx_cgx_pkt_statx
 };
 typedef union cavm_rfoex_rx_cgx_pkt_statx cavm_rfoex_rx_cgx_pkt_statx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_CGX_PKT_STATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_CGX_PKT_STATX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_CGX_PKT_STATX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_CGX_PKT_STATX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043d01dc0ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100001dc0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001dc0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_CGX_PKT_STATX", 2, a, b, 0, 0, 0, 0);
@@ -1866,11 +2215,13 @@ union cavm_rfoex_rx_cgxif_bp_test
 };
 typedef union cavm_rfoex_rx_cgxif_bp_test cavm_rfoex_rx_cgxif_bp_test_t;
 
-static inline uint64_t CAVM_RFOEX_RX_CGXIF_BP_TEST(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_CGXIF_BP_TEST(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_CGXIF_BP_TEST(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_CGXIF_BP_TEST(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01f00ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001f00ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001f00ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_CGXIF_BP_TEST", 1, a, 0, 0, 0, 0, 0);
@@ -1897,7 +2248,7 @@ union cavm_rfoex_rx_ctrl
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_20_63        : 44;
         uint64_t vlan_tpid_err_drop_ena : 4; /**< [ 19: 16](R/W) Per LMAC control of VLAN matching error handling. For error cases that set
-                                                                 RFOE()_RX_ERROR_INT[VLAN_TPID]:
+                                                                 RFOE_RX_ERROR_INT[VLAN_TPID]:
                                                                  *0 - treat packet as an ALT packet.
                                                                  *1 - clean drop packet.  Increment  RFOE()_RX_PKT_ERR_DROP_STAT. */
         uint64_t reserved_8_15         : 8;
@@ -1950,7 +2301,7 @@ union cavm_rfoex_rx_ctrl
                                                                  Packet traffic must be IDLE or disabled before changing the value of [RX_PTP_MODE] */
         uint64_t reserved_8_15         : 8;
         uint64_t vlan_tpid_err_drop_ena : 4; /**< [ 19: 16](R/W) Per LMAC control of VLAN matching error handling. For error cases that set
-                                                                 RFOE()_RX_ERROR_INT[VLAN_TPID]:
+                                                                 RFOE_RX_ERROR_INT[VLAN_TPID]:
                                                                  *0 - treat packet as an ALT packet.
                                                                  *1 - clean drop packet.  Increment  RFOE()_RX_PKT_ERR_DROP_STAT. */
         uint64_t reserved_20_63        : 44;
@@ -1999,15 +2350,81 @@ union cavm_rfoex_rx_ctrl
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
     } cnf95xx;
-    /* struct cavm_rfoex_rx_ctrl_s loki; */
+    /* struct cavm_rfoex_rx_ctrl_s f95mm; */
+    struct cavm_rfoex_rx_ctrl_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_20_63        : 44;
+        uint64_t vlan_tpid_err_drop_ena : 4; /**< [ 19: 16](R/W) Per LMAC control of VLAN matching error handling. For error cases that set
+                                                                 RFOE()_RX_ERROR_INT[VLAN_TPID]:
+                                                                 *0 - treat packet as an ALT packet.
+                                                                 *1 - clean drop packet.  Increment  RFOE()_RX_PKT_ERR_DROP_STAT. */
+        uint64_t reserved_8_15         : 8;
+        uint64_t rx_ptp_mode           : 4;  /**< [  7:  4](R/W) Per LMAC control of RX PTP.
+                                                                 When set, causes RX to interpret first 8B of packet as PTP Timestamp. Normal
+                                                                 packet data starts at byte 8.
+                                                                 RX strips PTP and writes value in PSW1 and Packet loger.
+                                                                 Packet traffic must be IDLE or disabled before changing the value of [RX_PTP_MODE] */
+        uint64_t reserved_2_3          : 2;
+        uint64_t rx_idle               : 1;  /**< [  1:  1](RO/H) When [DATA_PKT_RX_EN] = 0, [RX_IDLE]=1 indicates no in-flight RX
+                                                                 packets and any new RX packets will be discarded. [RX_IDLE] = 1
+                                                                 indicates that it is safe to do a BPHY and/or RFIF reset.
+                                                                 For the reset domains:
+                                                                 * BPHY domain DMA can still be active, but a BPHY reset will reset all these transactions.
+                                                                 * RFIF domain is discarding all traffic.
+                                                                 * Once [RX_IDLE] is set, it will stay set until [DATA_PKT_RX_EN] is set by software.
+                                                                 [RX_IDLE] should be ignored when [DATA_PKT_RX_EN] = 1. */
+        uint64_t data_pkt_rx_en        : 1;  /**< [  0:  0](R/W) Enable RX traffic.  Software must write to 1 to enable RX traffic.
+
+                                                                 When [DATA_PKT_RX_EN] transitions from 1 to 0, RFOE completes any
+                                                                 in-flight RX packets. At the next packet boundary, RFOE will set
+                                                                 [RX_IDLE] and begin discarding any subsequent packets.
+
+                                                                 When [DATA_PKT_RX_EN] transitions from 0 to 1, RFOE will continue to
+                                                                 discard any in-flight packets and begin normal reception at the next
+                                                                 start-of-packet boundary from CGX. */
+#else /* Word 0 - Little Endian */
+        uint64_t data_pkt_rx_en        : 1;  /**< [  0:  0](R/W) Enable RX traffic.  Software must write to 1 to enable RX traffic.
+
+                                                                 When [DATA_PKT_RX_EN] transitions from 1 to 0, RFOE completes any
+                                                                 in-flight RX packets. At the next packet boundary, RFOE will set
+                                                                 [RX_IDLE] and begin discarding any subsequent packets.
+
+                                                                 When [DATA_PKT_RX_EN] transitions from 0 to 1, RFOE will continue to
+                                                                 discard any in-flight packets and begin normal reception at the next
+                                                                 start-of-packet boundary from CGX. */
+        uint64_t rx_idle               : 1;  /**< [  1:  1](RO/H) When [DATA_PKT_RX_EN] = 0, [RX_IDLE]=1 indicates no in-flight RX
+                                                                 packets and any new RX packets will be discarded. [RX_IDLE] = 1
+                                                                 indicates that it is safe to do a BPHY and/or RFIF reset.
+                                                                 For the reset domains:
+                                                                 * BPHY domain DMA can still be active, but a BPHY reset will reset all these transactions.
+                                                                 * RFIF domain is discarding all traffic.
+                                                                 * Once [RX_IDLE] is set, it will stay set until [DATA_PKT_RX_EN] is set by software.
+                                                                 [RX_IDLE] should be ignored when [DATA_PKT_RX_EN] = 1. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t rx_ptp_mode           : 4;  /**< [  7:  4](R/W) Per LMAC control of RX PTP.
+                                                                 When set, causes RX to interpret first 8B of packet as PTP Timestamp. Normal
+                                                                 packet data starts at byte 8.
+                                                                 RX strips PTP and writes value in PSW1 and Packet loger.
+                                                                 Packet traffic must be IDLE or disabled before changing the value of [RX_PTP_MODE] */
+        uint64_t reserved_8_15         : 8;
+        uint64_t vlan_tpid_err_drop_ena : 4; /**< [ 19: 16](R/W) Per LMAC control of VLAN matching error handling. For error cases that set
+                                                                 RFOE()_RX_ERROR_INT[VLAN_TPID]:
+                                                                 *0 - treat packet as an ALT packet.
+                                                                 *1 - clean drop packet.  Increment  RFOE()_RX_PKT_ERR_DROP_STAT. */
+        uint64_t reserved_20_63        : 44;
+#endif /* Word 0 - End */
+    } loki;
 };
 typedef union cavm_rfoex_rx_ctrl cavm_rfoex_rx_ctrl_t;
 
-static inline uint64_t CAVM_RFOEX_RX_CTRL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_CTRL(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_CTRL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_CTRL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01018ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001018ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001018ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_CTRL", 1, a, 0, 0, 0, 0, 0);
@@ -2113,6 +2530,48 @@ union cavm_rfoex_rx_direction_ctlx
         uint64_t reserved_29_63        : 35;
 #endif /* Word 0 - End */
     } cnf95xx;
+    struct cavm_rfoex_rx_direction_ctlx_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_36_63        : 28;
+        uint64_t dma_type              : 4;  /**< [ 35: 32](R/W) Type of packet processing, as enumerated by RFOE_RX_DIR_CTL_PKT_TYPE_E. */
+        uint64_t reserved_29_31        : 3;
+        uint64_t valid                 : 1;  /**< [ 28: 28](R/W) Entry is valid. If [VALID] = 0, the register is ignored, except for the
+                                                                 last register ({b} = 7) which ignores this field. */
+        uint64_t ethertype             : 16; /**< [ 27: 12](R/W) EtherType to match against incoming packet from CGX.
+                                                                 * For the last register ({b} = 7) this field is a don't care and all
+                                                                 EtherTypes match (if they haven't already matched one of the other
+                                                                 registers).
+
+                                                                 EtherType from packet is the EtherType after all VLAN tags. */
+        uint64_t reserved_8_11         : 4;
+        uint64_t flowid                : 8;  /**< [  7:  0](R/W) FlowID for configuration lookup when processing non-RoE packets. Non-RoE:
+                                                                 *[DMA_TYPE] = CHI, or
+                                                                 *[DMA_TYPE] = GENERIC(0..7), or
+                                                                 *When default entry 7 is selected (no EtherType match in entries {0..6}).
+
+                                                                 ROE and ECPRI packets do not use this field. */
+#else /* Word 0 - Little Endian */
+        uint64_t flowid                : 8;  /**< [  7:  0](R/W) FlowID for configuration lookup when processing non-RoE packets. Non-RoE:
+                                                                 *[DMA_TYPE] = CHI, or
+                                                                 *[DMA_TYPE] = GENERIC(0..7), or
+                                                                 *When default entry 7 is selected (no EtherType match in entries {0..6}).
+
+                                                                 ROE and ECPRI packets do not use this field. */
+        uint64_t reserved_8_11         : 4;
+        uint64_t ethertype             : 16; /**< [ 27: 12](R/W) EtherType to match against incoming packet from CGX.
+                                                                 * For the last register ({b} = 7) this field is a don't care and all
+                                                                 EtherTypes match (if they haven't already matched one of the other
+                                                                 registers).
+
+                                                                 EtherType from packet is the EtherType after all VLAN tags. */
+        uint64_t valid                 : 1;  /**< [ 28: 28](R/W) Entry is valid. If [VALID] = 0, the register is ignored, except for the
+                                                                 last register ({b} = 7) which ignores this field. */
+        uint64_t reserved_29_31        : 3;
+        uint64_t dma_type              : 4;  /**< [ 35: 32](R/W) Type of packet processing, as enumerated by RFOE_RX_DIR_CTL_PKT_TYPE_E. */
+        uint64_t reserved_36_63        : 28;
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_rfoex_rx_direction_ctlx_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -2164,11 +2623,13 @@ union cavm_rfoex_rx_direction_ctlx
 };
 typedef union cavm_rfoex_rx_direction_ctlx cavm_rfoex_rx_direction_ctlx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_DIRECTION_CTLX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_DIRECTION_CTLX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_DIRECTION_CTLX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_DIRECTION_CTLX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043d01800ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=7)))
+        return 0x864100001780ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=7)))
         return 0x864100001780ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     __cavm_csr_fatal("RFOEX_RX_DIRECTION_CTLX", 2, a, b, 0, 0, 0, 0);
@@ -2209,11 +2670,13 @@ union cavm_rfoex_rx_dma_complete_statx
 };
 typedef union cavm_rfoex_rx_dma_complete_statx cavm_rfoex_rx_dma_complete_statx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_DMA_COMPLETE_STATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_DMA_COMPLETE_STATX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_DMA_COMPLETE_STATX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_DMA_COMPLETE_STATX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043d01da0ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100001da0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001da0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_DMA_COMPLETE_STATX", 2, a, b, 0, 0, 0, 0);
@@ -2288,11 +2751,13 @@ union cavm_rfoex_rx_dma_jca_bp_test
 };
 typedef union cavm_rfoex_rx_dma_jca_bp_test cavm_rfoex_rx_dma_jca_bp_test_t;
 
-static inline uint64_t CAVM_RFOEX_RX_DMA_JCA_BP_TEST(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_DMA_JCA_BP_TEST(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_DMA_JCA_BP_TEST(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_DMA_JCA_BP_TEST(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01f08ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001f08ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001f08ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_DMA_JCA_BP_TEST", 1, a, 0, 0, 0, 0, 0);
@@ -2331,11 +2796,13 @@ union cavm_rfoex_rx_dma_octs_statx
 };
 typedef union cavm_rfoex_rx_dma_octs_statx cavm_rfoex_rx_dma_octs_statx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_DMA_OCTS_STATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_DMA_OCTS_STATX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_DMA_OCTS_STATX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_DMA_OCTS_STATX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043d01d80ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100001d80ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001d80ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_DMA_OCTS_STATX", 2, a, b, 0, 0, 0, 0);
@@ -2370,11 +2837,13 @@ union cavm_rfoex_rx_dma_pkt_statx
 };
 typedef union cavm_rfoex_rx_dma_pkt_statx cavm_rfoex_rx_dma_pkt_statx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_DMA_PKT_STATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_DMA_PKT_STATX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_DMA_PKT_STATX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_DMA_PKT_STATX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043d01d60ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100001d60ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001d60ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_DMA_PKT_STATX", 2, a, b, 0, 0, 0, 0);
@@ -2396,6 +2865,66 @@ union cavm_rfoex_rx_ecpri_cfgx
 {
     uint64_t u;
     struct cavm_rfoex_rx_ecpri_cfgx_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_49_63        : 15;
+        uint64_t msg_type_enable       : 17; /**< [ 48: 32](R/W) Enable for eCPRI message types. Similar to RFOE()_RX_IND_FT()_CFG[ENABLE]:
+                                                                 _ bits \<15..0\> = enable for ECPRI_HDR_S[MSG_TYPE] values 15..0.
+                                                                 _ bit \<16\> = enable for ECPRI_HDR_S[MSG_TYPE] values 16 and above.
+
+                                                                 For each bit:
+                                                                 0 = Drop packets and count as RFOE()_RX_IND_FT()_CFG[ENABLE] drop.
+                                                                 1 = Process packets. */
+        uint64_t pcid_base_mask        : 16; /**< [ 31: 16](R/W) Used for [PCID_FLOWID_MODE]:
+
+                                                                 * RFOE_ECPRI_PCID_FLOWID_MODE_E::BASE  - Calculate FLOW_ID as
+                                                                 FLOW_ID=(ECPRI_HDR_S[PC_ID]-[PCID_BASE_MASK]) & 0x3ff.
+
+                                                                 * RFOE_ECPRI_PCID_FLOWID_MODE_E::HASH  - Calculate FLOW_ID as
+                                                                 FLOW_ID=hash(ECPRI_HDR_S[PC_ID] & [PCID_BASE_MASK]).
+
+                                                                 * RFOE_ECPRI_PCID_FLOWID_MODE_E::SHIFT - Calculate FLOW_ID as
+                                                                 FLOW_ID=((ECPRI_HDR_S[PC_ID] & [PCID_BASE_MASK]) \>\>  [PCID_MSK_SHFT]) &
+                                                                 0x3ff. */
+        uint64_t reserved_15           : 1;
+        uint64_t pcid_msk_shft         : 3;  /**< [ 14: 12](R/W) Define base for PCID-\>FLOWID mapping when [PCID_FLOWID_MODE] =
+                                                                 RFOE_ECPRI_PCID_FLOWID_MODE_E::SHIFT.
+
+                                                                 FLOW_ID=((ECPRI_HDR_S[PC_ID] & [PCID_BASE_MASK]) \>\>  [PCID_MSK_SHFT]) & 0x3ff. */
+        uint64_t reserved_2_11         : 10;
+        uint64_t pcid_flowid_mode      : 2;  /**< [  1:  0](R/W) Define PCID-\>FLOWID mapping, as enumerated by RFOE_ECPRI_PCID_FLOWID_MODE_E. */
+#else /* Word 0 - Little Endian */
+        uint64_t pcid_flowid_mode      : 2;  /**< [  1:  0](R/W) Define PCID-\>FLOWID mapping, as enumerated by RFOE_ECPRI_PCID_FLOWID_MODE_E. */
+        uint64_t reserved_2_11         : 10;
+        uint64_t pcid_msk_shft         : 3;  /**< [ 14: 12](R/W) Define base for PCID-\>FLOWID mapping when [PCID_FLOWID_MODE] =
+                                                                 RFOE_ECPRI_PCID_FLOWID_MODE_E::SHIFT.
+
+                                                                 FLOW_ID=((ECPRI_HDR_S[PC_ID] & [PCID_BASE_MASK]) \>\>  [PCID_MSK_SHFT]) & 0x3ff. */
+        uint64_t reserved_15           : 1;
+        uint64_t pcid_base_mask        : 16; /**< [ 31: 16](R/W) Used for [PCID_FLOWID_MODE]:
+
+                                                                 * RFOE_ECPRI_PCID_FLOWID_MODE_E::BASE  - Calculate FLOW_ID as
+                                                                 FLOW_ID=(ECPRI_HDR_S[PC_ID]-[PCID_BASE_MASK]) & 0x3ff.
+
+                                                                 * RFOE_ECPRI_PCID_FLOWID_MODE_E::HASH  - Calculate FLOW_ID as
+                                                                 FLOW_ID=hash(ECPRI_HDR_S[PC_ID] & [PCID_BASE_MASK]).
+
+                                                                 * RFOE_ECPRI_PCID_FLOWID_MODE_E::SHIFT - Calculate FLOW_ID as
+                                                                 FLOW_ID=((ECPRI_HDR_S[PC_ID] & [PCID_BASE_MASK]) \>\>  [PCID_MSK_SHFT]) &
+                                                                 0x3ff. */
+        uint64_t msg_type_enable       : 17; /**< [ 48: 32](R/W) Enable for eCPRI message types. Similar to RFOE()_RX_IND_FT()_CFG[ENABLE]:
+                                                                 _ bits \<15..0\> = enable for ECPRI_HDR_S[MSG_TYPE] values 15..0.
+                                                                 _ bit \<16\> = enable for ECPRI_HDR_S[MSG_TYPE] values 16 and above.
+
+                                                                 For each bit:
+                                                                 0 = Drop packets and count as RFOE()_RX_IND_FT()_CFG[ENABLE] drop.
+                                                                 1 = Process packets. */
+        uint64_t reserved_49_63        : 15;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_rx_ecpri_cfgx_s cn9; */
+    /* struct cavm_rfoex_rx_ecpri_cfgx_s f95mm; */
+    struct cavm_rfoex_rx_ecpri_cfgx_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_49_63        : 15;
@@ -2450,14 +2979,15 @@ union cavm_rfoex_rx_ecpri_cfgx
                                                                  1 = Process packets. */
         uint64_t reserved_49_63        : 15;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rfoex_rx_ecpri_cfgx_s cn; */
+    } loki;
 };
 typedef union cavm_rfoex_rx_ecpri_cfgx cavm_rfoex_rx_ecpri_cfgx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ECPRI_CFGX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ECPRI_CFGX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_ECPRI_CFGX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ECPRI_CFGX(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x8641000018c0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x8641000018c0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ECPRI_CFGX", 2, a, b, 0, 0, 0, 0);
@@ -2499,9 +3029,11 @@ union cavm_rfoex_rx_ecpri_check_enax
 };
 typedef union cavm_rfoex_rx_ecpri_check_enax cavm_rfoex_rx_ecpri_check_enax_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ECPRI_CHECK_ENAX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ECPRI_CHECK_ENAX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_ECPRI_CHECK_ENAX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ECPRI_CHECK_ENAX(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100001e60ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001e60ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ECPRI_CHECK_ENAX", 2, a, b, 0, 0, 0, 0);
@@ -2544,9 +3076,11 @@ union cavm_rfoex_rx_ecpri_err_drop_statx
 };
 typedef union cavm_rfoex_rx_ecpri_err_drop_statx cavm_rfoex_rx_ecpri_err_drop_statx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ECPRI_ERR_DROP_STATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ECPRI_ERR_DROP_STATX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_ECPRI_ERR_DROP_STATX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ECPRI_ERR_DROP_STATX(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100001e00ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001e00ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ECPRI_ERR_DROP_STATX", 2, a, b, 0, 0, 0, 0);
@@ -2584,9 +3118,11 @@ union cavm_rfoex_rx_ecpri_pc_id_apertx
 };
 typedef union cavm_rfoex_rx_ecpri_pc_id_apertx cavm_rfoex_rx_ecpri_pc_id_apertx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ECPRI_PC_ID_APERTX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ECPRI_PC_ID_APERTX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_ECPRI_PC_ID_APERTX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ECPRI_PC_ID_APERTX(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100001860ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001860ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ECPRI_PC_ID_APERTX", 2, a, b, 0, 0, 0, 0);
@@ -2611,16 +3147,16 @@ union cavm_rfoex_rx_error_ena_w1c
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_16_63        : 48;
-        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1C/H) Reads or clears enable for RFOE(0..2)_RX_ERROR_INT[VLAN_TPID]. */
-        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for RFOE(0..2)_RX_ERROR_INT[ECPRI_HDR]. */
-        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for RFOE(0..2)_RX_ERROR_INT[PKT_LEN_RANGE]. */
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[VLAN_TPID]. */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[ECPRI_HDR]. */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[PKT_LEN_RANGE]. */
         uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for RFOE(0..1)_RX_ERROR_INT[WRRSP_NFAT].
                                                                  Internal:
                                                                  Should never occur. Including for completeness */
         uint64_t wrrsp_fat             : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for RFOE(0..1)_RX_ERROR_INT[WRRSP_FAT]. */
         uint64_t fc_psm_opcode         : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for RFOE(0..1)_RX_ERROR_INT[FC_PSM_OPCODE]. */
         uint64_t malformed_x2p_pkt     : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for RFOE(0..1)_RX_ERROR_INT[MALFORMED_X2P_PKT]. */
-        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for RFOE(0..2)_RX_ERROR_INT[IDX_RANGE]. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[IDX_RANGE]. */
         uint64_t fd_malformed          : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for RFOE(0..1)_RX_ERROR_INT[FD_MALFORMED]. */
         uint64_t fd_state              : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for RFOE(0..1)_RX_ERROR_INT[FD_STATE]. */
         uint64_t nxm                   : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for RFOE(0..1)_RX_ERROR_INT[NXM]. */
@@ -2646,16 +3182,16 @@ union cavm_rfoex_rx_error_ena_w1c
         uint64_t nxm                   : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for RFOE(0..1)_RX_ERROR_INT[NXM]. */
         uint64_t fd_state              : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for RFOE(0..1)_RX_ERROR_INT[FD_STATE]. */
         uint64_t fd_malformed          : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for RFOE(0..1)_RX_ERROR_INT[FD_MALFORMED]. */
-        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for RFOE(0..2)_RX_ERROR_INT[IDX_RANGE]. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[IDX_RANGE]. */
         uint64_t malformed_x2p_pkt     : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for RFOE(0..1)_RX_ERROR_INT[MALFORMED_X2P_PKT]. */
         uint64_t fc_psm_opcode         : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for RFOE(0..1)_RX_ERROR_INT[FC_PSM_OPCODE]. */
         uint64_t wrrsp_fat             : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for RFOE(0..1)_RX_ERROR_INT[WRRSP_FAT]. */
         uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for RFOE(0..1)_RX_ERROR_INT[WRRSP_NFAT].
                                                                  Internal:
                                                                  Should never occur. Including for completeness */
-        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for RFOE(0..2)_RX_ERROR_INT[PKT_LEN_RANGE]. */
-        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for RFOE(0..2)_RX_ERROR_INT[ECPRI_HDR]. */
-        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1C/H) Reads or clears enable for RFOE(0..2)_RX_ERROR_INT[VLAN_TPID]. */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[PKT_LEN_RANGE]. */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[ECPRI_HDR]. */
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[VLAN_TPID]. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } s;
@@ -2706,6 +3242,58 @@ union cavm_rfoex_rx_error_ena_w1c
         uint64_t reserved_13_63        : 51;
 #endif /* Word 0 - End */
     } cnf95xx;
+    struct cavm_rfoex_rx_error_ena_w1c_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_16_63        : 48;
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[VLAN_TPID]. */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[ECPRI_HDR]. */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[PKT_LEN_RANGE]. */
+        uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[WRRSP_NFAT].
+                                                                 Internal:
+                                                                 Should never occur. Including for completeness */
+        uint64_t wrrsp_fat             : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[WRRSP_FAT]. */
+        uint64_t fc_psm_opcode         : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[FC_PSM_OPCODE]. */
+        uint64_t malformed_x2p_pkt     : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[MALFORMED_X2P_PKT]. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[IDX_RANGE]. */
+        uint64_t fd_malformed          : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[FD_MALFORMED]. */
+        uint64_t fd_state              : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[FD_STATE]. */
+        uint64_t nxm                   : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[NXM]. */
+        uint64_t clean_aperture        : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[CLEAN_APERTURE]. */
+        uint64_t dirty_aperture        : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[DIRTY_APERTURE]. */
+        uint64_t buf_overflow          : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[BUF_OVERFLOW]. */
+        uint64_t len_miscomp           : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[LEN_MISCOMP].
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. */
+        uint64_t len_abnorm            : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[LEN_ABNORM].
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. P1914 note--  RoE payload must be \>= 64B. */
+#else /* Word 0 - Little Endian */
+        uint64_t len_abnorm            : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[LEN_ABNORM].
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. P1914 note--  RoE payload must be \>= 64B. */
+        uint64_t len_miscomp           : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[LEN_MISCOMP].
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. */
+        uint64_t buf_overflow          : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[BUF_OVERFLOW]. */
+        uint64_t dirty_aperture        : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[DIRTY_APERTURE]. */
+        uint64_t clean_aperture        : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[CLEAN_APERTURE]. */
+        uint64_t nxm                   : 1;  /**< [  5:  5](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[NXM]. */
+        uint64_t fd_state              : 1;  /**< [  6:  6](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[FD_STATE]. */
+        uint64_t fd_malformed          : 1;  /**< [  7:  7](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[FD_MALFORMED]. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[IDX_RANGE]. */
+        uint64_t malformed_x2p_pkt     : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[MALFORMED_X2P_PKT]. */
+        uint64_t fc_psm_opcode         : 1;  /**< [ 10: 10](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[FC_PSM_OPCODE]. */
+        uint64_t wrrsp_fat             : 1;  /**< [ 11: 11](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[WRRSP_FAT]. */
+        uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[WRRSP_NFAT].
+                                                                 Internal:
+                                                                 Should never occur. Including for completeness */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[PKT_LEN_RANGE]. */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[ECPRI_HDR]. */
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ERROR_INT[VLAN_TPID]. */
+        uint64_t reserved_16_63        : 48;
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_rfoex_rx_error_ena_w1c_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -2761,11 +3349,13 @@ union cavm_rfoex_rx_error_ena_w1c
 };
 typedef union cavm_rfoex_rx_error_ena_w1c cavm_rfoex_rx_error_ena_w1c_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ERROR_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ERROR_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_ERROR_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ERROR_ENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01ea0ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001ea0ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001ea0ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ERROR_ENA_W1C", 1, a, 0, 0, 0, 0, 0);
@@ -2790,16 +3380,16 @@ union cavm_rfoex_rx_error_ena_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_16_63        : 48;
-        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets enable for RFOE(0..2)_RX_ERROR_INT[VLAN_TPID]. */
-        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for RFOE(0..2)_RX_ERROR_INT[ECPRI_HDR]. */
-        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for RFOE(0..2)_RX_ERROR_INT[PKT_LEN_RANGE]. */
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[VLAN_TPID]. */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[ECPRI_HDR]. */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[PKT_LEN_RANGE]. */
         uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for RFOE(0..1)_RX_ERROR_INT[WRRSP_NFAT].
                                                                  Internal:
                                                                  Should never occur. Including for completeness */
         uint64_t wrrsp_fat             : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for RFOE(0..1)_RX_ERROR_INT[WRRSP_FAT]. */
         uint64_t fc_psm_opcode         : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for RFOE(0..1)_RX_ERROR_INT[FC_PSM_OPCODE]. */
         uint64_t malformed_x2p_pkt     : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for RFOE(0..1)_RX_ERROR_INT[MALFORMED_X2P_PKT]. */
-        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for RFOE(0..2)_RX_ERROR_INT[IDX_RANGE]. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[IDX_RANGE]. */
         uint64_t fd_malformed          : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for RFOE(0..1)_RX_ERROR_INT[FD_MALFORMED]. */
         uint64_t fd_state              : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for RFOE(0..1)_RX_ERROR_INT[FD_STATE]. */
         uint64_t nxm                   : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for RFOE(0..1)_RX_ERROR_INT[NXM]. */
@@ -2825,16 +3415,16 @@ union cavm_rfoex_rx_error_ena_w1s
         uint64_t nxm                   : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for RFOE(0..1)_RX_ERROR_INT[NXM]. */
         uint64_t fd_state              : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for RFOE(0..1)_RX_ERROR_INT[FD_STATE]. */
         uint64_t fd_malformed          : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for RFOE(0..1)_RX_ERROR_INT[FD_MALFORMED]. */
-        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for RFOE(0..2)_RX_ERROR_INT[IDX_RANGE]. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[IDX_RANGE]. */
         uint64_t malformed_x2p_pkt     : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for RFOE(0..1)_RX_ERROR_INT[MALFORMED_X2P_PKT]. */
         uint64_t fc_psm_opcode         : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for RFOE(0..1)_RX_ERROR_INT[FC_PSM_OPCODE]. */
         uint64_t wrrsp_fat             : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for RFOE(0..1)_RX_ERROR_INT[WRRSP_FAT]. */
         uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for RFOE(0..1)_RX_ERROR_INT[WRRSP_NFAT].
                                                                  Internal:
                                                                  Should never occur. Including for completeness */
-        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for RFOE(0..2)_RX_ERROR_INT[PKT_LEN_RANGE]. */
-        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for RFOE(0..2)_RX_ERROR_INT[ECPRI_HDR]. */
-        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets enable for RFOE(0..2)_RX_ERROR_INT[VLAN_TPID]. */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[PKT_LEN_RANGE]. */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[ECPRI_HDR]. */
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[VLAN_TPID]. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } s;
@@ -2885,6 +3475,58 @@ union cavm_rfoex_rx_error_ena_w1s
         uint64_t reserved_13_63        : 51;
 #endif /* Word 0 - End */
     } cnf95xx;
+    struct cavm_rfoex_rx_error_ena_w1s_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_16_63        : 48;
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[VLAN_TPID]. */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[ECPRI_HDR]. */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[PKT_LEN_RANGE]. */
+        uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[WRRSP_NFAT].
+                                                                 Internal:
+                                                                 Should never occur. Including for completeness */
+        uint64_t wrrsp_fat             : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[WRRSP_FAT]. */
+        uint64_t fc_psm_opcode         : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[FC_PSM_OPCODE]. */
+        uint64_t malformed_x2p_pkt     : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[MALFORMED_X2P_PKT]. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[IDX_RANGE]. */
+        uint64_t fd_malformed          : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[FD_MALFORMED]. */
+        uint64_t fd_state              : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[FD_STATE]. */
+        uint64_t nxm                   : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[NXM]. */
+        uint64_t clean_aperture        : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[CLEAN_APERTURE]. */
+        uint64_t dirty_aperture        : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[DIRTY_APERTURE]. */
+        uint64_t buf_overflow          : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[BUF_OVERFLOW]. */
+        uint64_t len_miscomp           : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[LEN_MISCOMP].
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. */
+        uint64_t len_abnorm            : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[LEN_ABNORM].
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. P1914 note--  RoE payload must be \>= 64B. */
+#else /* Word 0 - Little Endian */
+        uint64_t len_abnorm            : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[LEN_ABNORM].
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. P1914 note--  RoE payload must be \>= 64B. */
+        uint64_t len_miscomp           : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[LEN_MISCOMP].
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. */
+        uint64_t buf_overflow          : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[BUF_OVERFLOW]. */
+        uint64_t dirty_aperture        : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[DIRTY_APERTURE]. */
+        uint64_t clean_aperture        : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[CLEAN_APERTURE]. */
+        uint64_t nxm                   : 1;  /**< [  5:  5](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[NXM]. */
+        uint64_t fd_state              : 1;  /**< [  6:  6](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[FD_STATE]. */
+        uint64_t fd_malformed          : 1;  /**< [  7:  7](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[FD_MALFORMED]. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[IDX_RANGE]. */
+        uint64_t malformed_x2p_pkt     : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[MALFORMED_X2P_PKT]. */
+        uint64_t fc_psm_opcode         : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[FC_PSM_OPCODE]. */
+        uint64_t wrrsp_fat             : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[WRRSP_FAT]. */
+        uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[WRRSP_NFAT].
+                                                                 Internal:
+                                                                 Should never occur. Including for completeness */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[PKT_LEN_RANGE]. */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[ECPRI_HDR]. */
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ERROR_INT[VLAN_TPID]. */
+        uint64_t reserved_16_63        : 48;
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_rfoex_rx_error_ena_w1s_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -2940,11 +3582,13 @@ union cavm_rfoex_rx_error_ena_w1s
 };
 typedef union cavm_rfoex_rx_error_ena_w1s cavm_rfoex_rx_error_ena_w1s_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ERROR_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ERROR_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_ERROR_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ERROR_ENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01e98ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001e98ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001e98ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ERROR_ENA_W1S", 1, a, 0, 0, 0, 0, 0);
@@ -2968,6 +3612,78 @@ union cavm_rfoex_rx_error_infox
 {
     uint64_t u;
     struct cavm_rfoex_rx_error_infox_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_60_63        : 4;
+        uint64_t hdr_err_type          : 4;  /**< [ 59: 56](RO/H) Header error type for RFOE()_RX_ERROR_INT[ECPRI_HDR].  Enumerated by
+                                                                 RFOE_ECPRI_HDR_ERR_TYPE_E.  Value will be NONE for all errors other than
+                                                                 RFOE()_RX_ERROR_INT[ECPRI_HDR].
+                                                                 Will be 0 for RFOE()_RX_ERROR_INT[NXM,WRRSP_FAT,WRRSP_NFAT,LEN_ABNORM, MALFORMED_X2P_PKT]. */
+        uint64_t reserved_51_55        : 5;
+        uint64_t logger                : 1;  /**< [ 50: 50](RO/H) Logger request caused the response error.
+                                                                 For RFOE()_RX_ERROR_INT[NXM], RFOE()_RX_ERROR_INT[WRRSP_FAT], or
+                                                                 RFOE()_RX_ERROR_INT[WRRSP_NFAT]. Will be 0 for all other errors. */
+        uint64_t lmac_id               : 2;  /**< [ 49: 48](RO/H) LMAC_ID of packet that set RFOE()_RX_ERROR_INT bit {b}. */
+        uint64_t reserved_42_47        : 6;
+        uint64_t flow_id               : 10; /**< [ 41: 32](RO/H) FLOW_ID of packet that set RFOE()_RX_ERROR_INT bit {b}.  Will be 0 for
+                                                                 RFOE()_RX_ERROR_INT[NXM,WRRSP_FAT,WRRSP_NFAT,LEN_ABNORM, MALFORMED_X2P_PKT].
+                                                                 *[Dir_CTL_TYPE] == eCPRI && [MSG_TYPE]==0 - Result of FLOW_ID calculation.
+                                                                 *[DIR_CTL_TYPE] == eCPRI && [MSG_TYPE]!=0 - 0.
+                                                                 *[DIR_CTL_TYPE] == RoE                    - FLOW_ID field from RoE header.   8b wide.
+                                                                 *[DIR_CTL_TYPE] == CHI or ALT or GENERIC* - FLOW_ID from RFOE()_RX_DIRECTION_CTL(). */
+        uint64_t reserved_28_31        : 4;
+        uint64_t dir_ctl_type          : 4;  /**< [ 27: 24](RO/H) Type of packet as defined by RFOE_RX_DIR_CTL_PKT_TYPE_E. Will be 0 for
+                                                                 RFOE()_RX_ERROR_INT[NXM,WRRSP_FAT,WRRSP_NFAT,LEN_ABNORM, MALFORMED_X2P_PKT]. */
+        uint64_t msg_type              : 8;  /**< [ 23: 16](RO/H) eCPRI Message Type or RoE subtype.
+                                                                 *[DIR_CTL_TYPE] == eCPRI -  Message Type for first error that set
+                                                                 RFOE()_RX_ERROR_INT bit {b}.
+                                                                 *[DIR_CTL_TYPE] == RoE - RoE subtype for first error that set
+                                                                 RFOE()_RX_ERROR_INT bit {b}.
+                                                                 *Field will be 0 for other [DIR_CTL_TYPE] types or
+                                                                 RFOE()_RX_ERROR_INT[NXM,WRRSP_FAT,WRRSP_NFAT, LEN_ABNORM, MALFORMED_X2P_PKT]. */
+        uint64_t ecpri_id              : 16; /**< [ 15:  0](RO/H) PC_ID or RTC_ID. First two bytes of ECPRI payload, or alternatively, Ecpri packet bytes {4,5}
+                                                                 *Dir_CTL_TYPE == eCPRI PC_ID/RTC_ID for first error that set
+                                                                 RFOE()_RX_ERROR_INT bit {b}.
+                                                                 *Field will be 0 for non-eCPRI packet types or
+                                                                 RFOE()_RX_ERROR_INT[NXM,WRRSP_FAT,WRRSP_NFAT, LEN_ABNORM, MALFORMED_X2P_PKT]. */
+#else /* Word 0 - Little Endian */
+        uint64_t ecpri_id              : 16; /**< [ 15:  0](RO/H) PC_ID or RTC_ID. First two bytes of ECPRI payload, or alternatively, Ecpri packet bytes {4,5}
+                                                                 *Dir_CTL_TYPE == eCPRI PC_ID/RTC_ID for first error that set
+                                                                 RFOE()_RX_ERROR_INT bit {b}.
+                                                                 *Field will be 0 for non-eCPRI packet types or
+                                                                 RFOE()_RX_ERROR_INT[NXM,WRRSP_FAT,WRRSP_NFAT, LEN_ABNORM, MALFORMED_X2P_PKT]. */
+        uint64_t msg_type              : 8;  /**< [ 23: 16](RO/H) eCPRI Message Type or RoE subtype.
+                                                                 *[DIR_CTL_TYPE] == eCPRI -  Message Type for first error that set
+                                                                 RFOE()_RX_ERROR_INT bit {b}.
+                                                                 *[DIR_CTL_TYPE] == RoE - RoE subtype for first error that set
+                                                                 RFOE()_RX_ERROR_INT bit {b}.
+                                                                 *Field will be 0 for other [DIR_CTL_TYPE] types or
+                                                                 RFOE()_RX_ERROR_INT[NXM,WRRSP_FAT,WRRSP_NFAT, LEN_ABNORM, MALFORMED_X2P_PKT]. */
+        uint64_t dir_ctl_type          : 4;  /**< [ 27: 24](RO/H) Type of packet as defined by RFOE_RX_DIR_CTL_PKT_TYPE_E. Will be 0 for
+                                                                 RFOE()_RX_ERROR_INT[NXM,WRRSP_FAT,WRRSP_NFAT,LEN_ABNORM, MALFORMED_X2P_PKT]. */
+        uint64_t reserved_28_31        : 4;
+        uint64_t flow_id               : 10; /**< [ 41: 32](RO/H) FLOW_ID of packet that set RFOE()_RX_ERROR_INT bit {b}.  Will be 0 for
+                                                                 RFOE()_RX_ERROR_INT[NXM,WRRSP_FAT,WRRSP_NFAT,LEN_ABNORM, MALFORMED_X2P_PKT].
+                                                                 *[Dir_CTL_TYPE] == eCPRI && [MSG_TYPE]==0 - Result of FLOW_ID calculation.
+                                                                 *[DIR_CTL_TYPE] == eCPRI && [MSG_TYPE]!=0 - 0.
+                                                                 *[DIR_CTL_TYPE] == RoE                    - FLOW_ID field from RoE header.   8b wide.
+                                                                 *[DIR_CTL_TYPE] == CHI or ALT or GENERIC* - FLOW_ID from RFOE()_RX_DIRECTION_CTL(). */
+        uint64_t reserved_42_47        : 6;
+        uint64_t lmac_id               : 2;  /**< [ 49: 48](RO/H) LMAC_ID of packet that set RFOE()_RX_ERROR_INT bit {b}. */
+        uint64_t logger                : 1;  /**< [ 50: 50](RO/H) Logger request caused the response error.
+                                                                 For RFOE()_RX_ERROR_INT[NXM], RFOE()_RX_ERROR_INT[WRRSP_FAT], or
+                                                                 RFOE()_RX_ERROR_INT[WRRSP_NFAT]. Will be 0 for all other errors. */
+        uint64_t reserved_51_55        : 5;
+        uint64_t hdr_err_type          : 4;  /**< [ 59: 56](RO/H) Header error type for RFOE()_RX_ERROR_INT[ECPRI_HDR].  Enumerated by
+                                                                 RFOE_ECPRI_HDR_ERR_TYPE_E.  Value will be NONE for all errors other than
+                                                                 RFOE()_RX_ERROR_INT[ECPRI_HDR].
+                                                                 Will be 0 for RFOE()_RX_ERROR_INT[NXM,WRRSP_FAT,WRRSP_NFAT,LEN_ABNORM, MALFORMED_X2P_PKT]. */
+        uint64_t reserved_60_63        : 4;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_rx_error_infox_s cn9; */
+    /* struct cavm_rfoex_rx_error_infox_s f95mm; */
+    struct cavm_rfoex_rx_error_infox_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_60_63        : 4;
@@ -3040,14 +3756,15 @@ union cavm_rfoex_rx_error_infox
                                                                  Will be 0 for RFOE()_RX_ERROR_INT[NXM,WRRSP_FAT,WRRSP_NFAT,LEN_ABNORM, MALFORMED_X2P_PKT]. */
         uint64_t reserved_60_63        : 4;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rfoex_rx_error_infox_s cn; */
+    } loki;
 };
 typedef union cavm_rfoex_rx_error_infox cavm_rfoex_rx_error_infox_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ERROR_INFOX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ERROR_INFOX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_ERROR_INFOX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ERROR_INFOX(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
+        return 0x864100001f80ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001f80ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_ERROR_INFOX", 2, a, b, 0, 0, 0, 0);
@@ -3108,8 +3825,8 @@ union cavm_rfoex_rx_error_info0
 };
 typedef union cavm_rfoex_rx_error_info0 cavm_rfoex_rx_error_info0_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ERROR_INFO0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ERROR_INFO0(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_ERROR_INFO0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ERROR_INFO0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01ec0ll + 0x80000ll * ((a) & 0x1);
@@ -3199,8 +3916,8 @@ union cavm_rfoex_rx_error_info1
 };
 typedef union cavm_rfoex_rx_error_info1 cavm_rfoex_rx_error_info1_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ERROR_INFO1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ERROR_INFO1(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_ERROR_INFO1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ERROR_INFO1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01ec8ll + 0x80000ll * ((a) & 0x1);
@@ -3233,15 +3950,12 @@ union cavm_rfoex_rx_error_int
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_16_63        : 48;
-        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1C/H) Unsupported VLAN TPID match. Only support no VLAN tag, VLAN0 only tag,
-                                                                 VLAN1,VLAN0 tag combinations. Packet is treated as an ALT packet. */
-        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1C/H) Indicates an error in one or more of the following fields in the eCPRI header:
-                                                                 _ ECPRI_HDR_S[CONCATENATION].
-                                                                 _ ECPRI_HDR_S[VER].
-                                                                 _ ECPRI_HDR_S[PC_ID].
-                                                                 _ ECPRI_HDR_S[MSG_TYPE]. */
-        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1C/H) Packet length range violation. Incomine Ethernet packet length outside of
-                                                                 range defined by RFOE()_RX_PKT_LEN_CFG(). */
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1C/H) Unsupported VLAN TPID match.  Only support no VLAN tag, VLAN0 only tag,
+                                                                 VLAN1,VLAN0 tag combinations. Packet is either dropped or treated as an ALT
+                                                                 packet, depending on TBD CSR field. */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1C/H) eCPRI Concatenation, Version, PC_ID, message type Errors. */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1C/H) PKT_LEN range violation. Incomine Ethernet packet length outside of range defined by
+                                                                 RFOE()_RX_PKT_LEN_CFG(). */
         uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1C/H) Write response returned a non-fatal non-NXM error.
                                                                  Internal:
                                                                  Should never occur. Including for completeness */
@@ -3253,10 +3967,9 @@ union cavm_rfoex_rx_error_int
                                                                  *Missing SOP: a flit arrived that was not preceded by SOP.
                                                                  *Unexpected SOP: an SOP flit received while still processing a packet (no EOP for previous packet).
                                                                  Something bad happened in receive path to cause bad packets. */
-        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1C/H) MBT index or flow index range violation.
-                                                                 * RoE Packet Outside of supported MBT index or flow index range. RoE must
-                                                                 use IDX \< 1024.
-                                                                 * CHI or GENERIC or ALT packet used IDX \> 1055. These types must use IDX \< 1056. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1C/H) MBT_IDX or FLOW_IDX range violation.
+                                                                 *RoE Packet Outside of supported MBT_IDX/FLOW_IDX range. RoE must use IDX \< 1024
+                                                                 *CHI or GENERIC or ALT packet used IDX \> 1055. These types must use IDX \< 1056. */
         uint64_t fd_malformed          : 1;  /**< [  7:  7](R/W1C/H) 0xFD subtype SOS received for a MBT entry that is already busy:
                                                                  *Packet is dropped.
                                                                  *0xFD packets using the same MBT entry through EOS are dropped.
@@ -3342,10 +4055,9 @@ union cavm_rfoex_rx_error_int
                                                                  0xFD subtype received, but no SOS received for that MBT entry.
                                                                  *Packet is dropped.
                                                                  *0xFD packets using the same MBT entry through EOS are dropped. */
-        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1C/H) MBT index or flow index range violation.
-                                                                 * RoE Packet Outside of supported MBT index or flow index range. RoE must
-                                                                 use IDX \< 1024.
-                                                                 * CHI or GENERIC or ALT packet used IDX \> 1055. These types must use IDX \< 1056. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1C/H) MBT_IDX or FLOW_IDX range violation.
+                                                                 *RoE Packet Outside of supported MBT_IDX/FLOW_IDX range. RoE must use IDX \< 1024
+                                                                 *CHI or GENERIC or ALT packet used IDX \> 1055. These types must use IDX \< 1056. */
         uint64_t malformed_x2p_pkt     : 1;  /**< [  9:  9](R/W1C/H) Corrupted packet arrived from MAC:
                                                                  *Missing SOP: a flit arrived that was not preceded by SOP.
                                                                  *Unexpected SOP: an SOP flit received while still processing a packet (no EOP for previous packet).
@@ -3357,15 +4069,12 @@ union cavm_rfoex_rx_error_int
         uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1C/H) Write response returned a non-fatal non-NXM error.
                                                                  Internal:
                                                                  Should never occur. Including for completeness */
-        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1C/H) Packet length range violation. Incomine Ethernet packet length outside of
-                                                                 range defined by RFOE()_RX_PKT_LEN_CFG(). */
-        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1C/H) Indicates an error in one or more of the following fields in the eCPRI header:
-                                                                 _ ECPRI_HDR_S[CONCATENATION].
-                                                                 _ ECPRI_HDR_S[VER].
-                                                                 _ ECPRI_HDR_S[PC_ID].
-                                                                 _ ECPRI_HDR_S[MSG_TYPE]. */
-        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1C/H) Unsupported VLAN TPID match. Only support no VLAN tag, VLAN0 only tag,
-                                                                 VLAN1,VLAN0 tag combinations. Packet is treated as an ALT packet. */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1C/H) PKT_LEN range violation. Incomine Ethernet packet length outside of range defined by
+                                                                 RFOE()_RX_PKT_LEN_CFG(). */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1C/H) eCPRI Concatenation, Version, PC_ID, message type Errors. */
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1C/H) Unsupported VLAN TPID match.  Only support no VLAN tag, VLAN0 only tag,
+                                                                 VLAN1,VLAN0 tag combinations. Packet is either dropped or treated as an ALT
+                                                                 packet, depending on TBD CSR field. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } s;
@@ -3486,6 +4195,140 @@ union cavm_rfoex_rx_error_int
         uint64_t reserved_13_63        : 51;
 #endif /* Word 0 - End */
     } cnf95xx;
+    struct cavm_rfoex_rx_error_int_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_16_63        : 48;
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1C/H) Unsupported VLAN TPID match.  Only support no VLAN tag, VLAN0 only tag,
+                                                                 VLAN1,VLAN0 tag combinations. Packet is either dropped or treated as an ALT
+                                                                 packet, depending on TBD CSR field. */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1C/H) eCPRI Concatenation, Version, PC_ID, message type Errors. */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1C/H) PKT_LEN range violation. Incomine Ethernet packet length outside of range defined by
+                                                                 RFOE()_RX_PKT_LEN_CFG(). */
+        uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1C/H) Write response returned a non-fatal non-NXM error.
+                                                                 Internal:
+                                                                 Should never occur. Including for completeness */
+        uint64_t wrrsp_fat             : 1;  /**< [ 11: 11](R/W1C/H) Write response returned a fatal non-NXM error. */
+        uint64_t fc_psm_opcode         : 1;  /**< [ 10: 10](R/W1C/H) Received RoE packet, 0xfc subtype with a PSM command carrying a disabled OPCODE.
+                                                                 Bit is set when RoE subtype 0xfc received with PSM command OPCODE is not enabled in
+                                                                 RFOE()_RX_FC_PSM_OPCODE_ENA. */
+        uint64_t malformed_x2p_pkt     : 1;  /**< [  9:  9](R/W1C/H) Corrupted packet arrived from MAC:
+                                                                 *Missing SOP: a flit arrived that was not preceded by SOP.
+                                                                 *Unexpected SOP: an SOP flit received while still processing a packet (no EOP for previous packet).
+                                                                 Something bad happened in receive path to cause bad packets. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1C/H) MBT_IDX or FLOW_IDX range violation.
+                                                                 *RoE Packet Outside of supported MBT_IDX/FLOW_IDX range. RoE must use IDX \< 1024
+                                                                 *CHI or GENERIC or ALT packet used IDX \> 1055. These types must use IDX \< 1056. */
+        uint64_t fd_malformed          : 1;  /**< [  7:  7](R/W1C/H) 0xFD subtype SOS received for a MBT entry that is already busy:
+                                                                 *Packet is dropped.
+                                                                 *0xFD packets using the same MBT entry through EOS are dropped.
+                                                                 *0xFD packets already received and in memory for the MBT entry are ignored.
+                                                                 Packet data will be overwritten on next usage of the buffer.
+
+                                                                 0xFD subtype received, but no SOS received for that MBT entry.
+                                                                 *Packet is dropped.
+                                                                 *0xFD packets using the same MBT entry through EOS are dropped. */
+        uint64_t fd_state              : 1;  /**< [  6:  6](R/W1C/H) At SOP a non 0xFD subtype is received for an MBT entry that is being used to assemble a symbol.
+                                                                 New packet is dropped, and assembly continues for the symbol. */
+        uint64_t nxm                   : 1;  /**< [  5:  5](R/W1C/H) Attempt to write to invalid SMEM address (i.e., address beyond current
+                                                                 SMEM size). Writes to invalid addresses were dropped. Note that this
+                                                                 may result from either a packet write or a logger write, see
+                                                                 RFOE()_RX_ERROR_INFO(5). */
+        uint64_t clean_aperture        : 1;  /**< [  4:  4](R/W1C/H) For RoE 0xFC subtype and CHI packets. Starting address is outside of the
+                                                                 MIN_APERTURE, MAX_APERTURE.
+                                                                 When this happens:
+                                                                 *Packet is cleanly dropped.
+                                                                 *No data from packet is written to memory.
+                                                                 *No JCA message. */
+        uint64_t dirty_aperture        : 1;  /**< [  3:  3](R/W1C/H) For RoE 0xfc subtype and CHI packets. DMA started if the packet but packet
+                                                                 length caused the DMA operation to go outside of the MAX_APERTURE.
+                                                                 When this happens:
+                                                                 *All flits from the packet beyond the MAX_APERTURE are dropped.
+                                                                 *Packet status/logger sets RFOE_PSW0_S[DMA_ERROR].
+                                                                 *Normal Completion JCA message is sent at EOP. */
+        uint64_t buf_overflow          : 1;  /**< [  2:  2](R/W1C/H) DMA operation of RoE type to a memory buffer exceeded the size of the buffer programmed in
+                                                                 RFOE()_RX_IND_MBT_CFG[BUF_SIZE]. When this happens:
+                                                                 *All flits from the packet beyond the buf_size limit are dropped.
+                                                                 *Packet status/logger sets RFOE_PSW0_S[DMA_ERROR].
+                                                                 *Normal Completion JCA message is sent at EOP. */
+        uint64_t len_miscomp           : 1;  /**< [  1:  1](R/W1C/H) Length field in packet header does not match payload.  For packets using DMA:
+                                                                 * CHI packet header length field does not match data length.
+                                                                 * RoE others. Length field does not match payload.
+                                                                 * ECPRI.  Payload is less than length.  Payload greater than length is not an error.
+                                                                 * Transparent, ALT: no length check for [LEN_MISCOMP].
+
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. */
+        uint64_t len_abnorm            : 1;  /**< [  0:  0](R/W1C/H) Total packet length \<= 48 bytes. Packet is dropped.  Total length at x2p must be \> 48B.
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. P1914 note--  RoE payload must be \>= 64B. */
+#else /* Word 0 - Little Endian */
+        uint64_t len_abnorm            : 1;  /**< [  0:  0](R/W1C/H) Total packet length \<= 48 bytes. Packet is dropped.  Total length at x2p must be \> 48B.
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. P1914 note--  RoE payload must be \>= 64B. */
+        uint64_t len_miscomp           : 1;  /**< [  1:  1](R/W1C/H) Length field in packet header does not match payload.  For packets using DMA:
+                                                                 * CHI packet header length field does not match data length.
+                                                                 * RoE others. Length field does not match payload.
+                                                                 * ECPRI.  Payload is less than length.  Payload greater than length is not an error.
+                                                                 * Transparent, ALT: no length check for [LEN_MISCOMP].
+
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. */
+        uint64_t buf_overflow          : 1;  /**< [  2:  2](R/W1C/H) DMA operation of RoE type to a memory buffer exceeded the size of the buffer programmed in
+                                                                 RFOE()_RX_IND_MBT_CFG[BUF_SIZE]. When this happens:
+                                                                 *All flits from the packet beyond the buf_size limit are dropped.
+                                                                 *Packet status/logger sets RFOE_PSW0_S[DMA_ERROR].
+                                                                 *Normal Completion JCA message is sent at EOP. */
+        uint64_t dirty_aperture        : 1;  /**< [  3:  3](R/W1C/H) For RoE 0xfc subtype and CHI packets. DMA started if the packet but packet
+                                                                 length caused the DMA operation to go outside of the MAX_APERTURE.
+                                                                 When this happens:
+                                                                 *All flits from the packet beyond the MAX_APERTURE are dropped.
+                                                                 *Packet status/logger sets RFOE_PSW0_S[DMA_ERROR].
+                                                                 *Normal Completion JCA message is sent at EOP. */
+        uint64_t clean_aperture        : 1;  /**< [  4:  4](R/W1C/H) For RoE 0xFC subtype and CHI packets. Starting address is outside of the
+                                                                 MIN_APERTURE, MAX_APERTURE.
+                                                                 When this happens:
+                                                                 *Packet is cleanly dropped.
+                                                                 *No data from packet is written to memory.
+                                                                 *No JCA message. */
+        uint64_t nxm                   : 1;  /**< [  5:  5](R/W1C/H) Attempt to write to invalid SMEM address (i.e., address beyond current
+                                                                 SMEM size). Writes to invalid addresses were dropped. Note that this
+                                                                 may result from either a packet write or a logger write, see
+                                                                 RFOE()_RX_ERROR_INFO(5). */
+        uint64_t fd_state              : 1;  /**< [  6:  6](R/W1C/H) At SOP a non 0xFD subtype is received for an MBT entry that is being used to assemble a symbol.
+                                                                 New packet is dropped, and assembly continues for the symbol. */
+        uint64_t fd_malformed          : 1;  /**< [  7:  7](R/W1C/H) 0xFD subtype SOS received for a MBT entry that is already busy:
+                                                                 *Packet is dropped.
+                                                                 *0xFD packets using the same MBT entry through EOS are dropped.
+                                                                 *0xFD packets already received and in memory for the MBT entry are ignored.
+                                                                 Packet data will be overwritten on next usage of the buffer.
+
+                                                                 0xFD subtype received, but no SOS received for that MBT entry.
+                                                                 *Packet is dropped.
+                                                                 *0xFD packets using the same MBT entry through EOS are dropped. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1C/H) MBT_IDX or FLOW_IDX range violation.
+                                                                 *RoE Packet Outside of supported MBT_IDX/FLOW_IDX range. RoE must use IDX \< 1024
+                                                                 *CHI or GENERIC or ALT packet used IDX \> 1055. These types must use IDX \< 1056. */
+        uint64_t malformed_x2p_pkt     : 1;  /**< [  9:  9](R/W1C/H) Corrupted packet arrived from MAC:
+                                                                 *Missing SOP: a flit arrived that was not preceded by SOP.
+                                                                 *Unexpected SOP: an SOP flit received while still processing a packet (no EOP for previous packet).
+                                                                 Something bad happened in receive path to cause bad packets. */
+        uint64_t fc_psm_opcode         : 1;  /**< [ 10: 10](R/W1C/H) Received RoE packet, 0xfc subtype with a PSM command carrying a disabled OPCODE.
+                                                                 Bit is set when RoE subtype 0xfc received with PSM command OPCODE is not enabled in
+                                                                 RFOE()_RX_FC_PSM_OPCODE_ENA. */
+        uint64_t wrrsp_fat             : 1;  /**< [ 11: 11](R/W1C/H) Write response returned a fatal non-NXM error. */
+        uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1C/H) Write response returned a non-fatal non-NXM error.
+                                                                 Internal:
+                                                                 Should never occur. Including for completeness */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1C/H) PKT_LEN range violation. Incomine Ethernet packet length outside of range defined by
+                                                                 RFOE()_RX_PKT_LEN_CFG(). */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1C/H) eCPRI Concatenation, Version, PC_ID, message type Errors. */
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1C/H) Unsupported VLAN TPID match.  Only support no VLAN tag, VLAN0 only tag,
+                                                                 VLAN1,VLAN0 tag combinations. Packet is either dropped or treated as an ALT
+                                                                 packet, depending on TBD CSR field. */
+        uint64_t reserved_16_63        : 48;
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_rfoex_rx_error_int_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -3629,11 +4472,13 @@ union cavm_rfoex_rx_error_int
 };
 typedef union cavm_rfoex_rx_error_int cavm_rfoex_rx_error_int_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ERROR_INT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ERROR_INT(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_ERROR_INT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ERROR_INT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01e90ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001e90ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001e90ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ERROR_INT", 1, a, 0, 0, 0, 0, 0);
@@ -3658,16 +4503,16 @@ union cavm_rfoex_rx_error_int_w1s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_16_63        : 48;
-        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets RFOE(0..2)_RX_ERROR_INT[VLAN_TPID]. */
-        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets RFOE(0..2)_RX_ERROR_INT[ECPRI_HDR]. */
-        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets RFOE(0..2)_RX_ERROR_INT[PKT_LEN_RANGE]. */
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[VLAN_TPID]. */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[ECPRI_HDR]. */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[PKT_LEN_RANGE]. */
         uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets RFOE(0..1)_RX_ERROR_INT[WRRSP_NFAT].
                                                                  Internal:
                                                                  Should never occur. Including for completeness */
         uint64_t wrrsp_fat             : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets RFOE(0..1)_RX_ERROR_INT[WRRSP_FAT]. */
         uint64_t fc_psm_opcode         : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets RFOE(0..1)_RX_ERROR_INT[FC_PSM_OPCODE]. */
         uint64_t malformed_x2p_pkt     : 1;  /**< [  9:  9](R/W1S/H) Reads or sets RFOE(0..1)_RX_ERROR_INT[MALFORMED_X2P_PKT]. */
-        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1S/H) Reads or sets RFOE(0..2)_RX_ERROR_INT[IDX_RANGE]. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[IDX_RANGE]. */
         uint64_t fd_malformed          : 1;  /**< [  7:  7](R/W1S/H) Reads or sets RFOE(0..1)_RX_ERROR_INT[FD_MALFORMED]. */
         uint64_t fd_state              : 1;  /**< [  6:  6](R/W1S/H) Reads or sets RFOE(0..1)_RX_ERROR_INT[FD_STATE]. */
         uint64_t nxm                   : 1;  /**< [  5:  5](R/W1S/H) Reads or sets RFOE(0..1)_RX_ERROR_INT[NXM]. */
@@ -3693,16 +4538,16 @@ union cavm_rfoex_rx_error_int_w1s
         uint64_t nxm                   : 1;  /**< [  5:  5](R/W1S/H) Reads or sets RFOE(0..1)_RX_ERROR_INT[NXM]. */
         uint64_t fd_state              : 1;  /**< [  6:  6](R/W1S/H) Reads or sets RFOE(0..1)_RX_ERROR_INT[FD_STATE]. */
         uint64_t fd_malformed          : 1;  /**< [  7:  7](R/W1S/H) Reads or sets RFOE(0..1)_RX_ERROR_INT[FD_MALFORMED]. */
-        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1S/H) Reads or sets RFOE(0..2)_RX_ERROR_INT[IDX_RANGE]. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[IDX_RANGE]. */
         uint64_t malformed_x2p_pkt     : 1;  /**< [  9:  9](R/W1S/H) Reads or sets RFOE(0..1)_RX_ERROR_INT[MALFORMED_X2P_PKT]. */
         uint64_t fc_psm_opcode         : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets RFOE(0..1)_RX_ERROR_INT[FC_PSM_OPCODE]. */
         uint64_t wrrsp_fat             : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets RFOE(0..1)_RX_ERROR_INT[WRRSP_FAT]. */
         uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets RFOE(0..1)_RX_ERROR_INT[WRRSP_NFAT].
                                                                  Internal:
                                                                  Should never occur. Including for completeness */
-        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets RFOE(0..2)_RX_ERROR_INT[PKT_LEN_RANGE]. */
-        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets RFOE(0..2)_RX_ERROR_INT[ECPRI_HDR]. */
-        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets RFOE(0..2)_RX_ERROR_INT[VLAN_TPID]. */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[PKT_LEN_RANGE]. */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[ECPRI_HDR]. */
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[VLAN_TPID]. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } s;
@@ -3753,6 +4598,58 @@ union cavm_rfoex_rx_error_int_w1s
         uint64_t reserved_13_63        : 51;
 #endif /* Word 0 - End */
     } cnf95xx;
+    struct cavm_rfoex_rx_error_int_w1s_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_16_63        : 48;
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[VLAN_TPID]. */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[ECPRI_HDR]. */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[PKT_LEN_RANGE]. */
+        uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[WRRSP_NFAT].
+                                                                 Internal:
+                                                                 Should never occur. Including for completeness */
+        uint64_t wrrsp_fat             : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[WRRSP_FAT]. */
+        uint64_t fc_psm_opcode         : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[FC_PSM_OPCODE]. */
+        uint64_t malformed_x2p_pkt     : 1;  /**< [  9:  9](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[MALFORMED_X2P_PKT]. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[IDX_RANGE]. */
+        uint64_t fd_malformed          : 1;  /**< [  7:  7](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[FD_MALFORMED]. */
+        uint64_t fd_state              : 1;  /**< [  6:  6](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[FD_STATE]. */
+        uint64_t nxm                   : 1;  /**< [  5:  5](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[NXM]. */
+        uint64_t clean_aperture        : 1;  /**< [  4:  4](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[CLEAN_APERTURE]. */
+        uint64_t dirty_aperture        : 1;  /**< [  3:  3](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[DIRTY_APERTURE]. */
+        uint64_t buf_overflow          : 1;  /**< [  2:  2](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[BUF_OVERFLOW]. */
+        uint64_t len_miscomp           : 1;  /**< [  1:  1](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[LEN_MISCOMP].
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. */
+        uint64_t len_abnorm            : 1;  /**< [  0:  0](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[LEN_ABNORM].
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. P1914 note--  RoE payload must be \>= 64B. */
+#else /* Word 0 - Little Endian */
+        uint64_t len_abnorm            : 1;  /**< [  0:  0](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[LEN_ABNORM].
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. P1914 note--  RoE payload must be \>= 64B. */
+        uint64_t len_miscomp           : 1;  /**< [  1:  1](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[LEN_MISCOMP].
+                                                                 Internal:
+                                                                 RX Header processing expects \> 48B. */
+        uint64_t buf_overflow          : 1;  /**< [  2:  2](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[BUF_OVERFLOW]. */
+        uint64_t dirty_aperture        : 1;  /**< [  3:  3](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[DIRTY_APERTURE]. */
+        uint64_t clean_aperture        : 1;  /**< [  4:  4](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[CLEAN_APERTURE]. */
+        uint64_t nxm                   : 1;  /**< [  5:  5](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[NXM]. */
+        uint64_t fd_state              : 1;  /**< [  6:  6](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[FD_STATE]. */
+        uint64_t fd_malformed          : 1;  /**< [  7:  7](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[FD_MALFORMED]. */
+        uint64_t idx_range             : 1;  /**< [  8:  8](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[IDX_RANGE]. */
+        uint64_t malformed_x2p_pkt     : 1;  /**< [  9:  9](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[MALFORMED_X2P_PKT]. */
+        uint64_t fc_psm_opcode         : 1;  /**< [ 10: 10](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[FC_PSM_OPCODE]. */
+        uint64_t wrrsp_fat             : 1;  /**< [ 11: 11](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[WRRSP_FAT]. */
+        uint64_t wrrsp_nfat            : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[WRRSP_NFAT].
+                                                                 Internal:
+                                                                 Should never occur. Including for completeness */
+        uint64_t pkt_len_range         : 1;  /**< [ 13: 13](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[PKT_LEN_RANGE]. */
+        uint64_t ecpri_hdr             : 1;  /**< [ 14: 14](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[ECPRI_HDR]. */
+        uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets RFOE(0)_RX_ERROR_INT[VLAN_TPID]. */
+        uint64_t reserved_16_63        : 48;
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_rfoex_rx_error_int_w1s_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -3808,11 +4705,13 @@ union cavm_rfoex_rx_error_int_w1s
 };
 typedef union cavm_rfoex_rx_error_int_w1s cavm_rfoex_rx_error_int_w1s_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ERROR_INT_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ERROR_INT_W1S(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_ERROR_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ERROR_INT_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01ea8ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001ea8ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001ea8ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ERROR_INT_W1S", 1, a, 0, 0, 0, 0, 0);
@@ -3845,11 +4744,13 @@ union cavm_rfoex_rx_error_psm_msg_w0
 };
 typedef union cavm_rfoex_rx_error_psm_msg_w0 cavm_rfoex_rx_error_psm_msg_w0_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ERROR_PSM_MSG_W0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ERROR_PSM_MSG_W0(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_ERROR_PSM_MSG_W0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ERROR_PSM_MSG_W0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01eb0ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001eb0ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001eb0ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ERROR_PSM_MSG_W0", 1, a, 0, 0, 0, 0, 0);
@@ -3882,11 +4783,13 @@ union cavm_rfoex_rx_error_psm_msg_w1
 };
 typedef union cavm_rfoex_rx_error_psm_msg_w1 cavm_rfoex_rx_error_psm_msg_w1_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ERROR_PSM_MSG_W1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ERROR_PSM_MSG_W1(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_ERROR_PSM_MSG_W1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ERROR_PSM_MSG_W1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01eb8ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001eb8ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001eb8ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ERROR_PSM_MSG_W1", 1, a, 0, 0, 0, 0, 0);
@@ -3920,11 +4823,13 @@ union cavm_rfoex_rx_fc_psm_opcode_ena
 };
 typedef union cavm_rfoex_rx_fc_psm_opcode_ena cavm_rfoex_rx_fc_psm_opcode_ena_t;
 
-static inline uint64_t CAVM_RFOEX_RX_FC_PSM_OPCODE_ENA(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_FC_PSM_OPCODE_ENA(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_FC_PSM_OPCODE_ENA(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_FC_PSM_OPCODE_ENA(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01880ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x8641000018a0ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x8641000018a0ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_FC_PSM_OPCODE_ENA", 1, a, 0, 0, 0, 0, 0);
@@ -3966,8 +4871,8 @@ union cavm_rfoex_rx_fd_reset
 };
 typedef union cavm_rfoex_rx_fd_reset cavm_rfoex_rx_fd_reset_t;
 
-static inline uint64_t CAVM_RFOEX_RX_FD_RESET(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_FD_RESET(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_FD_RESET(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_FD_RESET(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01770ll + 0x80000ll * ((a) & 0x1);
@@ -3992,6 +4897,20 @@ union cavm_rfoex_rx_fd_resetx
     struct cavm_rfoex_rx_fd_resetx_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reset                 : 64; /**< [ 63:  0](WO) Bit-mask of MBT_IDX. For each bit:
+                                                                 0 = Don't reset FD state.
+                                                                 1 =  Reset the FD state */
+#else /* Word 0 - Little Endian */
+        uint64_t reset                 : 64; /**< [ 63:  0](WO) Bit-mask of MBT_IDX. For each bit:
+                                                                 0 = Don't reset FD state.
+                                                                 1 =  Reset the FD state */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_rx_fd_resetx_s cn9; */
+    /* struct cavm_rfoex_rx_fd_resetx_s f95mm; */
+    struct cavm_rfoex_rx_fd_resetx_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reset                 : 64; /**< [ 63:  0](WO) One bit per MBT entry:
                                                                  _ RESET(0)[RESET]\<0\> for MBT index 0.
                                                                  _ RESET(0)[STATE]\<1\> for MBT index 1.
@@ -4014,14 +4933,15 @@ union cavm_rfoex_rx_fd_resetx
                                                                  _ 0 = Don't reset 0xFD reassembly state.
                                                                  _ 1 = Reset the 0xFD reassembly state. */
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rfoex_rx_fd_resetx_s cn; */
+    } loki;
 };
 typedef union cavm_rfoex_rx_fd_resetx cavm_rfoex_rx_fd_resetx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_FD_RESETX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_FD_RESETX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_FD_RESETX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_FD_RESETX(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
+        return 0x864100001300ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001300ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_FD_RESETX", 2, a, b, 0, 0, 0, 0);
@@ -4059,11 +4979,13 @@ union cavm_rfoex_rx_fd_sos_drop_stat
 };
 typedef union cavm_rfoex_rx_fd_sos_drop_stat cavm_rfoex_rx_fd_sos_drop_stat_t;
 
-static inline uint64_t CAVM_RFOEX_RX_FD_SOS_DROP_STAT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_FD_SOS_DROP_STAT(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_FD_SOS_DROP_STAT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_FD_SOS_DROP_STAT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01d30ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001d30ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001d30ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_FD_SOS_DROP_STAT", 1, a, 0, 0, 0, 0, 0);
@@ -4096,6 +5018,7 @@ union cavm_rfoex_rx_fd_statex
     } s;
     /* struct cavm_rfoex_rx_fd_statex_s cn9; */
     /* struct cavm_rfoex_rx_fd_statex_s cnf95xx; */
+    /* struct cavm_rfoex_rx_fd_statex_s f95mm; */
     struct cavm_rfoex_rx_fd_statex_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -4117,11 +5040,13 @@ union cavm_rfoex_rx_fd_statex
 };
 typedef union cavm_rfoex_rx_fd_statex cavm_rfoex_rx_fd_statex_t;
 
-static inline uint64_t CAVM_RFOEX_RX_FD_STATEX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_FD_STATEX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_FD_STATEX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_FD_STATEX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
         return 0x87e043d01760ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=31)))
+        return 0x864100001200ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x1f);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=31)))
         return 0x864100001200ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1f);
     __cavm_csr_fatal("RFOEX_RX_FD_STATEX", 2, a, b, 0, 0, 0, 0);
@@ -4159,11 +5084,13 @@ union cavm_rfoex_rx_ft_enable_drop_stat
 };
 typedef union cavm_rfoex_rx_ft_enable_drop_stat cavm_rfoex_rx_ft_enable_drop_stat_t;
 
-static inline uint64_t CAVM_RFOEX_RX_FT_ENABLE_DROP_STAT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_FT_ENABLE_DROP_STAT(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_FT_ENABLE_DROP_STAT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_FT_ENABLE_DROP_STAT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01d28ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001d28ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001d28ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_FT_ENABLE_DROP_STAT", 1, a, 0, 0, 0, 0, 0);
@@ -4202,6 +5129,26 @@ union cavm_rfoex_rx_ind_ecpri_ft_cfg
         uint64_t reserved_25_63        : 39;
         uint64_t enable                : 1;  /**< [ 24: 24](R/W) Enable this flow. Drop packets when clear. */
         uint64_t reserved_22_23        : 2;
+        uint64_t mbt_idx               : 10; /**< [ 21: 12](R/W) Pointer to RFOE()_RX_IND_MBT_CFG, RFOE()_RX_IND_MBT_ADDR for DMA write buffer configurations. */
+        uint64_t reserved_10_11        : 2;
+        uint64_t flow_idx              : 10; /**< [  9:  0](R/W) Pointer to RFOE()_RX_IND_JDT memories for job descriptor and flow configuration. */
+#else /* Word 0 - Little Endian */
+        uint64_t flow_idx              : 10; /**< [  9:  0](R/W) Pointer to RFOE()_RX_IND_JDT memories for job descriptor and flow configuration. */
+        uint64_t reserved_10_11        : 2;
+        uint64_t mbt_idx               : 10; /**< [ 21: 12](R/W) Pointer to RFOE()_RX_IND_MBT_CFG, RFOE()_RX_IND_MBT_ADDR for DMA write buffer configurations. */
+        uint64_t reserved_22_23        : 2;
+        uint64_t enable                : 1;  /**< [ 24: 24](R/W) Enable this flow. Drop packets when clear. */
+        uint64_t reserved_25_63        : 39;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_rx_ind_ecpri_ft_cfg_s cn9; */
+    /* struct cavm_rfoex_rx_ind_ecpri_ft_cfg_s f95mm; */
+    struct cavm_rfoex_rx_ind_ecpri_ft_cfg_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_25_63        : 39;
+        uint64_t enable                : 1;  /**< [ 24: 24](R/W) Enable this flow. Drop packets when clear. */
+        uint64_t reserved_22_23        : 2;
         uint64_t mbt_idx               : 10; /**< [ 21: 12](R/W) MBT index. Pointer to MBT entry for DMA write buffer configurations. */
         uint64_t reserved_10_11        : 2;
         uint64_t flow_idx              : 10; /**< [  9:  0](R/W) Flow index. Pointer to JDT entry for job descriptor and flow configuration. */
@@ -4213,14 +5160,15 @@ union cavm_rfoex_rx_ind_ecpri_ft_cfg
         uint64_t enable                : 1;  /**< [ 24: 24](R/W) Enable this flow. Drop packets when clear. */
         uint64_t reserved_25_63        : 39;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rfoex_rx_ind_ecpri_ft_cfg_s cn; */
+    } loki;
 };
 typedef union cavm_rfoex_rx_ind_ecpri_ft_cfg cavm_rfoex_rx_ind_ecpri_ft_cfg_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_ECPRI_FT_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_ECPRI_FT_CFG(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_IND_ECPRI_FT_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_ECPRI_FT_CFG(uint64_t a)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001cc0ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001cc0ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_ECPRI_FT_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -4282,9 +5230,11 @@ union cavm_rfoex_rx_ind_ecpri_hash_cfg
 };
 typedef union cavm_rfoex_rx_ind_ecpri_hash_cfg cavm_rfoex_rx_ind_ecpri_hash_cfg_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_ECPRI_HASH_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_ECPRI_HASH_CFG(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_IND_ECPRI_HASH_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_ECPRI_HASH_CFG(uint64_t a)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001ce0ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001ce0ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_ECPRI_HASH_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -4341,6 +5291,60 @@ union cavm_rfoex_rx_ind_ftx_cfg
         uint64_t reserved_15_63        : 49;
 #endif /* Word 0 - End */
     } cnf95xx;
+    struct cavm_rfoex_rx_ind_ftx_cfg_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_25_63        : 39;
+        uint64_t enable                : 1;  /**< [ 24: 24](R/W) Enable this flow. Drop packets when clear. */
+        uint64_t reserved_23           : 1;
+        uint64_t mbt_idx               : 11; /**< [ 22: 12](R/W) Pointer to RFOE()_RX_IND_MBT_CFG, RFOE()_RX_IND_MBT_ADDR for DMA write buffer
+                                                                 configurations. Valid range 0..1055.
+                                                                 * 0..1023 - full mbt/jdt.
+                                                                 * 1024..1039 - Illegal.  Used by RFOE_RX_DIR_CTL_PKT_TYPE_E::eCPRI with ECPRI_HDR_S[MSG_TYPE] \> 0.
+                                                                 * 1040..1055 - only for RFOE_RX_DIR_CTL_PKT_TYPE_E::ALT and
+                                                                 RFOE_RX_DIR_CTL_PKT_TYPE_E::GENERIC() types. Illegal for all other
+                                                                 RFOE_RX_DIR_CTL_PKT_TYPE_E values.
+
+                                                                 Internal:
+                                                                 No seqnum, no sync_flow, no fd_state, no mbt_seg_state for [MBT_IDX] \> 1023. */
+        uint64_t reserved_11           : 1;
+        uint64_t flow_idx              : 11; /**< [ 10:  0](R/W) Pointer to RFOE()_RX_IND_JDT memories for job descriptor and flow configuration.
+                                                                 Valid range 0..1055.
+                                                                 * 0..1023 - full mbt/jdt.
+                                                                 * 1024..1039 - Illegal.  Used by RFOE_RX_DIR_CTL_PKT_TYPE_E::eCPRI with ECPRI_HDR_S[MSG_TYPE] \> 0.
+                                                                 * 1040..1055 - only for RFOE_RX_DIR_CTL_PKT_TYPE_E::ALT and
+                                                                 RFOE_RX_DIR_CTL_PKT_TYPE_E::GENERIC() types. Illegal for all other
+                                                                 RFOE_RX_DIR_CTL_PKT_TYPE_E values.
+
+                                                                 Internal:
+                                                                 No seqnum, no sync_flow, no fd_state, no mbt_segstate for [FLOW_IDX] \> 1023. */
+#else /* Word 0 - Little Endian */
+        uint64_t flow_idx              : 11; /**< [ 10:  0](R/W) Pointer to RFOE()_RX_IND_JDT memories for job descriptor and flow configuration.
+                                                                 Valid range 0..1055.
+                                                                 * 0..1023 - full mbt/jdt.
+                                                                 * 1024..1039 - Illegal.  Used by RFOE_RX_DIR_CTL_PKT_TYPE_E::eCPRI with ECPRI_HDR_S[MSG_TYPE] \> 0.
+                                                                 * 1040..1055 - only for RFOE_RX_DIR_CTL_PKT_TYPE_E::ALT and
+                                                                 RFOE_RX_DIR_CTL_PKT_TYPE_E::GENERIC() types. Illegal for all other
+                                                                 RFOE_RX_DIR_CTL_PKT_TYPE_E values.
+
+                                                                 Internal:
+                                                                 No seqnum, no sync_flow, no fd_state, no mbt_segstate for [FLOW_IDX] \> 1023. */
+        uint64_t reserved_11           : 1;
+        uint64_t mbt_idx               : 11; /**< [ 22: 12](R/W) Pointer to RFOE()_RX_IND_MBT_CFG, RFOE()_RX_IND_MBT_ADDR for DMA write buffer
+                                                                 configurations. Valid range 0..1055.
+                                                                 * 0..1023 - full mbt/jdt.
+                                                                 * 1024..1039 - Illegal.  Used by RFOE_RX_DIR_CTL_PKT_TYPE_E::eCPRI with ECPRI_HDR_S[MSG_TYPE] \> 0.
+                                                                 * 1040..1055 - only for RFOE_RX_DIR_CTL_PKT_TYPE_E::ALT and
+                                                                 RFOE_RX_DIR_CTL_PKT_TYPE_E::GENERIC() types. Illegal for all other
+                                                                 RFOE_RX_DIR_CTL_PKT_TYPE_E values.
+
+                                                                 Internal:
+                                                                 No seqnum, no sync_flow, no fd_state, no mbt_seg_state for [MBT_IDX] \> 1023. */
+        uint64_t reserved_23           : 1;
+        uint64_t enable                : 1;  /**< [ 24: 24](R/W) Enable this flow. Drop packets when clear. */
+        uint64_t reserved_25_63        : 39;
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_rfoex_rx_ind_ftx_cfg_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -4398,11 +5402,13 @@ union cavm_rfoex_rx_ind_ftx_cfg
 };
 typedef union cavm_rfoex_rx_ind_ftx_cfg cavm_rfoex_rx_ind_ftx_cfg_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_FTX_CFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_FTX_CFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_IND_FTX_CFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_FTX_CFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043d01c00ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100001c00ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001c00ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_FTX_CFG", 2, a, b, 0, 0, 0, 0);
@@ -4683,6 +5689,142 @@ union cavm_rfoex_rx_ind_jdt_cfg0
                                                                   1 = LLC/DRAM. */
 #endif /* Word 0 - End */
     } cnf95xx;
+    struct cavm_rfoex_rx_ind_jdt_cfg0_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t target_mem            : 1;  /**< [ 63: 63](R/W) Specifies the target memory for the address for the DMA's job descriptor write (JDW):
+                                                                  0 = SMEM.
+                                                                  1 = LLC/DRAM. */
+        uint64_t reserved_62           : 1;
+        uint64_t cmd_type              : 2;  /**< [ 61: 60](R/W) Deprecated.  Hardware does not use.
+                                                                 Internal:
+                                                                 Specifies the CMD_TYPE used by the JDW.  Used for the GAA write field dmat.
+                                                                 Enumerated by MHBW_PNB_WR_CMD_E. */
+        uint64_t reserved_59           : 1;
+        uint64_t dswap                 : 3;  /**< [ 58: 56](R/W) The byte swap mode for JDW to LLC/DRAM. JDW to BPHY SMEM ignores this field.
+                                                                 Enumerated by MHBW_PNB_DSWAP_E. */
+        uint64_t reserved_55           : 1;
+        uint64_t pkt_offset            : 3;  /**< [ 54: 52](R/W) Packet offset in units of 128-bits. DMA operation starts at START_ADDDR + [PKT_OFFSET]*16 bytes.
+                                                                 Must be \<= 4. If [PKT_STATUS_WRITE]=1, must be \> 2 or the packet
+                                                                 status write will over-write the packet data.
+
+                                                                 Internal:
+                                                                 Hardware should support values 5..7, but can't guarantee behavior. */
+        uint64_t reserved_51           : 1;
+        uint64_t jdw_enable            : 1;  /**< [ 50: 50](R/W) Enable JDW updates of job descriptor in memory.
+                                                                 0 = Do not update job descriptor in memory.
+                                                                 1 = Update job descriptor in memory.
+                                                                 Used for standard RoE & 0xFD subtype RoE packets. Ignored by
+                                                                 RoE subtype 0xFC. 0xFC subtype never writes the JD. */
+        uint64_t pkt_status_write      : 1;  /**< [ 49: 49](R/W) When set, RFOE will write a packet status header at the start of each
+                                                                 buffer, consisting of RFOE_ECPRI_PSW0_S and RFOE_ECPRI_PSW1_S for eCPRI
+                                                                 packets, RFOE_PSW0_S and RFOE_PSW1_S otherwise. */
+        uint64_t jca_enable            : 1;  /**< [ 48: 48](R/W) Enable job completion action. When set, RFOE sends a JCA message on
+                                                                 completion of each packet, or on the last segment for 0xFD subtype
+                                                                 packets. */
+        uint64_t num_jd                : 16; /**< [ 47: 32](R/W) Number of job descriptors in this circular buffer. Total size of the
+                                                                 buffer is [NUM_JD]*[JD_SIZE]*8 bytes. Must be greater than 0.
+
+                                                                 Internal:
+                                                                 Hardware interprets [NUM_JD]=0 the same as [NUM_JD]=1.  [NUM_JD]=0 is nonsensical. */
+        uint64_t jd_rd_offset          : 4;  /**< [ 31: 28](R/W) Location of read DMA descriptor within each job descriptor, in units
+                                                                 of 8 bytes.
+                                                                 * Must be less than [JD_SIZE]-1.
+                                                                 * ([JD_RD_OFFSET]*8)+RFOE()_RX_IND_JDT_PTR[PTR] must be 128-bit aligned. */
+        uint64_t jd_size               : 4;  /**< [ 27: 24](R/W) Size of each job descriptor, in units of 8 bytes. Must be even (i.e.,
+                                                                 total size must be a multiple of 16 bytes). [JD_SIZE] must be greater than 0. */
+        uint64_t reserved_21_23        : 3;
+        uint64_t end_bswap_enable      : 1;  /**< [ 20: 20](R/W) For all byte-mode data,endianess byte swap enable . Does not change PSW, Logger, JDW writes.
+                                                                 0 = Don't do endianess swap DMA write of packet data.
+                                                                 1 = Do the byte swap for byte DMA data.  byte0-byte15, byte1-byte14, etc. */
+        uint64_t sample_width          : 8;  /**< [ 19: 12](R/W) For [SAMPLE_MODE]=1, defines width in bits of I an Q samples in the packet
+                                                                 data. */
+        uint64_t sample_mode           : 1;  /**< [ 11: 11](R/W) Interpret RoE samples. When set, interpret the data following rbMap
+                                                                 bytes as I,Q samples, and expand each [SAMPLE_WIDTH] I/Q sample to a 16-bit sample.
+
+                                                                 Must be zero for eCPRI flows. */
+        uint64_t sample_mode_width_option : 1;/**< [ 10: 10](R/W) I/Q sample format. When [SAMPLE_MODE]=1, this determines how samples
+                                                                 are expanded to 16 bits.
+                                                                 0 = Sign-extend left.
+                                                                 1 = Zero pad right. */
+        uint64_t transparent_mode      : 1;  /**< [  9:  9](R/W) Transparently write packet data to memory with no transformations.
+                                                                 Overrides settings for [HEADER_DMA_MODE], [RBMAP_BYTES], and
+                                                                 [SAMPLE_MODE]. RoE 0xFC subtype are never transparent and ignores this field. */
+        uint64_t header_dma_mode       : 1;  /**< [  8:  8](R/W) Write header bytes out to memory if [HEADER_DMA_MODE] = 1.  Ignored when [TRANSPARENT_MODE] = 1. */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) Number of rbMap bytes following the RoE header.
+                                                                 *RoE subtype == 0xFD: [RBMAP_BYTES] are only in first, SOS segment only.
+                                                                 *Transparent mode: ignored.  Transparent packets do not have rbMap.
+                                                                 *RoE 0xFC subtype: ignored.  0xFC packets do not have rbMap.
+
+                                                                 Must be zero for eCPRI flows. */
+#else /* Word 0 - Little Endian */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) Number of rbMap bytes following the RoE header.
+                                                                 *RoE subtype == 0xFD: [RBMAP_BYTES] are only in first, SOS segment only.
+                                                                 *Transparent mode: ignored.  Transparent packets do not have rbMap.
+                                                                 *RoE 0xFC subtype: ignored.  0xFC packets do not have rbMap.
+
+                                                                 Must be zero for eCPRI flows. */
+        uint64_t header_dma_mode       : 1;  /**< [  8:  8](R/W) Write header bytes out to memory if [HEADER_DMA_MODE] = 1.  Ignored when [TRANSPARENT_MODE] = 1. */
+        uint64_t transparent_mode      : 1;  /**< [  9:  9](R/W) Transparently write packet data to memory with no transformations.
+                                                                 Overrides settings for [HEADER_DMA_MODE], [RBMAP_BYTES], and
+                                                                 [SAMPLE_MODE]. RoE 0xFC subtype are never transparent and ignores this field. */
+        uint64_t sample_mode_width_option : 1;/**< [ 10: 10](R/W) I/Q sample format. When [SAMPLE_MODE]=1, this determines how samples
+                                                                 are expanded to 16 bits.
+                                                                 0 = Sign-extend left.
+                                                                 1 = Zero pad right. */
+        uint64_t sample_mode           : 1;  /**< [ 11: 11](R/W) Interpret RoE samples. When set, interpret the data following rbMap
+                                                                 bytes as I,Q samples, and expand each [SAMPLE_WIDTH] I/Q sample to a 16-bit sample.
+
+                                                                 Must be zero for eCPRI flows. */
+        uint64_t sample_width          : 8;  /**< [ 19: 12](R/W) For [SAMPLE_MODE]=1, defines width in bits of I an Q samples in the packet
+                                                                 data. */
+        uint64_t end_bswap_enable      : 1;  /**< [ 20: 20](R/W) For all byte-mode data,endianess byte swap enable . Does not change PSW, Logger, JDW writes.
+                                                                 0 = Don't do endianess swap DMA write of packet data.
+                                                                 1 = Do the byte swap for byte DMA data.  byte0-byte15, byte1-byte14, etc. */
+        uint64_t reserved_21_23        : 3;
+        uint64_t jd_size               : 4;  /**< [ 27: 24](R/W) Size of each job descriptor, in units of 8 bytes. Must be even (i.e.,
+                                                                 total size must be a multiple of 16 bytes). [JD_SIZE] must be greater than 0. */
+        uint64_t jd_rd_offset          : 4;  /**< [ 31: 28](R/W) Location of read DMA descriptor within each job descriptor, in units
+                                                                 of 8 bytes.
+                                                                 * Must be less than [JD_SIZE]-1.
+                                                                 * ([JD_RD_OFFSET]*8)+RFOE()_RX_IND_JDT_PTR[PTR] must be 128-bit aligned. */
+        uint64_t num_jd                : 16; /**< [ 47: 32](R/W) Number of job descriptors in this circular buffer. Total size of the
+                                                                 buffer is [NUM_JD]*[JD_SIZE]*8 bytes. Must be greater than 0.
+
+                                                                 Internal:
+                                                                 Hardware interprets [NUM_JD]=0 the same as [NUM_JD]=1.  [NUM_JD]=0 is nonsensical. */
+        uint64_t jca_enable            : 1;  /**< [ 48: 48](R/W) Enable job completion action. When set, RFOE sends a JCA message on
+                                                                 completion of each packet, or on the last segment for 0xFD subtype
+                                                                 packets. */
+        uint64_t pkt_status_write      : 1;  /**< [ 49: 49](R/W) When set, RFOE will write a packet status header at the start of each
+                                                                 buffer, consisting of RFOE_ECPRI_PSW0_S and RFOE_ECPRI_PSW1_S for eCPRI
+                                                                 packets, RFOE_PSW0_S and RFOE_PSW1_S otherwise. */
+        uint64_t jdw_enable            : 1;  /**< [ 50: 50](R/W) Enable JDW updates of job descriptor in memory.
+                                                                 0 = Do not update job descriptor in memory.
+                                                                 1 = Update job descriptor in memory.
+                                                                 Used for standard RoE & 0xFD subtype RoE packets. Ignored by
+                                                                 RoE subtype 0xFC. 0xFC subtype never writes the JD. */
+        uint64_t reserved_51           : 1;
+        uint64_t pkt_offset            : 3;  /**< [ 54: 52](R/W) Packet offset in units of 128-bits. DMA operation starts at START_ADDDR + [PKT_OFFSET]*16 bytes.
+                                                                 Must be \<= 4. If [PKT_STATUS_WRITE]=1, must be \> 2 or the packet
+                                                                 status write will over-write the packet data.
+
+                                                                 Internal:
+                                                                 Hardware should support values 5..7, but can't guarantee behavior. */
+        uint64_t reserved_55           : 1;
+        uint64_t dswap                 : 3;  /**< [ 58: 56](R/W) The byte swap mode for JDW to LLC/DRAM. JDW to BPHY SMEM ignores this field.
+                                                                 Enumerated by MHBW_PNB_DSWAP_E. */
+        uint64_t reserved_59           : 1;
+        uint64_t cmd_type              : 2;  /**< [ 61: 60](R/W) Deprecated.  Hardware does not use.
+                                                                 Internal:
+                                                                 Specifies the CMD_TYPE used by the JDW.  Used for the GAA write field dmat.
+                                                                 Enumerated by MHBW_PNB_WR_CMD_E. */
+        uint64_t reserved_62           : 1;
+        uint64_t target_mem            : 1;  /**< [ 63: 63](R/W) Specifies the target memory for the address for the DMA's job descriptor write (JDW):
+                                                                  0 = SMEM.
+                                                                  1 = LLC/DRAM. */
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_rfoex_rx_ind_jdt_cfg0_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -4824,11 +5966,13 @@ union cavm_rfoex_rx_ind_jdt_cfg0
 };
 typedef union cavm_rfoex_rx_ind_jdt_cfg0 cavm_rfoex_rx_ind_jdt_cfg0_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_CFG0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_CFG0(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_CFG0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_CFG0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01c40ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001c40ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c40ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_CFG0", 1, a, 0, 0, 0, 0, 0);
@@ -4930,7 +6074,7 @@ union cavm_rfoex_rx_ind_jdt_cfg1
         uint64_t reserved_57_63        : 7;
 #endif /* Word 0 - End */
     } cnf95xx;
-    struct cavm_rfoex_rx_ind_jdt_cfg1_loki
+    struct cavm_rfoex_rx_ind_jdt_cfg1_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_57_63        : 7;
@@ -4961,15 +6105,18 @@ union cavm_rfoex_rx_ind_jdt_cfg1
         uint64_t reserved_52_56        : 5;
         uint64_t reserved_57_63        : 7;
 #endif /* Word 0 - End */
-    } loki;
+    } f95mm;
+    /* struct cavm_rfoex_rx_ind_jdt_cfg1_f95mm loki; */
 };
 typedef union cavm_rfoex_rx_ind_jdt_cfg1 cavm_rfoex_rx_ind_jdt_cfg1_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_CFG1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_CFG1(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_CFG1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_CFG1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01c48ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001c48ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c48ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_CFG1", 1, a, 0, 0, 0, 0, 0);
@@ -5032,11 +6179,13 @@ union cavm_rfoex_rx_ind_jdt_psm_w0
 };
 typedef union cavm_rfoex_rx_ind_jdt_psm_w0 cavm_rfoex_rx_ind_jdt_psm_w0_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_PSM_W0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_PSM_W0(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_PSM_W0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_PSM_W0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01c58ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001c58ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c58ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_PSM_W0", 1, a, 0, 0, 0, 0, 0);
@@ -5069,11 +6218,13 @@ union cavm_rfoex_rx_ind_jdt_psm_w1
 };
 typedef union cavm_rfoex_rx_ind_jdt_psm_w1 cavm_rfoex_rx_ind_jdt_psm_w1_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_PSM_W1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_PSM_W1(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_PSM_W1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_PSM_W1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01c60ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001c60ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c60ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_PSM_W1", 1, a, 0, 0, 0, 0, 0);
@@ -5122,11 +6273,13 @@ union cavm_rfoex_rx_ind_jdt_ptr
 };
 typedef union cavm_rfoex_rx_ind_jdt_ptr cavm_rfoex_rx_ind_jdt_ptr_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_PTR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_PTR(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_PTR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_PTR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01c50ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001c50ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c50ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_PTR", 1, a, 0, 0, 0, 0, 0);
@@ -5178,6 +6331,32 @@ union cavm_rfoex_rx_ind_jdt_seqnum_p_cfg
     } s;
     /* struct cavm_rfoex_rx_ind_jdt_seqnum_p_cfg_s cn9; */
     /* struct cavm_rfoex_rx_ind_jdt_seqnum_p_cfg_s cnf95xx; */
+    struct cavm_rfoex_rx_ind_jdt_seqnum_p_cfg_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t pinc                  : 32; /**< [ 63: 32](R/W) Value to increment the p-counter by on each packet.
+                                                                 The increment value must be less than RFOE()_RX_IND_SEQNUM_P_CFG[PMAX]. */
+        uint64_t pmax                  : 32; /**< [ 31:  0](R/W) For ROE packets,seqNum PMax. Maximum numerical value of the p-counter field. Requirements:
+                                                                 *[PMAX] \> [PINC] when RFOE()_RX_IND_JDT_CFG1[PINC_PROP] == 1.
+                                                                 *[PMAX] \>= Initial RFOE()_RX_IND_JDT_SEQNUM_STATE[PVAL].
+                                                                 *[PMAX] \> Maximum RoE length field when RFOE()_RX_IND_JDT_CFG1[PINC_PROP] == 2.
+                                                                 *[PMAX] \<= 3 when (RFOE()_RX_IND_JDT_CFG1[ORDER_INFO_TYPE] == TIMESTAMP).
+
+                                                                 For ECPRI packets, configures the RX_SYNC start for ECPRI msg_type==0 packets.
+                                                                 ECPRI [PMAX] usage is described by structure RFOE_ECPRI_SEQID_RX_SYNC_S */
+#else /* Word 0 - Little Endian */
+        uint64_t pmax                  : 32; /**< [ 31:  0](R/W) For ROE packets,seqNum PMax. Maximum numerical value of the p-counter field. Requirements:
+                                                                 *[PMAX] \> [PINC] when RFOE()_RX_IND_JDT_CFG1[PINC_PROP] == 1.
+                                                                 *[PMAX] \>= Initial RFOE()_RX_IND_JDT_SEQNUM_STATE[PVAL].
+                                                                 *[PMAX] \> Maximum RoE length field when RFOE()_RX_IND_JDT_CFG1[PINC_PROP] == 2.
+                                                                 *[PMAX] \<= 3 when (RFOE()_RX_IND_JDT_CFG1[ORDER_INFO_TYPE] == TIMESTAMP).
+
+                                                                 For ECPRI packets, configures the RX_SYNC start for ECPRI msg_type==0 packets.
+                                                                 ECPRI [PMAX] usage is described by structure RFOE_ECPRI_SEQID_RX_SYNC_S */
+        uint64_t pinc                  : 32; /**< [ 63: 32](R/W) Value to increment the p-counter by on each packet.
+                                                                 The increment value must be less than RFOE()_RX_IND_SEQNUM_P_CFG[PMAX]. */
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_rfoex_rx_ind_jdt_seqnum_p_cfg_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -5209,11 +6388,13 @@ union cavm_rfoex_rx_ind_jdt_seqnum_p_cfg
 };
 typedef union cavm_rfoex_rx_ind_jdt_seqnum_p_cfg cavm_rfoex_rx_ind_jdt_seqnum_p_cfg_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_SEQNUM_P_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_SEQNUM_P_CFG(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_SEQNUM_P_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_SEQNUM_P_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01c68ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001c68ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c68ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_SEQNUM_P_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -5263,6 +6444,7 @@ union cavm_rfoex_rx_ind_jdt_seqnum_q_cfg
     } s;
     /* struct cavm_rfoex_rx_ind_jdt_seqnum_q_cfg_s cn9; */
     /* struct cavm_rfoex_rx_ind_jdt_seqnum_q_cfg_s cnf95xx; */
+    /* struct cavm_rfoex_rx_ind_jdt_seqnum_q_cfg_s f95mm; */
     struct cavm_rfoex_rx_ind_jdt_seqnum_q_cfg_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -5284,11 +6466,13 @@ union cavm_rfoex_rx_ind_jdt_seqnum_q_cfg
 };
 typedef union cavm_rfoex_rx_ind_jdt_seqnum_q_cfg cavm_rfoex_rx_ind_jdt_seqnum_q_cfg_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_SEQNUM_Q_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_SEQNUM_Q_CFG(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_SEQNUM_Q_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_SEQNUM_Q_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01c70ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001c70ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c70ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_SEQNUM_Q_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -5345,6 +6529,7 @@ union cavm_rfoex_rx_ind_jdt_seqnum_state
     } s;
     /* struct cavm_rfoex_rx_ind_jdt_seqnum_state_s cn9; */
     /* struct cavm_rfoex_rx_ind_jdt_seqnum_state_s cnf95xx; */
+    /* struct cavm_rfoex_rx_ind_jdt_seqnum_state_s f95mm; */
     struct cavm_rfoex_rx_ind_jdt_seqnum_state_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -5370,11 +6555,13 @@ union cavm_rfoex_rx_ind_jdt_seqnum_state
 };
 typedef union cavm_rfoex_rx_ind_jdt_seqnum_state cavm_rfoex_rx_ind_jdt_seqnum_state_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_SEQNUM_STATE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_SEQNUM_STATE(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_SEQNUM_STATE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_SEQNUM_STATE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01c80ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001c80ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c80ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_SEQNUM_STATE", 1, a, 0, 0, 0, 0, 0);
@@ -5421,11 +6608,13 @@ union cavm_rfoex_rx_ind_jdt_state
 };
 typedef union cavm_rfoex_rx_ind_jdt_state cavm_rfoex_rx_ind_jdt_state_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_STATE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_JDT_STATE(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_STATE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_JDT_STATE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01c78ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001c78ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c78ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_STATE", 1, a, 0, 0, 0, 0, 0);
@@ -5477,6 +6666,7 @@ union cavm_rfoex_rx_ind_mbt_addr
     } s;
     /* struct cavm_rfoex_rx_ind_mbt_addr_s cn9; */
     /* struct cavm_rfoex_rx_ind_mbt_addr_s cnf95xx; */
+    /* struct cavm_rfoex_rx_ind_mbt_addr_s f95mm; */
     struct cavm_rfoex_rx_ind_mbt_addr_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -5496,11 +6686,13 @@ union cavm_rfoex_rx_ind_mbt_addr
 };
 typedef union cavm_rfoex_rx_ind_mbt_addr cavm_rfoex_rx_ind_mbt_addr_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_MBT_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_MBT_ADDR(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_IND_MBT_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_MBT_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01c28ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001c28ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c28ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_MBT_ADDR", 1, a, 0, 0, 0, 0, 0);
@@ -5606,6 +6798,78 @@ union cavm_rfoex_rx_ind_mbt_cfg
     } s;
     /* struct cavm_rfoex_rx_ind_mbt_cfg_s cn9; */
     /* struct cavm_rfoex_rx_ind_mbt_cfg_s cnf95xx; */
+    struct cavm_rfoex_rx_ind_mbt_cfg_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t target_mem            : 1;  /**< [ 63: 63](R/W) Specifies the target memory for the address.
+                                                                 0 = SMEM.
+                                                                 1 = LLC/DRAM. */
+        uint64_t reserved_62           : 1;
+        uint64_t cmd_type              : 2;  /**< [ 61: 60](R/W) Command type for LLC/DRAM writes, enumerated by MHBW_PNB_WR_CMD_E.
+
+                                                                 Note:
+                                                                 * Writes to BPHY SMEM ignore this field.
+                                                                 * Unaligned or partial cacheline writes use MHBW_PNB_WR_CMD_E::STP.
+
+                                                                 Internal:
+                                                                 Notes:
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for unaligned cache line
+                                                                 starts. All transfers for this burst will be STP.
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for the last transfer in a burst if unaligned. */
+        uint64_t reserved_59           : 1;
+        uint64_t dswap                 : 3;  /**< [ 58: 56](R/W) The byte swap mode for DMA to LLC/DRAM. Enumerated in MHBW_PNB_DSWAP_E.
+                                                                 DMA to BPHY SMEM ignores this field. */
+        uint64_t reserved_48_55        : 8;
+        uint64_t nxt_buf               : 16; /**< [ 47: 32](R/W/H) Buffer number that the next packet will use to write DMA.
+                                                                 Address of this buffer is [NXT_BUF]*[BUF_SIZE] + RFOE(0..0)_RX_IND_MBT_ADDR[BUF_ADDR]
+                                                                 NXT_BUF is reset by BIST clear or writing 0. */
+        uint64_t buf_size              : 16; /**< [ 31: 16](R/W) Size of each buffer, in units of 128 bits. Must:
+                                                                 _ [BUF_SIZE] \<= 0x3FFF.
+                                                                 _ [BUF_SIZE] \>= 0x0010.
+                                                                 _ [TARGET_MEM]==1 - Must be aligned to cache line--bottom three bits
+                                                                 BUF_SIZE\<2:0\> must be 0x0.
+
+                                                                 Internal:
+                                                                 Max of 0x3fff is job descriptor BLOCK_SIZE limit. */
+        uint64_t num_buf               : 16; /**< [ 15:  0](R/W) Number of buffers in circular buffer. Must be greater than 0.
+                                                                 Internal:
+                                                                 Hardware interprets [NUM_BUF]=0 the same as [NUM_BUF]=1.  [NUM_BUF]=0 is nonsensical. */
+#else /* Word 0 - Little Endian */
+        uint64_t num_buf               : 16; /**< [ 15:  0](R/W) Number of buffers in circular buffer. Must be greater than 0.
+                                                                 Internal:
+                                                                 Hardware interprets [NUM_BUF]=0 the same as [NUM_BUF]=1.  [NUM_BUF]=0 is nonsensical. */
+        uint64_t buf_size              : 16; /**< [ 31: 16](R/W) Size of each buffer, in units of 128 bits. Must:
+                                                                 _ [BUF_SIZE] \<= 0x3FFF.
+                                                                 _ [BUF_SIZE] \>= 0x0010.
+                                                                 _ [TARGET_MEM]==1 - Must be aligned to cache line--bottom three bits
+                                                                 BUF_SIZE\<2:0\> must be 0x0.
+
+                                                                 Internal:
+                                                                 Max of 0x3fff is job descriptor BLOCK_SIZE limit. */
+        uint64_t nxt_buf               : 16; /**< [ 47: 32](R/W/H) Buffer number that the next packet will use to write DMA.
+                                                                 Address of this buffer is [NXT_BUF]*[BUF_SIZE] + RFOE(0..0)_RX_IND_MBT_ADDR[BUF_ADDR]
+                                                                 NXT_BUF is reset by BIST clear or writing 0. */
+        uint64_t reserved_48_55        : 8;
+        uint64_t dswap                 : 3;  /**< [ 58: 56](R/W) The byte swap mode for DMA to LLC/DRAM. Enumerated in MHBW_PNB_DSWAP_E.
+                                                                 DMA to BPHY SMEM ignores this field. */
+        uint64_t reserved_59           : 1;
+        uint64_t cmd_type              : 2;  /**< [ 61: 60](R/W) Command type for LLC/DRAM writes, enumerated by MHBW_PNB_WR_CMD_E.
+
+                                                                 Note:
+                                                                 * Writes to BPHY SMEM ignore this field.
+                                                                 * Unaligned or partial cacheline writes use MHBW_PNB_WR_CMD_E::STP.
+
+                                                                 Internal:
+                                                                 Notes:
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for unaligned cache line
+                                                                 starts. All transfers for this burst will be STP.
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for the last transfer in a burst if unaligned. */
+        uint64_t reserved_62           : 1;
+        uint64_t target_mem            : 1;  /**< [ 63: 63](R/W) Specifies the target memory for the address.
+                                                                 0 = SMEM.
+                                                                 1 = LLC/DRAM. */
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_rfoex_rx_ind_mbt_cfg_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -5679,11 +6943,13 @@ union cavm_rfoex_rx_ind_mbt_cfg
 };
 typedef union cavm_rfoex_rx_ind_mbt_cfg cavm_rfoex_rx_ind_mbt_cfg_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_MBT_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_MBT_CFG(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_IND_MBT_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_MBT_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01c20ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001c20ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c20ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_MBT_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -5751,11 +7017,13 @@ union cavm_rfoex_rx_ind_mbt_seg_state
 };
 typedef union cavm_rfoex_rx_ind_mbt_seg_state cavm_rfoex_rx_ind_mbt_seg_state_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_MBT_SEG_STATE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_MBT_SEG_STATE(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_IND_MBT_SEG_STATE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_MBT_SEG_STATE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01c30ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001c30ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c30ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_MBT_SEG_STATE", 1, a, 0, 0, 0, 0, 0);
@@ -5802,9 +7070,11 @@ union cavm_rfoex_rx_ind_vlanx_fwd
 };
 typedef union cavm_rfoex_rx_ind_vlanx_fwd cavm_rfoex_rx_ind_vlanx_fwd_t;
 
-static inline uint64_t CAVM_RFOEX_RX_IND_VLANX_FWD(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_IND_VLANX_FWD(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_IND_VLANX_FWD(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_IND_VLANX_FWD(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1)))
+        return 0x864100001cd0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1)))
         return 0x864100001cd0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("RFOEX_RX_IND_VLANX_FWD", 2, a, b, 0, 0, 0, 0);
@@ -5839,11 +7109,13 @@ union cavm_rfoex_rx_indirect_index
 };
 typedef union cavm_rfoex_rx_indirect_index cavm_rfoex_rx_indirect_index_t;
 
-static inline uint64_t CAVM_RFOEX_RX_INDIRECT_INDEX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_INDIRECT_INDEX(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_INDIRECT_INDEX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_INDIRECT_INDEX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01bf8ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001bf8ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001bf8ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_INDIRECT_INDEX", 1, a, 0, 0, 0, 0, 0);
@@ -5890,11 +7162,13 @@ union cavm_rfoex_rx_jca_addjob_jobtag
 };
 typedef union cavm_rfoex_rx_jca_addjob_jobtag cavm_rfoex_rx_jca_addjob_jobtag_t;
 
-static inline uint64_t CAVM_RFOEX_RX_JCA_ADDJOB_JOBTAG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_JCA_ADDJOB_JOBTAG(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_JCA_ADDJOB_JOBTAG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_JCA_ADDJOB_JOBTAG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01030ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001060ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001060ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_JCA_ADDJOB_JOBTAG", 1, a, 0, 0, 0, 0, 0);
@@ -5930,11 +7204,13 @@ union cavm_rfoex_rx_orderinfo_fail_stat
 };
 typedef union cavm_rfoex_rx_orderinfo_fail_stat cavm_rfoex_rx_orderinfo_fail_stat_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ORDERINFO_FAIL_STAT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ORDERINFO_FAIL_STAT(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_ORDERINFO_FAIL_STAT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ORDERINFO_FAIL_STAT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01d40ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001d40ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001d40ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ORDERINFO_FAIL_STAT", 1, a, 0, 0, 0, 0, 0);
@@ -5965,6 +7241,14 @@ union cavm_rfoex_rx_ordinf_err_ena_w1cx
     } s;
     /* struct cavm_rfoex_rx_ordinf_err_ena_w1cx_s cn9; */
     /* struct cavm_rfoex_rx_ordinf_err_ena_w1cx_s cnf95xx; */
+    struct cavm_rfoex_rx_ordinf_err_ena_w1cx_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ORDINF_ERR_INT(0..15)[ORDERINFO_MISCOMPARE]. */
+#else /* Word 0 - Little Endian */
+        uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ORDINF_ERR_INT(0..15)[ORDERINFO_MISCOMPARE]. */
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_rfoex_rx_ordinf_err_ena_w1cx_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -5976,11 +7260,13 @@ union cavm_rfoex_rx_ordinf_err_ena_w1cx
 };
 typedef union cavm_rfoex_rx_ordinf_err_ena_w1cx cavm_rfoex_rx_ordinf_err_ena_w1cx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_ENA_W1CX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_ENA_W1CX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_ENA_W1CX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_ENA_W1CX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043d01e40ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
+        return 0x864100001500ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001500ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_ORDINF_ERR_ENA_W1CX", 2, a, b, 0, 0, 0, 0);
@@ -6011,6 +7297,14 @@ union cavm_rfoex_rx_ordinf_err_ena_w1sx
     } s;
     /* struct cavm_rfoex_rx_ordinf_err_ena_w1sx_s cn9; */
     /* struct cavm_rfoex_rx_ordinf_err_ena_w1sx_s cnf95xx; */
+    struct cavm_rfoex_rx_ordinf_err_ena_w1sx_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ORDINF_ERR_INT(0..15)[ORDERINFO_MISCOMPARE]. */
+#else /* Word 0 - Little Endian */
+        uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ORDINF_ERR_INT(0..15)[ORDERINFO_MISCOMPARE]. */
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_rfoex_rx_ordinf_err_ena_w1sx_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -6022,11 +7316,13 @@ union cavm_rfoex_rx_ordinf_err_ena_w1sx
 };
 typedef union cavm_rfoex_rx_ordinf_err_ena_w1sx cavm_rfoex_rx_ordinf_err_ena_w1sx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_ENA_W1SX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_ENA_W1SX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_ENA_W1SX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_ENA_W1SX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043d01e20ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
+        return 0x864100001480ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001480ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_ORDINF_ERR_ENA_W1SX", 2, a, b, 0, 0, 0, 0);
@@ -6065,6 +7361,14 @@ union cavm_rfoex_rx_ordinf_err_intx
     } s;
     /* struct cavm_rfoex_rx_ordinf_err_intx_s cn9; */
     /* struct cavm_rfoex_rx_ordinf_err_intx_s cnf95xx; */
+    struct cavm_rfoex_rx_ordinf_err_intx_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1C/H) orderInfo.seqNum, orderInfo .timestamp miscompare, or eCPRI SEQ_ID from incoming RoE packet. */
+#else /* Word 0 - Little Endian */
+        uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1C/H) orderInfo.seqNum, orderInfo .timestamp miscompare, or eCPRI SEQ_ID from incoming RoE packet. */
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_rfoex_rx_ordinf_err_intx_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -6078,11 +7382,13 @@ union cavm_rfoex_rx_ordinf_err_intx
 };
 typedef union cavm_rfoex_rx_ordinf_err_intx cavm_rfoex_rx_ordinf_err_intx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_INTX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_INTX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_INTX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_INTX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043d01e00ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
+        return 0x864100001400ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001400ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_ORDINF_ERR_INTX", 2, a, b, 0, 0, 0, 0);
@@ -6113,6 +7419,14 @@ union cavm_rfoex_rx_ordinf_err_int_w1sx
     } s;
     /* struct cavm_rfoex_rx_ordinf_err_int_w1sx_s cn9; */
     /* struct cavm_rfoex_rx_ordinf_err_int_w1sx_s cnf95xx; */
+    struct cavm_rfoex_rx_ordinf_err_int_w1sx_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1S/H) Reads or sets RFOE(0)_RX_ORDINF_ERR_INT(0..15)[ORDERINFO_MISCOMPARE]. */
+#else /* Word 0 - Little Endian */
+        uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1S/H) Reads or sets RFOE(0)_RX_ORDINF_ERR_INT(0..15)[ORDERINFO_MISCOMPARE]. */
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_rfoex_rx_ordinf_err_int_w1sx_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -6124,11 +7438,13 @@ union cavm_rfoex_rx_ordinf_err_int_w1sx
 };
 typedef union cavm_rfoex_rx_ordinf_err_int_w1sx cavm_rfoex_rx_ordinf_err_int_w1sx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_INT_W1SX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_INT_W1SX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_INT_W1SX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_INT_W1SX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043d01e60ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
+        return 0x864100001580ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001580ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_ORDINF_ERR_INT_W1SX", 2, a, b, 0, 0, 0, 0);
@@ -6161,11 +7477,13 @@ union cavm_rfoex_rx_ordinf_psm_msg_w0
 };
 typedef union cavm_rfoex_rx_ordinf_psm_msg_w0 cavm_rfoex_rx_ordinf_psm_msg_w0_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ORDINF_PSM_MSG_W0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ORDINF_PSM_MSG_W0(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_ORDINF_PSM_MSG_W0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ORDINF_PSM_MSG_W0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01e80ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001600ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001600ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ORDINF_PSM_MSG_W0", 1, a, 0, 0, 0, 0, 0);
@@ -6198,11 +7516,13 @@ union cavm_rfoex_rx_ordinf_psm_msg_w1
 };
 typedef union cavm_rfoex_rx_ordinf_psm_msg_w1 cavm_rfoex_rx_ordinf_psm_msg_w1_t;
 
-static inline uint64_t CAVM_RFOEX_RX_ORDINF_PSM_MSG_W1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_ORDINF_PSM_MSG_W1(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_ORDINF_PSM_MSG_W1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_ORDINF_PSM_MSG_W1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01e88ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001608ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001608ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ORDINF_PSM_MSG_W1", 1, a, 0, 0, 0, 0, 0);
@@ -6240,11 +7560,13 @@ union cavm_rfoex_rx_pkt_err_drop_stat
 };
 typedef union cavm_rfoex_rx_pkt_err_drop_stat cavm_rfoex_rx_pkt_err_drop_stat_t;
 
-static inline uint64_t CAVM_RFOEX_RX_PKT_ERR_DROP_STAT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_PKT_ERR_DROP_STAT(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_PKT_ERR_DROP_STAT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_PKT_ERR_DROP_STAT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01d38ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001d38ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001d38ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_PKT_ERR_DROP_STAT", 1, a, 0, 0, 0, 0, 0);
@@ -6270,6 +7592,28 @@ union cavm_rfoex_rx_pkt_len_cfgx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_32_63        : 32;
+        uint64_t len_max               : 16; /**< [ 31: 16](R/W) Maximum packet length. If incoming packet length is greater than [LEN_MAX], set
+                                                                 Interrupt RFOE()_ERROR_INT[PKT_LEN] and indicate error in PSW
+                                                                 RFOE_ECPRI_PSW0_S[ERR_STS]\<4\> or  PSW RFOE_ECPRI_PSW0_S[DMA_ERROR]. */
+        uint64_t len_min               : 16; /**< [ 15:  0](R/W) Minimum packet length. If incoming packet length is less than [LEN_MIN], set
+                                                                 Interrupt RFOE()_ERROR_INT[PKT_LEN] and indicate error in PSW
+                                                                 RFOE_ECPRI_PSW0_S[ERR_STS]\<4\> or  PSW RFOE_ECPRI_PSW0_S[DMA_ERROR]. */
+#else /* Word 0 - Little Endian */
+        uint64_t len_min               : 16; /**< [ 15:  0](R/W) Minimum packet length. If incoming packet length is less than [LEN_MIN], set
+                                                                 Interrupt RFOE()_ERROR_INT[PKT_LEN] and indicate error in PSW
+                                                                 RFOE_ECPRI_PSW0_S[ERR_STS]\<4\> or  PSW RFOE_ECPRI_PSW0_S[DMA_ERROR]. */
+        uint64_t len_max               : 16; /**< [ 31: 16](R/W) Maximum packet length. If incoming packet length is greater than [LEN_MAX], set
+                                                                 Interrupt RFOE()_ERROR_INT[PKT_LEN] and indicate error in PSW
+                                                                 RFOE_ECPRI_PSW0_S[ERR_STS]\<4\> or  PSW RFOE_ECPRI_PSW0_S[DMA_ERROR]. */
+        uint64_t reserved_32_63        : 32;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_rx_pkt_len_cfgx_s cn9; */
+    /* struct cavm_rfoex_rx_pkt_len_cfgx_s f95mm; */
+    struct cavm_rfoex_rx_pkt_len_cfgx_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_32_63        : 32;
         uint64_t len_max               : 16; /**< [ 31: 16](R/W) Maximum packet length. If incoming packet length is greater than [LEN_MAX],
                                                                  set Interrupt RFOE()_RX_ERROR_INT[PKT_LEN_RANGE] and indicate error in
                                                                  RFOE_ECPRI_PSW0_S[ERR_STS]\<4\> or RFOE_PSW0_S[DMA_ERROR]. */
@@ -6285,14 +7629,15 @@ union cavm_rfoex_rx_pkt_len_cfgx
                                                                  RFOE_ECPRI_PSW0_S[ERR_STS]\<4\> or RFOE_PSW0_S[DMA_ERROR]. */
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rfoex_rx_pkt_len_cfgx_s cn; */
+    } loki;
 };
 typedef union cavm_rfoex_rx_pkt_len_cfgx cavm_rfoex_rx_pkt_len_cfgx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_PKT_LEN_CFGX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_PKT_LEN_CFGX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_PKT_LEN_CFGX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_PKT_LEN_CFGX(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100001880ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001880ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_PKT_LEN_CFGX", 2, a, b, 0, 0, 0, 0);
@@ -6319,6 +7664,26 @@ union cavm_rfoex_rx_pkt_loggerx_addr
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_53_63        : 11;
         uint64_t start_addr            : 53; /**< [ 52:  0](R/W) Specifies the byte address of the start of the write DMA.
+                                                                 * If RFOE()_RX_PKT_LOGGER_CFG[TARGET_MEM] = 0, the address  must be
+                                                                 128-bit aligned (i.e., bits[3:0] must be 0).
+                                                                 * If RFOE()_RX_PKT_LOGGER_CFG[TARGET_MEM] = 1, the address  must be
+                                                                 128-byte aligned (i.e., bits[6:0] must be 0). */
+#else /* Word 0 - Little Endian */
+        uint64_t start_addr            : 53; /**< [ 52:  0](R/W) Specifies the byte address of the start of the write DMA.
+                                                                 * If RFOE()_RX_PKT_LOGGER_CFG[TARGET_MEM] = 0, the address  must be
+                                                                 128-bit aligned (i.e., bits[3:0] must be 0).
+                                                                 * If RFOE()_RX_PKT_LOGGER_CFG[TARGET_MEM] = 1, the address  must be
+                                                                 128-byte aligned (i.e., bits[6:0] must be 0). */
+        uint64_t reserved_53_63        : 11;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_rx_pkt_loggerx_addr_s cn9; */
+    /* struct cavm_rfoex_rx_pkt_loggerx_addr_s f95mm; */
+    struct cavm_rfoex_rx_pkt_loggerx_addr_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_53_63        : 11;
+        uint64_t start_addr            : 53; /**< [ 52:  0](R/W) Specifies the byte address of the start of the write DMA.
                                                                  * If RFOE()_RX_PKT_LOGGER()_CFG[TARGET_MEM] = 0, the address  must be
                                                                  128-bit aligned (i.e., bits[3:0] must be 0).
                                                                  * If RFOE()_RX_PKT_LOGGER()_CFG[TARGET_MEM] = 1, the address  must be
@@ -6331,14 +7696,15 @@ union cavm_rfoex_rx_pkt_loggerx_addr
                                                                  128-byte aligned (i.e., bits[6:0] must be 0). */
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rfoex_rx_pkt_loggerx_addr_s cn; */
+    } loki;
 };
 typedef union cavm_rfoex_rx_pkt_loggerx_addr cavm_rfoex_rx_pkt_loggerx_addr_t;
 
-static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1)))
+        return 0x864100001020ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1)))
         return 0x864100001020ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("RFOEX_RX_PKT_LOGGERX_ADDR", 2, a, b, 0, 0, 0, 0);
@@ -6384,6 +7750,144 @@ union cavm_rfoex_rx_pkt_loggerx_cfg
         uint64_t reserved_53_55        : 3;
         uint64_t tail_idx              : 17; /**< [ 52: 36](RO/H) Index for the next logger status write, in units of 16 bytes.
                                                                  * Newest logger entry is at ([TAIL_IDX]-1) mod [SIZE].
+                                                                 * Address in memory is RFOE(0..0)_RX_PKT_LOGGER_ADDR +
+                                                                 (([TAIL_IDX]-1) mod [SIZE])*16 bytes.
+                                                                 * Newest is not valid after reset since nothing has been written to packet logger in memory. */
+        uint64_t reserved_35           : 1;
+        uint64_t flush_done            : 1;  /**< [ 34: 34](RO/H) Cleared on a write to[FLUSH]=1.  Set when the
+                                                                 packet logger buffer has been flushed to memory.
+                                                                 * Indicates that all logger write requests have been issued from RFOE.
+                                                                 * Does not guarantee return of all commits. */
+        uint64_t flush                 : 1;  /**< [ 33: 33](R/W/H) On a write with [FLUSH]=1, hardware flushes the internal packet log FIFO to
+                                                                 memory. Hardware clears when flush operation completes as indicated by
+                                                                 [FLUSH_DONE] == 1. */
+        uint64_t enable                : 1;  /**< [ 32: 32](R/W) Enable receive packet logging.
+                                                                 0 = Disabled.
+                                                                 1 = Enable packet logging.
+
+                                                                 When enabled, each RoE subtype 0xfd packet with EOS set generates a log
+                                                                 entry. All other packets generate a log entry for each packet.
+
+                                                                 Logger entries for packets already started will be completed and written
+                                                                 normally.  If a flush is desired,
+                                                                 write [FLUSH] = 1 to force all waiting entries to memory.
+
+                                                                 Software should only change logger configuration when logger is idle, logger
+                                                                 FIFO empty (ie. flushed) and [ENABLE] = 0.
+
+                                                                 RFOE_RX_PKT_LOGGER(1)[ENABLE] is ignored. TX packet logger enable
+                                                                 functionality is controlled in TX side. */
+        uint64_t ddr_wait_cycles       : 12; /**< [ 31: 20](R/W) Used when [TARGET_MEM]=1.  No action when [TARGET_MEM]=0.
+                                                                 Maximum time for coalescing log writes to LLC/DRAM. Up to 128 bytes of
+                                                                 log entries are coalesced before writing to LLC/DRAM. After
+                                                                 [DDR_WAIT_CYCLES]*16 cycles with no new log entries, any buffered
+                                                                 entries are written to memory.
+
+                                                                 The reset value of 0x80 results in a time of 2 us when BCLK is 1 GHz.
+
+                                                                 Setting [DDR_WAIT_CYCLES]=0 disables the timer, and the logger will
+                                                                 wait indefinitely to collect 128 bytes of log entries before writing
+                                                                 to LLC/DRAM.
+
+                                                                 Ignored when [TARGET_MEM]=0. */
+        uint64_t reserved_17_19        : 3;
+        uint64_t size                  : 17; /**< [ 16:  0](R/W) Total size of the log buffer in units of 128 bits. Must have [SIZE] \> 0.
+                                                                 If RFOE()_RX_PKT_LOGGER_CFG[TARGET_MEM]=1, [SIZE] must be a multiple
+                                                                 of 8 (i.e., the size must be a multiple of 128 bytes). */
+#else /* Word 0 - Little Endian */
+        uint64_t size                  : 17; /**< [ 16:  0](R/W) Total size of the log buffer in units of 128 bits. Must have [SIZE] \> 0.
+                                                                 If RFOE()_RX_PKT_LOGGER_CFG[TARGET_MEM]=1, [SIZE] must be a multiple
+                                                                 of 8 (i.e., the size must be a multiple of 128 bytes). */
+        uint64_t reserved_17_19        : 3;
+        uint64_t ddr_wait_cycles       : 12; /**< [ 31: 20](R/W) Used when [TARGET_MEM]=1.  No action when [TARGET_MEM]=0.
+                                                                 Maximum time for coalescing log writes to LLC/DRAM. Up to 128 bytes of
+                                                                 log entries are coalesced before writing to LLC/DRAM. After
+                                                                 [DDR_WAIT_CYCLES]*16 cycles with no new log entries, any buffered
+                                                                 entries are written to memory.
+
+                                                                 The reset value of 0x80 results in a time of 2 us when BCLK is 1 GHz.
+
+                                                                 Setting [DDR_WAIT_CYCLES]=0 disables the timer, and the logger will
+                                                                 wait indefinitely to collect 128 bytes of log entries before writing
+                                                                 to LLC/DRAM.
+
+                                                                 Ignored when [TARGET_MEM]=0. */
+        uint64_t enable                : 1;  /**< [ 32: 32](R/W) Enable receive packet logging.
+                                                                 0 = Disabled.
+                                                                 1 = Enable packet logging.
+
+                                                                 When enabled, each RoE subtype 0xfd packet with EOS set generates a log
+                                                                 entry. All other packets generate a log entry for each packet.
+
+                                                                 Logger entries for packets already started will be completed and written
+                                                                 normally.  If a flush is desired,
+                                                                 write [FLUSH] = 1 to force all waiting entries to memory.
+
+                                                                 Software should only change logger configuration when logger is idle, logger
+                                                                 FIFO empty (ie. flushed) and [ENABLE] = 0.
+
+                                                                 RFOE_RX_PKT_LOGGER(1)[ENABLE] is ignored. TX packet logger enable
+                                                                 functionality is controlled in TX side. */
+        uint64_t flush                 : 1;  /**< [ 33: 33](R/W/H) On a write with [FLUSH]=1, hardware flushes the internal packet log FIFO to
+                                                                 memory. Hardware clears when flush operation completes as indicated by
+                                                                 [FLUSH_DONE] == 1. */
+        uint64_t flush_done            : 1;  /**< [ 34: 34](RO/H) Cleared on a write to[FLUSH]=1.  Set when the
+                                                                 packet logger buffer has been flushed to memory.
+                                                                 * Indicates that all logger write requests have been issued from RFOE.
+                                                                 * Does not guarantee return of all commits. */
+        uint64_t reserved_35           : 1;
+        uint64_t tail_idx              : 17; /**< [ 52: 36](RO/H) Index for the next logger status write, in units of 16 bytes.
+                                                                 * Newest logger entry is at ([TAIL_IDX]-1) mod [SIZE].
+                                                                 * Address in memory is RFOE(0..0)_RX_PKT_LOGGER_ADDR +
+                                                                 (([TAIL_IDX]-1) mod [SIZE])*16 bytes.
+                                                                 * Newest is not valid after reset since nothing has been written to packet logger in memory. */
+        uint64_t reserved_53_55        : 3;
+        uint64_t dswap                 : 3;  /**< [ 58: 56](R/W) The byte swap mode for DMA to LLC/DRAM. Enumerated in MHBW_PNB_DSWAP_E.
+                                                                 DMA to BPHY SMEM ignores this field. */
+        uint64_t reserved_59           : 1;
+        uint64_t cmd_type              : 2;  /**< [ 61: 60](R/W) Command type for LLC/DRAM write, as enumerated by MHBW_PNB_WR_CMD_E.
+
+                                                                 Note:
+                                                                 * Writes to BPHY SMEM ignore this field.
+                                                                 * Unaligned or partial cacheline writes always use MHBW_PNB_WR_CMD_E::STP.
+
+                                                                 Internal:
+                                                                 Notes:
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for unaligned cache line
+                                                                 starts. All transfers for this burst will be STP.
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for the last transfer in a burst if unaligned. */
+        uint64_t reserved_62           : 1;
+        uint64_t target_mem            : 1;  /**< [ 63: 63](R/W) Specifies the target memory for the log buffer.
+                                                                 0 = SMEM.
+                                                                 1 = LLC/DRAM. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_rx_pkt_loggerx_cfg_s cn9; */
+    /* struct cavm_rfoex_rx_pkt_loggerx_cfg_s f95mm; */
+    struct cavm_rfoex_rx_pkt_loggerx_cfg_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t target_mem            : 1;  /**< [ 63: 63](R/W) Specifies the target memory for the log buffer.
+                                                                 0 = SMEM.
+                                                                 1 = LLC/DRAM. */
+        uint64_t reserved_62           : 1;
+        uint64_t cmd_type              : 2;  /**< [ 61: 60](R/W) Command type for LLC/DRAM write, as enumerated by MHBW_PNB_WR_CMD_E.
+
+                                                                 Note:
+                                                                 * Writes to BPHY SMEM ignore this field.
+                                                                 * Unaligned or partial cacheline writes always use MHBW_PNB_WR_CMD_E::STP.
+
+                                                                 Internal:
+                                                                 Notes:
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for unaligned cache line
+                                                                 starts. All transfers for this burst will be STP.
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for the last transfer in a burst if unaligned. */
+        uint64_t reserved_59           : 1;
+        uint64_t dswap                 : 3;  /**< [ 58: 56](R/W) The byte swap mode for DMA to LLC/DRAM. Enumerated in MHBW_PNB_DSWAP_E.
+                                                                 DMA to BPHY SMEM ignores this field. */
+        uint64_t reserved_53_55        : 3;
+        uint64_t tail_idx              : 17; /**< [ 52: 36](RO/H) Index for the next logger status write, in units of 16 bytes.
+                                                                 * Newest logger entry is at ([TAIL_IDX]-1) mod [SIZE].
                                                                  * Address in memory is RFOE()_RX_PKT_LOGGER()_ADDR +
                                                                  (([TAIL_IDX]-1) mod [SIZE])*16 bytes.
                                                                  * Newest is not valid after reset since nothing has been written to packet logger in memory. */
@@ -6495,14 +7999,15 @@ union cavm_rfoex_rx_pkt_loggerx_cfg
                                                                  0 = SMEM.
                                                                  1 = LLC/DRAM. */
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rfoex_rx_pkt_loggerx_cfg_s cn; */
+    } loki;
 };
 typedef union cavm_rfoex_rx_pkt_loggerx_cfg cavm_rfoex_rx_pkt_loggerx_cfg_t;
 
-static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_CFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_CFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_CFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_CFG(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1)))
+        return 0x864100001030ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1)))
         return 0x864100001030ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("RFOEX_RX_PKT_LOGGERX_CFG", 2, a, b, 0, 0, 0, 0);
@@ -6545,8 +8050,8 @@ union cavm_rfoex_rx_pkt_logger_addr
 };
 typedef union cavm_rfoex_rx_pkt_logger_addr cavm_rfoex_rx_pkt_logger_addr_t;
 
-static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGER_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGER_ADDR(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGER_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGER_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01020ll + 0x80000ll * ((a) & 0x1);
@@ -6684,8 +8189,8 @@ union cavm_rfoex_rx_pkt_logger_cfg
 };
 typedef union cavm_rfoex_rx_pkt_logger_cfg cavm_rfoex_rx_pkt_logger_cfg_t;
 
-static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGER_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGER_CFG(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGER_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGER_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01028ll + 0x80000ll * ((a) & 0x1);
@@ -6720,11 +8225,13 @@ union cavm_rfoex_rx_scratch
 };
 typedef union cavm_rfoex_rx_scratch cavm_rfoex_rx_scratch_t;
 
-static inline uint64_t CAVM_RFOEX_RX_SCRATCH(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_SCRATCH(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_SCRATCH(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01000ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001000ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001000ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_SCRATCH", 1, a, 0, 0, 0, 0, 0);
@@ -6879,7 +8386,7 @@ union cavm_rfoex_rx_status
         uint64_t reserved_50_63        : 14;
 #endif /* Word 0 - End */
     } cnf95xxp2;
-    struct cavm_rfoex_rx_status_loki
+    struct cavm_rfoex_rx_status_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_32_63        : 32;
@@ -6926,15 +8433,18 @@ union cavm_rfoex_rx_status
         uint64_t reserved_17_31        : 15;
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
-    } loki;
+    } f95mm;
+    /* struct cavm_rfoex_rx_status_f95mm loki; */
 };
 typedef union cavm_rfoex_rx_status cavm_rfoex_rx_status_t;
 
-static inline uint64_t CAVM_RFOEX_RX_STATUS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_STATUS(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01010ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001010ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001010ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_STATUS", 1, a, 0, 0, 0, 0, 0);
@@ -6967,11 +8477,13 @@ union cavm_rfoex_rx_sync_discard_counter
 };
 typedef union cavm_rfoex_rx_sync_discard_counter cavm_rfoex_rx_sync_discard_counter_t;
 
-static inline uint64_t CAVM_RFOEX_RX_SYNC_DISCARD_COUNTER(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_SYNC_DISCARD_COUNTER(unsigned long a)
+static inline uint64_t CAVM_RFOEX_RX_SYNC_DISCARD_COUNTER(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_SYNC_DISCARD_COUNTER(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d01d20ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100001d20ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001d20ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_SYNC_DISCARD_COUNTER", 1, a, 0, 0, 0, 0, 0);
@@ -7011,11 +8523,13 @@ union cavm_rfoex_rx_sync_flowx
 };
 typedef union cavm_rfoex_rx_sync_flowx cavm_rfoex_rx_sync_flowx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_SYNC_FLOWX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_SYNC_FLOWX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_SYNC_FLOWX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_SYNC_FLOWX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043d01700ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
+        return 0x864100001100ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001100ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_SYNC_FLOWX", 2, a, b, 0, 0, 0, 0);
@@ -7062,11 +8576,13 @@ union cavm_rfoex_rx_sync_statex
 };
 typedef union cavm_rfoex_rx_sync_statex cavm_rfoex_rx_sync_statex_t;
 
-static inline uint64_t CAVM_RFOEX_RX_SYNC_STATEX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_SYNC_STATEX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_SYNC_STATEX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_SYNC_STATEX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043d01740ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
+        return 0x864100001180ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001180ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_SYNC_STATEX", 2, a, b, 0, 0, 0, 0);
@@ -7092,6 +8608,24 @@ union cavm_rfoex_rx_vlanx_cfg
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_17_63        : 47;
         uint64_t ena                   : 1;  /**< [ 16: 16](R/W) Enable [TPID] match to packet EtherType. */
+        uint64_t tpid                  : 16; /**< [ 15:  0](R/W) EtherType match value for VLAN processing. If both
+                                                                 RFOE()_RX_VLAN(0..1)_CFG[ENA]==1, then require  RFOE()_RX_VLAN(0)_CFG[TPID] !=
+                                                                 RFOE()_RX_VLAN(1)_CFG[TPID] */
+#else /* Word 0 - Little Endian */
+        uint64_t tpid                  : 16; /**< [ 15:  0](R/W) EtherType match value for VLAN processing. If both
+                                                                 RFOE()_RX_VLAN(0..1)_CFG[ENA]==1, then require  RFOE()_RX_VLAN(0)_CFG[TPID] !=
+                                                                 RFOE()_RX_VLAN(1)_CFG[TPID] */
+        uint64_t ena                   : 1;  /**< [ 16: 16](R/W) Enable [TPID] match to packet EtherType. */
+        uint64_t reserved_17_63        : 47;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_rx_vlanx_cfg_s cn9; */
+    /* struct cavm_rfoex_rx_vlanx_cfg_s f95mm; */
+    struct cavm_rfoex_rx_vlanx_cfg_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_17_63        : 47;
+        uint64_t ena                   : 1;  /**< [ 16: 16](R/W) Enable [TPID] match to packet EtherType. */
         uint64_t tpid                  : 16; /**< [ 15:  0](R/W) EtherType match value for VLAN processing. If both [ENA] is set for both
                                                                  VLAN registers, then the [TPID] values of the two registers must be
                                                                  different. */
@@ -7102,14 +8636,15 @@ union cavm_rfoex_rx_vlanx_cfg
         uint64_t ena                   : 1;  /**< [ 16: 16](R/W) Enable [TPID] match to packet EtherType. */
         uint64_t reserved_17_63        : 47;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rfoex_rx_vlanx_cfg_s cn; */
+    } loki;
 };
 typedef union cavm_rfoex_rx_vlanx_cfg cavm_rfoex_rx_vlanx_cfg_t;
 
-static inline uint64_t CAVM_RFOEX_RX_VLANX_CFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_VLANX_CFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_VLANX_CFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_VLANX_CFG(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1)))
+        return 0x864100001070ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1)))
         return 0x864100001070ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("RFOEX_RX_VLANX_CFG", 2, a, b, 0, 0, 0, 0);
@@ -7144,9 +8679,11 @@ union cavm_rfoex_rx_vlan_drop_statx
 };
 typedef union cavm_rfoex_rx_vlan_drop_statx cavm_rfoex_rx_vlan_drop_statx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_VLAN_DROP_STATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_VLAN_DROP_STATX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_VLAN_DROP_STATX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_VLAN_DROP_STATX(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x8641000010a0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x8641000010a0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_VLAN_DROP_STATX", 2, a, b, 0, 0, 0, 0);
@@ -7181,9 +8718,11 @@ union cavm_rfoex_rx_vlan_fwd_statx
 };
 typedef union cavm_rfoex_rx_vlan_fwd_statx cavm_rfoex_rx_vlan_fwd_statx_t;
 
-static inline uint64_t CAVM_RFOEX_RX_VLAN_FWD_STATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_RX_VLAN_FWD_STATX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_RX_VLAN_FWD_STATX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_VLAN_FWD_STATX(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x8641000010c0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x8641000010c0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_VLAN_FWD_STATX", 2, a, b, 0, 0, 0, 0);
@@ -7288,6 +8827,7 @@ union cavm_rfoex_tx_ctrl
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_rfoex_tx_ctrl_cnf95xxp2 f95mm; */
     struct cavm_rfoex_tx_ctrl_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -7335,11 +8875,13 @@ union cavm_rfoex_tx_ctrl
 };
 typedef union cavm_rfoex_tx_ctrl cavm_rfoex_tx_ctrl_t;
 
-static inline uint64_t CAVM_RFOEX_TX_CTRL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_CTRL(unsigned long a)
+static inline uint64_t CAVM_RFOEX_TX_CTRL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_CTRL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d00f08ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100000f08ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000f08ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_CTRL", 1, a, 0, 0, 0, 0, 0);
@@ -7383,6 +8925,24 @@ union cavm_rfoex_tx_hdr_dax
     } s;
     /* struct cavm_rfoex_tx_hdr_dax_s cn9; */
     /* struct cavm_rfoex_tx_hdr_dax_s cnf95xx; */
+    struct cavm_rfoex_tx_hdr_dax_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_48_63        : 16;
+        uint64_t da                    : 48; /**< [ 47:  0](R/W) Destination Ethernet MAC address. The following ordering within the field \<7:0\>
+                                                                 at byte address 0, \<15:8\> at address 1, ..., \<47:40\> at address 0x5.
+                                                                 RFOE(0..0)_TX_HDR_DA[7:0] = byte 0 of Ethernet packet.
+                                                                 ...
+                                                                 RFOE(0..0)_TX_HDR_DA[47:40] = byte 5 of Ethernet packet. */
+#else /* Word 0 - Little Endian */
+        uint64_t da                    : 48; /**< [ 47:  0](R/W) Destination Ethernet MAC address. The following ordering within the field \<7:0\>
+                                                                 at byte address 0, \<15:8\> at address 1, ..., \<47:40\> at address 0x5.
+                                                                 RFOE(0..0)_TX_HDR_DA[7:0] = byte 0 of Ethernet packet.
+                                                                 ...
+                                                                 RFOE(0..0)_TX_HDR_DA[47:40] = byte 5 of Ethernet packet. */
+        uint64_t reserved_48_63        : 16;
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_rfoex_tx_hdr_dax_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -7404,11 +8964,13 @@ union cavm_rfoex_tx_hdr_dax
 };
 typedef union cavm_rfoex_tx_hdr_dax cavm_rfoex_tx_hdr_dax_t;
 
-static inline uint64_t CAVM_RFOEX_TX_HDR_DAX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_HDR_DAX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_TX_HDR_DAX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_HDR_DAX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=7)))
         return 0x87e043d00800ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=7)))
+        return 0x864100000800ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=7)))
         return 0x864100000800ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     __cavm_csr_fatal("RFOEX_TX_HDR_DAX", 2, a, b, 0, 0, 0, 0);
@@ -7450,7 +9012,7 @@ union cavm_rfoex_tx_hdr_ethertypex
     } s;
     /* struct cavm_rfoex_tx_hdr_ethertypex_s cn9; */
     /* struct cavm_rfoex_tx_hdr_ethertypex_s cnf95xx; */
-    struct cavm_rfoex_tx_hdr_ethertypex_loki
+    struct cavm_rfoex_tx_hdr_ethertypex_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_16_63        : 48;
@@ -7461,15 +9023,18 @@ union cavm_rfoex_tx_hdr_ethertypex
                                                                  byte address 0, EtherType\<15:8\> at byte address 1, */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
-    } loki;
+    } f95mm;
+    /* struct cavm_rfoex_tx_hdr_ethertypex_f95mm loki; */
 };
 typedef union cavm_rfoex_tx_hdr_ethertypex cavm_rfoex_tx_hdr_ethertypex_t;
 
-static inline uint64_t CAVM_RFOEX_TX_HDR_ETHERTYPEX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_HDR_ETHERTYPEX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_TX_HDR_ETHERTYPEX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_HDR_ETHERTYPEX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=7)))
         return 0x87e043d00880ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=7)))
+        return 0x864100000880ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=7)))
         return 0x864100000880ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     __cavm_csr_fatal("RFOEX_TX_HDR_ETHERTYPEX", 2, a, b, 0, 0, 0, 0);
@@ -7513,6 +9078,24 @@ union cavm_rfoex_tx_hdr_sax
     } s;
     /* struct cavm_rfoex_tx_hdr_sax_s cn9; */
     /* struct cavm_rfoex_tx_hdr_sax_s cnf95xx; */
+    struct cavm_rfoex_tx_hdr_sax_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_48_63        : 16;
+        uint64_t sa                    : 48; /**< [ 47:  0](R/W) Source Ethernet MAC address. The following ordering within the field \<7:0\>
+                                                                 at byte address 0, \<15:8\> at address 1, ..., \<47:40\> at address 0x5.
+                                                                 RFOE(0..0)_TX_HDR_SA[7:0] = byte 6 of Ethernet packet.
+                                                                 ...
+                                                                 RFOE(0..0)_TX_HDR_SA[47:40] = byte 11 of Ethernet packet. */
+#else /* Word 0 - Little Endian */
+        uint64_t sa                    : 48; /**< [ 47:  0](R/W) Source Ethernet MAC address. The following ordering within the field \<7:0\>
+                                                                 at byte address 0, \<15:8\> at address 1, ..., \<47:40\> at address 0x5.
+                                                                 RFOE(0..0)_TX_HDR_SA[7:0] = byte 6 of Ethernet packet.
+                                                                 ...
+                                                                 RFOE(0..0)_TX_HDR_SA[47:40] = byte 11 of Ethernet packet. */
+        uint64_t reserved_48_63        : 16;
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_rfoex_tx_hdr_sax_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -7534,11 +9117,13 @@ union cavm_rfoex_tx_hdr_sax
 };
 typedef union cavm_rfoex_tx_hdr_sax cavm_rfoex_tx_hdr_sax_t;
 
-static inline uint64_t CAVM_RFOEX_TX_HDR_SAX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_HDR_SAX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_TX_HDR_SAX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_HDR_SAX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=7)))
         return 0x87e043d00840ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=7)))
+        return 0x864100000840ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=7)))
         return 0x864100000840ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     __cavm_csr_fatal("RFOEX_TX_HDR_SAX", 2, a, b, 0, 0, 0, 0);
@@ -7580,9 +9165,11 @@ union cavm_rfoex_tx_hdr_vlanx
 };
 typedef union cavm_rfoex_tx_hdr_vlanx cavm_rfoex_tx_hdr_vlanx_t;
 
-static inline uint64_t CAVM_RFOEX_TX_HDR_VLANX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_HDR_VLANX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_TX_HDR_VLANX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_HDR_VLANX(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=7)))
+        return 0x8641000008c0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=7)))
         return 0x8641000008c0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     __cavm_csr_fatal("RFOEX_TX_HDR_VLANX", 2, a, b, 0, 0, 0, 0);
@@ -7635,6 +9222,7 @@ union cavm_rfoex_tx_ind_seqnum_p_cfg
     } s;
     /* struct cavm_rfoex_tx_ind_seqnum_p_cfg_s cn9; */
     /* struct cavm_rfoex_tx_ind_seqnum_p_cfg_s cnf95xx; */
+    /* struct cavm_rfoex_tx_ind_seqnum_p_cfg_s f95mm; */
     struct cavm_rfoex_tx_ind_seqnum_p_cfg_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -7658,11 +9246,13 @@ union cavm_rfoex_tx_ind_seqnum_p_cfg
 };
 typedef union cavm_rfoex_tx_ind_seqnum_p_cfg cavm_rfoex_tx_ind_seqnum_p_cfg_t;
 
-static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_P_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_P_CFG(unsigned long a)
+static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_P_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_P_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d00c00ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100000c00ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000c00ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_IND_SEQNUM_P_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -7731,11 +9321,13 @@ union cavm_rfoex_tx_ind_seqnum_prop_cfg
 };
 typedef union cavm_rfoex_tx_ind_seqnum_prop_cfg cavm_rfoex_tx_ind_seqnum_prop_cfg_t;
 
-static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_PROP_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_PROP_CFG(unsigned long a)
+static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_PROP_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_PROP_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d00c10ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100000c10ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000c10ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_IND_SEQNUM_PROP_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -7780,6 +9372,7 @@ union cavm_rfoex_tx_ind_seqnum_q_cfg
     } s;
     /* struct cavm_rfoex_tx_ind_seqnum_q_cfg_s cn9; */
     /* struct cavm_rfoex_tx_ind_seqnum_q_cfg_s cnf95xx; */
+    /* struct cavm_rfoex_tx_ind_seqnum_q_cfg_s f95mm; */
     struct cavm_rfoex_tx_ind_seqnum_q_cfg_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -7795,11 +9388,13 @@ union cavm_rfoex_tx_ind_seqnum_q_cfg
 };
 typedef union cavm_rfoex_tx_ind_seqnum_q_cfg cavm_rfoex_tx_ind_seqnum_q_cfg_t;
 
-static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_Q_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_Q_CFG(unsigned long a)
+static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_Q_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_Q_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d00c08ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100000c08ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000c08ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_IND_SEQNUM_Q_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -7846,6 +9441,7 @@ union cavm_rfoex_tx_ind_seqnum_state
     } s;
     /* struct cavm_rfoex_tx_ind_seqnum_state_s cn9; */
     /* struct cavm_rfoex_tx_ind_seqnum_state_s cnf95xx; */
+    /* struct cavm_rfoex_tx_ind_seqnum_state_s f95mm; */
     struct cavm_rfoex_tx_ind_seqnum_state_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -7863,11 +9459,13 @@ union cavm_rfoex_tx_ind_seqnum_state
 };
 typedef union cavm_rfoex_tx_ind_seqnum_state cavm_rfoex_tx_ind_seqnum_state_t;
 
-static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_STATE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_STATE(unsigned long a)
+static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_STATE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_STATE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d00c18ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100000c18ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000c18ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_IND_SEQNUM_STATE", 1, a, 0, 0, 0, 0, 0);
@@ -7902,11 +9500,13 @@ union cavm_rfoex_tx_indirect_index
 };
 typedef union cavm_rfoex_tx_indirect_index cavm_rfoex_tx_indirect_index_t;
 
-static inline uint64_t CAVM_RFOEX_TX_INDIRECT_INDEX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_INDIRECT_INDEX(unsigned long a)
+static inline uint64_t CAVM_RFOEX_TX_INDIRECT_INDEX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_INDIRECT_INDEX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d00bf8ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100000bf8ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000bf8ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_INDIRECT_INDEX", 1, a, 0, 0, 0, 0, 0);
@@ -8112,6 +9712,7 @@ union cavm_rfoex_tx_lmac_cfgx
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cnf95xx;
+    /* struct cavm_rfoex_tx_lmac_cfgx_s f95mm; */
     struct cavm_rfoex_tx_lmac_cfgx_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -8219,11 +9820,13 @@ union cavm_rfoex_tx_lmac_cfgx
 };
 typedef union cavm_rfoex_tx_lmac_cfgx cavm_rfoex_tx_lmac_cfgx_t;
 
-static inline uint64_t CAVM_RFOEX_TX_LMAC_CFGX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_LMAC_CFGX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_TX_LMAC_CFGX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_LMAC_CFGX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X) && ((a<=1) && (b<=3)))
         return 0x87e043d00f80ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100000f80ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100000f80ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_LMAC_CFGX", 2, a, b, 0, 0, 0, 0);
@@ -8258,11 +9861,13 @@ union cavm_rfoex_tx_octs_statx
 };
 typedef union cavm_rfoex_tx_octs_statx cavm_rfoex_tx_octs_statx_t;
 
-static inline uint64_t CAVM_RFOEX_TX_OCTS_STATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_OCTS_STATX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_TX_OCTS_STATX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_OCTS_STATX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043d00f40ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100000f40ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100000f40ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_OCTS_STATX", 2, a, b, 0, 0, 0, 0);
@@ -8297,11 +9902,13 @@ union cavm_rfoex_tx_pkt_drop_statx
 };
 typedef union cavm_rfoex_tx_pkt_drop_statx cavm_rfoex_tx_pkt_drop_statx_t;
 
-static inline uint64_t CAVM_RFOEX_TX_PKT_DROP_STATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_PKT_DROP_STATX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_TX_PKT_DROP_STATX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_PKT_DROP_STATX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X) && ((a<=1) && (b<=3)))
         return 0x87e043d00f60ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100000f60ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100000f60ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_PKT_DROP_STATX", 2, a, b, 0, 0, 0, 0);
@@ -8336,11 +9943,13 @@ union cavm_rfoex_tx_pkt_statx
 };
 typedef union cavm_rfoex_tx_pkt_statx cavm_rfoex_tx_pkt_statx_t;
 
-static inline uint64_t CAVM_RFOEX_TX_PKT_STATX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_PKT_STATX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_TX_PKT_STATX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_PKT_STATX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043d00f20ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100000f20ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100000f20ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_PKT_STATX", 2, a, b, 0, 0, 0, 0);
@@ -8374,9 +9983,11 @@ union cavm_rfoex_tx_ptp_tstmp_w0x
 };
 typedef union cavm_rfoex_tx_ptp_tstmp_w0x cavm_rfoex_tx_ptp_tstmp_w0x_t;
 
-static inline uint64_t CAVM_RFOEX_TX_PTP_TSTMP_W0X(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_PTP_TSTMP_W0X(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_TX_PTP_TSTMP_W0X(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_PTP_TSTMP_W0X(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100000fa0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100000fa0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_PTP_TSTMP_W0X", 2, a, b, 0, 0, 0, 0);
@@ -8402,6 +10013,28 @@ union cavm_rfoex_tx_ptp_tstmp_w1x
     struct cavm_rfoex_tx_ptp_tstmp_w1x_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t valid                 : 1;  /**< [ 63: 63](RC/H) When set to 1, indicates the registers RFOE()_TX_PTP_TSTMP_W() were updated. */
+        uint64_t reserved_22_62        : 41;
+        uint64_t tx_err                : 1;  /**< [ 21: 21](RO/H) When set to 1, indicates the packet was sent to CGX witht error bit set. */
+        uint64_t drop                  : 1;  /**< [ 20: 20](RO/H) When set to 1, indicates the packet was dropped by the RFOE block. */
+        uint64_t jobid                 : 16; /**< [ 19:  4](RO/H) The AB Job ID for this packet. */
+        uint64_t rfoe_id               : 2;  /**< [  3:  2](RO/H) Instance of the RFOE block from which the packet was sent. */
+        uint64_t lmac_id               : 2;  /**< [  1:  0](RO/H) LMAC to which the packet was sent. */
+#else /* Word 0 - Little Endian */
+        uint64_t lmac_id               : 2;  /**< [  1:  0](RO/H) LMAC to which the packet was sent. */
+        uint64_t rfoe_id               : 2;  /**< [  3:  2](RO/H) Instance of the RFOE block from which the packet was sent. */
+        uint64_t jobid                 : 16; /**< [ 19:  4](RO/H) The AB Job ID for this packet. */
+        uint64_t drop                  : 1;  /**< [ 20: 20](RO/H) When set to 1, indicates the packet was dropped by the RFOE block. */
+        uint64_t tx_err                : 1;  /**< [ 21: 21](RO/H) When set to 1, indicates the packet was sent to CGX witht error bit set. */
+        uint64_t reserved_22_62        : 41;
+        uint64_t valid                 : 1;  /**< [ 63: 63](RC/H) When set to 1, indicates the registers RFOE()_TX_PTP_TSTMP_W() were updated. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_tx_ptp_tstmp_w1x_s cn9; */
+    /* struct cavm_rfoex_tx_ptp_tstmp_w1x_s f95mm; */
+    struct cavm_rfoex_tx_ptp_tstmp_w1x_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t valid                 : 1;  /**< [ 63: 63](RC/H) When set to 1, indicates RFOE()_TX_PTP_TSTMP_W0() and this register were updated. */
         uint64_t reserved_22_62        : 41;
         uint64_t tx_err                : 1;  /**< [ 21: 21](RO/H) When set to 1, indicates the packet was sent to CGX witht error bit set. */
@@ -8418,14 +10051,15 @@ union cavm_rfoex_tx_ptp_tstmp_w1x
         uint64_t reserved_22_62        : 41;
         uint64_t valid                 : 1;  /**< [ 63: 63](RC/H) When set to 1, indicates RFOE()_TX_PTP_TSTMP_W0() and this register were updated. */
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_rfoex_tx_ptp_tstmp_w1x_s cn; */
+    } loki;
 };
 typedef union cavm_rfoex_tx_ptp_tstmp_w1x cavm_rfoex_tx_ptp_tstmp_w1x_t;
 
-static inline uint64_t CAVM_RFOEX_TX_PTP_TSTMP_W1X(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_PTP_TSTMP_W1X(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_RFOEX_TX_PTP_TSTMP_W1X(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_PTP_TSTMP_W1X(uint64_t a, uint64_t b)
 {
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
+        return 0x864100000fc0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100000fc0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_PTP_TSTMP_W1X", 2, a, b, 0, 0, 0, 0);
@@ -8459,11 +10093,13 @@ union cavm_rfoex_tx_scratch
 };
 typedef union cavm_rfoex_tx_scratch cavm_rfoex_tx_scratch_t;
 
-static inline uint64_t CAVM_RFOEX_TX_SCRATCH(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_RFOEX_TX_SCRATCH(unsigned long a)
+static inline uint64_t CAVM_RFOEX_TX_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_TX_SCRATCH(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043d00f00ll + 0x80000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x864100000f00ll + 0x1000000000ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000f00ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_SCRATCH", 1, a, 0, 0, 0, 0, 0);

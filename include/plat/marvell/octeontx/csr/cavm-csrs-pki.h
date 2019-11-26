@@ -2333,8 +2333,8 @@ union cavm_pki_alloc_fltx_int
 };
 typedef union cavm_pki_alloc_fltx_int cavm_pki_alloc_fltx_int_t;
 
-static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT(unsigned long a)
+static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=3))
         return 0x86c000000900ll + 8ll * ((a) & 0x3);
@@ -2369,8 +2369,8 @@ union cavm_pki_alloc_fltx_int_ena_w1c
 };
 typedef union cavm_pki_alloc_fltx_int_ena_w1c cavm_pki_alloc_fltx_int_ena_w1c_t;
 
-static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT_ENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=3))
         return 0x86c000000940ll + 8ll * ((a) & 0x3);
@@ -2405,8 +2405,8 @@ union cavm_pki_alloc_fltx_int_ena_w1s
 };
 typedef union cavm_pki_alloc_fltx_int_ena_w1s cavm_pki_alloc_fltx_int_ena_w1s_t;
 
-static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT_ENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=3))
         return 0x86c000000960ll + 8ll * ((a) & 0x3);
@@ -2441,8 +2441,8 @@ union cavm_pki_alloc_fltx_int_w1s
 };
 typedef union cavm_pki_alloc_fltx_int_w1s cavm_pki_alloc_fltx_int_w1s_t;
 
-static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT_W1S(unsigned long a)
+static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_ALLOC_FLTX_INT_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=3))
         return 0x86c000000920ll + 8ll * ((a) & 0x3);
@@ -2533,8 +2533,8 @@ union cavm_pki_aurax_cfg
 };
 typedef union cavm_pki_aurax_cfg cavm_pki_aurax_cfg_t;
 
-static inline uint64_t CAVM_PKI_AURAX_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_AURAX_CFG(unsigned long a)
+static inline uint64_t CAVM_PKI_AURAX_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_AURAX_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=511))
         return 0x86c000900000ll + 8ll * ((a) & 0x1ff);
@@ -3038,8 +3038,8 @@ union cavm_pki_bpidx_state
 };
 typedef union cavm_pki_bpidx_state cavm_pki_bpidx_state_t;
 
-static inline uint64_t CAVM_PKI_BPIDX_STATE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_BPIDX_STATE(unsigned long a)
+static inline uint64_t CAVM_PKI_BPIDX_STATE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_BPIDX_STATE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=511))
         return 0x86c000b00000ll + 8ll * ((a) & 0x1ff);
@@ -3176,8 +3176,8 @@ union cavm_pki_chanx_cfg
 };
 typedef union cavm_pki_chanx_cfg cavm_pki_chanx_cfg_t;
 
-static inline uint64_t CAVM_PKI_CHANX_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CHANX_CFG(unsigned long a)
+static inline uint64_t CAVM_PKI_CHANX_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CHANX_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=4095))
         return 0x86c000a00000ll + 8ll * ((a) & 0xfff);
@@ -3244,8 +3244,8 @@ union cavm_pki_clx_ecc_ctl
 };
 typedef union cavm_pki_clx_ecc_ctl cavm_pki_clx_ecc_ctl_t;
 
-static inline uint64_t CAVM_PKI_CLX_ECC_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_ECC_CTL(unsigned long a)
+static inline uint64_t CAVM_PKI_CLX_ECC_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_ECC_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x86c00000c020ll + 0x10000ll * ((a) & 0x1);
@@ -3299,8 +3299,8 @@ union cavm_pki_clx_ecc_int
 };
 typedef union cavm_pki_clx_ecc_int cavm_pki_clx_ecc_int_t;
 
-static inline uint64_t CAVM_PKI_CLX_ECC_INT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_ECC_INT(unsigned long a)
+static inline uint64_t CAVM_PKI_CLX_ECC_INT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_ECC_INT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x86c00000c200ll + 0x10000ll * ((a) & 0x1);
@@ -3351,8 +3351,8 @@ union cavm_pki_clx_ecc_int_ena_w1c
 };
 typedef union cavm_pki_clx_ecc_int_ena_w1c cavm_pki_clx_ecc_int_ena_w1c_t;
 
-static inline uint64_t CAVM_PKI_CLX_ECC_INT_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_ECC_INT_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_PKI_CLX_ECC_INT_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_ECC_INT_ENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x86c00000c220ll + 0x10000ll * ((a) & 0x1);
@@ -3403,8 +3403,8 @@ union cavm_pki_clx_ecc_int_ena_w1s
 };
 typedef union cavm_pki_clx_ecc_int_ena_w1s cavm_pki_clx_ecc_int_ena_w1s_t;
 
-static inline uint64_t CAVM_PKI_CLX_ECC_INT_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_ECC_INT_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_PKI_CLX_ECC_INT_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_ECC_INT_ENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x86c00000c230ll + 0x10000ll * ((a) & 0x1);
@@ -3455,8 +3455,8 @@ union cavm_pki_clx_ecc_int_w1s
 };
 typedef union cavm_pki_clx_ecc_int_w1s cavm_pki_clx_ecc_int_w1s_t;
 
-static inline uint64_t CAVM_PKI_CLX_ECC_INT_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_ECC_INT_W1S(unsigned long a)
+static inline uint64_t CAVM_PKI_CLX_ECC_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_ECC_INT_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x86c00000c210ll + 0x10000ll * ((a) & 0x1);
@@ -3512,8 +3512,8 @@ union cavm_pki_clx_int
 };
 typedef union cavm_pki_clx_int cavm_pki_clx_int_t;
 
-static inline uint64_t CAVM_PKI_CLX_INT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_INT(unsigned long a)
+static inline uint64_t CAVM_PKI_CLX_INT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_INT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x86c00000c100ll + 0x10000ll * ((a) & 0x1);
@@ -3562,8 +3562,8 @@ union cavm_pki_clx_int_ena_w1c
 };
 typedef union cavm_pki_clx_int_ena_w1c cavm_pki_clx_int_ena_w1c_t;
 
-static inline uint64_t CAVM_PKI_CLX_INT_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_INT_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_PKI_CLX_INT_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_INT_ENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x86c00000c120ll + 0x10000ll * ((a) & 0x1);
@@ -3612,8 +3612,8 @@ union cavm_pki_clx_int_ena_w1s
 };
 typedef union cavm_pki_clx_int_ena_w1s cavm_pki_clx_int_ena_w1s_t;
 
-static inline uint64_t CAVM_PKI_CLX_INT_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_INT_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_PKI_CLX_INT_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_INT_ENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x86c00000c130ll + 0x10000ll * ((a) & 0x1);
@@ -3662,8 +3662,8 @@ union cavm_pki_clx_int_w1s
 };
 typedef union cavm_pki_clx_int_w1s cavm_pki_clx_int_w1s_t;
 
-static inline uint64_t CAVM_PKI_CLX_INT_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_INT_W1S(unsigned long a)
+static inline uint64_t CAVM_PKI_CLX_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_INT_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x86c00000c110ll + 0x10000ll * ((a) & 0x1);
@@ -3818,8 +3818,8 @@ union cavm_pki_clx_pcamx_actionx
 };
 typedef union cavm_pki_clx_pcamx_actionx cavm_pki_clx_pcamx_actionx_t;
 
-static inline uint64_t CAVM_PKI_CLX_PCAMX_ACTIONX(unsigned long a, unsigned long b, unsigned long c) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_PCAMX_ACTIONX(unsigned long a, unsigned long b, unsigned long c)
+static inline uint64_t CAVM_PKI_CLX_PCAMX_ACTIONX(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_PCAMX_ACTIONX(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=1) && (b<=1) && (c<=191)))
         return 0x86c000708000ll + 0x10000ll * ((a) & 0x1) + 0x1000ll * ((b) & 0x1) + 8ll * ((c) & 0xff);
@@ -3875,8 +3875,8 @@ union cavm_pki_clx_pcamx_matchx
 };
 typedef union cavm_pki_clx_pcamx_matchx cavm_pki_clx_pcamx_matchx_t;
 
-static inline uint64_t CAVM_PKI_CLX_PCAMX_MATCHX(unsigned long a, unsigned long b, unsigned long c) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_PCAMX_MATCHX(unsigned long a, unsigned long b, unsigned long c)
+static inline uint64_t CAVM_PKI_CLX_PCAMX_MATCHX(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_PCAMX_MATCHX(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=1) && (b<=1) && (c<=191)))
         return 0x86c000704000ll + 0x10000ll * ((a) & 0x1) + 0x1000ll * ((b) & 0x1) + 8ll * ((c) & 0xff);
@@ -3957,8 +3957,8 @@ union cavm_pki_clx_pcamx_termx
 };
 typedef union cavm_pki_clx_pcamx_termx cavm_pki_clx_pcamx_termx_t;
 
-static inline uint64_t CAVM_PKI_CLX_PCAMX_TERMX(unsigned long a, unsigned long b, unsigned long c) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_PCAMX_TERMX(unsigned long a, unsigned long b, unsigned long c)
+static inline uint64_t CAVM_PKI_CLX_PCAMX_TERMX(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_PCAMX_TERMX(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=1) && (b<=1) && (c<=191)))
         return 0x86c000700000ll + 0x10000ll * ((a) & 0x1) + 0x1000ll * ((b) & 0x1) + 8ll * ((c) & 0xff);
@@ -4130,8 +4130,8 @@ union cavm_pki_clx_pkindx_cfg
 };
 typedef union cavm_pki_clx_pkindx_cfg cavm_pki_clx_pkindx_cfg_t;
 
-static inline uint64_t CAVM_PKI_CLX_PKINDX_CFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_PKINDX_CFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKI_CLX_PKINDX_CFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_PKINDX_CFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=1) && (b<=63)))
         return 0x86c000300040ll + 0x10000ll * ((a) & 0x1) + 0x100ll * ((b) & 0x3f);
@@ -4195,8 +4195,8 @@ union cavm_pki_clx_pkindx_kmemx
 };
 typedef union cavm_pki_clx_pkindx_kmemx cavm_pki_clx_pkindx_kmemx_t;
 
-static inline uint64_t CAVM_PKI_CLX_PKINDX_KMEMX(unsigned long a, unsigned long b, unsigned long c) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_PKINDX_KMEMX(unsigned long a, unsigned long b, unsigned long c)
+static inline uint64_t CAVM_PKI_CLX_PKINDX_KMEMX(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_PKINDX_KMEMX(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=1) && (b<=63) && (c<=15)))
         return 0x86c000200000ll + 0x10000ll * ((a) & 0x1) + 0x100ll * ((b) & 0x3f) + 8ll * ((c) & 0xf);
@@ -4260,8 +4260,8 @@ union cavm_pki_clx_pkindx_l2_custom
 };
 typedef union cavm_pki_clx_pkindx_l2_custom cavm_pki_clx_pkindx_l2_custom_t;
 
-static inline uint64_t CAVM_PKI_CLX_PKINDX_L2_CUSTOM(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_PKINDX_L2_CUSTOM(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKI_CLX_PKINDX_L2_CUSTOM(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_PKINDX_L2_CUSTOM(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=1) && (b<=63)))
         return 0x86c000300058ll + 0x10000ll * ((a) & 0x1) + 0x100ll * ((b) & 0x3f);
@@ -4317,8 +4317,8 @@ union cavm_pki_clx_pkindx_lg_custom
 };
 typedef union cavm_pki_clx_pkindx_lg_custom cavm_pki_clx_pkindx_lg_custom_t;
 
-static inline uint64_t CAVM_PKI_CLX_PKINDX_LG_CUSTOM(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_PKINDX_LG_CUSTOM(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKI_CLX_PKINDX_LG_CUSTOM(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_PKINDX_LG_CUSTOM(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=1) && (b<=63)))
         return 0x86c000300060ll + 0x10000ll * ((a) & 0x1) + 0x100ll * ((b) & 0x3f);
@@ -4376,8 +4376,8 @@ union cavm_pki_clx_pkindx_skip
 };
 typedef union cavm_pki_clx_pkindx_skip cavm_pki_clx_pkindx_skip_t;
 
-static inline uint64_t CAVM_PKI_CLX_PKINDX_SKIP(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_PKINDX_SKIP(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKI_CLX_PKINDX_SKIP(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_PKINDX_SKIP(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=1) && (b<=63)))
         return 0x86c000300050ll + 0x10000ll * ((a) & 0x1) + 0x100ll * ((b) & 0x3f);
@@ -4479,8 +4479,8 @@ union cavm_pki_clx_pkindx_style
 };
 typedef union cavm_pki_clx_pkindx_style cavm_pki_clx_pkindx_style_t;
 
-static inline uint64_t CAVM_PKI_CLX_PKINDX_STYLE(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_PKINDX_STYLE(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKI_CLX_PKINDX_STYLE(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_PKINDX_STYLE(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=1) && (b<=63)))
         return 0x86c000300048ll + 0x10000ll * ((a) & 0x1) + 0x100ll * ((b) & 0x3f);
@@ -4539,8 +4539,8 @@ union cavm_pki_clx_smemx
 };
 typedef union cavm_pki_clx_smemx cavm_pki_clx_smemx_t;
 
-static inline uint64_t CAVM_PKI_CLX_SMEMX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_SMEMX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKI_CLX_SMEMX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_SMEMX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=1) && (b<=2047)))
         return 0x86c000400000ll + 0x10000ll * ((a) & 0x1) + 8ll * ((b) & 0x7ff);
@@ -4577,8 +4577,8 @@ union cavm_pki_clx_start
 };
 typedef union cavm_pki_clx_start cavm_pki_clx_start_t;
 
-static inline uint64_t CAVM_PKI_CLX_START(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_START(unsigned long a)
+static inline uint64_t CAVM_PKI_CLX_START(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_START(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x86c00000c030ll + 0x10000ll * ((a) & 0x1);
@@ -4686,8 +4686,8 @@ union cavm_pki_clx_stylex_alg
 };
 typedef union cavm_pki_clx_stylex_alg cavm_pki_clx_stylex_alg_t;
 
-static inline uint64_t CAVM_PKI_CLX_STYLEX_ALG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_STYLEX_ALG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKI_CLX_STYLEX_ALG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_STYLEX_ALG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=1) && (b<=63)))
         return 0x86c000501000ll + 0x10000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
@@ -4950,8 +4950,8 @@ union cavm_pki_clx_stylex_cfg
 };
 typedef union cavm_pki_clx_stylex_cfg cavm_pki_clx_stylex_cfg_t;
 
-static inline uint64_t CAVM_PKI_CLX_STYLEX_CFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_STYLEX_CFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKI_CLX_STYLEX_CFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_STYLEX_CFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=1) && (b<=63)))
         return 0x86c000500000ll + 0x10000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
@@ -5368,8 +5368,8 @@ union cavm_pki_clx_stylex_cfg2
 };
 typedef union cavm_pki_clx_stylex_cfg2 cavm_pki_clx_stylex_cfg2_t;
 
-static inline uint64_t CAVM_PKI_CLX_STYLEX_CFG2(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_CLX_STYLEX_CFG2(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PKI_CLX_STYLEX_CFG2(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_CLX_STYLEX_CFG2(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && ((a<=1) && (b<=63)))
         return 0x86c000500800ll + 0x10000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
@@ -5654,8 +5654,8 @@ union cavm_pki_dstatx_stat0
 };
 typedef union cavm_pki_dstatx_stat0 cavm_pki_dstatx_stat0_t;
 
-static inline uint64_t CAVM_PKI_DSTATX_STAT0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_DSTATX_STAT0(unsigned long a)
+static inline uint64_t CAVM_PKI_DSTATX_STAT0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_DSTATX_STAT0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1023))
         return 0x86c000c00000ll + 0x40ll * ((a) & 0x3ff);
@@ -5696,8 +5696,8 @@ union cavm_pki_dstatx_stat1
 };
 typedef union cavm_pki_dstatx_stat1 cavm_pki_dstatx_stat1_t;
 
-static inline uint64_t CAVM_PKI_DSTATX_STAT1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_DSTATX_STAT1(unsigned long a)
+static inline uint64_t CAVM_PKI_DSTATX_STAT1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_DSTATX_STAT1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1023))
         return 0x86c000c00008ll + 0x40ll * ((a) & 0x3ff);
@@ -5742,8 +5742,8 @@ union cavm_pki_dstatx_stat2
 };
 typedef union cavm_pki_dstatx_stat2 cavm_pki_dstatx_stat2_t;
 
-static inline uint64_t CAVM_PKI_DSTATX_STAT2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_DSTATX_STAT2(unsigned long a)
+static inline uint64_t CAVM_PKI_DSTATX_STAT2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_DSTATX_STAT2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1023))
         return 0x86c000c00010ll + 0x40ll * ((a) & 0x3ff);
@@ -5782,8 +5782,8 @@ union cavm_pki_dstatx_stat3
 };
 typedef union cavm_pki_dstatx_stat3 cavm_pki_dstatx_stat3_t;
 
-static inline uint64_t CAVM_PKI_DSTATX_STAT3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_DSTATX_STAT3(unsigned long a)
+static inline uint64_t CAVM_PKI_DSTATX_STAT3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_DSTATX_STAT3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1023))
         return 0x86c000c00018ll + 0x40ll * ((a) & 0x3ff);
@@ -5822,8 +5822,8 @@ union cavm_pki_dstatx_stat4
 };
 typedef union cavm_pki_dstatx_stat4 cavm_pki_dstatx_stat4_t;
 
-static inline uint64_t CAVM_PKI_DSTATX_STAT4(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_DSTATX_STAT4(unsigned long a)
+static inline uint64_t CAVM_PKI_DSTATX_STAT4(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_DSTATX_STAT4(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1023))
         return 0x86c000c00020ll + 0x40ll * ((a) & 0x3ff);
@@ -6953,8 +6953,8 @@ union cavm_pki_frm_len_chkx
 };
 typedef union cavm_pki_frm_len_chkx cavm_pki_frm_len_chkx_t;
 
-static inline uint64_t CAVM_PKI_FRM_LEN_CHKX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_FRM_LEN_CHKX(unsigned long a)
+static inline uint64_t CAVM_PKI_FRM_LEN_CHKX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_FRM_LEN_CHKX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x86c000004000ll + 8ll * ((a) & 0x1);
@@ -7493,8 +7493,8 @@ union cavm_pki_icgx_cfg
 };
 typedef union cavm_pki_icgx_cfg cavm_pki_icgx_cfg_t;
 
-static inline uint64_t CAVM_PKI_ICGX_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_ICGX_CFG(unsigned long a)
+static inline uint64_t CAVM_PKI_ICGX_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_ICGX_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
         return 0x86c00000a000ll + 8ll * ((a) & 0x0);
@@ -7530,8 +7530,8 @@ union cavm_pki_imemx
 };
 typedef union cavm_pki_imemx cavm_pki_imemx_t;
 
-static inline uint64_t CAVM_PKI_IMEMX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_IMEMX(unsigned long a)
+static inline uint64_t CAVM_PKI_IMEMX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_IMEMX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=2047))
         return 0x86c000100000ll + 8ll * ((a) & 0x7ff);
@@ -7574,8 +7574,8 @@ union cavm_pki_ltypex_map
 };
 typedef union cavm_pki_ltypex_map cavm_pki_ltypex_map_t;
 
-static inline uint64_t CAVM_PKI_LTYPEX_MAP(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_LTYPEX_MAP(unsigned long a)
+static inline uint64_t CAVM_PKI_LTYPEX_MAP(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_LTYPEX_MAP(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x86c000005000ll + 8ll * ((a) & 0x1f);
@@ -7613,8 +7613,8 @@ union cavm_pki_msix_pbax
 };
 typedef union cavm_pki_msix_pbax cavm_pki_msix_pbax_t;
 
-static inline uint64_t CAVM_PKI_MSIX_PBAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_MSIX_PBAX(unsigned long a)
+static inline uint64_t CAVM_PKI_MSIX_PBAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_MSIX_PBAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a==0))
         return 0x86c0010f0000ll + 8ll * ((a) & 0x0);
@@ -7671,8 +7671,8 @@ union cavm_pki_msix_vecx_addr
 };
 typedef union cavm_pki_msix_vecx_addr cavm_pki_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_PKI_MSIX_VECX_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_MSIX_VECX_ADDR(unsigned long a)
+static inline uint64_t CAVM_PKI_MSIX_VECX_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_MSIX_VECX_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=15))
         return 0x86c001000000ll + 0x10ll * ((a) & 0xf);
@@ -7713,8 +7713,8 @@ union cavm_pki_msix_vecx_ctl
 };
 typedef union cavm_pki_msix_vecx_ctl cavm_pki_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_PKI_MSIX_VECX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_MSIX_VECX_CTL(unsigned long a)
+static inline uint64_t CAVM_PKI_MSIX_VECX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_MSIX_VECX_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=15))
         return 0x86c001000008ll + 0x10ll * ((a) & 0xf);
@@ -8556,8 +8556,8 @@ union cavm_pki_pkindx_icgsel
 };
 typedef union cavm_pki_pkindx_icgsel cavm_pki_pkindx_icgsel_t;
 
-static inline uint64_t CAVM_PKI_PKINDX_ICGSEL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PKINDX_ICGSEL(unsigned long a)
+static inline uint64_t CAVM_PKI_PKINDX_ICGSEL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_PKINDX_ICGSEL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000010000ll + 8ll * ((a) & 0x3f);
@@ -8594,8 +8594,8 @@ union cavm_pki_pkndx_inb_stat0
 };
 typedef union cavm_pki_pkndx_inb_stat0 cavm_pki_pkndx_inb_stat0_t;
 
-static inline uint64_t CAVM_PKI_PKNDX_INB_STAT0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PKNDX_INB_STAT0(unsigned long a)
+static inline uint64_t CAVM_PKI_PKNDX_INB_STAT0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_PKNDX_INB_STAT0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000f00000ll + 0x100ll * ((a) & 0x3f);
@@ -8632,8 +8632,8 @@ union cavm_pki_pkndx_inb_stat1
 };
 typedef union cavm_pki_pkndx_inb_stat1 cavm_pki_pkndx_inb_stat1_t;
 
-static inline uint64_t CAVM_PKI_PKNDX_INB_STAT1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PKNDX_INB_STAT1(unsigned long a)
+static inline uint64_t CAVM_PKI_PKNDX_INB_STAT1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_PKNDX_INB_STAT1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000f00008ll + 0x100ll * ((a) & 0x3f);
@@ -8670,8 +8670,8 @@ union cavm_pki_pkndx_inb_stat2
 };
 typedef union cavm_pki_pkndx_inb_stat2 cavm_pki_pkndx_inb_stat2_t;
 
-static inline uint64_t CAVM_PKI_PKNDX_INB_STAT2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PKNDX_INB_STAT2(unsigned long a)
+static inline uint64_t CAVM_PKI_PKNDX_INB_STAT2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_PKNDX_INB_STAT2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000f00010ll + 0x100ll * ((a) & 0x3f);
@@ -8850,8 +8850,8 @@ union cavm_pki_pstata_statx
 };
 typedef union cavm_pki_pstata_statx cavm_pki_pstata_statx_t;
 
-static inline uint64_t CAVM_PKI_PSTATA_STATX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PSTATA_STATX(unsigned long a)
+static inline uint64_t CAVM_PKI_PSTATA_STATX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_PSTATA_STATX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=2))
         return 0x86c000f14000ll + 0x20ll * ((a) & 0x3);
@@ -8888,8 +8888,8 @@ union cavm_pki_pstatb_statx
 };
 typedef union cavm_pki_pstatb_statx cavm_pki_pstatb_statx_t;
 
-static inline uint64_t CAVM_PKI_PSTATB_STATX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PSTATB_STATX(unsigned long a)
+static inline uint64_t CAVM_PKI_PSTATB_STATX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_PSTATB_STATX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=2))
         return 0x86c000f14008ll + 0x20ll * ((a) & 0x3);
@@ -8932,8 +8932,8 @@ union cavm_pki_pstatc_statx
 };
 typedef union cavm_pki_pstatc_statx cavm_pki_pstatc_statx_t;
 
-static inline uint64_t CAVM_PKI_PSTATC_STATX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_PSTATC_STATX(unsigned long a)
+static inline uint64_t CAVM_PKI_PSTATC_STATX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_PSTATC_STATX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=2))
         return 0x86c000f14010ll + 0x20ll * ((a) & 0x3);
@@ -9069,8 +9069,8 @@ union cavm_pki_qpg_tblx
 };
 typedef union cavm_pki_qpg_tblx cavm_pki_qpg_tblx_t;
 
-static inline uint64_t CAVM_PKI_QPG_TBLX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_QPG_TBLX(unsigned long a)
+static inline uint64_t CAVM_PKI_QPG_TBLX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_QPG_TBLX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=2047))
         return 0x86c000800000ll + 8ll * ((a) & 0x7ff);
@@ -9145,8 +9145,8 @@ union cavm_pki_qpg_tblbx
 };
 typedef union cavm_pki_qpg_tblbx cavm_pki_qpg_tblbx_t;
 
-static inline uint64_t CAVM_PKI_QPG_TBLBX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_QPG_TBLBX(unsigned long a)
+static inline uint64_t CAVM_PKI_QPG_TBLBX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_QPG_TBLBX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=2047))
         return 0x86c000820000ll + 8ll * ((a) & 0x7ff);
@@ -9188,8 +9188,8 @@ union cavm_pki_reasm_sopx
 };
 typedef union cavm_pki_reasm_sopx cavm_pki_reasm_sopx_t;
 
-static inline uint64_t CAVM_PKI_REASM_SOPX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_REASM_SOPX(unsigned long a)
+static inline uint64_t CAVM_PKI_REASM_SOPX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_REASM_SOPX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x86c000006000ll + 8ll * ((a) & 0x1);
@@ -9358,8 +9358,8 @@ union cavm_pki_statx_hist0
 };
 typedef union cavm_pki_statx_hist0 cavm_pki_statx_hist0_t;
 
-static inline uint64_t CAVM_PKI_STATX_HIST0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_HIST0(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_HIST0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_HIST0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00000ll + 0x100ll * ((a) & 0x3f);
@@ -9395,8 +9395,8 @@ union cavm_pki_statx_hist1
 };
 typedef union cavm_pki_statx_hist1 cavm_pki_statx_hist1_t;
 
-static inline uint64_t CAVM_PKI_STATX_HIST1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_HIST1(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_HIST1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_HIST1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00008ll + 0x100ll * ((a) & 0x3f);
@@ -9432,8 +9432,8 @@ union cavm_pki_statx_hist2
 };
 typedef union cavm_pki_statx_hist2 cavm_pki_statx_hist2_t;
 
-static inline uint64_t CAVM_PKI_STATX_HIST2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_HIST2(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_HIST2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_HIST2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00010ll + 0x100ll * ((a) & 0x3f);
@@ -9469,8 +9469,8 @@ union cavm_pki_statx_hist3
 };
 typedef union cavm_pki_statx_hist3 cavm_pki_statx_hist3_t;
 
-static inline uint64_t CAVM_PKI_STATX_HIST3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_HIST3(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_HIST3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_HIST3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00018ll + 0x100ll * ((a) & 0x3f);
@@ -9506,8 +9506,8 @@ union cavm_pki_statx_hist4
 };
 typedef union cavm_pki_statx_hist4 cavm_pki_statx_hist4_t;
 
-static inline uint64_t CAVM_PKI_STATX_HIST4(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_HIST4(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_HIST4(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_HIST4(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00020ll + 0x100ll * ((a) & 0x3f);
@@ -9543,8 +9543,8 @@ union cavm_pki_statx_hist5
 };
 typedef union cavm_pki_statx_hist5 cavm_pki_statx_hist5_t;
 
-static inline uint64_t CAVM_PKI_STATX_HIST5(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_HIST5(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_HIST5(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_HIST5(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00028ll + 0x100ll * ((a) & 0x3f);
@@ -9580,8 +9580,8 @@ union cavm_pki_statx_hist6
 };
 typedef union cavm_pki_statx_hist6 cavm_pki_statx_hist6_t;
 
-static inline uint64_t CAVM_PKI_STATX_HIST6(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_HIST6(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_HIST6(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_HIST6(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00030ll + 0x100ll * ((a) & 0x3f);
@@ -9617,8 +9617,8 @@ union cavm_pki_statx_stat0
 };
 typedef union cavm_pki_statx_stat0 cavm_pki_statx_stat0_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT0(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00038ll + 0x100ll * ((a) & 0x3f);
@@ -9654,8 +9654,8 @@ union cavm_pki_statx_stat1
 };
 typedef union cavm_pki_statx_stat1 cavm_pki_statx_stat1_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT1(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00040ll + 0x100ll * ((a) & 0x3f);
@@ -9691,8 +9691,8 @@ union cavm_pki_statx_stat10
 };
 typedef union cavm_pki_statx_stat10 cavm_pki_statx_stat10_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT10(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT10(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT10(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT10(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00088ll + 0x100ll * ((a) & 0x3f);
@@ -9728,8 +9728,8 @@ union cavm_pki_statx_stat11
 };
 typedef union cavm_pki_statx_stat11 cavm_pki_statx_stat11_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT11(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT11(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT11(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT11(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00090ll + 0x100ll * ((a) & 0x3f);
@@ -9769,8 +9769,8 @@ union cavm_pki_statx_stat12
 };
 typedef union cavm_pki_statx_stat12 cavm_pki_statx_stat12_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT12(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT12(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT12(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT12(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00098ll + 0x100ll * ((a) & 0x3f);
@@ -9808,8 +9808,8 @@ union cavm_pki_statx_stat13
 };
 typedef union cavm_pki_statx_stat13 cavm_pki_statx_stat13_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT13(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT13(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT13(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT13(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e000a0ll + 0x100ll * ((a) & 0x3f);
@@ -9847,8 +9847,8 @@ union cavm_pki_statx_stat14
 };
 typedef union cavm_pki_statx_stat14 cavm_pki_statx_stat14_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT14(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT14(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT14(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT14(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e000a8ll + 0x100ll * ((a) & 0x3f);
@@ -9886,8 +9886,8 @@ union cavm_pki_statx_stat15
 };
 typedef union cavm_pki_statx_stat15 cavm_pki_statx_stat15_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT15(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT15(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT15(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT15(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e000b0ll + 0x100ll * ((a) & 0x3f);
@@ -9925,8 +9925,8 @@ union cavm_pki_statx_stat16
 };
 typedef union cavm_pki_statx_stat16 cavm_pki_statx_stat16_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT16(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT16(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT16(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT16(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e000b8ll + 0x100ll * ((a) & 0x3f);
@@ -9964,8 +9964,8 @@ union cavm_pki_statx_stat17
 };
 typedef union cavm_pki_statx_stat17 cavm_pki_statx_stat17_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT17(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT17(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT17(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT17(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e000c0ll + 0x100ll * ((a) & 0x3f);
@@ -10003,8 +10003,8 @@ union cavm_pki_statx_stat18
 };
 typedef union cavm_pki_statx_stat18 cavm_pki_statx_stat18_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT18(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT18(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT18(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT18(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e000c8ll + 0x100ll * ((a) & 0x3f);
@@ -10040,8 +10040,8 @@ union cavm_pki_statx_stat2
 };
 typedef union cavm_pki_statx_stat2 cavm_pki_statx_stat2_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT2(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00048ll + 0x100ll * ((a) & 0x3f);
@@ -10077,8 +10077,8 @@ union cavm_pki_statx_stat3
 };
 typedef union cavm_pki_statx_stat3 cavm_pki_statx_stat3_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT3(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00050ll + 0x100ll * ((a) & 0x3f);
@@ -10114,8 +10114,8 @@ union cavm_pki_statx_stat4
 };
 typedef union cavm_pki_statx_stat4 cavm_pki_statx_stat4_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT4(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT4(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT4(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT4(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00058ll + 0x100ll * ((a) & 0x3f);
@@ -10153,8 +10153,8 @@ union cavm_pki_statx_stat5
 };
 typedef union cavm_pki_statx_stat5 cavm_pki_statx_stat5_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT5(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT5(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT5(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT5(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00060ll + 0x100ll * ((a) & 0x3f);
@@ -10192,8 +10192,8 @@ union cavm_pki_statx_stat6
 };
 typedef union cavm_pki_statx_stat6 cavm_pki_statx_stat6_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT6(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT6(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT6(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT6(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00068ll + 0x100ll * ((a) & 0x3f);
@@ -10229,8 +10229,8 @@ union cavm_pki_statx_stat7
 };
 typedef union cavm_pki_statx_stat7 cavm_pki_statx_stat7_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT7(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT7(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT7(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT7(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00070ll + 0x100ll * ((a) & 0x3f);
@@ -10266,8 +10266,8 @@ union cavm_pki_statx_stat8
 };
 typedef union cavm_pki_statx_stat8 cavm_pki_statx_stat8_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT8(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT8(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT8(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT8(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00078ll + 0x100ll * ((a) & 0x3f);
@@ -10303,8 +10303,8 @@ union cavm_pki_statx_stat9
 };
 typedef union cavm_pki_statx_stat9 cavm_pki_statx_stat9_t;
 
-static inline uint64_t CAVM_PKI_STATX_STAT9(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STATX_STAT9(unsigned long a)
+static inline uint64_t CAVM_PKI_STATX_STAT9(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STATX_STAT9(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000e00080ll + 0x100ll * ((a) & 0x3f);
@@ -10409,8 +10409,8 @@ union cavm_pki_strmx_cfg
 };
 typedef union cavm_pki_strmx_cfg cavm_pki_strmx_cfg_t;
 
-static inline uint64_t CAVM_PKI_STRMX_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STRMX_CFG(unsigned long a)
+static inline uint64_t CAVM_PKI_STRMX_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STRMX_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=255))
         return 0x86c000840000ll + 8ll * ((a) & 0xff);
@@ -10447,8 +10447,8 @@ union cavm_pki_strm_fltx_int
 };
 typedef union cavm_pki_strm_fltx_int cavm_pki_strm_fltx_int_t;
 
-static inline uint64_t CAVM_PKI_STRM_FLTX_INT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STRM_FLTX_INT(unsigned long a)
+static inline uint64_t CAVM_PKI_STRM_FLTX_INT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STRM_FLTX_INT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=3))
         return 0x86c000000980ll + 8ll * ((a) & 0x3);
@@ -10483,8 +10483,8 @@ union cavm_pki_strm_fltx_int_ena_w1c
 };
 typedef union cavm_pki_strm_fltx_int_ena_w1c cavm_pki_strm_fltx_int_ena_w1c_t;
 
-static inline uint64_t CAVM_PKI_STRM_FLTX_INT_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STRM_FLTX_INT_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_PKI_STRM_FLTX_INT_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STRM_FLTX_INT_ENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=3))
         return 0x86c0000009c0ll + 8ll * ((a) & 0x3);
@@ -10519,8 +10519,8 @@ union cavm_pki_strm_fltx_int_ena_w1s
 };
 typedef union cavm_pki_strm_fltx_int_ena_w1s cavm_pki_strm_fltx_int_ena_w1s_t;
 
-static inline uint64_t CAVM_PKI_STRM_FLTX_INT_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STRM_FLTX_INT_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_PKI_STRM_FLTX_INT_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STRM_FLTX_INT_ENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=3))
         return 0x86c0000009e0ll + 8ll * ((a) & 0x3);
@@ -10555,8 +10555,8 @@ union cavm_pki_strm_fltx_int_w1s
 };
 typedef union cavm_pki_strm_fltx_int_w1s cavm_pki_strm_fltx_int_w1s_t;
 
-static inline uint64_t CAVM_PKI_STRM_FLTX_INT_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STRM_FLTX_INT_W1S(unsigned long a)
+static inline uint64_t CAVM_PKI_STRM_FLTX_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STRM_FLTX_INT_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=3))
         return 0x86c0000009a0ll + 8ll * ((a) & 0x3);
@@ -10752,8 +10752,8 @@ union cavm_pki_stylex_buf
 };
 typedef union cavm_pki_stylex_buf cavm_pki_stylex_buf_t;
 
-static inline uint64_t CAVM_PKI_STYLEX_BUF(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STYLEX_BUF(unsigned long a)
+static inline uint64_t CAVM_PKI_STYLEX_BUF(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STYLEX_BUF(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000024000ll + 8ll * ((a) & 0x3f);
@@ -10799,8 +10799,8 @@ union cavm_pki_stylex_tag_mask
 };
 typedef union cavm_pki_stylex_tag_mask cavm_pki_stylex_tag_mask_t;
 
-static inline uint64_t CAVM_PKI_STYLEX_TAG_MASK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STYLEX_TAG_MASK(unsigned long a)
+static inline uint64_t CAVM_PKI_STYLEX_TAG_MASK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STYLEX_TAG_MASK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000021000ll + 8ll * ((a) & 0x3f);
@@ -10856,8 +10856,8 @@ union cavm_pki_stylex_tag_sel
 };
 typedef union cavm_pki_stylex_tag_sel cavm_pki_stylex_tag_sel_t;
 
-static inline uint64_t CAVM_PKI_STYLEX_TAG_SEL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STYLEX_TAG_SEL(unsigned long a)
+static inline uint64_t CAVM_PKI_STYLEX_TAG_SEL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STYLEX_TAG_SEL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000020000ll + 8ll * ((a) & 0x3f);
@@ -10903,8 +10903,8 @@ union cavm_pki_stylex_wq2
 };
 typedef union cavm_pki_stylex_wq2 cavm_pki_stylex_wq2_t;
 
-static inline uint64_t CAVM_PKI_STYLEX_WQ2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STYLEX_WQ2(unsigned long a)
+static inline uint64_t CAVM_PKI_STYLEX_WQ2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STYLEX_WQ2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000022000ll + 8ll * ((a) & 0x3f);
@@ -10950,8 +10950,8 @@ union cavm_pki_stylex_wq4
 };
 typedef union cavm_pki_stylex_wq4 cavm_pki_stylex_wq4_t;
 
-static inline uint64_t CAVM_PKI_STYLEX_WQ4(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_STYLEX_WQ4(unsigned long a)
+static inline uint64_t CAVM_PKI_STYLEX_WQ4(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_STYLEX_WQ4(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=63))
         return 0x86c000023000ll + 8ll * ((a) & 0x3f);
@@ -11033,8 +11033,8 @@ union cavm_pki_tag_incx_ctl
 };
 typedef union cavm_pki_tag_incx_ctl cavm_pki_tag_incx_ctl_t;
 
-static inline uint64_t CAVM_PKI_TAG_INCX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_TAG_INCX_CTL(unsigned long a)
+static inline uint64_t CAVM_PKI_TAG_INCX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_TAG_INCX_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x86c000007000ll + 8ll * ((a) & 0x1f);
@@ -11072,8 +11072,8 @@ union cavm_pki_tag_incx_mask
 };
 typedef union cavm_pki_tag_incx_mask cavm_pki_tag_incx_mask_t;
 
-static inline uint64_t CAVM_PKI_TAG_INCX_MASK(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_TAG_INCX_MASK(unsigned long a)
+static inline uint64_t CAVM_PKI_TAG_INCX_MASK(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_TAG_INCX_MASK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=31))
         return 0x86c000008000ll + 8ll * ((a) & 0x1f);
@@ -11225,8 +11225,8 @@ union cavm_pki_x2p_datx
 };
 typedef union cavm_pki_x2p_datx cavm_pki_x2p_datx_t;
 
-static inline uint64_t CAVM_PKI_X2P_DATX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PKI_X2P_DATX(unsigned long a)
+static inline uint64_t CAVM_PKI_X2P_DATX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PKI_X2P_DATX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
         return 0x86c000000140ll + 8ll * ((a) & 0x1);

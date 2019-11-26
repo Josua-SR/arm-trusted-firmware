@@ -45,6 +45,7 @@
 #define CAVM_MIO_PTP_EXT_SEL_E_QLM_REFX_CN96XX(a) (0x38 + (a))
 #define CAVM_MIO_PTP_EXT_SEL_E_QLM_REFX_CN98XX(a) (0x10 + (a))
 #define CAVM_MIO_PTP_EXT_SEL_E_QLM_REFX_CNF95XX(a) (0x38 + (a))
+#define CAVM_MIO_PTP_EXT_SEL_E_QLM_REFX_F95MM(a) (0x38 + (a))
 #define CAVM_MIO_PTP_EXT_SEL_E_QLM_REFX_LOKI(a) (0x38 + (a))
 
 /**
@@ -532,6 +533,7 @@ union cavm_mio_ptp_clock_cfg
     /* struct cavm_mio_ptp_clock_cfg_cn96xxp3 cn98xx; */
     /* struct cavm_mio_ptp_clock_cfg_s cnf95xxp1; */
     /* struct cavm_mio_ptp_clock_cfg_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_mio_ptp_clock_cfg_cn96xxp3 f95mm; */
     /* struct cavm_mio_ptp_clock_cfg_cn96xxp3 loki; */
 };
 typedef union cavm_mio_ptp_clock_cfg cavm_mio_ptp_clock_cfg_t;
@@ -1010,8 +1012,8 @@ union cavm_mio_ptp_msix_pbax
 };
 typedef union cavm_mio_ptp_msix_pbax cavm_mio_ptp_msix_pbax_t;
 
-static inline uint64_t CAVM_MIO_PTP_MSIX_PBAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MIO_PTP_MSIX_PBAX(unsigned long a)
+static inline uint64_t CAVM_MIO_PTP_MSIX_PBAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MIO_PTP_MSIX_PBAX(uint64_t a)
 {
     if (a==0)
         return 0x807000ff0000ll + 8ll * ((a) & 0x0);
@@ -1158,12 +1160,13 @@ union cavm_mio_ptp_msix_vecx_addr
     } cn96xxp3;
     /* struct cavm_mio_ptp_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_mio_ptp_msix_vecx_addr_cn96xxp3 cnf95xx; */
+    /* struct cavm_mio_ptp_msix_vecx_addr_cn96xxp3 f95mm; */
     /* struct cavm_mio_ptp_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_mio_ptp_msix_vecx_addr cavm_mio_ptp_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_MIO_PTP_MSIX_VECX_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MIO_PTP_MSIX_VECX_ADDR(unsigned long a)
+static inline uint64_t CAVM_MIO_PTP_MSIX_VECX_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MIO_PTP_MSIX_VECX_ADDR(uint64_t a)
 {
     if (a<=1)
         return 0x807000f00000ll + 0x10ll * ((a) & 0x1);
@@ -1216,8 +1219,8 @@ union cavm_mio_ptp_msix_vecx_ctl
 };
 typedef union cavm_mio_ptp_msix_vecx_ctl cavm_mio_ptp_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_MIO_PTP_MSIX_VECX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MIO_PTP_MSIX_VECX_CTL(unsigned long a)
+static inline uint64_t CAVM_MIO_PTP_MSIX_VECX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MIO_PTP_MSIX_VECX_CTL(uint64_t a)
 {
     if (a<=1)
         return 0x807000f00008ll + 0x10ll * ((a) & 0x1);

@@ -45,6 +45,15 @@ extern uint64_t cavm_fuse_read_range(cavm_node_t node, int fuse, int width);
 extern int cavm_fuse_soft_blow(cavm_node_t node, int fuse);
 
 /**
+ * Display all manufacturing fuses in a human readable format
+ *
+ * @param node   Node to display
+ *
+ * @return Zero on success, negative on failure
+ */
+extern int cavm_fuse_display(cavm_node_t node);
+
+/**
  * Read a single fuse bit from the field set (FUSF)
  *
  * @param fuse   Fuse number (0-1024)
@@ -81,4 +90,13 @@ extern int cavm_fuse_field_soft_blow(cavm_node_t node, int fuse);
  * @return Zero on success, negative on failure
  */
 extern int cavm_fuse_field_hard_blow(cavm_node_t node, int start_fuse, uint64_t fuses0, uint64_t fuses1);
+
+/**
+ * Display all field fuses in a human readable format
+ *
+ * @param node   Node to display
+ *
+ * @return Zero on success, negative on failure
+ */
+extern int cavm_fuse_field_display(cavm_node_t node);
 

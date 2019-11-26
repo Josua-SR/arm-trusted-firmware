@@ -633,8 +633,8 @@ union cavm_mdn_debug_datax
 };
 typedef union cavm_mdn_debug_datax cavm_mdn_debug_datax_t;
 
-static inline uint64_t CAVM_MDN_DEBUG_DATAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MDN_DEBUG_DATAX(unsigned long a)
+static inline uint64_t CAVM_MDN_DEBUG_DATAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MDN_DEBUG_DATAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=31))
         return 0x80 + 4 * ((a) & 0x1f);

@@ -838,6 +838,7 @@ union cavm_gic_bp_test1
     } cn96xxp3;
     /* struct cavm_gic_bp_test1_cn96xxp3 cn98xx; */
     /* struct cavm_gic_bp_test1_cn96xxp3 cnf95xx; */
+    /* struct cavm_gic_bp_test1_cn96xxp3 f95mm; */
     /* struct cavm_gic_bp_test1_cn96xxp3 loki; */
 };
 typedef union cavm_gic_bp_test1 cavm_gic_bp_test1_t;
@@ -1305,8 +1306,8 @@ union cavm_gic_int_reqx_pc
 };
 typedef union cavm_gic_int_reqx_pc cavm_gic_int_reqx_pc_t;
 
-static inline uint64_t CAVM_GIC_INT_REQX_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GIC_INT_REQX_PC(unsigned long a)
+static inline uint64_t CAVM_GIC_INT_REQX_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GIC_INT_REQX_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=6))
         return 0x801000010100ll + 8ll * ((a) & 0x7);
@@ -1341,8 +1342,8 @@ union cavm_gic_pf_msix_pbax
 };
 typedef union cavm_gic_pf_msix_pbax cavm_gic_pf_msix_pbax_t;
 
-static inline uint64_t CAVM_GIC_PF_MSIX_PBAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GIC_PF_MSIX_PBAX(unsigned long a)
+static inline uint64_t CAVM_GIC_PF_MSIX_PBAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GIC_PF_MSIX_PBAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a==0))
         return 0x8010800f0000ll + 8ll * ((a) & 0x0);
@@ -1441,12 +1442,13 @@ union cavm_gic_pf_msix_vecx_addr
     } cn96xxp3;
     /* struct cavm_gic_pf_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_gic_pf_msix_vecx_addr_cn96xxp3 cnf95xx; */
+    /* struct cavm_gic_pf_msix_vecx_addr_cn96xxp3 f95mm; */
     /* struct cavm_gic_pf_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_gic_pf_msix_vecx_addr cavm_gic_pf_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_GIC_PF_MSIX_VECX_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GIC_PF_MSIX_VECX_ADDR(unsigned long a)
+static inline uint64_t CAVM_GIC_PF_MSIX_VECX_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GIC_PF_MSIX_VECX_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a==0))
         return 0x801080000000ll + 0x10ll * ((a) & 0x0);
@@ -1485,8 +1487,8 @@ union cavm_gic_pf_msix_vecx_ctl
 };
 typedef union cavm_gic_pf_msix_vecx_ctl cavm_gic_pf_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_GIC_PF_MSIX_VECX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GIC_PF_MSIX_VECX_CTL(unsigned long a)
+static inline uint64_t CAVM_GIC_PF_MSIX_VECX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GIC_PF_MSIX_VECX_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a==0))
         return 0x801080000008ll + 0x10ll * ((a) & 0x0);
@@ -2398,8 +2400,8 @@ union cavm_gicd_icactiverx
 };
 typedef union cavm_gicd_icactiverx cavm_gicd_icactiverx_t;
 
-static inline uint64_t CAVM_GICD_ICACTIVERX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICD_ICACTIVERX(unsigned long a)
+static inline uint64_t CAVM_GICD_ICACTIVERX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICD_ICACTIVERX(uint64_t a)
 {
     if ((a>=1)&&(a<=4))
         return 0x801000000380ll + 4ll * ((a) & 0x7);
@@ -2454,8 +2456,8 @@ union cavm_gicd_icenablerx
 };
 typedef union cavm_gicd_icenablerx cavm_gicd_icenablerx_t;
 
-static inline uint64_t CAVM_GICD_ICENABLERX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICD_ICENABLERX(unsigned long a)
+static inline uint64_t CAVM_GICD_ICENABLERX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICD_ICENABLERX(uint64_t a)
 {
     if ((a>=1)&&(a<=4))
         return 0x801000000180ll + 4ll * ((a) & 0x7);
@@ -2501,8 +2503,8 @@ union cavm_gicd_icfgrx
 };
 typedef union cavm_gicd_icfgrx cavm_gicd_icfgrx_t;
 
-static inline uint64_t CAVM_GICD_ICFGRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICD_ICFGRX(unsigned long a)
+static inline uint64_t CAVM_GICD_ICFGRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICD_ICFGRX(uint64_t a)
 {
     if ((a>=2)&&(a<=9))
         return 0x801000000c00ll + 4ll * ((a) & 0xf);
@@ -2552,8 +2554,8 @@ union cavm_gicd_icpendrx
 };
 typedef union cavm_gicd_icpendrx cavm_gicd_icpendrx_t;
 
-static inline uint64_t CAVM_GICD_ICPENDRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICD_ICPENDRX(unsigned long a)
+static inline uint64_t CAVM_GICD_ICPENDRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICD_ICPENDRX(uint64_t a)
 {
     if ((a>=1)&&(a<=4))
         return 0x801000000280ll + 4ll * ((a) & 0x7);
@@ -2592,8 +2594,8 @@ union cavm_gicd_igrouprx
 };
 typedef union cavm_gicd_igrouprx cavm_gicd_igrouprx_t;
 
-static inline uint64_t CAVM_GICD_IGROUPRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICD_IGROUPRX(unsigned long a)
+static inline uint64_t CAVM_GICD_IGROUPRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICD_IGROUPRX(uint64_t a)
 {
     if ((a>=1)&&(a<=4))
         return 0x801000000080ll + 4ll * ((a) & 0x7);
@@ -2634,8 +2636,8 @@ union cavm_gicd_igrpmodrx
 };
 typedef union cavm_gicd_igrpmodrx cavm_gicd_igrpmodrx_t;
 
-static inline uint64_t CAVM_GICD_IGRPMODRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICD_IGRPMODRX(unsigned long a)
+static inline uint64_t CAVM_GICD_IGRPMODRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICD_IGRPMODRX(uint64_t a)
 {
     if ((a>=1)&&(a<=4))
         return 0x801000000d00ll + 4ll * ((a) & 0x7);
@@ -2712,6 +2714,7 @@ union cavm_gicd_iidr
     } cn96xxp3;
     /* struct cavm_gicd_iidr_cn96xxp3 cn98xx; */
     /* struct cavm_gicd_iidr_cn96xxp3 cnf95xx; */
+    /* struct cavm_gicd_iidr_cn96xxp3 f95mm; */
     /* struct cavm_gicd_iidr_cn96xxp3 loki; */
 };
 typedef union cavm_gicd_iidr cavm_gicd_iidr_t;
@@ -2765,8 +2768,8 @@ union cavm_gicd_ipriorityrx
 };
 typedef union cavm_gicd_ipriorityrx cavm_gicd_ipriorityrx_t;
 
-static inline uint64_t CAVM_GICD_IPRIORITYRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICD_IPRIORITYRX(unsigned long a)
+static inline uint64_t CAVM_GICD_IPRIORITYRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICD_IPRIORITYRX(uint64_t a)
 {
     if ((a>=8)&&(a<=39))
         return 0x801000000400ll + 4ll * ((a) & 0x3f);
@@ -2818,8 +2821,8 @@ union cavm_gicd_irouterx
 };
 typedef union cavm_gicd_irouterx cavm_gicd_irouterx_t;
 
-static inline uint64_t CAVM_GICD_IROUTERX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICD_IROUTERX(unsigned long a)
+static inline uint64_t CAVM_GICD_IROUTERX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICD_IROUTERX(uint64_t a)
 {
     if ((a>=32)&&(a<=159))
         return 0x801000006000ll + 8ll * ((a) & 0xff);
@@ -2869,8 +2872,8 @@ union cavm_gicd_isactiverx
 };
 typedef union cavm_gicd_isactiverx cavm_gicd_isactiverx_t;
 
-static inline uint64_t CAVM_GICD_ISACTIVERX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICD_ISACTIVERX(unsigned long a)
+static inline uint64_t CAVM_GICD_ISACTIVERX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICD_ISACTIVERX(uint64_t a)
 {
     if ((a>=1)&&(a<=4))
         return 0x801000000300ll + 4ll * ((a) & 0x7);
@@ -2915,8 +2918,8 @@ union cavm_gicd_isenablerx
 };
 typedef union cavm_gicd_isenablerx cavm_gicd_isenablerx_t;
 
-static inline uint64_t CAVM_GICD_ISENABLERX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICD_ISENABLERX(unsigned long a)
+static inline uint64_t CAVM_GICD_ISENABLERX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICD_ISENABLERX(uint64_t a)
 {
     if ((a>=1)&&(a<=4))
         return 0x801000000100ll + 4ll * ((a) & 0x7);
@@ -2966,8 +2969,8 @@ union cavm_gicd_ispendrx
 };
 typedef union cavm_gicd_ispendrx cavm_gicd_ispendrx_t;
 
-static inline uint64_t CAVM_GICD_ISPENDRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICD_ISPENDRX(unsigned long a)
+static inline uint64_t CAVM_GICD_ISPENDRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICD_ISPENDRX(uint64_t a)
 {
     if ((a>=1)&&(a<=4))
         return 0x801000000200ll + 4ll * ((a) & 0x7);
@@ -3031,8 +3034,8 @@ union cavm_gicd_nsacrx
 };
 typedef union cavm_gicd_nsacrx cavm_gicd_nsacrx_t;
 
-static inline uint64_t CAVM_GICD_NSACRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICD_NSACRX(unsigned long a)
+static inline uint64_t CAVM_GICD_NSACRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICD_NSACRX(uint64_t a)
 {
     if ((a>=2)&&(a<=9))
         return 0x801000000e00ll + 4ll * ((a) & 0xf);
@@ -3119,6 +3122,7 @@ union cavm_gicd_pidr1
     } cn96xxp3;
     /* struct cavm_gicd_pidr1_cn96xxp3 cn98xx; */
     /* struct cavm_gicd_pidr1_cn96xxp3 cnf95xx; */
+    /* struct cavm_gicd_pidr1_cn96xxp3 f95mm; */
     /* struct cavm_gicd_pidr1_cn96xxp3 loki; */
 };
 typedef union cavm_gicd_pidr1 cavm_gicd_pidr1_t;
@@ -3198,6 +3202,7 @@ union cavm_gicd_pidr2
     } cn96xxp3;
     /* struct cavm_gicd_pidr2_cn96xxp3 cn98xx; */
     /* struct cavm_gicd_pidr2_cn96xxp3 cnf95xx; */
+    /* struct cavm_gicd_pidr2_cn96xxp3 f95mm; */
     /* struct cavm_gicd_pidr2_cn96xxp3 loki; */
 };
 typedef union cavm_gicd_pidr2 cavm_gicd_pidr2_t;
@@ -3293,6 +3298,7 @@ union cavm_gicd_pidr4
     } cn96xxp3;
     /* struct cavm_gicd_pidr4_cn96xxp3 cn98xx; */
     /* struct cavm_gicd_pidr4_cn96xxp3 cnf95xx; */
+    /* struct cavm_gicd_pidr4_cn96xxp3 f95mm; */
     /* struct cavm_gicd_pidr4_cn96xxp3 loki; */
 };
 typedef union cavm_gicd_pidr4 cavm_gicd_pidr4_t;
@@ -3761,8 +3767,8 @@ union cavm_gicrx_cidr0
 };
 typedef union cavm_gicrx_cidr0 cavm_gicrx_cidr0_t;
 
-static inline uint64_t CAVM_GICRX_CIDR0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_CIDR0(unsigned long a)
+static inline uint64_t CAVM_GICRX_CIDR0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_CIDR0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x80108000fff0ll + 0x20000ll * ((a) & 0x3);
@@ -3773,6 +3779,8 @@ static inline uint64_t CAVM_GICRX_CIDR0(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x80108080fff0ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x80108080fff0ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x80108080fff0ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x80108080fff0ll + 0x20000ll * ((a) & 0x7);
@@ -3808,8 +3816,8 @@ union cavm_gicrx_cidr1
 };
 typedef union cavm_gicrx_cidr1 cavm_gicrx_cidr1_t;
 
-static inline uint64_t CAVM_GICRX_CIDR1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_CIDR1(unsigned long a)
+static inline uint64_t CAVM_GICRX_CIDR1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_CIDR1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x80108000fff4ll + 0x20000ll * ((a) & 0x3);
@@ -3820,6 +3828,8 @@ static inline uint64_t CAVM_GICRX_CIDR1(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x80108080fff4ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x80108080fff4ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x80108080fff4ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x80108080fff4ll + 0x20000ll * ((a) & 0x7);
@@ -3855,8 +3865,8 @@ union cavm_gicrx_cidr2
 };
 typedef union cavm_gicrx_cidr2 cavm_gicrx_cidr2_t;
 
-static inline uint64_t CAVM_GICRX_CIDR2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_CIDR2(unsigned long a)
+static inline uint64_t CAVM_GICRX_CIDR2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_CIDR2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x80108000fff8ll + 0x20000ll * ((a) & 0x3);
@@ -3867,6 +3877,8 @@ static inline uint64_t CAVM_GICRX_CIDR2(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x80108080fff8ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x80108080fff8ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x80108080fff8ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x80108080fff8ll + 0x20000ll * ((a) & 0x7);
@@ -3902,8 +3914,8 @@ union cavm_gicrx_cidr3
 };
 typedef union cavm_gicrx_cidr3 cavm_gicrx_cidr3_t;
 
-static inline uint64_t CAVM_GICRX_CIDR3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_CIDR3(unsigned long a)
+static inline uint64_t CAVM_GICRX_CIDR3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_CIDR3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x80108000fffcll + 0x20000ll * ((a) & 0x3);
@@ -3914,6 +3926,8 @@ static inline uint64_t CAVM_GICRX_CIDR3(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x80108080fffcll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x80108080fffcll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x80108080fffcll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x80108080fffcll + 0x20000ll * ((a) & 0x7);
@@ -3955,8 +3969,8 @@ union cavm_gicrx_clrlpir
 };
 typedef union cavm_gicrx_clrlpir cavm_gicrx_clrlpir_t;
 
-static inline uint64_t CAVM_GICRX_CLRLPIR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_CLRLPIR(unsigned long a)
+static inline uint64_t CAVM_GICRX_CLRLPIR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_CLRLPIR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080000048ll + 0x20000ll * ((a) & 0x3);
@@ -3967,6 +3981,8 @@ static inline uint64_t CAVM_GICRX_CLRLPIR(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080800048ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080800048ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080800048ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080800048ll + 0x20000ll * ((a) & 0x7);
@@ -4015,8 +4031,8 @@ union cavm_gicrx_icactiver0
 };
 typedef union cavm_gicrx_icactiver0 cavm_gicrx_icactiver0_t;
 
-static inline uint64_t CAVM_GICRX_ICACTIVER0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_ICACTIVER0(unsigned long a)
+static inline uint64_t CAVM_GICRX_ICACTIVER0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_ICACTIVER0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080010380ll + 0x20000ll * ((a) & 0x3);
@@ -4027,6 +4043,8 @@ static inline uint64_t CAVM_GICRX_ICACTIVER0(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080810380ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080810380ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080810380ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080810380ll + 0x20000ll * ((a) & 0x7);
@@ -4084,8 +4102,8 @@ union cavm_gicrx_icenabler0
 };
 typedef union cavm_gicrx_icenabler0 cavm_gicrx_icenabler0_t;
 
-static inline uint64_t CAVM_GICRX_ICENABLER0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_ICENABLER0(unsigned long a)
+static inline uint64_t CAVM_GICRX_ICENABLER0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_ICENABLER0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080010180ll + 0x20000ll * ((a) & 0x3);
@@ -4096,6 +4114,8 @@ static inline uint64_t CAVM_GICRX_ICENABLER0(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080810180ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080810180ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080810180ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080810180ll + 0x20000ll * ((a) & 0x7);
@@ -4147,8 +4167,8 @@ union cavm_gicrx_icfgr0
 };
 typedef union cavm_gicrx_icfgr0 cavm_gicrx_icfgr0_t;
 
-static inline uint64_t CAVM_GICRX_ICFGR0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_ICFGR0(unsigned long a)
+static inline uint64_t CAVM_GICRX_ICFGR0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_ICFGR0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080010c00ll + 0x20000ll * ((a) & 0x3);
@@ -4159,6 +4179,8 @@ static inline uint64_t CAVM_GICRX_ICFGR0(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080810c00ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080810c00ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080810c00ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080810c00ll + 0x20000ll * ((a) & 0x7);
@@ -4209,8 +4231,8 @@ union cavm_gicrx_icfgr1
 };
 typedef union cavm_gicrx_icfgr1 cavm_gicrx_icfgr1_t;
 
-static inline uint64_t CAVM_GICRX_ICFGR1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_ICFGR1(unsigned long a)
+static inline uint64_t CAVM_GICRX_ICFGR1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_ICFGR1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080010c04ll + 0x20000ll * ((a) & 0x3);
@@ -4221,6 +4243,8 @@ static inline uint64_t CAVM_GICRX_ICFGR1(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080810c04ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080810c04ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080810c04ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080810c04ll + 0x20000ll * ((a) & 0x7);
@@ -4270,8 +4294,8 @@ union cavm_gicrx_icpendr0
 };
 typedef union cavm_gicrx_icpendr0 cavm_gicrx_icpendr0_t;
 
-static inline uint64_t CAVM_GICRX_ICPENDR0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_ICPENDR0(unsigned long a)
+static inline uint64_t CAVM_GICRX_ICPENDR0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_ICPENDR0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080010280ll + 0x20000ll * ((a) & 0x3);
@@ -4282,6 +4306,8 @@ static inline uint64_t CAVM_GICRX_ICPENDR0(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080810280ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080810280ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080810280ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080810280ll + 0x20000ll * ((a) & 0x7);
@@ -4325,8 +4351,8 @@ union cavm_gicrx_igroupr0
 };
 typedef union cavm_gicrx_igroupr0 cavm_gicrx_igroupr0_t;
 
-static inline uint64_t CAVM_GICRX_IGROUPR0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_IGROUPR0(unsigned long a)
+static inline uint64_t CAVM_GICRX_IGROUPR0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_IGROUPR0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080010080ll + 0x20000ll * ((a) & 0x3);
@@ -4337,6 +4363,8 @@ static inline uint64_t CAVM_GICRX_IGROUPR0(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080810080ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080810080ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080810080ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080810080ll + 0x20000ll * ((a) & 0x7);
@@ -4381,8 +4409,8 @@ union cavm_gicrx_igrpmodr0
 };
 typedef union cavm_gicrx_igrpmodr0 cavm_gicrx_igrpmodr0_t;
 
-static inline uint64_t CAVM_GICRX_IGRPMODR0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_IGRPMODR0(unsigned long a)
+static inline uint64_t CAVM_GICRX_IGRPMODR0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_IGRPMODR0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080010d00ll + 0x20000ll * ((a) & 0x3);
@@ -4393,6 +4421,8 @@ static inline uint64_t CAVM_GICRX_IGRPMODR0(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080810d00ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080810d00ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080810d00ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080810d00ll + 0x20000ll * ((a) & 0x7);
@@ -4469,12 +4499,13 @@ union cavm_gicrx_iidr
     } cn96xxp3;
     /* struct cavm_gicrx_iidr_s cn98xx; */
     /* struct cavm_gicrx_iidr_s cnf95xx; */
+    /* struct cavm_gicrx_iidr_s f95mm; */
     /* struct cavm_gicrx_iidr_s loki; */
 };
 typedef union cavm_gicrx_iidr cavm_gicrx_iidr_t;
 
-static inline uint64_t CAVM_GICRX_IIDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_IIDR(unsigned long a)
+static inline uint64_t CAVM_GICRX_IIDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_IIDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080000004ll + 0x20000ll * ((a) & 0x3);
@@ -4485,6 +4516,8 @@ static inline uint64_t CAVM_GICRX_IIDR(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080800004ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080800004ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080800004ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080800004ll + 0x20000ll * ((a) & 0x7);
@@ -4520,8 +4553,8 @@ union cavm_gicrx_invallr
 };
 typedef union cavm_gicrx_invallr cavm_gicrx_invallr_t;
 
-static inline uint64_t CAVM_GICRX_INVALLR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_INVALLR(unsigned long a)
+static inline uint64_t CAVM_GICRX_INVALLR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_INVALLR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x8010800000b0ll + 0x20000ll * ((a) & 0x3);
@@ -4532,6 +4565,8 @@ static inline uint64_t CAVM_GICRX_INVALLR(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x8010808000b0ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x8010808000b0ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x8010808000b0ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x8010808000b0ll + 0x20000ll * ((a) & 0x7);
@@ -4573,8 +4608,8 @@ union cavm_gicrx_invlpir
 };
 typedef union cavm_gicrx_invlpir cavm_gicrx_invlpir_t;
 
-static inline uint64_t CAVM_GICRX_INVLPIR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_INVLPIR(unsigned long a)
+static inline uint64_t CAVM_GICRX_INVLPIR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_INVLPIR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x8010800000a0ll + 0x20000ll * ((a) & 0x3);
@@ -4585,6 +4620,8 @@ static inline uint64_t CAVM_GICRX_INVLPIR(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x8010808000a0ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x8010808000a0ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x8010808000a0ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x8010808000a0ll + 0x20000ll * ((a) & 0x7);
@@ -4634,8 +4671,8 @@ union cavm_gicrx_ipriorityrx
 };
 typedef union cavm_gicrx_ipriorityrx cavm_gicrx_ipriorityrx_t;
 
-static inline uint64_t CAVM_GICRX_IPRIORITYRX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_IPRIORITYRX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_GICRX_IPRIORITYRX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_IPRIORITYRX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && ((a<=3) && (b<=7)))
         return 0x801080010400ll + 0x20000ll * ((a) & 0x3) + 4ll * ((b) & 0x7);
@@ -4646,6 +4683,8 @@ static inline uint64_t CAVM_GICRX_IPRIORITYRX(unsigned long a, unsigned long b)
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=35) && (b<=7)))
         return 0x801080810400ll + 0x20000ll * ((a) & 0x3f) + 4ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=5) && (b<=7)))
+        return 0x801080810400ll + 0x20000ll * ((a) & 0x7) + 4ll * ((b) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=5) && (b<=7)))
         return 0x801080810400ll + 0x20000ll * ((a) & 0x7) + 4ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=5) && (b<=7)))
         return 0x801080810400ll + 0x20000ll * ((a) & 0x7) + 4ll * ((b) & 0x7);
@@ -4695,8 +4734,8 @@ union cavm_gicrx_isactiver0
 };
 typedef union cavm_gicrx_isactiver0 cavm_gicrx_isactiver0_t;
 
-static inline uint64_t CAVM_GICRX_ISACTIVER0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_ISACTIVER0(unsigned long a)
+static inline uint64_t CAVM_GICRX_ISACTIVER0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_ISACTIVER0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080010300ll + 0x20000ll * ((a) & 0x3);
@@ -4707,6 +4746,8 @@ static inline uint64_t CAVM_GICRX_ISACTIVER0(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080810300ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080810300ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080810300ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080810300ll + 0x20000ll * ((a) & 0x7);
@@ -4751,8 +4792,8 @@ union cavm_gicrx_isenabler0
 };
 typedef union cavm_gicrx_isenabler0 cavm_gicrx_isenabler0_t;
 
-static inline uint64_t CAVM_GICRX_ISENABLER0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_ISENABLER0(unsigned long a)
+static inline uint64_t CAVM_GICRX_ISENABLER0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_ISENABLER0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080010100ll + 0x20000ll * ((a) & 0x3);
@@ -4763,6 +4804,8 @@ static inline uint64_t CAVM_GICRX_ISENABLER0(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080810100ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080810100ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080810100ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080810100ll + 0x20000ll * ((a) & 0x7);
@@ -4812,8 +4855,8 @@ union cavm_gicrx_ispendr0
 };
 typedef union cavm_gicrx_ispendr0 cavm_gicrx_ispendr0_t;
 
-static inline uint64_t CAVM_GICRX_ISPENDR0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_ISPENDR0(unsigned long a)
+static inline uint64_t CAVM_GICRX_ISPENDR0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_ISPENDR0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080010200ll + 0x20000ll * ((a) & 0x3);
@@ -4824,6 +4867,8 @@ static inline uint64_t CAVM_GICRX_ISPENDR0(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080810200ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080810200ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080810200ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080810200ll + 0x20000ll * ((a) & 0x7);
@@ -4865,8 +4910,8 @@ union cavm_gicrx_movallr
 };
 typedef union cavm_gicrx_movallr cavm_gicrx_movallr_t;
 
-static inline uint64_t CAVM_GICRX_MOVALLR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_MOVALLR(unsigned long a)
+static inline uint64_t CAVM_GICRX_MOVALLR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_MOVALLR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080000110ll + 0x20000ll * ((a) & 0x3);
@@ -4877,6 +4922,8 @@ static inline uint64_t CAVM_GICRX_MOVALLR(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080800110ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080800110ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080800110ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080800110ll + 0x20000ll * ((a) & 0x7);
@@ -4918,8 +4965,8 @@ union cavm_gicrx_movlpir
 };
 typedef union cavm_gicrx_movlpir cavm_gicrx_movlpir_t;
 
-static inline uint64_t CAVM_GICRX_MOVLPIR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_MOVLPIR(unsigned long a)
+static inline uint64_t CAVM_GICRX_MOVLPIR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_MOVLPIR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080000100ll + 0x20000ll * ((a) & 0x3);
@@ -4930,6 +4977,8 @@ static inline uint64_t CAVM_GICRX_MOVLPIR(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080800100ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080800100ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080800100ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080800100ll + 0x20000ll * ((a) & 0x7);
@@ -4983,8 +5032,8 @@ union cavm_gicrx_nsacr
 };
 typedef union cavm_gicrx_nsacr cavm_gicrx_nsacr_t;
 
-static inline uint64_t CAVM_GICRX_NSACR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_NSACR(unsigned long a)
+static inline uint64_t CAVM_GICRX_NSACR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_NSACR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080010e00ll + 0x20000ll * ((a) & 0x3);
@@ -4995,6 +5044,8 @@ static inline uint64_t CAVM_GICRX_NSACR(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080810e00ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080810e00ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080810e00ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080810e00ll + 0x20000ll * ((a) & 0x7);
@@ -5111,8 +5162,8 @@ union cavm_gicrx_pendbaser
 };
 typedef union cavm_gicrx_pendbaser cavm_gicrx_pendbaser_t;
 
-static inline uint64_t CAVM_GICRX_PENDBASER(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_PENDBASER(unsigned long a)
+static inline uint64_t CAVM_GICRX_PENDBASER(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_PENDBASER(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080000078ll + 0x20000ll * ((a) & 0x3);
@@ -5123,6 +5174,8 @@ static inline uint64_t CAVM_GICRX_PENDBASER(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080800078ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080800078ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080800078ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080800078ll + 0x20000ll * ((a) & 0x7);
@@ -5158,8 +5211,8 @@ union cavm_gicrx_pidr0
 };
 typedef union cavm_gicrx_pidr0 cavm_gicrx_pidr0_t;
 
-static inline uint64_t CAVM_GICRX_PIDR0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_PIDR0(unsigned long a)
+static inline uint64_t CAVM_GICRX_PIDR0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_PIDR0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x80108000ffe0ll + 0x20000ll * ((a) & 0x3);
@@ -5170,6 +5223,8 @@ static inline uint64_t CAVM_GICRX_PIDR0(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x80108080ffe0ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x80108080ffe0ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x80108080ffe0ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x80108080ffe0ll + 0x20000ll * ((a) & 0x7);
@@ -5220,12 +5275,13 @@ union cavm_gicrx_pidr1
     } cn96xxp3;
     /* struct cavm_gicrx_pidr1_cn96xxp3 cn98xx; */
     /* struct cavm_gicrx_pidr1_cn96xxp3 cnf95xx; */
+    /* struct cavm_gicrx_pidr1_cn96xxp3 f95mm; */
     /* struct cavm_gicrx_pidr1_cn96xxp3 loki; */
 };
 typedef union cavm_gicrx_pidr1 cavm_gicrx_pidr1_t;
 
-static inline uint64_t CAVM_GICRX_PIDR1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_PIDR1(unsigned long a)
+static inline uint64_t CAVM_GICRX_PIDR1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_PIDR1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x80108000ffe4ll + 0x20000ll * ((a) & 0x3);
@@ -5236,6 +5292,8 @@ static inline uint64_t CAVM_GICRX_PIDR1(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x80108080ffe4ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x80108080ffe4ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x80108080ffe4ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x80108080ffe4ll + 0x20000ll * ((a) & 0x7);
@@ -5310,12 +5368,13 @@ union cavm_gicrx_pidr2
     } cn96xxp3;
     /* struct cavm_gicrx_pidr2_cn96xxp3 cn98xx; */
     /* struct cavm_gicrx_pidr2_cn96xxp3 cnf95xx; */
+    /* struct cavm_gicrx_pidr2_cn96xxp3 f95mm; */
     /* struct cavm_gicrx_pidr2_cn96xxp3 loki; */
 };
 typedef union cavm_gicrx_pidr2 cavm_gicrx_pidr2_t;
 
-static inline uint64_t CAVM_GICRX_PIDR2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_PIDR2(unsigned long a)
+static inline uint64_t CAVM_GICRX_PIDR2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_PIDR2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x80108000ffe8ll + 0x20000ll * ((a) & 0x3);
@@ -5326,6 +5385,8 @@ static inline uint64_t CAVM_GICRX_PIDR2(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x80108080ffe8ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x80108080ffe8ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x80108080ffe8ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x80108080ffe8ll + 0x20000ll * ((a) & 0x7);
@@ -5365,8 +5426,8 @@ union cavm_gicrx_pidr3
 };
 typedef union cavm_gicrx_pidr3 cavm_gicrx_pidr3_t;
 
-static inline uint64_t CAVM_GICRX_PIDR3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_PIDR3(unsigned long a)
+static inline uint64_t CAVM_GICRX_PIDR3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_PIDR3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x80108000ffecll + 0x20000ll * ((a) & 0x3);
@@ -5377,6 +5438,8 @@ static inline uint64_t CAVM_GICRX_PIDR3(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x80108080ffecll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x80108080ffecll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x80108080ffecll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x80108080ffecll + 0x20000ll * ((a) & 0x7);
@@ -5427,12 +5490,13 @@ union cavm_gicrx_pidr4
     } cn96xxp3;
     /* struct cavm_gicrx_pidr4_s cn98xx; */
     /* struct cavm_gicrx_pidr4_s cnf95xx; */
+    /* struct cavm_gicrx_pidr4_s f95mm; */
     /* struct cavm_gicrx_pidr4_s loki; */
 };
 typedef union cavm_gicrx_pidr4 cavm_gicrx_pidr4_t;
 
-static inline uint64_t CAVM_GICRX_PIDR4(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_PIDR4(unsigned long a)
+static inline uint64_t CAVM_GICRX_PIDR4(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_PIDR4(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x80108000ffd0ll + 0x20000ll * ((a) & 0x3);
@@ -5443,6 +5507,8 @@ static inline uint64_t CAVM_GICRX_PIDR4(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x80108080ffd0ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x80108080ffd0ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x80108080ffd0ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x80108080ffd0ll + 0x20000ll * ((a) & 0x7);
@@ -5476,8 +5542,8 @@ union cavm_gicrx_pidr5
 };
 typedef union cavm_gicrx_pidr5 cavm_gicrx_pidr5_t;
 
-static inline uint64_t CAVM_GICRX_PIDR5(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_PIDR5(unsigned long a)
+static inline uint64_t CAVM_GICRX_PIDR5(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_PIDR5(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x80108000ffd4ll + 0x20000ll * ((a) & 0x3);
@@ -5488,6 +5554,8 @@ static inline uint64_t CAVM_GICRX_PIDR5(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x80108080ffd4ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x80108080ffd4ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x80108080ffd4ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x80108080ffd4ll + 0x20000ll * ((a) & 0x7);
@@ -5521,8 +5589,8 @@ union cavm_gicrx_pidr6
 };
 typedef union cavm_gicrx_pidr6 cavm_gicrx_pidr6_t;
 
-static inline uint64_t CAVM_GICRX_PIDR6(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_PIDR6(unsigned long a)
+static inline uint64_t CAVM_GICRX_PIDR6(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_PIDR6(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x80108000ffd8ll + 0x20000ll * ((a) & 0x3);
@@ -5533,6 +5601,8 @@ static inline uint64_t CAVM_GICRX_PIDR6(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x80108080ffd8ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x80108080ffd8ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x80108080ffd8ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x80108080ffd8ll + 0x20000ll * ((a) & 0x7);
@@ -5566,8 +5636,8 @@ union cavm_gicrx_pidr7
 };
 typedef union cavm_gicrx_pidr7 cavm_gicrx_pidr7_t;
 
-static inline uint64_t CAVM_GICRX_PIDR7(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_PIDR7(unsigned long a)
+static inline uint64_t CAVM_GICRX_PIDR7(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_PIDR7(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x80108000ffdcll + 0x20000ll * ((a) & 0x3);
@@ -5578,6 +5648,8 @@ static inline uint64_t CAVM_GICRX_PIDR7(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x80108080ffdcll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x80108080ffdcll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x80108080ffdcll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x80108080ffdcll + 0x20000ll * ((a) & 0x7);
@@ -5682,8 +5754,8 @@ union cavm_gicrx_propbaser
 };
 typedef union cavm_gicrx_propbaser cavm_gicrx_propbaser_t;
 
-static inline uint64_t CAVM_GICRX_PROPBASER(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_PROPBASER(unsigned long a)
+static inline uint64_t CAVM_GICRX_PROPBASER(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_PROPBASER(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080000070ll + 0x20000ll * ((a) & 0x3);
@@ -5694,6 +5766,8 @@ static inline uint64_t CAVM_GICRX_PROPBASER(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080800070ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080800070ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080800070ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080800070ll + 0x20000ll * ((a) & 0x7);
@@ -5766,8 +5840,8 @@ union cavm_gicrx_sctlr
 };
 typedef union cavm_gicrx_sctlr cavm_gicrx_sctlr_t;
 
-static inline uint64_t CAVM_GICRX_SCTLR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_SCTLR(unsigned long a)
+static inline uint64_t CAVM_GICRX_SCTLR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_SCTLR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080000000ll + 0x20000ll * ((a) & 0x3);
@@ -5778,6 +5852,8 @@ static inline uint64_t CAVM_GICRX_SCTLR(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080800000ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080800000ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080800000ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080800000ll + 0x20000ll * ((a) & 0x7);
@@ -5819,8 +5895,8 @@ union cavm_gicrx_seir
 };
 typedef union cavm_gicrx_seir cavm_gicrx_seir_t;
 
-static inline uint64_t CAVM_GICRX_SEIR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_SEIR(unsigned long a)
+static inline uint64_t CAVM_GICRX_SEIR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_SEIR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080000068ll + 0x20000ll * ((a) & 0x3);
@@ -5831,6 +5907,8 @@ static inline uint64_t CAVM_GICRX_SEIR(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080800068ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080800068ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080800068ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080800068ll + 0x20000ll * ((a) & 0x7);
@@ -5874,8 +5952,8 @@ union cavm_gicrx_setdel3tr_el1s
 };
 typedef union cavm_gicrx_setdel3tr_el1s cavm_gicrx_setdel3tr_el1s_t;
 
-static inline uint64_t CAVM_GICRX_SETDEL3TR_EL1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_SETDEL3TR_EL1S(unsigned long a)
+static inline uint64_t CAVM_GICRX_SETDEL3TR_EL1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_SETDEL3TR_EL1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x80108000c000ll + 0x20000ll * ((a) & 0x3);
@@ -5886,6 +5964,8 @@ static inline uint64_t CAVM_GICRX_SETDEL3TR_EL1S(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x80108080c000ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x80108080c000ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x80108080c000ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x80108080c000ll + 0x20000ll * ((a) & 0x7);
@@ -5927,8 +6007,8 @@ union cavm_gicrx_setlpir
 };
 typedef union cavm_gicrx_setlpir cavm_gicrx_setlpir_t;
 
-static inline uint64_t CAVM_GICRX_SETLPIR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_SETLPIR(unsigned long a)
+static inline uint64_t CAVM_GICRX_SETLPIR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_SETLPIR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080000040ll + 0x20000ll * ((a) & 0x3);
@@ -5939,6 +6019,8 @@ static inline uint64_t CAVM_GICRX_SETLPIR(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080800040ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080800040ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080800040ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080800040ll + 0x20000ll * ((a) & 0x7);
@@ -5988,8 +6070,8 @@ union cavm_gicrx_sstatusr
 };
 typedef union cavm_gicrx_sstatusr cavm_gicrx_sstatusr_t;
 
-static inline uint64_t CAVM_GICRX_SSTATUSR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_SSTATUSR(unsigned long a)
+static inline uint64_t CAVM_GICRX_SSTATUSR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_SSTATUSR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080000010ll + 0x20000ll * ((a) & 0x3);
@@ -6000,6 +6082,8 @@ static inline uint64_t CAVM_GICRX_SSTATUSR(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080800010ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080800010ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080800010ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080800010ll + 0x20000ll * ((a) & 0x7);
@@ -6053,8 +6137,8 @@ union cavm_gicrx_syncr
 };
 typedef union cavm_gicrx_syncr cavm_gicrx_syncr_t;
 
-static inline uint64_t CAVM_GICRX_SYNCR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_SYNCR(unsigned long a)
+static inline uint64_t CAVM_GICRX_SYNCR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_SYNCR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x8010800000c0ll + 0x20000ll * ((a) & 0x3);
@@ -6065,6 +6149,8 @@ static inline uint64_t CAVM_GICRX_SYNCR(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x8010808000c0ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x8010808000c0ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x8010808000c0ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x8010808000c0ll + 0x20000ll * ((a) & 0x7);
@@ -6194,8 +6280,8 @@ union cavm_gicrx_typer
 };
 typedef union cavm_gicrx_typer cavm_gicrx_typer_t;
 
-static inline uint64_t CAVM_GICRX_TYPER(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_TYPER(unsigned long a)
+static inline uint64_t CAVM_GICRX_TYPER(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_TYPER(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080000008ll + 0x20000ll * ((a) & 0x3);
@@ -6206,6 +6292,8 @@ static inline uint64_t CAVM_GICRX_TYPER(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080800008ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080800008ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080800008ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080800008ll + 0x20000ll * ((a) & 0x7);
@@ -6261,8 +6349,8 @@ union cavm_gicrx_waker
 };
 typedef union cavm_gicrx_waker cavm_gicrx_waker_t;
 
-static inline uint64_t CAVM_GICRX_WAKER(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GICRX_WAKER(unsigned long a)
+static inline uint64_t CAVM_GICRX_WAKER(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GICRX_WAKER(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=3))
         return 0x801080000014ll + 0x20000ll * ((a) & 0x3);
@@ -6273,6 +6361,8 @@ static inline uint64_t CAVM_GICRX_WAKER(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=35))
         return 0x801080800014ll + 0x20000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
+        return 0x801080800014ll + 0x20000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x801080800014ll + 0x20000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x801080800014ll + 0x20000ll * ((a) & 0x7);
@@ -6886,8 +6976,8 @@ union cavm_gits_baserx
 };
 typedef union cavm_gits_baserx cavm_gits_baserx_t;
 
-static inline uint64_t CAVM_GITS_BASERX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GITS_BASERX(unsigned long a)
+static inline uint64_t CAVM_GITS_BASERX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GITS_BASERX(uint64_t a)
 {
     if (a==0)
         return 0x801000020100ll + 8ll * ((a) & 0x0);
@@ -6925,8 +7015,8 @@ union cavm_gits_baserx_rowi
 };
 typedef union cavm_gits_baserx_rowi cavm_gits_baserx_rowi_t;
 
-static inline uint64_t CAVM_GITS_BASERX_ROWI(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GITS_BASERX_ROWI(unsigned long a)
+static inline uint64_t CAVM_GITS_BASERX_ROWI(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GITS_BASERX_ROWI(uint64_t a)
 {
     if ((a>=1)&&(a<=7))
         return 0x801000020100ll + 8ll * ((a) & 0x7);
@@ -7666,6 +7756,7 @@ union cavm_gits_iidr
     } cn96xxp3;
     /* struct cavm_gits_iidr_cn96xxp3 cn98xx; */
     /* struct cavm_gits_iidr_cn96xxp3 cnf95xx; */
+    /* struct cavm_gits_iidr_cn96xxp3 f95mm; */
     /* struct cavm_gits_iidr_cn96xxp3 loki; */
 };
 typedef union cavm_gits_iidr cavm_gits_iidr_t;
@@ -7899,6 +7990,7 @@ union cavm_gits_pidr1
     } cn96xxp3;
     /* struct cavm_gits_pidr1_cn96xxp3 cn98xx; */
     /* struct cavm_gits_pidr1_cn96xxp3 cnf95xx; */
+    /* struct cavm_gits_pidr1_cn96xxp3 f95mm; */
     /* struct cavm_gits_pidr1_cn96xxp3 loki; */
 };
 typedef union cavm_gits_pidr1 cavm_gits_pidr1_t;
@@ -7978,6 +8070,7 @@ union cavm_gits_pidr2
     } cn96xxp3;
     /* struct cavm_gits_pidr2_cn96xxp3 cn98xx; */
     /* struct cavm_gits_pidr2_cn96xxp3 cnf95xx; */
+    /* struct cavm_gits_pidr2_cn96xxp3 f95mm; */
     /* struct cavm_gits_pidr2_cn96xxp3 loki; */
 };
 typedef union cavm_gits_pidr2 cavm_gits_pidr2_t;
@@ -8073,6 +8166,7 @@ union cavm_gits_pidr4
     } cn96xxp3;
     /* struct cavm_gits_pidr4_cn96xxp3 cn98xx; */
     /* struct cavm_gits_pidr4_cn96xxp3 cnf95xx; */
+    /* struct cavm_gits_pidr4_cn96xxp3 f95mm; */
     /* struct cavm_gits_pidr4_cn96xxp3 loki; */
 };
 typedef union cavm_gits_pidr4 cavm_gits_pidr4_t;

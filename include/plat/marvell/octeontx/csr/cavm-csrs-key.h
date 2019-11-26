@@ -306,8 +306,8 @@ union cavm_key_memx
 };
 typedef union cavm_key_memx cavm_key_memx_t;
 
-static inline uint64_t CAVM_KEY_MEMX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_KEY_MEMX(unsigned long a)
+static inline uint64_t CAVM_KEY_MEMX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_KEY_MEMX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=2047))
         return 0x841000400000ll + 8ll * ((a) & 0x7ff);
@@ -391,8 +391,8 @@ union cavm_key_msix_pbax
 };
 typedef union cavm_key_msix_pbax cavm_key_msix_pbax_t;
 
-static inline uint64_t CAVM_KEY_MSIX_PBAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_KEY_MSIX_PBAX(unsigned long a)
+static inline uint64_t CAVM_KEY_MSIX_PBAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_KEY_MSIX_PBAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a==0))
         return 0x87e041ff0000ll + 8ll * ((a) & 0x0);
@@ -447,8 +447,8 @@ union cavm_key_msix_vecx_addr
 };
 typedef union cavm_key_msix_vecx_addr cavm_key_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_KEY_MSIX_VECX_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_KEY_MSIX_VECX_ADDR(unsigned long a)
+static inline uint64_t CAVM_KEY_MSIX_VECX_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_KEY_MSIX_VECX_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a==0))
         return 0x87e041f00000ll + 0x10ll * ((a) & 0x0);
@@ -489,8 +489,8 @@ union cavm_key_msix_vecx_ctl
 };
 typedef union cavm_key_msix_vecx_ctl cavm_key_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_KEY_MSIX_VECX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_KEY_MSIX_VECX_CTL(unsigned long a)
+static inline uint64_t CAVM_KEY_MSIX_VECX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_KEY_MSIX_VECX_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a==0))
         return 0x87e041f00008ll + 0x10ll * ((a) & 0x0);

@@ -84,12 +84,14 @@
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CN96XX(a) (0x36 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CN98XX(a) (0x24 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CNF95XX(a) (6 + 2 * (a))
+#define CAVM_GPIO_INT_VEC_E_INTR_PINX_F95MM(a) (6 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_LOKI(a) (6 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CLEAR_CN81XX(a) (5 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CLEAR_CN83XX(a) (0x19 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CLEAR_CN96XX(a) (0x37 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CLEAR_CN98XX(a) (0x25 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CLEAR_CNF95XX(a) (7 + 2 * (a))
+#define CAVM_GPIO_INT_VEC_E_INTR_PINX_CLEAR_F95MM(a) (7 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CLEAR_LOKI(a) (7 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_MC_INTR_PPX(a) (0 + (a))
 
@@ -585,8 +587,8 @@ union cavm_gpio_bit_cfgx
 };
 typedef union cavm_gpio_bit_cfgx cavm_gpio_bit_cfgx_t;
 
-static inline uint64_t CAVM_GPIO_BIT_CFGX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GPIO_BIT_CFGX(unsigned long a)
+static inline uint64_t CAVM_GPIO_BIT_CFGX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GPIO_BIT_CFGX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=47))
         return 0x803000000400ll + 8ll * ((a) & 0x3f);
@@ -597,6 +599,8 @@ static inline uint64_t CAVM_GPIO_BIT_CFGX(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=83))
         return 0x803000000400ll + 8ll * ((a) & 0x7f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=63))
+        return 0x803000000400ll + 8ll * ((a) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=63))
         return 0x803000000400ll + 8ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=63))
         return 0x803000000400ll + 8ll * ((a) & 0x3f);
@@ -649,14 +653,16 @@ union cavm_gpio_bit_permitx
 };
 typedef union cavm_gpio_bit_permitx cavm_gpio_bit_permitx_t;
 
-static inline uint64_t CAVM_GPIO_BIT_PERMITX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GPIO_BIT_PERMITX(unsigned long a)
+static inline uint64_t CAVM_GPIO_BIT_PERMITX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GPIO_BIT_PERMITX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX) && (a<=63))
         return 0x803000002000ll + 8ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=83))
         return 0x803000002000ll + 8ll * ((a) & 0x7f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=63))
+        return 0x803000002000ll + 8ll * ((a) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=63))
         return 0x803000002000ll + 8ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=63))
         return 0x803000002000ll + 8ll * ((a) & 0x3f);
@@ -799,7 +805,7 @@ static inline uint64_t CAVM_GPIO_BLINK_FREQ_FUNC(void)
 /**
  * Register (NCB) gpio_cer_err_w1c
  *
- * GPIO Central Error Write-One-to-Clear Register
+ * INTERNAL: GPIO Central Error Write-One-to-Clear Register
  */
 union cavm_gpio_cer_err_w1c
 {
@@ -845,8 +851,9 @@ static inline uint64_t CAVM_GPIO_CER_ERR_W1C_FUNC(void)
 /**
  * Register (NCB) gpio_cer_err_w1s
  *
- * GPIO Central Error Write-One-to-Set Register
- * This register report CER Errors to GPIO pins.
+ * INTERNAL: GPIO Central Error Write-One-to-Set Register
+ *
+ * Deprecated. This register report CER Errors to GPIO pins.
  *
  * This register is not accessible through ROM scripts; see SCR_WRITE32_S[ADDR].
  */
@@ -972,8 +979,8 @@ union cavm_gpio_clk_genx
 };
 typedef union cavm_gpio_clk_genx cavm_gpio_clk_genx_t;
 
-static inline uint64_t CAVM_GPIO_CLK_GENX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GPIO_CLK_GENX(unsigned long a)
+static inline uint64_t CAVM_GPIO_CLK_GENX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GPIO_CLK_GENX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=3))
         return 0x803000000040ll + 8ll * ((a) & 0x3);
@@ -1187,6 +1194,50 @@ union cavm_gpio_clk_syncex
 #endif /* Word 0 - End */
     } cnf95xxp1;
     /* struct cavm_gpio_clk_syncex_cn98xx cnf95xxp2; */
+    struct cavm_gpio_clk_syncex_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_12_63        : 52;
+        uint64_t qlm_sel               : 4;  /**< [ 11:  8](R/W) Selects which GSERR/GSERJ:
+                                                                   0x0 = GSERR0.
+                                                                   0x1 = GSERR1.
+                                                                   0x2 = GSERJ(1..0).
+                                                                   0x3-0xF = Reserved. */
+        uint64_t reserved_4_7          : 4;
+        uint64_t div                   : 2;  /**< [  3:  2](R/W) GPIO internal clock division of the SerDes recovered clock selected by [QLM_SEL]
+                                                                 to create the output clock. The maximum supported GPIO output frequency is 125
+                                                                 MHz.
+                                                                 0x0 = Divide by 40.
+                                                                 0x1 = Divide by 80.
+                                                                 0x2 = Divide by 160.
+                                                                 0x3 = Divide by 320. */
+        uint64_t lane_sel              : 2;  /**< [  1:  0](R/W) Which RX lane within the SerDes selected with [QLM_SEL] to use as the GPIO
+                                                                 internal clock.
+
+                                                                 If GSERJ is selected lanes 0..1 are from GSERJ(0) and lanes 2..3 are from
+                                                                 GSERJ(1). */
+#else /* Word 0 - Little Endian */
+        uint64_t lane_sel              : 2;  /**< [  1:  0](R/W) Which RX lane within the SerDes selected with [QLM_SEL] to use as the GPIO
+                                                                 internal clock.
+
+                                                                 If GSERJ is selected lanes 0..1 are from GSERJ(0) and lanes 2..3 are from
+                                                                 GSERJ(1). */
+        uint64_t div                   : 2;  /**< [  3:  2](R/W) GPIO internal clock division of the SerDes recovered clock selected by [QLM_SEL]
+                                                                 to create the output clock. The maximum supported GPIO output frequency is 125
+                                                                 MHz.
+                                                                 0x0 = Divide by 40.
+                                                                 0x1 = Divide by 80.
+                                                                 0x2 = Divide by 160.
+                                                                 0x3 = Divide by 320. */
+        uint64_t reserved_4_7          : 4;
+        uint64_t qlm_sel               : 4;  /**< [ 11:  8](R/W) Selects which GSERR/GSERJ:
+                                                                   0x0 = GSERR0.
+                                                                   0x1 = GSERR1.
+                                                                   0x2 = GSERJ(1..0).
+                                                                   0x3-0xF = Reserved. */
+        uint64_t reserved_12_63        : 52;
+#endif /* Word 0 - End */
+    } f95mm;
     struct cavm_gpio_clk_syncex_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -1224,8 +1275,8 @@ union cavm_gpio_clk_syncex
 };
 typedef union cavm_gpio_clk_syncex cavm_gpio_clk_syncex_t;
 
-static inline uint64_t CAVM_GPIO_CLK_SYNCEX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GPIO_CLK_SYNCEX(unsigned long a)
+static inline uint64_t CAVM_GPIO_CLK_SYNCEX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GPIO_CLK_SYNCEX(uint64_t a)
 {
     if (a<=1)
         return 0x803000000060ll + 8ll * ((a) & 0x1);
@@ -1398,8 +1449,8 @@ union cavm_gpio_intrx
 };
 typedef union cavm_gpio_intrx cavm_gpio_intrx_t;
 
-static inline uint64_t CAVM_GPIO_INTRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GPIO_INTRX(unsigned long a)
+static inline uint64_t CAVM_GPIO_INTRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GPIO_INTRX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=47))
         return 0x803000000800ll + 8ll * ((a) & 0x3f);
@@ -1410,6 +1461,8 @@ static inline uint64_t CAVM_GPIO_INTRX(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=83))
         return 0x803000000800ll + 8ll * ((a) & 0x7f);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=63))
+        return 0x803000000800ll + 8ll * ((a) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=63))
         return 0x803000000800ll + 8ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=63))
         return 0x803000000800ll + 8ll * ((a) & 0x3f);
@@ -1721,6 +1774,7 @@ union cavm_gpio_io_ctl
     } cn98xx;
     /* struct cavm_gpio_io_ctl_cn96xxp1 cnf95xxp1; */
     /* struct cavm_gpio_io_ctl_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_gpio_io_ctl_cn96xxp3 f95mm; */
     /* struct cavm_gpio_io_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_gpio_io_ctl cavm_gpio_io_ctl_t;
@@ -1851,12 +1905,13 @@ union cavm_gpio_mc_intrx
         uint64_t reserved_6_63         : 58;
 #endif /* Word 0 - End */
     } cnf95xx;
+    /* struct cavm_gpio_mc_intrx_cnf95xx f95mm; */
     /* struct cavm_gpio_mc_intrx_cnf95xx loki; */
 };
 typedef union cavm_gpio_mc_intrx cavm_gpio_mc_intrx_t;
 
-static inline uint64_t CAVM_GPIO_MC_INTRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GPIO_MC_INTRX(unsigned long a)
+static inline uint64_t CAVM_GPIO_MC_INTRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GPIO_MC_INTRX(uint64_t a)
 {
     if ((a>=4)&&(a<=7))
         return 0x803000001000ll + 8ll * ((a) & 0x7);
@@ -1921,12 +1976,13 @@ union cavm_gpio_mc_intrx_ena_w1c
         uint64_t reserved_6_63         : 58;
 #endif /* Word 0 - End */
     } cnf95xx;
+    /* struct cavm_gpio_mc_intrx_ena_w1c_cnf95xx f95mm; */
     /* struct cavm_gpio_mc_intrx_ena_w1c_cnf95xx loki; */
 };
 typedef union cavm_gpio_mc_intrx_ena_w1c cavm_gpio_mc_intrx_ena_w1c_t;
 
-static inline uint64_t CAVM_GPIO_MC_INTRX_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GPIO_MC_INTRX_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_GPIO_MC_INTRX_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GPIO_MC_INTRX_ENA_W1C(uint64_t a)
 {
     if ((a>=4)&&(a<=7))
         return 0x803000001200ll + 8ll * ((a) & 0x7);
@@ -1991,12 +2047,13 @@ union cavm_gpio_mc_intrx_ena_w1s
         uint64_t reserved_6_63         : 58;
 #endif /* Word 0 - End */
     } cnf95xx;
+    /* struct cavm_gpio_mc_intrx_ena_w1s_cnf95xx f95mm; */
     /* struct cavm_gpio_mc_intrx_ena_w1s_cnf95xx loki; */
 };
 typedef union cavm_gpio_mc_intrx_ena_w1s cavm_gpio_mc_intrx_ena_w1s_t;
 
-static inline uint64_t CAVM_GPIO_MC_INTRX_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GPIO_MC_INTRX_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_GPIO_MC_INTRX_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GPIO_MC_INTRX_ENA_W1S(uint64_t a)
 {
     if ((a>=4)&&(a<=7))
         return 0x803000001300ll + 8ll * ((a) & 0x7);
@@ -2061,12 +2118,13 @@ union cavm_gpio_mc_intrx_w1s
         uint64_t reserved_6_63         : 58;
 #endif /* Word 0 - End */
     } cnf95xx;
+    /* struct cavm_gpio_mc_intrx_w1s_cnf95xx f95mm; */
     /* struct cavm_gpio_mc_intrx_w1s_cnf95xx loki; */
 };
 typedef union cavm_gpio_mc_intrx_w1s cavm_gpio_mc_intrx_w1s_t;
 
-static inline uint64_t CAVM_GPIO_MC_INTRX_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GPIO_MC_INTRX_W1S(unsigned long a)
+static inline uint64_t CAVM_GPIO_MC_INTRX_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GPIO_MC_INTRX_W1S(uint64_t a)
 {
     if ((a>=4)&&(a<=7))
         return 0x803000001100ll + 8ll * ((a) & 0x7);
@@ -2740,6 +2798,7 @@ union cavm_gpio_misc_supply
         uint64_t reserved_24_63        : 40;
 #endif /* Word 0 - End */
     } cnf95xx;
+    /* struct cavm_gpio_misc_supply_cnf95xx f95mm; */
     struct cavm_gpio_misc_supply_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -2920,8 +2979,8 @@ union cavm_gpio_msix_pbax
 };
 typedef union cavm_gpio_msix_pbax cavm_gpio_msix_pbax_t;
 
-static inline uint64_t CAVM_GPIO_MSIX_PBAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GPIO_MSIX_PBAX(unsigned long a)
+static inline uint64_t CAVM_GPIO_MSIX_PBAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GPIO_MSIX_PBAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=1))
         return 0x803000ff0000ll + 8ll * ((a) & 0x1);
@@ -2932,6 +2991,8 @@ static inline uint64_t CAVM_GPIO_MSIX_PBAX(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=3))
         return 0x803000ff0000ll + 8ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=2))
+        return 0x803000ff0000ll + 8ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=2))
         return 0x803000ff0000ll + 8ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x803000ff0000ll + 8ll * ((a) & 0x3);
@@ -3072,12 +3133,13 @@ union cavm_gpio_msix_vecx_addr
     } cn96xxp3;
     /* struct cavm_gpio_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_gpio_msix_vecx_addr_cn96xxp3 cnf95xx; */
+    /* struct cavm_gpio_msix_vecx_addr_cn96xxp3 f95mm; */
     /* struct cavm_gpio_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_gpio_msix_vecx_addr cavm_gpio_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_GPIO_MSIX_VECX_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GPIO_MSIX_VECX_ADDR(unsigned long a)
+static inline uint64_t CAVM_GPIO_MSIX_VECX_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GPIO_MSIX_VECX_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=99))
         return 0x803000f00000ll + 0x10ll * ((a) & 0x7f);
@@ -3088,6 +3150,8 @@ static inline uint64_t CAVM_GPIO_MSIX_VECX_ADDR(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=203))
         return 0x803000f00000ll + 0x10ll * ((a) & 0xff);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=133))
+        return 0x803000f00000ll + 0x10ll * ((a) & 0xff);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=133))
         return 0x803000f00000ll + 0x10ll * ((a) & 0xff);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=133))
         return 0x803000f00000ll + 0x10ll * ((a) & 0xff);
@@ -3142,8 +3206,8 @@ union cavm_gpio_msix_vecx_ctl
 };
 typedef union cavm_gpio_msix_vecx_ctl cavm_gpio_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_GPIO_MSIX_VECX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GPIO_MSIX_VECX_CTL(unsigned long a)
+static inline uint64_t CAVM_GPIO_MSIX_VECX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GPIO_MSIX_VECX_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN81XX) && (a<=99))
         return 0x803000f00008ll + 0x10ll * ((a) & 0x7f);
@@ -3154,6 +3218,8 @@ static inline uint64_t CAVM_GPIO_MSIX_VECX_CTL(unsigned long a)
     if (cavm_is_model(OCTEONTX_CN98XX) && (a<=203))
         return 0x803000f00008ll + 0x10ll * ((a) & 0xff);
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=133))
+        return 0x803000f00008ll + 0x10ll * ((a) & 0xff);
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=133))
         return 0x803000f00008ll + 0x10ll * ((a) & 0xff);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=133))
         return 0x803000f00008ll + 0x10ll * ((a) & 0xff);
@@ -3329,6 +3395,7 @@ union cavm_gpio_permit
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } cnf95xx;
+    /* struct cavm_gpio_permit_cnf95xx f95mm; */
     /* struct cavm_gpio_permit_cnf95xx loki; */
 };
 typedef union cavm_gpio_permit cavm_gpio_permit_t;
@@ -3484,6 +3551,7 @@ union cavm_gpio_pkg_ver
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_gpio_pkg_ver_cnf95xxp2 f95mm; */
     /* struct cavm_gpio_pkg_ver_cnf95xxp1 loki; */
 };
 typedef union cavm_gpio_pkg_ver cavm_gpio_pkg_ver_t;
@@ -3559,6 +3627,7 @@ union cavm_gpio_pspi_ctl
     } cn96xxp3;
     /* struct cavm_gpio_pspi_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_gpio_pspi_ctl_cn96xxp3 cnf95xx; */
+    /* struct cavm_gpio_pspi_ctl_cn96xxp3 f95mm; */
     /* struct cavm_gpio_pspi_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_gpio_pspi_ctl cavm_gpio_pspi_ctl_t;
@@ -3818,6 +3887,7 @@ union cavm_gpio_strap1
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_gpio_strap1_cn9 cnf95xx; */
+    /* struct cavm_gpio_strap1_cn9 f95mm; */
     /* struct cavm_gpio_strap1_cn9 loki; */
 };
 typedef union cavm_gpio_strap1 cavm_gpio_strap1_t;

@@ -163,8 +163,8 @@ union cavm_usbdrdx_bp_test0
 };
 typedef union cavm_usbdrdx_bp_test0 cavm_usbdrdx_bp_test0_t;
 
-static inline uint64_t CAVM_USBDRDX_BP_TEST0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_BP_TEST0(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_BP_TEST0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_BP_TEST0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=1))
         return 0x868000100070ll + 0x1000000000ll * ((a) & 0x1);
@@ -202,8 +202,8 @@ union cavm_usbdrdx_const
 };
 typedef union cavm_usbdrdx_const cavm_usbdrdx_const_t;
 
-static inline uint64_t CAVM_USBDRDX_CONST(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_CONST(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_CONST(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_CONST(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=1))
         return 0x868000100078ll + 0x1000000000ll * ((a) & 0x1);
@@ -247,8 +247,8 @@ union cavm_usbdrdx_msix_pbax
 };
 typedef union cavm_usbdrdx_msix_pbax cavm_usbdrdx_msix_pbax_t;
 
-static inline uint64_t CAVM_USBDRDX_MSIX_PBAX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_MSIX_PBAX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_MSIX_PBAX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_MSIX_PBAX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x8680002f0000ll + 0x1000000000ll * ((a) & 0x1) + 8ll * ((b) & 0x0);
@@ -407,8 +407,8 @@ union cavm_usbdrdx_msix_vecx_addr
 };
 typedef union cavm_usbdrdx_msix_vecx_addr cavm_usbdrdx_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_USBDRDX_MSIX_VECX_ADDR(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_MSIX_VECX_ADDR(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_MSIX_VECX_ADDR(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_MSIX_VECX_ADDR(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b<=3)))
         return 0x868000200000ll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3);
@@ -467,8 +467,8 @@ union cavm_usbdrdx_msix_vecx_ctl
 };
 typedef union cavm_usbdrdx_msix_vecx_ctl cavm_usbdrdx_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_USBDRDX_MSIX_VECX_CTL(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_MSIX_VECX_CTL(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_MSIX_VECX_CTL(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_MSIX_VECX_CTL(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b<=3)))
         return 0x868000200008ll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x3);
@@ -515,8 +515,8 @@ union cavm_usbdrdx_uahc_caplength
 };
 typedef union cavm_usbdrdx_uahc_caplength cavm_usbdrdx_uahc_caplength_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_CAPLENGTH(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_CAPLENGTH(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_CAPLENGTH(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_CAPLENGTH(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000000ll + 0x1000000000ll * ((a) & 0x1);
@@ -565,8 +565,8 @@ union cavm_usbdrdx_uahc_config
 };
 typedef union cavm_usbdrdx_uahc_config cavm_usbdrdx_uahc_config_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_CONFIG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_CONFIG(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_CONFIG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_CONFIG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000058ll + 0x1000000000ll * ((a) & 0x1);
@@ -622,8 +622,8 @@ union cavm_usbdrdx_uahc_crcr
 };
 typedef union cavm_usbdrdx_uahc_crcr cavm_usbdrdx_uahc_crcr_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_CRCR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_CRCR(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_CRCR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_CRCR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000038ll + 0x1000000000ll * ((a) & 0x1);
@@ -717,8 +717,8 @@ union cavm_usbdrdx_uahc_dalepena
 };
 typedef union cavm_usbdrdx_uahc_dalepena cavm_usbdrdx_uahc_dalepena_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DALEPENA(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DALEPENA(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_DALEPENA(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DALEPENA(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c720ll + 0x1000000000ll * ((a) & 0x1);
@@ -772,8 +772,8 @@ union cavm_usbdrdx_uahc_dbx
 };
 typedef union cavm_usbdrdx_uahc_dbx cavm_usbdrdx_uahc_dbx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DBX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DBX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_DBX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DBX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b<=64)))
         return 0x868000000480ll + 0x1000000000ll * ((a) & 0x1) + 4ll * ((b) & 0x7f);
@@ -817,8 +817,8 @@ union cavm_usbdrdx_uahc_dboff
 };
 typedef union cavm_usbdrdx_uahc_dboff cavm_usbdrdx_uahc_dboff_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DBOFF(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DBOFF(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_DBOFF(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DBOFF(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000014ll + 0x1000000000ll * ((a) & 0x1);
@@ -869,8 +869,8 @@ union cavm_usbdrdx_uahc_dcbaap
 };
 typedef union cavm_usbdrdx_uahc_dcbaap cavm_usbdrdx_uahc_dcbaap_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DCBAAP(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DCBAAP(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_DCBAAP(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DCBAAP(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000050ll + 0x1000000000ll * ((a) & 0x1);
@@ -1133,8 +1133,8 @@ union cavm_usbdrdx_uahc_dcfg
 };
 typedef union cavm_usbdrdx_uahc_dcfg cavm_usbdrdx_uahc_dcfg_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DCFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DCFG(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_DCFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DCFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c700ll + 0x1000000000ll * ((a) & 0x1);
@@ -1554,8 +1554,8 @@ union cavm_usbdrdx_uahc_dctl
 };
 typedef union cavm_usbdrdx_uahc_dctl cavm_usbdrdx_uahc_dctl_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DCTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DCTL(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_DCTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DCTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c704ll + 0x1000000000ll * ((a) & 0x1);
@@ -1874,8 +1874,8 @@ union cavm_usbdrdx_uahc_depcmdx
 };
 typedef union cavm_usbdrdx_uahc_depcmdx cavm_usbdrdx_uahc_depcmdx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b<=15)))
         return 0x86800000c80cll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0xf);
@@ -1925,8 +1925,8 @@ union cavm_usbdrdx_uahc_depcmdpar0_x
 };
 typedef union cavm_usbdrdx_uahc_depcmdpar0_x cavm_usbdrdx_uahc_depcmdpar0_x_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDPAR0_X(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDPAR0_X(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDPAR0_X(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDPAR0_X(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b<=15)))
         return 0x86800000c808ll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0xf);
@@ -1976,8 +1976,8 @@ union cavm_usbdrdx_uahc_depcmdpar1_x
 };
 typedef union cavm_usbdrdx_uahc_depcmdpar1_x cavm_usbdrdx_uahc_depcmdpar1_x_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDPAR1_X(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDPAR1_X(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDPAR1_X(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDPAR1_X(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b<=15)))
         return 0x86800000c804ll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0xf);
@@ -2027,8 +2027,8 @@ union cavm_usbdrdx_uahc_depcmdpar2_x
 };
 typedef union cavm_usbdrdx_uahc_depcmdpar2_x cavm_usbdrdx_uahc_depcmdpar2_x_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDPAR2_X(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDPAR2_X(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDPAR2_X(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DEPCMDPAR2_X(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b<=15)))
         return 0x86800000c800ll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0xf);
@@ -2078,8 +2078,8 @@ union cavm_usbdrdx_uahc_dev_imodx
 };
 typedef union cavm_usbdrdx_uahc_dev_imodx cavm_usbdrdx_uahc_dev_imodx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DEV_IMODX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DEV_IMODX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_DEV_IMODX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DEV_IMODX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && ((a<=1) && (b<=15)))
         return 0x86800000ca00ll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0xf);
@@ -2196,8 +2196,8 @@ union cavm_usbdrdx_uahc_devten
 };
 typedef union cavm_usbdrdx_uahc_devten cavm_usbdrdx_uahc_devten_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DEVTEN(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DEVTEN(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_DEVTEN(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DEVTEN(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c708ll + 0x1000000000ll * ((a) & 0x1);
@@ -2283,8 +2283,8 @@ union cavm_usbdrdx_uahc_dgcmd
 };
 typedef union cavm_usbdrdx_uahc_dgcmd cavm_usbdrdx_uahc_dgcmd_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DGCMD(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DGCMD(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_DGCMD(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DGCMD(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c714ll + 0x1000000000ll * ((a) & 0x1);
@@ -2338,8 +2338,8 @@ union cavm_usbdrdx_uahc_dgcmdpar
 };
 typedef union cavm_usbdrdx_uahc_dgcmdpar cavm_usbdrdx_uahc_dgcmdpar_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DGCMDPAR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DGCMDPAR(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_DGCMDPAR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DGCMDPAR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c710ll + 0x1000000000ll * ((a) & 0x1);
@@ -2390,8 +2390,8 @@ union cavm_usbdrdx_uahc_dnctrl
 };
 typedef union cavm_usbdrdx_uahc_dnctrl cavm_usbdrdx_uahc_dnctrl_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DNCTRL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DNCTRL(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_DNCTRL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DNCTRL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000034ll + 0x1000000000ll * ((a) & 0x1);
@@ -2610,8 +2610,8 @@ union cavm_usbdrdx_uahc_dsts
 };
 typedef union cavm_usbdrdx_uahc_dsts cavm_usbdrdx_uahc_dsts_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_DSTS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_DSTS(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_DSTS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_DSTS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c70cll + 0x1000000000ll * ((a) & 0x1);
@@ -2661,8 +2661,8 @@ union cavm_usbdrdx_uahc_erdpx
 };
 typedef union cavm_usbdrdx_uahc_erdpx cavm_usbdrdx_uahc_erdpx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_ERDPX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_ERDPX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_ERDPX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_ERDPX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x868000000478ll + 0x1000000000ll * ((a) & 0x1) + 0ll * ((b) & 0x0);
@@ -2710,8 +2710,8 @@ union cavm_usbdrdx_uahc_erstbax
 };
 typedef union cavm_usbdrdx_uahc_erstbax cavm_usbdrdx_uahc_erstbax_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_ERSTBAX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_ERSTBAX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_ERSTBAX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_ERSTBAX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x868000000470ll + 0x1000000000ll * ((a) & 0x1) + 0ll * ((b) & 0x0);
@@ -2759,8 +2759,8 @@ union cavm_usbdrdx_uahc_erstszx
 };
 typedef union cavm_usbdrdx_uahc_erstszx cavm_usbdrdx_uahc_erstszx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_ERSTSZX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_ERSTSZX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_ERSTSZX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_ERSTSZX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x868000000468ll + 0x1000000000ll * ((a) & 0x1) + 0ll * ((b) & 0x0);
@@ -2824,8 +2824,8 @@ union cavm_usbdrdx_uahc_gbuserraddr
 };
 typedef union cavm_usbdrdx_uahc_gbuserraddr cavm_usbdrdx_uahc_gbuserraddr_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GBUSERRADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GBUSERRADDR(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GBUSERRADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GBUSERRADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c130ll + 0x1000000000ll * ((a) & 0x1);
@@ -3732,8 +3732,8 @@ union cavm_usbdrdx_uahc_gctl
 };
 typedef union cavm_usbdrdx_uahc_gctl cavm_usbdrdx_uahc_gctl_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GCTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GCTL(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GCTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GCTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c110ll + 0x1000000000ll * ((a) & 0x1);
@@ -3783,8 +3783,8 @@ union cavm_usbdrdx_uahc_gdbgbmu
 };
 typedef union cavm_usbdrdx_uahc_gdbgbmu cavm_usbdrdx_uahc_gdbgbmu_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GDBGBMU(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GDBGBMU(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GDBGBMU(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GDBGBMU(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c16cll + 0x1000000000ll * ((a) & 0x1);
@@ -3827,8 +3827,8 @@ union cavm_usbdrdx_uahc_gdbgepinfo
 };
 typedef union cavm_usbdrdx_uahc_gdbgepinfo cavm_usbdrdx_uahc_gdbgepinfo_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GDBGEPINFO(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GDBGEPINFO(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GDBGEPINFO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GDBGEPINFO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c178ll + 0x1000000000ll * ((a) & 0x1);
@@ -3909,8 +3909,8 @@ union cavm_usbdrdx_uahc_gdbgfifospace
 };
 typedef union cavm_usbdrdx_uahc_gdbgfifospace cavm_usbdrdx_uahc_gdbgfifospace_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GDBGFIFOSPACE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GDBGFIFOSPACE(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GDBGFIFOSPACE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GDBGFIFOSPACE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c160ll + 0x1000000000ll * ((a) & 0x1);
@@ -3962,8 +3962,8 @@ union cavm_usbdrdx_uahc_gdbglnmcc
 };
 typedef union cavm_usbdrdx_uahc_gdbglnmcc cavm_usbdrdx_uahc_gdbglnmcc_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLNMCC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLNMCC(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLNMCC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLNMCC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c168ll + 0x1000000000ll * ((a) & 0x1);
@@ -4006,8 +4006,8 @@ union cavm_usbdrdx_uahc_gdbglsp
 };
 typedef union cavm_usbdrdx_uahc_gdbglsp cavm_usbdrdx_uahc_gdbglsp_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLSP(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLSP(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLSP(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLSP(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c174ll + 0x1000000000ll * ((a) & 0x1);
@@ -4078,8 +4078,8 @@ union cavm_usbdrdx_uahc_gdbglspmux
 };
 typedef union cavm_usbdrdx_uahc_gdbglspmux cavm_usbdrdx_uahc_gdbglspmux_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLSPMUX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLSPMUX(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLSPMUX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLSPMUX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c170ll + 0x1000000000ll * ((a) & 0x1);
@@ -4188,8 +4188,8 @@ union cavm_usbdrdx_uahc_gdbgltssm
 };
 typedef union cavm_usbdrdx_uahc_gdbgltssm cavm_usbdrdx_uahc_gdbgltssm_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLTSSM(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLTSSM(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLTSSM(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GDBGLTSSM(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c164ll + 0x1000000000ll * ((a) & 0x1);
@@ -4258,8 +4258,8 @@ union cavm_usbdrdx_uahc_gdmahlratio
 };
 typedef union cavm_usbdrdx_uahc_gdmahlratio cavm_usbdrdx_uahc_gdmahlratio_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GDMAHLRATIO(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GDMAHLRATIO(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GDMAHLRATIO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GDMAHLRATIO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c624ll + 0x1000000000ll * ((a) & 0x1);
@@ -4316,8 +4316,8 @@ union cavm_usbdrdx_uahc_gevntadrx
 };
 typedef union cavm_usbdrdx_uahc_gevntadrx cavm_usbdrdx_uahc_gevntadrx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GEVNTADRX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GEVNTADRX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_GEVNTADRX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GEVNTADRX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x86800000c400ll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x0);
@@ -4383,8 +4383,8 @@ union cavm_usbdrdx_uahc_gevntcountx
 };
 typedef union cavm_usbdrdx_uahc_gevntcountx cavm_usbdrdx_uahc_gevntcountx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GEVNTCOUNTX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GEVNTCOUNTX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_GEVNTCOUNTX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GEVNTCOUNTX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x86800000c40cll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x0);
@@ -4447,8 +4447,8 @@ union cavm_usbdrdx_uahc_gevntsizx
 };
 typedef union cavm_usbdrdx_uahc_gevntsizx cavm_usbdrdx_uahc_gevntsizx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GEVNTSIZX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GEVNTSIZX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_GEVNTSIZX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GEVNTSIZX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x86800000c408ll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x0);
@@ -4677,8 +4677,8 @@ union cavm_usbdrdx_uahc_gfladj
 };
 typedef union cavm_usbdrdx_uahc_gfladj cavm_usbdrdx_uahc_gfladj_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GFLADJ(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GFLADJ(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GFLADJ(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GFLADJ(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c630ll + 0x1000000000ll * ((a) & 0x1);
@@ -4727,8 +4727,8 @@ union cavm_usbdrdx_uahc_ggpio
 };
 typedef union cavm_usbdrdx_uahc_ggpio cavm_usbdrdx_uahc_ggpio_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GGPIO(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GGPIO(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GGPIO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GGPIO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c124ll + 0x1000000000ll * ((a) & 0x1);
@@ -4782,8 +4782,8 @@ union cavm_usbdrdx_uahc_ghwparams0
 };
 typedef union cavm_usbdrdx_uahc_ghwparams0 cavm_usbdrdx_uahc_ghwparams0_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS0(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c140ll + 0x1000000000ll * ((a) & 0x1);
@@ -4865,8 +4865,8 @@ union cavm_usbdrdx_uahc_ghwparams1
 };
 typedef union cavm_usbdrdx_uahc_ghwparams1 cavm_usbdrdx_uahc_ghwparams1_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS1(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c144ll + 0x1000000000ll * ((a) & 0x1);
@@ -4910,8 +4910,8 @@ union cavm_usbdrdx_uahc_ghwparams2
 };
 typedef union cavm_usbdrdx_uahc_ghwparams2 cavm_usbdrdx_uahc_ghwparams2_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS2(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c148ll + 0x1000000000ll * ((a) & 0x1);
@@ -4974,8 +4974,8 @@ union cavm_usbdrdx_uahc_ghwparams3
 };
 typedef union cavm_usbdrdx_uahc_ghwparams3 cavm_usbdrdx_uahc_ghwparams3_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS3(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c14cll + 0x1000000000ll * ((a) & 0x1);
@@ -5035,8 +5035,8 @@ union cavm_usbdrdx_uahc_ghwparams4
 };
 typedef union cavm_usbdrdx_uahc_ghwparams4 cavm_usbdrdx_uahc_ghwparams4_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS4(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS4(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS4(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS4(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c150ll + 0x1000000000ll * ((a) & 0x1);
@@ -5090,8 +5090,8 @@ union cavm_usbdrdx_uahc_ghwparams5
 };
 typedef union cavm_usbdrdx_uahc_ghwparams5 cavm_usbdrdx_uahc_ghwparams5_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS5(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS5(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS5(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS5(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c154ll + 0x1000000000ll * ((a) & 0x1);
@@ -5155,8 +5155,8 @@ union cavm_usbdrdx_uahc_ghwparams6
 };
 typedef union cavm_usbdrdx_uahc_ghwparams6 cavm_usbdrdx_uahc_ghwparams6_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS6(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS6(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS6(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS6(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c158ll + 0x1000000000ll * ((a) & 0x1);
@@ -5202,8 +5202,8 @@ union cavm_usbdrdx_uahc_ghwparams7
 };
 typedef union cavm_usbdrdx_uahc_ghwparams7 cavm_usbdrdx_uahc_ghwparams7_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS7(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS7(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS7(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS7(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c15cll + 0x1000000000ll * ((a) & 0x1);
@@ -5247,8 +5247,8 @@ union cavm_usbdrdx_uahc_ghwparams8
 };
 typedef union cavm_usbdrdx_uahc_ghwparams8 cavm_usbdrdx_uahc_ghwparams8_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS8(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS8(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS8(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GHWPARAMS8(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c600ll + 0x1000000000ll * ((a) & 0x1);
@@ -5337,8 +5337,8 @@ union cavm_usbdrdx_uahc_gpmsts
 };
 typedef union cavm_usbdrdx_uahc_gpmsts cavm_usbdrdx_uahc_gpmsts_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GPMSTS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GPMSTS(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GPMSTS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GPMSTS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c114ll + 0x1000000000ll * ((a) & 0x1);
@@ -5390,8 +5390,8 @@ union cavm_usbdrdx_uahc_gprtbimap
 };
 typedef union cavm_usbdrdx_uahc_gprtbimap cavm_usbdrdx_uahc_gprtbimap_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GPRTBIMAP(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GPRTBIMAP(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GPRTBIMAP(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GPRTBIMAP(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c138ll + 0x1000000000ll * ((a) & 0x1);
@@ -5443,8 +5443,8 @@ union cavm_usbdrdx_uahc_gprtbimap_fs
 };
 typedef union cavm_usbdrdx_uahc_gprtbimap_fs cavm_usbdrdx_uahc_gprtbimap_fs_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GPRTBIMAP_FS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GPRTBIMAP_FS(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GPRTBIMAP_FS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GPRTBIMAP_FS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c188ll + 0x1000000000ll * ((a) & 0x1);
@@ -5496,8 +5496,8 @@ union cavm_usbdrdx_uahc_gprtbimap_hs
 };
 typedef union cavm_usbdrdx_uahc_gprtbimap_hs cavm_usbdrdx_uahc_gprtbimap_hs_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GPRTBIMAP_HS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GPRTBIMAP_HS(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GPRTBIMAP_HS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GPRTBIMAP_HS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c180ll + 0x1000000000ll * ((a) & 0x1);
@@ -5569,8 +5569,8 @@ union cavm_usbdrdx_uahc_grlsid
 };
 typedef union cavm_usbdrdx_uahc_grlsid cavm_usbdrdx_uahc_grlsid_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GRLSID(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GRLSID(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GRLSID(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GRLSID(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c120ll + 0x1000000000ll * ((a) & 0x1);
@@ -5637,8 +5637,8 @@ union cavm_usbdrdx_uahc_grxfifoprihst
 };
 typedef union cavm_usbdrdx_uahc_grxfifoprihst cavm_usbdrdx_uahc_grxfifoprihst_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GRXFIFOPRIHST(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GRXFIFOPRIHST(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GRXFIFOPRIHST(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GRXFIFOPRIHST(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c61cll + 0x1000000000ll * ((a) & 0x1);
@@ -5706,8 +5706,8 @@ union cavm_usbdrdx_uahc_grxfifosizx
 };
 typedef union cavm_usbdrdx_uahc_grxfifosizx cavm_usbdrdx_uahc_grxfifosizx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GRXFIFOSIZX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GRXFIFOSIZX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_GRXFIFOSIZX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GRXFIFOSIZX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b<=2)))
         return 0x86800000c380ll + 0x1000000000ll * ((a) & 0x1) + 4ll * ((b) & 0x3);
@@ -5886,8 +5886,8 @@ union cavm_usbdrdx_uahc_grxthrcfg
 };
 typedef union cavm_usbdrdx_uahc_grxthrcfg cavm_usbdrdx_uahc_grxthrcfg_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GRXTHRCFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GRXTHRCFG(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GRXTHRCFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GRXTHRCFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c10cll + 0x1000000000ll * ((a) & 0x1);
@@ -6063,8 +6063,8 @@ union cavm_usbdrdx_uahc_gsbuscfg0
 };
 typedef union cavm_usbdrdx_uahc_gsbuscfg0 cavm_usbdrdx_uahc_gsbuscfg0_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GSBUSCFG0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GSBUSCFG0(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GSBUSCFG0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GSBUSCFG0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c100ll + 0x1000000000ll * ((a) & 0x1);
@@ -6145,8 +6145,8 @@ union cavm_usbdrdx_uahc_gsbuscfg1
 };
 typedef union cavm_usbdrdx_uahc_gsbuscfg1 cavm_usbdrdx_uahc_gsbuscfg1_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GSBUSCFG1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GSBUSCFG1(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GSBUSCFG1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GSBUSCFG1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c104ll + 0x1000000000ll * ((a) & 0x1);
@@ -6213,8 +6213,8 @@ union cavm_usbdrdx_uahc_gsts
 };
 typedef union cavm_usbdrdx_uahc_gsts cavm_usbdrdx_uahc_gsts_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GSTS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GSTS(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GSTS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GSTS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c118ll + 0x1000000000ll * ((a) & 0x1);
@@ -6284,8 +6284,8 @@ union cavm_usbdrdx_uahc_gtxfifopridev
 };
 typedef union cavm_usbdrdx_uahc_gtxfifopridev cavm_usbdrdx_uahc_gtxfifopridev_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GTXFIFOPRIDEV(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GTXFIFOPRIDEV(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GTXFIFOPRIDEV(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GTXFIFOPRIDEV(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c610ll + 0x1000000000ll * ((a) & 0x1);
@@ -6357,8 +6357,8 @@ union cavm_usbdrdx_uahc_gtxfifoprihst
 };
 typedef union cavm_usbdrdx_uahc_gtxfifoprihst cavm_usbdrdx_uahc_gtxfifoprihst_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GTXFIFOPRIHST(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GTXFIFOPRIHST(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GTXFIFOPRIHST(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GTXFIFOPRIHST(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c618ll + 0x1000000000ll * ((a) & 0x1);
@@ -6427,8 +6427,8 @@ union cavm_usbdrdx_uahc_gtxfifosizx
 };
 typedef union cavm_usbdrdx_uahc_gtxfifosizx cavm_usbdrdx_uahc_gtxfifosizx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GTXFIFOSIZX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GTXFIFOSIZX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_GTXFIFOSIZX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GTXFIFOSIZX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b<=3)))
         return 0x86800000c300ll + 0x1000000000ll * ((a) & 0x1) + 4ll * ((b) & 0x3);
@@ -6582,8 +6582,8 @@ union cavm_usbdrdx_uahc_gtxthrcfg
 };
 typedef union cavm_usbdrdx_uahc_gtxthrcfg cavm_usbdrdx_uahc_gtxthrcfg_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GTXTHRCFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GTXTHRCFG(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GTXTHRCFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GTXTHRCFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c108ll + 0x1000000000ll * ((a) & 0x1);
@@ -6836,8 +6836,8 @@ union cavm_usbdrdx_uahc_guctl
 };
 typedef union cavm_usbdrdx_uahc_guctl cavm_usbdrdx_uahc_guctl_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GUCTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GUCTL(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GUCTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GUCTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c12cll + 0x1000000000ll * ((a) & 0x1);
@@ -6954,8 +6954,8 @@ union cavm_usbdrdx_uahc_guctl1
 };
 typedef union cavm_usbdrdx_uahc_guctl1 cavm_usbdrdx_uahc_guctl1_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GUCTL1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GUCTL1(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GUCTL1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GUCTL1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c11cll + 0x1000000000ll * ((a) & 0x1);
@@ -7010,8 +7010,8 @@ union cavm_usbdrdx_uahc_guctl2
 };
 typedef union cavm_usbdrdx_uahc_guctl2 cavm_usbdrdx_uahc_guctl2_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GUCTL2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GUCTL2(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GUCTL2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GUCTL2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=1))
         return 0x86800000c19cll + 0x1000000000ll * ((a) & 0x1);
@@ -7060,8 +7060,8 @@ union cavm_usbdrdx_uahc_guid
 };
 typedef union cavm_usbdrdx_uahc_guid cavm_usbdrdx_uahc_guid_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GUID(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GUID(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_GUID(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GUID(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000c128ll + 0x1000000000ll * ((a) & 0x1);
@@ -7107,8 +7107,8 @@ union cavm_usbdrdx_uahc_gusb2i2cctlx
 };
 typedef union cavm_usbdrdx_uahc_gusb2i2cctlx cavm_usbdrdx_uahc_gusb2i2cctlx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GUSB2I2CCTLX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GUSB2I2CCTLX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_GUSB2I2CCTLX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GUSB2I2CCTLX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x86800000c240ll + 0x1000000000ll * ((a) & 0x1) + 4ll * ((b) & 0x0);
@@ -7460,8 +7460,8 @@ union cavm_usbdrdx_uahc_gusb2phycfgx
 };
 typedef union cavm_usbdrdx_uahc_gusb2phycfgx cavm_usbdrdx_uahc_gusb2phycfgx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GUSB2PHYCFGX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GUSB2PHYCFGX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_GUSB2PHYCFGX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GUSB2PHYCFGX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x86800000c200ll + 0x1000000000ll * ((a) & 0x1) + 4ll * ((b) & 0x0);
@@ -8170,8 +8170,8 @@ union cavm_usbdrdx_uahc_gusb3pipectlx
 };
 typedef union cavm_usbdrdx_uahc_gusb3pipectlx cavm_usbdrdx_uahc_gusb3pipectlx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_GUSB3PIPECTLX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_GUSB3PIPECTLX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_GUSB3PIPECTLX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_GUSB3PIPECTLX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x86800000c2c0ll + 0x1000000000ll * ((a) & 0x1) + 4ll * ((b) & 0x0);
@@ -8238,8 +8238,8 @@ union cavm_usbdrdx_uahc_hccparams
 };
 typedef union cavm_usbdrdx_uahc_hccparams cavm_usbdrdx_uahc_hccparams_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_HCCPARAMS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_HCCPARAMS(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_HCCPARAMS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_HCCPARAMS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000010ll + 0x1000000000ll * ((a) & 0x1);
@@ -8300,8 +8300,8 @@ union cavm_usbdrdx_uahc_hccparams1
 };
 typedef union cavm_usbdrdx_uahc_hccparams1 cavm_usbdrdx_uahc_hccparams1_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_HCCPARAMS1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_HCCPARAMS1(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_HCCPARAMS1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_HCCPARAMS1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=1))
         return 0x868000000010ll + 0x1000000000ll * ((a) & 0x1);
@@ -8353,8 +8353,8 @@ union cavm_usbdrdx_uahc_hccparams2
 };
 typedef union cavm_usbdrdx_uahc_hccparams2 cavm_usbdrdx_uahc_hccparams2_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_HCCPARAMS2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_HCCPARAMS2(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_HCCPARAMS2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_HCCPARAMS2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=1))
         return 0x86800000001cll + 0x1000000000ll * ((a) & 0x1);
@@ -8401,8 +8401,8 @@ union cavm_usbdrdx_uahc_hcsparams1
 };
 typedef union cavm_usbdrdx_uahc_hcsparams1 cavm_usbdrdx_uahc_hcsparams1_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_HCSPARAMS1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_HCSPARAMS1(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_HCSPARAMS1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_HCSPARAMS1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000004ll + 0x1000000000ll * ((a) & 0x1);
@@ -8454,8 +8454,8 @@ union cavm_usbdrdx_uahc_hcsparams2
 };
 typedef union cavm_usbdrdx_uahc_hcsparams2 cavm_usbdrdx_uahc_hcsparams2_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_HCSPARAMS2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_HCSPARAMS2(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_HCSPARAMS2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_HCSPARAMS2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000008ll + 0x1000000000ll * ((a) & 0x1);
@@ -8500,8 +8500,8 @@ union cavm_usbdrdx_uahc_hcsparams3
 };
 typedef union cavm_usbdrdx_uahc_hcsparams3 cavm_usbdrdx_uahc_hcsparams3_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_HCSPARAMS3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_HCSPARAMS3(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_HCSPARAMS3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_HCSPARAMS3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000000cll + 0x1000000000ll * ((a) & 0x1);
@@ -8551,8 +8551,8 @@ union cavm_usbdrdx_uahc_imanx
 };
 typedef union cavm_usbdrdx_uahc_imanx cavm_usbdrdx_uahc_imanx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_IMANX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_IMANX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_IMANX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_IMANX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x868000000460ll + 0x1000000000ll * ((a) & 0x1) + 0ll * ((b) & 0x0);
@@ -8600,8 +8600,8 @@ union cavm_usbdrdx_uahc_imodx
 };
 typedef union cavm_usbdrdx_uahc_imodx cavm_usbdrdx_uahc_imodx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_IMODX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_IMODX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_IMODX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_IMODX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x868000000464ll + 0x1000000000ll * ((a) & 0x1) + 0ll * ((b) & 0x0);
@@ -8649,8 +8649,8 @@ union cavm_usbdrdx_uahc_mfindex
 };
 typedef union cavm_usbdrdx_uahc_mfindex cavm_usbdrdx_uahc_mfindex_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_MFINDEX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_MFINDEX(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_MFINDEX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_MFINDEX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000440ll + 0x1000000000ll * ((a) & 0x1);
@@ -8693,8 +8693,8 @@ union cavm_usbdrdx_uahc_pagesize
 };
 typedef union cavm_usbdrdx_uahc_pagesize cavm_usbdrdx_uahc_pagesize_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_PAGESIZE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_PAGESIZE(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_PAGESIZE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_PAGESIZE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000028ll + 0x1000000000ll * ((a) & 0x1);
@@ -8768,8 +8768,8 @@ union cavm_usbdrdx_uahc_porthlpmc_20x
 };
 typedef union cavm_usbdrdx_uahc_porthlpmc_20x cavm_usbdrdx_uahc_porthlpmc_20x_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_PORTHLPMC_20X(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_PORTHLPMC_20X(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_PORTHLPMC_20X(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_PORTHLPMC_20X(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x86800000042cll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x0);
@@ -8816,8 +8816,8 @@ union cavm_usbdrdx_uahc_porthlpmc_ssx
 };
 typedef union cavm_usbdrdx_uahc_porthlpmc_ssx cavm_usbdrdx_uahc_porthlpmc_ssx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_PORTHLPMC_SSX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_PORTHLPMC_SSX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_PORTHLPMC_SSX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_PORTHLPMC_SSX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==1)))
         return 0x86800000042cll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x1);
@@ -8858,8 +8858,8 @@ union cavm_usbdrdx_uahc_portli_20x
 };
 typedef union cavm_usbdrdx_uahc_portli_20x cavm_usbdrdx_uahc_portli_20x_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_PORTLI_20X(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_PORTLI_20X(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_PORTLI_20X(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_PORTLI_20X(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x868000000428ll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x0);
@@ -8902,8 +8902,8 @@ union cavm_usbdrdx_uahc_portli_ssx
 };
 typedef union cavm_usbdrdx_uahc_portli_ssx cavm_usbdrdx_uahc_portli_ssx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_PORTLI_SSX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_PORTLI_SSX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_PORTLI_SSX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_PORTLI_SSX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==1)))
         return 0x868000000428ll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x1);
@@ -8961,8 +8961,8 @@ union cavm_usbdrdx_uahc_portpmsc_20x
 };
 typedef union cavm_usbdrdx_uahc_portpmsc_20x cavm_usbdrdx_uahc_portpmsc_20x_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_PORTPMSC_20X(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_PORTPMSC_20X(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_PORTPMSC_20X(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_PORTPMSC_20X(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x868000000424ll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x0);
@@ -9014,8 +9014,8 @@ union cavm_usbdrdx_uahc_portpmsc_ssx
 };
 typedef union cavm_usbdrdx_uahc_portpmsc_ssx cavm_usbdrdx_uahc_portpmsc_ssx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_PORTPMSC_SSX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_PORTPMSC_SSX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_PORTPMSC_SSX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_PORTPMSC_SSX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==1)))
         return 0x868000000424ll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x1);
@@ -9108,8 +9108,8 @@ union cavm_usbdrdx_uahc_portscx
 };
 typedef union cavm_usbdrdx_uahc_portscx cavm_usbdrdx_uahc_portscx_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_PORTSCX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_PORTSCX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UAHC_PORTSCX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_PORTSCX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b<=1)))
         return 0x868000000420ll + 0x1000000000ll * ((a) & 0x1) + 0x10ll * ((b) & 0x1);
@@ -9153,8 +9153,8 @@ union cavm_usbdrdx_uahc_rtsoff
 };
 typedef union cavm_usbdrdx_uahc_rtsoff cavm_usbdrdx_uahc_rtsoff_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_RTSOFF(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_RTSOFF(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_RTSOFF(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_RTSOFF(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000018ll + 0x1000000000ll * ((a) & 0x1);
@@ -9201,8 +9201,8 @@ union cavm_usbdrdx_uahc_suptprt2_dw0
 };
 typedef union cavm_usbdrdx_uahc_suptprt2_dw0 cavm_usbdrdx_uahc_suptprt2_dw0_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW0(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000890ll + 0x1000000000ll * ((a) & 0x1);
@@ -9243,8 +9243,8 @@ union cavm_usbdrdx_uahc_suptprt2_dw1
 };
 typedef union cavm_usbdrdx_uahc_suptprt2_dw1 cavm_usbdrdx_uahc_suptprt2_dw1_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW1(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000894ll + 0x1000000000ll * ((a) & 0x1);
@@ -9301,8 +9301,8 @@ union cavm_usbdrdx_uahc_suptprt2_dw2
 };
 typedef union cavm_usbdrdx_uahc_suptprt2_dw2 cavm_usbdrdx_uahc_suptprt2_dw2_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW2(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000898ll + 0x1000000000ll * ((a) & 0x1);
@@ -9345,8 +9345,8 @@ union cavm_usbdrdx_uahc_suptprt2_dw3
 };
 typedef union cavm_usbdrdx_uahc_suptprt2_dw3 cavm_usbdrdx_uahc_suptprt2_dw3_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW3(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT2_DW3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x86800000089cll + 0x1000000000ll * ((a) & 0x1);
@@ -9399,8 +9399,8 @@ union cavm_usbdrdx_uahc_suptprt3_dw0
 };
 typedef union cavm_usbdrdx_uahc_suptprt3_dw0 cavm_usbdrdx_uahc_suptprt3_dw0_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW0(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x8680000008a0ll + 0x1000000000ll * ((a) & 0x1);
@@ -9441,8 +9441,8 @@ union cavm_usbdrdx_uahc_suptprt3_dw1
 };
 typedef union cavm_usbdrdx_uahc_suptprt3_dw1 cavm_usbdrdx_uahc_suptprt3_dw1_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW1(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x8680000008a4ll + 0x1000000000ll * ((a) & 0x1);
@@ -9489,8 +9489,8 @@ union cavm_usbdrdx_uahc_suptprt3_dw2
 };
 typedef union cavm_usbdrdx_uahc_suptprt3_dw2 cavm_usbdrdx_uahc_suptprt3_dw2_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW2(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x8680000008a8ll + 0x1000000000ll * ((a) & 0x1);
@@ -9533,8 +9533,8 @@ union cavm_usbdrdx_uahc_suptprt3_dw3
 };
 typedef union cavm_usbdrdx_uahc_suptprt3_dw3 cavm_usbdrdx_uahc_suptprt3_dw3_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW3(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_SUPTPRT3_DW3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x8680000008acll + 0x1000000000ll * ((a) & 0x1);
@@ -9603,8 +9603,8 @@ union cavm_usbdrdx_uahc_usbcmd
 };
 typedef union cavm_usbdrdx_uahc_usbcmd cavm_usbdrdx_uahc_usbcmd_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_USBCMD(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_USBCMD(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_USBCMD(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_USBCMD(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000020ll + 0x1000000000ll * ((a) & 0x1);
@@ -9695,8 +9695,8 @@ union cavm_usbdrdx_uahc_usblegctlsts
 };
 typedef union cavm_usbdrdx_uahc_usblegctlsts cavm_usbdrdx_uahc_usblegctlsts_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_USBLEGCTLSTS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_USBLEGCTLSTS(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_USBLEGCTLSTS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_USBLEGCTLSTS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000884ll + 0x1000000000ll * ((a) & 0x1);
@@ -9752,8 +9752,8 @@ union cavm_usbdrdx_uahc_usblegsup
 };
 typedef union cavm_usbdrdx_uahc_usblegsup cavm_usbdrdx_uahc_usblegsup_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_USBLEGSUP(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_USBLEGSUP(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_USBLEGSUP(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_USBLEGSUP(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000880ll + 0x1000000000ll * ((a) & 0x1);
@@ -9822,8 +9822,8 @@ union cavm_usbdrdx_uahc_usbsts
 };
 typedef union cavm_usbdrdx_uahc_usbsts cavm_usbdrdx_uahc_usbsts_t;
 
-static inline uint64_t CAVM_USBDRDX_UAHC_USBSTS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UAHC_USBSTS(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UAHC_USBSTS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UAHC_USBSTS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000000024ll + 0x1000000000ll * ((a) & 0x1);
@@ -9892,8 +9892,8 @@ union cavm_usbdrdx_uctl_bist_status
 };
 typedef union cavm_usbdrdx_uctl_bist_status cavm_usbdrdx_uctl_bist_status_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_BIST_STATUS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_BIST_STATUS(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_BIST_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_BIST_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000100008ll + 0x1000000000ll * ((a) & 0x1);
@@ -9929,8 +9929,8 @@ union cavm_usbdrdx_uctl_csclk_active_pc
 };
 typedef union cavm_usbdrdx_uctl_csclk_active_pc cavm_usbdrdx_uctl_csclk_active_pc_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_CSCLK_ACTIVE_PC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_CSCLK_ACTIVE_PC(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_CSCLK_ACTIVE_PC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_CSCLK_ACTIVE_PC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=1))
         return 0x868000100028ll + 0x1000000000ll * ((a) & 0x1);
@@ -13362,8 +13362,8 @@ union cavm_usbdrdx_uctl_ctl
 };
 typedef union cavm_usbdrdx_uctl_ctl cavm_usbdrdx_uctl_ctl_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_CTL(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000100000ll + 0x1000000000ll * ((a) & 0x1);
@@ -13452,8 +13452,8 @@ union cavm_usbdrdx_uctl_ecc
 };
 typedef union cavm_usbdrdx_uctl_ecc cavm_usbdrdx_uctl_ecc_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_ECC(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_ECC(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_ECC(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_ECC(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x8680001000f0ll + 0x1000000000ll * ((a) & 0x1);
@@ -13597,8 +13597,8 @@ union cavm_usbdrdx_uctl_host_cfg
 };
 typedef union cavm_usbdrdx_uctl_host_cfg cavm_usbdrdx_uctl_host_cfg_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_HOST_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_HOST_CFG(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_HOST_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_HOST_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x8680001000e0ll + 0x1000000000ll * ((a) & 0x1);
@@ -13766,8 +13766,8 @@ union cavm_usbdrdx_uctl_intena_w1c
 };
 typedef union cavm_usbdrdx_uctl_intena_w1c cavm_usbdrdx_uctl_intena_w1c_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_INTENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_INTENA_W1C(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_INTENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_INTENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000100040ll + 0x1000000000ll * ((a) & 0x1);
@@ -13935,8 +13935,8 @@ union cavm_usbdrdx_uctl_intena_w1s
 };
 typedef union cavm_usbdrdx_uctl_intena_w1s cavm_usbdrdx_uctl_intena_w1s_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_INTENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_INTENA_W1S(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_INTENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_INTENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000100048ll + 0x1000000000ll * ((a) & 0x1);
@@ -14146,8 +14146,8 @@ union cavm_usbdrdx_uctl_intstat
 };
 typedef union cavm_usbdrdx_uctl_intstat cavm_usbdrdx_uctl_intstat_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_INTSTAT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_INTSTAT(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_INTSTAT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_INTSTAT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000100030ll + 0x1000000000ll * ((a) & 0x1);
@@ -14315,8 +14315,8 @@ union cavm_usbdrdx_uctl_intstat_w1s
 };
 typedef union cavm_usbdrdx_uctl_intstat_w1s cavm_usbdrdx_uctl_intstat_w1s_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_INTSTAT_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_INTSTAT_W1S(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_INTSTAT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_INTSTAT_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000100038ll + 0x1000000000ll * ((a) & 0x1);
@@ -14359,8 +14359,8 @@ union cavm_usbdrdx_uctl_pipeclk_counter
 };
 typedef union cavm_usbdrdx_uctl_pipeclk_counter cavm_usbdrdx_uctl_pipeclk_counter_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_PIPECLK_COUNTER(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_PIPECLK_COUNTER(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_PIPECLK_COUNTER(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_PIPECLK_COUNTER(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=1))
         return 0x868000100020ll + 0x1000000000ll * ((a) & 0x1);
@@ -14947,8 +14947,8 @@ union cavm_usbdrdx_uctl_portx_cfg_hs
 };
 typedef union cavm_usbdrdx_uctl_portx_cfg_hs cavm_usbdrdx_uctl_portx_cfg_hs_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CFG_HS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CFG_HS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CFG_HS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CFG_HS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x868000100050ll + 0x1000000000ll * ((a) & 0x1) + 0x20ll * ((b) & 0x0);
@@ -15222,8 +15222,8 @@ union cavm_usbdrdx_uctl_portx_cfg_ss
 };
 typedef union cavm_usbdrdx_uctl_portx_cfg_ss cavm_usbdrdx_uctl_portx_cfg_ss_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CFG_SS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CFG_SS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CFG_SS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CFG_SS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x868000100058ll + 0x1000000000ll * ((a) & 0x1) + 0x20ll * ((b) & 0x0);
@@ -15337,8 +15337,8 @@ union cavm_usbdrdx_uctl_portx_cr_dbg_cfg
 };
 typedef union cavm_usbdrdx_uctl_portx_cr_dbg_cfg cavm_usbdrdx_uctl_portx_cr_dbg_cfg_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CR_DBG_CFG(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CR_DBG_CFG(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CR_DBG_CFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CR_DBG_CFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x868000100060ll + 0x1000000000ll * ((a) & 0x1) + 0ll * ((b) & 0x0);
@@ -15390,8 +15390,8 @@ union cavm_usbdrdx_uctl_portx_cr_dbg_status
 };
 typedef union cavm_usbdrdx_uctl_portx_cr_dbg_status cavm_usbdrdx_uctl_portx_cr_dbg_status_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CR_DBG_STATUS(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CR_DBG_STATUS(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CR_DBG_STATUS(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_PORTX_CR_DBG_STATUS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a<=1) && (b==0)))
         return 0x868000100068ll + 0x1000000000ll * ((a) & 0x1) + 0ll * ((b) & 0x0);
@@ -15437,8 +15437,8 @@ union cavm_usbdrdx_uctl_ras
 };
 typedef union cavm_usbdrdx_uctl_ras cavm_usbdrdx_uctl_ras_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_RAS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_RAS(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_RAS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_RAS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=1))
         return 0x868000100080ll + 0x1000000000ll * ((a) & 0x1);
@@ -15491,8 +15491,8 @@ union cavm_usbdrdx_uctl_ras_w1s
 };
 typedef union cavm_usbdrdx_uctl_ras_w1s cavm_usbdrdx_uctl_ras_w1s_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_RAS_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_RAS_W1S(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_RAS_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_RAS_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=1))
         return 0x868000100088ll + 0x1000000000ll * ((a) & 0x1);
@@ -15545,8 +15545,8 @@ union cavm_usbdrdx_uctl_rasena_w1c
 };
 typedef union cavm_usbdrdx_uctl_rasena_w1c cavm_usbdrdx_uctl_rasena_w1c_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_RASENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_RASENA_W1C(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_RASENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_RASENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=1))
         return 0x868000100090ll + 0x1000000000ll * ((a) & 0x1);
@@ -15599,8 +15599,8 @@ union cavm_usbdrdx_uctl_rasena_w1s
 };
 typedef union cavm_usbdrdx_uctl_rasena_w1s cavm_usbdrdx_uctl_rasena_w1s_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_RASENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_RASENA_W1S(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_RASENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_RASENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=1))
         return 0x868000100098ll + 0x1000000000ll * ((a) & 0x1);
@@ -15684,8 +15684,8 @@ union cavm_usbdrdx_uctl_shim_cfg
 };
 typedef union cavm_usbdrdx_uctl_shim_cfg cavm_usbdrdx_uctl_shim_cfg_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_SHIM_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_SHIM_CFG(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_SHIM_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_SHIM_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x8680001000e8ll + 0x1000000000ll * ((a) & 0x1);
@@ -15727,8 +15727,8 @@ union cavm_usbdrdx_uctl_spare0
 };
 typedef union cavm_usbdrdx_uctl_spare0 cavm_usbdrdx_uctl_spare0_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_SPARE0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_SPARE0(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_SPARE0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_SPARE0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x868000100010ll + 0x1000000000ll * ((a) & 0x1);
@@ -15772,8 +15772,8 @@ union cavm_usbdrdx_uctl_spare1
 };
 typedef union cavm_usbdrdx_uctl_spare1 cavm_usbdrdx_uctl_spare1_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_SPARE1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_SPARE1(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_SPARE1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_SPARE1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x8680001000f8ll + 0x1000000000ll * ((a) & 0x1);
@@ -15816,8 +15816,8 @@ union cavm_usbdrdx_uctl_utmiclk_counter
 };
 typedef union cavm_usbdrdx_uctl_utmiclk_counter cavm_usbdrdx_uctl_utmiclk_counter_t;
 
-static inline uint64_t CAVM_USBDRDX_UCTL_UTMICLK_COUNTER(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_USBDRDX_UCTL_UTMICLK_COUNTER(unsigned long a)
+static inline uint64_t CAVM_USBDRDX_UCTL_UTMICLK_COUNTER(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_USBDRDX_UCTL_UTMICLK_COUNTER(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) && (a<=1))
         return 0x868000100018ll + 0x1000000000ll * ((a) & 0x1);

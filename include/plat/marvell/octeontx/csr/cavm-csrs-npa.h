@@ -1150,6 +1150,7 @@ union cavm_npa_aura_s
     /* struct cavm_npa_aura_s_cn96xxp3 cn98xx; */
     /* struct cavm_npa_aura_s_s cnf95xxp1; */
     /* struct cavm_npa_aura_s_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_npa_aura_s_cn96xxp3 f95mm; */
     /* struct cavm_npa_aura_s_cn96xxp3 loki; */
 };
 
@@ -2464,8 +2465,8 @@ union cavm_npa_af_bar2_aliasx
 };
 typedef union cavm_npa_af_bar2_aliasx cavm_npa_af_bar2_aliasx_t;
 
-static inline uint64_t CAVM_NPA_AF_BAR2_ALIASX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPA_AF_BAR2_ALIASX(unsigned long a)
+static inline uint64_t CAVM_NPA_AF_BAR2_ALIASX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NPA_AF_BAR2_ALIASX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=131071))
         return 0x840039100000ll + 8ll * ((a) & 0x1ffff);
@@ -2820,6 +2821,7 @@ union cavm_npa_af_bp_test
     /* struct cavm_npa_af_bp_test_cn96xxp3 cn98xx; */
     /* struct cavm_npa_af_bp_test_s cnf95xxp1; */
     /* struct cavm_npa_af_bp_test_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_npa_af_bp_test_cn96xxp3 f95mm; */
     /* struct cavm_npa_af_bp_test_cn96xxp3 loki; */
 };
 typedef union cavm_npa_af_bp_test cavm_npa_af_bp_test_t;
@@ -3355,6 +3357,7 @@ union cavm_npa_af_gen_cfg
     /* struct cavm_npa_af_gen_cfg_cn96xxp3 cn98xx; */
     /* struct cavm_npa_af_gen_cfg_s cnf95xxp1; */
     /* struct cavm_npa_af_gen_cfg_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_npa_af_gen_cfg_cn96xxp3 f95mm; */
     /* struct cavm_npa_af_gen_cfg_cn96xxp3 loki; */
 };
 typedef union cavm_npa_af_gen_cfg cavm_npa_af_gen_cfg_t;
@@ -3937,12 +3940,13 @@ union cavm_npa_af_lfx_auras_cfg
     /* struct cavm_npa_af_lfx_auras_cfg_s cn96xxp3; */
     /* struct cavm_npa_af_lfx_auras_cfg_s cn98xx; */
     /* struct cavm_npa_af_lfx_auras_cfg_s cnf95xx; */
+    /* struct cavm_npa_af_lfx_auras_cfg_s f95mm; */
     /* struct cavm_npa_af_lfx_auras_cfg_s loki; */
 };
 typedef union cavm_npa_af_lfx_auras_cfg cavm_npa_af_lfx_auras_cfg_t;
 
-static inline uint64_t CAVM_NPA_AF_LFX_AURAS_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPA_AF_LFX_AURAS_CFG(unsigned long a)
+static inline uint64_t CAVM_NPA_AF_LFX_AURAS_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NPA_AF_LFX_AURAS_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=127))
         return 0x840030004000ll + 0x40000ll * ((a) & 0x7f);
@@ -3990,8 +3994,8 @@ union cavm_npa_af_lfx_loc_auras_base
 };
 typedef union cavm_npa_af_lfx_loc_auras_base cavm_npa_af_lfx_loc_auras_base_t;
 
-static inline uint64_t CAVM_NPA_AF_LFX_LOC_AURAS_BASE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPA_AF_LFX_LOC_AURAS_BASE(unsigned long a)
+static inline uint64_t CAVM_NPA_AF_LFX_LOC_AURAS_BASE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NPA_AF_LFX_LOC_AURAS_BASE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=127))
         return 0x840030004010ll + 0x40000ll * ((a) & 0x7f);
@@ -4033,8 +4037,8 @@ union cavm_npa_af_lfx_qints_base
 };
 typedef union cavm_npa_af_lfx_qints_base cavm_npa_af_lfx_qints_base_t;
 
-static inline uint64_t CAVM_NPA_AF_LFX_QINTS_BASE(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPA_AF_LFX_QINTS_BASE(unsigned long a)
+static inline uint64_t CAVM_NPA_AF_LFX_QINTS_BASE(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NPA_AF_LFX_QINTS_BASE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=127))
         return 0x840030004110ll + 0x40000ll * ((a) & 0x7f);
@@ -4100,8 +4104,8 @@ union cavm_npa_af_lfx_qints_cfg
 };
 typedef union cavm_npa_af_lfx_qints_cfg cavm_npa_af_lfx_qints_cfg_t;
 
-static inline uint64_t CAVM_NPA_AF_LFX_QINTS_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPA_AF_LFX_QINTS_CFG(unsigned long a)
+static inline uint64_t CAVM_NPA_AF_LFX_QINTS_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NPA_AF_LFX_QINTS_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=127))
         return 0x840030004100ll + 0x40000ll * ((a) & 0x7f);
@@ -4744,8 +4748,8 @@ union cavm_npa_lf_aura_op_allocx
 };
 typedef union cavm_npa_lf_aura_op_allocx cavm_npa_lf_aura_op_allocx_t;
 
-static inline uint64_t CAVM_NPA_LF_AURA_OP_ALLOCX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPA_LF_AURA_OP_ALLOCX(unsigned long a)
+static inline uint64_t CAVM_NPA_LF_AURA_OP_ALLOCX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NPA_LF_AURA_OP_ALLOCX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=1))
         return 0x840200300010ll + 8ll * ((a) & 0x1);
@@ -5861,8 +5865,8 @@ union cavm_npa_lf_qintx_cnt
 };
 typedef union cavm_npa_lf_qintx_cnt cavm_npa_lf_qintx_cnt_t;
 
-static inline uint64_t CAVM_NPA_LF_QINTX_CNT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPA_LF_QINTX_CNT(unsigned long a)
+static inline uint64_t CAVM_NPA_LF_QINTX_CNT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NPA_LF_QINTX_CNT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=63))
         return 0x840200300300ll + 0x1000ll * ((a) & 0x3f);
@@ -5899,8 +5903,8 @@ union cavm_npa_lf_qintx_ena_w1c
 };
 typedef union cavm_npa_lf_qintx_ena_w1c cavm_npa_lf_qintx_ena_w1c_t;
 
-static inline uint64_t CAVM_NPA_LF_QINTX_ENA_W1C(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPA_LF_QINTX_ENA_W1C(unsigned long a)
+static inline uint64_t CAVM_NPA_LF_QINTX_ENA_W1C(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NPA_LF_QINTX_ENA_W1C(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=63))
         return 0x840200300330ll + 0x1000ll * ((a) & 0x3f);
@@ -5937,8 +5941,8 @@ union cavm_npa_lf_qintx_ena_w1s
 };
 typedef union cavm_npa_lf_qintx_ena_w1s cavm_npa_lf_qintx_ena_w1s_t;
 
-static inline uint64_t CAVM_NPA_LF_QINTX_ENA_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPA_LF_QINTX_ENA_W1S(unsigned long a)
+static inline uint64_t CAVM_NPA_LF_QINTX_ENA_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NPA_LF_QINTX_ENA_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=63))
         return 0x840200300320ll + 0x1000ll * ((a) & 0x3f);
@@ -5974,8 +5978,8 @@ union cavm_npa_lf_qintx_int
 };
 typedef union cavm_npa_lf_qintx_int cavm_npa_lf_qintx_int_t;
 
-static inline uint64_t CAVM_NPA_LF_QINTX_INT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPA_LF_QINTX_INT(unsigned long a)
+static inline uint64_t CAVM_NPA_LF_QINTX_INT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NPA_LF_QINTX_INT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=63))
         return 0x840200300310ll + 0x1000ll * ((a) & 0x3f);
@@ -6011,8 +6015,8 @@ union cavm_npa_lf_qintx_int_w1s
 };
 typedef union cavm_npa_lf_qintx_int_w1s cavm_npa_lf_qintx_int_w1s_t;
 
-static inline uint64_t CAVM_NPA_LF_QINTX_INT_W1S(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPA_LF_QINTX_INT_W1S(unsigned long a)
+static inline uint64_t CAVM_NPA_LF_QINTX_INT_W1S(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NPA_LF_QINTX_INT_W1S(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=63))
         return 0x840200300318ll + 0x1000ll * ((a) & 0x3f);
@@ -6303,8 +6307,8 @@ union cavm_npa_priv_lfx_cfg
 };
 typedef union cavm_npa_priv_lfx_cfg cavm_npa_priv_lfx_cfg_t;
 
-static inline uint64_t CAVM_NPA_PRIV_LFX_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPA_PRIV_LFX_CFG(unsigned long a)
+static inline uint64_t CAVM_NPA_PRIV_LFX_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NPA_PRIV_LFX_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=127))
         return 0x840030010010ll + 0x100ll * ((a) & 0x7f);
@@ -6354,8 +6358,8 @@ union cavm_npa_priv_lfx_int_cfg
 };
 typedef union cavm_npa_priv_lfx_int_cfg cavm_npa_priv_lfx_int_cfg_t;
 
-static inline uint64_t CAVM_NPA_PRIV_LFX_INT_CFG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_NPA_PRIV_LFX_INT_CFG(unsigned long a)
+static inline uint64_t CAVM_NPA_PRIV_LFX_INT_CFG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_NPA_PRIV_LFX_INT_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=127))
         return 0x840030010020ll + 0x100ll * ((a) & 0x7f);

@@ -76,8 +76,8 @@ union cavm_ap_actlr_elx
 };
 typedef union cavm_ap_actlr_elx cavm_ap_actlr_elx_t;
 
-static inline uint64_t CAVM_AP_ACTLR_ELX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ACTLR_ELX(unsigned long a)
+static inline uint64_t CAVM_AP_ACTLR_ELX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_ACTLR_ELX(uint64_t a)
 {
     if ((a>=1)&&(a<=3))
         return 0x030001000100 | ((a<<1)&((~(a>>1))&(0x4|a)))<<32;
@@ -112,8 +112,8 @@ union cavm_ap_afsrx_elx
 };
 typedef union cavm_ap_afsrx_elx cavm_ap_afsrx_elx_t;
 
-static inline uint64_t CAVM_AP_AFSRX_ELX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_AFSRX_ELX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_AP_AFSRX_ELX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_AFSRX_ELX(uint64_t a, uint64_t b)
 {
     if ((a<=1) && ((b>=1)&&(b<=3)))
         return 0x030005010000 | ((b<<1)&((~(b>>1))&(0x4|b)))<<32 | a<<8;
@@ -147,8 +147,8 @@ union cavm_ap_afsrx_el12
 };
 typedef union cavm_ap_afsrx_el12 cavm_ap_afsrx_el12_t;
 
-static inline uint64_t CAVM_AP_AFSRX_EL12(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_AFSRX_EL12(unsigned long a)
+static inline uint64_t CAVM_AP_AFSRX_EL12(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_AFSRX_EL12(uint64_t a)
 {
     if (a<=1)
         return 0x30505010000ll + 0x100ll * ((a) & 0x1);
@@ -217,8 +217,8 @@ union cavm_ap_amair_elx
 };
 typedef union cavm_ap_amair_elx cavm_ap_amair_elx_t;
 
-static inline uint64_t CAVM_AP_AMAIR_ELX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_AMAIR_ELX(unsigned long a)
+static inline uint64_t CAVM_AP_AMAIR_ELX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_AMAIR_ELX(uint64_t a)
 {
     if ((a>=1)&&(a<=3))
         return 0x03000a030000 | ((a<<1)&((~(a>>1))&(0x4|a)))<<32;
@@ -625,6 +625,7 @@ union cavm_ap_ccsidr_el1
     /* struct cavm_ap_ccsidr_el1_cn96xxp3 cn98xx; */
     /* struct cavm_ap_ccsidr_el1_cn9 cnf95xxp1; */
     /* struct cavm_ap_ccsidr_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_ccsidr_el1_cn96xxp3 f95mm; */
     /* struct cavm_ap_ccsidr_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_ccsidr_el1 cavm_ap_ccsidr_el1_t;
@@ -6321,8 +6322,8 @@ union cavm_ap_cvm_scratchx_el1
 };
 typedef union cavm_ap_cvm_scratchx_el1 cavm_ap_cvm_scratchx_el1_t;
 
-static inline uint64_t CAVM_AP_CVM_SCRATCHX_EL1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_SCRATCHX_EL1(unsigned long a)
+static inline uint64_t CAVM_AP_CVM_SCRATCHX_EL1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_CVM_SCRATCHX_EL1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x3000b050000ll + 0x100ll * ((a) & 0x3);
@@ -6475,6 +6476,7 @@ union cavm_ap_cvm_statprofctl_el1
     /* struct cavm_ap_cvm_statprofctl_el1_cn96xxp3 cn98xx; */
     /* struct cavm_ap_cvm_statprofctl_el1_s cnf95xxp1; */
     /* struct cavm_ap_cvm_statprofctl_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_cvm_statprofctl_el1_cn96xxp3 f95mm; */
     /* struct cavm_ap_cvm_statprofctl_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvm_statprofctl_el1 cavm_ap_cvm_statprofctl_el1_t;
@@ -6537,8 +6539,8 @@ union cavm_ap_cvm_trapaddrx_el3
 };
 typedef union cavm_ap_cvm_trapaddrx_el3 cavm_ap_cvm_trapaddrx_el3_t;
 
-static inline uint64_t CAVM_AP_CVM_TRAPADDRX_EL3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_TRAPADDRX_EL3(unsigned long a)
+static inline uint64_t CAVM_AP_CVM_TRAPADDRX_EL3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_CVM_TRAPADDRX_EL3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && ((a>=4)&&(a<=7)))
         return 0x3060b070000ll + 0x100ll * ((a) & 0x7);
@@ -6586,8 +6588,8 @@ union cavm_ap_cvm_trapaddrenax_el3
 };
 typedef union cavm_ap_cvm_trapaddrenax_el3 cavm_ap_cvm_trapaddrenax_el3_t;
 
-static inline uint64_t CAVM_AP_CVM_TRAPADDRENAX_EL3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_TRAPADDRENAX_EL3(unsigned long a)
+static inline uint64_t CAVM_AP_CVM_TRAPADDRENAX_EL3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_CVM_TRAPADDRENAX_EL3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && ((a>=4)&&(a<=7)))
         return 0x3060b090000ll + 0x100ll * ((a) & 0x7);
@@ -6666,8 +6668,8 @@ union cavm_ap_cvm_trapctlx_el3
 };
 typedef union cavm_ap_cvm_trapctlx_el3 cavm_ap_cvm_trapctlx_el3_t;
 
-static inline uint64_t CAVM_AP_CVM_TRAPCTLX_EL3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_TRAPCTLX_EL3(unsigned long a)
+static inline uint64_t CAVM_AP_CVM_TRAPCTLX_EL3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_CVM_TRAPCTLX_EL3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=7))
         return 0x3060b080000ll + 0x100ll * ((a) & 0x7);
@@ -6713,8 +6715,8 @@ union cavm_ap_cvm_trapinsnx_el3
 };
 typedef union cavm_ap_cvm_trapinsnx_el3 cavm_ap_cvm_trapinsnx_el3_t;
 
-static inline uint64_t CAVM_AP_CVM_TRAPINSNX_EL3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_TRAPINSNX_EL3(unsigned long a)
+static inline uint64_t CAVM_AP_CVM_TRAPINSNX_EL3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_CVM_TRAPINSNX_EL3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x3060b090000ll + 0x100ll * ((a) & 0x3);
@@ -6821,8 +6823,8 @@ union cavm_ap_cvm_xlatdatax_el1
 };
 typedef union cavm_ap_cvm_xlatdatax_el1 cavm_ap_cvm_xlatdatax_el1_t;
 
-static inline uint64_t CAVM_AP_CVM_XLATDATAX_EL1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_CVM_XLATDATAX_EL1(unsigned long a)
+static inline uint64_t CAVM_AP_CVM_XLATDATAX_EL1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_CVM_XLATDATAX_EL1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=1))
         return 0x3000b050400ll + 0x100ll * ((a) & 0x1);
@@ -7277,6 +7279,7 @@ union cavm_ap_cvmctl2_el1
     /* struct cavm_ap_cvmctl2_el1_s cn98xx; */
     /* struct cavm_ap_cvmctl2_el1_cn96xxp1 cnf95xxp1; */
     /* struct cavm_ap_cvmctl2_el1_s cnf95xxp2; */
+    /* struct cavm_ap_cvmctl2_el1_s f95mm; */
     /* struct cavm_ap_cvmctl2_el1_s loki; */
 };
 typedef union cavm_ap_cvmctl2_el1 cavm_ap_cvmctl2_el1_t;
@@ -8157,6 +8160,7 @@ union cavm_ap_cvmctl_el1
 #endif /* Word 0 - End */
     } cnf95xxp1;
     /* struct cavm_ap_cvmctl_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_cvmctl_el1_cn96xxp3 f95mm; */
     /* struct cavm_ap_cvmctl_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvmctl_el1 cavm_ap_cvmctl_el1_t;
@@ -9629,6 +9633,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t rsvd_59_63            : 5;  /**< [ 63: 59](R/W) Reserved. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_ap_cvmmemctl1_el1_cnf95xxp2 f95mm; */
     /* struct cavm_ap_cvmmemctl1_el1_cnf95xxp2 loki; */
 };
 typedef union cavm_ap_cvmmemctl1_el1 cavm_ap_cvmmemctl1_el1_t;
@@ -10201,8 +10206,8 @@ union cavm_ap_dbgbcrx_el1
 };
 typedef union cavm_ap_dbgbcrx_el1 cavm_ap_dbgbcrx_el1_t;
 
-static inline uint64_t CAVM_AP_DBGBCRX_EL1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_DBGBCRX_EL1(unsigned long a)
+static inline uint64_t CAVM_AP_DBGBCRX_EL1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_DBGBCRX_EL1(uint64_t a)
 {
     if (a<=15)
         return 0x20000000500ll + 0x10000ll * ((a) & 0xf);
@@ -10246,8 +10251,8 @@ union cavm_ap_dbgbvrx_el1
 };
 typedef union cavm_ap_dbgbvrx_el1 cavm_ap_dbgbvrx_el1_t;
 
-static inline uint64_t CAVM_AP_DBGBVRX_EL1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_DBGBVRX_EL1(unsigned long a)
+static inline uint64_t CAVM_AP_DBGBVRX_EL1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_DBGBVRX_EL1(uint64_t a)
 {
     if (a<=15)
         return 0x20000000400ll + 0x10000ll * ((a) & 0xf);
@@ -10846,8 +10851,8 @@ union cavm_ap_dbgwcrx_el1
 };
 typedef union cavm_ap_dbgwcrx_el1 cavm_ap_dbgwcrx_el1_t;
 
-static inline uint64_t CAVM_AP_DBGWCRX_EL1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_DBGWCRX_EL1(unsigned long a)
+static inline uint64_t CAVM_AP_DBGWCRX_EL1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_DBGWCRX_EL1(uint64_t a)
 {
     if (a<=15)
         return 0x20000000700ll + 0x10000ll * ((a) & 0xf);
@@ -10918,8 +10923,8 @@ union cavm_ap_dbgwvrx_el1
 };
 typedef union cavm_ap_dbgwvrx_el1 cavm_ap_dbgwvrx_el1_t;
 
-static inline uint64_t CAVM_AP_DBGWVRX_EL1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_DBGWVRX_EL1(unsigned long a)
+static inline uint64_t CAVM_AP_DBGWVRX_EL1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_DBGWVRX_EL1(uint64_t a)
 {
     if (a<=15)
         return 0x20000000600ll + 0x10000ll * ((a) & 0xf);
@@ -11307,6 +11312,7 @@ union cavm_ap_dspsr_el0
     /* struct cavm_ap_dspsr_el0_s cn96xxp3; */
     /* struct cavm_ap_dspsr_el0_s cn98xx; */
     /* struct cavm_ap_dspsr_el0_s cnf95xx; */
+    /* struct cavm_ap_dspsr_el0_s f95mm; */
     /* struct cavm_ap_dspsr_el0_s loki; */
 };
 typedef union cavm_ap_dspsr_el0 cavm_ap_dspsr_el0_t;
@@ -11345,8 +11351,8 @@ union cavm_ap_elr_elx
 };
 typedef union cavm_ap_elr_elx cavm_ap_elr_elx_t;
 
-static inline uint64_t CAVM_AP_ELR_ELX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ELR_ELX(unsigned long a)
+static inline uint64_t CAVM_AP_ELR_ELX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_ELR_ELX(uint64_t a)
 {
     if ((a>=1)&&(a<=3))
         return 0x030004000100 | ((a<<1)&((~(a>>1))&(0x4|a)))<<32;
@@ -12762,8 +12768,8 @@ union cavm_ap_esr_elx
 };
 typedef union cavm_ap_esr_elx cavm_ap_esr_elx_t;
 
-static inline uint64_t CAVM_AP_ESR_ELX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ESR_ELX(unsigned long a)
+static inline uint64_t CAVM_AP_ESR_ELX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_ESR_ELX(uint64_t a)
 {
     if ((a>=1)&&(a<=3))
         return 0x030005020000 | ((a<<1)&((~(a>>1))&(0x4|a)))<<32;
@@ -12845,8 +12851,8 @@ union cavm_ap_far_elx
 };
 typedef union cavm_ap_far_elx cavm_ap_far_elx_t;
 
-static inline uint64_t CAVM_AP_FAR_ELX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_FAR_ELX(unsigned long a)
+static inline uint64_t CAVM_AP_FAR_ELX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_FAR_ELX(uint64_t a)
 {
     if ((a>=1)&&(a<=3))
         return 0x030006000000 | ((a<<1)&((~(a>>1))&(0x4|a)))<<32;
@@ -14990,8 +14996,8 @@ union cavm_ap_icc_ap0rx_el1
 };
 typedef union cavm_ap_icc_ap0rx_el1 cavm_ap_icc_ap0rx_el1_t;
 
-static inline uint64_t CAVM_AP_ICC_AP0RX_EL1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ICC_AP0RX_EL1(unsigned long a)
+static inline uint64_t CAVM_AP_ICC_AP0RX_EL1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_ICC_AP0RX_EL1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=3))
         return 0x3000c080400ll + 0x100ll * ((a) & 0x3);
@@ -15257,8 +15263,8 @@ union cavm_ap_icc_ap1rx_el1
 };
 typedef union cavm_ap_icc_ap1rx_el1 cavm_ap_icc_ap1rx_el1_t;
 
-static inline uint64_t CAVM_AP_ICC_AP1RX_EL1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ICC_AP1RX_EL1(unsigned long a)
+static inline uint64_t CAVM_AP_ICC_AP1RX_EL1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_ICC_AP1RX_EL1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=3))
         return 0x3000c090000ll + 0x100ll * ((a) & 0x3);
@@ -18218,8 +18224,8 @@ union cavm_ap_ich_lrx_el2
 };
 typedef union cavm_ap_ich_lrx_el2 cavm_ap_ich_lrx_el2_t;
 
-static inline uint64_t CAVM_AP_ICH_LRX_EL2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ICH_LRX_EL2(unsigned long a)
+static inline uint64_t CAVM_AP_ICH_LRX_EL2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_ICH_LRX_EL2(uint64_t a)
 {
     if (a<=15)
         return 0x03040c0c0000 | ((a>>3)<<16 | (a&7)<<8);
@@ -18254,8 +18260,8 @@ union cavm_ap_ich_lrcx
 };
 typedef union cavm_ap_ich_lrcx cavm_ap_ich_lrcx_t;
 
-static inline uint64_t CAVM_AP_ICH_LRCX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ICH_LRCX(unsigned long a)
+static inline uint64_t CAVM_AP_ICH_LRCX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_ICH_LRCX(uint64_t a)
 {
     if (a<=15)
         return 0x03040c0e0000 | ((a>>3)<<16 | (a&7)<<8);
@@ -18690,8 +18696,8 @@ union cavm_ap_id_aa64afrx_el1_res0
 };
 typedef union cavm_ap_id_aa64afrx_el1_res0 cavm_ap_id_aa64afrx_el1_res0_t;
 
-static inline uint64_t CAVM_AP_ID_AA64AFRX_EL1_RES0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ID_AA64AFRX_EL1_RES0(unsigned long a)
+static inline uint64_t CAVM_AP_ID_AA64AFRX_EL1_RES0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_ID_AA64AFRX_EL1_RES0(uint64_t a)
 {
     if ((a>=2)&&(a<=3))
         return 0x30000050400ll + 0x100ll * ((a) & 0x3);
@@ -18798,8 +18804,8 @@ union cavm_ap_id_aa64dfrx_el1_res0
 };
 typedef union cavm_ap_id_aa64dfrx_el1_res0 cavm_ap_id_aa64dfrx_el1_res0_t;
 
-static inline uint64_t CAVM_AP_ID_AA64DFRX_EL1_RES0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ID_AA64DFRX_EL1_RES0(unsigned long a)
+static inline uint64_t CAVM_AP_ID_AA64DFRX_EL1_RES0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_ID_AA64DFRX_EL1_RES0(uint64_t a)
 {
     if ((a>=2)&&(a<=3))
         return 0x30000050000ll + 0x100ll * ((a) & 0x3);
@@ -19082,8 +19088,8 @@ union cavm_ap_id_aa64isarx_el1_res0
 };
 typedef union cavm_ap_id_aa64isarx_el1_res0 cavm_ap_id_aa64isarx_el1_res0_t;
 
-static inline uint64_t CAVM_AP_ID_AA64ISARX_EL1_RES0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ID_AA64ISARX_EL1_RES0(unsigned long a)
+static inline uint64_t CAVM_AP_ID_AA64ISARX_EL1_RES0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_ID_AA64ISARX_EL1_RES0(uint64_t a)
 {
     if ((a>=2)&&(a<=7))
         return 0x30000060000ll + 0x100ll * ((a) & 0x7);
@@ -19388,6 +19394,7 @@ union cavm_ap_id_aa64isar1_el1
     /* struct cavm_ap_id_aa64isar1_el1_s cn96xxp3; */
     /* struct cavm_ap_id_aa64isar1_el1_s cn98xx; */
     /* struct cavm_ap_id_aa64isar1_el1_s cnf95xx; */
+    /* struct cavm_ap_id_aa64isar1_el1_s f95mm; */
     /* struct cavm_ap_id_aa64isar1_el1_s loki; */
 };
 typedef union cavm_ap_id_aa64isar1_el1 cavm_ap_id_aa64isar1_el1_t;
@@ -19430,8 +19437,8 @@ union cavm_ap_id_aa64mmfrx_el1_res0
 };
 typedef union cavm_ap_id_aa64mmfrx_el1_res0 cavm_ap_id_aa64mmfrx_el1_res0_t;
 
-static inline uint64_t CAVM_AP_ID_AA64MMFRX_EL1_RES0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ID_AA64MMFRX_EL1_RES0(unsigned long a)
+static inline uint64_t CAVM_AP_ID_AA64MMFRX_EL1_RES0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_ID_AA64MMFRX_EL1_RES0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a>=2)&&(a<=7)))
         return 0x30000070000ll + 0x100ll * ((a) & 0x7);
@@ -20192,8 +20199,8 @@ union cavm_ap_id_aa64pfrx_el1_res0
 };
 typedef union cavm_ap_id_aa64pfrx_el1_res0 cavm_ap_id_aa64pfrx_el1_res0_t;
 
-static inline uint64_t CAVM_AP_ID_AA64PFRX_EL1_RES0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ID_AA64PFRX_EL1_RES0(unsigned long a)
+static inline uint64_t CAVM_AP_ID_AA64PFRX_EL1_RES0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_ID_AA64PFRX_EL1_RES0(uint64_t a)
 {
     if ((a>=2)&&(a<=7))
         return 0x30000040000ll + 0x100ll * ((a) & 0x7);
@@ -20581,6 +20588,7 @@ union cavm_ap_id_aa64pfr1_el1
 #endif /* Word 0 - End */
     } cnf95xxp1;
     /* struct cavm_ap_id_aa64pfr1_el1_s cnf95xxp2; */
+    /* struct cavm_ap_id_aa64pfr1_el1_s f95mm; */
     /* struct cavm_ap_id_aa64pfr1_el1_s loki; */
 };
 typedef union cavm_ap_id_aa64pfr1_el1 cavm_ap_id_aa64pfr1_el1_t;
@@ -20691,8 +20699,8 @@ union cavm_ap_id_isarx_el1
 };
 typedef union cavm_ap_id_isarx_el1 cavm_ap_id_isarx_el1_t;
 
-static inline uint64_t CAVM_AP_ID_ISARX_EL1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ID_ISARX_EL1(unsigned long a)
+static inline uint64_t CAVM_AP_ID_ISARX_EL1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_ID_ISARX_EL1(uint64_t a)
 {
     if (a<=5)
         return 0x30000020000ll + 0x100ll * ((a) & 0x7);
@@ -20728,8 +20736,8 @@ union cavm_ap_id_isarx_el1_res0
 };
 typedef union cavm_ap_id_isarx_el1_res0 cavm_ap_id_isarx_el1_res0_t;
 
-static inline uint64_t CAVM_AP_ID_ISARX_EL1_RES0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ID_ISARX_EL1_RES0(unsigned long a)
+static inline uint64_t CAVM_AP_ID_ISARX_EL1_RES0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_ID_ISARX_EL1_RES0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && ((a>=6)&&(a<=7)))
         return 0x30000020000ll + 0x100ll * ((a) & 0x7);
@@ -20801,8 +20809,8 @@ union cavm_ap_id_mmfrx_el1
 };
 typedef union cavm_ap_id_mmfrx_el1 cavm_ap_id_mmfrx_el1_t;
 
-static inline uint64_t CAVM_AP_ID_MMFRX_EL1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_ID_MMFRX_EL1(unsigned long a)
+static inline uint64_t CAVM_AP_ID_MMFRX_EL1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_ID_MMFRX_EL1(uint64_t a)
 {
     if (a<=3)
         return 0x30000010400ll + 0x100ll * ((a) & 0x3);
@@ -22401,8 +22409,8 @@ union cavm_ap_mair_elx
 };
 typedef union cavm_ap_mair_elx cavm_ap_mair_elx_t;
 
-static inline uint64_t CAVM_AP_MAIR_ELX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_MAIR_ELX(unsigned long a)
+static inline uint64_t CAVM_AP_MAIR_ELX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_MAIR_ELX(uint64_t a)
 {
     if ((a>=1)&&(a<=3))
         return 0x03000a020000 | ((a<<1)&((~(a>>1))&(0x4|a)))<<32;
@@ -24112,8 +24120,8 @@ union cavm_ap_mvfrx_el1
 };
 typedef union cavm_ap_mvfrx_el1 cavm_ap_mvfrx_el1_t;
 
-static inline uint64_t CAVM_AP_MVFRX_EL1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_MVFRX_EL1(unsigned long a)
+static inline uint64_t CAVM_AP_MVFRX_EL1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_MVFRX_EL1(uint64_t a)
 {
     if (a<=2)
         return 0x30000030000ll + 0x100ll * ((a) & 0x3);
@@ -24148,8 +24156,8 @@ union cavm_ap_mvfrx_el1_res0
 };
 typedef union cavm_ap_mvfrx_el1_res0 cavm_ap_mvfrx_el1_res0_t;
 
-static inline uint64_t CAVM_AP_MVFRX_EL1_RES0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_MVFRX_EL1_RES0(unsigned long a)
+static inline uint64_t CAVM_AP_MVFRX_EL1_RES0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_MVFRX_EL1_RES0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && ((a>=3)&&(a<=7)))
         return 0x30000030000ll + 0x100ll * ((a) & 0x7);
@@ -25899,8 +25907,8 @@ union cavm_ap_pmevcntrx_el0
 };
 typedef union cavm_ap_pmevcntrx_el0 cavm_ap_pmevcntrx_el0_t;
 
-static inline uint64_t CAVM_AP_PMEVCNTRX_EL0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_PMEVCNTRX_EL0(unsigned long a)
+static inline uint64_t CAVM_AP_PMEVCNTRX_EL0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_PMEVCNTRX_EL0(uint64_t a)
 {
     if (a<=30)
         return 0x03030e080000 | ((a>>3)<<16 | (a&7)<<8);
@@ -26048,8 +26056,8 @@ union cavm_ap_pmevtyperx_el0
 };
 typedef union cavm_ap_pmevtyperx_el0 cavm_ap_pmevtyperx_el0_t;
 
-static inline uint64_t CAVM_AP_PMEVTYPERX_EL0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_PMEVTYPERX_EL0(unsigned long a)
+static inline uint64_t CAVM_AP_PMEVTYPERX_EL0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_PMEVTYPERX_EL0(uint64_t a)
 {
     if (a<=30)
         return 0x03030e0c0000 | ((a>>3)<<16 | (a&7)<<8);
@@ -27632,8 +27640,8 @@ union cavm_ap_rmr_elx
 };
 typedef union cavm_ap_rmr_elx cavm_ap_rmr_elx_t;
 
-static inline uint64_t CAVM_AP_RMR_ELX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_RMR_ELX(unsigned long a)
+static inline uint64_t CAVM_AP_RMR_ELX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_RMR_ELX(uint64_t a)
 {
     if ((a>=1)&&(a<=2))
         return 0x03000c000200 | ((a<<1)&((~(a>>1))&(0x4|a)))<<32;
@@ -27746,8 +27754,8 @@ union cavm_ap_rvbar_elx
 };
 typedef union cavm_ap_rvbar_elx cavm_ap_rvbar_elx_t;
 
-static inline uint64_t CAVM_AP_RVBAR_ELX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_RVBAR_ELX(unsigned long a)
+static inline uint64_t CAVM_AP_RVBAR_ELX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_RVBAR_ELX(uint64_t a)
 {
     if ((a>=1)&&(a<=2))
         return 0x03000c000100 | ((a<<1)&((~(a>>1))&(0x4|a)))<<32;
@@ -29730,6 +29738,7 @@ union cavm_ap_sctlr_el1
     /* struct cavm_ap_sctlr_el1_cn96xxp1_1 cn96xxp3; */
     /* struct cavm_ap_sctlr_el1_cn96xxp1_1 cn98xx; */
     /* struct cavm_ap_sctlr_el1_cn96xxp1_1 cnf95xx; */
+    /* struct cavm_ap_sctlr_el1_cn96xxp1_1 f95mm; */
     /* struct cavm_ap_sctlr_el1_cn96xxp1_1 loki; */
 };
 typedef union cavm_ap_sctlr_el1 cavm_ap_sctlr_el1_t;
@@ -30376,6 +30385,7 @@ union cavm_ap_sctlr_el2
     /* struct cavm_ap_sctlr_el2_s cn96xxp3; */
     /* struct cavm_ap_sctlr_el2_s cn98xx; */
     /* struct cavm_ap_sctlr_el2_s cnf95xx; */
+    /* struct cavm_ap_sctlr_el2_s f95mm; */
     /* struct cavm_ap_sctlr_el2_s loki; */
 };
 typedef union cavm_ap_sctlr_el2 cavm_ap_sctlr_el2_t;
@@ -31927,6 +31937,7 @@ union cavm_ap_sctlr_el2_e2h
     /* struct cavm_ap_sctlr_el2_e2h_cn96xxp1_1 cn96xxp3; */
     /* struct cavm_ap_sctlr_el2_e2h_cn96xxp1_1 cn98xx; */
     /* struct cavm_ap_sctlr_el2_e2h_cn96xxp1_1 cnf95xx; */
+    /* struct cavm_ap_sctlr_el2_e2h_cn96xxp1_1 f95mm; */
     /* struct cavm_ap_sctlr_el2_e2h_cn96xxp1_1 loki; */
 };
 typedef union cavm_ap_sctlr_el2_e2h cavm_ap_sctlr_el2_e2h_t;
@@ -32525,6 +32536,7 @@ union cavm_ap_sctlr_el3
     /* struct cavm_ap_sctlr_el3_s cn96xxp3; */
     /* struct cavm_ap_sctlr_el3_s cn98xx; */
     /* struct cavm_ap_sctlr_el3_s cnf95xx; */
+    /* struct cavm_ap_sctlr_el3_s f95mm; */
     /* struct cavm_ap_sctlr_el3_s loki; */
 };
 typedef union cavm_ap_sctlr_el3 cavm_ap_sctlr_el3_t;
@@ -33192,12 +33204,13 @@ union cavm_ap_spsr_elx
     /* struct cavm_ap_spsr_elx_s cn96xxp3; */
     /* struct cavm_ap_spsr_elx_s cn98xx; */
     /* struct cavm_ap_spsr_elx_s cnf95xx; */
+    /* struct cavm_ap_spsr_elx_s f95mm; */
     /* struct cavm_ap_spsr_elx_s loki; */
 };
 typedef union cavm_ap_spsr_elx cavm_ap_spsr_elx_t;
 
-static inline uint64_t CAVM_AP_SPSR_ELX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_SPSR_ELX(unsigned long a)
+static inline uint64_t CAVM_AP_SPSR_ELX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_SPSR_ELX(uint64_t a)
 {
     if ((a>=1)&&(a<=3))
         return 0x030004000000 | ((a<<1)&((~(a>>1))&(0x4|a)))<<32;
@@ -33413,6 +33426,8 @@ static inline uint64_t CAVM_AP_SSBS_FUNC(void)
     if (cavm_is_model(OCTEONTX_CN98XX))
         return 0x30304020600ll;
     if (cavm_is_model(OCTEONTX_CNF95XX))
+        return 0x30304020600ll;
+    if (cavm_is_model(OCTEONTX_F95MM))
         return 0x30304020600ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x30304020600ll;
@@ -35786,8 +35801,8 @@ union cavm_ap_tpidr_elx
 };
 typedef union cavm_ap_tpidr_elx cavm_ap_tpidr_elx_t;
 
-static inline uint64_t CAVM_AP_TPIDR_ELX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TPIDR_ELX(unsigned long a)
+static inline uint64_t CAVM_AP_TPIDR_ELX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TPIDR_ELX(uint64_t a)
 {
     if ((a>=2)&&(a<=3))
         return 0x3000d000200ll + 0x200000000ll * ((a) & 0x3);
@@ -35932,8 +35947,8 @@ union cavm_ap_trcacatrx
 };
 typedef union cavm_ap_trcacatrx cavm_ap_trcacatrx_t;
 
-static inline uint64_t CAVM_AP_TRCACATRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCACATRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCACATRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCACATRX(uint64_t a)
 {
     if (a<=15)
         return 0x020102000200 | (((a&7)*2)<<16 | (a>>3)<<8);
@@ -35966,8 +35981,8 @@ union cavm_ap_trcacvrx
 };
 typedef union cavm_ap_trcacvrx cavm_ap_trcacvrx_t;
 
-static inline uint64_t CAVM_AP_TRCACVRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCACVRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCACVRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCACVRX(uint64_t a)
 {
     if (a<=15)
         return 0x020102000000 | (((a&7)*2)<<16 | (a>>3)<<8);
@@ -36132,8 +36147,8 @@ union cavm_ap_trccidcctlrx
 };
 typedef union cavm_ap_trccidcctlrx cavm_ap_trccidcctlrx_t;
 
-static inline uint64_t CAVM_AP_TRCCIDCCTLRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCCIDCCTLRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCCIDCCTLRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCCIDCCTLRX(uint64_t a)
 {
     if (a<=1)
         return 0x20103000200ll + 0x10000ll * ((a) & 0x1);
@@ -36166,8 +36181,8 @@ union cavm_ap_trccidcvrx
 };
 typedef union cavm_ap_trccidcvrx cavm_ap_trccidcvrx_t;
 
-static inline uint64_t CAVM_AP_TRCCIDCVRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCCIDCVRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCCIDCVRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCCIDCVRX(uint64_t a)
 {
     if (a<=7)
         return 0x20103000000ll + 0x20000ll * ((a) & 0x7);
@@ -36200,8 +36215,8 @@ union cavm_ap_trccidrx
 };
 typedef union cavm_ap_trccidrx cavm_ap_trccidrx_t;
 
-static inline uint64_t CAVM_AP_TRCCIDRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCCIDRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCCIDRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCCIDRX(uint64_t a)
 {
     if (a<=3)
         return 0x201070c0700ll + 0x10000ll * ((a) & 0x3);
@@ -36300,8 +36315,8 @@ union cavm_ap_trccntctlrx
 };
 typedef union cavm_ap_trccntctlrx cavm_ap_trccntctlrx_t;
 
-static inline uint64_t CAVM_AP_TRCCNTCTLRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCCNTCTLRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCCNTCTLRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCCNTCTLRX(uint64_t a)
 {
     if (a<=3)
         return 0x20100040500ll + 0x10000ll * ((a) & 0x3);
@@ -36334,8 +36349,8 @@ union cavm_ap_trccntrldvrx
 };
 typedef union cavm_ap_trccntrldvrx cavm_ap_trccntrldvrx_t;
 
-static inline uint64_t CAVM_AP_TRCCNTRLDVRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCCNTRLDVRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCCNTRLDVRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCCNTRLDVRX(uint64_t a)
 {
     if (a<=3)
         return 0x20100000500ll + 0x10000ll * ((a) & 0x3);
@@ -36368,8 +36383,8 @@ union cavm_ap_trccntvrx
 };
 typedef union cavm_ap_trccntvrx cavm_ap_trccntvrx_t;
 
-static inline uint64_t CAVM_AP_TRCCNTVRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCCNTVRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCCNTVRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCCNTVRX(uint64_t a)
 {
     if (a<=3)
         return 0x20100080500ll + 0x10000ll * ((a) & 0x3);
@@ -36435,8 +36450,8 @@ union cavm_ap_trcdevaffx
 };
 typedef union cavm_ap_trcdevaffx cavm_ap_trcdevaffx_t;
 
-static inline uint64_t CAVM_AP_TRCDEVAFFX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCDEVAFFX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCDEVAFFX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCDEVAFFX(uint64_t a)
 {
     if (a<=1)
         return 0x201070a0600ll + 0x10000ll * ((a) & 0x1);
@@ -36568,8 +36583,8 @@ union cavm_ap_trcdvcmrx
 };
 typedef union cavm_ap_trcdvcmrx cavm_ap_trcdvcmrx_t;
 
-static inline uint64_t CAVM_AP_TRCDVCMRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCDVCMRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCDVCMRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCDVCMRX(uint64_t a)
 {
     if (a<=7)
         return 0x020102000600 | (((a&3)*4)<<16 | (a>>2)<<8);
@@ -36602,8 +36617,8 @@ union cavm_ap_trcdvcvrx
 };
 typedef union cavm_ap_trcdvcvrx cavm_ap_trcdvcvrx_t;
 
-static inline uint64_t CAVM_AP_TRCDVCVRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCDVCVRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCDVCVRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCDVCVRX(uint64_t a)
 {
     if (a<=7)
         return 0x020102000400 | (((a&3)*4)<<16 | (a>>2)<<8);
@@ -36636,8 +36651,8 @@ union cavm_ap_trceventctlxr
 };
 typedef union cavm_ap_trceventctlxr cavm_ap_trceventctlxr_t;
 
-static inline uint64_t CAVM_AP_TRCEVENTCTLXR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCEVENTCTLXR(unsigned long a)
+static inline uint64_t CAVM_AP_TRCEVENTCTLXR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCEVENTCTLXR(uint64_t a)
 {
     if (a<=1)
         return 0x20100080000ll + 0x10000ll * ((a) & 0x1);
@@ -36703,8 +36718,8 @@ union cavm_ap_trcidrx
 };
 typedef union cavm_ap_trcidrx cavm_ap_trcidrx_t;
 
-static inline uint64_t CAVM_AP_TRCIDRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCIDRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCIDRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCIDRX(uint64_t a)
 {
     if (a<=13)
         return 0x020100000600 | (((8-((a>>3)<<3))|(a&7))<<16 | (1-(a>>3))<<8);
@@ -36737,8 +36752,8 @@ union cavm_ap_trcimspecx
 };
 typedef union cavm_ap_trcimspecx cavm_ap_trcimspecx_t;
 
-static inline uint64_t CAVM_AP_TRCIMSPECX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCIMSPECX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCIMSPECX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCIMSPECX(uint64_t a)
 {
     if (a<=7)
         return 0x20100000700ll + 0x10000ll * ((a) & 0x7);
@@ -37002,8 +37017,8 @@ union cavm_ap_trcpidrx
 };
 typedef union cavm_ap_trcpidrx cavm_ap_trcpidrx_t;
 
-static inline uint64_t CAVM_AP_TRCPIDRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCPIDRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCPIDRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCPIDRX(uint64_t a)
 {
     if (a<=7)
         return 0x020107000700 | (a|(8-((a&4)<<1)))<<16;
@@ -37135,8 +37150,8 @@ union cavm_ap_trcrsctlrx
 };
 typedef union cavm_ap_trcrsctlrx cavm_ap_trcrsctlrx_t;
 
-static inline uint64_t CAVM_AP_TRCRSCTLRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCRSCTLRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCRSCTLRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCRSCTLRX(uint64_t a)
 {
     if ((a>=2)&&(a<=31))
         return 0x020101000000 | ((a&15)<<16 | (a>>4)<<8);
@@ -37169,8 +37184,8 @@ union cavm_ap_trcseqevrx
 };
 typedef union cavm_ap_trcseqevrx cavm_ap_trcseqevrx_t;
 
-static inline uint64_t CAVM_AP_TRCSEQEVRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCSEQEVRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCSEQEVRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCSEQEVRX(uint64_t a)
 {
     if (a<=2)
         return 0x20100000400ll + 0x10000ll * ((a) & 0x3);
@@ -37269,8 +37284,8 @@ union cavm_ap_trcssccrx
 };
 typedef union cavm_ap_trcssccrx cavm_ap_trcssccrx_t;
 
-static inline uint64_t CAVM_AP_TRCSSCCRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCSSCCRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCSSCCRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCSSCCRX(uint64_t a)
 {
     if (a<=7)
         return 0x20101000200ll + 0x10000ll * ((a) & 0x7);
@@ -37303,8 +37318,8 @@ union cavm_ap_trcsscsrx
 };
 typedef union cavm_ap_trcsscsrx cavm_ap_trcsscsrx_t;
 
-static inline uint64_t CAVM_AP_TRCSSCSRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCSSCSRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCSSCSRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCSSCSRX(uint64_t a)
 {
     if (a<=7)
         return 0x20101080200ll + 0x10000ll * ((a) & 0x7);
@@ -37337,8 +37352,8 @@ union cavm_ap_trcsspcicrx
 };
 typedef union cavm_ap_trcsspcicrx cavm_ap_trcsspcicrx_t;
 
-static inline uint64_t CAVM_AP_TRCSSPCICRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCSSPCICRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCSSPCICRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCSSPCICRX(uint64_t a)
 {
     if (a<=7)
         return 0x20101000300ll + 0x10000ll * ((a) & 0x7);
@@ -37767,8 +37782,8 @@ union cavm_ap_trcvmidcctlrx
 };
 typedef union cavm_ap_trcvmidcctlrx cavm_ap_trcvmidcctlrx_t;
 
-static inline uint64_t CAVM_AP_TRCVMIDCCTLRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCVMIDCCTLRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCVMIDCCTLRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCVMIDCCTLRX(uint64_t a)
 {
     if (a<=1)
         return 0x20103020200ll + 0x10000ll * ((a) & 0x1);
@@ -37801,8 +37816,8 @@ union cavm_ap_trcvmidcvrx
 };
 typedef union cavm_ap_trcvmidcvrx cavm_ap_trcvmidcvrx_t;
 
-static inline uint64_t CAVM_AP_TRCVMIDCVRX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_TRCVMIDCVRX(unsigned long a)
+static inline uint64_t CAVM_AP_TRCVMIDCVRX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_TRCVMIDCVRX(uint64_t a)
 {
     if (a<=7)
         return 0x20103000100ll + 0x20000ll * ((a) & 0x7);
@@ -38722,8 +38737,8 @@ union cavm_ap_vbar_elx
 };
 typedef union cavm_ap_vbar_elx cavm_ap_vbar_elx_t;
 
-static inline uint64_t CAVM_AP_VBAR_ELX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_AP_VBAR_ELX(unsigned long a)
+static inline uint64_t CAVM_AP_VBAR_ELX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_AP_VBAR_ELX(uint64_t a)
 {
     if ((a>=1)&&(a<=3))
         return 0x03000c000000 | ((a<<1)&((~(a>>1))&(0x4|a)))<<32;

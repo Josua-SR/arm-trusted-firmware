@@ -489,6 +489,7 @@ union cavm_gti_bz_pidr1
     } cn96xxp3;
     /* struct cavm_gti_bz_pidr1_cn96xxp3 cn98xx; */
     /* struct cavm_gti_bz_pidr1_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_bz_pidr1_cn96xxp3 f95mm; */
     /* struct cavm_gti_bz_pidr1_cn96xxp3 loki; */
 };
 typedef union cavm_gti_bz_pidr1 cavm_gti_bz_pidr1_t;
@@ -565,6 +566,7 @@ union cavm_gti_bz_pidr2
     } cn96xxp3;
     /* struct cavm_gti_bz_pidr2_cn96xxp3 cn98xx; */
     /* struct cavm_gti_bz_pidr2_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_bz_pidr2_cn96xxp3 f95mm; */
     /* struct cavm_gti_bz_pidr2_cn96xxp3 loki; */
 };
 typedef union cavm_gti_bz_pidr2 cavm_gti_bz_pidr2_t;
@@ -668,6 +670,7 @@ union cavm_gti_bz_pidr4
     } cn96xxp3;
     /* struct cavm_gti_bz_pidr4_cn96xxp3 cn98xx; */
     /* struct cavm_gti_bz_pidr4_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_bz_pidr4_cn96xxp3 f95mm; */
     /* struct cavm_gti_bz_pidr4_cn96xxp3 loki; */
 };
 typedef union cavm_gti_bz_pidr4 cavm_gti_bz_pidr4_t;
@@ -1734,6 +1737,7 @@ union cavm_gti_cc_imp_ctl
     /* struct cavm_gti_cc_imp_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_gti_cc_imp_ctl_s cnf95xxp1; */
     /* struct cavm_gti_cc_imp_ctl_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_gti_cc_imp_ctl_cn96xxp3 f95mm; */
     /* struct cavm_gti_cc_imp_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_gti_cc_imp_ctl cavm_gti_cc_imp_ctl_t;
@@ -1833,6 +1837,7 @@ union cavm_gti_cc_pidr1
     } cn96xxp3;
     /* struct cavm_gti_cc_pidr1_cn96xxp3 cn98xx; */
     /* struct cavm_gti_cc_pidr1_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_cc_pidr1_cn96xxp3 f95mm; */
     /* struct cavm_gti_cc_pidr1_cn96xxp3 loki; */
 };
 typedef union cavm_gti_cc_pidr1 cavm_gti_cc_pidr1_t;
@@ -1909,6 +1914,7 @@ union cavm_gti_cc_pidr2
     } cn96xxp3;
     /* struct cavm_gti_cc_pidr2_cn96xxp3 cn98xx; */
     /* struct cavm_gti_cc_pidr2_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_cc_pidr2_cn96xxp3 f95mm; */
     /* struct cavm_gti_cc_pidr2_cn96xxp3 loki; */
 };
 typedef union cavm_gti_cc_pidr2 cavm_gti_cc_pidr2_t;
@@ -2012,6 +2018,7 @@ union cavm_gti_cc_pidr4
     } cn96xxp3;
     /* struct cavm_gti_cc_pidr4_cn96xxp3 cn98xx; */
     /* struct cavm_gti_cc_pidr4_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_cc_pidr4_cn96xxp3 f95mm; */
     /* struct cavm_gti_cc_pidr4_cn96xxp3 loki; */
 };
 typedef union cavm_gti_cc_pidr4 cavm_gti_cc_pidr4_t;
@@ -2587,6 +2594,7 @@ union cavm_gti_ctl_pidr1
     } cn96xxp3;
     /* struct cavm_gti_ctl_pidr1_cn96xxp3 cn98xx; */
     /* struct cavm_gti_ctl_pidr1_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_ctl_pidr1_cn96xxp3 f95mm; */
     /* struct cavm_gti_ctl_pidr1_cn96xxp3 loki; */
 };
 typedef union cavm_gti_ctl_pidr1 cavm_gti_ctl_pidr1_t;
@@ -2663,6 +2671,7 @@ union cavm_gti_ctl_pidr2
     } cn96xxp3;
     /* struct cavm_gti_ctl_pidr2_cn96xxp3 cn98xx; */
     /* struct cavm_gti_ctl_pidr2_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_ctl_pidr2_cn96xxp3 f95mm; */
     /* struct cavm_gti_ctl_pidr2_cn96xxp3 loki; */
 };
 typedef union cavm_gti_ctl_pidr2 cavm_gti_ctl_pidr2_t;
@@ -2766,6 +2775,7 @@ union cavm_gti_ctl_pidr4
     } cn96xxp3;
     /* struct cavm_gti_ctl_pidr4_cn96xxp3 cn98xx; */
     /* struct cavm_gti_ctl_pidr4_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_ctl_pidr4_cn96xxp3 f95mm; */
     /* struct cavm_gti_ctl_pidr4_cn96xxp3 loki; */
 };
 typedef union cavm_gti_ctl_pidr4 cavm_gti_ctl_pidr4_t;
@@ -3396,8 +3406,8 @@ union cavm_gti_cwd_pokex
 };
 typedef union cavm_gti_cwd_pokex cavm_gti_cwd_pokex_t;
 
-static inline uint64_t CAVM_GTI_CWD_POKEX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_CWD_POKEX(unsigned long a)
+static inline uint64_t CAVM_GTI_CWD_POKEX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_CWD_POKEX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=47))
         return 0x844000050000ll + 8ll * ((a) & 0x3f);
@@ -3502,8 +3512,8 @@ union cavm_gti_cwd_wdogx
 };
 typedef union cavm_gti_cwd_wdogx cavm_gti_cwd_wdogx_t;
 
-static inline uint64_t CAVM_GTI_CWD_WDOGX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_CWD_WDOGX(unsigned long a)
+static inline uint64_t CAVM_GTI_CWD_WDOGX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_CWD_WDOGX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=47))
         return 0x844000040000ll + 8ll * ((a) & 0x3f);
@@ -3968,8 +3978,8 @@ union cavm_gti_msix_pbax
 };
 typedef union cavm_gti_msix_pbax cavm_gti_msix_pbax_t;
 
-static inline uint64_t CAVM_GTI_MSIX_PBAX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_MSIX_PBAX(unsigned long a)
+static inline uint64_t CAVM_GTI_MSIX_PBAX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_MSIX_PBAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x84400f0f0000ll + 8ll * ((a) & 0x1);
@@ -4110,12 +4120,13 @@ union cavm_gti_msix_vecx_addr
     } cn96xxp3;
     /* struct cavm_gti_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_gti_msix_vecx_addr_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_msix_vecx_addr_cn96xxp3 f95mm; */
     /* struct cavm_gti_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_gti_msix_vecx_addr cavm_gti_msix_vecx_addr_t;
 
-static inline uint64_t CAVM_GTI_MSIX_VECX_ADDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_MSIX_VECX_ADDR(unsigned long a)
+static inline uint64_t CAVM_GTI_MSIX_VECX_ADDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_MSIX_VECX_ADDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=105))
         return 0x84400f000000ll + 0x10ll * ((a) & 0x7f);
@@ -4170,8 +4181,8 @@ union cavm_gti_msix_vecx_ctl
 };
 typedef union cavm_gti_msix_vecx_ctl cavm_gti_msix_vecx_ctl_t;
 
-static inline uint64_t CAVM_GTI_MSIX_VECX_CTL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_MSIX_VECX_CTL(unsigned long a)
+static inline uint64_t CAVM_GTI_MSIX_VECX_CTL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_MSIX_VECX_CTL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=105))
         return 0x84400f000008ll + 0x10ll * ((a) & 0x7f);
@@ -4474,6 +4485,7 @@ union cavm_gti_rd_pidr1
     } cn96xxp3;
     /* struct cavm_gti_rd_pidr1_cn96xxp3 cn98xx; */
     /* struct cavm_gti_rd_pidr1_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_rd_pidr1_cn96xxp3 f95mm; */
     /* struct cavm_gti_rd_pidr1_cn96xxp3 loki; */
 };
 typedef union cavm_gti_rd_pidr1 cavm_gti_rd_pidr1_t;
@@ -4550,6 +4562,7 @@ union cavm_gti_rd_pidr2
     } cn96xxp3;
     /* struct cavm_gti_rd_pidr2_cn96xxp3 cn98xx; */
     /* struct cavm_gti_rd_pidr2_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_rd_pidr2_cn96xxp3 f95mm; */
     /* struct cavm_gti_rd_pidr2_cn96xxp3 loki; */
 };
 typedef union cavm_gti_rd_pidr2 cavm_gti_rd_pidr2_t;
@@ -4653,6 +4666,7 @@ union cavm_gti_rd_pidr4
     } cn96xxp3;
     /* struct cavm_gti_rd_pidr4_cn96xxp3 cn98xx; */
     /* struct cavm_gti_rd_pidr4_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_rd_pidr4_cn96xxp3 f95mm; */
     /* struct cavm_gti_rd_pidr4_cn96xxp3 loki; */
 };
 typedef union cavm_gti_rd_pidr4 cavm_gti_rd_pidr4_t;
@@ -4847,8 +4861,8 @@ union cavm_gti_wcx_cidr0
 };
 typedef union cavm_gti_wcx_cidr0 cavm_gti_wcx_cidr0_t;
 
-static inline uint64_t CAVM_GTI_WCX_CIDR0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_CIDR0(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_CIDR0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_CIDR0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080ff0ll + 0x20000ll * ((a) & 0x1);
@@ -4888,8 +4902,8 @@ union cavm_gti_wcx_cidr1
 };
 typedef union cavm_gti_wcx_cidr1 cavm_gti_wcx_cidr1_t;
 
-static inline uint64_t CAVM_GTI_WCX_CIDR1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_CIDR1(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_CIDR1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_CIDR1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080ff4ll + 0x20000ll * ((a) & 0x1);
@@ -4927,8 +4941,8 @@ union cavm_gti_wcx_cidr2
 };
 typedef union cavm_gti_wcx_cidr2 cavm_gti_wcx_cidr2_t;
 
-static inline uint64_t CAVM_GTI_WCX_CIDR2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_CIDR2(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_CIDR2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_CIDR2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080ff8ll + 0x20000ll * ((a) & 0x1);
@@ -4976,8 +4990,8 @@ union cavm_gti_wcx_cidr3
 };
 typedef union cavm_gti_wcx_cidr3 cavm_gti_wcx_cidr3_t;
 
-static inline uint64_t CAVM_GTI_WCX_CIDR3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_CIDR3(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_CIDR3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_CIDR3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080ffcll + 0x20000ll * ((a) & 0x1);
@@ -5017,8 +5031,8 @@ union cavm_gti_wcx_pidr0
 };
 typedef union cavm_gti_wcx_pidr0 cavm_gti_wcx_pidr0_t;
 
-static inline uint64_t CAVM_GTI_WCX_PIDR0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_PIDR0(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_PIDR0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_PIDR0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080fe0ll + 0x20000ll * ((a) & 0x1);
@@ -5073,12 +5087,13 @@ union cavm_gti_wcx_pidr1
     } cn96xxp3;
     /* struct cavm_gti_wcx_pidr1_cn96xxp3 cn98xx; */
     /* struct cavm_gti_wcx_pidr1_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_wcx_pidr1_cn96xxp3 f95mm; */
     /* struct cavm_gti_wcx_pidr1_cn96xxp3 loki; */
 };
 typedef union cavm_gti_wcx_pidr1 cavm_gti_wcx_pidr1_t;
 
-static inline uint64_t CAVM_GTI_WCX_PIDR1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_PIDR1(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_PIDR1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_PIDR1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080fe4ll + 0x20000ll * ((a) & 0x1);
@@ -5150,12 +5165,13 @@ union cavm_gti_wcx_pidr2
     } cn96xxp3;
     /* struct cavm_gti_wcx_pidr2_cn96xxp3 cn98xx; */
     /* struct cavm_gti_wcx_pidr2_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_wcx_pidr2_cn96xxp3 f95mm; */
     /* struct cavm_gti_wcx_pidr2_cn96xxp3 loki; */
 };
 typedef union cavm_gti_wcx_pidr2 cavm_gti_wcx_pidr2_t;
 
-static inline uint64_t CAVM_GTI_WCX_PIDR2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_PIDR2(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_PIDR2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_PIDR2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080fe8ll + 0x20000ll * ((a) & 0x1);
@@ -5199,8 +5215,8 @@ union cavm_gti_wcx_pidr3
 };
 typedef union cavm_gti_wcx_pidr3 cavm_gti_wcx_pidr3_t;
 
-static inline uint64_t CAVM_GTI_WCX_PIDR3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_PIDR3(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_PIDR3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_PIDR3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080fecll + 0x20000ll * ((a) & 0x1);
@@ -5255,12 +5271,13 @@ union cavm_gti_wcx_pidr4
     } cn96xxp3;
     /* struct cavm_gti_wcx_pidr4_cn96xxp3 cn98xx; */
     /* struct cavm_gti_wcx_pidr4_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_wcx_pidr4_cn96xxp3 f95mm; */
     /* struct cavm_gti_wcx_pidr4_cn96xxp3 loki; */
 };
 typedef union cavm_gti_wcx_pidr4 cavm_gti_wcx_pidr4_t;
 
-static inline uint64_t CAVM_GTI_WCX_PIDR4(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_PIDR4(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_PIDR4(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_PIDR4(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080fd0ll + 0x20000ll * ((a) & 0x1);
@@ -5296,8 +5313,8 @@ union cavm_gti_wcx_pidr5
 };
 typedef union cavm_gti_wcx_pidr5 cavm_gti_wcx_pidr5_t;
 
-static inline uint64_t CAVM_GTI_WCX_PIDR5(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_PIDR5(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_PIDR5(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_PIDR5(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080fd4ll + 0x20000ll * ((a) & 0x1);
@@ -5333,8 +5350,8 @@ union cavm_gti_wcx_pidr6
 };
 typedef union cavm_gti_wcx_pidr6 cavm_gti_wcx_pidr6_t;
 
-static inline uint64_t CAVM_GTI_WCX_PIDR6(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_PIDR6(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_PIDR6(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_PIDR6(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080fd8ll + 0x20000ll * ((a) & 0x1);
@@ -5370,8 +5387,8 @@ union cavm_gti_wcx_pidr7
 };
 typedef union cavm_gti_wcx_pidr7 cavm_gti_wcx_pidr7_t;
 
-static inline uint64_t CAVM_GTI_WCX_PIDR7(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_PIDR7(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_PIDR7(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_PIDR7(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080fdcll + 0x20000ll * ((a) & 0x1);
@@ -5450,12 +5467,13 @@ union cavm_gti_wcx_w_iidr
     } cn96xxp3;
     /* struct cavm_gti_wcx_w_iidr_cn96xxp3 cn98xx; */
     /* struct cavm_gti_wcx_w_iidr_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_wcx_w_iidr_cn96xxp3 f95mm; */
     /* struct cavm_gti_wcx_w_iidr_cn96xxp3 loki; */
 };
 typedef union cavm_gti_wcx_w_iidr cavm_gti_wcx_w_iidr_t;
 
-static inline uint64_t CAVM_GTI_WCX_W_IIDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_W_IIDR(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_W_IIDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_W_IIDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080fccll + 0x20000ll * ((a) & 0x1);
@@ -5513,8 +5531,8 @@ union cavm_gti_wcx_wcs
 };
 typedef union cavm_gti_wcx_wcs cavm_gti_wcx_wcs_t;
 
-static inline uint64_t CAVM_GTI_WCX_WCS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_WCS(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_WCS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_WCS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080000ll + 0x20000ll * ((a) & 0x1);
@@ -5552,8 +5570,8 @@ union cavm_gti_wcx_wcv
 };
 typedef union cavm_gti_wcx_wcv cavm_gti_wcx_wcv_t;
 
-static inline uint64_t CAVM_GTI_WCX_WCV(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_WCV(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_WCV(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_WCV(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080010ll + 0x20000ll * ((a) & 0x1);
@@ -5591,8 +5609,8 @@ union cavm_gti_wcx_wor
 };
 typedef union cavm_gti_wcx_wor cavm_gti_wcx_wor_t;
 
-static inline uint64_t CAVM_GTI_WCX_WOR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WCX_WOR(unsigned long a)
+static inline uint64_t CAVM_GTI_WCX_WOR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WCX_WOR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000080008ll + 0x20000ll * ((a) & 0x1);
@@ -5630,8 +5648,8 @@ union cavm_gti_wrx_cidr0
 };
 typedef union cavm_gti_wrx_cidr0 cavm_gti_wrx_cidr0_t;
 
-static inline uint64_t CAVM_GTI_WRX_CIDR0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WRX_CIDR0(unsigned long a)
+static inline uint64_t CAVM_GTI_WRX_CIDR0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WRX_CIDR0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000090ff0ll + 0x20000ll * ((a) & 0x1);
@@ -5671,8 +5689,8 @@ union cavm_gti_wrx_cidr1
 };
 typedef union cavm_gti_wrx_cidr1 cavm_gti_wrx_cidr1_t;
 
-static inline uint64_t CAVM_GTI_WRX_CIDR1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WRX_CIDR1(unsigned long a)
+static inline uint64_t CAVM_GTI_WRX_CIDR1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WRX_CIDR1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000090ff4ll + 0x20000ll * ((a) & 0x1);
@@ -5710,8 +5728,8 @@ union cavm_gti_wrx_cidr2
 };
 typedef union cavm_gti_wrx_cidr2 cavm_gti_wrx_cidr2_t;
 
-static inline uint64_t CAVM_GTI_WRX_CIDR2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WRX_CIDR2(unsigned long a)
+static inline uint64_t CAVM_GTI_WRX_CIDR2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WRX_CIDR2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000090ff8ll + 0x20000ll * ((a) & 0x1);
@@ -5759,8 +5777,8 @@ union cavm_gti_wrx_cidr3
 };
 typedef union cavm_gti_wrx_cidr3 cavm_gti_wrx_cidr3_t;
 
-static inline uint64_t CAVM_GTI_WRX_CIDR3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WRX_CIDR3(unsigned long a)
+static inline uint64_t CAVM_GTI_WRX_CIDR3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WRX_CIDR3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000090ffcll + 0x20000ll * ((a) & 0x1);
@@ -5798,8 +5816,8 @@ union cavm_gti_wrx_pidr0
 };
 typedef union cavm_gti_wrx_pidr0 cavm_gti_wrx_pidr0_t;
 
-static inline uint64_t CAVM_GTI_WRX_PIDR0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WRX_PIDR0(unsigned long a)
+static inline uint64_t CAVM_GTI_WRX_PIDR0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WRX_PIDR0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000090fe0ll + 0x20000ll * ((a) & 0x1);
@@ -5852,12 +5870,13 @@ union cavm_gti_wrx_pidr1
     } cn96xxp3;
     /* struct cavm_gti_wrx_pidr1_cn96xxp3 cn98xx; */
     /* struct cavm_gti_wrx_pidr1_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_wrx_pidr1_cn96xxp3 f95mm; */
     /* struct cavm_gti_wrx_pidr1_cn96xxp3 loki; */
 };
 typedef union cavm_gti_wrx_pidr1 cavm_gti_wrx_pidr1_t;
 
-static inline uint64_t CAVM_GTI_WRX_PIDR1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WRX_PIDR1(unsigned long a)
+static inline uint64_t CAVM_GTI_WRX_PIDR1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WRX_PIDR1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000090fe4ll + 0x20000ll * ((a) & 0x1);
@@ -5927,12 +5946,13 @@ union cavm_gti_wrx_pidr2
     } cn96xxp3;
     /* struct cavm_gti_wrx_pidr2_cn96xxp3 cn98xx; */
     /* struct cavm_gti_wrx_pidr2_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_wrx_pidr2_cn96xxp3 f95mm; */
     /* struct cavm_gti_wrx_pidr2_cn96xxp3 loki; */
 };
 typedef union cavm_gti_wrx_pidr2 cavm_gti_wrx_pidr2_t;
 
-static inline uint64_t CAVM_GTI_WRX_PIDR2(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WRX_PIDR2(unsigned long a)
+static inline uint64_t CAVM_GTI_WRX_PIDR2(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WRX_PIDR2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000090fe8ll + 0x20000ll * ((a) & 0x1);
@@ -5974,8 +5994,8 @@ union cavm_gti_wrx_pidr3
 };
 typedef union cavm_gti_wrx_pidr3 cavm_gti_wrx_pidr3_t;
 
-static inline uint64_t CAVM_GTI_WRX_PIDR3(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WRX_PIDR3(unsigned long a)
+static inline uint64_t CAVM_GTI_WRX_PIDR3(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WRX_PIDR3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000090fecll + 0x20000ll * ((a) & 0x1);
@@ -6028,12 +6048,13 @@ union cavm_gti_wrx_pidr4
     } cn96xxp3;
     /* struct cavm_gti_wrx_pidr4_cn96xxp3 cn98xx; */
     /* struct cavm_gti_wrx_pidr4_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_wrx_pidr4_cn96xxp3 f95mm; */
     /* struct cavm_gti_wrx_pidr4_cn96xxp3 loki; */
 };
 typedef union cavm_gti_wrx_pidr4 cavm_gti_wrx_pidr4_t;
 
-static inline uint64_t CAVM_GTI_WRX_PIDR4(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WRX_PIDR4(unsigned long a)
+static inline uint64_t CAVM_GTI_WRX_PIDR4(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WRX_PIDR4(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000090fd0ll + 0x20000ll * ((a) & 0x1);
@@ -6069,8 +6090,8 @@ union cavm_gti_wrx_pidr5
 };
 typedef union cavm_gti_wrx_pidr5 cavm_gti_wrx_pidr5_t;
 
-static inline uint64_t CAVM_GTI_WRX_PIDR5(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WRX_PIDR5(unsigned long a)
+static inline uint64_t CAVM_GTI_WRX_PIDR5(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WRX_PIDR5(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000090fd4ll + 0x20000ll * ((a) & 0x1);
@@ -6106,8 +6127,8 @@ union cavm_gti_wrx_pidr6
 };
 typedef union cavm_gti_wrx_pidr6 cavm_gti_wrx_pidr6_t;
 
-static inline uint64_t CAVM_GTI_WRX_PIDR6(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WRX_PIDR6(unsigned long a)
+static inline uint64_t CAVM_GTI_WRX_PIDR6(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WRX_PIDR6(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000090fd8ll + 0x20000ll * ((a) & 0x1);
@@ -6143,8 +6164,8 @@ union cavm_gti_wrx_pidr7
 };
 typedef union cavm_gti_wrx_pidr7 cavm_gti_wrx_pidr7_t;
 
-static inline uint64_t CAVM_GTI_WRX_PIDR7(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WRX_PIDR7(unsigned long a)
+static inline uint64_t CAVM_GTI_WRX_PIDR7(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WRX_PIDR7(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000090fdcll + 0x20000ll * ((a) & 0x1);
@@ -6223,12 +6244,13 @@ union cavm_gti_wrx_w_iidr
     } cn96xxp3;
     /* struct cavm_gti_wrx_w_iidr_cn96xxp3 cn98xx; */
     /* struct cavm_gti_wrx_w_iidr_cn96xxp3 cnf95xx; */
+    /* struct cavm_gti_wrx_w_iidr_cn96xxp3 f95mm; */
     /* struct cavm_gti_wrx_w_iidr_cn96xxp3 loki; */
 };
 typedef union cavm_gti_wrx_w_iidr cavm_gti_wrx_w_iidr_t;
 
-static inline uint64_t CAVM_GTI_WRX_W_IIDR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WRX_W_IIDR(unsigned long a)
+static inline uint64_t CAVM_GTI_WRX_W_IIDR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WRX_W_IIDR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000090fccll + 0x20000ll * ((a) & 0x1);
@@ -6266,8 +6288,8 @@ union cavm_gti_wrx_wrr
 };
 typedef union cavm_gti_wrx_wrr cavm_gti_wrx_wrr_t;
 
-static inline uint64_t CAVM_GTI_WRX_WRR(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_GTI_WRX_WRR(unsigned long a)
+static inline uint64_t CAVM_GTI_WRX_WRR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_GTI_WRX_WRR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x844000090000ll + 0x20000ll * ((a) & 0x1);

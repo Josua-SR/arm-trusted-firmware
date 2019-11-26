@@ -187,13 +187,13 @@ union cavm_cpc_dvfs_config_s
                                                                  actual RCLK frequency depending on Tj, power budget, and system load;
                                                                  this sets an upper bound.  If fuses indicate the part supports a lower
                                                                  frequency, the fuse value is used. */
-        uint64_t vrm_temp_high         : 16; /**< [ 15:  0] The chip_overtemp_limit. In modes other than MANUAL_CONTROL and DVFS,
-                                                                 RCLK is throttled when the maximum die temp gets within 10C
-                                                                 of chip_overtemp_limit.  Values between 0 and 140 degrees Celsius. */
+        uint64_t vrm_temp_high         : 16; /**< [ 15:  0] The chip over temperature limit. In modes other than MANUAL_CONTROL and DVFS,
+                                                                 RCLK is throttled when the maximum die temp gets within 10C of this limit. Value
+                                                                 must be between 0 and 140 degrees Celsius. */
 #else /* Word 0 - Little Endian */
-        uint64_t vrm_temp_high         : 16; /**< [ 15:  0] The chip_overtemp_limit. In modes other than MANUAL_CONTROL and DVFS,
-                                                                 RCLK is throttled when the maximum die temp gets within 10C
-                                                                 of chip_overtemp_limit.  Values between 0 and 140 degrees Celsius. */
+        uint64_t vrm_temp_high         : 16; /**< [ 15:  0] The chip over temperature limit. In modes other than MANUAL_CONTROL and DVFS,
+                                                                 RCLK is throttled when the maximum die temp gets within 10C of this limit. Value
+                                                                 must be between 0 and 140 degrees Celsius. */
         uint64_t rclk_freq_max         : 16; /**< [ 31: 16] Maximum core clock (RCLK) frequency in MHz. DVFS control will vary the
                                                                  actual RCLK frequency depending on Tj, power budget, and system load;
                                                                  this sets an upper bound.  If fuses indicate the part supports a lower
@@ -209,18 +209,18 @@ union cavm_cpc_dvfs_config_s
                                                                  to emergency power off. The default value is the Marvell recommended
                                                                  maximum temperature of the chip. */
         uint64_t vdd_sys_tolerance     : 16; /**< [111: 96] The +/- control tolerance of the VDD_SYS supply as measured at the
-                                                                 chip in mV.   Default is +/-29mV. Doesn't apply to CN8XXX chips. */
+                                                                 chip in mV.   Default is +/-29 mV. Doesn't apply to CN8XXX chips. */
         uint64_t vdd_core_tolerance    : 16; /**< [ 95: 80] The +/- control tolerance of the VDDC supply as measured at the
-                                                                 chip in mV.   Default is +/-29mV. Doesn't apply to CN8XXX chips. */
+                                                                 chip in mV.   Default is +/-29 mV. Doesn't apply to CN8XXX chips. */
         uint64_t cptclk_freq           : 16; /**< [ 79: 64] Cryptographic accelerator clock (CPTCLK) frequency in MHz. If fuses
                                                                  indicate the part supports a lower frequency, the fuse value is used. */
 #else /* Word 1 - Little Endian */
         uint64_t cptclk_freq           : 16; /**< [ 79: 64] Cryptographic accelerator clock (CPTCLK) frequency in MHz. If fuses
                                                                  indicate the part supports a lower frequency, the fuse value is used. */
         uint64_t vdd_core_tolerance    : 16; /**< [ 95: 80] The +/- control tolerance of the VDDC supply as measured at the
-                                                                 chip in mV.   Default is +/-29mV. Doesn't apply to CN8XXX chips. */
+                                                                 chip in mV.   Default is +/-29 mV. Doesn't apply to CN8XXX chips. */
         uint64_t vdd_sys_tolerance     : 16; /**< [111: 96] The +/- control tolerance of the VDD_SYS supply as measured at the
-                                                                 chip in mV.   Default is +/-29mV. Doesn't apply to CN8XXX chips. */
+                                                                 chip in mV.   Default is +/-29 mV. Doesn't apply to CN8XXX chips. */
         uint64_t vrm_temp_trip         : 16; /**< [127:112] Temperature in degrees C where THERMAL_TRIP_N is asserted. When the chip reaches
                                                                  this temperature THERMAL_TRIP_N will assert, signaling the board
                                                                  to emergency power off. The default value is the Marvell recommended
@@ -229,7 +229,7 @@ union cavm_cpc_dvfs_config_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
         uint64_t sclk_freq             : 16; /**< [191:176] Coprocessor clock (SCLK) frequency in MHz. */
         uint64_t dvfs_thermal_hot      : 16; /**< [175:160] SCP firmware will assert the THERMAL_HOT_L pin when the highest
-                                                                 observed temperature on the chip is at or above this value.  Used for
+                                                                 observed temperature on the chip is at or above this value. Used for
                                                                  simple on-off fan control.  Recommended value is 20 degrees Celsius
                                                                  below [VRM_TEMP_HIGH].
                                                                  The default value is the Marvell recommended maximum temperature of
@@ -246,7 +246,7 @@ union cavm_cpc_dvfs_config_s
         uint64_t dvfs_power_control_mode : 16;/**< [159:144] The operating mode of the DVFS (Dynamic Frequency Voltage Scaling)
                                                                  power control code.  Enumerated by CPC_DVFS_MODE_E. */
         uint64_t dvfs_thermal_hot      : 16; /**< [175:160] SCP firmware will assert the THERMAL_HOT_L pin when the highest
-                                                                 observed temperature on the chip is at or above this value.  Used for
+                                                                 observed temperature on the chip is at or above this value. Used for
                                                                  simple on-off fan control.  Recommended value is 20 degrees Celsius
                                                                  below [VRM_TEMP_HIGH].
                                                                  The default value is the Marvell recommended maximum temperature of
@@ -366,8 +366,8 @@ union cavm_cpc_boot_ownerx
 };
 typedef union cavm_cpc_boot_ownerx cavm_cpc_boot_ownerx_t;
 
-static inline uint64_t CAVM_CPC_BOOT_OWNERX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CPC_BOOT_OWNERX(unsigned long a)
+static inline uint64_t CAVM_CPC_BOOT_OWNERX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_CPC_BOOT_OWNERX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=3))
         return 0x86d000000160ll + 8ll * ((a) & 0x3);
@@ -986,8 +986,8 @@ union cavm_cpc_ram_memx
 };
 typedef union cavm_cpc_ram_memx cavm_cpc_ram_memx_t;
 
-static inline uint64_t CAVM_CPC_RAM_MEMX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CPC_RAM_MEMX(unsigned long a)
+static inline uint64_t CAVM_CPC_RAM_MEMX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_CPC_RAM_MEMX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=49151))
         return 0x86d000080000ll + 8ll * ((a) & 0xffff);
@@ -1056,8 +1056,8 @@ union cavm_cpc_ram_permitx
 };
 typedef union cavm_cpc_ram_permitx cavm_cpc_ram_permitx_t;
 
-static inline uint64_t CAVM_CPC_RAM_PERMITX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CPC_RAM_PERMITX(unsigned long a)
+static inline uint64_t CAVM_CPC_RAM_PERMITX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_CPC_RAM_PERMITX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=23))
         return 0x86d000008000ll + 8ll * ((a) & 0x1f);
@@ -1096,8 +1096,8 @@ union cavm_cpc_rom_memx
 };
 typedef union cavm_cpc_rom_memx cavm_cpc_rom_memx_t;
 
-static inline uint64_t CAVM_CPC_ROM_MEMX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CPC_ROM_MEMX(unsigned long a)
+static inline uint64_t CAVM_CPC_ROM_MEMX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_CPC_ROM_MEMX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=4095))
         return 0x86d000010000ll + 8ll * ((a) & 0xfff);
@@ -1240,8 +1240,8 @@ union cavm_cpc_xcpx_permit
 };
 typedef union cavm_cpc_xcpx_permit cavm_cpc_xcpx_permit_t;
 
-static inline uint64_t CAVM_CPC_XCPX_PERMIT(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_CPC_XCPX_PERMIT(unsigned long a)
+static inline uint64_t CAVM_CPC_XCPX_PERMIT(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_CPC_XCPX_PERMIT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN9XXX) && (a<=1))
         return 0x86d000000140ll + 8ll * ((a) & 0x1);

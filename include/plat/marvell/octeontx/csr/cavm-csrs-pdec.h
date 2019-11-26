@@ -2971,8 +2971,8 @@ union cavm_pdecx_control
 };
 typedef union cavm_pdecx_control cavm_pdecx_control_t;
 
-static inline uint64_t CAVM_PDECX_CONTROL(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_CONTROL(unsigned long a)
+static inline uint64_t CAVM_PDECX_CONTROL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_CONTROL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043580000ll + 0x8000ll * ((a) & 0x1);
@@ -3011,8 +3011,8 @@ union cavm_pdecx_eco
 };
 typedef union cavm_pdecx_eco cavm_pdecx_eco_t;
 
-static inline uint64_t CAVM_PDECX_ECO(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_ECO(unsigned long a)
+static inline uint64_t CAVM_PDECX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_ECO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043580008ll + 0x8000ll * ((a) & 0x1);
@@ -3054,8 +3054,8 @@ union cavm_pdecx_error_enable0
 };
 typedef union cavm_pdecx_error_enable0 cavm_pdecx_error_enable0_t;
 
-static inline uint64_t CAVM_PDECX_ERROR_ENABLE0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_ERROR_ENABLE0(unsigned long a)
+static inline uint64_t CAVM_PDECX_ERROR_ENABLE0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_ERROR_ENABLE0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043580040ll + 0x8000ll * ((a) & 0x1);
@@ -3099,8 +3099,8 @@ union cavm_pdecx_error_enable1
 };
 typedef union cavm_pdecx_error_enable1 cavm_pdecx_error_enable1_t;
 
-static inline uint64_t CAVM_PDECX_ERROR_ENABLE1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_ERROR_ENABLE1(unsigned long a)
+static inline uint64_t CAVM_PDECX_ERROR_ENABLE1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_ERROR_ENABLE1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043580048ll + 0x8000ll * ((a) & 0x1);
@@ -3148,8 +3148,8 @@ union cavm_pdecx_error_source0
 };
 typedef union cavm_pdecx_error_source0 cavm_pdecx_error_source0_t;
 
-static inline uint64_t CAVM_PDECX_ERROR_SOURCE0(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_ERROR_SOURCE0(unsigned long a)
+static inline uint64_t CAVM_PDECX_ERROR_SOURCE0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_ERROR_SOURCE0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043580030ll + 0x8000ll * ((a) & 0x1);
@@ -3193,8 +3193,8 @@ union cavm_pdecx_error_source1
 };
 typedef union cavm_pdecx_error_source1 cavm_pdecx_error_source1_t;
 
-static inline uint64_t CAVM_PDECX_ERROR_SOURCE1(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_ERROR_SOURCE1(unsigned long a)
+static inline uint64_t CAVM_PDECX_ERROR_SOURCE1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_ERROR_SOURCE1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043580038ll + 0x8000ll * ((a) & 0x1);
@@ -3240,8 +3240,8 @@ union cavm_pdecx_hab_jcfg0_ramx_data
 };
 typedef union cavm_pdecx_hab_jcfg0_ramx_data cavm_pdecx_hab_jcfg0_ramx_data_t;
 
-static inline uint64_t CAVM_PDECX_HAB_JCFG0_RAMX_DATA(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_HAB_JCFG0_RAMX_DATA(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PDECX_HAB_JCFG0_RAMX_DATA(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_HAB_JCFG0_RAMX_DATA(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=149)))
         return 0x87e043582000ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
@@ -3287,8 +3287,8 @@ union cavm_pdecx_hab_jcfg1_ramx_data
 };
 typedef union cavm_pdecx_hab_jcfg1_ramx_data cavm_pdecx_hab_jcfg1_ramx_data_t;
 
-static inline uint64_t CAVM_PDECX_HAB_JCFG1_RAMX_DATA(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_HAB_JCFG1_RAMX_DATA(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PDECX_HAB_JCFG1_RAMX_DATA(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_HAB_JCFG1_RAMX_DATA(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=149)))
         return 0x87e043584000ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
@@ -3334,8 +3334,8 @@ union cavm_pdecx_hab_jcfg2_ramx_data
 };
 typedef union cavm_pdecx_hab_jcfg2_ramx_data cavm_pdecx_hab_jcfg2_ramx_data_t;
 
-static inline uint64_t CAVM_PDECX_HAB_JCFG2_RAMX_DATA(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_HAB_JCFG2_RAMX_DATA(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PDECX_HAB_JCFG2_RAMX_DATA(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_HAB_JCFG2_RAMX_DATA(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=149)))
         return 0x87e043586000ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
@@ -3372,8 +3372,8 @@ union cavm_pdecx_scratch
 };
 typedef union cavm_pdecx_scratch cavm_pdecx_scratch_t;
 
-static inline uint64_t CAVM_PDECX_SCRATCH(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_SCRATCH(unsigned long a)
+static inline uint64_t CAVM_PDECX_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_SCRATCH(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043580080ll + 0x8000ll * ((a) & 0x1);
@@ -3418,8 +3418,8 @@ union cavm_pdecx_status
 };
 typedef union cavm_pdecx_status cavm_pdecx_status_t;
 
-static inline uint64_t CAVM_PDECX_STATUS(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_STATUS(unsigned long a)
+static inline uint64_t CAVM_PDECX_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043580018ll + 0x8000ll * ((a) & 0x1);
@@ -3565,8 +3565,8 @@ union cavm_pdecx_tc_config_err_flags_reg
 };
 typedef union cavm_pdecx_tc_config_err_flags_reg cavm_pdecx_tc_config_err_flags_reg_t;
 
-static inline uint64_t CAVM_PDECX_TC_CONFIG_ERR_FLAGS_REG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_TC_CONFIG_ERR_FLAGS_REG(unsigned long a)
+static inline uint64_t CAVM_PDECX_TC_CONFIG_ERR_FLAGS_REG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_TC_CONFIG_ERR_FLAGS_REG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043581040ll + 0x8000ll * ((a) & 0x1);
@@ -3613,8 +3613,8 @@ union cavm_pdecx_tc_config_regx
 };
 typedef union cavm_pdecx_tc_config_regx cavm_pdecx_tc_config_regx_t;
 
-static inline uint64_t CAVM_PDECX_TC_CONFIG_REGX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_TC_CONFIG_REGX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PDECX_TC_CONFIG_REGX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_TC_CONFIG_REGX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=2)))
         return 0x87e043581400ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
@@ -3725,8 +3725,8 @@ union cavm_pdecx_tc_control_reg
 };
 typedef union cavm_pdecx_tc_control_reg cavm_pdecx_tc_control_reg_t;
 
-static inline uint64_t CAVM_PDECX_TC_CONTROL_REG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_TC_CONTROL_REG(unsigned long a)
+static inline uint64_t CAVM_PDECX_TC_CONTROL_REG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_TC_CONTROL_REG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043581010ll + 0x8000ll * ((a) & 0x1);
@@ -3766,8 +3766,8 @@ union cavm_pdecx_tc_error_mask_reg
 };
 typedef union cavm_pdecx_tc_error_mask_reg cavm_pdecx_tc_error_mask_reg_t;
 
-static inline uint64_t CAVM_PDECX_TC_ERROR_MASK_REG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_TC_ERROR_MASK_REG(unsigned long a)
+static inline uint64_t CAVM_PDECX_TC_ERROR_MASK_REG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_TC_ERROR_MASK_REG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043581030ll + 0x8000ll * ((a) & 0x1);
@@ -3841,8 +3841,8 @@ union cavm_pdecx_tc_error_reg
 };
 typedef union cavm_pdecx_tc_error_reg cavm_pdecx_tc_error_reg_t;
 
-static inline uint64_t CAVM_PDECX_TC_ERROR_REG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_TC_ERROR_REG(unsigned long a)
+static inline uint64_t CAVM_PDECX_TC_ERROR_REG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_TC_ERROR_REG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043581038ll + 0x8000ll * ((a) & 0x1);
@@ -3892,8 +3892,8 @@ union cavm_pdecx_tc_main_reset_reg
 };
 typedef union cavm_pdecx_tc_main_reset_reg cavm_pdecx_tc_main_reset_reg_t;
 
-static inline uint64_t CAVM_PDECX_TC_MAIN_RESET_REG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_TC_MAIN_RESET_REG(unsigned long a)
+static inline uint64_t CAVM_PDECX_TC_MAIN_RESET_REG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_TC_MAIN_RESET_REG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043581000ll + 0x8000ll * ((a) & 0x1);
@@ -3944,8 +3944,8 @@ union cavm_pdecx_tc_main_start_reg
 };
 typedef union cavm_pdecx_tc_main_start_reg cavm_pdecx_tc_main_start_reg_t;
 
-static inline uint64_t CAVM_PDECX_TC_MAIN_START_REG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_TC_MAIN_START_REG(unsigned long a)
+static inline uint64_t CAVM_PDECX_TC_MAIN_START_REG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_TC_MAIN_START_REG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043581008ll + 0x8000ll * ((a) & 0x1);
@@ -4012,8 +4012,8 @@ union cavm_pdecx_tc_mon_regx
 };
 typedef union cavm_pdecx_tc_mon_regx cavm_pdecx_tc_mon_regx_t;
 
-static inline uint64_t CAVM_PDECX_TC_MON_REGX(unsigned long a, unsigned long b) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_TC_MON_REGX(unsigned long a, unsigned long b)
+static inline uint64_t CAVM_PDECX_TC_MON_REGX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_TC_MON_REGX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=3)))
         return 0x87e043581300ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
@@ -4067,8 +4067,8 @@ union cavm_pdecx_tc_status_reg
 };
 typedef union cavm_pdecx_tc_status_reg cavm_pdecx_tc_status_reg_t;
 
-static inline uint64_t CAVM_PDECX_TC_STATUS_REG(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_PDECX_TC_STATUS_REG(unsigned long a)
+static inline uint64_t CAVM_PDECX_TC_STATUS_REG(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_PDECX_TC_STATUS_REG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043581020ll + 0x8000ll * ((a) & 0x1);

@@ -1436,6 +1436,7 @@ union cavm_rom_csib_s
     } cn96xxp3;
     /* struct cavm_rom_csib_s_cn96xxp3 cn98xx; */
     /* struct cavm_rom_csib_s_cn96xxp3 cnf95xx; */
+    /* struct cavm_rom_csib_s_cn96xxp3 f95mm; */
     /* struct cavm_rom_csib_s_cn96xxp3 loki; */
 };
 
@@ -1467,8 +1468,8 @@ union cavm_rom_memx
 };
 typedef union cavm_rom_memx cavm_rom_memx_t;
 
-static inline uint64_t CAVM_ROM_MEMX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_ROM_MEMX(unsigned long a)
+static inline uint64_t CAVM_ROM_MEMX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_ROM_MEMX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=2047))
         return 0x87d000000000ll + 8ll * ((a) & 0x7ff);

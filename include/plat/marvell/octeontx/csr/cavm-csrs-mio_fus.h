@@ -149,8 +149,8 @@ union cavm_mio_fus_bnk_datx
 };
 typedef union cavm_mio_fus_bnk_datx cavm_mio_fus_bnk_datx_t;
 
-static inline uint64_t CAVM_MIO_FUS_BNK_DATX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MIO_FUS_BNK_DATX(unsigned long a)
+static inline uint64_t CAVM_MIO_FUS_BNK_DATX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MIO_FUS_BNK_DATX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x87e003001520ll + 8ll * ((a) & 0x1);
@@ -1307,8 +1307,8 @@ union cavm_mio_fus_pnamex
 };
 typedef union cavm_mio_fus_pnamex cavm_mio_fus_pnamex_t;
 
-static inline uint64_t CAVM_MIO_FUS_PNAMEX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MIO_FUS_PNAMEX(unsigned long a)
+static inline uint64_t CAVM_MIO_FUS_PNAMEX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MIO_FUS_PNAMEX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x87e003001440ll + 8ll * ((a) & 0x1);
@@ -1615,8 +1615,8 @@ union cavm_mio_fus_rpr_datx
 };
 typedef union cavm_mio_fus_rpr_datx cavm_mio_fus_rpr_datx_t;
 
-static inline uint64_t CAVM_MIO_FUS_RPR_DATX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_MIO_FUS_RPR_DATX(unsigned long a)
+static inline uint64_t CAVM_MIO_FUS_RPR_DATX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_MIO_FUS_RPR_DATX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=1))
         return 0x87e003001530ll + 8ll * ((a) & 0x1);

@@ -62,7 +62,7 @@ typedef struct __attribute__ ((packed)) {
 
 typedef struct {
     uint32_t model;
-    const int16_t *data;            /**< Array of integers indexing __cavm_csr_db_csr */
+    const uint16_t *data;           /**< Array of integers indexing __cavm_csr_db_csr */
 } __cavm_csr_db_map_t;
 
 extern void __cavm_csr_fatal(const char *name, int num_args, unsigned long arg1, unsigned long arg2, unsigned long arg3, unsigned long arg4, unsigned long arg5, unsigned long arg6) __attribute__ ((noreturn));

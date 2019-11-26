@@ -478,8 +478,8 @@ union cavm_sgp_imp_drivex
 };
 typedef union cavm_sgp_imp_drivex cavm_sgp_imp_drivex_t;
 
-static inline uint64_t CAVM_SGP_IMP_DRIVEX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SGP_IMP_DRIVEX(unsigned long a)
+static inline uint64_t CAVM_SGP_IMP_DRIVEX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SGP_IMP_DRIVEX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=15))
         return 0x87e027040000ll + 8ll * ((a) & 0xf);
@@ -587,8 +587,8 @@ union cavm_sgp_rxx
 };
 typedef union cavm_sgp_rxx cavm_sgp_rxx_t;
 
-static inline uint64_t CAVM_SGP_RXX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SGP_RXX(unsigned long a)
+static inline uint64_t CAVM_SGP_RXX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SGP_RXX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=3))
         return 0x87e027000400ll + 4ll * ((a) & 0x3);
@@ -684,8 +684,8 @@ union cavm_sgp_rx_gpx
 };
 typedef union cavm_sgp_rx_gpx cavm_sgp_rx_gpx_t;
 
-static inline uint64_t CAVM_SGP_RX_GPX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SGP_RX_GPX(unsigned long a)
+static inline uint64_t CAVM_SGP_RX_GPX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SGP_RX_GPX(uint64_t a)
 {
     if ((a>=1)&&(a<=2))
         return 0x87e027000800ll + 4ll * ((a) & 0x3);
@@ -779,8 +779,8 @@ union cavm_sgp_txx
 };
 typedef union cavm_sgp_txx cavm_sgp_txx_t;
 
-static inline uint64_t CAVM_SGP_TXX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SGP_TXX(unsigned long a)
+static inline uint64_t CAVM_SGP_TXX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SGP_TXX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CN8XXX) && (a<=3))
         return 0x87e027000c00ll + 4ll * ((a) & 0x3);
@@ -878,8 +878,8 @@ union cavm_sgp_tx_gpx
 };
 typedef union cavm_sgp_tx_gpx cavm_sgp_tx_gpx_t;
 
-static inline uint64_t CAVM_SGP_TX_GPX(unsigned long a) __attribute__ ((pure, always_inline));
-static inline uint64_t CAVM_SGP_TX_GPX(unsigned long a)
+static inline uint64_t CAVM_SGP_TX_GPX(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_SGP_TX_GPX(uint64_t a)
 {
     if ((a>=1)&&(a<=2))
         return 0x87e027001000ll + 4ll * ((a) & 0x3);
