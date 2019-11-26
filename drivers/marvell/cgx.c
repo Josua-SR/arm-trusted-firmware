@@ -1203,7 +1203,7 @@ int cgx_fec_change(int cgx_id, int lmac_id, int new_fec)
 	return 0;
 }
 
-uint64_t cgx_get_lane_mask(int qlm, int lane, int mode)
+uint64_t cgx_get_lane_mask(int lane, int mode)
 {
 	uint64_t lane_mask = 0;
 
@@ -1939,7 +1939,7 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 					qlm = 4;
 			}
 		}
-		lane_mask = cgx_get_lane_mask(qlm, lane, lmac->mode);
+		lane_mask = cgx_get_lane_mask(lane, lmac->mode);
 
 		/* Skip RX adaptation in internal loopback mode */
 		spux_control1.u = CSR_READ(CAVM_CGXX_SPUX_CONTROL1(
