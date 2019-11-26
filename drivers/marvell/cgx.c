@@ -1235,10 +1235,12 @@ uint64_t cgx_get_lane_mask(int qlm, int lane, int mode)
 
 static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 {
-	int mode_req = 0, hcd_match = 0, fec_req = 0;
+	int mode_req = 0, fec_req = 0;
 	cgx_lmac_config_t *lmac;
 	cavm_cgxx_spux_an_lp_base_t an_lp_base;
 	cavm_cgxx_spux_an_control_t spux_an_ctl;
+	cavm_cgxx_spux_an_adv_t an_adv;
+	cavm_cgxx_spux_int_t spux_int;
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
@@ -1247,57 +1249,129 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 
 	debug_cgx("%s: %d:%d mode %d\n", __func__, cgx_id, lmac_id, lmac->mode);
 
-	/* FIXME for other modes */
-	if ((lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
-		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R)) {
-		/* Poll for reception of new page */
-		if (cgx_poll_for_csr(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
-			CGX_SPUX_AN_RX_PAGE_MASK, 1, CGX_POLL_AN_STATUS)) {
-			debug_cgx("%s:%d:%d Timeout for AN 1st page 0x%llx\n",
-					__func__, cgx_id, lmac_id,
-					CSR_READ(CAVM_CGXX_SPUX_INT(
-						cgx_id, lmac_id)));
-			cgx_set_error_type(cgx_id, lmac_id,
-					CGX_ERR_AN_CPT_FAIL);
-			return -1;
-		}
+	if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_USXGMII)
+		return 1;
 
-		/* Clear AN page RX - W1C */
-		CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
-				CGX_SPUX_AN_RX_PAGE_MASK);
+	spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
+	spux_an_ctl.u = CSR_READ(CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id));
 
-		/* Read the link partner's base page ability */
-		an_lp_base.u = CSR_READ(CAVM_CGXX_SPUX_AN_LP_BASE(cgx_id,
-						lmac_id));
-		debug_cgx("%s: an_lp_base.u 0x%llx\n", __func__, an_lp_base.u);
-		if (an_lp_base.s.fec_able && an_lp_base.s.fec_req) {
-			/* FEC requested */
-			if ((lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
-			(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R)) {
-				fec_req = CGX_FEC_BASE_R;
-			} else
-				fec_req = CGX_FEC_NONE;
-		} else
-			fec_req = CGX_FEC_NONE; /* FEC not requested */
-
-		/* Based on speed ability bit set, set LMAC type to compare
-		 * with the CGX configuration
-		 */
-		if (an_lp_base.s.a10g_kr)
-			mode_req = CAVM_CGX_LMAC_TYPES_E_TENG_R;
-		else if ((an_lp_base.s.a40g_cr4) || (an_lp_base.s.a40g_kr4))
-			mode_req = CAVM_CGX_LMAC_TYPES_E_FORTYG_R;
-	}
-	debug_cgx("%s %d:%d LMAC type configured %d, LP's ability %d\n",
-				__func__, cgx_id, lmac_id,
-				lmac->mode, mode_req);
-
-	spux_an_ctl.u = CSR_READ(CAVM_CGXX_SPUX_AN_CONTROL(
-						cgx_id, lmac_id));
 	if (spux_an_ctl.s.an_arb_link_chk_en) {
-		if (cgx_poll_for_csr(CAVM_CGXX_SPUX_AN_STATUS(cgx_id, lmac_id),
-			CGX_SPUX_AN_CPT_MASK, 1, CGX_POLL_AN_STATUS)) {
-			debug_cgx("%s: %d:%d AN not complete\n",
+		if (spux_int.s.an_complete) {
+			debug_cgx("%s:%d:%d: Skipping AN, AN compelete\n",
+				__func__, cgx_id, lmac_id);
+			return 0;
+		}
+	} else {
+		if (spux_int.s.an_link_good) {
+			debug_cgx("%s:%d:%d: Skipping AN, AN link good\n",
+				__func__, cgx_id, lmac_id);
+			return 0;
+		}
+	}
+
+	/* Poll for reception of new page */
+	if (cgx_poll_for_csr(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
+		CGX_SPUX_AN_RX_PAGE_MASK, 1, CGX_POLL_AN_STATUS)) {
+		debug_cgx("%s:%d:%d Timeout for AN base page\n",
+				__func__, cgx_id, lmac_id);
+		// FIXME: need to restart autoneg
+		cgx_set_error_type(cgx_id, lmac_id, CGX_ERR_AN_CPT_FAIL);
+		return -1;
+	}
+
+	/* Clear AN page RX - W1C */
+	CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id), CGX_SPUX_AN_RX_PAGE_MASK);
+
+	/* Read the link partner's base page ability */
+	an_lp_base.u = CSR_READ(CAVM_CGXX_SPUX_AN_LP_BASE(cgx_id, lmac_id));
+	debug_cgx("%s: an_lp_base.u 0x%llx\n", __func__, an_lp_base.u);
+	if (an_lp_base.s.fec_able && an_lp_base.s.fec_req) {
+		/* FEC requested */
+		if ((lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
+			(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R)) {
+			fec_req = CGX_FEC_BASE_R;
+		} else
+			fec_req = CGX_FEC_NONE;
+	} else
+		fec_req = CGX_FEC_NONE; /* FEC not requested */
+
+	/* Check if the partner or us has extended pages */
+	an_adv.u = CSR_READ(CAVM_CGXX_SPUX_AN_ADV(cgx_id, lmac_id));
+	if (an_lp_base.s.np || an_adv.s.np) {
+		int num_pages = 0;
+		cavm_cgxx_spux_an_xnp_tx_t xnp_tx;
+		cavm_cgxx_spux_an_lp_xnp_t lp_xnp;
+		cavm_cgxx_spux_int_t spu_int;
+
+		spu_int.u = 0;
+		spu_int.s.an_page_rx = 1;
+		do {
+			xnp_tx.u = 0;
+			xnp_tx.s.mp = 1;
+			xnp_tx.s.m_u = 1;
+			switch (num_pages) {
+			case 0: /* Send ethernet consortium header */
+				if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R) {
+					xnp_tx.s.u = 0x4df0353; //0x3530fd40;
+					xnp_tx.s.np = 1;
+					xnp_tx.s.mp = 1;
+					xnp_tx.s.m_u = 0x005;
+				}
+				break;
+			case 1: /* Send ethernet consortium data */
+				if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R) {
+					xnp_tx.s.u |= 1 << 4;  /* 25GBASE-KR */
+					xnp_tx.s.u |= 1 << 5;  /* 25GBASE-CR */
+					xnp_tx.s.u |= 1 << 8;  /* 50GBASE-KR2 */
+					xnp_tx.s.u |= 1 << 9;  /* 50GBASE-CR2 */
+					xnp_tx.s.u |= 1 << 24;  /* F1 - Clause 91 FEC ability */
+					xnp_tx.s.u |= 1 << 25;  /* F2 - Clause 74 FEC ability */
+					if (fec_req != CGX_FEC_NONE) {
+						xnp_tx.s.u |= 1 << 26; /* F3 - Claue 91 FEC request */
+						xnp_tx.s.u |= 1 << 27; /* F3 - Claue 74 FEC request */
+					}
+					xnp_tx.s.np = 0;
+					xnp_tx.s.mp = 0;
+					xnp_tx.s.m_u = 0x203;
+				}
+				break;
+			default: /* Send empty page to finish protocol */
+				break;
+			}
+			CSR_WRITE(CAVM_CGXX_SPUX_AN_XNP_TX(cgx_id, lmac_id), xnp_tx.u);
+
+			if (cgx_poll_for_csr(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
+				CGX_SPUX_AN_RX_PAGE_MASK, 1, CGX_POLL_AN_STATUS)) {
+				debug_cgx("%s:%d:%d Timeout waiting for AN extended page 0x%llx\n",
+						__func__, cgx_id, lmac_id,
+						CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id)));
+				cgx_restart_an(cgx_id, lmac_id);
+				cgx_set_error_type(cgx_id, lmac_id, CGX_ERR_AN_CPT_FAIL);
+				return -1;
+			}
+
+			lp_xnp.u = CSR_READ(CAVM_CGXX_SPUX_AN_LP_XNP(cgx_id, lmac_id));
+			CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id), spu_int.u);
+			debug_cgx("%s:%d:%d AN extended page %d sent 0x%llx, received 0x%llx\n",
+					__func__, cgx_id, lmac_id, num_pages, xnp_tx.u, lp_xnp.u);
+			num_pages++;
+		} while (lp_xnp.s.np || xnp_tx.s.np);
+	}
+
+	/* Based on speed ability bit set, set LMAC type to compare
+	* with the CGX configuration
+	*/
+	if (an_lp_base.s.a10g_kr)
+		mode_req = CAVM_CGX_LMAC_TYPES_E_TENG_R;
+	else if ((an_lp_base.s.a40g_cr4) || (an_lp_base.s.a40g_kr4))
+		mode_req = CAVM_CGX_LMAC_TYPES_E_FORTYG_R;
+	debug_cgx("%s %d:%d LMAC type configured %d, LP's ability %d\n",
+			__func__, cgx_id, lmac_id, lmac->mode, mode_req);
+
+	if (spux_an_ctl.s.an_arb_link_chk_en) {
+		if (cgx_poll_for_csr(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
+			CGX_SPUX_AN_CMP_MASK, 1, CGX_POLL_AN_STATUS)) {
+			debug_cgx("%s: %d:%d Timeout waiting for AN not complete\n",
 				__func__, cgx_id, lmac_id);
 			cgx_set_error_type(cgx_id, lmac_id,
 					CGX_ERR_AN_CPT_FAIL);
@@ -1313,7 +1387,7 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 		/* Poll for AN_LINK_GOOD state */
 		if (cgx_poll_for_csr(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
 			CGX_SPUX_AN_LNK_MASK, 1, CGX_POLL_AN_STATUS)) {
-			debug_cgx("%s: %d:%d SPUX AN_LINK_GOOD not set\n",
+			debug_cgx("%s: %d:%d Timeout waiting for AN link good\n",
 						__func__, cgx_id, lmac_id);
 			cgx_set_error_type(cgx_id, lmac_id,
 					CGX_ERR_AN_CPT_FAIL);
@@ -1331,8 +1405,8 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 			return 0;
 		}
 		debug_cgx("%s:No change in LMAC mode %d mode_req %d\n",
-			__func__, lmac->mode, mode_req);
-		hcd_match = 1;
+				__func__, lmac->mode, mode_req);
+		//hcd_match = 1;
 
 		if (lmac->fec != fec_req) {
 			debug_cgx("%s %d:%d FEC type %d, LP's FEC ability %d\n",
@@ -1342,16 +1416,15 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 		}
 		debug_cgx("%s: No change in FEC type %d fec_req %d\n",
 			__func__, lmac->fec, fec_req);
-		hcd_match = 1; /* Both LMAC and FEC type match */
+		//hcd_match = 1; /* Both LMAC and FEC type match */
 		/* If there is no change in LMAC mode/FEC configuration,
 		 * disable AN and proceed
 		 */
 		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
 				CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
 				an_en, 0);
-		return hcd_match;
 	}
-	return 1;
+	return 0;
 }
 
 static void cgx_fill_lmac_attributes(int cgx_idx, int lmac_idx)
@@ -1626,6 +1699,9 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id)
 				cgx_set_error_type(cgx_id, lmac_id,
 					CGX_ERR_SPUX_RESET_FAIL);
 				return -1;
+			} else {
+				debug_cgx("%s: %d:%d Training not done\n",
+					__func__, cgx_id, lmac_id);
 			}
 		} else { /* AN enabled case, reset AN_CONTROL bit */
 			CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
@@ -1806,7 +1882,7 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 
 	/* check whether AN is complete, if AN is enabled */
 	if (!lmac->autoneg_dis) {
-		if (cgx_complete_sw_an(cgx_id, lmac_id) != 1) {
+		if (cgx_complete_sw_an(cgx_id, lmac_id) != 0) {
 			/* restart AN */
 			cgx_restart_an(cgx_id, lmac_id);
 			cgx_set_error_type(cgx_id, lmac_id,
@@ -1822,10 +1898,10 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 			CGX_POLL_TRAINING_STATUS)) {
 			spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(
 					cgx_id, lmac_id));
-			if (!spux_int.s.training_failure) {
+			if (spux_int.s.training_done && !spux_int.s.training_failure) {
 				debug_cgx("%s: %d:%d No Training failure\n",
 					__func__, cgx_id, lmac_id);
-			} else {
+			} else if (spux_int.s.training_failure) {
 				/* Training failed, restart */
 				debug_cgx("%s: %d:%d Restarting Training\t"
 					"0x%llx\n", __func__, cgx_id, lmac_id,
@@ -1835,6 +1911,9 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 				cgx_set_error_type(cgx_id, lmac_id,
 						CGX_ERR_TRAINING_FAIL);
 				return -1;
+			} else {
+				debug_cgx("%s: %d:%d Training not done\n",
+					__func__, cgx_id, lmac_id);
 			}
 		}
 	} else {
@@ -1894,68 +1973,7 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 	/* POLL for the status of the link by checking lane
 	 * alignment/block lock
 	 */
-	if ((lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
-		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R) ||
-		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R) ||
-		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FIFTYG_R) ||
-		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R) ||
-		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_USXGMII)) {
-		if (cgx_poll_for_csr(CAVM_CGXX_SPUX_BR_STATUS1(cgx_id,
-				lmac_id), CGX_SPUX_BLK_LOCK_MASK, 1, -1)) {
-			/* restart AN */
-			cgx_restart_an(cgx_id, lmac_id);
-			debug_cgx("%s: %d:%d: SPUX BLK LOCK not set 0x%llx\n",
-					__func__, cgx_id, lmac_id, CSR_READ(
-						CAVM_CGXX_SPUX_BR_STATUS1(cgx_id, lmac_id)));
-			cgx_set_error_type(cgx_id, lmac_id,
-					CGX_ERR_SPUX_BR_BLKLOCK_FAIL);
-			return -1;
-		}
-
-		if (strncmp(plat_octeontx_bcfg->bcfg.board_model, "asim-", 5)) {
-		/* Not simulated on ASIM */
-			/* If RS-FEC is enabled, check the alignment status.
-			 * This does not apply to QLM_MODE_25GAUI_2_C2C and
-			 * QLM_MODE_50GAUI_4_C2C becuase they use proprietary
-			 * PCS (25GBASE-R2 and 50GBASE-R4) which do not support
-			 * FEC.
-			 */
-			if (lmac->mode_idx != QLM_MODE_25GAUI_2_C2C &&
-			    lmac->mode_idx != QLM_MODE_50GAUI_4_C2C &&
-			    lmac->fec == CGX_FEC_RS) {
-				if (cgx_poll_for_csr(CAVM_CGXX_SPUX_RSFEC_STATUS(
-						cgx_id, lmac_id),
-						CGX_SPUX_RSFEC_ALGN_STS_MASK,
-						1, -1)) {
-					/* restart AN */
-					cgx_restart_an(cgx_id, lmac_id);
-					debug_cgx("%s: %d:%d: SPUX RSFEC alignment not acquired\n",
-							__func__, cgx_id, lmac_id);
-					cgx_set_error_type(cgx_id, lmac_id,
-							CGX_ERR_SPUX_RSFEC_ALGN_FAIL);
-					return -1;
-				}
-			}
-			/* check if marker lock achieved for 40G/50G/100G/USXGMII */
-			if ((lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R) ||
-				(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FIFTYG_R) ||
-				(lmac->mode == CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R) ||
-				(lmac->mode == CAVM_CGX_LMAC_TYPES_E_USXGMII)) {
-				if (cgx_poll_for_csr(CAVM_CGXX_SPUX_BR_ALGN_STATUS(
-						cgx_id, lmac_id),
-						CGX_SPUX_MARKER_LOCK_MASK,
-						1, -1)) {
-					/* restart AN */
-					cgx_restart_an(cgx_id, lmac_id);
-					debug_cgx("%s: %d:%d SPUX Marker Lock not achieved\n",
-						__func__, cgx_id, lmac_id);
-					cgx_set_error_type(cgx_id, lmac_id,
-							CGX_ERR_SPUX_MARKER_LOCK_FAIL);
-					return -1;
-				}
-			}
-		}
-	} else if ((lmac->mode == CAVM_CGX_LMAC_TYPES_E_XAUI) ||
+	if ((lmac->mode == CAVM_CGX_LMAC_TYPES_E_XAUI) ||
 		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_RXAUI)) {
 		if (cgx_poll_for_csr(CAVM_CGXX_SPUX_BX_STATUS(cgx_id,
 				lmac_id), CGX_SPUX_RX_ALIGN_MASK, 1, -1)) {
@@ -2030,7 +2048,7 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 				break;
 
 			if (gser_clock_get_count(GSER_CLOCK_TIME) >= timeout) {
-				debug_cgx("%s: %d:%d Link error timeout %d\n",
+				debug_cgx("%s: %d:%d Link error timeout %lld\n",
 					__func__, cgx_id, lmac_id, timeout);
 				spux_status1.u = CSR_READ(
 						CAVM_CGXX_SPUX_STATUS1(
