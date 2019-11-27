@@ -56,7 +56,7 @@
 
 /* TIMEOUT for different usecases */
 #define CGX_POLL_AN_STATUS		100000
-#define CGX_POLL_TRAINING_STATUS	50000	/* 500 ms */
+#define CGX_POLL_TRAINING_STATUS	500000	/* 500 ms */
 
 /* Read-Modify-Write APIs for CGX CSRs */
 #define CAVM_MODIFY_CGX_CSR(type, csr, field, val)        \
