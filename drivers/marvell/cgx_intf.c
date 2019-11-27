@@ -794,7 +794,7 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 	int req_duplex = 0;
 	int qlm = 0, an = 0, invalid_req = 0;
 	link_state_t link;
-	int lane;
+	int lane, lane_count;
 	uint64_t req_mode;
 
 	lmac_ctx = &lmac_context[cgx_id][lmac_id];
@@ -902,19 +902,17 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 			/* Configure SerDes for new QLM mode */
 			qlm_state_lane_t state = qlm_build_state(qlm_mode, baud_mhz, flags);
 
-			if (qlm_mode == QLM_MODE_50GAUI_4_C2C ||
-			    qlm_mode == QLM_MODE_25GAUI_2_C2C)
-				lane = -1;
-			else
-				lane = lmac->rev_lane;
-
 			qlm_ops = plat_otx2_get_qlm_ops(&qlm);
 			if (qlm_ops == NULL) {
 				debug_cgx_intf("%s:get_qlm_ops failed %d\n",
 					__func__, qlm);
 				return -1;
 			}
-			qlm_ops->qlm_set_mode(qlm, lane, qlm_mode, baud_mhz, 0);
+			lane_count = cgx_get_lane_count(lmac->rev_lane, lmac_type);
+			for (int i = 0; i < lane_count; i++) {
+				lane = (lmac->lane_to_sds >> (i*2)) & 3;
+				qlm_ops->qlm_set_mode(qlm, lane, qlm_mode, baud_mhz, 0);
+			}
 
 			/* Update the SCRATCHX register with the new link info to the
 			 * original lane

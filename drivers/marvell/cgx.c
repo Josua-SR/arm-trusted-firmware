@@ -2377,7 +2377,7 @@ void cgx_lmac_init_link(int cgx_id, int lmac_id)
  */
 void cgx_hw_init(int cgx_id)
 {
-	int lmac_id, qlm_mode, lmac_type, qlm;
+	int lmac_id, qlm_mode, lmac_type, qlm, lane_count;
 	int baud_rate, flags = 0, lane, ret;
 	qlm_state_lane_t state;
 	cgx_config_t *cgx;
@@ -2424,11 +2424,6 @@ void cgx_hw_init(int cgx_id)
 					/* Configure SerDes for new QLM mode */
 					baud_rate = qlm_get_mode_strmap(qlm_mode).baud_rate;
 					state = qlm_build_state(qlm_mode, baud_rate, flags);
-					if (qlm_mode == QLM_MODE_50GAUI_4_C2C ||
-						qlm_mode == QLM_MODE_25GAUI_2_C2C)
-						lane = -1;
-					else
-						lane = lmac->rev_lane;
 					qlm = lmac->qlm;
 					qlm_ops = plat_otx2_get_qlm_ops(&qlm);
 					if (qlm_ops == NULL) {
@@ -2437,9 +2432,15 @@ void cgx_hw_init(int cgx_id)
 							 __func__, qlm);
 						continue;
 					}
-					qlm_ops->qlm_set_mode(qlm, lane,
-							qlm_mode, baud_rate,
-							flags);
+
+					lane_count = cgx_get_lane_count(lmac->rev_lane, lmac_type);
+					for (int i = 0; i < lane_count; i++) {
+						lane = (lmac->lane_to_sds >> (i*2)) & 3;
+						qlm_ops->qlm_set_mode(qlm, lane,
+								qlm_mode, baud_rate,
+								flags);
+					}
+
 					if (qlm_ops->type == QLM_GSERN_TYPE)
 						qlm_ops->qlm_set_state(qlm,
 							    lmac->lane, state);
@@ -2473,3 +2474,16 @@ void cgx_hw_init(int cgx_id)
 	}
 }
 
+int cgx_get_lane_count(int lane, int lmac_type)
+{
+	uint64_t lane_mask;
+	int i, lane_count;
+
+	lane_mask = cgx_get_lane_mask(lane, lmac_type);
+
+	for (i = 0, lane_count = 0; i < 4; i++)
+		if (lane_mask & (1 << i))
+			lane_count++;
+
+	return lane_count;
+}

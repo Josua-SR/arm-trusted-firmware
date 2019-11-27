@@ -266,5 +266,6 @@ int cgx_set_fec_type(int cgx_id, int lmac_id, int req_fec);
 int cgx_read_flash_ignore(int cgx_id, int lmac_id, int *ignore);
 int cgx_read_flash_mode_param(int cgx_id, int lmac_id, int *qlm_mode,
 			      int *lmac_mode);
+int cgx_get_lane_count(int lane, int lmac_type);
 
 #endif
