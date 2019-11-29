@@ -1223,6 +1223,7 @@ uint64_t cgx_get_lane_mask(int lane, int mode)
 	uint64_t lane_mask = 0;
 
 	switch (mode) {
+	case CAVM_CGX_LMAC_TYPES_E_SGMII:
 	case CAVM_CGX_LMAC_TYPES_E_TENG_R:
 	case CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R:
 	case CAVM_CGX_LMAC_TYPES_E_USXGMII:
