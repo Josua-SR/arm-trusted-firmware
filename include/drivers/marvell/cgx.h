@@ -105,6 +105,10 @@
 /* Default value of NETWORK-LANE-ORDER.N0.CGX%d property */
 #define CGX_DEFAULT_NETWORK_LANE_ORDER	0x3210
 
+/* Return codes used by cgx display eye and serdes settings */
+#define CGX_DISPLAY_OK			0
+#define CGX_DISPLAY_PENDING		1
+
 /* enum declaration for FEC */
 typedef enum cgx_fec_type {
 	CGX_FEC_NONE,
@@ -267,5 +271,8 @@ int cgx_read_flash_ignore(int cgx_id, int lmac_id, int *ignore);
 int cgx_read_flash_mode_param(int cgx_id, int lmac_id, int *qlm_mode,
 			      int *lmac_mode);
 int cgx_get_lane_count(int lane, int lmac_type);
+
+int cgx_display_eye(int qlm, int qlm_lane, int show_data);
+int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data);
 
 #endif

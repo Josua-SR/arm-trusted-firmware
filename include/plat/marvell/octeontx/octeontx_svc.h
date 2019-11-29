@@ -59,6 +59,12 @@
 
 #define OCTEONTX_NUM_CALLS		17
 
+/*
+ * Standard OcteonTX SMC responses
+ * To signal correct status SMC_OK is used
+ */
+#define OCTEONTX_SMC_PENDING		0x1
+#define OCTEONTX_SMC_FAIL		0x2
 
 /* API that allows to define family specific SMC CALLS */
 uintptr_t plat_octeontx_svc_smc_handler(uint32_t smc_fid,

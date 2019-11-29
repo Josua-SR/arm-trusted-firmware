@@ -1239,7 +1239,7 @@ static uint64_t log10(uint64_t num)
 /* This structure has over 32KiB and cannot be stored on stack */
 static gser_qlm_eye_t eye;
 
-static int do_eye(int qlm, int qlm_lane, int show_data)
+int cgx_display_eye(int qlm, int qlm_lane, int show_data)
 {
 	int x, y, width, height, last_color, level, deltay, deltax, dy, dx;
 	int dist, color, max_lane;
@@ -1247,6 +1247,7 @@ static int do_eye(int qlm, int qlm_lane, int show_data)
 	int eye_width = 0;
 	int eye_height = 0;
 	int qlm_idx;
+	int ec;
 	const qlm_ops_t *qlm_ops;
 	char color_str[] = "\33[40m"; /* Note: This is modified, not constant */
 
@@ -1270,15 +1271,16 @@ static int do_eye(int qlm, int qlm_lane, int show_data)
 		return -1;
 	}
 
-	if (qlm_ops->qlm_eye_capture(qlm, qlm_lane, show_data, &eye))
-		return -1;
+	ec = qlm_ops->qlm_eye_capture(qlm, qlm_lane, show_data, &eye);
+	if (ec)
+		return ec;
 
 	if (!show_data) {
 		eye.type = qlm_ops->type;
 		memcpy((void *)(SERDES_EYE_DATA_BASE), &eye,
 				sizeof(gser_qlm_eye_t));
 
-		return 0;
+		return CGX_DISPLAY_OK;
 	}
 
 	if (qlm_ops->type == QLM_GSERN_TYPE) {
@@ -1352,10 +1354,10 @@ static int do_eye(int qlm, int qlm_lane, int show_data)
 	printf("\nEye Width %d, Height %d, Area %d\n",
 		eye_width, eye_height, eye_area);
 
-	return 0;
+	return CGX_DISPLAY_OK;
 }
 
-static int do_serdes_settings(int qlm, int qlm_lane, int show_data)
+int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data)
 {
 	int max_lane;
 	const qlm_ops_t *qlm_ops;
@@ -1387,7 +1389,7 @@ static int do_serdes_settings(int qlm, int qlm_lane, int show_data)
 				SERDES_SETTINGS_DATA_SIZE);
 	}
 
-	return 0;
+	return CGX_DISPLAY_OK;
 }
 
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
@@ -1494,13 +1496,14 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 			break;
 
 		case CGX_CMD_DISPLAY_EYE:
-			do_eye(scratchx1.s.dsp_eye_args.qlm,
+			cgx_display_eye(scratchx1.s.dsp_eye_args.qlm,
 				scratchx1.s.dsp_eye_args.lane,
 				1 /* = show_data */);
 			break;
 
 		case CGX_CMD_DISPLAY_SERDES:
-			do_serdes_settings(scratchx1.s.dsp_serdes_args.qlm,
+			cgx_display_serdes_settings(
+				scratchx1.s.dsp_serdes_args.qlm,
 				scratchx1.s.dsp_serdes_args.lane,
 				1 /* = show_data */);
 			break;

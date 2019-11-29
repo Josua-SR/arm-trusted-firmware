@@ -44,6 +44,40 @@
 
 #define OCTEONTX_ATTESTATION_QUERY		0xc2000d03
 
+/*
+ * No input
+ * Return:
+ *	x0:
+ *		0x0 -- Success
+ *		0x2 -- Fail
+ *	x1 - in case of success - address to eye cmd data
+ *	x2 - in case of success - address to serdes cmd data
+ */
+#define PLAT_OCTEONTX_SERDES_DBG_GET_MEM	0xc2000d04
+
+/*
+ * x1 - qlm
+ * x2 - lane
+ * x3 - display data to console
+ * Return:
+ *	x0:
+ *		0x0 -- Success
+ *		0x1 -- Pending
+ *		0x2 -- Fail
+ */
+#define PLAT_OCTEONTX_SERDES_DBG_GET_EYE	0xc2000d05
+
+/*
+ * x1 - qlm
+ * x2 - lane
+ * x3 - display data to console
+ * Return:
+ *	x0:
+ *		0x0 -- Success
+ *		0x2 -- Fail
+ */
+#define PLAT_OCTEONTX_SERDES_DBG_GET_CONF	0xc2000d06
+
 /* X1 - if <= 0, query for attestation buffer address.
  *      if > 0, specifies nonce len
  */
