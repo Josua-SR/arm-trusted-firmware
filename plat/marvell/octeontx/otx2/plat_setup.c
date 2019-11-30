@@ -21,6 +21,7 @@
 #include <lmc_ras.h>
 #include <plat_octeontx.h>
 #include <octeontx_utils.h>
+#include <octeontx_security.h>
 #include <sh_fwdata.h>
 
 static int disable_ooo;
@@ -46,6 +47,14 @@ void plat_octeontx_setup(void)
 	plat_flr_init();
 
 	plat_dram_ras_init();
+
+	/* Configure PEM0 (EP) streams to use secure world access.
+	 * PEM0 streams must be secure to support host remote utils' memory
+	 * access while running OcteonTX Linux. Otherwise, any remote access
+	 * will be aborted (and an event logged) due to OcteonTX Linux SMMU
+	 * initialization.
+	 */
+	octeontx_configure_pem_ep_security(0 /* PEM0 */, 1 /* secure */);
 }
 
 /*

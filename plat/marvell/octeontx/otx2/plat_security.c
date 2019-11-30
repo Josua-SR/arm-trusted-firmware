@@ -236,3 +236,100 @@ void octeontx_configure_mmc_security(int secure)
 		}
 	}
 }
+
+/*
+ * Helper function for setting-up stream security in IOBN.
+ */
+static void set_iobn_stream_security(int domain_idx, int bus_idx, int dev_idx,
+				     int strm_ns, int phys_ns)
+{
+	int iobn_idx;
+
+	for (iobn_idx = 0; iobn_idx < plat_octeontx_scfg->iobn_count;
+	     iobn_idx++) {
+		cavm_iobnx_domx_devx_streams_t iobn_comx_devx_stream;
+		cavm_iobnx_domx_busx_streams_t iobn_domx_busx_stream;
+
+		iobn_domx_busx_stream.u = CSR_READ(
+			CAVM_IOBNX_DOMX_BUSX_STREAMS(iobn_idx, domain_idx,
+						     bus_idx));
+		iobn_domx_busx_stream.s.strm_nsec = strm_ns;
+		iobn_domx_busx_stream.s.phys_nsec = phys_ns;
+		CSR_WRITE(CAVM_IOBNX_DOMX_BUSX_STREAMS(
+			  iobn_idx, domain_idx, bus_idx),
+			  iobn_domx_busx_stream.u);
+
+		iobn_comx_devx_stream.u = CSR_READ(
+			CAVM_IOBNX_DOMX_DEVX_STREAMS(iobn_idx, domain_idx,
+						     dev_idx));
+		iobn_comx_devx_stream.s.strm_nsec = strm_ns;
+		iobn_comx_devx_stream.s.phys_nsec = phys_ns;
+		CSR_WRITE(CAVM_IOBNX_DOMX_DEVX_STREAMS(
+			  iobn_idx, domain_idx, dev_idx),
+			  iobn_comx_devx_stream.u);
+	}
+}
+
+/*
+ * This function configures PCI EP streams' security in IOBN.
+ *
+ * On entry,
+ *   secure: 0 to configure stream for NON-secure lookup
+ *           1 to configure stream for SECURE lookup
+ */
+void octeontx_configure_pem_ep_security(int pem, int secure)
+{
+	int dev_idx;
+	int bus_idx;
+	int domain_idx;
+	int strm_ns, phys_ns;
+	uint32_t streamid;
+	cavm_pemx_cfg_t pemx_cfg;
+	cavm_pemx_on_t pemx_on;
+	cavm_smmux_s_gbpa_t s_gbpa;
+
+	switch (MIDR_PARTNUM(read_midr())) {
+	case T96PARTNUM:
+		if (pem == 0)
+			streamid = CAVM_PCC_DEV_CON_E_PCIERC0_CN9;
+		else if (pem == 2)
+			streamid = CAVM_PCC_DEV_CON_E_PCIERC2_CN9;
+		else
+			break;
+
+		pemx_on.u = CSR_READ(CAVM_PEMX_ON(pem));
+		pemx_cfg.u = CSR_READ(CAVM_PEMX_CFG(pem));
+
+		/* if PEM0 disabled or in RC mode, exit */
+		if (!pemx_on.cn9.pemon || pemx_cfg.cn9.hostmd)
+			break;
+
+		strm_ns = !secure; /* set according to caller's request */
+		phys_ns = 1; /* host can only access non-secure memory */
+
+		domain_idx = (streamid >> 16) & 0xFF;
+		bus_idx = (streamid >> 8) & 0xFF;
+		dev_idx = 0; /* device 0 is used for host remote WRITE ops */
+		set_iobn_stream_security(domain_idx, bus_idx, dev_idx, strm_ns,
+					 phys_ns);
+
+		dev_idx = 3; /* device 3 is used for host remote READ ops */
+		set_iobn_stream_security(domain_idx, bus_idx, dev_idx, strm_ns,
+					 phys_ns);
+
+		/* Ensure that SMMU uses NS bit from secure stream config.
+		 * The BDK sets NSCFG override to force secure memory accesses
+		 * while loading images.
+		 * It is safe to reset this here because all images have been
+		 * loaded.
+		 */
+		s_gbpa.u = CSR_READ(CAVM_SMMUX_S_GBPA(0));
+		s_gbpa.s.nscfg = 0;
+		CSR_WRITE(CAVM_SMMUX_S_GBPA(0), s_gbpa.u);
+
+		break;
+
+	default:
+		break; /* nothing to do ... */
+	}
+}
