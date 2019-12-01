@@ -43,7 +43,6 @@
 # define debug_ras(...) (void)0
 #endif
 
-#define CACHE_LINE_SIZE		128
 #define RAS_MAX_MEM_CHAINS	32
 
 struct ras_dram_lmc_map {
@@ -518,7 +517,8 @@ static uint64_t ras_ccs_convert_lmc_to_pa(uint64_t _lmc_addr)
 			addr_data.ASC_LMC_MASK = attr.s.lmc_mask;
 			addr_data.ASC_LMC_MODE = attr.s.lmc_mode;
 			addr_data.ASC_REGION = region;
-			addr_data.addr = internal_lmc_addr / CACHE_LINE_SIZE;
+			addr_data.addr = internal_lmc_addr /
+					    CACHE_WRITEBACK_GRANULE;
 
 			phys_addr = ras_ccs_convert_lmc_to_pa_algorithm(
 								&addr_data);
@@ -859,7 +859,8 @@ static int ras_check_ecc_errors(int lmc)
 					1);
 	}
 
-	address = octeontx_bit_extract(erraddr.u, 3, 35) * CACHE_LINE_SIZE;
+	address = octeontx_bit_extract(erraddr.u, 3, 35) *
+					    CACHE_WRITEBACK_GRANULE;
 
 	/* Display failing cache line index instead of phase string on
 	 * CN9XXX
