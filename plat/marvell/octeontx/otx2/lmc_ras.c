@@ -1058,6 +1058,60 @@ static int lmcoe_ras_int(int lmcoe)
 	return -1;
 };
 
+int lmcoe_scrubber_setup(int mcc, int lmcoe)
+{
+	union cavm_mccx_lmcoex_bscrub_cfg cfg;
+	union cavm_mccx_lmcoex_bscrub_cfg2 cfg2;
+	union cavm_ccs_const ccs_const;
+	uint64_t a_start = ~0ULL;
+	uint64_t a_end = 0ULL;
+	int nr_ascs, region;
+
+	/* Find max/min addr covered by all ASC_REGIONs */
+	ccs_const.u = CSR_READ(CAVM_CCS_CONST);
+	nr_ascs = ccs_const.s.asc;
+	for (region = 0; region < nr_ascs; region++) {
+		union cavm_ccs_asc_regionx_attr attr;
+		union cavm_ccs_asc_regionx_start r_start;
+		union cavm_ccs_asc_regionx_end r_end;
+
+		attr.u = CSR_READ(CAVM_CCS_ASC_REGIONX_ATTR(region));
+
+		if (!(attr.s.s_en || attr.s.ns_en))
+			continue;
+
+		r_start.u = CSR_READ(CAVM_CCS_ASC_REGIONX_START(region));
+		r_end.u = CSR_READ(CAVM_CCS_ASC_REGIONX_END(region));
+		if (a_start > r_start.s.addr << 24)
+			a_start = r_start.s.addr << 24;
+		if (a_end < r_end.s.addr << 24)
+			a_end = r_end.s.addr << 24;
+	}
+
+	cfg.u = CSR_READ(CAVM_MCCX_LMCOEX_BSCRUB_CFG(mcc, lmcoe));
+	cfg2.u = CSR_READ(CAVM_MCCX_LMCOEX_BSCRUB_CFG2(mcc, lmcoe));
+
+	cfg.s.start_address = a_start;
+	cfg2.s.stop_address = a_end;
+
+	/*
+	 * background-scrubber idle count, currently default from HRM,
+	 * perhaps should scale to SCLK, and allow adjustment via SMC
+	 */
+	cfg.s.bs_idle_cnt = 0x4f;
+
+	if (cfg.s.busy) {
+		ERROR("%s(%d,%d) sees BUSY scrubber\n",
+			__func__, mcc, lmcoe);
+		return -1;
+	}
+	CSR_WRITE(CAVM_MCCX_LMCOEX_BSCRUB_CFG2(mcc, lmcoe), cfg2.u);
+	cfg.s.enable = 1;
+	CSR_WRITE(CAVM_MCCX_LMCOEX_BSCRUB_CFG(mcc, lmcoe), cfg.u);
+
+	return 0;
+}
+
 static int ras_init_mcc(int mcc)
 {
 	uint64_t bar4 = CAVM_MCC_BAR_E_MCCX_PF_BAR4(mcc);
@@ -1117,6 +1171,8 @@ static int ras_init_mcc(int mcc)
 		int_ena.s.err07 = 1;
 		CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_INT_ENA_W1S(mcc, lmcoe),
 			  int_ena.u);
+
+		lmcoe_scrubber_setup(mcc, lmcoe);
 	}
 
 	debug_ras("%s done\n", __func__);
