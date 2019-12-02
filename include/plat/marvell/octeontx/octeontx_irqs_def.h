@@ -65,4 +65,25 @@
 #define GTI_CWD_SPI_IRQ(irq)		-1
 #endif
 
+/* RAS definitions */
+#ifndef RAS_PPI_IRQ
+#define RAS_PPI_IRQS		0
+#define RAS_PPI_IRQ(irq)	(-1)
+#endif
+
+#ifndef MDC_SPI_IRQ
+#define MDC_SPI_IRQS		0
+#define MDC_SPI_IRQ(irq)	(-1)
+#endif
+
+#ifndef MCC_SPI_IRQ
+#define MCC_SPI_IRQS		0
+#define MCC_SPI_IRQ(irq)	(-1)
+#endif
+
+#ifndef LMC_SPI_IRQ
+#define LMC_SPI_IRQS		0
+#define LMC_SPI_IRQ(irq)	(-1)
+#endif
+
 #endif /* __OCTEONTX_IRQS_DEF_H__ */

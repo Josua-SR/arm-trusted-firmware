@@ -214,7 +214,10 @@ void plat_add_mmio()
 	add_map_record(CAVM_GTI_BAR_E_GTI_PF_BAR4_CN9, CAVM_GTI_BAR_E_GTI_PF_BAR4_CN9_SIZE, attr);
 
 	for (i = 0; i < MAX_LMC; i++) {
-		add_map_record(CAVM_LMC_BAR_E_LMCX_PF_BAR0(i), CAVM_LMC_BAR_E_LMCX_PF_BAR0_SIZE, attr);
+		add_map_record(CAVM_LMC_BAR_E_LMCX_PF_BAR0(i),
+			CAVM_LMC_BAR_E_LMCX_PF_BAR0_SIZE, attr);
+		add_map_record(CAVM_LMC_BAR_E_LMCX_PF_BAR4(i),
+			CAVM_LMC_BAR_E_LMCX_PF_BAR4_SIZE, attr);
 	}
 
 	device_type_count = plat_octeontx_get_twsi_count();
@@ -304,6 +307,10 @@ void plat_add_mmio()
 	}
 	add_map_record(CAVM_MDC_BAR_E_MDC_PF_BAR4,
 		       CAVM_MDC_BAR_E_MDC_PF_BAR4_SIZE, attr);
+
+	for (i = 0; i < MAX_CCU; i++)
+		add_map_record(CAVM_CCU_BAR_E_CCUX_PF_BAR0(i),
+			       CAVM_CCU_BAR_E_CCUX_PF_BAR0_SIZE, attr);
 
 	/*
 	 * Shared memory configuration.

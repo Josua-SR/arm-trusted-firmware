@@ -12,8 +12,9 @@
  * Definitions of IRQs
  ******************************************************************************/
 
-/* Definitions of IRQ SGI (Software Generated Interrupt) IDs (range 0x0 - 0xf) */
+/* Definitions of SGI IRQs (range 0-7 NS, 8-15 Secure) */
 #define SGI_IRQ_OFFSET			0x0
+
 
 /* Definitions of IRQ PPI (Per-Processor Interrupt) IDs (range 0x10 - 0x1f) */
 #define PPI_IRQ_OFFSET			0x10
@@ -22,6 +23,9 @@
 #define SEC_TIMER_PPI_IRQ_BASE	(0xd + PPI_IRQ_OFFSET)
 #define SEC_TIMER_PPI_IRQ		(SEC_TIMER_PPI_IRQ_BASE)
 
+/* PPI IRQ triggering RAS scan */
+#define RAS_PPI_IRQS		1
+#define RAS_PPI_IRQ(irq)	(0xe + PPI_IRQ_OFFSET)
 
 /* Definitions of IRQ SPI (Shared Peripheral Interrupt) IDs (range 0x20-0x3FC) */
 #define SPI_IRQ_OFFSET			0x20
@@ -66,14 +70,16 @@
 #define GTI_CWD_SPI_IRQ_BASE	(GPIO_SPI_IRQ_NSEC_BASE + GPIO_SPI_NSEC_IRQS)
 #define GTI_CWD_SPI_IRQ(irq)	((irq) + GTI_CWD_SPI_IRQ_BASE)
 
-/* Default SPI IRQs used by MCC (range 0x56 - 0x65) */
-#define MCC_SPI_IRQS		0x10	/* 2 * 8 */
-#define MCC_SPI_IRQ_BASE	(GTI_CWD_SPI_IRQ_BASE + GTI_CWD_SPI_IRQS)
-#define MCC_SPI_IRQ(irq)	((irq) + MCC_SPI_IRQ_BASE)
+#define MDC_SPI_IRQS		1
+#define MDC_SPI_IRQ_BASE	(GTI_CWD_SPI_IRQ_BASE + GTI_CWD_SPI_IRQS)
+#define MDC_SPI_IRQ(irq)	MDC_SPI_IRQ_BASE
 
-/* Default SPI IRQs used by MDC (interrupt 0x66) */
-#define MDC_SPI_IRQS		0x1
-#define MDC_SPI_IRQ_BASE	(MCC_SPI_IRQ_BASE + MCC_SPI_IRQS)
-#define MDC_SPI_IRQ()	(MDC_SPI_IRQ_BASE)
+#define MCC_SPI_IRQS		1
+#define MCC_SPI_IRQ_BASE	(MDC_SPI_IRQ_BASE + MDC_SPI_IRQS)
+#define MCC_SPI_IRQ(irq)	MCC_SPI_IRQ_BASE
+
+#define LMC_SPI_IRQS		1
+#define LMC_SPI_IRQ_BASE	(MCC_SPI_IRQ_BASE + MCC_SPI_IRQS)
+#define LMC_SPI_IRQ(irq)	LMC_SPI_IRQ_BASE
 
 #endif /* __PLATFORM_IRQS_DEF_H__ */

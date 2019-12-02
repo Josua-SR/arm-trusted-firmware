@@ -373,6 +373,10 @@ void plat_add_mmio()
 	add_map_record(CAVM_MDC_BAR_E_MDC_PF_BAR4,
 		       CAVM_MDC_BAR_E_MDC_PF_BAR4_SIZE, attr);
 
+	for (i = 0; i < MAX_CCU; i++)
+		add_map_record(CAVM_CCU_BAR_E_CCUX_PF_BAR0(i),
+			       CAVM_CCU_BAR_E_CCUX_PF_BAR0_SIZE, attr);
+
 	/*
 	 * Map temperature sensor used by qlm gsern code.
 	 */

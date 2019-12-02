@@ -12,7 +12,7 @@
 #include <octeontx_common.h>
 #include <gicv3_setup.h>
 #include <octeontx_utils.h>
-#include <octeontx_irqs_def.h>
+#include <platform_irqs_def.h>
 
 #undef GICD_SETSPI_NSR
 #undef GICD_CLRSPI_NSR
@@ -57,6 +57,14 @@ static void initialize_interrupt_array(interrupt_prop_t *intr_array)
 	intr_array[idx].intr_cfg = GIC_INTR_CFG_LEVEL;
 	idx++;
 
+	for (i = 0; i < RAS_PPI_IRQS; i++) {
+		intr_array[idx].intr_num = RAS_PPI_IRQ(i);
+		intr_array[idx].intr_pri = PLAT_RAS_PRI;
+		intr_array[idx].intr_grp = INTR_TYPE_EL3;
+		intr_array[idx].intr_cfg = GIC_INTR_CFG_EDGE;
+		idx++;
+	}
+
 	/* Configure GPIO IRQs */
 	for (i = 0; i < GPIO_SPI_IRQS; i++) {
 		intr_array[idx].intr_num = GPIO_SPI_IRQ(i);
@@ -84,7 +92,14 @@ static void initialize_interrupt_array(interrupt_prop_t *intr_array)
 		idx++;
 	}
 
-	/* Configure all MCC LMCOE IRQs */
+	for (i = 0; i < MDC_SPI_IRQS; i++) {
+		intr_array[idx].intr_num = MDC_SPI_IRQ(i);
+		intr_array[idx].intr_pri = PLAT_RAS_PRI;
+		intr_array[idx].intr_grp = INTR_TYPE_EL3;
+		intr_array[idx].intr_cfg = GIC_INTR_CFG_EDGE;
+		idx++;
+	}
+
 	for (i = 0; i < MCC_SPI_IRQS; i++) {
 		intr_array[idx].intr_num = MCC_SPI_IRQ(i);
 		intr_array[idx].intr_pri = PLAT_RAS_PRI;
@@ -93,9 +108,8 @@ static void initialize_interrupt_array(interrupt_prop_t *intr_array)
 		idx++;
 	}
 
-	/* Configure all MDC IRQs */
-	for (i = 0; i < MDC_SPI_IRQS; i++) {
-		intr_array[idx].intr_num = MDC_SPI_IRQ();
+	for (i = 0; i < LMC_SPI_IRQS; i++) {
+		intr_array[idx].intr_num = LMC_SPI_IRQ(i);
 		intr_array[idx].intr_pri = PLAT_RAS_PRI;
 		intr_array[idx].intr_grp = INTR_TYPE_EL3;
 		intr_array[idx].intr_cfg = GIC_INTR_CFG_EDGE;

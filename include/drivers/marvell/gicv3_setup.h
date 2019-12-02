@@ -16,11 +16,16 @@
  * There is one interrupt for secure timer, interrupts for GPIO and
  * interrupts for BPHY.
  */
-#define NUMBER_OF_GIC_INTERRUPTS	(1 + GPIO_SPI_IRQS + \
-					BPHY_PSM_IRQS_NUMBER + \
-					GTI_CWD_SPI_IRQS + \
-					MDC_SPI_IRQS + \
-					MCC_SPI_IRQS)
+#define NUMBER_OF_GIC_INTERRUPTS (1 \
+				+ GPIO_SPI_IRQS \
+				+ BPHY_PSM_IRQS_NUMBER \
+				+ GTI_CWD_SPI_IRQS \
+				+ RAS_PPI_IRQS \
+				+ MDC_SPI_IRQS \
+				+ MCC_SPI_IRQS \
+				+ LMC_SPI_IRQS \
+				)
+
 
 void octeontx_gic_driver_init(void);
 void octeontx_gic_init(void);

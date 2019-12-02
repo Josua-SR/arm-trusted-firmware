@@ -129,11 +129,6 @@ static inline void ras_atomic_add64_nosync(int64_t *ptr, int64_t incr)
 		      : "memory");
 }
 
-static inline int is_asim(void)
-{
-	return !strncmp(plat_octeontx_bcfg->bcfg.board_model, "asim-", 5);
-}
-
 /**
  * Add 2 bits into the LMC address to represent the LMC the address
  * came from. (like the CN8xxx LMC address configuration)
@@ -428,7 +423,8 @@ uint64_t ras_ccs_convert_lmc_to_pa_algorithm(
 					    addr_data->ASC_MCS_EN);
 	debug_ras("%-40s: 0x%016llx\n", "pa_no_lr", pa_no_lr);
 	if (pa_no_lr == (uint64_t)-1) {
-		debug_ras("No Valid LMC Hash Combinations Work for lmc%0d address: 0x%016llx.\n",
+		debug_ras("No Valid LMC Hash Combinations Work"
+			  " for lmc%0d address: 0x%016llx.\n",
 			  phys_lmc_mask, pre_offset);
 		return -1;
 	}
@@ -889,7 +885,8 @@ static int ras_check_ecc_errors(int lmc)
 	lmcaddr = ras_ccs_get_lmc_addr(address, lmc);
 	physaddr = ras_ccs_convert_lmc_to_pa(lmcaddr);
 	if (physaddr == (uint64_t)-1) {
-		ERROR("N%d.LMC%d: ERROR: LMC to Phys conversion failed: ADDR: 0x%llx, LMC: 0x%llx\n",
+		ERROR("N%d.LMC%d: ERROR: LMC to Phys conversion failed:"
+		      " ADDR: 0x%llx, LMC: 0x%llx\n",
 		      0, lmc, address, lmcaddr);
 		return 0;
 	}
@@ -918,7 +915,9 @@ static int ras_check_ecc_errors(int lmc)
 
 	ras_dram_address_extract_info(lmcaddr, &lmc_num, &dimm,
 				      &prank, &lrank, &bank, &row, &col);
-	ERROR("N%d.LMC%d: ECC %s (DIMM%d,Rank%d/%d,Bank%02d,Row 0x%05x,Col 0x%04x,FIDX=%d,%s)[0x%012llx]\n",
+	ERROR("N%d.LMC%d: ECC %s"
+	      " (DIMM%d,Rank%d/%d,Bank%02d,Row 0x%05x,Col 0x%04x,FIDX=%d,%s)"
+	      "[0x%012llx]\n",
 	      0, lmc, err_type, dimm, prank, lrank, bank, row, col, fidx,
 	      synstr, physaddr);
 
@@ -948,20 +947,20 @@ static void check_cn9xxx_mdc(void)
 	if (mdc_int_w1s.s.ecc_error) {
 		mdc_ecc_status.u = CSR_READ(CAVM_MDC_ECC_STATUS);
 		if (mdc_ecc_status.s.dbe)
-			ERROR("ERROR: ECC double bit failure, Row 0x%x, Chain %d, Hub %d, Node %d\n",
+			ERROR("ERROR: ECC double bit failure%s,"
+			      " Row 0x%x, Chain %d, Hub %d, Node %d\n",
+			      mdc_ecc_status.s.dbe_plus ? "s" : "",
 			      mdc_ecc_status.s.row, mdc_ecc_status.s.chain_id,
 			      mdc_ecc_status.s.hub_id,
 			      mdc_ecc_status.s.node_id);
-		if (mdc_ecc_status.s.dbe_plus)
-			ERROR("ERROR: ECC other double bit failures occurred\n");
 
 		if (mdc_ecc_status.s.sbe)
-			ERROR("Warning: ECC single bit correction, Row 0x%x, Chain %d, Hub %d, Node %d\n",
+			ERROR("Warning: ECC single bit correction%s,"
+			      " Row 0x%x, Chain %d, Hub %d, Node %d\n",
+			      mdc_ecc_status.s.sbe_plus ? "s" : "",
 			      mdc_ecc_status.s.row, mdc_ecc_status.s.chain_id,
 			      mdc_ecc_status.s.hub_id,
 			      mdc_ecc_status.s.node_id);
-		if (mdc_ecc_status.s.sbe_plus)
-			ERROR("ECC other single bit correction occurred\n");
 	}
 }
 
@@ -1152,8 +1151,9 @@ static int ras_init_mcc(int mcc)
 		}
 #endif /* !RAS_EXTENSION */
 
-		debug_ras("Enabling error MSIX interrupt %d for MCC %d, LMCOE %d, vaddr: 0x%llx, vctl: 0x%llx, irq: 0x%x\n",
-		     vec, mcc, lmcoe, vaddr, vctl, irq);
+		debug_ras("Enabling error MSIX interrupt %d for MCC %d,"
+			  " LMCOE %d, vaddr: 0x%llx, vctl: 0x%llx, irq: 0x%x\n",
+			  vec, mcc, lmcoe, vaddr, vctl, irq);
 
 		octeontx_write64(vaddr, CAVM_GICD_SETSPI_SR | 1);
 		octeontx_write64(vctl, irq);
@@ -1232,8 +1232,6 @@ static int ras_init_mccs(void)
 int plat_dram_ras_init(void)
 {
 	debug_ras("%s\n", __func__);
-	if (is_asim())
-		return 0;
 
 	switch (MIDR_PARTNUM(read_midr())) {
 	case T96PARTNUM:

@@ -18,8 +18,8 @@
 #include <gpio_octeontx.h>
 #include <plat_board_cfg.h>
 #include <plat_flr.h>
-#include <lmc_ras.h>
 #include <plat_octeontx.h>
+#include <lmc_ras.h>
 #include <octeontx_utils.h>
 #include <octeontx_security.h>
 #include <sh_fwdata.h>
