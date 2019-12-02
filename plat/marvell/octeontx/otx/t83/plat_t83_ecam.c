@@ -278,9 +278,9 @@ static inline void cn83xx_disable_dev(struct ecam_device *dev)
 
 static inline int disable_pccbr(struct ecam_device *dev)
 {
-	/* disable PCC Bridge of BCH, CPT1 and RAD */
+	/* disable PCC Bridge of BCH and RAD */
 	if ((dev->ecam == 0) && (dev->bus == 0) &&
-	    ((dev->dev == 0xA || dev->dev == 0xD || dev->dev == 0xE)) &&
+	    ((dev->dev == 0xA || dev->dev == 0xE)) &&
 	    dev->func == 0)
 		return 1;
 
