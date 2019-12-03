@@ -52,15 +52,18 @@ uint64_t arm_trace_alloc_sbuf(uint64_t size, uint64_t cpu, int llc_lock_req,
 /* API to map non secure buffer for copying trace data */
 int arm_trace_register_drvbuf(uint64_t address, uint64_t size)
 {
-	mmap_add_dynamic_region(address, address, size, MT_MEMORY
-			| MT_RW | MT_NS);
-	return 0;
+	if (mmap_add_dynamic_region(address, address, size, MT_MEMORY
+			| MT_RW | MT_NS))
+		return SMC_UNK;
+	return SMC_OK;
 }
 
 int arm_trace_unregister_drvbuf(uint64_t address, uint64_t size)
 {
-	mmap_remove_dynamic_region(address, size);
-	return 0;
+	if (mmap_remove_dynamic_region(address, size))
+		return SMC_UNK;
+
+	return SMC_OK;
 }
 
 int arm_trace_copy_to_drvbuf(uint64_t dst,  uint64_t src, uint64_t size)

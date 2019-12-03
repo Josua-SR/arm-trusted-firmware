@@ -159,8 +159,8 @@ uintptr_t octeontx_svc_smc_handler(uint32_t smc_fid,
 		break;
 
 	case OCTEONTX_TRC_UNREGISTER_DRVBUF:
-		arm_trace_unregister_drvbuf(x1, x2);
-		SMC_RET1(handle, 0);
+		ret = arm_trace_unregister_drvbuf(x1, x2);
+		SMC_RET1(handle, ret);
 		break;
 #endif
 
