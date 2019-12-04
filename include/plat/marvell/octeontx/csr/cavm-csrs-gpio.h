@@ -3551,8 +3551,42 @@ union cavm_gpio_pkg_ver
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } cnf95xxp2;
-    /* struct cavm_gpio_pkg_ver_cnf95xxp2 f95mm; */
-    /* struct cavm_gpio_pkg_ver_cnf95xxp1 loki; */
+    struct cavm_gpio_pkg_ver_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_3_63         : 61;
+        uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
+                                                                 0x0 = SKU package A = for CNF95XXMM.
+
+                                                                 Internal:
+                                                                 Architecturally defined, same encoding across same die. */
+#else /* Word 0 - Little Endian */
+        uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
+                                                                 0x0 = SKU package A = for CNF95XXMM.
+
+                                                                 Internal:
+                                                                 Architecturally defined, same encoding across same die. */
+        uint64_t reserved_3_63         : 61;
+#endif /* Word 0 - End */
+    } f95mm;
+    struct cavm_gpio_pkg_ver_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_3_63         : 61;
+        uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
+                                                                 0x0 = SKU package A = for CNF95XXN.
+
+                                                                 Internal:
+                                                                 Architecturally defined, same encoding across same die. */
+#else /* Word 0 - Little Endian */
+        uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
+                                                                 0x0 = SKU package A = for CNF95XXN.
+
+                                                                 Internal:
+                                                                 Architecturally defined, same encoding across same die. */
+        uint64_t reserved_3_63         : 61;
+#endif /* Word 0 - End */
+    } loki;
 };
 typedef union cavm_gpio_pkg_ver cavm_gpio_pkg_ver_t;
 

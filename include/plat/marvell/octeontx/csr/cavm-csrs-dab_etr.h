@@ -1558,7 +1558,8 @@ union cavm_etrx_pidr2
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
-    struct cavm_etrx_pidr2_cn98xx
+    /* struct cavm_etrx_pidr2_cn96xxp3 cn98xx; */
+    struct cavm_etrx_pidr2_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_8_31         : 24;
@@ -1571,8 +1572,7 @@ union cavm_etrx_pidr2
         uint32_t revision              : 4;  /**< [  7:  4](RO) Architectural revision, as assigned by Arm. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
-    } cn98xx;
-    /* struct cavm_etrx_pidr2_cn98xx cnf95xxp1; */
+    } cnf95xxp1;
     /* struct cavm_etrx_pidr2_cn96xxp3 cnf95xxp2; */
     /* struct cavm_etrx_pidr2_cn96xxp3 f95mm; */
     /* struct cavm_etrx_pidr2_cn96xxp3 loki; */
@@ -1689,7 +1689,7 @@ union cavm_etrx_pidr4
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
-    /* struct cavm_etrx_pidr4_s cn98xx; */
+    /* struct cavm_etrx_pidr4_cn96xxp3 cn98xx; */
     /* struct cavm_etrx_pidr4_s cnf95xxp1; */
     /* struct cavm_etrx_pidr4_cn96xxp3 cnf95xxp2; */
     /* struct cavm_etrx_pidr4_cn96xxp3 f95mm; */
@@ -1980,7 +1980,25 @@ union cavm_etrx_ramsize
         uint32_t reserved_31           : 1;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_etrx_ramsize_s cn; */
+    /* struct cavm_etrx_ramsize_s cn9; */
+    /* struct cavm_etrx_ramsize_s cn96xx; */
+    struct cavm_etrx_ramsize_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_31           : 1;
+        uint32_t rsz                   : 31; /**< [ 30:  0](R/W) Size of the buffer in memory in 32-bit words.
+                                                                 For example, for 1KB buffer this register is 0x00000100.
+                                                                 For 4GB buffer this register is 0x40000000. Must be multiple of 8B. */
+#else /* Word 0 - Little Endian */
+        uint32_t rsz                   : 31; /**< [ 30:  0](R/W) Size of the buffer in memory in 32-bit words.
+                                                                 For example, for 1KB buffer this register is 0x00000100.
+                                                                 For 4GB buffer this register is 0x40000000. Must be multiple of 8B. */
+        uint32_t reserved_31           : 1;
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_etrx_ramsize_s cnf95xx; */
+    /* struct cavm_etrx_ramsize_s f95mm; */
+    /* struct cavm_etrx_ramsize_cn98xx loki; */
 };
 typedef union cavm_etrx_ramsize cavm_etrx_ramsize_t;
 
@@ -2078,7 +2096,75 @@ union cavm_etrx_status
         uint32_t reserved_7_31         : 25;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_etrx_status_s cn; */
+    /* struct cavm_etrx_status_s cn9; */
+    /* struct cavm_etrx_status_s cn96xx; */
+    struct cavm_etrx_status_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_7_31         : 25;
+        uint32_t msi                   : 1;  /**< [  6:  6](RO) Message-signaled interrupt status.
+                                                                 Indicates that a message signaled interrupt is in flight.
+                                                                   0 = No interrupt is in flight.
+                                                                   1 = An interrupt message has been sent and the acknowledge not yet received. */
+        uint32_t memerr                : 1;  /**< [  5:  5](R/W1C) Error has occurred on a memory transaction.
+                                                                 This bit is cleared by:
+                                                                   1. Writing to this register with this bit set when [TMCREADY] is 1.
+                                                                   2. Setting [TRACECAPTEN] when [TRACECAPTEN] is zero. */
+        uint32_t empty                 : 1;  /**< [  4:  4](RO) If set, this bit indicates that the TMC does not contain any valid trace data in the
+                                                                 memory.
+                                                                 This does not, however, mean that the pipeline stages within the TMC are empty.
+                                                                 To determine whether the pipeline stages within TMC are empty, read [TMCREADY].
+                                                                 This bit is valid when [TRACECAPTEN] is 1.
+                                                                 This bit reads as zero when [TRACECAPTEN] is zero. */
+        uint32_t ftempty               : 1;  /**< [  3:  3](RO) This bit is set when trace capture has stopped, and all internal pipelines and buffers
+                                                                 have drained.
+                                                                 Unlike [TMCREADY], it is not affected by buffer drains and AXI accesses. */
+        uint32_t tmcready              : 1;  /**< [  2:  2](RO) This bit is set when all the following are true:
+                                                                   1. Trace capture has stopped and all internal pipelines and buffers have drained.
+                                                                   2. The TMC is not draining because of ETR_FFCR[DRAINBUFFER] being 1.
+                                                                   3. In ETR configuration, the memory interface is not busy. This case can be used to
+                                                                 detect
+                                                                      page table reads in scatter-gather mode when in stopped state. */
+        uint32_t triggered             : 1;  /**< [  1:  1](RO) Set when trace capture is in progress and the TMC has detected a trigger
+                                                                 event. This bit is cleared when leaving disabled state. */
+        uint32_t full                  : 1;  /**< [  0:  0](R/W) This bit can help to determine how much of the trace buffer contains valid data,
+                                                                 or whether the write pointer has wrapped at least once.
+                                                                 Software must initialize this bit before leaving the Disabled state. */
+#else /* Word 0 - Little Endian */
+        uint32_t full                  : 1;  /**< [  0:  0](R/W) This bit can help to determine how much of the trace buffer contains valid data,
+                                                                 or whether the write pointer has wrapped at least once.
+                                                                 Software must initialize this bit before leaving the Disabled state. */
+        uint32_t triggered             : 1;  /**< [  1:  1](RO) Set when trace capture is in progress and the TMC has detected a trigger
+                                                                 event. This bit is cleared when leaving disabled state. */
+        uint32_t tmcready              : 1;  /**< [  2:  2](RO) This bit is set when all the following are true:
+                                                                   1. Trace capture has stopped and all internal pipelines and buffers have drained.
+                                                                   2. The TMC is not draining because of ETR_FFCR[DRAINBUFFER] being 1.
+                                                                   3. In ETR configuration, the memory interface is not busy. This case can be used to
+                                                                 detect
+                                                                      page table reads in scatter-gather mode when in stopped state. */
+        uint32_t ftempty               : 1;  /**< [  3:  3](RO) This bit is set when trace capture has stopped, and all internal pipelines and buffers
+                                                                 have drained.
+                                                                 Unlike [TMCREADY], it is not affected by buffer drains and AXI accesses. */
+        uint32_t empty                 : 1;  /**< [  4:  4](RO) If set, this bit indicates that the TMC does not contain any valid trace data in the
+                                                                 memory.
+                                                                 This does not, however, mean that the pipeline stages within the TMC are empty.
+                                                                 To determine whether the pipeline stages within TMC are empty, read [TMCREADY].
+                                                                 This bit is valid when [TRACECAPTEN] is 1.
+                                                                 This bit reads as zero when [TRACECAPTEN] is zero. */
+        uint32_t memerr                : 1;  /**< [  5:  5](R/W1C) Error has occurred on a memory transaction.
+                                                                 This bit is cleared by:
+                                                                   1. Writing to this register with this bit set when [TMCREADY] is 1.
+                                                                   2. Setting [TRACECAPTEN] when [TRACECAPTEN] is zero. */
+        uint32_t msi                   : 1;  /**< [  6:  6](RO) Message-signaled interrupt status.
+                                                                 Indicates that a message signaled interrupt is in flight.
+                                                                   0 = No interrupt is in flight.
+                                                                   1 = An interrupt message has been sent and the acknowledge not yet received. */
+        uint32_t reserved_7_31         : 25;
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_etrx_status_s cnf95xx; */
+    /* struct cavm_etrx_status_s f95mm; */
+    /* struct cavm_etrx_status_cn98xx loki; */
 };
 typedef union cavm_etrx_status cavm_etrx_status_t;
 
@@ -2263,7 +2349,7 @@ static inline uint64_t CAVM_ETRX_WTRPOINTER(uint64_t a)
  * Register (DAB32b) etr#_wtrpointerhi
  *
  * ETR Write Pointer High Register
- * In the ETR configuration, memory addresses are 40 bits wide. This register is used
+ * In the ETR configuration, memory addresses are 52 bits wide. This register is used
  * together with ETR()_RWP to write entries into the trace memory.
  */
 union cavm_etrx_wtrpointerhi

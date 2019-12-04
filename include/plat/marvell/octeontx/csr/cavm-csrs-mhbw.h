@@ -503,7 +503,70 @@ union cavm_mhbw_jd_hdr_word_0_s
         uint64_t reserved_61_63        : 3;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_mhbw_jd_hdr_word_0_s_s cn; */
+    /* struct cavm_mhbw_jd_hdr_word_0_s_s cn9; */
+    /* struct cavm_mhbw_jd_hdr_word_0_s_s cnf95xxp1; */
+    struct cavm_mhbw_jd_hdr_word_0_s_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_61_63        : 3;
+        uint64_t toth                  : 4;  /**< [ 60: 57] Job timeout threshold. The timeout timer starts counting when the job
+                                                                 gets started on a HAB. The timer increments by one each SCLK cycle,
+                                                                 and a timeout occurs when the timer reaches the threshold specified
+                                                                 as:
+
+                                                                 _ ((MHBW()_JD_CFG[TIMEOUT_MULT]\<\<4)+[TOTH])*2^([TOTH_TICK]+4)
+
+                                                                 Setting [TOTH]=0 disables the timeout timer.
+
+                                                                 For example, to get 26.624 us timeout value when BPHY runs at 1GHz,
+                                                                 set [TOTH_TICK]=0x6, [TOTH]=0xA, and MHBW()_JD_CFG[TIMEOUT_MULT]=0x1. */
+        uint64_t toth_tick             : 4;  /**< [ 56: 53] Timeout threshold tick count. See MHBW_JD_HDR_WORD_0_S[TOTH] for
+                                                                 details. */
+        uint64_t jce_cnt               : 6;  /**< [ 52: 47] Specifies the number of 64-bit words in the job completion event
+                                                                 subdescriptor, starting from MHBW_JD_JCE_PTR_S[START_ADDR].
+                                                                 Supports up to 62 x 64-bit words, i.e., 31 PSM commands. */
+        uint64_t reserved_42_46        : 5;
+        uint64_t dma_p0_wrcnt          : 10; /**< [ 41: 32] Specifies the number of 64-bit words in the DMA subdescriptor for
+                                                                 write port 0. Supports up to 1023 64-bit words. */
+        uint64_t reserved_26_31        : 6;
+        uint64_t dma_p0_rdcnt          : 10; /**< [ 25: 16] Specifies the number of 64-bit words in the DMA subdescriptor for
+                                                                 read port 0. Supports up to 1023 64-bit words. */
+        uint64_t reserved_10_15        : 6;
+        uint64_t cfg_cnt               : 10; /**< [  9:  0] Specifies the number of 64-bit words in the job configuration
+                                                                 subdescriptor, starting from MHBW_JD_CFG_PTR_S[START_ADDR].  Supports
+                                                                 up to 1023 64-bit words. */
+#else /* Word 0 - Little Endian */
+        uint64_t cfg_cnt               : 10; /**< [  9:  0] Specifies the number of 64-bit words in the job configuration
+                                                                 subdescriptor, starting from MHBW_JD_CFG_PTR_S[START_ADDR].  Supports
+                                                                 up to 1023 64-bit words. */
+        uint64_t reserved_10_15        : 6;
+        uint64_t dma_p0_rdcnt          : 10; /**< [ 25: 16] Specifies the number of 64-bit words in the DMA subdescriptor for
+                                                                 read port 0. Supports up to 1023 64-bit words. */
+        uint64_t reserved_26_31        : 6;
+        uint64_t dma_p0_wrcnt          : 10; /**< [ 41: 32] Specifies the number of 64-bit words in the DMA subdescriptor for
+                                                                 write port 0. Supports up to 1023 64-bit words. */
+        uint64_t reserved_42_46        : 5;
+        uint64_t jce_cnt               : 6;  /**< [ 52: 47] Specifies the number of 64-bit words in the job completion event
+                                                                 subdescriptor, starting from MHBW_JD_JCE_PTR_S[START_ADDR].
+                                                                 Supports up to 62 x 64-bit words, i.e., 31 PSM commands. */
+        uint64_t toth_tick             : 4;  /**< [ 56: 53] Timeout threshold tick count. See MHBW_JD_HDR_WORD_0_S[TOTH] for
+                                                                 details. */
+        uint64_t toth                  : 4;  /**< [ 60: 57] Job timeout threshold. The timeout timer starts counting when the job
+                                                                 gets started on a HAB. The timer increments by one each SCLK cycle,
+                                                                 and a timeout occurs when the timer reaches the threshold specified
+                                                                 as:
+
+                                                                 _ ((MHBW()_JD_CFG[TIMEOUT_MULT]\<\<4)+[TOTH])*2^([TOTH_TICK]+4)
+
+                                                                 Setting [TOTH]=0 disables the timeout timer.
+
+                                                                 For example, to get 26.624 us timeout value when BPHY runs at 1GHz,
+                                                                 set [TOTH_TICK]=0x6, [TOTH]=0xA, and MHBW()_JD_CFG[TIMEOUT_MULT]=0x1. */
+        uint64_t reserved_61_63        : 3;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_mhbw_jd_hdr_word_0_s_cnf95xxp2 f95mm; */
+    /* struct cavm_mhbw_jd_hdr_word_0_s_cnf95xxp2 loki; */
 };
 
 /**
@@ -3085,7 +3148,18 @@ union cavm_mhbwx_adr_error_jce_w0
         uint64_t ls_word               : 64; /**< [ 63:  0](R/W) The first word of the PSM command to send on a job timeout. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_mhbwx_adr_error_jce_w0_s cn; */
+    /* struct cavm_mhbwx_adr_error_jce_w0_s cn9; */
+    /* struct cavm_mhbwx_adr_error_jce_w0_s cnf95xxp1; */
+    struct cavm_mhbwx_adr_error_jce_w0_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t ls_word               : 64; /**< [ 63:  0](R/W) The first word of the PSM command to send on an address error. */
+#else /* Word 0 - Little Endian */
+        uint64_t ls_word               : 64; /**< [ 63:  0](R/W) The first word of the PSM command to send on an address error. */
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_mhbwx_adr_error_jce_w0_cnf95xxp2 f95mm; */
+    /* struct cavm_mhbwx_adr_error_jce_w0_cnf95xxp2 loki; */
 };
 typedef union cavm_mhbwx_adr_error_jce_w0 cavm_mhbwx_adr_error_jce_w0_t;
 
@@ -3125,7 +3199,18 @@ union cavm_mhbwx_adr_error_jce_w1
         uint64_t ms_word               : 64; /**< [ 63:  0](R/W) The second word of the PSM command to send on a job timeout. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_mhbwx_adr_error_jce_w1_s cn; */
+    /* struct cavm_mhbwx_adr_error_jce_w1_s cn9; */
+    /* struct cavm_mhbwx_adr_error_jce_w1_s cnf95xxp1; */
+    struct cavm_mhbwx_adr_error_jce_w1_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t ms_word               : 64; /**< [ 63:  0](R/W) The second word of the PSM command to send on an address error. */
+#else /* Word 0 - Little Endian */
+        uint64_t ms_word               : 64; /**< [ 63:  0](R/W) The second word of the PSM command to send on an address error. */
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_mhbwx_adr_error_jce_w1_cnf95xxp2 f95mm; */
+    /* struct cavm_mhbwx_adr_error_jce_w1_cnf95xxp2 loki; */
 };
 typedef union cavm_mhbwx_adr_error_jce_w1 cavm_mhbwx_adr_error_jce_w1_t;
 

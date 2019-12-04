@@ -56,11 +56,14 @@ extern int cavm_fuse_display(cavm_node_t node);
 /**
  * Read a single fuse bit from the field set (FUSF)
  *
- * @param fuse   Fuse number (0-1024)
+ * @param node
+ * @param fuse     Fuse number (0-1024)
+ * @param read_raw True if the raw efuses should be read. False if the cached values should be
+ *                 read. Generally you want the cached values.
  *
  * @return fuse value: 0 or 1
  */
-extern int cavm_fuse_field_read(cavm_node_t node, int fuse);
+extern int cavm_fuse_field_read(cavm_node_t node, int fuse, bool read_raw);
 
 /**
  * Soft blow a fuse in the field set (FUSF). Soft blown fuses
@@ -94,9 +97,11 @@ extern int cavm_fuse_field_hard_blow(cavm_node_t node, int start_fuse, uint64_t 
 /**
  * Display all field fuses in a human readable format
  *
- * @param node   Node to display
+ * @param node     Node to display
+ * @param read_raw True if the raw efuses should be read. False if the cached values should be
+ *                 read. Generally you want the cached values.
  *
  * @return Zero on success, negative on failure
  */
-extern int cavm_fuse_field_display(cavm_node_t node);
+extern int cavm_fuse_field_display(cavm_node_t node, bool read_raw);
 
