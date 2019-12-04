@@ -186,6 +186,7 @@ int timers_octeontx_init_delay(void)
 	if (IS_OCTEONTX_PN(midr, T96PARTNUM) ||
 		IS_OCTEONTX_PN(midr, F95PARTNUM) ||
 		IS_OCTEONTX_PN(midr, LOKIPARTNUM) ||
+		IS_OCTEONTX_PN(midr, F95MMPARTNUM) ||
 		IS_OCTEONTX_PN(midr, T98PARTNUM)) {
 
 		plat_timer_ops.clk_div	= 100;

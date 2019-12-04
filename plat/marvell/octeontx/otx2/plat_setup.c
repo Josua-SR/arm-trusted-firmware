@@ -83,7 +83,7 @@ unsigned int plat_configure_cpt_rid(void)
  * Program REVID for PCIe devices.
  * Bits 0..1: minor pass
  * Bits 3..2: major pass
- * Bits 7..4: midr id, 0:96, 1:95, 2:loki, 3:98, f:unknown
+ * Bits 7..4: midr id, 0:96, 1:95, 2:loki, 3:98, 4:f95mm f:unknown
  */
 unsigned int plat_configure_rid(void)
 {
@@ -109,6 +109,10 @@ unsigned int plat_configure_rid(void)
 
 	case T98PARTNUM:
 		midr_id = 3;
+		break;
+
+	case F95MMPARTNUM:
+		midr_id = 4;
 		break;
 
 	default:
@@ -299,7 +303,8 @@ void plat_octeontx_cpu_setup(void)
 	set_bit(cvmmemctl1_el1, 6); /* Enable SSO switch tag */
 
 	if (IS_OCTEONTX_PN(midr, F95PARTNUM)
-	    || IS_OCTEONTX_PN(midr, LOKIPARTNUM))
+	    || IS_OCTEONTX_PN(midr, LOKIPARTNUM)
+	    || IS_OCTEONTX_PN(midr, F95MMPARTNUM))
 		set_bit(cvmmemctl1_el1, 58); /* Enable 128-bit access to BPHY */
 
 	/*

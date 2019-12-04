@@ -15,6 +15,7 @@
 #define OCTEONTX2_CN96XX_MIDR		0x430F0B20
 #define OCTEONTX2_CNF95XX_MIDR		0x430F0B30
 #define OCTEONTX2_LOKI_MIDR		0x430F0B40
+#define OCTEONTX2_F95MM_MIDR		0x430F0B50
 
 func octeontx2_reset_func
 	ret
@@ -57,6 +58,11 @@ declare_cpu_ops octeontx2, OCTEONTX2_LOKI_MIDR, \
 	octeontx2_cluster_pwr_dwn
 
 declare_cpu_ops octeontx2, OCTEONTX2_CN98XX_MIDR, \
+	octeontx2_reset_func, \
+	octeontx2_core_pwr_dwn, \
+	octeontx2_cluster_pwr_dwn
+
+declare_cpu_ops octeontx2, OCTEONTX2_F95MM_MIDR, \
 	octeontx2_reset_func, \
 	octeontx2_core_pwr_dwn, \
 	octeontx2_cluster_pwr_dwn

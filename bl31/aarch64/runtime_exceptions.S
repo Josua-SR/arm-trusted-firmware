@@ -117,7 +117,7 @@
 
 	/* Synchronous exceptions other than the above are assumed to be EA */
 #if (defined(PLAT_f95) || defined(PLAT_t96) || defined(PLAT_loki) || \
-	defined(PLAT_t98))
+	defined(PLAT_t98) || defined(PLAT_f95mm))
 	/* -----------------------------------------------------
 	 * Handle Cavium-specific trap - synchronous data abort
 	 * with (as per ARM's ARM DDI0487B) EC = 0x1f, which
