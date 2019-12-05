@@ -608,8 +608,8 @@ static int cgx_link_bringdown(int cgx_id, int lmac_id)
 	 * In case of QSGMII, always bring down the link even
 	 * if the link was not brought up
 	 */
-	if ((lmac_ctx->s.link_enable == 0) && (lmac_cfg->mode !=
-				CAVM_CGX_LMAC_TYPES_E_QSGMII)) {
+	if ((lmac_ctx->s.init_link == 0) && (lmac_ctx->s.link_enable == 0) &&
+	    (lmac_cfg->mode != CAVM_CGX_LMAC_TYPES_E_QSGMII)) {
 		debug_cgx_intf("%s: Link status for %d:%d is already down\n",
 			__func__, cgx_id, lmac_id);
 		link.s.link_up = lmac_ctx->s.link_up;
