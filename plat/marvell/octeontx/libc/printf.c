@@ -38,14 +38,31 @@
 		}							\
 	} while(0)
 
-static int string_print(char **s, size_t *n, int mode, const char *str)
+static int string_print(char **s, size_t *n, int mode, const char *str,
+			int left_align, char padc, int padn)
 {
 	int count = 0;
+	int i;
 
 	assert(str != NULL);
 
+	if (!left_align) {
+		for (i = 0; str[i] != '\0' && padn > 0; i++)
+			padn--;
+		while (padn > 0) {
+			PUTCH(padc, mode, *s, *n, count);
+			padn--;
+		}
+	}
+
 	for ( ; *str != '\0'; str++) {
 		PUTCH(*str, mode, *s, *n, count);
+	}
+
+	if (left_align) {
+		while (count < padn) {
+			PUTCH(padc, mode, *s, *n, count);
+		}
 	}
 
 	return count;
@@ -92,6 +109,7 @@ static int unsigned_num_print(char **s, size_t *n, int mode,
  * %d or %i - signed decimal format
  * %u - unsigned decimal format
  * %p - pointer format
+ * %c - character format
  *
  * The following length specifiers are supported by this print
  * %l - long int (64-bit on AArch64)
@@ -100,6 +118,10 @@ static int unsigned_num_print(char **s, size_t *n, int mode,
  *
  * The following padding specifiers are supported by this print
  * %0NN - Left-pad the number with 0s (NN is a decimal number)
+ *
+ * The following flags specifiers are supported by this print
+ * %+ - Forces to preceed the result with plus or minus sign
+ * %- - Left-justify string within the given field width
  *
  * The print exits on all other formats specifiers other than valid
  * combinations of the above specifiers.
@@ -110,13 +132,18 @@ int kvnprintf(char *s, size_t n, int mode, const char *fmt, va_list args)
 	long long int num;
 	unsigned long long int unum;
 	char *str;
+	char c;
 	char padc = '\0'; /* Padding character */
 	int padn; /* Number of characters to pad */
 	int count = 0; /* Number of printed characters */
+	int sign;
+	int left_align;
 
 	while (*fmt != '\0') {
 		l_count = 0;
 		padn = 0;
+		sign = 0;
+		left_align = 0;
 
 		if (*fmt == '%') {
 			fmt++;
@@ -130,21 +157,32 @@ loop:
 					PUTCH('-', mode, s, n, count);
 					unum = (unsigned long long int)-num;
 					padn--;
-				} else
+				} else {
+					if (sign) {
+						PUTCH('+', mode, s, n, count);
+						padn--;
+					}
 					unum = (unsigned long long int)num;
+				}
 
 				count += unsigned_num_print(&s, &n, mode, unum,
 							    10, padc, padn);
 				break;
+			case 'c':
+				c = va_arg(args, int);
+				PUTCH(c, mode, s, n, count);
+				break;
 			case 's':
 				str = va_arg(args, char *);
-				count += string_print(&s, &n, mode, str);
+				count += string_print(&s, &n, mode, str,
+						      left_align, padc, padn);
 				break;
 			case 'p':
 				unum = (uintptr_t)va_arg(args, void *);
 				if (unum > 0U) {
 					count += string_print(&s, &n,
-							      mode, "0x");
+							      mode, "0x", 0,
+							      padc, 0);
 					padn -= 2;
 				}
 
@@ -174,6 +212,25 @@ loop:
 			case '0':
 				padc = '0';
 				padn = 0;
+				fmt++;
+
+				for (;;) {
+					char ch = *fmt;
+					if ((ch < '0') || (ch > '9')) {
+						goto loop;
+					}
+					padn = (padn * 10) + (ch - '0');
+					fmt++;
+				}
+				assert(0); /* Unreachable */
+			case '+':
+				sign = 1;
+				fmt++;
+				goto loop;
+			case '-':
+				padc = ' ';
+				padn = 0;
+				left_align = 1;
 				fmt++;
 
 				for (;;) {
