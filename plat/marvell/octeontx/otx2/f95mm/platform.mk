@@ -33,7 +33,6 @@ PLAT_BL_COMMON_SOURCES	+=	plat/marvell/octeontx/otx2/f95mm/plat_f95mm_setup.c	\
 				drivers/marvell/qlm/qlm_gserr.c			\
 				drivers/marvell/qlm/qlm_gserr_ops.c		\
 				plat/marvell/octeontx/otx2/plat_setup.c		\
-				plat/marvell/octeontx/otx2/plat_svc_mdio.c	\
 
 BL2_SOURCES		+=	plat/marvell/octeontx/otx2/f95mm/plat_f95mm_ecam.c	\
 				drivers/marvell/sh_fwdata.c				\
@@ -68,6 +67,8 @@ BL31_SOURCES		+=	plat/marvell/octeontx/otx2/aarch64/plat_octeontx_common.S	\
 				plat/marvell/octeontx/otx2/plat_npc_mcam_profile.c	\
 				plat/marvell/octeontx/otx2/plat_legacy_pm_ops.c		\
 				plat/marvell/octeontx/otx2/f95mm/plat_f95mm_svc.c		\
+				plat/marvell/octeontx/otx2/plat_svc.c		\
+				plat/marvell/octeontx/otx2/plat_svc_mdio.c	\
 
 ifeq (${RAS_EXTENSION},1)
 BL31_SOURCES		+=	plat/marvell/octeontx/otx2/smc_ras.c
