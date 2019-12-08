@@ -55,7 +55,7 @@
 #define MAX_USXGMII_RATE_TYPES (CAVM_CGX_USXGMII_RATE_E_RSV_RATE + 1)
 
 /* TIMEOUT for different usecases */
-#define CGX_POLL_AN_STATUS		100000
+#define CGX_POLL_AN_STATUS		10000
 #define CGX_POLL_TRAINING_STATUS	500000	/* 500 ms */
 
 /* Read-Modify-Write APIs for CGX CSRs */
