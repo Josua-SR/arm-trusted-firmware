@@ -216,4 +216,14 @@ void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx,
  */
 int qlm_gserr_eye_capture(int qlm, int lane, int show_data, gser_qlm_eye_t *eye_data);
 
+/**
+ * Manually turn on or off the SERDES transmitter
+ *
+ * @param node	  Node to use in numa setup
+ * @param qlm	   QLM to use
+ * @param lane	  Which lane
+ * @param enable_tx True to enable transmitter, false to disable
+ */
+void qlm_gserr_tx_control(int qlm, int lane, bool enable_tx);
+
 #endif /* _QLM_GSERR_H_ */

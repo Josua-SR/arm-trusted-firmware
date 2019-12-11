@@ -31,5 +31,6 @@ const qlm_ops_t qlm_gserc_ops = {
 	.qlm_get_tune_lane_tx = qlm_gserc_get_tune_lane_tx,
 	.qlm_rx_equalization = qlm__gserc_rx_equalization,
 	.qlm_display_settings = qlm_gserc_display_settings,
-	.qlm_eye_capture = qlm_gserc_eye_capture
+	.qlm_eye_capture = qlm_gserc_eye_capture,
+	.qlm_tx_control = qlm_gserc_tx_control,
 };

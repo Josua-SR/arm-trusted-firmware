@@ -40,5 +40,6 @@ const qlm_ops_t qlm_gsern_ops = {
 	.qlm_get_tune_lane_tx = qlm_get_tune_lane_tx_gsern,
 	.qlm_rx_equalization = qlm_rx_equalization_gsern,
 	.qlm_display_settings = qlm_display_settings_gsern,
-	.qlm_eye_capture = gsern_eye_capture
+	.qlm_eye_capture = gsern_eye_capture,
+	.qlm_tx_control = qlm_tx_control_gsern,
 };

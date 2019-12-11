@@ -230,6 +230,7 @@ typedef struct {
 			bool show_rx, char *buf, int size);
 	int (*qlm_eye_capture)(int qlm, int lane, int show_data,
 			gser_qlm_eye_t *eye_data);
+	void (*qlm_tx_control)(int qlm, int lane, bool enable_tx);
 } qlm_ops_t;
 
 /* QLM platform specific API */
