@@ -336,6 +336,84 @@ static int cgx_get_usxgmii_speed_mbps_from_rate(int rate)
 	return speed;
 }
 
+uint64_t cgx_get_lane_mask(int lane, int mode)
+{
+	uint64_t lane_mask = 0;
+
+	switch (mode) {
+	case CAVM_CGX_LMAC_TYPES_E_SGMII:
+	case CAVM_CGX_LMAC_TYPES_E_TENG_R:
+	case CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R:
+	case CAVM_CGX_LMAC_TYPES_E_USXGMII:
+		lane_mask = 1ULL << lane;
+	break;
+	case CAVM_CGX_LMAC_TYPES_E_RXAUI:
+	case CAVM_CGX_LMAC_TYPES_E_FIFTYG_R:
+		if (lane & 1)
+			lane_mask = 3ULL << (lane - 1);
+		else
+			lane_mask = 3ULL << lane;
+	break;
+	case CAVM_CGX_LMAC_TYPES_E_XAUI:
+	case CAVM_CGX_LMAC_TYPES_E_FORTYG_R:
+	case CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R:
+		lane_mask = 0xF;
+	break;
+	default:
+		lane_mask = 0;
+	break;
+	}
+
+	return lane_mask;
+}
+
+/*
+ * Called whenever CGX needs to enable or disable the SERDES transmitter
+ */
+static int cgx_serdes_tx_control(int cgx_id, int lmac_id, bool enable_tx)
+{
+	int qlm, lane, num_lanes;
+	uint64_t lane_mask;
+	const qlm_ops_t *qlm_ops;
+	cavm_cgxx_spux_control1_t spux_ctrl1;
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+
+	/* Only do first LMAC of USXGMII */
+	if (cgx->usxgmii_mode && (lmac_id > 0))
+		return 0;
+
+	lane = lmac->rev_lane;
+	lane_mask = cgx_get_lane_mask(lane, lmac->mode);
+
+	qlm = lmac->qlm;
+	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+	if (qlm_ops == NULL) {
+		debug_cgx("%s:get_qlm_ops failed %d\n", __func__, qlm);
+		return -1;
+	}
+
+	/* Always disable TX in loopback mode */
+	spux_ctrl1.u = CSR_READ(CAVM_CGXX_SPUX_CONTROL1(cgx_id, lmac_id));
+	if (spux_ctrl1.s.loopbck)
+		enable_tx = false;
+
+	num_lanes = qlm_get_lanes(qlm);
+	for (lane = 0; lane < num_lanes; lane++) {
+		if (!(lane_mask & (1 << lane)))
+			continue;
+
+		qlm_ops->qlm_tx_control(qlm, lane, enable_tx);
+	}
+
+	return 0;
+}
+
 /* This function initializes the CGX LMAC for
  * a particular mode
  */
@@ -365,6 +443,7 @@ void cgx_lmac_init(int cgx_id, int lmac_id)
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmr_global_config_t,
 		CAVM_CGXX_CMR_GLOBAL_CONFIG(cgx_id), cgx_clk_enable, 1);
 
+	cgx_serdes_tx_control(cgx_id, lmac_id, false);
 	/* disable LMAC */
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
 		CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id), enable, 0);
@@ -1159,6 +1238,7 @@ int cgx_fec_change(int cgx_id, int lmac_id, int new_fec)
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmr_global_config_t,
 			CAVM_CGXX_CMR_GLOBAL_CONFIG(cgx_id), cgx_clk_enable, 1);
 
+	cgx_serdes_tx_control(cgx_id, lmac_id, false);
 	/* disable LMAC */
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
 			CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id), enable, 0);
@@ -1215,38 +1295,9 @@ int cgx_fec_change(int cgx_id, int lmac_id, int new_fec)
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
 			CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id), enable, 1);
 
+	cgx_serdes_tx_control(cgx_id, lmac_id, true);
+
 	return 0;
-}
-
-uint64_t cgx_get_lane_mask(int lane, int mode)
-{
-	uint64_t lane_mask = 0;
-
-	switch (mode) {
-	case CAVM_CGX_LMAC_TYPES_E_SGMII:
-	case CAVM_CGX_LMAC_TYPES_E_TENG_R:
-	case CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R:
-	case CAVM_CGX_LMAC_TYPES_E_USXGMII:
-		lane_mask = 1ULL << lane;
-	break;
-	case CAVM_CGX_LMAC_TYPES_E_RXAUI:
-	case CAVM_CGX_LMAC_TYPES_E_FIFTYG_R:
-		if (lane & 1)
-			lane_mask = 3ULL << (lane - 1);
-		else
-			lane_mask = 3ULL << lane;
-	break;
-	case CAVM_CGX_LMAC_TYPES_E_XAUI:
-	case CAVM_CGX_LMAC_TYPES_E_FORTYG_R:
-	case CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R:
-		lane_mask = 0xF;
-	break;
-	default:
-		lane_mask = 0;
-	break;
-	}
-
-	return lane_mask;
 }
 
 static int cgx_complete_sw_an(int cgx_id, int lmac_id)
@@ -1519,6 +1570,7 @@ int cgx_sgmii_set_link_up(int cgx_id, int lmac_id)
 		CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id),
 		enable, 1);
 
+	cgx_serdes_tx_control(cgx_id, lmac_id, true);
 	/* disable GMI */
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_gmp_pcs_miscx_ctl_t,
 			CAVM_CGXX_GMP_PCS_MISCX_CTL(cgx_id, lmac_id),
@@ -1659,6 +1711,7 @@ int cgx_sgmii_set_link_down(int cgx_id, int lmac_id)
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmr_global_config_t,
 		CAVM_CGXX_CMR_GLOBAL_CONFIG(cgx_id), cgx_clk_enable, 1);
 
+	cgx_serdes_tx_control(cgx_id, lmac_id, false);
 	/* disable LMAC */
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
 		CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id), enable, 0);
@@ -1742,6 +1795,7 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id)
 			an_en, 0); /* disable AN for USXGMII */
 	}
 
+	cgx_serdes_tx_control(cgx_id, lmac_id, false);
 	/* disable LMAC */
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
 			CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id),
@@ -1858,6 +1912,9 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id)
 		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spu_usxgmii_control_t,
 			CAVM_CGXX_SPU_USXGMII_CONTROL(cgx_id),
 			enable, 1);
+
+	/* At this point CGX is driving the serdes. Enable serdes transmitter */
+	cgx_serdes_tx_control(cgx_id, lmac_id, true);
 
 	/* keep the reset values for lane polarity. select deficit
 	 * idle count mode and unidirectional enable/disable
@@ -2227,6 +2284,7 @@ int cgx_xaui_set_link_down(int cgx_id, int lmac_id)
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmr_global_config_t,
 		CAVM_CGXX_CMR_GLOBAL_CONFIG(cgx_id), cgx_clk_enable, 1);
 
+	cgx_serdes_tx_control(cgx_id, lmac_id, false);
 	/* disable LMAC */
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
 		CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id), enable, 0);
