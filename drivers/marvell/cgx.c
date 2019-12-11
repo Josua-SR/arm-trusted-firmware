@@ -2116,7 +2116,7 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 						cgx_id, lmac_id));
 
 				if ((spux_status1.s.rcv_lnk == 1) &&
-					(smux_rx_ctl.s.status == 0) &&
+					(smux_rx_ctl.s.status != 1) &&  /* Verify it is not a local Rx fault */
 					(br_status2.s.err_blks == 0) &&
 					(br_status2.s.ber_cnt == 0))
 					link_up = 1;
@@ -2195,26 +2195,29 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 }
 
 int cgx_xaui_get_link(int cgx_id, int lmac_id,
-		link_state_t *result)
+		link_state_t *result, cgx_lmac_context_t *lmac_ctx)
 {
 	cavm_cgxx_spux_status1_t spux_status1;
+	cavm_cgxx_spux_br_status2_t spux_br_status2;
 	cavm_cgxx_smux_tx_ctl_t smux_tx_ctl;
 	cavm_cgxx_smux_rx_ctl_t	smux_rx_ctl;
 	int speed = 0;
+	cgx_lmac_config_t *lmac = NULL;
 
-	spux_status1.u = CSR_READ(CAVM_CGXX_SPUX_STATUS1(
-					cgx_id, lmac_id));
-	smux_tx_ctl.u = CSR_READ(CAVM_CGXX_SMUX_TX_CTL(
-					cgx_id, lmac_id));
-	smux_rx_ctl.u = CSR_READ(CAVM_CGXX_SMUX_RX_CTL(
-					cgx_id, lmac_id));
+	/* Get the LMAC type for each LMAC */
+	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
+	spux_status1.u = CSR_READ(CAVM_CGXX_SPUX_STATUS1(cgx_id, lmac_id));
+	smux_tx_ctl.u = CSR_READ(CAVM_CGXX_SMUX_TX_CTL(cgx_id, lmac_id));
+	smux_rx_ctl.u = CSR_READ(CAVM_CGXX_SMUX_RX_CTL(cgx_id, lmac_id));
+	/* Check if both Rx and Tx link is up */
 	if ((smux_tx_ctl.s.ls == 0) && (smux_rx_ctl.s.status ==
 			0) && (spux_status1.s.rcv_lnk)) {
-		/* link is up */
 		result->s.link_up = 1;
 		result->s.full_duplex = 1;
 		speed = cgx_get_lane_speed(cgx_id, lmac_id);
+		debug_cgx("%s: spux_status1 0x%llx, smux_tx_ctl 0x%llx smux_rx_ctl 0x%llx\n",
+			__func__, spux_status1.u, smux_tx_ctl.u, smux_rx_ctl.u);
 		debug_cgx("%s: speed obtained %d\n", __func__, speed);
 		result->s.speed = CGX_LINK_NONE;
 		/* obtain the speed enum based on the speed in Mbps */
@@ -2227,6 +2230,44 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 	} else {
 		debug_cgx("%s: spux_status1 0x%llx, smux_tx_ctl 0x%llx smux_rx_ctl 0x%llx\n",
 			__func__, spux_status1.u, smux_tx_ctl.u, smux_rx_ctl.u);
+		uint64_t ber_cnt = 0;
+		uint64_t err_blks = 0;
+
+		/* Only BASE-R protocols track error counts */
+		if ((lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
+			(lmac->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R) ||
+			(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R) ||
+			(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FIFTYG_R) ||
+			(lmac->mode == CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R)) {
+			spux_br_status2.u = CSR_READ(CAVM_CGXX_SPUX_BR_STATUS2(cgx_id, lmac_id));
+			ber_cnt = spux_br_status2.s.ber_cnt;
+			err_blks = spux_br_status2.s.err_blks;
+		}
+
+		/* Check if Rx link is up and error free. */
+		if (lmac_ctx->s.rx_link_up) {
+			if ((smux_rx_ctl.s.status != 1) &&
+			    (spux_status1.s.rcv_lnk) &&
+			    (err_blks == 0) &&
+			    (ber_cnt == 0))
+				lmac_ctx->s.rx_link_up = 1;
+			else {
+				lmac_ctx->s.rx_link_up = 0;
+				if ((smux_rx_ctl.s.status == 1) ||
+					(!spux_status1.s.rcv_lnk)) {
+					debug_cgx("%s: Local Rx fault detected, reinitializing Rx link\n",
+				       __func__);
+				} else
+					debug_cgx("%s: Errors detected (err_blk = %lld, ber_cnt = %lld), reinitializing Rx link\n",
+				       __func__, err_blks, ber_cnt);
+			}
+		}
+
+		/* Check if we are receiving Remote faults from link partner. */
+		if (smux_rx_ctl.s.status == 2) {
+			debug_cgx("%s: Remote fault detected\n",
+			   __func__);
+		}
 
 		/* When the link is down, try to re-initialize the CGX link */
 		result->s.link_up = 0;

@@ -503,30 +503,39 @@ retry_link:
 			}
 			cgx_set_link_state(cgx_id, lmac_id, &link, 0);
 		}
-
-		if (cgx_xaui_set_link_up(cgx_id, lmac_id) == -1) {
-			/* if init link fails, retry */
-			if (count++ < 5) {
-				debug_cgx_intf("%s: %d:%d Init failed,\t"
-					"retrying link\n", __func__,
-					cgx_id, lmac_id);
-				/* clear the error when retrying */
-				cgx_set_error_type(cgx_id, lmac_id, 0);
-				goto retry_link;
+		/* Check if Rx link is down */
+		if (!lmac_ctx->s.rx_link_up) {
+			if (cgx_xaui_set_link_up(cgx_id, lmac_id) == -1) {
+				/* if init link fails, retry */
+				lmac_ctx->s.rx_link_up = 0;
+				if (count++ < 5) {
+					debug_cgx_intf("%s: %d:%d Init failed,\t"
+						"retrying link\n", __func__,
+						cgx_id, lmac_id);
+					/* clear the error when retrying */
+					cgx_set_error_type(cgx_id, lmac_id, 0);
+					goto retry_link;
+				}
+			} else {
+				lmac_ctx->s.rx_link_up = 1;
 			}
 		}
 
-		if (cgx_xaui_get_link(cgx_id, lmac_id, &link) == -1) {
-			/* if link is not up, retry */
-			if (count1++ < 5) {
-				debug_cgx_intf("%s %d:%d Link down,\t"
-					"retrying link\n", __func__,
-					cgx_id, lmac_id);
-				/* clear the error when retrying */
-				cgx_set_error_type(cgx_id, lmac_id, 0);
-				goto retry_link;
+		/* Only check full link (Tx and Rx) is up after verifying Rx is up */
+		if (lmac_ctx->s.rx_link_up) {
+			if (cgx_xaui_get_link(cgx_id, lmac_id, &link, lmac_ctx) == -1) {
+				/* if link is not up, retry */
+				if (count1++ < 5) {
+					debug_cgx_intf("%s %d:%d Link down,\t"
+						"retrying link\n", __func__,
+						cgx_id, lmac_id);
+					/* clear the error when retrying */
+					cgx_set_error_type(cgx_id, lmac_id, 0);
+					goto retry_link;
+				}
 			}
 		}
+
 		if (link.s.link_up == 1) {	/* link is up */
 			if (cgx_get_error_type(cgx_id, lmac_id) &
 						CGX_ERR_MASK)
@@ -1789,6 +1798,13 @@ static int cgx_get_link_status(int cgx_id, int lmac_id,
 	cgx_lmac_config_t *lmac = NULL;
 	phy_config_t *phy = NULL;
 	int ret = 0;
+	cgx_lmac_context_t *lmac_ctx;
+
+	/* get the lmac type and based on lmac
+	 * type, initialize SGMII/XAUI link
+	 */
+
+	lmac_ctx = &lmac_context[cgx_id][lmac_id];
 
 	debug_cgx_intf("%s: %d:%d\n", __func__, cgx_id, lmac_id);
 
@@ -1848,13 +1864,19 @@ static int cgx_get_link_status(int cgx_id, int lmac_id,
 		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R) ||
 		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_USXGMII)) {
 		/* Obtain the link status from CGX CSRs */
-		if (cgx_xaui_get_link(cgx_id, lmac_id, link) == -1) {
-			/* When the link is down, try to re-initialize
-			 * CGX link
-			 */
-			debug_cgx_intf("%s: %d:%d link down, re-initialize link\n",
-					__func__, cgx_id, lmac_id);
-			ret = cgx_xaui_set_link_up(cgx_id, lmac_id);
+		if (lmac_ctx->s.rx_link_up) {
+			if (cgx_xaui_get_link(cgx_id, lmac_id, link, lmac_ctx) == -1) {
+				/* When the rx link is up but link is still not UP, wait for remote fault to clear */
+				debug_cgx_intf("%s: %d:%d link down\n",
+						   __func__, cgx_id, lmac_id);
+			}
+		} else {
+			debug_cgx_intf("%s: %d:%d link down, re-initialize Rx link\n",
+						   __func__, cgx_id, lmac_id);
+			if (cgx_xaui_set_link_up(cgx_id, lmac_id))
+				lmac_ctx->s.rx_link_up = 0;
+			else
+				lmac_ctx->s.rx_link_up = 1;
 		}
 		debug_cgx_intf("%s: %d:%d link %d speed %d duplex %d\n",
 			__func__, cgx_id, lmac_id,
@@ -1889,7 +1911,6 @@ static int cgx_poll_for_link_cb(int timer)
 				if (lmac_cfg->sfp_slot)
 					valid = cgx_check_sfp_mod_stat(cgx,
 							lmac);
-
 				/* Get the link status */
 				cgx_get_link_status(cgx, lmac, &link);
 
