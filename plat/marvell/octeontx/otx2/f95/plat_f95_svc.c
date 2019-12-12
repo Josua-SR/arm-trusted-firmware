@@ -15,6 +15,7 @@
 #include <bphy.h>
 #include <rvu.h>
 #include <plat_scmi.h>
+#include <cgx.h>
 
 extern void *scmi_handle;
 
@@ -75,6 +76,32 @@ uintptr_t plat_octeontx_svc_smc_handler(uint32_t smc_fid,
 		ret = mdio_debug_write(x1, x2, x3, x4, x5, x6);
 		SMC_RET1(handle, ret);
 		break;
+
+#ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
+	case PLAT_OCTEONTX_SERDES_DBG_GET_MEM:
+		SMC_RET3(handle, SMC_OK,
+			 SERDES_EYE_DATA_BASE, SERDES_SETTINGS_DATA_BASE);
+		break;
+
+	case PLAT_OCTEONTX_SERDES_DBG_GET_EYE:
+		ret = cgx_display_eye(x1, x2, x3);
+		if (ret == CGX_DISPLAY_OK)
+			ret = SMC_OK;
+		else if (ret == CGX_DISPLAY_PENDING)
+			ret = OCTEONTX_SMC_PENDING;
+		else
+			ret = OCTEONTX_SMC_FAIL;
+
+		SMC_RET1(handle, ret);
+		break;
+
+	case PLAT_OCTEONTX_SERDES_DBG_GET_CONF:
+		ret = cgx_display_serdes_settings(x1, x2, x3);
+		ret = ret == CGX_DISPLAY_OK ? SMC_OK : OCTEONTX_SMC_FAIL;
+
+		SMC_RET1(handle, ret);
+		break;
+#endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 
 	default:
 		WARN("Unimplemented OcteonTX Service Call: 0x%x\n", smc_fid);
