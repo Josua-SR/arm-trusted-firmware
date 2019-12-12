@@ -57,6 +57,9 @@
 /* TIMEOUT for different usecases */
 #define CGX_POLL_AN_STATUS		10000
 #define CGX_POLL_TRAINING_STATUS	500000	/* 500 ms */
+#define GSERN_LANEX_TX_RST_SM_TIMEOUT   10000 /* 10 ms */
+#define REMOTE_FAULT_TIMEOUT_MS		10000
+#define TX_IDLE_TOGGLE_US		1000
 
 /* Read-Modify-Write APIs for CGX CSRs */
 #define CAVM_MODIFY_CGX_CSR(type, csr, field, val)        \
@@ -94,6 +97,7 @@
 #define CGX_SPUX_TRAINING_DONE_MASK	1ULL << 13
 #define CGX_SPUX_TRAINING_FAIL_MASK	1ULL << 14
 #define CGX_SPUX_AN_RX_PAGE_MASK	1ULL << 10
+#define GSERN_LANEX_TX_RST_SM_COMPLETE_MASK	1ULL << 33
 
 /* GSERN macros to define BIT masks for polling */
 #define GSERN_RX_IDLEDET_MASK	1ULL << 0
@@ -145,6 +149,10 @@ typedef struct usxgmii_rate_map {
 	int speed_mbps;
 } usxgmii_rate_map_t;
 
+typedef struct cgx_lmac_timers {
+	uint64_t remote_fault_timeout;
+} cgx_lmac_timers_t;
+
 /* this structure will be used to maintain the current
  * link status and also lock mechanism to prevent simultaneous
  * access of CSRs by timer #1 and timer #2 CBs. as, SCRATCHX CSRs
@@ -190,7 +198,9 @@ typedef union cgx_lmac_context {
 		uint64_t mod_stats:2;
 		/* Used to track the Rx link status. */
 		uint64_t rx_link_up:1;
-		uint64_t reserved:26;
+		/* Used to track if a remote fault is detected. */
+		uint64_t remote_fault:1;
+		uint64_t reserved:25;
 	} s;
 } cgx_lmac_context_t;
 
@@ -248,7 +258,8 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id);
 int cgx_xaui_set_link_up(int cgx_id, int lmac_id);
 int cgx_xaui_set_link_down(int cgx_id, int lmac_id);
 int cgx_xaui_get_link(int cgx_id, int lmac_id,
-		link_state_t *result, cgx_lmac_context_t *lmac_ctx);
+		link_state_t *result, cgx_lmac_context_t *lmac_ctx,
+		cgx_lmac_timers_t *lmac_tmr);
 void cgx_set_internal_loopback(int cgx_id, int lmac_id, int enable);
 void cgx_set_external_loopback(int cgx_id, int lmac_id, int enable);
 void cgx_set_error_type(int cgx_id, int lmac_id, uint64_t type);

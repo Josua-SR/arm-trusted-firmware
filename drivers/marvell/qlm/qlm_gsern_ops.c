@@ -42,4 +42,5 @@ const qlm_ops_t qlm_gsern_ops = {
 	.qlm_display_settings = qlm_display_settings_gsern,
 	.qlm_eye_capture = gsern_eye_capture,
 	.qlm_tx_control = qlm_tx_control_gsern,
+	.qlm_tx_sm_rst_control = qlm_tx_sm_rst_control_gsern
 };

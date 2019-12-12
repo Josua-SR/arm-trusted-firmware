@@ -2195,13 +2195,14 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 }
 
 int cgx_xaui_get_link(int cgx_id, int lmac_id,
-		link_state_t *result, cgx_lmac_context_t *lmac_ctx)
+					  link_state_t *result, cgx_lmac_context_t *lmac_ctx,
+					  cgx_lmac_timers_t *lmac_tmr)
 {
 	cavm_cgxx_spux_status1_t spux_status1;
 	cavm_cgxx_spux_br_status2_t spux_br_status2;
 	cavm_cgxx_smux_tx_ctl_t smux_tx_ctl;
 	cavm_cgxx_smux_rx_ctl_t	smux_rx_ctl;
-	int speed = 0;
+	int speed = 0, qlm = 0;
 	cgx_lmac_config_t *lmac = NULL;
 
 	/* Get the LMAC type for each LMAC */
@@ -2210,6 +2211,7 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 	spux_status1.u = CSR_READ(CAVM_CGXX_SPUX_STATUS1(cgx_id, lmac_id));
 	smux_tx_ctl.u = CSR_READ(CAVM_CGXX_SMUX_TX_CTL(cgx_id, lmac_id));
 	smux_rx_ctl.u = CSR_READ(CAVM_CGXX_SMUX_RX_CTL(cgx_id, lmac_id));
+
 	/* Check if both Rx and Tx link is up */
 	if ((smux_tx_ctl.s.ls == 0) && (smux_rx_ctl.s.status ==
 			0) && (spux_status1.s.rcv_lnk)) {
@@ -2226,6 +2228,11 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 				result->s.speed = i;
 				break;
 			}
+		}
+		if (lmac_ctx->s.remote_fault) {
+			debug_cgx("%s: Remote fault cleared\n",
+			   __func__);
+			lmac_ctx->s.remote_fault = 0;
 		}
 	} else {
 		debug_cgx("%s: spux_status1 0x%llx, smux_tx_ctl 0x%llx smux_rx_ctl 0x%llx\n",
@@ -2265,8 +2272,56 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 
 		/* Check if we are receiving Remote faults from link partner. */
 		if (smux_rx_ctl.s.status == 2) {
-			debug_cgx("%s: Remote fault detected\n",
-			   __func__);
+			/* Check if we need to start the remote fault timeout */
+			if (!lmac_ctx->s.remote_fault) {
+				debug_cgx("%s: Remote fault detected\n",
+				   __func__);
+				lmac_tmr->remote_fault_timeout = gser_clock_get_count(GSER_CLOCK_TIME) +
+					REMOTE_FAULT_TIMEOUT_MS * gser_clock_get_rate(GSER_CLOCK_TIME)/1000;
+				lmac_ctx->s.remote_fault = 1;
+			} else {
+				const qlm_ops_t *qlm_ops;
+				uint64_t lane_mask;
+
+				qlm = lmac->qlm;
+				qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+				if (qlm_ops == NULL) {
+					debug_cgx("%s:get_qlm_ops failed %d\n",	__func__, qlm);
+					return -1;
+				}
+				lane_mask = cgx_get_lane_mask(lmac->rev_lane, lmac->mode);
+
+				if (gser_clock_get_count(GSER_CLOCK_TIME) >= lmac_tmr->remote_fault_timeout) {
+					debug_cgx("%s: Remote fault timeout, Resetting Tx\n",
+					   __func__);
+					/* 96XX Pass 1.x and 95XX pass 1.x require a Tx state machine reset */
+					/* Other chips will toggle the Tx idle */
+					if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
+						cavm_is_model(OCTEONTX_CNF95XX_PASS1_X)) {
+						qlm_ops->qlm_tx_sm_rst_control(lmac->qlm,
+								lane_mask, 1);
+					} else
+						cgx_serdes_tx_control(cgx_id, lmac_id, 0);
+
+					udelay(TX_IDLE_TOGGLE_US);
+
+					if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
+						cavm_is_model(OCTEONTX_CNF95XX_PASS1_X)) {
+						if (qlm_ops->qlm_tx_sm_rst_control(lmac->qlm,
+								lane_mask, 0))
+							lmac_ctx->s.remote_fault = 1;
+						else
+							lmac_ctx->s.remote_fault = 0;
+					} else
+						cgx_serdes_tx_control(cgx_id, lmac_id, 1);
+				}
+			}
+		} else {
+			if (lmac_ctx->s.remote_fault) {
+				debug_cgx("%s: Remote fault cleared\n",
+					__func__);
+				lmac_ctx->s.remote_fault = 0;
+			}
 		}
 
 		/* When the link is down, try to re-initialize the CGX link */

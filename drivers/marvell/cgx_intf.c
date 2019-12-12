@@ -45,6 +45,9 @@ static int cgx_timers[MAX_CGX_TIMERS];
 static cgx_lmac_context_t
 		lmac_context[MAX_CGX][MAX_LMAC_PER_CGX];
 
+static cgx_lmac_timers_t
+		lmac_timers[MAX_CGX][MAX_LMAC_PER_CGX];
+
 static const cgx_speed_mode_map speed_mode_map[] = {
 	{CAVM_CGX_LMAC_TYPES_E_SGMII, 0, QLM_MODE_SGMII, CGX_FEC_NONE, 1250, (1 << CGX_MODE_SGMII_BIT)},
 	{CAVM_CGX_LMAC_TYPES_E_SGMII, 0, QLM_MODE_SGMII, CGX_FEC_NONE, 1250, (1 << CGX_MODE_SGMII_BIT)},
@@ -308,6 +311,7 @@ static int cgx_link_bringup(int cgx_id, int lmac_id)
 	int valid;
 	cgx_lmac_config_t *lmac_cfg;
 	cgx_lmac_context_t *lmac_ctx;
+	cgx_lmac_timers_t *lmac_tmr;
 	link_state_t link;
 	int count = 0, count1 = 0;
 
@@ -320,6 +324,8 @@ static int cgx_link_bringup(int cgx_id, int lmac_id)
 			lmac_id, lmac_cfg->mode);
 
 	lmac_ctx = &lmac_context[cgx_id][lmac_id];
+	lmac_tmr = &lmac_timers[cgx_id][lmac_id];
+
 	link.u64 = 0;
 
 	/* link_enable will be set when the LINK UP req is processed.
@@ -523,7 +529,7 @@ retry_link:
 
 		/* Only check full link (Tx and Rx) is up after verifying Rx is up */
 		if (lmac_ctx->s.rx_link_up) {
-			if (cgx_xaui_get_link(cgx_id, lmac_id, &link, lmac_ctx) == -1) {
+			if (cgx_xaui_get_link(cgx_id, lmac_id, &link, lmac_ctx, lmac_tmr) == -1) {
 				/* if link is not up, retry */
 				if (count1++ < 5) {
 					debug_cgx_intf("%s %d:%d Link down,\t"
@@ -1799,12 +1805,14 @@ static int cgx_get_link_status(int cgx_id, int lmac_id,
 	phy_config_t *phy = NULL;
 	int ret = 0;
 	cgx_lmac_context_t *lmac_ctx;
+	cgx_lmac_timers_t *lmac_tmr;
 
 	/* get the lmac type and based on lmac
 	 * type, initialize SGMII/XAUI link
 	 */
 
 	lmac_ctx = &lmac_context[cgx_id][lmac_id];
+	lmac_tmr = &lmac_timers[cgx_id][lmac_id];
 
 	debug_cgx_intf("%s: %d:%d\n", __func__, cgx_id, lmac_id);
 
@@ -1865,7 +1873,7 @@ static int cgx_get_link_status(int cgx_id, int lmac_id,
 		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_USXGMII)) {
 		/* Obtain the link status from CGX CSRs */
 		if (lmac_ctx->s.rx_link_up) {
-			if (cgx_xaui_get_link(cgx_id, lmac_id, link, lmac_ctx) == -1) {
+			if (cgx_xaui_get_link(cgx_id, lmac_id, link, lmac_ctx, lmac_tmr) == -1) {
 				/* When the rx link is up but link is still not UP, wait for remote fault to clear */
 				debug_cgx_intf("%s: %d:%d link down\n",
 						   __func__, cgx_id, lmac_id);

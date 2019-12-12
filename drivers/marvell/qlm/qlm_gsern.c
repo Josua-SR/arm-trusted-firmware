@@ -1725,3 +1725,73 @@ void qlm_tx_control_gsern(int qlm, int lane, bool enable_tx)
 	GSER_TRACE(QLM, "GSERN0.%d: %s TX - Not implemented\n", qlm, lane, (enable_tx) ? "Enable" : "Disable"); //FIXME
 }
 
+/**
+ * Called whenever CGX needs to reset or clear the reset
+ * of the GSERN Lane Tx state machine
+ *
+ * @param qlm
+ * @param lane
+ * @param mode
+ * @param reset_tx True if the serdes Tx state machine should be reset
+ *
+ * @return Zero on success, negative on error
+ */
+int qlm_tx_sm_rst_control_qsern(int qlm, uint64_t lane_mask, int reset_tx)
+{
+	int num_lanes;
+	uint64_t lane_mask1;
+	cavm_gsernx_lanex_rst2_bcfg_t gsernx_lanex_rst2_bcfg;
+
+	num_lanes = qlm_get_lanes(qlm);
+	lane_mask1 = lane_mask;
+
+	if (reset_tx) {
+		/* Assert Tx State Machine Reset */
+		while (lane_mask1) {
+			num_lanes = qlm_get_lanes(qlm);
+			for (int lane = 0; lane < num_lanes; lane++) {
+				if (!(lane_mask1 & (1 << lane)))
+					continue;
+				gsernx_lanex_rst2_bcfg.u = CSR_READ(CAVM_GSERNX_LANEX_RST2_BCFG(
+								qlm, lane));
+				gsernx_lanex_rst2_bcfg.s.rst_tx_rst_sm = 1;
+				CSR_WRITE(CAVM_GSERNX_LANEX_RST2_BCFG(qlm, lane),
+					gsernx_lanex_rst2_bcfg.u);
+			}
+		lane_mask1 >>= num_lanes;
+		}
+	} else {
+		/* Deassert Tx State Machine Reset */
+		while (lane_mask1) {
+			for (int lane = 0; lane < num_lanes; lane++) {
+				if (!(lane_mask1 & (1 << lane)))
+					continue;
+				/* Toggle Tx State Machine Reset */
+				gsernx_lanex_rst2_bcfg.u = CSR_READ(CAVM_GSERNX_LANEX_RST2_BCFG(
+									qlm, lane));
+				gsernx_lanex_rst2_bcfg.s.rst_tx_rst_sm = 0;
+				CSR_WRITE(CAVM_GSERNX_LANEX_RST2_BCFG(qlm, lane),
+						gsernx_lanex_rst2_bcfg.u);
+			}
+			lane_mask1 >>= num_lanes;
+		}
+
+		/* Wait for Tx State Machine to be Ready */
+		while (lane_mask) {
+			num_lanes = qlm_get_lanes(qlm);
+			for (int lane = 0; lane < num_lanes; lane++) {
+				if (!(lane_mask & (1 << lane)))
+					continue;
+				/* Verify Tx State machine reset complete */
+				if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERNX_LANEX_INIT_BSTS(
+					qlm, lane), GSERN_LANEX_TX_RST_SM_COMPLETE_MASK, ==, 1,
+						GSERN_LANEX_TX_RST_SM_TIMEOUT)) {
+					GSER_TRACE(QLM, "%s: QLM%d.LANE%d Timeout waiting for reset of Tx state machine to complete\n", __func__, qlm, lane);
+					return -1;
+				}
+			}
+			lane_mask >>= num_lanes;
+		}
+	}
+	return 0;
+}
