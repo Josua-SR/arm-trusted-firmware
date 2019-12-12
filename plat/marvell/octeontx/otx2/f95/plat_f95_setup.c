@@ -347,6 +347,12 @@ void plat_add_mmio()
 		       CAVM_MDC_BAR_E_MDC_PF_BAR4_SIZE, attr);
 
 	/*
+	 * Map temperature sensor used by qlm gsern code.
+	 */
+	add_map_record(CAVM_TSN_BAR_E_TSNX_PF_BAR0(2),
+		       CAVM_TSN_BAR_E_TSNX_PF_BAR0_SIZE, attr);
+
+	/*
 	 * Shared memory configuration.
 	 * Map additional memory used by RVU/SFP mgmt(shared between AP & MCP).
 	 * Do not use add_map_record, it will round size up
