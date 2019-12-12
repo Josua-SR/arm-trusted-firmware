@@ -209,8 +209,8 @@ loop:
 				count += unsigned_num_print(&s, &n, mode, unum,
 							    10, padc, padn);
 				break;
-			case '0':
-				padc = '0';
+			case '0' ... '9':
+				padc = (*fmt == '0') ? '0' : ' ';
 				padn = 0;
 				fmt++;
 
@@ -242,6 +242,9 @@ loop:
 					fmt++;
 				}
 				assert(0); /* Unreachable */
+			case '%':
+				PUTCH('%', mode, s, n, count);
+				break;
 			default:
 				/* Exit on any other format specifier */
 				ERROR("kvnprintf: specifier with ASCII code '%d' not supported.",
