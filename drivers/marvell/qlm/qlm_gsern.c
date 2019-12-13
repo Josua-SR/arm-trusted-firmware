@@ -1722,7 +1722,12 @@ int qlm_set_mode_gsern(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
  */
 void qlm_tx_control_gsern(int qlm, int lane, bool enable_tx)
 {
-	GSER_TRACE(QLM, "GSERN0.%d: %s TX - Not implemented\n", qlm, lane, (enable_tx) ? "Enable" : "Disable"); //FIXME
+	if (enable_tx)
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, lane),
+			c.s.tx_idle = 0);
+	else
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, lane),
+			c.s.tx_idle = 1);
 }
 
 /**
