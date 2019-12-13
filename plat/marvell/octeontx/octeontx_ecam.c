@@ -702,7 +702,13 @@ static void octeontx_dev_on_bus_enumerate(struct ecam_device *device)
 	     device->dev < OCTEONTX_ECAM_MAX_DEV;
 	     device->dev++) {
 		device->func = 0;
-		octeontx_ecam_dev_enumerate(device);
+
+		if (MIDR_PARTNUM(read_midr()) == T83PARTNUM &&
+		    device->ecam == 0 && device->bus == 0 &&
+		    device->dev == 0x19 && device->func == 0)
+			plat_ops.disable_dev(device);
+		else
+			octeontx_ecam_dev_enumerate(device);
 	}
 }
 
