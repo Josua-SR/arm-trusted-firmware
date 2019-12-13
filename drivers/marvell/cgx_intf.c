@@ -1068,6 +1068,119 @@ int cgx_set_fec_type(int cgx_id, int lmac_id, int req_fec)
 	return 0;
 }
 
+static int cgx_control_higig2(int cgx_id, int lmac_id, int enable)
+{
+	struct val {
+		int ifg1, ifg2, len, fcssel, skip_after_term, hg2tx_en,
+		    hg2rx_en, phys_en, logl_en, pre_chk, pre_strp, hg_en,
+		    preamble, tx_en, rx_en;
+	};
+	static const struct val values[2] = {
+		[0] = { /* for disabling HiGig2 */
+			.ifg1		 = 8,
+			.ifg2		 = 4,
+			.len		 = 0,
+			.fcssel		 = 0,
+			.skip_after_term = 0,
+			.hg2tx_en	 = 0,
+			.hg2rx_en	 = 0,
+			.phys_en	 = 1,
+			.logl_en	 = 0xffff,
+			.pre_chk	 = 1,
+			.pre_strp	 = 1,
+			.hg_en		 = 0,
+			.preamble	 = 1,
+			.tx_en		 = 0,
+			.rx_en		 = 0
+		},
+		[1] = { /* for enabling HiGig2 */
+			.ifg1		 = 4,
+			.ifg2		 = 4,
+			.len		 = 16,
+			.fcssel		 = 0,
+			.skip_after_term = 1,
+			.hg2tx_en	 = 1,
+			.hg2rx_en	 = 1,
+			.phys_en	 = 1,
+			.logl_en	 = 1,
+			.pre_chk	 = 0,
+			.pre_strp	 = 0,
+			.hg_en		 = 1,
+			.preamble	 = 0,
+			.tx_en		 = 0,
+			.rx_en		 = 0
+		}
+	};
+	cavm_cgxx_spux_misc_control_t misc_control;
+	cavm_cgxx_smux_hg2_control_t hg2_control;
+	cavm_cgxx_smux_rx_frm_ctl_t rx_frm_ctl;
+	cavm_cgxx_smux_tx_append_t tx_append;
+	cavm_cgxx_smux_rx_udd_skp_t udd_skp;
+	cavm_cgxx_smux_cbfc_ctl_t cbfc_ctl;
+	cavm_cgxx_smux_tx_ctl_t tx_ctl;
+	cavm_cgxx_smux_tx_ifg_t ifg;
+	cgx_lmac_config_t *lmac;
+	const struct val *v;
+
+	debug_cgx_intf("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+
+	if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_SGMII ||
+	    lmac->mode == CAVM_CGX_LMAC_TYPES_E_QSGMII) {
+		ERROR("%s: %d:%d HiGig2 is not supported by %s\n",
+		      __func__, cgx_id, lmac_id,
+		      qlm_get_mode_strmap(lmac->mode_idx).bdk_str);
+		return -1;
+        }
+
+	if (enable)
+		v = &values[1];
+	else
+		v = &values[0];
+
+	ifg.u = CSR_READ(CAVM_CGXX_SMUX_TX_IFG(cgx_id, lmac_id));
+	ifg.s.ifg1 = v->ifg1;
+	ifg.s.ifg2 = v->ifg2;
+	CSR_WRITE(CAVM_CGXX_SMUX_TX_IFG(cgx_id, lmac_id), ifg.u);
+
+	udd_skp.u = CSR_READ(CAVM_CGXX_SMUX_RX_UDD_SKP(cgx_id, lmac_id));
+	udd_skp.s.len = v->len;
+	udd_skp.s.fcssel = v->fcssel;
+	CSR_WRITE(CAVM_CGXX_SMUX_RX_UDD_SKP(cgx_id, lmac_id), udd_skp.u);
+
+	misc_control.u = CSR_READ(CAVM_CGXX_SPUX_MISC_CONTROL(cgx_id, lmac_id));
+	misc_control.s.skip_after_term = v->skip_after_term;
+	CSR_WRITE(CAVM_CGXX_SPUX_MISC_CONTROL(cgx_id, lmac_id), misc_control.u);
+
+	hg2_control.u = CSR_READ(CAVM_CGXX_SMUX_HG2_CONTROL(cgx_id, lmac_id));
+	hg2_control.s.hg2tx_en = v->hg2tx_en;
+	hg2_control.s.hg2rx_en = v->hg2rx_en;
+	hg2_control.s.phys_en  = v->phys_en;
+	hg2_control.s.logl_en  = v->logl_en;
+	CSR_WRITE(CAVM_CGXX_SMUX_HG2_CONTROL(cgx_id, lmac_id), hg2_control.u);
+
+	rx_frm_ctl.u = CSR_READ(CAVM_CGXX_SMUX_RX_FRM_CTL(cgx_id, lmac_id));
+	rx_frm_ctl.s.pre_chk  = v->pre_chk;
+	rx_frm_ctl.s.pre_strp = v->pre_strp;
+	CSR_WRITE(CAVM_CGXX_SMUX_RX_FRM_CTL(cgx_id, lmac_id), rx_frm_ctl.u);
+
+	tx_ctl.u = CSR_READ(CAVM_CGXX_SMUX_TX_CTL(cgx_id, lmac_id));
+	tx_ctl.s.hg_en = v->hg_en;
+	CSR_WRITE(CAVM_CGXX_SMUX_TX_CTL(cgx_id, lmac_id), tx_ctl.u);
+
+	tx_append.u = CSR_READ(CAVM_CGXX_SMUX_TX_APPEND(cgx_id, lmac_id));
+	tx_append.s.preamble = v->preamble;
+	CSR_WRITE(CAVM_CGXX_SMUX_TX_APPEND(cgx_id, lmac_id), tx_append.u);
+
+	cbfc_ctl.u = CSR_READ(CAVM_CGXX_SMUX_CBFC_CTL(cgx_id, lmac_id));
+	cbfc_ctl.s.tx_en = v->tx_en;
+	cbfc_ctl.s.rx_en = v->rx_en;
+	CSR_WRITE(CAVM_CGXX_SMUX_CBFC_CTL(cgx_id, lmac_id), cbfc_ctl.u);
+
+	return 0;
+}
+
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
 static int do_prbs(int qlm, int mode, int time)
 {
@@ -1649,6 +1762,9 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 				}
 			break;
 #endif
+			case CGX_CMD_HIGIG:
+				ret = cgx_control_higig2(cgx_id, lmac_id, enable);
+			break;
 			/* FIXME: add support for other commands */
 			default:
 				debug_cgx_intf("%s: %d:%d Invalid request %d\n",
