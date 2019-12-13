@@ -1736,7 +1736,7 @@ void qlm_tx_control_gsern(int qlm, int lane, bool enable_tx)
  *
  * @return Zero on success, negative on error
  */
-int qlm_tx_sm_rst_control_qsern(int qlm, uint64_t lane_mask, int reset_tx)
+int qlm_tx_sm_rst_control_gsern(int qlm, uint64_t lane_mask, int reset_tx)
 {
 	int num_lanes;
 	uint64_t lane_mask1;
