@@ -41,7 +41,7 @@ The above reqirement is covered by client-server split-execution doimage model.
 
 
 Client-Server mode of operation
-===============================
+-------------------------------
 
 The difference between standalone and client-serevr doimage variant lays in
 digital signatures production. The rest of the code is similar across these
@@ -57,7 +57,7 @@ appropriate public key and inserted into flash image security extension.
 
 
 Client and Server system components
-===================================
+-----------------------------------
 
 The client and server system setups contain the following components:
 
@@ -127,7 +127,7 @@ The client and server system setups contain the following components:
 
 
 Usage example
-=============
+-------------
 
 This example uses the same computer for client-server connection
 (localhost:4433).
@@ -252,7 +252,7 @@ This example uses the same computer for client-server connection
 
 
 How to create certificates
-==========================
+--------------------------
 
 The example application uses custom CA (Marvell) and server located on the same
 machine as the client (localhost). This configuration is only useful for basic
@@ -325,7 +325,7 @@ company name as an example.
 
 
 Useful references
-=================
+-----------------
 
 `Self-signed certificate with custom CA
 <https://gist.github.com/fntlnz/cf14feb5a46b2eda428e000157447309>`_
