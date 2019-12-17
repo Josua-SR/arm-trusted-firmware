@@ -222,4 +222,13 @@ int qlm_gserc_eye_capture(int qlm, int lane, int show_data, gser_qlm_eye_t *eye_
  */
 void qlm_gserc_tx_control(int qlm, int lane, bool enable_tx);
 
+/**
+ * Check whether SERDES Rx lane is detecting a signal
+ *
+ * @param qlm	  QLM to use
+ * @param lane	  Which lane
+ * @return 0 on successful signal detected, 1 on no signal detected
+ */
+int qlm_gserc_rx_signal_detect(int qlm, int lane);
+
 #endif /* _QLM_GSERC_H_ */

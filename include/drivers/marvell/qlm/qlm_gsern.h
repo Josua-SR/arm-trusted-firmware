@@ -242,4 +242,13 @@ void qlm_tx_control_gsern(int qlm, int lane, bool enable_tx);
  */
 int qlm_tx_sm_rst_control_gsern(int qlm, uint64_t lane_mask, int reset_tx);
 
+/**
+ * Check whether SERDES Rx lane is detecting a signal
+ *
+ * @param qlm	  QLM to use
+ * @param lane	  Which lane
+ * @return 0 on successful signal detected, 1 on no signal detected
+ */
+int qlm_rx_signal_detect_gsern(int qlm, int lane);
+
 #endif /* _QLM_GSERN_H_ */

@@ -2222,3 +2222,19 @@ int qlm_gserc_change_phy_rate(int module)
 //	/* Done later */
 //	GSER_TRACE(QLM, "GSERC: End of init\n");
 //}
+
+/**
+ * Check whether SERDES Rx lane is detecting a signal
+ *
+ * @param qlm	  QLM to use
+ * @param lane	  Which lane
+ * @return 0 on successful signal detected, 1 on no signal detected
+ */
+int qlm_gserc_rx_signal_detect(int qlm, int lane)
+{
+	GSER_CSR_INIT(bsts, CAVM_GSERCX_LANEX_STATUS_BSTS(qlm, lane));
+	if (bsts.s.ln_stat_los)
+		return 1;
+	else
+		return 0;
+}

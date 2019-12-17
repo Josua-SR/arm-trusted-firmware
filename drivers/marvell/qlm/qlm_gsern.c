@@ -1800,3 +1800,19 @@ int qlm_tx_sm_rst_control_gsern(int qlm, uint64_t lane_mask, int reset_tx)
 	}
 	return 0;
 }
+
+/**
+ * Check whether SERDES Rx lane is detecting a signal
+ *
+ * @param qlm	  QLM to use
+ * @param lane	  Which lane
+ * @return 0 on successful signal detected, 1 on no signal detected
+ */
+int qlm_rx_signal_detect_gsern(int qlm, int lane)
+{
+	GSER_CSR_INIT(rx_idledet_bsts, CAVM_GSERNX_LANEX_RX_IDLEDET_BSTS(qlm, lane));
+	if (rx_idledet_bsts.s.idle)
+		return 1;
+	else
+		return 0;
+}
