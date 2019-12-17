@@ -60,6 +60,7 @@
 #define GSERN_LANEX_TX_RST_SM_TIMEOUT   10000 /* 10 ms */
 #define REMOTE_FAULT_TIMEOUT_MS		10000
 #define TX_IDLE_TOGGLE_US		1000
+#define RX_SIGNAL_STABLE_US		100000 /* 10 ms */
 
 /* Read-Modify-Write APIs for CGX CSRs */
 #define CAVM_MODIFY_CGX_CSR(type, csr, field, val)        \

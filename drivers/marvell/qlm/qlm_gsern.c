@@ -869,35 +869,26 @@ int qlm_rx_equalization_gsern(int qlm, int qlm_lane)
 
 	int fail = 0; /* Bitmask of lanes that failed Rx Ready, Electrical Idle check or Rx adaptation */
 
-	/* Lanes must be RX ready and not idle. Mark lanes as failed if either
-	   check fails */
-	uint64_t debounce_usec = 10000;  /* 10ms */
-	uint64_t debounce = gser_clock_get_count(GSER_CLOCK_TIME) + debounce_usec *
-						  gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
-
-	/* Verify signal is detected for debounce time */
-	while (gser_clock_get_count(GSER_CLOCK_TIME) < debounce)
+	for (int lane = 0; lane < MAX_LANES; lane++)
 	{
-		for (int lane = 0; lane < MAX_LANES; lane++)
-		{
-			/* Skip lanes we don't care about */
-			if ((qlm_lane != -1) && (qlm_lane != lane))
-				continue;
+		/* Skip lanes we don't care about */
+		if ((qlm_lane != -1) && (qlm_lane != lane))
+			continue;
 
-			/* Check if GSER Rx is NOT ready or */
-			/* if GSER Rx is idle (no signal detected) */
-			GSER_CSR_INIT(init_bsts, CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane));
-			if (!init_bsts.s.rx_ready)
-			{
-				GSER_TRACE(QLM, "N0.QLM%d: Rx is not ready on lane %d\n", qlm, lane);
-		return -1;
-			}
-			GSER_CSR_INIT(rx_idledet_bsts, CAVM_GSERNX_LANEX_RX_IDLEDET_BSTS(qlm, lane));
-			if (rx_idledet_bsts.s.idle)
-			{
-				GSER_TRACE(QLM, "N0.QLM%d: Rx is idle.  No signal detected on lane %d\n", qlm, lane);
-		return -1;
-			}
+		/* Check if GSER Rx is NOT ready or
+		 * if GSER Rx is idle (no signal detected)
+		 */
+		GSER_CSR_INIT(init_bsts, CAVM_GSERNX_LANEX_INIT_BSTS(qlm, lane));
+		if (!init_bsts.s.rx_ready)
+		{
+			GSER_TRACE(QLM, "N0.QLM%d: Rx is not ready on lane %d\n", qlm, lane);
+			return -1;
+		}
+		GSER_CSR_INIT(rx_idledet_bsts, CAVM_GSERNX_LANEX_RX_IDLEDET_BSTS(qlm, lane));
+		if (rx_idledet_bsts.s.idle)
+		{
+			GSER_TRACE(QLM, "N0.QLM%d: Rx is idle.  No signal detected on lane %d\n", qlm, lane);
+			return -1;
 		}
 	}
 

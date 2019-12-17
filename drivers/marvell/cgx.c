@@ -368,6 +368,84 @@ uint64_t cgx_get_lane_mask(int lane, int mode)
 }
 
 /*
+ * Called whenever CGX needs know if the SERDES Rx
+ * detects a signal on all associated GSER lanes
+ * return 0 on successful signal detect, -1 on failed signal detect
+ */
+static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id, int rx_signal_detect_us)
+{
+	int qlm, lane, num_lanes;
+	uint64_t lane_mask;
+	const qlm_ops_t *qlm_ops;
+	cavm_cgxx_spux_control1_t spux_ctrl1;
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+	uint64_t rx_debounce_time;
+	int signal_detect;
+	uint64_t stabilization_timeout;
+
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+
+	/* Only do first LMAC of USXGMII */
+	if (cgx->usxgmii_mode && (lmac_id > 0))
+		return 0;
+
+	lane = lmac->rev_lane;
+	lane_mask = cgx_get_lane_mask(lane, lmac->mode);
+
+	qlm = lmac->qlm;
+	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+	if (qlm_ops == NULL) {
+		debug_cgx("%s:get_qlm_ops failed %d\n", __func__, qlm);
+		return -1;
+	}
+
+	/* Don't need to look at GSER Rx signals when in internal loopback mode */
+	spux_ctrl1.u = CSR_READ(CAVM_CGXX_SPUX_CONTROL1(cgx_id, lmac_id));
+	if (spux_ctrl1.s.loopbck)
+		return 0;
+
+	num_lanes = qlm_get_lanes(qlm);
+
+	stabilization_timeout = gser_clock_get_count(GSER_CLOCK_TIME) + RX_SIGNAL_STABLE_US *
+		gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+
+	while (1) {
+		signal_detect = 1;
+
+		/* Make sure Rx signal is detected for debounce time */
+		rx_debounce_time = gser_clock_get_count(GSER_CLOCK_TIME) + rx_signal_detect_us *
+				gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+
+		while (signal_detect && (gser_clock_get_count(GSER_CLOCK_TIME)
+				< rx_debounce_time)) {
+			for (lane = 0; lane < num_lanes; lane++) {
+				if (!(lane_mask & (1 << lane)))
+					continue;
+				/* Fail if Rx signal is not detected */
+				if (qlm_ops->qlm_rx_signal_detect(qlm, lane)) {
+					signal_detect = 0;
+					break;
+				}
+			}
+		}
+		if (signal_detect)
+			break;
+
+		/* Verify if we are passed the link stabilization time */
+		if (gser_clock_get_count(GSER_CLOCK_TIME) >= stabilization_timeout) {
+			debug_cgx("%s %d:%d QLM%d Lane%d Rx signal detect timeout\n",
+					__func__, cgx_id, lmac_id, qlm, lane);
+			return -1;
+		}
+	}
+	return 0;
+}
+
+/*
  * Called whenever CGX needs to enable or disable the SERDES transmitter
  */
 static int cgx_serdes_tx_control(int cgx_id, int lmac_id, bool enable_tx)
@@ -1914,7 +1992,9 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id)
 			enable, 1);
 
 	/* At this point CGX is driving the serdes. Enable serdes transmitter */
-	cgx_serdes_tx_control(cgx_id, lmac_id, true);
+	/* Only enable serdes transmitter if autoneg is disabled */
+	if (lmac->autoneg_dis)
+		cgx_serdes_tx_control(cgx_id, lmac_id, true);
 
 	/* keep the reset values for lane polarity. select deficit
 	 * idle count mode and unidirectional enable/disable
@@ -1946,6 +2026,7 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 	cavm_cgxx_spux_br_status2_t br_status2;
 	cavm_cgxx_spux_control1_t spux_control1;
 	cavm_cgxx_smux_rx_ctl_t	smux_rx_ctl;
+	int	rx_signal_detect_us;
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
@@ -1953,7 +2034,25 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 			__func__, cgx_id, lmac_id, lmac->mode,
 			!lmac->autoneg_dis, lmac->use_training);
 
-	/* check whether AN is complete, if AN is enabled */
+	if (lmac->autoneg_dis)
+		rx_signal_detect_us = 10000;
+	else {
+		rx_signal_detect_us = 100;
+		cgx_serdes_tx_control(cgx_id, lmac_id, true);
+	}
+
+	/* Check if SERDES Rx is detecting a signal
+	 * on all associated lanes
+	 */
+	if (cgx_serdes_rx_signal_detect(cgx_id, lmac_id, rx_signal_detect_us)) {
+		debug_cgx("%s: %d:%d No SERDES Rx signal detected\n",
+				  __func__, cgx_id, lmac_id);
+		cgx_set_error_type(cgx_id, lmac_id,
+				CGX_ERR_SERDES_RX_NO_SIGNAL);
+		return -1;
+	}
+
+	/* Complete AN and link training */
 	if (!lmac->autoneg_dis) {
 		if (cgx_complete_sw_an(cgx_id, lmac_id) != 0) {
 			/* restart AN */

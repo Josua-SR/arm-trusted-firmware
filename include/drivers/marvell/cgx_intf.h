@@ -45,7 +45,8 @@ enum cgx_error_type {
 	CGX_ERR_SET_FEC_FAIL,
 	CGX_ERR_MODULE_INVALID,
 	CGX_ERR_MODULE_NOT_PRESENT,
-	CGX_ERR_SPEED_CHANGE_INVALID,	/* = 28 */
+	CGX_ERR_SPEED_CHANGE_INVALID,
+	CGX_ERR_SERDES_RX_NO_SIGNAL,	/* = 29 */
 	/* FIXME : add more error types when adding support for new modes */
 };
 
