@@ -1707,18 +1707,31 @@ int qlm_set_mode_gsern(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
  * Manually turn on or off the SERDES transmitter
  *
  * @param node	  Node to use in numa setup
- * @param qlm	   QLM to use
+ * @param qlm	  QLM to use
  * @param lane	  Which lane
  * @param enable_tx True to enable transmitter, false to disable
  */
 void qlm_tx_control_gsern(int qlm, int lane, bool enable_tx)
 {
 	if (enable_tx)
-		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, lane),
-			c.s.tx_idle = 0);
-	else
-		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_RST2_BCFG(qlm, lane),
-			c.s.tx_idle = 1);
+		/* Clear all the Tx overrides */
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TX_DRV_BCFG(qlm, lane),
+			c.s.tx_cspd = 0;
+			c.s.en_tx_cspd = 0);
+	else {
+		/* Make sure GSERN lane is not in a PRBS mode */
+		GSER_CSR_INIT(srcmx_bcfg, CAVM_GSERNX_LANEX_SRCMX_BCFG(qlm, lane));
+		if (srcmx_bcfg.s.tx_ctrl_sel == 0x10 ||
+			srcmx_bcfg.s.tx_ctrl_sel == 0x0 ||
+			srcmx_bcfg.s.tx_data_sel == 0x10 ||
+			srcmx_bcfg.s.tx_data_sel == 0x0)
+			return;
+
+		/* Set the gsern Tx overrides to force Tx idle */
+		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TX_DRV_BCFG(qlm, lane),
+			c.s.tx_cspd = 1;
+			c.s.en_tx_cspd = 1);
+	}
 }
 
 /**
