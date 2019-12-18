@@ -45,17 +45,6 @@
 #define OCTEONTX_ATTESTATION_QUERY		0xc2000d03
 
 /*
- * No input
- * Return:
- *	x0:
- *		0x0 -- Success
- *		0x2 -- Fail
- *	x1 - in case of success - address to eye cmd data
- *	x2 - in case of success - address to serdes cmd data
- */
-#define PLAT_OCTEONTX_SERDES_DBG_GET_MEM	0xc2000d04
-
-/*
  * x1 - qlm
  * x2 - lane
  * x3 - display data to console
@@ -90,7 +79,7 @@
 #define OCTEONTX_ATTESTATION_QUERY_SUBCMD_INFO   2
 
 /* Number of platform specific SMCs */
-#define PLAT_OCTEONTX_NUM_SMC_CALLS	7
+#define PLAT_OCTEONTX_NUM_SMC_CALLS	8
 
 int octeontx2_configure_ooo(int x1);
 

@@ -41,17 +41,6 @@
 #define PLAT_OCTEONTX_MDIO_DBG_WRITE		0xc2000d02
 
 /*
- * No input
- * Return:
- *	x0:
- *		0x0 -- Success
- *		0x2 -- Fail
- *	x1 - in case of success - address to eye cmd data
- *	x2 - in case of success - address to serdes cmd data
- */
-#define PLAT_OCTEONTX_SERDES_DBG_GET_MEM	0xc2000d04
-
-/*
  * x1 - qlm
  * x2 - lane
  * x3 - display data to console
@@ -75,7 +64,7 @@
 #define PLAT_OCTEONTX_SERDES_DBG_GET_CONF	0xc2000d06
 
 /* Number of platform specific SMCs */
-#define PLAT_OCTEONTX_NUM_SMC_CALLS	11
+#define PLAT_OCTEONTX_NUM_SMC_CALLS	10
 
 int octeontx2_configure_ooo(int x1);
 

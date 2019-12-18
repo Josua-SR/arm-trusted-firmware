@@ -78,11 +78,6 @@ uintptr_t plat_octeontx_svc_smc_handler(uint32_t smc_fid,
 		break;
 
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
-	case PLAT_OCTEONTX_SERDES_DBG_GET_MEM:
-		SMC_RET3(handle, SMC_OK,
-			 SERDES_EYE_DATA_BASE, SERDES_SETTINGS_DATA_BASE);
-		break;
-
 	case PLAT_OCTEONTX_SERDES_DBG_GET_EYE:
 		ret = cgx_display_eye(x1, x2, x3);
 		if (ret == CGX_DISPLAY_OK)

@@ -163,6 +163,22 @@ uintptr_t octeontx_svc_smc_handler(uint32_t smc_fid,
 		SMC_RET1(handle, 0);
 		break;
 #endif
+
+#ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
+	case PLAT_OCTEONTX_SERDES_DBG_GET_MEM:
+		SMC_RET3(handle, SMC_OK,
+			 SERDES_EYE_DATA_BASE, SERDES_SETTINGS_DATA_BASE);
+		break;
+#else /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
+	/*
+	 * If serdes diagnostic command are disabled return SMC_UNK,
+	 * but without warning message.
+	 */
+	case PLAT_OCTEONTX_SERDES_DBG_GET_MEM:
+		SMC_RET3(handle, SMC_UNK, 0, 0);
+		break;
+#endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
+
 	default:
 		return plat_octeontx_svc_smc_handler(smc_fid, x1, x2, x3, x4,
 			cookie, handle, flags);

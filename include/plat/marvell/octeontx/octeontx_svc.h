@@ -57,7 +57,18 @@
 /* Args: x1 - non secure buffer address, x2 - size */
 #define OCTEONTX_TRC_UNREGISTER_DRVBUF	0xc2000c09
 
-#define OCTEONTX_NUM_CALLS		17
+/*
+ * No input
+ * Return:
+ *	x0:
+ *		0x0 -- Success
+ *		0x2 -- Fail
+ *	x1 - in case of success - address to eye cmd data
+ *	x2 - in case of success - address to serdes cmd data
+ */
+#define PLAT_OCTEONTX_SERDES_DBG_GET_MEM	0xc2000d04
+
+#define OCTEONTX_NUM_CALLS		18
 
 /*
  * Standard OcteonTX SMC responses
