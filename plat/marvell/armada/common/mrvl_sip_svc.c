@@ -15,6 +15,7 @@
 #include <plat_marvell.h>
 
 #include "comphy/phy-comphy-cp110.h"
+#include "secure_dfx_access/dfx.h"
 #include <stdbool.h>
 
 /* #define DEBUG_COMPHY */
@@ -36,6 +37,7 @@
 #define MV_SIP_LLC_ENABLE	0x82000011
 #define MV_SIP_PMU_IRQ_ENABLE	0x82000012
 #define MV_SIP_PMU_IRQ_DISABLE	0x82000013
+#define MV_SIP_DFX		0x82000014
 
 #define MAX_LANE_NR		6
 #define MVEBU_COMPHY_OFFSET	0x441000
@@ -67,7 +69,7 @@ uintptr_t mrvl_sip_smc_handler(uint32_t smc_fid,
 			       void *handle,
 			       u_register_t flags)
 {
-	u_register_t ret;
+	u_register_t ret, read;
 	int i;
 
 	debug("%s: got SMC (0x%x) x1 0x%lx, x2 0x%lx, x3 0x%lx\n",
@@ -131,7 +133,9 @@ uintptr_t mrvl_sip_smc_handler(uint32_t smc_fid,
 		mvebu_pmu_interrupt_disable();
 		SMC_RET1(handle, 0);
 #endif
-
+	case MV_SIP_DFX:
+		ret = mvebu_dfx_handle(x1, &read, x2, x3);
+		SMC_RET2(handle, ret, read);
 	default:
 		ERROR("%s: unhandled SMC (0x%x)\n", __func__, smc_fid);
 		SMC_RET1(handle, SMC_UNK);
