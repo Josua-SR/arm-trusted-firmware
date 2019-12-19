@@ -42,9 +42,6 @@
 /* delay to wait before reading the CSR again when polling */
 #define CGX_POLL_FOR_CSR_DELAY 10
 
-/* software to wait ~1.75 ms when restarting training process as per HRM */
-#define CGX_SPUX_TRAINING_RESTART_DELAY 2000
-
 /* software to wait 10 ms to establish stable link */
 #define CGX_SPUX_BR_RCV_LINK_DELAY 10000
 
@@ -55,7 +52,9 @@
 #define MAX_USXGMII_RATE_TYPES (CAVM_CGX_USXGMII_RATE_E_RSV_RATE + 1)
 
 /* TIMEOUT for different usecases */
-#define CGX_POLL_AN_STATUS		10000
+#define CGX_POLL_AN_STATUS		10000 /* 10 ms */
+#define CGX_POLL_AN_COMPLETE_STATUS		500000 /* 500 ms */
+#define CGX_POLL_AN_RESTART_STATUS	80000	/* 80 ms */
 #define CGX_POLL_TRAINING_STATUS	500000	/* 500 ms */
 #define GSERN_LANEX_TX_RST_SM_TIMEOUT   10000 /* 10 ms */
 #define REMOTE_FAULT_TIMEOUT_MS		10000
@@ -88,6 +87,7 @@
 #define CGX_SMUX_RX_IDLE_MASK		1ULL
 #define CGX_SMUX_PCS_RCV_LINK_MASK	1ULL << 1
 #define CGX_SPUX_AN_RESET_MASK		1ULL << 15
+#define CGX_SPUX_AN_RESTART_MASK	1ULL << 9
 #define CGX_SPUX_USX_AN_RESET_MASK	1ULL << 15
 #define CGX_SPUX_AN_CMP_MASK		1ULL << 12
 #define CGX_SPUX_AN_LNK_MASK		1ULL << 11

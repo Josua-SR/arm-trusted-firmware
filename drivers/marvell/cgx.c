@@ -229,7 +229,7 @@ static int cgx_xaui_hw_init(int cgx_id, int lmac_id)
 	return 0;
 }
 
-static void cgx_restart_an(int cgx_id, int lmac_id)
+static int cgx_restart_an(int cgx_id, int lmac_id)
 {
 	cgx_lmac_config_t *lmac;
 
@@ -238,35 +238,424 @@ static void cgx_restart_an(int cgx_id, int lmac_id)
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
 	if (lmac->autoneg_dis)
-		return;
+		return 0;
 
+	/* Enable AN */
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
+			CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
+			an_en, 1);
+
+	/* Restart AN */
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
 			CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
 			an_restart, 1);
+
+	/* Need to wait 80ms for the AN restart to complete.
+	 * This is the max for the AN break_link_timer
+	 */
+	if (cgx_poll_for_csr(CAVM_CGXX_SPUX_AN_CONTROL(
+				cgx_id, lmac_id),
+				CGX_SPUX_AN_RESTART_MASK, 0,
+				CGX_POLL_AN_RESTART_STATUS)) {
+		ERROR("%s: %d:%d SPUX AN restart not complete\n",
+					__func__, cgx_id, lmac_id);
+		return -1;
+	}
+
+	/* Clear all the interrupts used for tracking AN and Link training */
+	CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
+		CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id)));
+
+	return 0;
 }
 
-static void cgx_restart_training(int cgx_id, int lmac_id)
+/* This function initializes the CGX LMAC and SERDES
+ * after an auto-neg HCD mismatch
+ */
+void cgx_an_lmac_serdes_reinit(int cgx_id, int lmac_id, int speed_change, int training_fail)
 {
+	cgx_lmac_config_t *lmac;
+	cavm_cgxx_spux_int_t spux_int;
+
 	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
 
-	/* clear the training interrupts by writing 1 - W1C CSR */
-	CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
-			CGX_SPUX_TRAINING_DONE_MASK);
-	CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
-			CGX_SPUX_TRAINING_FAIL_MASK);
+	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
-	CSR_WRITE(CAVM_CGXX_SPUX_BR_PMD_LD_CUP(cgx_id, lmac_id), 0);
-	CSR_WRITE(CAVM_CGXX_SPUX_BR_PMD_LP_CUP(cgx_id, lmac_id), 0);
-	CSR_WRITE(CAVM_CGXX_SPUX_BR_PMD_LP_REP(cgx_id, lmac_id), 0);
+	/* FDT parser should have updated the lmac mode by now.
+	 * check if mode is programmed, if not, return
+	 */
+	if ((lmac->mode == -1) || (lmac->lane_to_sds == -1)) {
+		debug_cgx("%s: %d:%d mode/lane_to_sds not programmed\n",
+					__func__, cgx_id, lmac_id);
+		return;
+	}
 
-	/* wait */
-	udelay(CGX_SPUX_TRAINING_RESTART_DELAY);
+	/* Force on CGX clocks to ensure successful propagation of reset
+	 * when disabling the link
+	 */
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmr_global_config_t,
+		CAVM_CGXX_CMR_GLOBAL_CONFIG(cgx_id), cgx_clk_enable, 1);
 
-	/* restart the training */
-	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
-		CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
-		train_restart, 1);
+	/* disable LMAC */
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
+		CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id), enable, 0);
+
+	/* FIXME : Change SERDES speed if required */
+
+	/* Disable autonegotiation */
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
+			CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
+			an_en, 0);
+
+	/* Reconfigure the LMAC type */
+	/* Note: S/W does not support changing power width during AN */
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
+			CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id),
+			lmac_type, lmac->mode);
+
+	/* Reconfigure the FEC type */
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_fec_control_t,
+			CAVM_CGXX_SPUX_FEC_CONTROL(cgx_id, lmac_id),
+			fec_en, lmac->fec);
+
+	/* release the force of clocks */
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmr_global_config_t,
+		CAVM_CGXX_CMR_GLOBAL_CONFIG(cgx_id), cgx_clk_enable, 0);
+
+	/* Optionally enable link training */
+	if (lmac->use_training) {
+		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
+			CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
+				train_en, 1);
+		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
+				CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
+				train_restart, 1);
+
+
+		spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
+		spux_int.s.training_done = 1;
+		CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id), spux_int.u);
+	}
+
+	/* If a training failure was detected, need to restart AN */
+	if (training_fail) {
+		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
+			CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
+			an_en, 1);
+	}
+
+	/* Re-enable the LMAC */
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
+			CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id), enable, 1);
 }
+
+static int cgx_an_hcd_check(int cgx_id, int lmac_id, int training_fail)
+{
+	cgx_lmac_config_t *lmac;
+	cavm_cgxx_spux_an_bp_status_t an_bp_status;
+
+	int fec_new = 0, prot_new = 0, speed_change = 0;
+
+	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	if (lmac->autoneg_dis)
+		return 0;
+
+	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+
+	an_bp_status.u = CSR_READ(CAVM_CGXX_SPUX_AN_BP_STATUS(
+				cgx_id, lmac_id));
+
+	/* Check if we did not have an HCD match. Bit 0 is always 1 */
+	if (an_bp_status.u == 1) {
+		debug_cgx("%s %d:%d Autonegotiation failed to find a match, AN ADV=0x%llx, AN LP BASE= 0x%llx\n",
+				__func__, cgx_id, lmac_id,
+				CSR_READ(CAVM_CGXX_SPUX_AN_ADV(cgx_id, lmac_id)),
+				CSR_READ(CAVM_CGXX_SPUX_AN_LP_BASE(cgx_id, lmac_id)));
+		return -1;
+	} else {
+		/* Check if negotiated FEC matches CGX config */
+		if (an_bp_status.s.rs_fec) {
+			/* Check if RS_FEC selected */
+			if (lmac->fec != CGX_FEC_RS) {
+				fec_new = CGX_FEC_RS;
+				lmac->fec = CGX_FEC_RS;
+			}
+		} else if (an_bp_status.s.fec) {
+			/* Check if BASE-R FEC selected */
+			if (lmac->fec != CGX_FEC_BASE_R) {
+				fec_new = CGX_FEC_BASE_R;
+				lmac->fec = CGX_FEC_BASE_R;
+			}
+		} else {
+			/* Check if no FEC is selected */
+			if (lmac->fec != CGX_FEC_NONE) {
+				lmac->fec = CGX_FEC_NONE;
+				fec_new = CGX_FEC_NONE;
+			}
+		}
+
+		/* Check if negotiated protocol matches CGX lmac mode */
+		if (an_bp_status.s.n100g_cr4) {
+			if (lmac->mode !=  CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R) {
+				prot_new = CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R;
+				lmac->mode = CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R;
+			}
+		} else if (an_bp_status.s.n100g_kr4) {
+			if (lmac->mode !=  CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R) {
+				prot_new = CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R;
+				lmac->mode = CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R;
+			}
+		} else if (an_bp_status.s.n50g_cr2) {
+			if (lmac->mode != CAVM_CGX_LMAC_TYPES_E_FIFTYG_R) {
+				prot_new = CAVM_CGX_LMAC_TYPES_E_FIFTYG_R;
+				lmac->mode = CAVM_CGX_LMAC_TYPES_E_FIFTYG_R;
+			}
+		} else if (an_bp_status.s.n50g_kr2) {
+			if (lmac->mode != CAVM_CGX_LMAC_TYPES_E_FIFTYG_R) {
+				prot_new = CAVM_CGX_LMAC_TYPES_E_FIFTYG_R;
+				lmac->mode = CAVM_CGX_LMAC_TYPES_E_FIFTYG_R;
+			}
+		} else if (an_bp_status.s.n40g_cr4) {
+			if (lmac->mode != CAVM_CGX_LMAC_TYPES_E_FORTYG_R) {
+				prot_new = CAVM_CGX_LMAC_TYPES_E_FORTYG_R;
+				lmac->mode = CAVM_CGX_LMAC_TYPES_E_FORTYG_R;
+			}
+		} else if (an_bp_status.s.n40g_kr4) {
+			if (lmac->mode != CAVM_CGX_LMAC_TYPES_E_FORTYG_R) {
+				prot_new = CAVM_CGX_LMAC_TYPES_E_FORTYG_R;
+				lmac->mode = CAVM_CGX_LMAC_TYPES_E_FORTYG_R;
+			}
+		} else if (an_bp_status.s.n25g_kr_cr) {
+			if (lmac->mode != CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R) {
+				prot_new = CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R;
+				lmac->mode = CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R;
+			}
+		} else if (an_bp_status.s.n25g_krs_crs) {
+			if (lmac->mode != CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R) {
+				prot_new = CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R;
+				lmac->mode = CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R;
+			}
+		} else if (an_bp_status.s.n25g_cr1) {
+			if (lmac->mode != CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R) {
+				prot_new = CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R;
+				lmac->mode = CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R;
+			}
+		} else if (an_bp_status.s.n25g_kr1) {
+			if (lmac->mode != CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R) {
+				prot_new = CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R;
+				lmac->mode = CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R;
+			}
+		} else if (an_bp_status.s.n10g_kx4) {
+			if (lmac->mode != CAVM_CGX_LMAC_TYPES_E_XAUI) {
+				prot_new = CAVM_CGX_LMAC_TYPES_E_XAUI;
+				lmac->mode = CAVM_CGX_LMAC_TYPES_E_XAUI;
+			}
+		}
+
+		if (fec_new || prot_new) {
+			if (fec_new)
+				debug_cgx("%s %d:%d AN HCD FEC setting mismatch with CGX config\n", __func__, cgx_id, lmac_id);
+			if (prot_new) {
+				debug_cgx("%s %d:%d AN HCD Protocol setting mismatch with CGX config\n", __func__, cgx_id, lmac_id);
+				speed_change = 1;
+			}
+			cgx_an_lmac_serdes_reinit(cgx_id, lmac_id, speed_change, training_fail);
+
+			/* Indicate an HCD mismatch occurred */
+			return -1;
+		}
+
+		/* FIXME : If it is a protocol change we need to figure out if a
+		 * SERDES speed change is required
+		 */
+	}
+	debug_cgx("%s %d:%d AN HCD matched CGX config, AN ADV=0x%llx, AN LP BASE= 0x%llx\n",
+			  __func__, cgx_id, lmac_id,
+			CSR_READ(CAVM_CGXX_SPUX_AN_ADV(cgx_id, lmac_id)),
+			CSR_READ(CAVM_CGXX_SPUX_AN_LP_BASE(cgx_id, lmac_id)));
+
+	/* Set CGXX_SPUX_AN_CONTROL[AN_EN] = 0 after a AN HCD match */
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
+		CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
+		an_en, 0);
+
+	return 0;
+}
+
+/* Wait for link training to complete.  If link training fails
+ * return -1
+ */
+static int cgx_link_training_wait(int cgx_id, int lmac_id)
+{
+	int still_training = 1;
+	uint64_t training_time;
+	cavm_cgxx_spux_int_t spux_int;
+	cgx_lmac_config_t *lmac;
+
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+
+	if (!lmac->use_training) {
+		debug_cgx("%s %d:%d Link training not enabled\n", __func__, cgx_id, lmac_id);
+		return 0;
+	}
+
+	/* Setup Link training timeout (500ms) */
+	training_time = gser_clock_get_count(GSER_CLOCK_TIME) + CGX_POLL_TRAINING_STATUS *
+			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+
+	while (still_training && (gser_clock_get_count(GSERN_CLOCK_TIME)
+			< training_time)) {
+		spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(
+				cgx_id, lmac_id));
+		if (spux_int.s.training_failure) {
+			/* Training failed, restart */
+			debug_cgx("%s: %d:%d Link Training failed\n"
+					  , __func__, cgx_id, lmac_id);
+			return -1;
+		} else if (spux_int.s.training_done) {
+			debug_cgx("%s: %d:%d Link Training successfully completed\n",
+				__func__, cgx_id, lmac_id);
+			still_training = 0;
+		}
+		udelay(1);
+	}
+
+	if (still_training) {
+		debug_cgx("%s: %d:%d Link Training timed out\n",
+			__func__, cgx_id, lmac_id);
+		return -1;
+	}
+
+	return 0;
+}
+
+/* Wait for autoneg to complete.  If autoneg fails
+ * return -1
+ */
+static int cgx_autoneg_wait(int cgx_id, int lmac_id)
+{
+	int still_negotiating = 1;
+	uint64_t autoneg_time;
+	cavm_cgxx_spux_int_t spux_int;
+	cavm_cgxx_spux_an_adv_t an_adv;
+	cavm_cgxx_spux_an_xnp_tx_t xnp_tx;
+	int num_pages = 1;
+	cgx_lmac_config_t *lmac;
+	int is_25gbaser = 0;
+	int is_50gbaser2 = 0;
+
+	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+
+	debug_cgx("%s: %d:%d\n", __func__, cgx_id, lmac_id);
+
+	if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R)
+		is_25gbaser = 1;
+
+	if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_FIFTYG_R)
+		is_50gbaser2 = 1;
+
+	/* Setup AN timeout (50ms) */
+	autoneg_time = gser_clock_get_count(GSER_CLOCK_TIME) + CGX_POLL_AN_COMPLETE_STATUS *
+			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+
+	while (still_negotiating && (gser_clock_get_count(GSERN_CLOCK_TIME)
+			< autoneg_time)) {
+		spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(
+				cgx_id, lmac_id));
+
+		/* Check if AN completed */
+		if (spux_int.s.an_complete ||
+			spux_int.s.an_link_good) {
+			still_negotiating = 0;
+			break;
+		}
+
+		if (spux_int.s.an_page_rx) {
+			debug_cgx("%s: %d:%d Received an Extended next page\n"
+					  , __func__, cgx_id, lmac_id);
+
+			xnp_tx.u = CSR_READ(CAVM_CGXX_SPUX_AN_XNP_TX(cgx_id, lmac_id));
+
+			an_adv.u = CSR_READ(CAVM_CGXX_SPUX_AN_ADV(cgx_id, lmac_id));
+
+			/* Check to see if we are configured to send Extended next pages */
+			/* and in a supported Ethernet Consortium lmac_mode */
+			if ((an_adv.s.np && is_25gbaser) ||
+				(an_adv.s.np && is_50gbaser2)) {
+				switch (num_pages) {
+				case 1: /* Send ethernet consortium header */
+					xnp_tx.s.u = 0x4df0353; //0x3530fd40;
+					xnp_tx.s.np = 1;
+					xnp_tx.s.mp = 1;
+					xnp_tx.s.m_u = 0x005;
+					debug_cgx("%s: %d:%d Sending Ethernet Consortium Header Page, Page#=%d\n"
+							  , __func__, cgx_id, lmac_id, num_pages);
+					break;
+				case 2: /* Send ethernet consortium data */
+					xnp_tx.s.u |= 1 << is_25gbaser;  /* 25GBASE-KR */
+					xnp_tx.s.u |= 1 << is_25gbaser;  /* 25GBASE-CR */
+					xnp_tx.s.u |= 1 << is_50gbaser2; /* 50GBASE-KR2 */
+					xnp_tx.s.u |= 1 << is_50gbaser2;  /* 50GBASE-CR2 */
+					xnp_tx.s.u |= 1 << 24;  /* F1 - Clause 91 FEC ability */
+					xnp_tx.s.u |= 1 << 25;  /* F2 - Clause 74 FEC ability */
+					if (lmac->fec != CGX_FEC_NONE) {
+						xnp_tx.s.u |= 1 << 26; /* F3 - Claue 91 FEC request */
+						xnp_tx.s.u |= 1 << 27; /* F3 - Claue 74 FEC request */
+					}
+					xnp_tx.s.np = 0;
+					xnp_tx.s.mp = 0;
+					xnp_tx.s.m_u = 0x203;
+					debug_cgx("%s: %d:%d Sending Ethernet Consortium Data, Page#=%d\n"
+							  , __func__, cgx_id, lmac_id, num_pages);
+					break;
+				default: /* Send NULL message */
+					xnp_tx.s.mp = 1;
+					xnp_tx.s.m_u = 0x1;
+					debug_cgx("%s: %d:%d Sending Extended Next Page with NULL Data, Page#=%d\n"
+							  , __func__, cgx_id, lmac_id, num_pages);
+					break;
+				}
+			} else {
+				debug_cgx("%s: %d:%d Sending Extended Next Page with NULL Data, Page#=%d\n"
+						  , __func__, cgx_id, lmac_id, num_pages);
+
+				/* Send next page with NULL message */
+				xnp_tx.s.mp = 1;
+				xnp_tx.s.m_u = 0x1;
+			}
+
+			CSR_WRITE(CAVM_CGXX_SPUX_AN_XNP_TX(cgx_id, lmac_id),
+					xnp_tx.u);
+			num_pages++;
+
+			/* Clear AN Page Rx interrupt */
+			spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(
+					cgx_id, lmac_id));
+			spux_int.s.an_page_rx = 1;
+			CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
+					spux_int.u);
+		}
+		udelay(1);
+	}
+
+	if (still_negotiating) {
+		debug_cgx("%s: %d:%d AN timed out\n",
+			__func__, cgx_id, lmac_id);
+		return -1;
+	}
+
+	debug_cgx("%s: %d:%d AN successfully completed\n",
+		__func__, cgx_id, lmac_id);
+
+	return 0;
+}
+
+
 
 static int cgx_get_usxgmii_type(int cgx_id, int lmac_id)
 {
@@ -1176,13 +1565,6 @@ static int cgx_sgmii_set_mode(int cgx_id, int lmac_id)
 	return 0;
 }
 
-static void cgx_mode_change(int cgx_id, int lmac_id, int new_mode,
-					int new_fec)
-{
-	/* FIXME */
-	debug_cgx("%s: %d:%d\n", __func__, cgx_id, lmac_id);
-}
-
 int cgx_validate_fec_config(int cgx_id, int lmac_id, int req_fec)
 {
 	cgx_lmac_config_t *lmac;
@@ -1380,12 +1762,11 @@ int cgx_fec_change(int cgx_id, int lmac_id, int new_fec)
 
 static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 {
-	int mode_req = 0, fec_req = 0;
+	int training_fail = 0;
 	cgx_lmac_config_t *lmac;
-	cavm_cgxx_spux_an_lp_base_t an_lp_base;
 	cavm_cgxx_spux_an_control_t spux_an_ctl;
-	cavm_cgxx_spux_an_adv_t an_adv;
 	cavm_cgxx_spux_int_t spux_int;
+
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
@@ -1400,176 +1781,127 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 	spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
 	spux_an_ctl.u = CSR_READ(CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id));
 
-	if (spux_an_ctl.s.an_arb_link_chk_en) {
+	/* Check if auto-neg and link training were successfully completed.
+	 * an_arb_link_chk_en only supported in 95XX Ax (1.x) and
+	 * 96XX Ax/Bx (1.x). CGX will automatically complete link
+	 * training if AN HCD matches CGX config
+	 */
+	if (spux_an_ctl.s.an_arb_link_chk_en &&
+		(cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
+		 cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))) {
+		/* an_complete means both auto-neg and
+		 * link training (if enabled) were successful
+		 */
 		if (spux_int.s.an_complete) {
-			debug_cgx("%s:%d:%d: Skipping AN, AN compelete\n",
-				__func__, cgx_id, lmac_id);
-			return 0;
-		}
-	} else {
-		if (spux_int.s.an_link_good) {
-			debug_cgx("%s:%d:%d: Skipping AN, AN link good\n",
-				__func__, cgx_id, lmac_id);
-			return 0;
-		}
-	}
+			debug_cgx("%s:%d:%d: AN completed successfully\n",
+					__func__, cgx_id, lmac_id);
+			if (lmac->use_training)
+				debug_cgx("%s:%d:%d: Link training completed successfully\n",
+					__func__, cgx_id, lmac_id);
+		} else if (spux_int.s.an_link_good) {
+			/* AN LINK GOOD means we got a successful HCD match */
+			debug_cgx("%s:%d:%d: AN_LINK_GOOD\n",
+					__func__, cgx_id, lmac_id);
 
-	/* Poll for reception of new page */
-	if (cgx_poll_for_csr(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
-		CGX_SPUX_AN_RX_PAGE_MASK, 1, CGX_POLL_AN_STATUS)) {
-		debug_cgx("%s:%d:%d Timeout for AN base page\n",
-				__func__, cgx_id, lmac_id);
-		// FIXME: need to restart autoneg
-		cgx_set_error_type(cgx_id, lmac_id, CGX_ERR_AN_CPT_FAIL);
-		return -1;
-	}
+			/* Check if link training failed */
+			if (spux_int.s.training_failure)
+				training_fail = 1;
 
-	/* Clear AN page RX - W1C */
-	CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id), CGX_SPUX_AN_RX_PAGE_MASK);
-
-	/* Read the link partner's base page ability */
-	an_lp_base.u = CSR_READ(CAVM_CGXX_SPUX_AN_LP_BASE(cgx_id, lmac_id));
-	debug_cgx("%s: an_lp_base.u 0x%llx\n", __func__, an_lp_base.u);
-	if (an_lp_base.s.fec_able && an_lp_base.s.fec_req) {
-		/* FEC requested */
-		if ((lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
-			(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R)) {
-			fec_req = CGX_FEC_BASE_R;
-		} else
-			fec_req = CGX_FEC_NONE;
-	} else
-		fec_req = CGX_FEC_NONE; /* FEC not requested */
-
-	/* Check if the partner or us has extended pages */
-	an_adv.u = CSR_READ(CAVM_CGXX_SPUX_AN_ADV(cgx_id, lmac_id));
-	if (an_lp_base.s.np || an_adv.s.np) {
-		int num_pages = 0;
-		cavm_cgxx_spux_an_xnp_tx_t xnp_tx;
-		cavm_cgxx_spux_an_lp_xnp_t lp_xnp;
-		cavm_cgxx_spux_int_t spu_int;
-
-		spu_int.u = 0;
-		spu_int.s.an_page_rx = 1;
-		do {
-			xnp_tx.u = 0;
-			xnp_tx.s.mp = 1;
-			xnp_tx.s.m_u = 1;
-			switch (num_pages) {
-			case 0: /* Send ethernet consortium header */
-				if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R) {
-					xnp_tx.s.u = 0x4df0353; //0x3530fd40;
-					xnp_tx.s.np = 1;
-					xnp_tx.s.mp = 1;
-					xnp_tx.s.m_u = 0x005;
-				}
-				break;
-			case 1: /* Send ethernet consortium data */
-				if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R) {
-					xnp_tx.s.u |= 1 << 4;  /* 25GBASE-KR */
-					xnp_tx.s.u |= 1 << 5;  /* 25GBASE-CR */
-					xnp_tx.s.u |= 1 << 8;  /* 50GBASE-KR2 */
-					xnp_tx.s.u |= 1 << 9;  /* 50GBASE-CR2 */
-					xnp_tx.s.u |= 1 << 24;  /* F1 - Clause 91 FEC ability */
-					xnp_tx.s.u |= 1 << 25;  /* F2 - Clause 74 FEC ability */
-					if (fec_req != CGX_FEC_NONE) {
-						xnp_tx.s.u |= 1 << 26; /* F3 - Claue 91 FEC request */
-						xnp_tx.s.u |= 1 << 27; /* F3 - Claue 74 FEC request */
-					}
-					xnp_tx.s.np = 0;
-					xnp_tx.s.mp = 0;
-					xnp_tx.s.m_u = 0x203;
-				}
-				break;
-			default: /* Send empty page to finish protocol */
-				break;
-			}
-			CSR_WRITE(CAVM_CGXX_SPUX_AN_XNP_TX(cgx_id, lmac_id), xnp_tx.u);
-
-			if (cgx_poll_for_csr(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
-				CGX_SPUX_AN_RX_PAGE_MASK, 1, CGX_POLL_AN_STATUS)) {
-				debug_cgx("%s:%d:%d Timeout waiting for AN extended page 0x%llx\n",
-						__func__, cgx_id, lmac_id,
-						CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id)));
-				cgx_restart_an(cgx_id, lmac_id);
-				cgx_set_error_type(cgx_id, lmac_id, CGX_ERR_AN_CPT_FAIL);
-				return -1;
-			}
-
-			lp_xnp.u = CSR_READ(CAVM_CGXX_SPUX_AN_LP_XNP(cgx_id, lmac_id));
-			CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id), spu_int.u);
-			debug_cgx("%s:%d:%d AN extended page %d sent 0x%llx, received 0x%llx\n",
-					__func__, cgx_id, lmac_id, num_pages, xnp_tx.u, lp_xnp.u);
-			num_pages++;
-		} while (lp_xnp.s.np || xnp_tx.s.np);
-	}
-
-	/* Based on speed ability bit set, set LMAC type to compare
-	* with the CGX configuration
-	*/
-	if (an_lp_base.s.a10g_kr)
-		mode_req = CAVM_CGX_LMAC_TYPES_E_TENG_R;
-	else if ((an_lp_base.s.a40g_cr4) || (an_lp_base.s.a40g_kr4))
-		mode_req = CAVM_CGX_LMAC_TYPES_E_FORTYG_R;
-	debug_cgx("%s %d:%d LMAC type configured %d, LP's ability %d\n",
-			__func__, cgx_id, lmac_id, lmac->mode, mode_req);
-
-	if (spux_an_ctl.s.an_arb_link_chk_en) {
-		if (cgx_poll_for_csr(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
-			CGX_SPUX_AN_CMP_MASK, 1, CGX_POLL_AN_STATUS)) {
-			debug_cgx("%s: %d:%d Timeout waiting for AN not complete\n",
-				__func__, cgx_id, lmac_id);
-			cgx_set_error_type(cgx_id, lmac_id,
-					CGX_ERR_AN_CPT_FAIL);
-			return -1;
-		}
-	} else {
-		/* if arb_link_chk_en not enabled, SW need to intervene AN
-		 * process. poll for AN_LINK_GOOD state. It will be set when
-		 * HCD technology has negotiated with link partner
-		 * and perform HCD match
-		 * This is FIXME
-		 */
-		/* Poll for AN_LINK_GOOD state */
-		if (cgx_poll_for_csr(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
-			CGX_SPUX_AN_LNK_MASK, 1, CGX_POLL_AN_STATUS)) {
-			debug_cgx("%s: %d:%d Timeout waiting for AN link good\n",
-						__func__, cgx_id, lmac_id);
-			cgx_set_error_type(cgx_id, lmac_id,
-					CGX_ERR_AN_CPT_FAIL);
-			return -1;
-		}
-
-		if (lmac->mode != mode_req) {
-			/* Handle mode change - reconfigure LMAC and GSER
-			 * to new mode
+			/* Check auto-neg HCD to see if their is a CGX mismatch.
+			 * Function will restart auto-neg if training failed
 			 */
-			debug_cgx("%s: %d:%d LMAC type %d, LP's ability %d\n",
-					__func__, cgx_id, lmac_id,
-					lmac->mode, mode_req);
-			cgx_mode_change(cgx_id, lmac_id, mode_req, fec_req);
-			return 0;
-		}
-		debug_cgx("%s:No change in LMAC mode %d mode_req %d\n",
-				__func__, lmac->mode, mode_req);
-		//hcd_match = 1;
+			if (cgx_an_hcd_check(cgx_id, lmac_id, training_fail))
+				debug_cgx("%s:%d:%d: Auto-neg HCD mismatch detected\n",
+					__func__, cgx_id, lmac_id);
 
-		if (lmac->fec != fec_req) {
-			debug_cgx("%s %d:%d FEC type %d, LP's FEC ability %d\n",
-				__func__, cgx_id, lmac_id, lmac->fec, fec_req);
-			/* FIXME */
-			return 0;
+			/* Wait for training to complete or fail */
+			if (!training_fail) {
+				if (cgx_link_training_wait(cgx_id, lmac_id))
+					training_fail = 1;
+			}
+
+			/* If link training fails restart AN */
+			if (training_fail) {
+				debug_cgx("%s:%d:%d: Link training failed, Restarting AN.\n",
+					__func__, cgx_id, lmac_id);
+				goto restart_an;
+			}
+		} else {
+			if (cgx_autoneg_wait(cgx_id, lmac_id)) {
+				debug_cgx("%s:%d:%d: AN failed, Restarting AN.\n",
+					__func__, cgx_id, lmac_id);
+				goto restart_an;
+			}
+
+			/* Check auto-neg HCD to see if their is a CGX mismatch */
+			if (cgx_an_hcd_check(cgx_id, lmac_id, 0))
+				debug_cgx("%s:%d:%d: Auto-neg HCD mismatch detected.\n",
+					__func__, cgx_id, lmac_id);
+
+			if (cgx_link_training_wait(cgx_id, lmac_id)) {
+				debug_cgx("%s:%d:%d: Link training failed, Restarting AN.\n",
+					__func__, cgx_id, lmac_id);
+				goto restart_an;
+			}
 		}
-		debug_cgx("%s: No change in FEC type %d fec_req %d\n",
-			__func__, lmac->fec, fec_req);
-		//hcd_match = 1; /* Both LMAC and FEC type match */
-		/* If there is no change in LMAC mode/FEC configuration,
-		 * disable AN and proceed
+	} else {
+		/* Force link partner to the AN ABILITY DETECT STATE */
+		/* When an_arb_link_chk_en disabled S/W needs to start link training */
+		debug_cgx("%s:%d:%d: Restarting AN.\n",
+			__func__, cgx_id, lmac_id);
+
+		cgx_restart_an(cgx_id, lmac_id);
+
+		debug_cgx("%s:%d:%d: Waiting for AN to complete.\n",
+			__func__, cgx_id, lmac_id);
+
+		if (cgx_autoneg_wait(cgx_id, lmac_id)) {
+			debug_cgx("%s:%d:%d: AN failed, Restarting AN.\n",
+				__func__, cgx_id, lmac_id);
+			goto restart_an;
+		}
+
+		/* Check auto-neg HCD to see if their is a CGX mismatch.
+		 * If there is an HCD mismatch, after reconfig link
+		 * training will be started
 		 */
-		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
-				CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
-				an_en, 0);
+		if (cgx_an_hcd_check(cgx_id, lmac_id, 0)) {
+			debug_cgx("%s:%d:%d: Auto-neg HCD mismatch detected.\n",
+				__func__, cgx_id, lmac_id);
+		} else {
+			/* If there was no mismatch S/W needs to manually kick off training */
+			debug_cgx("%s:%d:%d: Auto-neg HCD matches CGX config.\n",
+				__func__, cgx_id, lmac_id);
+			if (lmac->use_training) {
+				CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
+					CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
+						train_en, 1);
+				CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
+						CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
+						train_restart, 1);
+				spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
+				spux_int.s.training_done = 1;
+				CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id), spux_int.u);
+			}
+		}
+
+		if (cgx_link_training_wait(cgx_id, lmac_id)) {
+			debug_cgx("%s:%d:%d: Link training failed, Restarting AN.\n",
+				__func__, cgx_id, lmac_id);
+			goto restart_an;
+		}
 	}
+
 	return 0;
+
+restart_an:
+	/* Disable SERDES Tx. S/W needs to be ready to respond to
+	 * AN before enabling Tx
+	 */
+	cgx_serdes_tx_control(cgx_id, lmac_id, false);
+	/* Restart AN */
+	cgx_restart_an(cgx_id, lmac_id);
+	return 1;
 }
 
 static void cgx_fill_lmac_attributes(int cgx_idx, int lmac_idx)
@@ -2019,7 +2351,6 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 	uint64_t debounce_time;
 	int link_up = 1;
 	cgx_lmac_config_t *lmac;
-	cavm_cgxx_spux_int_t spux_int;
 	cavm_cgxx_spux_status1_t spux_status1;
 	cavm_cgxx_spux_status2_t spux_status2;
 	cavm_cgxx_cmrx_config_t cmr_config;
@@ -2055,40 +2386,25 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 	/* Complete AN and link training */
 	if (!lmac->autoneg_dis) {
 		if (cgx_complete_sw_an(cgx_id, lmac_id) != 0) {
-			/* restart AN */
-			cgx_restart_an(cgx_id, lmac_id);
 			cgx_set_error_type(cgx_id, lmac_id,
 				CGX_ERR_AN_CPT_FAIL);
 			return -1;
+		} else {
+			if (lmac->use_training)
+				debug_cgx("%s: %d:%d AN and Link training completed successfully\n",
+						__func__, cgx_id, lmac_id);
+			else
+				debug_cgx("%s: %d:%d AN completed successfully\n",
+						__func__, cgx_id, lmac_id);
+
+			/* Clear interrupts used for auto-neg/link training */
+			CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
+				CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id)));
 		}
 	}
 
-	/* check training is complete if enabled */
-	if (lmac->use_training) {
-		if (cgx_poll_for_csr(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
-			CGX_SPUX_TRAINING_DONE_MASK, 1,
-			CGX_POLL_TRAINING_STATUS)) {
-			spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(
-					cgx_id, lmac_id));
-			if (spux_int.s.training_done && !spux_int.s.training_failure) {
-				debug_cgx("%s: %d:%d No Training failure\n",
-					__func__, cgx_id, lmac_id);
-			} else if (spux_int.s.training_failure) {
-				/* Training failed, restart */
-				debug_cgx("%s: %d:%d Restarting Training\t"
-					"0x%llx\n", __func__, cgx_id, lmac_id,
-					CSR_READ(CAVM_CGXX_SPUX_INT(
-						cgx_id, lmac_id)));
-				cgx_restart_training(cgx_id, lmac_id);
-				cgx_set_error_type(cgx_id, lmac_id,
-						CGX_ERR_TRAINING_FAIL);
-				return -1;
-			} else {
-				debug_cgx("%s: %d:%d Training not done\n",
-					__func__, cgx_id, lmac_id);
-			}
-		}
-	} else {
+	/* If link training is disabled, manually bring up Link */
+	if (!lmac->use_training) {
 		const qlm_ops_t *qlm_ops;
 
 		/* Perform RX EQU for non-KR interfaces and for the link
