@@ -1513,7 +1513,7 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 {
 	int ret = 0, val = 0;
 	int enable = 0; /* read from scratch1 - cmd_args */
-	int request_id = 0, err_type = 0, req_fec, phy_mod_type;
+	int request_id = 0, err_type = 0, req_fec, phy_mod_type, ignore;
 #if defined(PLAT_t96)
 	int mode;
 #endif
@@ -1730,6 +1730,22 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 				scratchx0.u = 0;
 				scratchx0.s.phy_mod_type.mod =
 					lmac->phy_config.mod_type;
+				CSR_WRITE(CAVM_CGXX_CMRX_SCRATCHX(
+						cgx_id, lmac_id, 0),
+						scratchx0.u);
+			break;
+			case CGX_CMD_SET_PERSIST_IGNORE:
+				ignore = scratchx1.s.persist_args.ignore;
+				ret = cgx_update_flash_ignore_param(cgx_id,
+								    lmac_id,
+								    ignore);
+			break;
+			case CGX_CMD_GET_PERSIST_IGNORE:
+				scratchx0.u = 0;
+				ret = cgx_read_flash_ignore(cgx_id, lmac_id,
+							    &ignore);
+				if (!ret)
+					scratchx0.s.persist.ignore = ignore;
 				CSR_WRITE(CAVM_CGXX_CMRX_SCRATCHX(
 						cgx_id, lmac_id, 0),
 						scratchx0.u);
