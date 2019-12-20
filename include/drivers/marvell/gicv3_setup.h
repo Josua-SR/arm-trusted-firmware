@@ -13,8 +13,6 @@
 /*
  * It is number of all interrupts configured in GIC.
  * Every GIC interrupt has to be defined in interrupt_array.
- * There is one interrupt for secure timer, interrupts for GPIO and
- * interrupts for BPHY.
  */
 #define NUMBER_OF_GIC_INTERRUPTS (1 \
 				+ GPIO_SPI_IRQS \

@@ -33,6 +33,7 @@
 #include <drivers/delay_timer.h>
 #include <octeontx_ehf.h>
 #include <lib/el3_runtime/context_mgmt.h>
+#include <octeontx_ehf.h>
 
 #if RAS_EXTENSION
 #include <lib/extensions/ras.h>

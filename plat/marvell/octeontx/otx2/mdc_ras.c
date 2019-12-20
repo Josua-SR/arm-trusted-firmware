@@ -29,6 +29,7 @@
 #include <timers.h>
 #include <drivers/delay_timer.h>
 #include <cavm-csrs-ccu.h>
+#include <octeontx_ehf.h>
 
 #ifdef EDAC_POLLED
 static int edac_timer = -1; /* periodic poll */
