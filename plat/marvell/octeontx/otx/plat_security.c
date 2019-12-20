@@ -22,18 +22,35 @@ struct l2c_region {
 };
 
 #define LAST_L2C_REGION (~0U)
+#define UNKNOWN_VALUE	(~0UL)
 
 struct l2c_region l2c_map [] = {
+	/* Secure non preserve region */
 	{
 		.number  = 0,
 		.start   = TZDRAM_BASE,
-		.end     = TZDRAM_BASE + TZDRAM_SIZE,
+		.end     = TZDRAM_BASE + TZDRAM_SIZE - 1,
 		.secure  = 1,
 	},
+	/* Non-secure non preserve region */
 	{
 		.number  = 1,
 		.start   = TZDRAM_BASE + TZDRAM_SIZE,
-		.end     = ~0UL,
+		.end     = UNKNOWN_VALUE,
+		.secure  = 0,
+	},
+	/* Secure preserve region */
+	{
+		.number  = 2,
+		.start   = UNKNOWN_VALUE,
+		.end     = UNKNOWN_VALUE,
+		.secure  = 1,
+	},
+	/* Non-secure preserve region */
+	{
+		.number  = 3,
+		.start   = UNKNOWN_VALUE,
+		.end     = UNKNOWN_VALUE,
 		.secure  = 0,
 	},
 	{
@@ -85,19 +102,47 @@ void l2c_flush(void)
 void octeontx_security_setup(void)
 {
 	union cavm_l2c_asc_regionx_attr l2c_asc_attr;
+	union cavm_l2c_asc_regionx_start bdk_l2c_asc_start, atf_l2c_asc_start;
+	union cavm_l2c_asc_regionx_end bdk_l2c_asc_end, atf_l2c_asc_end;
 	struct l2c_region *region = l2c_map;
 
-	uint64_t dram_end;
-
 	while (region->number != LAST_L2C_REGION) {
-		dram_end = octeontx_dram_size() - 1;
-		if (region->end > dram_end)
-			region->end = dram_end;
-
-		CSR_WRITE(CAVM_L2C_ASC_REGIONX_START(region->number), region->start);
-		CSR_WRITE(CAVM_L2C_ASC_REGIONX_END(region->number), region->end);
+		/*
+		 * ATF require some ASC regions to have ceratian start or end.
+		 * If BDK configure regions in different way print error and
+		 * panic.
+		 */
+		if (region->start != UNKNOWN_VALUE) {
+			bdk_l2c_asc_start.u =
+				CSR_READ(CAVM_L2C_ASC_REGIONX_START(
+							region->number));
+			atf_l2c_asc_start.u = region->start;
+			if (bdk_l2c_asc_start.s.addr !=
+			    atf_l2c_asc_start.s.addr) {
+				ERROR(
+				      "Start of ASC region %d is different for BDK(0x%x) and ATF(0x%x)\n",
+				      region->number, bdk_l2c_asc_start.s.addr,
+				      atf_l2c_asc_start.s.addr);
+				panic();
+			}
+		}
+		if (region->end != UNKNOWN_VALUE) {
+			bdk_l2c_asc_end.u = CSR_READ(CAVM_L2C_ASC_REGIONX_END(
+							region->number));
+			atf_l2c_asc_end.u = region->end;
+			if (bdk_l2c_asc_end.s.addr != atf_l2c_asc_end.s.addr) {
+				ERROR(
+				      "End of ASC region %d is different for BDK(0x%x) and ATF(0x%x)\n",
+				      region->number, bdk_l2c_asc_end.s.addr,
+				      atf_l2c_asc_end.s.addr);
+				panic();
+			}
+		}
 
 		l2c_asc_attr.u = CSR_READ(CAVM_L2C_ASC_REGIONX_ATTR(region->number));
+		/*
+		 * BDK cannot set non-secure regions, do it here.
+		 */
 		l2c_asc_attr.s.s_en  = region->secure;
 		l2c_asc_attr.s.ns_en = !region->secure;
 

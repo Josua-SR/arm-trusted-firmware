@@ -25,18 +25,37 @@ struct ccs_region {
 
 #define LAST_CCS_REGION (~0U)
 #define MCC_CONFIG_DIS_TADPSN_BIT	BIT(1)
+#define UNKNOWN_VALUE	(~0UL)
+
+#define CCS_ASC_REGION_MASK
 
 struct ccs_region ccs_map [] = {
+	/* Secure non preserve region */
 	{
 		.number  = 0,
 		.start   = TZDRAM_BASE,
 		.end     = TZDRAM_BASE + TZDRAM_SIZE - 1,
 		.secure  = 1,
 	},
+	/* Non-secure non preserve region */
 	{
 		.number  = 1,
 		.start   = TZDRAM_BASE + TZDRAM_SIZE,
-		.end     = ~0UL,
+		.end     = UNKNOWN_VALUE,
+		.secure  = 0,
+	},
+	/* Secure preserve region */
+	{
+		.number  = 2,
+		.start   = UNKNOWN_VALUE,
+		.end     = UNKNOWN_VALUE,
+		.secure  = 1,
+	},
+	/* Non-secure preserve region */
+	{
+		.number  = 3,
+		.start   = UNKNOWN_VALUE,
+		.end     = UNKNOWN_VALUE,
 		.secure  = 0,
 	},
 	{
@@ -103,10 +122,10 @@ void l2c_flush(void)
 void octeontx_security_setup(void)
 {
 	union cavm_ccs_asc_regionx_attr ccs_asc_attr;
+	union cavm_ccs_asc_regionx_start bdk_ccs_asc_start, atf_ccs_asc_start;
+	union cavm_ccs_asc_regionx_end bdk_ccs_asc_end, atf_ccs_asc_end;
 	struct ccs_region *region = ccs_map;
-	uint64_t dram_end;
 	uint64_t midr;
-	uint8_t lmc_mask, lmc_mode;
 
 	midr = read_midr();
 
@@ -116,31 +135,43 @@ void octeontx_security_setup(void)
 	    || IS_OCTEONTX_PASS(midr, T98PARTNUM, 1, 0))
 		disable_poison();
 
-	/*
-	 * BDK has configured CCS ASC REGION 0. We will use the same lmc_mask and
-	 * lmc_mode for every configured region.
-	 */
-	ccs_asc_attr.u = CSR_READ(CAVM_CCS_ASC_REGIONX_ATTR(0));
-	lmc_mode = ccs_asc_attr.s.lmc_mode;
-	lmc_mask = ccs_asc_attr.s.lmc_mask;
-
-	INFO("BDK LMC mode = 0x%x; mask 0x%x\n", lmc_mode, lmc_mask);
-
 	while (region->number != LAST_CCS_REGION) {
-		dram_end = octeontx_dram_size() - 1;
-		if (region->end > dram_end)
-			region->end = dram_end;
-
-		CSR_WRITE(CAVM_CCS_ASC_REGIONX_START(region->number), region->start);
-		CSR_WRITE(CAVM_CCS_ASC_REGIONX_END(region->number), region->end);
+		/*
+		 * ATF require some ASC regions to have ceratian start or end.
+		 * If BDK configure regions in different way print error and
+		 * panic.
+		 */
+		if (region->start != UNKNOWN_VALUE) {
+			bdk_ccs_asc_start.u =
+				CSR_READ(CAVM_CCS_ASC_REGIONX_START(
+							region->number));
+			atf_ccs_asc_start.u = region->start;
+			if (bdk_ccs_asc_start.s.addr !=
+			    atf_ccs_asc_start.s.addr) {
+				ERROR(
+				      "Start of ASC region %d is different for BDK(0x%x) and ATF(0x%x)\n",
+				      region->number, bdk_ccs_asc_start.s.addr,
+				      atf_ccs_asc_start.s.addr);
+				panic();
+			}
+		}
+		if (region->end != UNKNOWN_VALUE) {
+			bdk_ccs_asc_end.u = CSR_READ(CAVM_CCS_ASC_REGIONX_END(
+							region->number));
+			atf_ccs_asc_end.u = region->end;
+			if (bdk_ccs_asc_end.s.addr != atf_ccs_asc_end.s.addr) {
+				ERROR(
+				      "End of ASC region %d is different for BDK(0x%x) and ATF(0x%x)\n",
+				      region->number, bdk_ccs_asc_end.s.addr,
+				      atf_ccs_asc_end.s.addr);
+				panic();
+			}
+		}
 
 		ccs_asc_attr.u = CSR_READ(CAVM_CCS_ASC_REGIONX_ATTR(region->number));
 		/*
-		 * For given memory region, grant access
-		 * to this region to all LMCs
+		 * BDK cannot set non-secure regions, do it here.
 		 */
-		ccs_asc_attr.s.lmc_mode = lmc_mode;
-		ccs_asc_attr.s.lmc_mask = lmc_mask;
 		ccs_asc_attr.s.s_en  = region->secure;
 		ccs_asc_attr.s.ns_en = !region->secure;
 		CSR_WRITE(CAVM_CCS_ASC_REGIONX_ATTR(region->number), ccs_asc_attr.u);
