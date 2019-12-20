@@ -61,6 +61,9 @@
 #define TX_IDLE_TOGGLE_US		1000
 #define RX_SIGNAL_STABLE_US		100000 /* 10 ms */
 
+/* Maximum number of extended next page prints */
+#define AN_NP_PRINT_MAX 20
+
 /* Read-Modify-Write APIs for CGX CSRs */
 #define CAVM_MODIFY_CGX_CSR(type, csr, field, val)        \
 	do {                                                    \

@@ -542,12 +542,17 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 	int still_negotiating = 1;
 	uint64_t autoneg_time;
 	cavm_cgxx_spux_int_t spux_int;
-	cavm_cgxx_spux_an_adv_t an_adv;
-	cavm_cgxx_spux_an_xnp_tx_t xnp_tx;
-	int num_pages = 1;
+	cavm_cgxx_spux_an_adv_t an_adv[AN_NP_PRINT_MAX];
+	cavm_cgxx_spux_an_xnp_tx_t xnp_tx[AN_NP_PRINT_MAX];
+	cavm_cgxx_spux_an_lp_base_t lp_base[AN_NP_PRINT_MAX];
+	cavm_cgxx_spux_an_lp_xnp_t lp_xnp[AN_NP_PRINT_MAX];
+	int num_pages = 0;
+	int num_eth_pages = 0;
 	cgx_lmac_config_t *lmac;
 	int is_25gbaser = 0;
 	int is_50gbaser2 = 0;
+	int transmit_np = 0;
+	int np = 0;
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
@@ -559,12 +564,12 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 	if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_FIFTYG_R)
 		is_50gbaser2 = 1;
 
-	/* Setup AN timeout (50ms) */
+	/* Setup AN timeout */
 	autoneg_time = gser_clock_get_count(GSER_CLOCK_TIME) + CGX_POLL_AN_COMPLETE_STATUS *
 			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
 
-	while (still_negotiating && (gser_clock_get_count(GSERN_CLOCK_TIME)
-			< autoneg_time)) {
+	while (gser_clock_get_count(GSERN_CLOCK_TIME)
+		   < autoneg_time) {
 		spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(
 				cgx_id, lmac_id));
 
@@ -576,71 +581,118 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 		}
 
 		if (spux_int.s.an_page_rx) {
-			debug_cgx("%s: %d:%d Received an Extended next page\n"
-					  , __func__, cgx_id, lmac_id);
+			lp_xnp[np].u = CSR_READ(CAVM_CGXX_SPUX_AN_LP_XNP(
+						   cgx_id, lmac_id));
+			lp_base[np].u = CSR_READ(CAVM_CGXX_SPUX_AN_LP_BASE(
+						   cgx_id, lmac_id));
+			xnp_tx[np].u = CSR_READ(CAVM_CGXX_SPUX_AN_XNP_TX(cgx_id, lmac_id));
 
-			xnp_tx.u = CSR_READ(CAVM_CGXX_SPUX_AN_XNP_TX(cgx_id, lmac_id));
+			an_adv[np].u = CSR_READ(CAVM_CGXX_SPUX_AN_ADV(cgx_id, lmac_id));
 
-			an_adv.u = CSR_READ(CAVM_CGXX_SPUX_AN_ADV(cgx_id, lmac_id));
+			/* Check if LP's or our Extended Next Page (NP) bit is set */
+			/* Must send either NULL message or Eth consortium message */
+			if ((xnp_tx[np].s.np == 1) ||
+				(lp_xnp[np].s.np == 1))
+				transmit_np = 1;
 
-			/* Check to see if we are configured to send Extended next pages */
-			/* and in a supported Ethernet Consortium lmac_mode */
-			if ((an_adv.s.np && is_25gbaser) ||
-				(an_adv.s.np && is_50gbaser2)) {
-				switch (num_pages) {
-				case 1: /* Send ethernet consortium header */
-					xnp_tx.s.u = 0x4df0353; //0x3530fd40;
-					xnp_tx.s.np = 1;
-					xnp_tx.s.mp = 1;
-					xnp_tx.s.m_u = 0x005;
-					debug_cgx("%s: %d:%d Sending Ethernet Consortium Header Page, Page#=%d\n"
-							  , __func__, cgx_id, lmac_id, num_pages);
+			/* If we received a LP base page, check if NP=1 */
+			if (lp_xnp[np].u == 0) {
+				if (lp_base[np].s.np == 1)
+					transmit_np = 1;
+			}
+
+			/* If we received a LP Next Page
+			 * Clear LP extended next page register
+			 */
+			if (lp_xnp[np].u != 0) {
+				/* Clear LP extended next page register */
+				lp_xnp[np].u = 0;
+				CSR_WRITE(CAVM_CGXX_SPUX_AN_LP_XNP
+						  (cgx_id, lmac_id), lp_xnp[np].u);
+			}
+
+			/* Check to see if we are configured to send Extended next pages
+			 * and in a supported Ethernet Consortium lmac_mode
+			 */
+			if ((an_adv[np].s.np && is_25gbaser) ||
+				(an_adv[np].s.np && is_50gbaser2)) {
+				switch (num_eth_pages) {
+				case 0: /* Send ethernet consortium header */
+					xnp_tx[np].s.u = 0x4df0353; //0x3530fd40;
+					xnp_tx[np].s.np = 1;
+					xnp_tx[np].s.mp = 1;
+					xnp_tx[np].s.m_u = 0x005;
+					transmit_np = 1;
+					num_eth_pages++;
 					break;
-				case 2: /* Send ethernet consortium data */
-					xnp_tx.s.u |= 1 << is_25gbaser;  /* 25GBASE-KR */
-					xnp_tx.s.u |= 1 << is_25gbaser;  /* 25GBASE-CR */
-					xnp_tx.s.u |= 1 << is_50gbaser2; /* 50GBASE-KR2 */
-					xnp_tx.s.u |= 1 << is_50gbaser2;  /* 50GBASE-CR2 */
-					xnp_tx.s.u |= 1 << 24;  /* F1 - Clause 91 FEC ability */
-					xnp_tx.s.u |= 1 << 25;  /* F2 - Clause 74 FEC ability */
-					if (lmac->fec != CGX_FEC_NONE) {
-						xnp_tx.s.u |= 1 << 26; /* F3 - Claue 91 FEC request */
-						xnp_tx.s.u |= 1 << 27; /* F3 - Claue 74 FEC request */
+				case 1: /* Send ethernet consortium data */
+					if (is_25gbaser) {
+						xnp_tx[np].s.u |= 1 << 4;  /* 25GBASE-KR */
+						xnp_tx[np].s.u |= 1 << 5;  /* 25GBASE-CR */
+					} else if (is_50gbaser2) {
+						xnp_tx[np].s.u |= 1 << 8; /* 50GBASE-KR2 */
+						xnp_tx[np].s.u |= 1 << 9;  /* 50GBASE-CR2 */
 					}
-					xnp_tx.s.np = 0;
-					xnp_tx.s.mp = 0;
-					xnp_tx.s.m_u = 0x203;
-					debug_cgx("%s: %d:%d Sending Ethernet Consortium Data, Page#=%d\n"
-							  , __func__, cgx_id, lmac_id, num_pages);
+					xnp_tx[np].s.u |= 1 << 24;  /* F1 - Clause 91 FEC ability */
+					xnp_tx[np].s.u |= 1 << 25;  /* F2 - Clause 74 FEC ability */
+					if (lmac->fec != CGX_FEC_NONE) {
+						xnp_tx[np].s.u |= 1 << 26; /* F3 - Claue 91 FEC request */
+						xnp_tx[np].s.u |= 1 << 27; /* F3 - Claue 74 FEC request */
+					}
+					xnp_tx[np].s.np = 0;
+					xnp_tx[np].s.mp = 0;
+					xnp_tx[np].s.m_u = 0x203;
+					transmit_np = 1;
+					num_eth_pages++;
 					break;
 				default: /* Send NULL message */
-					xnp_tx.s.mp = 1;
-					xnp_tx.s.m_u = 0x1;
-					debug_cgx("%s: %d:%d Sending Extended Next Page with NULL Data, Page#=%d\n"
-							  , __func__, cgx_id, lmac_id, num_pages);
+					xnp_tx[np].s.mp = 1;
+					xnp_tx[np].s.m_u = 0x1;
+					xnp_tx[np].s.np = 0;
+					xnp_tx[np].s.u = 0;
 					break;
 				}
 			} else {
-				debug_cgx("%s: %d:%d Sending Extended Next Page with NULL Data, Page#=%d\n"
-						  , __func__, cgx_id, lmac_id, num_pages);
-
 				/* Send next page with NULL message */
-				xnp_tx.s.mp = 1;
-				xnp_tx.s.m_u = 0x1;
+				xnp_tx[np].s.mp = 1;
+				xnp_tx[np].s.m_u = 0x1;
+				xnp_tx[np].s.np = 0;
+				xnp_tx[np].s.u = 0;
 			}
 
-			CSR_WRITE(CAVM_CGXX_SPUX_AN_XNP_TX(cgx_id, lmac_id),
-					xnp_tx.u);
-			num_pages++;
-
 			/* Clear AN Page Rx interrupt */
-			spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(
-					cgx_id, lmac_id));
-			spux_int.s.an_page_rx = 1;
-			CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
-					spux_int.u);
+			CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_int_t,
+					CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
+					an_page_rx, 1);
+
+			/* Send extended next page */
+			if (transmit_np) {
+				CSR_WRITE(CAVM_CGXX_SPUX_AN_XNP_TX(cgx_id, lmac_id),
+						xnp_tx[np].u);
+				num_pages++;
+				/* Only increase if less than 19 (max index) */
+				if (np < (AN_NP_PRINT_MAX - 1))
+					np++;
+				transmit_np = 0;
+			}
 		}
 		udelay(1);
+	}
+
+	/* Print AN page data if Next Pages sent */
+	if (np > 0) {
+		debug_cgx("%s: %d:%d Number of Next pages transmitted = %d\n"
+				  , __func__, cgx_id, lmac_id, num_pages);
+		for (int i = 0; i < np; i++) {
+			debug_cgx("%s: %d:%d Next Page%d: AN Link Partner Extended Next Page: 0x%llx\n"
+				      , __func__, cgx_id, lmac_id, i, lp_xnp[i].u);
+			debug_cgx("%s: %d:%d Next Page%d: AN Extended Next Page Tx: 0x%llx\n"
+				      , __func__, cgx_id, lmac_id, i, xnp_tx[i].u);
+			debug_cgx("%s: %d:%d Next Page%d: AN Advertisement: 0x%llx\n"
+				      , __func__, cgx_id, lmac_id, i, an_adv[i].u);
+			debug_cgx("%s: %d:%d Next Page%d: Link Partner Base Page: 0x%llx\n"
+				      , __func__, cgx_id, lmac_id, i, lp_base[i].u);
+		}
 	}
 
 	if (still_negotiating) {
