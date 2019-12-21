@@ -813,7 +813,7 @@ uint64_t cgx_get_lane_mask(int lane, int mode)
  * detects a signal on all associated GSER lanes
  * return 0 on successful signal detect, -1 on failed signal detect
  */
-static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id, int rx_signal_detect_us)
+static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 {
 	int qlm, lane, num_lanes;
 	uint64_t lane_mask;
@@ -824,6 +824,7 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id, int rx_signal_de
 	uint64_t rx_debounce_time;
 	int signal_detect;
 	uint64_t stabilization_timeout;
+	int rx_signal_detect_us, rx_signal_stable_us;
 
 	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
 
@@ -833,6 +834,18 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id, int rx_signal_de
 	/* Only do first LMAC of USXGMII */
 	if (cgx->usxgmii_mode && (lmac_id > 0))
 		return 0;
+
+	if (lmac->autoneg_dis) {
+		rx_signal_detect_us = 10000;
+		rx_signal_stable_us = 10000;
+	} else {
+		rx_signal_detect_us = 100;
+		/* Needs to be > 75ms because during AN
+		 * LP may complete an AN restart.  The
+		 * break_link_timer is a max of 75ms
+		 */
+		 rx_signal_stable_us = 100000;
+	}
 
 	lane = lmac->rev_lane;
 	lane_mask = cgx_get_lane_mask(lane, lmac->mode);
@@ -851,7 +864,7 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id, int rx_signal_de
 
 	num_lanes = qlm_get_lanes(qlm);
 
-	stabilization_timeout = gser_clock_get_count(GSER_CLOCK_TIME) + RX_SIGNAL_STABLE_US *
+	stabilization_timeout = gser_clock_get_count(GSER_CLOCK_TIME) + rx_signal_stable_us *
 		gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
 
 	while (1) {
@@ -2409,7 +2422,6 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 	cavm_cgxx_spux_br_status2_t br_status2;
 	cavm_cgxx_spux_control1_t spux_control1;
 	cavm_cgxx_smux_rx_ctl_t	smux_rx_ctl;
-	int	rx_signal_detect_us;
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
@@ -2417,17 +2429,13 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 			__func__, cgx_id, lmac_id, lmac->mode,
 			!lmac->autoneg_dis, lmac->use_training);
 
-	if (lmac->autoneg_dis)
-		rx_signal_detect_us = 10000;
-	else {
-		rx_signal_detect_us = 100;
+	if (!lmac->autoneg_dis)
 		cgx_serdes_tx_control(cgx_id, lmac_id, true);
-	}
 
 	/* Check if SERDES Rx is detecting a signal
-	 * on all associated lanes
+	 *  on all associated lanes
 	 */
-	if (cgx_serdes_rx_signal_detect(cgx_id, lmac_id, rx_signal_detect_us)) {
+	if (cgx_serdes_rx_signal_detect(cgx_id, lmac_id)) {
 		debug_cgx("%s: %d:%d No SERDES Rx signal detected\n",
 				  __func__, cgx_id, lmac_id);
 		cgx_set_error_type(cgx_id, lmac_id,
