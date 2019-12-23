@@ -15,7 +15,7 @@
 #include <qlm/qlm_gserr.h>
 
 /* Indexed by QLM number and lane */
-static uint64_t prbs_errors[8][4];
+static uint64_t prbs_errors[5][4];
 
 /**
  * Function to return the number of lanes in the SERDES group
@@ -409,18 +409,22 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 	{
 		case 0:
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN0_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
+				c.s.ctrl_src_ovr_en = 1;
 				c.s.ctrl_src_ovr_val = ctrl_src_ovr_val);
 			break;
 		case 1:
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
+				c.s.ctrl_src_ovr_en = 1;
 				c.s.ctrl_src_ovr_val = ctrl_src_ovr_val);
 			break;
 		case 2:
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
+				c.s.ctrl_src_ovr_en = 1;
 				c.s.ctrl_src_ovr_val = ctrl_src_ovr_val);
 			break;
 		case 3:
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
+				c.s.ctrl_src_ovr_en = 1;
 				c.s.ctrl_src_ovr_val = ctrl_src_ovr_val);
 			break;
 	}
@@ -2126,8 +2130,23 @@ int qlm_gserr_change_phy_rate(int module)
 //		}
 //	}
 //
-//	/* For most chips each serdes needs to be brought up in sequencial order.
-//	   CN96XX requires reverese order */
+//	/* For most chips each serdes needs to be brought up in sequential order.
+//		CN96XX requires reverse order
+//			CN96XX GSERR2 is REXT Master and must be released from POR reset first.
+//				Wait for GSERR2 cm0_state_chng_rdy=1, then release GSERR1 and
+//				GSERR0 from POR reset. This ensures that GSERR2 completes the
+//				REXT calibration and then sends the REXT trim code (8-bit value)
+//				and REXT redy to GSERR0 and GSERR1.
+//				Next GSERR2 must wait for the 156.25 MHz reference clock to
+//				propagated from GSERR0->GSERR1->GSERR2 before we release the
+//				GSERR2 cm0_rst.
+//				So in summary
+//				CN96XX C0:
+//					Release POR,APB,CPU Reset Order:  GSERR2 first-> GSERR1 second ->GSERR0 last.
+//					Release CM0_RST Order:  GSERR0 first-> GSERR1 second ->GSERR2 last.
+//				CNF95XX B0:
+//					Release POR,APB,CPU Reset Order:  GSERR0 first-> GSERR1 second ->GSERR2 last.
+//					Release CM0_RST Order:  GSERR0 first-> GSERR1 second ->GSERR2 last. */
 //	int module = 0;
 //	int module_last = num_gserr - 1;
 //	int module_inc = 1;
@@ -2138,7 +2157,7 @@ int qlm_gserr_change_phy_rate(int module)
 //		module_inc = -1;
 //	}
 //
-//	/* Steps 4-9 are done sequencially across all GSERR blocks */
+//	/* Steps 4-6 are done sequentially across all GSERR blocks */
 //	while (1)
 //	{
 //		/* 4) Take the PHY out of reset and release the APB reset
@@ -2185,7 +2204,23 @@ int qlm_gserr_change_phy_rate(int module)
 //				gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1 (after cpu_reset=0)\n", module);
 //			qlm_gserr_poll_error(module);
 //		}
+//		if (module == module_last)
+//			break;
+//		module += module_inc;
+//	}
 //
+//	/* Steps 7-9 are done sequentially across all GSERR blocks
+//		For 156.25MHz Reference Clock bring-up and proper refclk propagation between GSERR block:
+//		CN96XX C0 & CNF95XX B0 start with GSERR0 first, GSERR1 second, GSERR2 last
+//			GSERR0 receives the 156.25MHz refclk from the BGA bumps so start CMU first,
+//			GSERR1 gets refclk from GSERR0 and forwards to GSERR2, so start CMU second,
+//			GSERR2 gets refclk from GSERR1 so start CMU last. */
+//	module = 0;
+//	module_last = num_gserr - 1;
+//	module_inc = 1;
+//
+//	while (1)
+//	{
 //		/* 7) Take the GSERR PHY clock management unit (CM0) out of reset.
 //			Write GSERR(0..2)_COMMON_PHY_CTRL_BCFG
 //			CM0_RST=0 - Release CMU from reset */

@@ -15,7 +15,7 @@
 #include <qlm/qlm_gserr.h>
 
 /* Indexed by QLM number and lane */
-static uint64_t prbs_errors[8][4];
+static uint64_t prbs_errors[5][2];
 
 /**
  * Function to return the number of lanes in the SERDES group

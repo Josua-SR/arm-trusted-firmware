@@ -778,7 +778,6 @@ void qlm_display_settings_gsern(int qlm, int qlm_lane, bool show_tx, bool show_r
 			rx_5a_bsts.s.ctlez_adapt_status, rx_6_bsts.s.ctlelte_adapt_status, rx_5_bsts.s.ctle_adapt_status);
 		printf("	VGA_ADAPT_STATUS=%d, AFEOS_ADAPT_STATUS=%d, DFE_ADAPT_STATUS=%d\n",
 			   rx_5_bsts.s.vga_adapt_status, rx_8_bsts.s.afeos_adapt_status, rx_5_bsts.s.dfe_adapt_status);
-#if 0
 		int sensor = gser_is_model(OCTEONTX_CNF95XX) ? 2 : 9;
 		GSER_CSR_INIT(temp_conv_result, CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
 		if (temp_conv_result.s.temp_valid)
@@ -788,7 +787,6 @@ void qlm_display_settings_gsern(int qlm, int qlm_lane, bool show_tx, bool show_r
 		}
 		else
 			printf("	TEMPERATURE=Unavailable\n");
-#endif
 	}
 	if (show_tx)
 	{
@@ -1820,3 +1818,4 @@ int qlm_rx_signal_detect_gsern(int qlm, int lane)
 	else
 		return 0;
 }
+
