@@ -231,18 +231,6 @@ int gsern_eye_capture(int qlm, int lane, int show_data, gser_qlm_eye_t *eye_data
 void qlm_tx_control_gsern(int qlm, int lane, bool enable_tx);
 
 /**
- * Called whenever CGX needs to reset or clear the reset
- * of the GSERN Lane Tx state machine
- *
- * @param qlm
- * @param lane_mask
- * @param reset_tx True if the serdes Tx state machine should be reset
- *
- * @return Zero on success, negative on error
- */
-int qlm_tx_sm_rst_control_gsern(int qlm, uint64_t lane_mask, int reset_tx);
-
-/**
  * Check whether SERDES Rx lane is detecting a signal
  *
  * @param qlm	  QLM to use
