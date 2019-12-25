@@ -16,6 +16,7 @@
 
 #include "comphy/phy-comphy-cp110.h"
 #include "secure_dfx_access/dfx.h"
+#include "ddr_phy_access.h"
 #include <stdbool.h>
 
 /* #define DEBUG_COMPHY */
@@ -38,6 +39,8 @@
 #define MV_SIP_PMU_IRQ_ENABLE	0x82000012
 #define MV_SIP_PMU_IRQ_DISABLE	0x82000013
 #define MV_SIP_DFX		0x82000014
+#define MV_SIP_DDR_PHY_WRITE	0x82000015
+#define MV_SIP_DDR_PHY_READ	0x82000016
 
 #define MAX_LANE_NR		6
 #define MVEBU_COMPHY_OFFSET	0x441000
@@ -135,6 +138,13 @@ uintptr_t mrvl_sip_smc_handler(uint32_t smc_fid,
 #endif
 	case MV_SIP_DFX:
 		ret = mvebu_dfx_handle(x1, &read, x2, x3);
+		SMC_RET2(handle, ret, read);
+	case MV_SIP_DDR_PHY_WRITE:
+		ret = mvebu_ddr_phy_write(x1, x2);
+		SMC_RET1(handle, ret);
+	case MV_SIP_DDR_PHY_READ:
+		read = 0;
+		ret = mvebu_ddr_phy_read(x1, (uint16_t *)&read);
 		SMC_RET2(handle, ret, read);
 	default:
 		ERROR("%s: unhandled SMC (0x%x)\n", __func__, smc_fid);
