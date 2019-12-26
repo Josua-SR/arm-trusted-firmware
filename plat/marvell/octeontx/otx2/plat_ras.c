@@ -8,6 +8,7 @@
 #include <lib/extensions/ras.h>
 #include <octeontx_irqs_def.h>
 #include <plat_ras.h>
+#include <plat/common/platform.h>
 
 /*
  * It is number of all RAS interrupts.
@@ -22,13 +23,27 @@
 static int plat_ras_mdc_handler(const struct err_record_info *info,
 		int probe_data, const struct err_handler_data *const data)
 {
-	return otx2_mdc_isr(data->interrupt, data->flags, data->cookie);
+	int ret;
+
+	ret = otx2_mdc_isr(data->interrupt, data->flags, data->cookie);
+
+	/* issue EOI to controller */
+	plat_ic_end_of_interrupt(data->interrupt);
+
+	return ret;
 }
 
 static int plat_ras_mcc_handler(const struct err_record_info *info,
 		int probe_data, const struct err_handler_data *const data)
 {
-	return otx2_mcc_isr(data->interrupt, data->flags, data->cookie);
+	int ret;
+
+	ret = otx2_mcc_isr(data->interrupt, data->flags, data->cookie);
+
+	/* issue EOI to controller */
+	plat_ic_end_of_interrupt(data->interrupt);
+
+	return ret;
 }
 
 struct ras_interrupt otx2_ras_interrupts[NUMBER_OF_RAS_INTERRUPTS];
