@@ -233,6 +233,8 @@ typedef struct {
 	void (*qlm_tx_control)(int qlm, int lane, bool enable_tx);
 	int (*qlm_tx_sm_rst_control)(int qlm, uint64_t lane_mask, int reset_tx);
 	int (*qlm_rx_signal_detect)(int qlm, int lane);
+	int (*qlm_get_lmac_phy_lane)(int qlm, int lane);
+	int (*qlm_get_lmac_first_qlm)(int qlm);
 } qlm_ops_t;
 
 /* QLM platform specific API */

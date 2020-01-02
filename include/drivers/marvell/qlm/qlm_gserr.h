@@ -235,4 +235,22 @@ void qlm_gserr_tx_control(int qlm, int lane, bool enable_tx);
  */
 int qlm_gserr_rx_signal_detect(int qlm, int lane);
 
+/**
+ * Get the LMAC physical lane for the GSER physical lane
+ *
+ * @param  qlm	  QLM to use
+ * @param  lane	  Which lane
+ * @return Returns the physical lane
+ */
+int qlm_gserr_get_lmac_phy_lane(int qlm, int lane);
+
+/**
+ * Get the LMAC's first GSER associated with the specified GSER.
+ * Required for LMAC's that use DLM's
+ *
+ * @param  qlm	   QLM to use
+ * @return Returns the LMAC first GSER
+ */
+int qlm_gserr_get_lmac_first_qlm(int qlm);
+
 #endif /* _QLM_GSERR_H_ */

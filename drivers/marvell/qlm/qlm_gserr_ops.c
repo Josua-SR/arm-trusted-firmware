@@ -34,4 +34,6 @@ const qlm_ops_t qlm_gserr_ops = {
 	.qlm_eye_capture = qlm_gserr_eye_capture,
 	.qlm_tx_control = qlm_gserr_tx_control,
 	.qlm_rx_signal_detect = qlm_gserr_rx_signal_detect,
+	.qlm_get_lmac_phy_lane = qlm_gserr_get_lmac_phy_lane,
+	.qlm_get_lmac_first_qlm = qlm_gserr_get_lmac_first_qlm,
 };

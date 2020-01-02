@@ -43,5 +43,7 @@ const qlm_ops_t qlm_gsern_ops = {
 	.qlm_eye_capture = gsern_eye_capture,
 	.qlm_tx_control = qlm_tx_control_gsern,
 	.qlm_tx_sm_rst_control = qlm_tx_sm_rst_control_gsern,
-	.qlm_rx_signal_detect = qlm_rx_signal_detect_gsern
+	.qlm_rx_signal_detect = qlm_rx_signal_detect_gsern,
+	.qlm_get_lmac_phy_lane = qlm_gsern_get_lmac_phy_lane,
+	.qlm_get_lmac_first_qlm = qlm_gsern_get_lmac_first_qlm,
 };
