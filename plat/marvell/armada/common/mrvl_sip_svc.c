@@ -137,8 +137,12 @@ uintptr_t mrvl_sip_smc_handler(uint32_t smc_fid,
 		SMC_RET1(handle, 0);
 #endif
 	case MV_SIP_DFX:
-		ret = mvebu_dfx_handle(x1, &read, x2, x3);
-		SMC_RET2(handle, ret, read);
+		if (x1 >= MV_SIP_DFX_THERMAL_INIT &&
+		    x1 <= MV_SIP_DFX_THERMAL_SEL_CHANNEL) {
+			ret = mvebu_dfx_thermal_handle(x1, &read, x2, x3);
+			SMC_RET2(handle, ret, read);
+		}
+		SMC_RET1(handle, SMC_UNK);
 	case MV_SIP_DDR_PHY_WRITE:
 		ret = mvebu_ddr_phy_write(x1, x2);
 		SMC_RET1(handle, ret);
