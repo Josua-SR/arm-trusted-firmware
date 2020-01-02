@@ -39,9 +39,6 @@
 /* Packet data depth is 128-bit and mark to be configured in multiple of 16 bytes */
 #define CGX_BP_PACKET_DATA_DEPTH	16
 
-/* delay to wait before reading the CSR again when polling */
-#define CGX_POLL_FOR_CSR_DELAY 10
-
 /* software to wait 10 ms to establish stable link */
 #define CGX_SPUX_BR_RCV_LINK_DELAY 10000
 
@@ -53,7 +50,7 @@
 
 /* TIMEOUT for different usecases */
 #define CGX_POLL_AN_STATUS		10000 /* 10 ms */
-#define CGX_POLL_AN_COMPLETE_STATUS		500000 /* 500 ms */
+#define CGX_POLL_AN_COMPLETE_STATUS	500000 /* 500 ms */
 #define CGX_POLL_AN_RESTART_STATUS	80000	/* 80 ms */
 #define CGX_POLL_TRAINING_STATUS	500000	/* 500 ms */
 #define GSERN_LANEX_TX_RST_SM_TIMEOUT   10000 /* 10 ms */

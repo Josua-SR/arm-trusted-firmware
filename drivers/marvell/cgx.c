@@ -63,8 +63,8 @@ static usxgmii_rate_map_t usxgmii_rate_map[MAX_USXGMII_RATE_TYPES] = {
 static int cgx_poll_for_csr(uint64_t addr, uint64_t mask,
 					int poll_val, int timeout)
 {
-	int tries;
-	uint64_t val;
+	int tries, ret_val = 0;
+	uint64_t val, poll_time;
 
 	/* Default poll for CGX status registers is 1 ms. If any
 	 * specific case like AN, training needs different
@@ -74,8 +74,12 @@ static int cgx_poll_for_csr(uint64_t addr, uint64_t mask,
 	if (timeout != -1)
 		tries = timeout;
 	else
-		tries = 100;
-	do {
+		tries = 1000;
+
+	poll_time = gser_clock_get_count(GSER_CLOCK_TIME) + tries *
+			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+
+	while (1) {
 		/* NOTE : directly read from addr instead of using
 		 * CSR_READ in this case to avoid dependencies
 		 */
@@ -83,15 +87,17 @@ static int cgx_poll_for_csr(uint64_t addr, uint64_t mask,
 		/* argument poll_val indicates if the bit should
 		 * be polled for value of 1 or 0
 		 */
-		if ((poll_val && (val & mask)) || (!poll_val && !(val & mask)))
+		if ((poll_val && (val & mask)) || (!poll_val &&
+						!(val & mask)))
 			break;
-		udelay(CGX_POLL_FOR_CSR_DELAY);
-	} while (--tries > 0);
+		else if (gser_clock_get_count(GSER_CLOCK_TIME) > poll_time) {
+			ret_val = -1;
+			break;
+		}
+		udelay(1);
+	};
 
-	if (!tries)
-		return -1;
-
-	return 0;
+	return ret_val;
 }
 
 /* This function initializes CGX in the SGMII/QSGMII modes
