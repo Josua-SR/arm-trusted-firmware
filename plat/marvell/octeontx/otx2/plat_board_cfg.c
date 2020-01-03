@@ -1352,9 +1352,8 @@ static int octeontx2_cgx_get_phy_info(const void *fdt, int lmac_offset, int cgx_
 
 	strlcpy(phyname, "phy-handle", sizeof(phyname));
 
-	/* FIXME: Using board model is safe to use for now */
-	if ((!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb96", 5))
-		&& (cavm_is_model(OCTEONTX_CN96XX_PASS1_X))) {
+	/* FIXME: Using board model is safe to use */
+	if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb96", 5)) {
 		/* On EBB9604 board, PHY address can be different on
 		 * QLM 3 and QLM 7 and at a time, ethernet can be configured
 		 * either on QLM3 or QLM7 only and not both. CGX0 is mapped to
