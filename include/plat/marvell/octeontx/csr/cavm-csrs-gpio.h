@@ -3574,13 +3574,13 @@ union cavm_gpio_pkg_ver
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_3_63         : 61;
         uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
-                                                                 0x0 = SKU package A = for CNF95XXN.
+                                                                 0x0 = SKU package A = for LOKI.
 
                                                                  Internal:
                                                                  Architecturally defined, same encoding across same die. */
 #else /* Word 0 - Little Endian */
         uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
-                                                                 0x0 = SKU package A = for CNF95XXN.
+                                                                 0x0 = SKU package A = for LOKI.
 
                                                                  Internal:
                                                                  Architecturally defined, same encoding across same die. */

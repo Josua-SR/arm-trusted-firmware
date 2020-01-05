@@ -773,7 +773,89 @@ union cavm_fus_read_times
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_fus_read_times_s cn; */
+    /* struct cavm_fus_read_times_s cn9; */
+    /* struct cavm_fus_read_times_s cn96xxp1; */
+    struct cavm_fus_read_times_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_32_63        : 32;
+        uint64_t done                  : 4;  /**< [ 31: 28](R/W) Hold time of CSB, PGENB, and LOAD with respect to falling edge
+                                                                 of STROBE for read and write mode in GSERC_REF_CLK0 + 1 cycles.
+                                                                 Default of 0x0 yields 10 ns at 100 MHz.
+
+                                                                 Internal:
+                                                                 Timing specs are th_CS = 6 ns, th_PG = 10 ns, th_LD_p = 7 ns. */
+        uint64_t ahd                   : 4;  /**< [ 27: 24](R/W) Hold time of A with respect to falling edge of STROBE
+                                                                 for read and write modes in GSERC_REF_CLK0 + 1 cycles.
+                                                                 Default of 0x0 yields 10 ns at 100 MHz.
+
+                                                                 Internal:
+                                                                 Timing spec of tsu_A_r and tsu_A_p is 3 ns min. */
+        uint64_t wrstb_wh              : 12; /**< [ 23: 12](R/W) Pulse width high of STROBE in write mode in GSERC_REF_CLK0 + 1 cycles.
+                                                                 Default of 0x3E8 yields 10 us at 100 MHz.
+
+                                                                 Internal:
+                                                                 Timing spec of twh_SB_p is 9.8 us max. */
+        uint64_t rdstb_wh              : 4;  /**< [ 11:  8](R/W) Pulse width high of STROBE in read mode in GSERC_REF_CLK0 + 1 cycles.
+                                                                 Default of 0x3 yields 40 ns at 100 MHz.
+
+                                                                 Internal:
+                                                                 Timing spec of twh_SB_p is 20 ns min. */
+        uint64_t asu                   : 4;  /**< [  7:  4](R/W) Setup time of A to rising edge of STROBE for read and write
+                                                                 modes in GSERC_REF_CLK0 cycles.
+                                                                 Default of 0x1 yields 10 ns at 100 MHz.
+
+                                                                 Internal:
+                                                                 Timing spec of tsu_A_r and tsu_A_p is 12 ns min. */
+        uint64_t setup                 : 4;  /**< [  3:  0](R/W) Setup time of CSB, PGENB, LOAD to rising edge of STROBE
+                                                                 in read and write modes in GSERC_REF_CLK0 + 1 cycles.
+                                                                 Default of 0x0 yields 10 ns plus ASU cycles (20nS) equals 30nS at 100 MHz.
+
+                                                                 Internal:
+                                                                 tsu_CS = 16 ns, tsu_PG = 14 ns, tsu_LD_r = 10 ns. */
+#else /* Word 0 - Little Endian */
+        uint64_t setup                 : 4;  /**< [  3:  0](R/W) Setup time of CSB, PGENB, LOAD to rising edge of STROBE
+                                                                 in read and write modes in GSERC_REF_CLK0 + 1 cycles.
+                                                                 Default of 0x0 yields 10 ns plus ASU cycles (20nS) equals 30nS at 100 MHz.
+
+                                                                 Internal:
+                                                                 tsu_CS = 16 ns, tsu_PG = 14 ns, tsu_LD_r = 10 ns. */
+        uint64_t asu                   : 4;  /**< [  7:  4](R/W) Setup time of A to rising edge of STROBE for read and write
+                                                                 modes in GSERC_REF_CLK0 cycles.
+                                                                 Default of 0x1 yields 10 ns at 100 MHz.
+
+                                                                 Internal:
+                                                                 Timing spec of tsu_A_r and tsu_A_p is 12 ns min. */
+        uint64_t rdstb_wh              : 4;  /**< [ 11:  8](R/W) Pulse width high of STROBE in read mode in GSERC_REF_CLK0 + 1 cycles.
+                                                                 Default of 0x3 yields 40 ns at 100 MHz.
+
+                                                                 Internal:
+                                                                 Timing spec of twh_SB_p is 20 ns min. */
+        uint64_t wrstb_wh              : 12; /**< [ 23: 12](R/W) Pulse width high of STROBE in write mode in GSERC_REF_CLK0 + 1 cycles.
+                                                                 Default of 0x3E8 yields 10 us at 100 MHz.
+
+                                                                 Internal:
+                                                                 Timing spec of twh_SB_p is 9.8 us max. */
+        uint64_t ahd                   : 4;  /**< [ 27: 24](R/W) Hold time of A with respect to falling edge of STROBE
+                                                                 for read and write modes in GSERC_REF_CLK0 + 1 cycles.
+                                                                 Default of 0x0 yields 10 ns at 100 MHz.
+
+                                                                 Internal:
+                                                                 Timing spec of tsu_A_r and tsu_A_p is 3 ns min. */
+        uint64_t done                  : 4;  /**< [ 31: 28](R/W) Hold time of CSB, PGENB, and LOAD with respect to falling edge
+                                                                 of STROBE for read and write mode in GSERC_REF_CLK0 + 1 cycles.
+                                                                 Default of 0x0 yields 10 ns at 100 MHz.
+
+                                                                 Internal:
+                                                                 Timing specs are th_CS = 6 ns, th_PG = 10 ns, th_LD_p = 7 ns. */
+        uint64_t reserved_32_63        : 32;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_fus_read_times_s cn98xx; */
+    /* struct cavm_fus_read_times_s cnf95xxp1; */
+    /* struct cavm_fus_read_times_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_fus_read_times_s f95mm; */
+    /* struct cavm_fus_read_times_s loki; */
 };
 typedef union cavm_fus_read_times cavm_fus_read_times_t;
 

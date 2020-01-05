@@ -1105,7 +1105,10 @@ union cavm_ndcx_af_ctl
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_21_63        : 43;
         uint64_t dis_inval_on_mask_pnd : 1;  /**< [ 20: 20](R/W) When set, invalidate requests will be ignored when pending read requests to the
-                                                                 same cache line are present in the bank pending FIFO.
+                                                                 same cache line are present in the bank pending FIFO. When set, the NDC_AF_PORT()_IT0_INVAL_PC
+                                                                 performance counters will overcount the number of successful invalidate requests while the
+                                                                 NDC_AF_PORT()_IT2_INVAL_PC performance counters will undercount the number of invalidate
+                                                                 requests that failed due to a read fetch being in flight.
                                                                  For diagnostic use only. */
         uint64_t en_flush_on_inval     : 1;  /**< [ 19: 19](R/W) When set, invalidate requests will flush the corresponding entry back to
                                                                  coherent memory if the entry is dirty.
@@ -1225,7 +1228,10 @@ union cavm_ndcx_af_ctl
                                                                  coherent memory if the entry is dirty.
                                                                  For diagnostic use only. */
         uint64_t dis_inval_on_mask_pnd : 1;  /**< [ 20: 20](R/W) When set, invalidate requests will be ignored when pending read requests to the
-                                                                 same cache line are present in the bank pending FIFO.
+                                                                 same cache line are present in the bank pending FIFO. When set, the NDC_AF_PORT()_IT0_INVAL_PC
+                                                                 performance counters will overcount the number of successful invalidate requests while the
+                                                                 NDC_AF_PORT()_IT2_INVAL_PC performance counters will undercount the number of invalidate
+                                                                 requests that failed due to a read fetch being in flight.
                                                                  For diagnostic use only. */
         uint64_t reserved_21_63        : 43;
 #endif /* Word 0 - End */
@@ -1428,7 +1434,10 @@ union cavm_ndcx_af_ctl
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_21_63        : 43;
         uint64_t dis_inval_on_mask_pnd : 1;  /**< [ 20: 20](R/W) When set, invalidate requests will be ignored when pending read requests to the
-                                                                 same cache line are present in the bank pending FIFO.
+                                                                 same cache line are present in the bank pending FIFO. When set, the NDC_AF_PORT()_IT0_INVAL_PC
+                                                                 performance counters will overcount the number of successful invalidate requests while the
+                                                                 NDC_AF_PORT()_IT2_INVAL_PC performance counters will undercount the number of invalidate
+                                                                 requests that failed due to a read fetch being in flight.
                                                                  For diagnostic use only. */
         uint64_t en_flush_on_inval     : 1;  /**< [ 19: 19](R/W) When set, invalidate requests will flush the corresponding entry back to
                                                                  coherent memory if the entry is dirty.
@@ -1568,7 +1577,10 @@ union cavm_ndcx_af_ctl
                                                                  coherent memory if the entry is dirty.
                                                                  For diagnostic use only. */
         uint64_t dis_inval_on_mask_pnd : 1;  /**< [ 20: 20](R/W) When set, invalidate requests will be ignored when pending read requests to the
-                                                                 same cache line are present in the bank pending FIFO.
+                                                                 same cache line are present in the bank pending FIFO. When set, the NDC_AF_PORT()_IT0_INVAL_PC
+                                                                 performance counters will overcount the number of successful invalidate requests while the
+                                                                 NDC_AF_PORT()_IT2_INVAL_PC performance counters will undercount the number of invalidate
+                                                                 requests that failed due to a read fetch being in flight.
                                                                  For diagnostic use only. */
         uint64_t reserved_21_63        : 43;
 #endif /* Word 0 - End */
@@ -2193,7 +2205,31 @@ union cavm_ndcx_af_portx_itx_inval_pc
                                                                    _ IT(0..2) is enumerated by NDC_INVAL_RES_E. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_ndcx_af_portx_itx_inval_pc_s cn; */
+    /* struct cavm_ndcx_af_portx_itx_inval_pc_s cn9; */
+    /* struct cavm_ndcx_af_portx_itx_inval_pc_s cn96xx; */
+    struct cavm_ndcx_af_portx_itx_inval_pc_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Per-port counters tracking invalidate references.
+
+                                                                 The register index indicates the type of request that is counted:
+                                                                   _ IT(0..2) is enumerated by NDC_INVAL_RES_E.
+
+                                                                 When NDC_AF_CTL[DIS_INVAL_ON_MASK_PND] is set, the IT0 registers will overcount
+                                                                 the number of successful invalidate requests while the IT2 registers will
+                                                                 undercount the number of invalidate requests that failed due to a read fetch being in flight. */
+#else /* Word 0 - Little Endian */
+        uint64_t count                 : 64; /**< [ 63:  0](R/W/H) Per-port counters tracking invalidate references.
+
+                                                                 The register index indicates the type of request that is counted:
+                                                                   _ IT(0..2) is enumerated by NDC_INVAL_RES_E.
+
+                                                                 When NDC_AF_CTL[DIS_INVAL_ON_MASK_PND] is set, the IT0 registers will overcount
+                                                                 the number of successful invalidate requests while the IT2 registers will
+                                                                 undercount the number of invalidate requests that failed due to a read fetch being in flight. */
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_ndcx_af_portx_itx_inval_pc_s loki; */
 };
 typedef union cavm_ndcx_af_portx_itx_inval_pc cavm_ndcx_af_portx_itx_inval_pc_t;
 

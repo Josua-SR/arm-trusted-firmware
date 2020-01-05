@@ -384,7 +384,6 @@
 #define CAVM_PCC_PROD_E_CN99XX (0xaf)
 #define CAVM_PCC_PROD_E_CNF95XX (0xb3)
 #define CAVM_PCC_PROD_E_CNF95XXMM (0xb5)
-#define CAVM_PCC_PROD_E_CNF95XXN (0xb4)
 #define CAVM_PCC_PROD_E_GEN (0xa0)
 #define CAVM_PCC_PROD_E_LOKI (0xb4)
 

@@ -368,8 +368,7 @@ static inline uint64_t CAVM_TIM_AF_ACTIVE_PC_FUNC(void)
 /**
  * Register (RVU_PF_BAR0) tim_af_bar2_alias#
  *
- * INTERNAL: TIM Admin Function  BAR2 Alias Registers
- *
+ * TIM Admin Function  BAR2 Alias Registers
  * These registers alias to the TIM BAR2 registers for the PF and function
  * selected by TIM_AF_BAR2_SEL[PF_FUNC].
  *
@@ -409,8 +408,7 @@ static inline uint64_t CAVM_TIM_AF_BAR2_ALIASX(uint64_t a)
 /**
  * Register (RVU_PF_BAR0) tim_af_bar2_sel
  *
- * INTERNAL: TIM Admin Function BAR2 Select Register
- *
+ * TIM Admin Function BAR2 Select Register
  * This register configures BAR2 accesses from the TIM_AF_BAR2_ALIAS() registers in BAR0.
  * Internal:
  * Not implemented. Placeholder for bug33464.
@@ -1472,7 +1470,81 @@ union cavm_tim_af_ringx_ctl0
                                                                  setting or resetting TIM_AF_RING()_CTL1[ENA]. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_tim_af_ringx_ctl0_s cn; */
+    /* struct cavm_tim_af_ringx_ctl0_s cn9; */
+    /* struct cavm_tim_af_ringx_ctl0_s cn96xxp1; */
+    struct cavm_tim_af_ringx_ctl0_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t expire_offset         : 32; /**< [ 63: 32](R/W/H) Time at which the next bucket will be serviced, or offset. See also TIM_LF_RING_REL
+                                                                 for the position relative to current time.
+
+                                                                 If TIM_AF_RING()_CTL1[ENA] = 0, then contains an offset.
+
+                                                                 When activating the first ring for current TIM_AF_RING()_CTL1[CLK_SRC]: When
+                                                                 TIM_AF_RING()_CTL1[ENA] transitions from a zero to a one, this offset will be
+                                                                 added to the current time and INTERVAL, and loaded back into [EXPIRE_OFFSET].
+
+                                                                 When having at least one active ring for current TIM_AF_RING()_CTL1[CLK_SRC]:
+                                                                 When TIM_AF_RING()_CTL1[ENA] transitions from a zero to a one, this offset will
+                                                                 be added to the closest expiration time among those of the rings that are
+                                                                 already active on that source, added to INTERVAL, and then loaded back into
+                                                                 [EXPIRE_OFFSET].  Thus the offset sets the delta time between ENA transitioning
+                                                                 to one and the very first time the ring will be serviced. Software should
+                                                                 program different offsets on each ring to reduce congestion to prevent many
+                                                                 rings from otherwise expiring concurrently.
+
+                                                                 If TIM_AF_RING()_CTL1[ENA] = 1, then [EXPIRE_OFFSET] contains the time in the future the next
+                                                                 bucket will be serviced.
+
+                                                                 When [EXPIRE_OFFSET] reaches the current time (TIM_AF_FR_RN_TENNS,
+                                                                 TIM_AF_FR_RN_GPIOS, TIM_AF_FR_RN_PTP or TIM_AF_FR_RN_GTI),
+                                                                 [EXPIRE_OFFSET] is set to the next expiration time (current time plus
+                                                                 TIM_AF_RING()_CTL0[INTERVAL]).
+
+                                                                 [EXPIRE_OFFSET] is unpredictable after TIM_AF_RING()_CTL1[CLK_SRC] changes or
+                                                                 TIM_AF_RING()_CTL1[ENA] transitions from one to zero, and must be reprogrammed before
+                                                                 setting or resetting TIM_AF_RING()_CTL1[ENA]. */
+        uint64_t interval              : 32; /**< [ 31:  0](R/W) Timer interval, measured in TENNS, GTI or PTP clocks, or GPIO transitions.
+                                                                 Minimum value is 256 for TENNS, 256 for GPIO, 300 for GTI and PTP rings. */
+#else /* Word 0 - Little Endian */
+        uint64_t interval              : 32; /**< [ 31:  0](R/W) Timer interval, measured in TENNS, GTI or PTP clocks, or GPIO transitions.
+                                                                 Minimum value is 256 for TENNS, 256 for GPIO, 300 for GTI and PTP rings. */
+        uint64_t expire_offset         : 32; /**< [ 63: 32](R/W/H) Time at which the next bucket will be serviced, or offset. See also TIM_LF_RING_REL
+                                                                 for the position relative to current time.
+
+                                                                 If TIM_AF_RING()_CTL1[ENA] = 0, then contains an offset.
+
+                                                                 When activating the first ring for current TIM_AF_RING()_CTL1[CLK_SRC]: When
+                                                                 TIM_AF_RING()_CTL1[ENA] transitions from a zero to a one, this offset will be
+                                                                 added to the current time and INTERVAL, and loaded back into [EXPIRE_OFFSET].
+
+                                                                 When having at least one active ring for current TIM_AF_RING()_CTL1[CLK_SRC]:
+                                                                 When TIM_AF_RING()_CTL1[ENA] transitions from a zero to a one, this offset will
+                                                                 be added to the closest expiration time among those of the rings that are
+                                                                 already active on that source, added to INTERVAL, and then loaded back into
+                                                                 [EXPIRE_OFFSET].  Thus the offset sets the delta time between ENA transitioning
+                                                                 to one and the very first time the ring will be serviced. Software should
+                                                                 program different offsets on each ring to reduce congestion to prevent many
+                                                                 rings from otherwise expiring concurrently.
+
+                                                                 If TIM_AF_RING()_CTL1[ENA] = 1, then [EXPIRE_OFFSET] contains the time in the future the next
+                                                                 bucket will be serviced.
+
+                                                                 When [EXPIRE_OFFSET] reaches the current time (TIM_AF_FR_RN_TENNS,
+                                                                 TIM_AF_FR_RN_GPIOS, TIM_AF_FR_RN_PTP or TIM_AF_FR_RN_GTI),
+                                                                 [EXPIRE_OFFSET] is set to the next expiration time (current time plus
+                                                                 TIM_AF_RING()_CTL0[INTERVAL]).
+
+                                                                 [EXPIRE_OFFSET] is unpredictable after TIM_AF_RING()_CTL1[CLK_SRC] changes or
+                                                                 TIM_AF_RING()_CTL1[ENA] transitions from one to zero, and must be reprogrammed before
+                                                                 setting or resetting TIM_AF_RING()_CTL1[ENA]. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_tim_af_ringx_ctl0_cn96xxp3 cn98xx; */
+    /* struct cavm_tim_af_ringx_ctl0_s cnf95xxp1; */
+    /* struct cavm_tim_af_ringx_ctl0_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_tim_af_ringx_ctl0_cn96xxp3 f95mm; */
+    /* struct cavm_tim_af_ringx_ctl0_cn96xxp3 loki; */
 };
 typedef union cavm_tim_af_ringx_ctl0 cavm_tim_af_ringx_ctl0_t;
 

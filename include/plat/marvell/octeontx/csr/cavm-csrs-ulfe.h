@@ -653,6 +653,559 @@ union cavm_ulfe_semistatic_s
 };
 
 /**
+ * Register (RSL) ulfe#_config0_data#
+ *
+ * ULFE_CONFIG0 Registers
+ * This register block contains the ULFE job 0 configuration data.
+ */
+union cavm_ulfex_config0_datax
+{
+    uint64_t u;
+    struct cavm_ulfex_config0_datax_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t jcfg0                 : 64; /**< [ 63:  0](R/W) ULFE Job Configuration Word. */
+#else /* Word 0 - Little Endian */
+        uint64_t jcfg0                 : 64; /**< [ 63:  0](R/W) ULFE Job Configuration Word. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_ulfex_config0_datax_s cn; */
+};
+typedef union cavm_ulfex_config0_datax cavm_ulfex_config0_datax_t;
+
+static inline uint64_t CAVM_ULFEX_CONFIG0_DATAX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_ULFEX_CONFIG0_DATAX(uint64_t a, uint64_t b)
+{
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=5) && (b<=1)))
+        return 0x87e043002000ll + 0x80000ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
+    __cavm_csr_fatal("ULFEX_CONFIG0_DATAX", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_ULFEX_CONFIG0_DATAX(a,b) cavm_ulfex_config0_datax_t
+#define bustype_CAVM_ULFEX_CONFIG0_DATAX(a,b) CSR_TYPE_RSL
+#define basename_CAVM_ULFEX_CONFIG0_DATAX(a,b) "ULFEX_CONFIG0_DATAX"
+#define busnum_CAVM_ULFEX_CONFIG0_DATAX(a,b) (a)
+#define arguments_CAVM_ULFEX_CONFIG0_DATAX(a,b) (a),(b),-1,-1
+
+/**
+ * Register (RSL) ulfe#_config1_data#
+ *
+ * ULFE_CONFIG1 Registers
+ * This register block contains the ULFE job 1 configuration data.
+ */
+union cavm_ulfex_config1_datax
+{
+    uint64_t u;
+    struct cavm_ulfex_config1_datax_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t jcfg1                 : 64; /**< [ 63:  0](R/W) ULFE Job Configuration Word. */
+#else /* Word 0 - Little Endian */
+        uint64_t jcfg1                 : 64; /**< [ 63:  0](R/W) ULFE Job Configuration Word. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_ulfex_config1_datax_s cn; */
+};
+typedef union cavm_ulfex_config1_datax cavm_ulfex_config1_datax_t;
+
+static inline uint64_t CAVM_ULFEX_CONFIG1_DATAX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_ULFEX_CONFIG1_DATAX(uint64_t a, uint64_t b)
+{
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=5) && (b<=1)))
+        return 0x87e043004000ll + 0x80000ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
+    __cavm_csr_fatal("ULFEX_CONFIG1_DATAX", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_ULFEX_CONFIG1_DATAX(a,b) cavm_ulfex_config1_datax_t
+#define bustype_CAVM_ULFEX_CONFIG1_DATAX(a,b) CSR_TYPE_RSL
+#define basename_CAVM_ULFEX_CONFIG1_DATAX(a,b) "ULFEX_CONFIG1_DATAX"
+#define busnum_CAVM_ULFEX_CONFIG1_DATAX(a,b) (a)
+#define arguments_CAVM_ULFEX_CONFIG1_DATAX(a,b) (a),(b),-1,-1
+
+/**
+ * Register (RSL) ulfe#_config2_data#
+ *
+ * ULFE_CONFIG2 Registers
+ * This register block contains the ULFE job 2 configuration data.
+ */
+union cavm_ulfex_config2_datax
+{
+    uint64_t u;
+    struct cavm_ulfex_config2_datax_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t jcfg2                 : 64; /**< [ 63:  0](R/W) ULFE Job Configuration Word. */
+#else /* Word 0 - Little Endian */
+        uint64_t jcfg2                 : 64; /**< [ 63:  0](R/W) ULFE Job Configuration Word. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_ulfex_config2_datax_s cn; */
+};
+typedef union cavm_ulfex_config2_datax cavm_ulfex_config2_datax_t;
+
+static inline uint64_t CAVM_ULFEX_CONFIG2_DATAX(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_ULFEX_CONFIG2_DATAX(uint64_t a, uint64_t b)
+{
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a<=5) && (b<=1)))
+        return 0x87e043006000ll + 0x80000ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
+    __cavm_csr_fatal("ULFEX_CONFIG2_DATAX", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_ULFEX_CONFIG2_DATAX(a,b) cavm_ulfex_config2_datax_t
+#define bustype_CAVM_ULFEX_CONFIG2_DATAX(a,b) CSR_TYPE_RSL
+#define basename_CAVM_ULFEX_CONFIG2_DATAX(a,b) "ULFEX_CONFIG2_DATAX"
+#define busnum_CAVM_ULFEX_CONFIG2_DATAX(a,b) (a)
+#define arguments_CAVM_ULFEX_CONFIG2_DATAX(a,b) (a),(b),-1,-1
+
+/**
+ * Register (RSL) ulfe#_control
+ *
+ * ULFE_CONTROL Register
+ * This register is used to start ULFE HAB processing.
+ */
+union cavm_ulfex_control
+{
+    uint64_t u;
+    struct cavm_ulfex_control_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t jobid2                : 16; /**< [ 63: 48](R/W/H) Job ID2 */
+        uint64_t jobid1                : 16; /**< [ 47: 32](R/W/H) Job ID1 */
+        uint64_t jobid0                : 16; /**< [ 31: 16](R/W/H) Job ID0 */
+        uint64_t reserved_3_15         : 13;
+        uint64_t start2                : 1;  /**< [  2:  2](R/W/H) A write of 1 will start the HAB using the configuration in
+                                                                 ULFE_CONFIG2_DATA(). This bit auto-clears, and it is ignored if the
+                                                                 HAB status is busy (ULFE_STATUS[STATUS2] = 1). */
+        uint64_t start1                : 1;  /**< [  1:  1](R/W/H) A write of 1 will start the HAB using the configuration in
+                                                                 ULFE_CONFIG1_DATA(). This bit auto-clears, and it is ignored if the
+                                                                 HAB status is busy (ULFE_STATUS[STATUS1] = 1). */
+        uint64_t start0                : 1;  /**< [  0:  0](R/W/H) A write of 1 will start the HAB using the configuration in
+                                                                 ULFE_CONFIG0_DATA(). This bit auto-clears, and it is ignored if the
+                                                                 HAB status is busy (ULFE_STATUS[STATUS0] = 1). */
+#else /* Word 0 - Little Endian */
+        uint64_t start0                : 1;  /**< [  0:  0](R/W/H) A write of 1 will start the HAB using the configuration in
+                                                                 ULFE_CONFIG0_DATA(). This bit auto-clears, and it is ignored if the
+                                                                 HAB status is busy (ULFE_STATUS[STATUS0] = 1). */
+        uint64_t start1                : 1;  /**< [  1:  1](R/W/H) A write of 1 will start the HAB using the configuration in
+                                                                 ULFE_CONFIG1_DATA(). This bit auto-clears, and it is ignored if the
+                                                                 HAB status is busy (ULFE_STATUS[STATUS1] = 1). */
+        uint64_t start2                : 1;  /**< [  2:  2](R/W/H) A write of 1 will start the HAB using the configuration in
+                                                                 ULFE_CONFIG2_DATA(). This bit auto-clears, and it is ignored if the
+                                                                 HAB status is busy (ULFE_STATUS[STATUS2] = 1). */
+        uint64_t reserved_3_15         : 13;
+        uint64_t jobid0                : 16; /**< [ 31: 16](R/W/H) Job ID0 */
+        uint64_t jobid1                : 16; /**< [ 47: 32](R/W/H) Job ID1 */
+        uint64_t jobid2                : 16; /**< [ 63: 48](R/W/H) Job ID2 */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_ulfex_control_s cn; */
+};
+typedef union cavm_ulfex_control cavm_ulfex_control_t;
+
+static inline uint64_t CAVM_ULFEX_CONTROL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_ULFEX_CONTROL(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87e043000000ll + 0x80000ll * ((a) & 0x7);
+    __cavm_csr_fatal("ULFEX_CONTROL", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_ULFEX_CONTROL(a) cavm_ulfex_control_t
+#define bustype_CAVM_ULFEX_CONTROL(a) CSR_TYPE_RSL
+#define basename_CAVM_ULFEX_CONTROL(a) "ULFEX_CONTROL"
+#define busnum_CAVM_ULFEX_CONTROL(a) (a)
+#define arguments_CAVM_ULFEX_CONTROL(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) ulfe#_eco
+ *
+ * INTERNAL: ULFE ECO Register
+ */
+union cavm_ulfex_eco
+{
+    uint64_t u;
+    struct cavm_ulfex_eco_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_32_63        : 32;
+        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
+                                                                 Reserved for ECO usage. */
+#else /* Word 0 - Little Endian */
+        uint64_t eco_rw                : 32; /**< [ 31:  0](R/W) Internal:
+                                                                 Reserved for ECO usage. */
+        uint64_t reserved_32_63        : 32;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_ulfex_eco_s cn; */
+};
+typedef union cavm_ulfex_eco cavm_ulfex_eco_t;
+
+static inline uint64_t CAVM_ULFEX_ECO(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_ULFEX_ECO(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87e043000008ll + 0x80000ll * ((a) & 0x7);
+    __cavm_csr_fatal("ULFEX_ECO", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_ULFEX_ECO(a) cavm_ulfex_eco_t
+#define bustype_CAVM_ULFEX_ECO(a) CSR_TYPE_RSL
+#define basename_CAVM_ULFEX_ECO(a) "ULFEX_ECO"
+#define busnum_CAVM_ULFEX_ECO(a) (a)
+#define arguments_CAVM_ULFEX_ECO(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) ulfe#_error_enable0
+ *
+ * ULFE Error Enable 0 Register
+ * This register enables error reporting for ULFE_ERROR_SOURCE0 register.
+ */
+union cavm_ulfex_error_enable0
+{
+    uint64_t u;
+    struct cavm_ulfex_error_enable0_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_2_63         : 62;
+        uint64_t rp0_of_en             : 1;  /**< [  1:  1](R/W) Read port 0 overflow enable. */
+        uint64_t rp0_uf_en             : 1;  /**< [  0:  0](R/W) Read port 0 underflow enable. */
+#else /* Word 0 - Little Endian */
+        uint64_t rp0_uf_en             : 1;  /**< [  0:  0](R/W) Read port 0 underflow enable. */
+        uint64_t rp0_of_en             : 1;  /**< [  1:  1](R/W) Read port 0 overflow enable. */
+        uint64_t reserved_2_63         : 62;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_ulfex_error_enable0_s cn; */
+};
+typedef union cavm_ulfex_error_enable0 cavm_ulfex_error_enable0_t;
+
+static inline uint64_t CAVM_ULFEX_ERROR_ENABLE0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_ULFEX_ERROR_ENABLE0(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87e043000040ll + 0x80000ll * ((a) & 0x7);
+    __cavm_csr_fatal("ULFEX_ERROR_ENABLE0", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_ULFEX_ERROR_ENABLE0(a) cavm_ulfex_error_enable0_t
+#define bustype_CAVM_ULFEX_ERROR_ENABLE0(a) CSR_TYPE_RSL
+#define basename_CAVM_ULFEX_ERROR_ENABLE0(a) "ULFEX_ERROR_ENABLE0"
+#define busnum_CAVM_ULFEX_ERROR_ENABLE0(a) (a)
+#define arguments_CAVM_ULFEX_ERROR_ENABLE0(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) ulfe#_error_enable1
+ *
+ * ULFE Error Enable Register 1
+ * This register enables report particular HAB errors
+ */
+union cavm_ulfex_error_enable1
+{
+    uint64_t u;
+    struct cavm_ulfex_error_enable1_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t e35                   : 29; /**< [ 63: 35](R/W) Reserved. */
+        uint64_t e34                   : 1;  /**< [ 34: 34](RO/H) illegal rach4 output_level_atten */
+        uint64_t e33                   : 1;  /**< [ 33: 33](R/W) illegal rach4 oversample_ratio */
+        uint64_t e32                   : 1;  /**< [ 32: 32](R/W) illegal rach4 decimation */
+        uint64_t e31                   : 1;  /**< [ 31: 31](R/W) Reserved. */
+        uint64_t e30                   : 1;  /**< [ 30: 30](R/W) illegal rach3 output_level_atten */
+        uint64_t e29                   : 1;  /**< [ 29: 29](R/W) illegal rach3 oversample_ratio */
+        uint64_t e28                   : 1;  /**< [ 28: 28](R/W) illegal rach3 decimation */
+        uint64_t e27                   : 1;  /**< [ 27: 27](R/W) Reserved. */
+        uint64_t e26                   : 1;  /**< [ 26: 26](R/W) illegal rach2 output_level_atten */
+        uint64_t e25                   : 1;  /**< [ 25: 25](R/W) illegal rach2 oversample_ratio */
+        uint64_t e24                   : 1;  /**< [ 24: 24](R/W) illegal rach2 decimation */
+        uint64_t e23                   : 1;  /**< [ 23: 23](R/W) Reserved. */
+        uint64_t e22                   : 1;  /**< [ 22: 22](R/W) illegal rach1 output_level_atten */
+        uint64_t e21                   : 1;  /**< [ 21: 21](R/W) illegal rach1 oversample_ratio */
+        uint64_t e20                   : 1;  /**< [ 20: 20](R/W) illegal rach1 decimation */
+        uint64_t e19                   : 1;  /**< [ 19: 19](R/W) Reserved. */
+        uint64_t e18                   : 1;  /**< [ 18: 18](R/W) illegal rach0 output_level_atten */
+        uint64_t e17                   : 1;  /**< [ 17: 17](R/W) illegal rach0 oversample_ratio */
+        uint64_t e16                   : 1;  /**< [ 16: 16](R/W) illegal rach0 decimation */
+        uint64_t e9                    : 7;  /**< [ 15:  9](R/W) Reserved. */
+        uint64_t e8                    : 1;  /**< [  8:  8](R/W) illegal k0 */
+        uint64_t e7                    : 1;  /**< [  7:  7](R/W) illegal cprm_offset1 */
+        uint64_t e6                    : 1;  /**< [  6:  6](R/W) illegal cprm_offset0 */
+        uint64_t e5                    : 1;  /**< [  5:  5](R/W) illegal cprm_offset1 */
+        uint64_t e4                    : 1;  /**< [  4:  4](R/W) illegal cprm_offset0 */
+        uint64_t e3                    : 1;  /**< [  3:  3](R/W) illegal num_rb */
+        uint64_t e2                    : 1;  /**< [  2:  2](R/W) illegal cp_size */
+        uint64_t e1                    : 1;  /**< [  1:  1](R/W) illegal scs */
+        uint64_t e0                    : 1;  /**< [  0:  0](R/W) illegal ant_idx */
+#else /* Word 0 - Little Endian */
+        uint64_t e0                    : 1;  /**< [  0:  0](R/W) illegal ant_idx */
+        uint64_t e1                    : 1;  /**< [  1:  1](R/W) illegal scs */
+        uint64_t e2                    : 1;  /**< [  2:  2](R/W) illegal cp_size */
+        uint64_t e3                    : 1;  /**< [  3:  3](R/W) illegal num_rb */
+        uint64_t e4                    : 1;  /**< [  4:  4](R/W) illegal cprm_offset0 */
+        uint64_t e5                    : 1;  /**< [  5:  5](R/W) illegal cprm_offset1 */
+        uint64_t e6                    : 1;  /**< [  6:  6](R/W) illegal cprm_offset0 */
+        uint64_t e7                    : 1;  /**< [  7:  7](R/W) illegal cprm_offset1 */
+        uint64_t e8                    : 1;  /**< [  8:  8](R/W) illegal k0 */
+        uint64_t e9                    : 7;  /**< [ 15:  9](R/W) Reserved. */
+        uint64_t e16                   : 1;  /**< [ 16: 16](R/W) illegal rach0 decimation */
+        uint64_t e17                   : 1;  /**< [ 17: 17](R/W) illegal rach0 oversample_ratio */
+        uint64_t e18                   : 1;  /**< [ 18: 18](R/W) illegal rach0 output_level_atten */
+        uint64_t e19                   : 1;  /**< [ 19: 19](R/W) Reserved. */
+        uint64_t e20                   : 1;  /**< [ 20: 20](R/W) illegal rach1 decimation */
+        uint64_t e21                   : 1;  /**< [ 21: 21](R/W) illegal rach1 oversample_ratio */
+        uint64_t e22                   : 1;  /**< [ 22: 22](R/W) illegal rach1 output_level_atten */
+        uint64_t e23                   : 1;  /**< [ 23: 23](R/W) Reserved. */
+        uint64_t e24                   : 1;  /**< [ 24: 24](R/W) illegal rach2 decimation */
+        uint64_t e25                   : 1;  /**< [ 25: 25](R/W) illegal rach2 oversample_ratio */
+        uint64_t e26                   : 1;  /**< [ 26: 26](R/W) illegal rach2 output_level_atten */
+        uint64_t e27                   : 1;  /**< [ 27: 27](R/W) Reserved. */
+        uint64_t e28                   : 1;  /**< [ 28: 28](R/W) illegal rach3 decimation */
+        uint64_t e29                   : 1;  /**< [ 29: 29](R/W) illegal rach3 oversample_ratio */
+        uint64_t e30                   : 1;  /**< [ 30: 30](R/W) illegal rach3 output_level_atten */
+        uint64_t e31                   : 1;  /**< [ 31: 31](R/W) Reserved. */
+        uint64_t e32                   : 1;  /**< [ 32: 32](R/W) illegal rach4 decimation */
+        uint64_t e33                   : 1;  /**< [ 33: 33](R/W) illegal rach4 oversample_ratio */
+        uint64_t e34                   : 1;  /**< [ 34: 34](RO/H) illegal rach4 output_level_atten */
+        uint64_t e35                   : 29; /**< [ 63: 35](R/W) Reserved. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_ulfex_error_enable1_s cn; */
+};
+typedef union cavm_ulfex_error_enable1 cavm_ulfex_error_enable1_t;
+
+static inline uint64_t CAVM_ULFEX_ERROR_ENABLE1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_ULFEX_ERROR_ENABLE1(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87e043000048ll + 0x80000ll * ((a) & 0x7);
+    __cavm_csr_fatal("ULFEX_ERROR_ENABLE1", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_ULFEX_ERROR_ENABLE1(a) cavm_ulfex_error_enable1_t
+#define bustype_CAVM_ULFEX_ERROR_ENABLE1(a) CSR_TYPE_RSL
+#define basename_CAVM_ULFEX_ERROR_ENABLE1(a) "ULFEX_ERROR_ENABLE1"
+#define busnum_CAVM_ULFEX_ERROR_ENABLE1(a) (a)
+#define arguments_CAVM_ULFEX_ERROR_ENABLE1(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) ulfe#_error_source0
+ *
+ * ULFE Error Source Register 0
+ * This register reports the source of read DMA overflow/underflow errors.
+ */
+union cavm_ulfex_error_source0
+{
+    uint64_t u;
+    struct cavm_ulfex_error_source0_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_32_63        : 32;
+        uint64_t rp0_jobid             : 16; /**< [ 31: 16](RO/H) Job ID for read port 0 overflow/underflow. */
+        uint64_t reserved_5_15         : 11;
+        uint64_t rp0_of                : 1;  /**< [  4:  4](R/W1C/H) Read port 0 overflow. */
+        uint64_t reserved_1_3          : 3;
+        uint64_t rp0_uf                : 1;  /**< [  0:  0](R/W1C/H) Read port 0 underflow. */
+#else /* Word 0 - Little Endian */
+        uint64_t rp0_uf                : 1;  /**< [  0:  0](R/W1C/H) Read port 0 underflow. */
+        uint64_t reserved_1_3          : 3;
+        uint64_t rp0_of                : 1;  /**< [  4:  4](R/W1C/H) Read port 0 overflow. */
+        uint64_t reserved_5_15         : 11;
+        uint64_t rp0_jobid             : 16; /**< [ 31: 16](RO/H) Job ID for read port 0 overflow/underflow. */
+        uint64_t reserved_32_63        : 32;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_ulfex_error_source0_s cn; */
+};
+typedef union cavm_ulfex_error_source0 cavm_ulfex_error_source0_t;
+
+static inline uint64_t CAVM_ULFEX_ERROR_SOURCE0(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_ULFEX_ERROR_SOURCE0(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87e043000030ll + 0x80000ll * ((a) & 0x7);
+    __cavm_csr_fatal("ULFEX_ERROR_SOURCE0", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_ULFEX_ERROR_SOURCE0(a) cavm_ulfex_error_source0_t
+#define bustype_CAVM_ULFEX_ERROR_SOURCE0(a) CSR_TYPE_RSL
+#define basename_CAVM_ULFEX_ERROR_SOURCE0(a) "ULFEX_ERROR_SOURCE0"
+#define busnum_CAVM_ULFEX_ERROR_SOURCE0(a) (a)
+#define arguments_CAVM_ULFEX_ERROR_SOURCE0(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) ulfe#_error_source1
+ *
+ * ULFE Error Source Register 1
+ * This register reports the source of HAB specific errors
+ */
+union cavm_ulfex_error_source1
+{
+    uint64_t u;
+    struct cavm_ulfex_error_source1_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_35_63        : 29;
+        uint64_t e34                   : 1;  /**< [ 34: 34](RO/H) illegal rach4 output_level_atten */
+        uint64_t e33                   : 1;  /**< [ 33: 33](RO/H) illegal rach4 oversample_ratio */
+        uint64_t e32                   : 1;  /**< [ 32: 32](RO/H) illegal rach4 decimation */
+        uint64_t reserved_31           : 1;
+        uint64_t e30                   : 1;  /**< [ 30: 30](RO/H) illegal rach3 output_level_atten */
+        uint64_t e29                   : 1;  /**< [ 29: 29](RO/H) illegal rach3 oversample_ratio */
+        uint64_t e28                   : 1;  /**< [ 28: 28](RO/H) illegal rach3 decimation */
+        uint64_t reserved_27           : 1;
+        uint64_t e26                   : 1;  /**< [ 26: 26](RO/H) illegal rach2 output_level_atten */
+        uint64_t e25                   : 1;  /**< [ 25: 25](RO/H) illegal rach2 oversample_ratio */
+        uint64_t e24                   : 1;  /**< [ 24: 24](RO/H) illegal rach2 decimation */
+        uint64_t reserved_23           : 1;
+        uint64_t e22                   : 1;  /**< [ 22: 22](RO/H) illegal rach1 output_level_atten */
+        uint64_t e21                   : 1;  /**< [ 21: 21](RO/H) illegal rach1 oversample_ratio */
+        uint64_t e20                   : 1;  /**< [ 20: 20](RO/H) illegal rach1 decimation */
+        uint64_t reserved_19           : 1;
+        uint64_t e18                   : 1;  /**< [ 18: 18](RO/H) illegal rach0 output_level_atten */
+        uint64_t e17                   : 1;  /**< [ 17: 17](RO/H) illegal rach0 oversample_ratio */
+        uint64_t e16                   : 1;  /**< [ 16: 16](RO/H) illegal rach0 decimation */
+        uint64_t reserved_9_15         : 7;
+        uint64_t e8                    : 1;  /**< [  8:  8](RO/H) illegal k0 */
+        uint64_t e7                    : 1;  /**< [  7:  7](RO/H) illegal cprm_offset1 */
+        uint64_t e6                    : 1;  /**< [  6:  6](RO/H) illegal cprm_offset0 */
+        uint64_t e5                    : 1;  /**< [  5:  5](RO/H) illegal cprm_offset1 */
+        uint64_t e4                    : 1;  /**< [  4:  4](RO/H) illegal cprm_offset0 */
+        uint64_t e3                    : 1;  /**< [  3:  3](RO/H) illegal num_rb */
+        uint64_t e2                    : 1;  /**< [  2:  2](RO/H) illegal cp_size */
+        uint64_t e1                    : 1;  /**< [  1:  1](RO/H) illegal scs */
+        uint64_t e0                    : 1;  /**< [  0:  0](RO/H) illegal ant_idx */
+#else /* Word 0 - Little Endian */
+        uint64_t e0                    : 1;  /**< [  0:  0](RO/H) illegal ant_idx */
+        uint64_t e1                    : 1;  /**< [  1:  1](RO/H) illegal scs */
+        uint64_t e2                    : 1;  /**< [  2:  2](RO/H) illegal cp_size */
+        uint64_t e3                    : 1;  /**< [  3:  3](RO/H) illegal num_rb */
+        uint64_t e4                    : 1;  /**< [  4:  4](RO/H) illegal cprm_offset0 */
+        uint64_t e5                    : 1;  /**< [  5:  5](RO/H) illegal cprm_offset1 */
+        uint64_t e6                    : 1;  /**< [  6:  6](RO/H) illegal cprm_offset0 */
+        uint64_t e7                    : 1;  /**< [  7:  7](RO/H) illegal cprm_offset1 */
+        uint64_t e8                    : 1;  /**< [  8:  8](RO/H) illegal k0 */
+        uint64_t reserved_9_15         : 7;
+        uint64_t e16                   : 1;  /**< [ 16: 16](RO/H) illegal rach0 decimation */
+        uint64_t e17                   : 1;  /**< [ 17: 17](RO/H) illegal rach0 oversample_ratio */
+        uint64_t e18                   : 1;  /**< [ 18: 18](RO/H) illegal rach0 output_level_atten */
+        uint64_t reserved_19           : 1;
+        uint64_t e20                   : 1;  /**< [ 20: 20](RO/H) illegal rach1 decimation */
+        uint64_t e21                   : 1;  /**< [ 21: 21](RO/H) illegal rach1 oversample_ratio */
+        uint64_t e22                   : 1;  /**< [ 22: 22](RO/H) illegal rach1 output_level_atten */
+        uint64_t reserved_23           : 1;
+        uint64_t e24                   : 1;  /**< [ 24: 24](RO/H) illegal rach2 decimation */
+        uint64_t e25                   : 1;  /**< [ 25: 25](RO/H) illegal rach2 oversample_ratio */
+        uint64_t e26                   : 1;  /**< [ 26: 26](RO/H) illegal rach2 output_level_atten */
+        uint64_t reserved_27           : 1;
+        uint64_t e28                   : 1;  /**< [ 28: 28](RO/H) illegal rach3 decimation */
+        uint64_t e29                   : 1;  /**< [ 29: 29](RO/H) illegal rach3 oversample_ratio */
+        uint64_t e30                   : 1;  /**< [ 30: 30](RO/H) illegal rach3 output_level_atten */
+        uint64_t reserved_31           : 1;
+        uint64_t e32                   : 1;  /**< [ 32: 32](RO/H) illegal rach4 decimation */
+        uint64_t e33                   : 1;  /**< [ 33: 33](RO/H) illegal rach4 oversample_ratio */
+        uint64_t e34                   : 1;  /**< [ 34: 34](RO/H) illegal rach4 output_level_atten */
+        uint64_t reserved_35_63        : 29;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_ulfex_error_source1_s cn; */
+};
+typedef union cavm_ulfex_error_source1 cavm_ulfex_error_source1_t;
+
+static inline uint64_t CAVM_ULFEX_ERROR_SOURCE1(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_ULFEX_ERROR_SOURCE1(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87e043000038ll + 0x80000ll * ((a) & 0x7);
+    __cavm_csr_fatal("ULFEX_ERROR_SOURCE1", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_ULFEX_ERROR_SOURCE1(a) cavm_ulfex_error_source1_t
+#define bustype_CAVM_ULFEX_ERROR_SOURCE1(a) CSR_TYPE_RSL
+#define basename_CAVM_ULFEX_ERROR_SOURCE1(a) "ULFEX_ERROR_SOURCE1"
+#define busnum_CAVM_ULFEX_ERROR_SOURCE1(a) (a)
+#define arguments_CAVM_ULFEX_ERROR_SOURCE1(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) ulfe#_scratch
+ *
+ * INTERNAL: Scratch Registers
+ *
+ * Scratch register.
+ */
+union cavm_ulfex_scratch
+{
+    uint64_t u;
+    struct cavm_ulfex_scratch_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data */
+#else /* Word 0 - Little Endian */
+        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_ulfex_scratch_s cn; */
+};
+typedef union cavm_ulfex_scratch cavm_ulfex_scratch_t;
+
+static inline uint64_t CAVM_ULFEX_SCRATCH(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_ULFEX_SCRATCH(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87e043000080ll + 0x80000ll * ((a) & 0x7);
+    __cavm_csr_fatal("ULFEX_SCRATCH", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_ULFEX_SCRATCH(a) cavm_ulfex_scratch_t
+#define bustype_CAVM_ULFEX_SCRATCH(a) CSR_TYPE_RSL
+#define basename_CAVM_ULFEX_SCRATCH(a) "ULFEX_SCRATCH"
+#define busnum_CAVM_ULFEX_SCRATCH(a) (a)
+#define arguments_CAVM_ULFEX_SCRATCH(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) ulfe#_status
+ *
+ * ULFE Status Register
+ * ULFE Status Register.
+ */
+union cavm_ulfex_status
+{
+    uint64_t u;
+    struct cavm_ulfex_status_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_5_63         : 59;
+        uint64_t ready                 : 1;  /**< [  4:  4](RO/H) When set, indicates the ULFE HAB is ready to receive next job. */
+        uint64_t reserved_3            : 1;
+        uint64_t status2               : 1;  /**< [  2:  2](RO/H) When set, indicates the ULFE HAB is busy processing a job. */
+        uint64_t status1               : 1;  /**< [  1:  1](RO/H) When set, indicates the ULFE HAB is busy processing a job. */
+        uint64_t status0               : 1;  /**< [  0:  0](RO/H) When set, indicates the ULFE HAB is busy processing a job. */
+#else /* Word 0 - Little Endian */
+        uint64_t status0               : 1;  /**< [  0:  0](RO/H) When set, indicates the ULFE HAB is busy processing a job. */
+        uint64_t status1               : 1;  /**< [  1:  1](RO/H) When set, indicates the ULFE HAB is busy processing a job. */
+        uint64_t status2               : 1;  /**< [  2:  2](RO/H) When set, indicates the ULFE HAB is busy processing a job. */
+        uint64_t reserved_3            : 1;
+        uint64_t ready                 : 1;  /**< [  4:  4](RO/H) When set, indicates the ULFE HAB is ready to receive next job. */
+        uint64_t reserved_5_63         : 59;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_ulfex_status_s cn; */
+};
+typedef union cavm_ulfex_status cavm_ulfex_status_t;
+
+static inline uint64_t CAVM_ULFEX_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_ULFEX_STATUS(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87e043000018ll + 0x80000ll * ((a) & 0x7);
+    __cavm_csr_fatal("ULFEX_STATUS", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_ULFEX_STATUS(a) cavm_ulfex_status_t
+#define bustype_CAVM_ULFEX_STATUS(a) CSR_TYPE_RSL
+#define basename_CAVM_ULFEX_STATUS(a) "ULFEX_STATUS"
+#define busnum_CAVM_ULFEX_STATUS(a) (a)
+#define arguments_CAVM_ULFEX_STATUS(a) (a),-1,-1,-1
+
+/**
  * Register (RSL) ulfe_config0_data#
  *
  * ULFE_CONFIG0 Registers
@@ -678,8 +1231,6 @@ static inline uint64_t CAVM_ULFE_CONFIG0_DATAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043082000ll + 8ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x87e043002000ll + 8ll * ((a) & 0x1);
     __cavm_csr_fatal("ULFE_CONFIG0_DATAX", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -715,8 +1266,6 @@ static inline uint64_t CAVM_ULFE_CONFIG1_DATAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043084000ll + 8ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x87e043004000ll + 8ll * ((a) & 0x1);
     __cavm_csr_fatal("ULFE_CONFIG1_DATAX", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -752,8 +1301,6 @@ static inline uint64_t CAVM_ULFE_CONFIG2_DATAX(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043086000ll + 8ll * ((a) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
-        return 0x87e043006000ll + 8ll * ((a) & 0x1);
     __cavm_csr_fatal("ULFE_CONFIG2_DATAX", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -814,8 +1361,6 @@ static inline uint64_t CAVM_ULFE_CONTROL_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e043080000ll;
-    if (cavm_is_model(OCTEONTX_F95MM))
-        return 0x87e043000000ll;
     __cavm_csr_fatal("ULFE_CONTROL", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -855,8 +1400,6 @@ static inline uint64_t CAVM_ULFE_ECO_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e043080008ll;
-    if (cavm_is_model(OCTEONTX_F95MM))
-        return 0x87e043000008ll;
     __cavm_csr_fatal("ULFE_ECO", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -897,8 +1440,6 @@ static inline uint64_t CAVM_ULFE_ERROR_ENABLE0_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e043080040ll;
-    if (cavm_is_model(OCTEONTX_F95MM))
-        return 0x87e043000040ll;
     __cavm_csr_fatal("ULFE_ERROR_ENABLE0", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -993,8 +1534,6 @@ static inline uint64_t CAVM_ULFE_ERROR_ENABLE1_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e043080048ll;
-    if (cavm_is_model(OCTEONTX_F95MM))
-        return 0x87e043000048ll;
     __cavm_csr_fatal("ULFE_ERROR_ENABLE1", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -1041,8 +1580,6 @@ static inline uint64_t CAVM_ULFE_ERROR_SOURCE0_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e043080030ll;
-    if (cavm_is_model(OCTEONTX_F95MM))
-        return 0x87e043000030ll;
     __cavm_csr_fatal("ULFE_ERROR_SOURCE0", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -1137,8 +1674,6 @@ static inline uint64_t CAVM_ULFE_ERROR_SOURCE1_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e043080038ll;
-    if (cavm_is_model(OCTEONTX_F95MM))
-        return 0x87e043000038ll;
     __cavm_csr_fatal("ULFE_ERROR_SOURCE1", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -1176,8 +1711,6 @@ static inline uint64_t CAVM_ULFE_SCRATCH_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e043080080ll;
-    if (cavm_is_model(OCTEONTX_F95MM))
-        return 0x87e043000080ll;
     __cavm_csr_fatal("ULFE_SCRATCH", 0, 0, 0, 0, 0, 0, 0);
 }
 
@@ -1224,8 +1757,6 @@ static inline uint64_t CAVM_ULFE_STATUS_FUNC(void)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e043080018ll;
-    if (cavm_is_model(OCTEONTX_F95MM))
-        return 0x87e043000018ll;
     __cavm_csr_fatal("ULFE_STATUS", 0, 0, 0, 0, 0, 0, 0);
 }
 
