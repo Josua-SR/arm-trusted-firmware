@@ -100,7 +100,7 @@ static int ecam_probe_cgx_p3(unsigned long long arg)
 #ifdef DEBUG_ATF_PLAT_ECAM
 	int qlm_idx;
 #endif /* DEBUG_ATF_PLAT_ECAM */
-	printf("%s arg %lld\n", __func__, arg);
+	debug_plat_ecam("%s arg %lld\n", __func__, arg);
 
 	switch (arg) {
 	case 0:
