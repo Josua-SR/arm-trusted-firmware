@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2019 Marvell International Ltd.
+* Copyright (C) 2020 Marvell International Ltd.
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -338,13 +338,15 @@ union cavm_cpc_dvfs_config_s
                                                                  actual RCLK frequency depending on Tj, power budget, and system load;
                                                                  this sets an upper bound.  If fuses indicate the part supports a lower
                                                                  frequency, the fuse value is used. */
-        uint64_t vrm_temp_high         : 16; /**< [ 15:  0] The chip over temperature limit. In modes other than MANUAL_CONTROL and DVFS,
-                                                                 RCLK is throttled when the maximum die temp gets within 10C of this limit. Value
-                                                                 must be between 0 and 140 degrees Celsius. */
+        uint64_t vrm_temp_high         : 16; /**< [ 15:  0] The chip over temperature limit. In modes other than
+                                                                 CPC_DVFS_MODE_E::MANUAL_CONTROL and CPC_DVFS_MODE_E::DVFS, RCLK is throttled
+                                                                 when the maximum die temp gets within 10C of this limit. Value must be between 0
+                                                                 and 140 degrees Celsius. */
 #else /* Word 0 - Little Endian */
-        uint64_t vrm_temp_high         : 16; /**< [ 15:  0] The chip over temperature limit. In modes other than MANUAL_CONTROL and DVFS,
-                                                                 RCLK is throttled when the maximum die temp gets within 10C of this limit. Value
-                                                                 must be between 0 and 140 degrees Celsius. */
+        uint64_t vrm_temp_high         : 16; /**< [ 15:  0] The chip over temperature limit. In modes other than
+                                                                 CPC_DVFS_MODE_E::MANUAL_CONTROL and CPC_DVFS_MODE_E::DVFS, RCLK is throttled
+                                                                 when the maximum die temp gets within 10C of this limit. Value must be between 0
+                                                                 and 140 degrees Celsius. */
         uint64_t rclk_freq_max         : 16; /**< [ 31: 16] Maximum core clock (RCLK) frequency in MHz. DVFS control will vary the
                                                                  actual RCLK frequency depending on Tj, power budget, and system load;
                                                                  this sets an upper bound.  If fuses indicate the part supports a lower
@@ -412,7 +414,7 @@ union cavm_cpc_dvfs_config_s
         uint64_t reserved_218_222      : 5;
         uint64_t twsi_slave_addr       : 7;  /**< [217:211] The I2C address of the TWSI slave controller. */
         uint64_t twsi_slave_bus        : 3;  /**< [210:208] The TWSI controller number that processes TWSI slave transactions from chip side. */
-        uint64_t wakeup_mode           : 2;  /**< [207:206] Enumerated by CPC_WAKEUP_MODE_E. Default FAST_WAKE_SLOW_SLEEP. */
+        uint64_t wakeup_mode           : 2;  /**< [207:206] Enumerated by CPC_WAKEUP_MODE_E. Default CPC_WAKEUP_MODE_E::FAST_WAKE_SLOW_SLEEP. */
         uint64_t force_secondary_boot  : 1;  /**< [205:205] Force the next reboot to use the secondary boot device. */
         uint64_t mcp_disable           : 1;  /**< [204:204] Instructs SCP firmware to not start the MCP. */
         uint64_t scp_uart_num          : 4;  /**< [203:200] Selects which UART SCP will use for the SCP CLI and logging.  0xF selects no logging. */
@@ -424,7 +426,7 @@ union cavm_cpc_dvfs_config_s
         uint64_t scp_uart_num          : 4;  /**< [203:200] Selects which UART SCP will use for the SCP CLI and logging.  0xF selects no logging. */
         uint64_t mcp_disable           : 1;  /**< [204:204] Instructs SCP firmware to not start the MCP. */
         uint64_t force_secondary_boot  : 1;  /**< [205:205] Force the next reboot to use the secondary boot device. */
-        uint64_t wakeup_mode           : 2;  /**< [207:206] Enumerated by CPC_WAKEUP_MODE_E. Default FAST_WAKE_SLOW_SLEEP. */
+        uint64_t wakeup_mode           : 2;  /**< [207:206] Enumerated by CPC_WAKEUP_MODE_E. Default CPC_WAKEUP_MODE_E::FAST_WAKE_SLOW_SLEEP. */
         uint64_t twsi_slave_bus        : 3;  /**< [210:208] The TWSI controller number that processes TWSI slave transactions from chip side. */
         uint64_t twsi_slave_addr       : 7;  /**< [217:211] The I2C address of the TWSI slave controller. */
         uint64_t reserved_218_222      : 5;

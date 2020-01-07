@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2019 Marvell International Ltd.
+* Copyright (C) 2020 Marvell International Ltd.
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -1205,7 +1205,27 @@ union cavm_npc_af_dbg_resultx
         uint64_t data                  : 64; /**< [ 63:  0](RO/H) Lookup result data with format NPC_RESULT_S. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_npc_af_dbg_resultx_s cn; */
+    /* struct cavm_npc_af_dbg_resultx_s cn9; */
+    /* struct cavm_npc_af_dbg_resultx_s cn96xx; */
+    struct cavm_npc_af_dbg_resultx_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t data                  : 64; /**< [ 63:  0](RO/H) Software lookup result data with format NPC_RESULT_S. Reading these six
+                                                                 registers is not an atomic operation. Therefore, the various [DATA] fields may
+                                                                 contain information across multiple packets. If [DATA] coherrency is critical,
+                                                                 software must ensure only one packet is marked for capture before sending or
+                                                                 allowing another packet. */
+#else /* Word 0 - Little Endian */
+        uint64_t data                  : 64; /**< [ 63:  0](RO/H) Software lookup result data with format NPC_RESULT_S. Reading these six
+                                                                 registers is not an atomic operation. Therefore, the various [DATA] fields may
+                                                                 contain information across multiple packets. If [DATA] coherrency is critical,
+                                                                 software must ensure only one packet is marked for capture before sending or
+                                                                 allowing another packet. */
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_npc_af_dbg_resultx_s cnf95xx; */
+    /* struct cavm_npc_af_dbg_resultx_s f95mm; */
+    /* struct cavm_npc_af_dbg_resultx_s loki; */
 };
 typedef union cavm_npc_af_dbg_resultx cavm_npc_af_dbg_resultx_t;
 
@@ -2988,7 +3008,29 @@ union cavm_npc_af_lkup_resultx
         uint64_t data                  : 64; /**< [ 63:  0](RO/H) Software lookup result data with format NPC_RESULT_S. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_npc_af_lkup_resultx_s cn; */
+    /* struct cavm_npc_af_lkup_resultx_s cn9; */
+    /* struct cavm_npc_af_lkup_resultx_s cn96xxp1; */
+    struct cavm_npc_af_lkup_resultx_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t data                  : 64; /**< [ 63:  0](RO/H) Software lookup result data with format NPC_RESULT_S. Reading these six
+                                                                 registers is not an atomic operation. Therefore, the various [DATA] fields may
+                                                                 contain information across multiple packets. If [DATA] coherrency is critical,
+                                                                 software must ensure only one packet is marked for capture before sending or
+                                                                 allowing another packet. */
+#else /* Word 0 - Little Endian */
+        uint64_t data                  : 64; /**< [ 63:  0](RO/H) Software lookup result data with format NPC_RESULT_S. Reading these six
+                                                                 registers is not an atomic operation. Therefore, the various [DATA] fields may
+                                                                 contain information across multiple packets. If [DATA] coherrency is critical,
+                                                                 software must ensure only one packet is marked for capture before sending or
+                                                                 allowing another packet. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_npc_af_lkup_resultx_cn96xxp3 cn98xx; */
+    /* struct cavm_npc_af_lkup_resultx_s cnf95xxp1; */
+    /* struct cavm_npc_af_lkup_resultx_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_npc_af_lkup_resultx_cn96xxp3 f95mm; */
+    /* struct cavm_npc_af_lkup_resultx_cn96xxp3 loki; */
 };
 typedef union cavm_npc_af_lkup_resultx cavm_npc_af_lkup_resultx_t;
 
@@ -3192,7 +3234,7 @@ static inline uint64_t CAVM_NPC_AF_MCAM_BANKX_HITX_EXT(uint64_t a, uint64_t b) _
 static inline uint64_t CAVM_NPC_AF_MCAM_BANKX_HITX_EXT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=3) && (b<=63)))
-        return 0x840068000070ll + 0x1000000ll * ((a) & 0x3) + 0x100ll * ((b) & 0x3f);
+        return 0x840068000070ll + 0x400000ll * ((a) & 0x3) + 0x100ll * ((b) & 0x3f);
     __cavm_csr_fatal("NPC_AF_MCAM_BANKX_HITX_EXT", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -3484,7 +3526,7 @@ static inline uint64_t CAVM_NPC_AF_MCAMEX_BANKX_ACTION_EXT(uint64_t a, uint64_t 
 static inline uint64_t CAVM_NPC_AF_MCAMEX_BANKX_ACTION_EXT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4095) && (b<=3)))
-        return 0x840068000040ll + 0x100ll * ((a) & 0xfff) + 0x1000000ll * ((b) & 0x3);
+        return 0x840068000040ll + 0x100ll * ((a) & 0xfff) + 0x400000ll * ((b) & 0x3);
     __cavm_csr_fatal("NPC_AF_MCAMEX_BANKX_ACTION_EXT", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -3625,7 +3667,7 @@ static inline uint64_t CAVM_NPC_AF_MCAMEX_BANKX_CAMX_INTF_EXT(uint64_t a, uint64
 static inline uint64_t CAVM_NPC_AF_MCAMEX_BANKX_CAMX_INTF_EXT(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4095) && (b<=3) && (c<=1)))
-        return 0x840068000000ll + 0x100ll * ((a) & 0xfff) + 0x1000000ll * ((b) & 0x3) + 8ll * ((c) & 0x1);
+        return 0x840068000000ll + 0x100ll * ((a) & 0xfff) + 0x400000ll * ((b) & 0x3) + 8ll * ((c) & 0x1);
     __cavm_csr_fatal("NPC_AF_MCAMEX_BANKX_CAMX_INTF_EXT", 3, a, b, c, 0, 0, 0);
 }
 
@@ -3696,7 +3738,7 @@ static inline uint64_t CAVM_NPC_AF_MCAMEX_BANKX_CAMX_W0_EXT(uint64_t a, uint64_t
 static inline uint64_t CAVM_NPC_AF_MCAMEX_BANKX_CAMX_W0_EXT(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4095) && (b<=3) && (c<=1)))
-        return 0x840068000010ll + 0x100ll * ((a) & 0xfff) + 0x1000000ll * ((b) & 0x3) + 8ll * ((c) & 0x1);
+        return 0x840068000010ll + 0x100ll * ((a) & 0xfff) + 0x400000ll * ((b) & 0x3) + 8ll * ((c) & 0x1);
     __cavm_csr_fatal("NPC_AF_MCAMEX_BANKX_CAMX_W0_EXT", 3, a, b, c, 0, 0, 0);
 }
 
@@ -3771,7 +3813,7 @@ static inline uint64_t CAVM_NPC_AF_MCAMEX_BANKX_CAMX_W1_EXT(uint64_t a, uint64_t
 static inline uint64_t CAVM_NPC_AF_MCAMEX_BANKX_CAMX_W1_EXT(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4095) && (b<=3) && (c<=1)))
-        return 0x840068000020ll + 0x100ll * ((a) & 0xfff) + 0x1000000ll * ((b) & 0x3) + 8ll * ((c) & 0x1);
+        return 0x840068000020ll + 0x100ll * ((a) & 0xfff) + 0x400000ll * ((b) & 0x3) + 8ll * ((c) & 0x1);
     __cavm_csr_fatal("NPC_AF_MCAMEX_BANKX_CAMX_W1_EXT", 3, a, b, c, 0, 0, 0);
 }
 
@@ -3849,7 +3891,7 @@ static inline uint64_t CAVM_NPC_AF_MCAMEX_BANKX_CFG_EXT(uint64_t a, uint64_t b) 
 static inline uint64_t CAVM_NPC_AF_MCAMEX_BANKX_CFG_EXT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4095) && (b<=3)))
-        return 0x840068000038ll + 0x100ll * ((a) & 0xfff) + 0x1000000ll * ((b) & 0x3);
+        return 0x840068000038ll + 0x100ll * ((a) & 0xfff) + 0x400000ll * ((b) & 0x3);
     __cavm_csr_fatal("NPC_AF_MCAMEX_BANKX_CFG_EXT", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -3963,7 +4005,7 @@ static inline uint64_t CAVM_NPC_AF_MCAMEX_BANKX_STAT_ACT_EXT(uint64_t a, uint64_
 static inline uint64_t CAVM_NPC_AF_MCAMEX_BANKX_STAT_ACT_EXT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4095) && (b<=3)))
-        return 0x840068000050ll + 0x100ll * ((a) & 0xfff) + 0x1000000ll * ((b) & 0x3);
+        return 0x840068000050ll + 0x100ll * ((a) & 0xfff) + 0x400000ll * ((b) & 0x3);
     __cavm_csr_fatal("NPC_AF_MCAMEX_BANKX_STAT_ACT_EXT", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -4039,7 +4081,7 @@ static inline uint64_t CAVM_NPC_AF_MCAMEX_BANKX_TAG_ACT_EXT(uint64_t a, uint64_t
 static inline uint64_t CAVM_NPC_AF_MCAMEX_BANKX_TAG_ACT_EXT(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4095) && (b<=3)))
-        return 0x840068000048ll + 0x100ll * ((a) & 0xfff) + 0x1000000ll * ((b) & 0x3);
+        return 0x840068000048ll + 0x100ll * ((a) & 0xfff) + 0x400000ll * ((b) & 0x3);
     __cavm_csr_fatal("NPC_AF_MCAMEX_BANKX_TAG_ACT_EXT", 2, a, b, 0, 0, 0, 0);
 }
 

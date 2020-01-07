@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2019 Marvell International Ltd.
+* Copyright (C) 2020 Marvell International Ltd.
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -11466,7 +11466,68 @@ union cavm_nixx_af_lfx_rss_grpx
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_lfx_rss_grpx_s cn; */
+    /* struct cavm_nixx_af_lfx_rss_grpx_s cn9; */
+    /* struct cavm_nixx_af_lfx_rss_grpx_s cn96xxp1; */
+    struct cavm_nixx_af_lfx_rss_grpx_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_19_63        : 45;
+        uint64_t sizem1                : 3;  /**< [ 18: 16](R/W) Number of RSS adder bits minus one to add in RSS calculation.
+                                                                 0x0 = rss_adder\<0\> included in RSS.
+                                                                 0x1 = rss_adder\<1:0\> included in RSS.
+                                                                 0x2 = rss_adder\<2:0\> included in RSS.
+                                                                 0x3 = rss_adder\<3:0\> included in RSS.
+                                                                 0x4 = rss_adder\<4:0\> included in RSS.
+                                                                 0x5 = rss_adder\<5:0\> included in RSS.
+                                                                 0x6 = rss_adder\<6:0\> included in RSS.
+                                                                 0x7 = rss_adder\<7:0\> included in RSS.
+
+                                                                 where:
+
+                                                                 _ rss_adder\<7:0\> = flow_tag\<7:0\> ^ flow_tag\<15:8\> ^ flow_tag\<23:16\> ^ flow_tag\<31:24\>
+
+                                                                 The AF IOVA of the packet's final NIX_RSSE_S structure is computed as follows:
+                                                                 \<pre\>
+                                                                 if (NIX_AF_LF()_RSS_CFG[ADDER_IS_TAG_LSB])
+                                                                    rss_adder\<7:0\> = flow_tag\<7:0\>;
+                                                                 else
+                                                                    rss_adder\<7:0\> = flow_tag\<7:0\> ^ flow_tag\<15:8\> ^ flow_tag\<23:16\> ^ flow_tag\<31:24\>;
+                                                                 \</pre\> */
+        uint64_t reserved_11_15        : 5;
+        uint64_t offset                : 11; /**< [ 10:  0](R/W) Offset (number of four-byte NIX_RSSE_S structures) into RSS table from
+                                                                 NIX_AF_LF()_RSS_BASE. See [SIZEM1]. */
+#else /* Word 0 - Little Endian */
+        uint64_t offset                : 11; /**< [ 10:  0](R/W) Offset (number of four-byte NIX_RSSE_S structures) into RSS table from
+                                                                 NIX_AF_LF()_RSS_BASE. See [SIZEM1]. */
+        uint64_t reserved_11_15        : 5;
+        uint64_t sizem1                : 3;  /**< [ 18: 16](R/W) Number of RSS adder bits minus one to add in RSS calculation.
+                                                                 0x0 = rss_adder\<0\> included in RSS.
+                                                                 0x1 = rss_adder\<1:0\> included in RSS.
+                                                                 0x2 = rss_adder\<2:0\> included in RSS.
+                                                                 0x3 = rss_adder\<3:0\> included in RSS.
+                                                                 0x4 = rss_adder\<4:0\> included in RSS.
+                                                                 0x5 = rss_adder\<5:0\> included in RSS.
+                                                                 0x6 = rss_adder\<6:0\> included in RSS.
+                                                                 0x7 = rss_adder\<7:0\> included in RSS.
+
+                                                                 where:
+
+                                                                 _ rss_adder\<7:0\> = flow_tag\<7:0\> ^ flow_tag\<15:8\> ^ flow_tag\<23:16\> ^ flow_tag\<31:24\>
+
+                                                                 The AF IOVA of the packet's final NIX_RSSE_S structure is computed as follows:
+                                                                 \<pre\>
+                                                                 if (NIX_AF_LF()_RSS_CFG[ADDER_IS_TAG_LSB])
+                                                                    rss_adder\<7:0\> = flow_tag\<7:0\>;
+                                                                 else
+                                                                    rss_adder\<7:0\> = flow_tag\<7:0\> ^ flow_tag\<15:8\> ^ flow_tag\<23:16\> ^ flow_tag\<31:24\>;
+                                                                 \</pre\> */
+        uint64_t reserved_19_63        : 45;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_nixx_af_lfx_rss_grpx_cn96xxp3 cn98xx; */
+    /* struct cavm_nixx_af_lfx_rss_grpx_s cnf95xx; */
+    /* struct cavm_nixx_af_lfx_rss_grpx_s f95mm; */
+    /* struct cavm_nixx_af_lfx_rss_grpx_s loki; */
 };
 typedef union cavm_nixx_af_lfx_rss_grpx cavm_nixx_af_lfx_rss_grpx_t;
 

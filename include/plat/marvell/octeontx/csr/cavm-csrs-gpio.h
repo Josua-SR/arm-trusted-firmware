@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2019 Marvell International Ltd.
+* Copyright (C) 2020 Marvell International Ltd.
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -2533,7 +2533,12 @@ union cavm_gpio_misc_supply
     struct cavm_gpio_misc_supply_cn98xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_24_63        : 40;
+        uint64_t reserved_26_63        : 38;
+        uint64_t vdet_avs              : 2;  /**< [ 25: 24](RO/H) Sensed I/O power supply setting for AVS.
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
         uint64_t vdet_gpio66           : 2;  /**< [ 23: 22](RO/H) Sensed I/O power supply setting for GPIO66..83.
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
@@ -2589,13 +2594,13 @@ union cavm_gpio_misc_supply
                                                                  0x1 = 2.5 V.
                                                                  0x2/0x3 = 1.8 V.
                                                                  _ All other values reserved. */
-        uint64_t vdet_tws_3_1_avs      : 2;  /**< [  1:  0](RO/H) Sensed I/O power supply setting for TWSI[3:1] & AVS. (TWSI[0] is tied to direct 2.5V supply):
+        uint64_t vdet_tws_3_1_avs      : 2;  /**< [  1:  0](RO/H) Sensed I/O power supply setting for TWSI[3:1]. (TWSI[0] is tied to direct 2.5V supply):
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
                                                                  0x2/0x3 = 1.8 V.
                                                                  _ All other values reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t vdet_tws_3_1_avs      : 2;  /**< [  1:  0](RO/H) Sensed I/O power supply setting for TWSI[3:1] & AVS. (TWSI[0] is tied to direct 2.5V supply):
+        uint64_t vdet_tws_3_1_avs      : 2;  /**< [  1:  0](RO/H) Sensed I/O power supply setting for TWSI[3:1]. (TWSI[0] is tied to direct 2.5V supply):
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
                                                                  0x2/0x3 = 1.8 V.
@@ -2655,7 +2660,12 @@ union cavm_gpio_misc_supply
                                                                  0x1 = 2.5 V.
                                                                  0x2/0x3 = 1.8 V.
                                                                  _ All other values reserved. */
-        uint64_t reserved_24_63        : 40;
+        uint64_t vdet_avs              : 2;  /**< [ 25: 24](RO/H) Sensed I/O power supply setting for AVS.
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t reserved_26_63        : 38;
 #endif /* Word 0 - End */
     } cn98xx;
     struct cavm_gpio_misc_supply_cnf95xx
