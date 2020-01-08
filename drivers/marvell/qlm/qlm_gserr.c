@@ -13,6 +13,7 @@
 #include <qlm/qlm_gsern.h>
 #include <qlm/qlm_gserc.h>
 #include <qlm/qlm_gserr.h>
+#include <plat_otx2_configuration.h>
 
 /* Indexed by QLM number and lane */
 static uint64_t prbs_errors[5][4];
@@ -2395,16 +2396,6 @@ int qlm_gserr_rx_signal_detect(int qlm, int lane)
  */
 int qlm_gserr_get_lmac_phy_lane(int qlm, int lane)
 {
-	if (gser_is_model(OCTEONTX_LOKI)) {
-		switch (qlm) {
-		case 3:
-		case 5:
-			return (lane + 2);
-		default:
-			return lane;
-		}
-	}
-
 	return lane;
 }
 
@@ -2417,16 +2408,5 @@ int qlm_gserr_get_lmac_phy_lane(int qlm, int lane)
  */
 int qlm_gserr_get_lmac_first_qlm(int qlm)
 {
-	if (gser_is_model(OCTEONTX_LOKI)) {
-		switch (qlm) {
-		case 3:
-			return 2;
-		case 5:
-			return 4;
-		default:
-			return qlm;
-		}
-	}
-
-	return qlm;
+	return qlm + plat_octeontx_get_gserp_count();
 }

@@ -95,7 +95,7 @@ int plat_octeontx_get_gser_count(void)
 	return 14;
 }
 
-int plat_otx2_get_gserp_count(void)
+int plat_octeontx_get_gserp_count(void)
 {
 	return 9;
 }
@@ -109,7 +109,7 @@ const qlm_ops_t *plat_otx2_get_qlm_ops(int *qlm)
 	if (*qlm >= plat_octeontx_get_gser_count())
 		return NULL;
 
-	gserp_count = plat_otx2_get_gserp_count();
+	gserp_count = plat_octeontx_get_gserp_count();
 
 	if (*qlm < gserp_count)
 		return NULL;
@@ -143,7 +143,7 @@ int plat_get_max_lane_num(int qlm)
 /* Return the CGX<->QLM mapping */
 int plat_get_cgx_idx(int qlm)
 {
-	int gserp_cnt = plat_otx2_get_gserp_count();
+	int gserp_cnt = plat_octeontx_get_gserp_count();
 
 	if (qlm < gserp_cnt) {
 		printf("Invalid QLM%d for CGX\n", qlm);

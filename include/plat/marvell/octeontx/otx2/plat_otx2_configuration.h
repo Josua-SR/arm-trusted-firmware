@@ -15,6 +15,7 @@ int plat_octeontx_get_iobn_count(void);
 int plat_octeontx_get_cpt_count(void);
 int plat_octeontx_get_cgx_count(void);
 int plat_octeontx_get_gser_count(void);
+int plat_octeontx_get_gserp_count(void);
 int plat_octeontx_get_mcc_count(void);
 int plat_octeontx_get_pem_count(void);
 int plat_get_altpkg(void);

@@ -111,9 +111,12 @@ int plat_octeontx_get_gser_count(void)
 	return 8;
 }
 
-int plat_otx2_get_gserp_count(void)
+int plat_octeontx_get_gserp_count(void)
 {
-	return 5;
+	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 3))
+		return 5;
+
+	return 0;
 }
 
 extern const qlm_ops_t qlm_gsern_ops;
@@ -121,18 +124,20 @@ extern const qlm_ops_t qlm_gserr_ops;
 
 const qlm_ops_t *plat_otx2_get_qlm_ops(int *qlm)
 {
+	int gserp_count;
+
 	if (*qlm >= plat_octeontx_get_gser_count())
 		return NULL;
 
-	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 3)) {
-		int gserp_count = plat_otx2_get_gserp_count();
+	gserp_count = plat_octeontx_get_gserp_count();
 
-		if (*qlm < gserp_count)
-			return NULL;
-		*qlm -= gserp_count;
+	if (*qlm < gserp_count)
+		return NULL;
 
+	*qlm -= gserp_count;
+
+	if (gserp_count)
 		return &qlm_gserr_ops;
-	}
 
 	return &qlm_gsern_ops;
 }

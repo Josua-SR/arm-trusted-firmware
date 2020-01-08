@@ -116,6 +116,11 @@ int plat_octeontx_get_gser_count(void)
 	return 3;
 }
 
+int plat_octeontx_get_gserp_count(void)
+{
+	return 0;
+}
+
 extern const qlm_ops_t qlm_gsern_ops;
 extern const qlm_ops_t qlm_gserr_ops;
 
