@@ -151,6 +151,30 @@ struct ecam_probe_callback probe_callbacks[] = {
 	{ECAM_INVALID_DEV_ID, 0, 0, 0}
 };
 
+static void init_mcc(uint64_t config_base, uint64_t config_size)
+{
+	union cavm_pccpf_xxx_msix_cap_hdr msix_cap_hdr;
+
+	/* Enable MSIX delivery via PCCPF_XXX_MSIX_CAP_HDR[MSIXEN]. */
+	msix_cap_hdr.u = octeontx_read32(config_base +
+					 CAVM_PCCPF_XXX_MSIX_CAP_HDR);
+	msix_cap_hdr.s.msixen = 1;
+	octeontx_write32(config_base + CAVM_PCCPF_XXX_MSIX_CAP_HDR,
+			 msix_cap_hdr.u);
+}
+
+static void init_mdc(uint64_t config_base, uint64_t config_size)
+{
+	union cavm_pccpf_xxx_msix_cap_hdr msix_cap_hdr;
+
+	/* Enable MSIX delivery via PCCPF_XXX_MSIX_CAP_HDR[MSIXEN]. */
+	msix_cap_hdr.u = octeontx_read32(config_base +
+					 CAVM_PCCPF_XXX_MSIX_CAP_HDR);
+	msix_cap_hdr.s.msixen = 1;
+	octeontx_write32(config_base + CAVM_PCCPF_XXX_MSIX_CAP_HDR,
+			 msix_cap_hdr.u);
+}
+
 static void init_gpio(uint64_t config_base, uint64_t config_size)
 {
 	union cavm_pccpf_xxx_vsec_sctl vsec_sctl;
@@ -210,6 +234,8 @@ static void init_cgx(uint64_t config_base, uint64_t config_size)
 
 struct ecam_init_callback plat_init_callbacks[] = {
 	{0xa00a, 0x177d, init_gpio},
+	{0xa070, 0x177d, init_mcc}, /* 0x70 - PCC_DEV_IDL_E::MCC */
+	{0xa073, 0x177d, init_mdc}, /* 0x73 - PCC_DEV_IDL_E::MDC */
 	{0xa059, 0x177d, init_cgx}, /* 0x59 - PCC_DEV_IDL_E::CGX */
 	{0xa065, 0x177d, init_rvu}, /* 0x65 - PCC_DEV_IDL_E::RVU_AF */
 	{0xa063, 0x177d, init_rvu_rid}, /* 0x63 - PCC_DEV_IDL_E::RVU */
