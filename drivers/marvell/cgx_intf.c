@@ -742,6 +742,7 @@ static int cgx_check_speed_change_allowed(int cgx_id, int lmac_id, int new_mode,
 {
 	int change = 0;
 	cgx_lmac_config_t *lmac_cfg;
+	int new_lc;
 
 	static int cgx_valid_speed_mode[] = {
 					CAVM_CGX_LMAC_TYPES_E_SGMII,
@@ -763,7 +764,9 @@ static int cgx_check_speed_change_allowed(int cgx_id, int lmac_id, int new_mode,
 	}
 	for (int i = 0; i < ARRAY_SIZE(cgx_valid_speed_mode); i++) {
 		if (new_mode == cgx_valid_speed_mode[i]) {
-			change = 1;
+			new_lc = cgx_get_lane_count(new_mode);
+			if (new_lc && lmac_cfg->max_lane_count >= new_lc)
+				change = 1;
 			break;
 		}
 	}
@@ -811,6 +814,7 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 	link_state_t link;
 	int lane, lane_count;
 	uint64_t req_mode;
+	uint32_t lane_mask;
 
 	lmac_ctx = &lmac_context[cgx_id][lmac_id];
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
@@ -891,25 +895,8 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 				lmac->fec = CGX_FEC_NONE;
 
 			lmac->mode = lmac_type;
-
-			/* For some boards, lanes are swizzled and the lane
-			 * info in LMAC config structure might not have the
-			 * swapped lane info and hence read it from lane_to_sds
-			 */
 			qlm = lmac->qlm;
-			/* Special case for EBB9604 for DLM4/5. Lanes are
-			 * swizzled on EBB9604 and hence for DLM 4/5 case,
-			 * even the QLM is different
-			 */
-			if (!strncmp(plat_octeontx_bcfg->bcfg.board_model,
-					"ebb96", 5)) {
-				if (qlm_get_lanes(qlm) == 2) {
-					if (lmac->qlm == 4)
-						qlm = 5;
-					else if (lmac->qlm == 5)
-						qlm = 4;
-				}
-			}
+
 			debug_cgx_intf("%s: Re-configuring serdes for mode %d, baud rate %d, lmac type %d\n",
 						__func__, qlm_mode, baud_mhz,
 						lmac->mode);
@@ -923,11 +910,16 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 					__func__, qlm);
 				return -1;
 			}
-			lane_count = cgx_get_lane_count(lmac->rev_lane, lmac_type);
+			lane_count = cgx_get_lane_count(lmac_type);
+			lane_mask = 0;
 			for (int i = 0; i < lane_count; i++) {
 				lane = (lmac->lane_to_sds >> (i*2)) & 3;
+				lane_mask |= 1 << lane;
+				if (lmac->qlm != lmac->first_qlm && lane > 1)
+					lane -= 2; /* adjust for upper DLM */
 				qlm_ops->qlm_set_mode(qlm, lane, qlm_mode, baud_mhz, 0);
 			}
+			lmac->lane_mask = lane_mask;
 
 			/* Update the SCRATCHX register with the new link info to the
 			 * original lane

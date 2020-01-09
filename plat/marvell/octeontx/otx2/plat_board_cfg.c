@@ -120,15 +120,14 @@ void plat_octeontx_print_board_variables(void)
 		debug_dts("CGX%d: lmac_count = %d\n", i, cgx->lmac_count);
 		for (j = 0; j < cgx->lmac_count; j++) {
 			lmac = &cgx->lmac_cfg[j];
-			debug_dts("CGX%d.LMAC%d: mode = %s:%d, qlm = %d, lane = %d, lane_to_sds=0x%x, rev_lane = %d\n",
+			debug_dts("CGX%d.LMAC%d: mode = %s:%d, qlm = %d, lane = %d, lane_to_sds=0x%x\n",
 					i,
 					j,
 					qlm_get_mode_strmap(lmac->mode_idx).bdk_str,
 					lmac->mode,
 					lmac->qlm,
 					lmac->lane,
-					lmac->lane_to_sds,
-					lmac->rev_lane);
+					lmac->lane_to_sds);
 			debug_dts("\tnum_rvu_vfs=%d, num_msix_vec=%d, use_training=%d\n",
 					lmac->num_rvu_vfs,
 					lmac->num_msix_vec,
@@ -1127,7 +1126,13 @@ static int octeontx2_fill_cgx_struct(int qlm, int lane, int mode_idx)
 	int cgx_idx;
 	int i, j;
 	int lcnt, lused, lane_to_sds;
-	int lane_order;
+	int lane_order, qlm_orig;
+	int phy_lane, found_lane, lane_other;
+	int lane_sds_idx = 0;
+	const qlm_ops_t *qlm_ops;
+	uint32_t lane_mask = 0;
+
+	qlm_orig = qlm;
 
 	if ((mode_idx < QLM_MODE_SGMII) || (mode_idx >= QLM_MODE_LAST)) {
 		debug_dts("QLM%d.LANE%d: not configured for CGX, skip.\n", qlm, lane);
@@ -1142,6 +1147,21 @@ static int octeontx2_fill_cgx_struct(int qlm, int lane, int mode_idx)
 	debug_dts("CGX%d: Configure QLM%d Lane%d\n", cgx_idx, qlm, lane);
 
 	cgx = &(plat_octeontx_bcfg->cgx_cfg[cgx_idx]);
+
+	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+	if (qlm_ops == NULL) {
+		INFO("%s:CGX%d: get_qlm_ops failed for QLM %d\n",
+			 __func__, cgx_idx, qlm);
+		return 0;
+	}
+
+	phy_lane = qlm_ops->qlm_get_lmac_phy_lane(qlm, lane);
+	if ((cgx->lanes_used_mask >> phy_lane) & 1) {
+		debug_dts("CGX%d: QLM%d.LANE%d: already configured for CGX, skip.\n",
+				  cgx_idx, qlm, lane);
+		return 0;
+	}
+
 	if (cgx->lmac_count >= MAX_LMAC_PER_CGX) {
 		WARN("CGX%d: already configured, not configuring QLM%d, Lane%d\n",
 				cgx_idx, qlm, lane);
@@ -1197,6 +1217,15 @@ static int octeontx2_fill_cgx_struct(int qlm, int lane, int mode_idx)
 	 */
 	lane_order = plat_octeontx_bcfg->cgx_cfg[cgx_idx].network_lane_order;
 
+	/* For spanning more than one GSER (e.g DLMs) NETWORK-LANE-ORDER should be
+	 * interpreted as below. The lowest lane of the lowest GSER
+	 * maps to the LMAC physical lane 0 and the highest lane
+	 * of the highest GSER maps to the highest LMAC physical lane (typ lane 3)
+	 * For EBB9604, the lanes are swizzled and for lane 0 of DLM5,
+	 * reversed lane should be lane 1 of DLM4 not lane 3
+	 * and same for DLM 4.
+	 */
+
 	for (i = 0; i < lcnt; i++) {
 		lmac = &cgx->lmac_cfg[cgx->lmac_count];
 		/* lane_to_sds(8 bits) is an array of 2-bit values that map each
@@ -1211,7 +1240,7 @@ static int octeontx2_fill_cgx_struct(int qlm, int lane, int mode_idx)
 		/* Fill in the CGX/LMAC structures */
 		lmac->mode = mode;
 		lmac->mode_idx = mode_idx;
-		lmac->qlm = qlm;
+		lmac->qlm = qlm_orig;
 
 		if (mode == CAVM_CGX_LMAC_TYPES_E_USXGMII) {
 			if (!cgx->usxgmii_mode) {
@@ -1236,23 +1265,8 @@ static int octeontx2_fill_cgx_struct(int qlm, int lane, int mode_idx)
 		} else
 			lmac->lane = lane + i;
 
-		/* Use NETWORK-LANE-ORDER to fill the lane info that are
-		 * reversed
-		 */
-		lmac->rev_lane = (lane_order >> (lmac->lane * 4)) & 3;
+		found_lane = 0;
 
-		/* For spanning two DLMs, NETWORK-LANE-ORDER should be
-		 * interpreted as below. The first DLM is lane 0
-		 * and 1, the second is lane 2 and 3. For EBB9604,
-		 * the lanes are swizzled and for lane 0 of DLM5,
-		 * reversed lane should be lane 1 of DLM4 not lane 3
-		 * and same for DLM 4.
-		 */
-		if ((!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb96", 5)) &&
-			(cavm_is_model(OCTEONTX_CN96XX_PASS1_X))) {
-			if (plat_octeontx_scfg->qlm_max_lane_num[qlm] == 2)
-				lmac->rev_lane -= 2;
-		}
 		switch (mode) {
 		case CAVM_CGX_LMAC_TYPES_E_XAUI:
 		case CAVM_CGX_LMAC_TYPES_E_FORTYG_R:
@@ -1264,28 +1278,65 @@ static int octeontx2_fill_cgx_struct(int qlm, int lane, int mode_idx)
 			/* The RXAUI mode is always using a double lane. So
 			 * the lane value can be 0 or 2.
 			 */
-			if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X)
-			    && (qlm == 5))
-				lane += 2;
-			lmac->lane_to_sds = (lane_to_sds >> (lane * 2)) & 0xF;
+			for (i = 0; i < MAX_LMAC_PER_CGX; i++) {
+				phy_lane = lane_to_sds >> (i*2) & 0x3;
+				if (phy_lane == qlm_ops->qlm_get_lmac_phy_lane(qlm, lane)) {
+					found_lane = 1;
+					break;
+				}
+			}
+			lane_sds_idx = i;
+
+			/* If the CGX physical lane associated with the GSER
+			 * lane is found than the first 2 lanes in the
+			 * network lane order are associated with this QLM
+			 * otherwise it is in the upper 2 lanes in the
+			 * network lane order.
+			 */
+			if (found_lane) {
+				/* Check if  2-lane protocols to be aligned on a bit multiple of 4 */
+				/* Expect 2-lane protocols to be aligned on a bit multiple of 4 */
+				/* Verify partner lane is not already used */
+				if (lane_sds_idx & 1)
+					lane_other = (lane_to_sds >> ((lane_sds_idx - 1) * 2)) & 0x3;
+				else
+					lane_other = (lane_to_sds >> ((lane_sds_idx + 1) * 2)) & 0x3;
+				if ((cgx->lanes_used_mask >> lane_other) & 0x1) {
+					WARN("CGX%d: LANE%d already used.  Check network-lane-order.\n",
+						 cgx_idx, lane_other);
+					return 0;
+				}
+				lmac->lane_to_sds = (lane_to_sds >> ((i >> 1)*4)) & 0xF;
+			} else
+				WARN("CGX%d: Unable to find QLM%d LANE%d in the network-lane-order.\n",
+					    cgx_idx, qlm, lane);
 			break;
 		default:
-			/* 95E alternative package based EBB9504 boards have
-			 * lane reversed and for DLM 4, it just has 2 lanes.
-			 * Update lane_to_sds accordingly
-			 */
-			if ((plat_get_altpkg() == CN95XXE_PKG) && (qlm == 4))
-				lmac->lane_to_sds = !lane;
-			else {
-				if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X)
-				    && (qlm == 5))
-					lane += 2;
-
-				lmac->lane_to_sds = ((lane_to_sds >> (lane * 2))
-								& 0x3);
-			}
+			lmac->lane_to_sds = qlm_ops->qlm_get_lmac_phy_lane(qlm, lane);
 			break;
 		}
+
+		/* Create the GSER lane_mask */
+		for (i = 0; i < lused; i++) {
+			lane_mask |= 1 << ((lmac->lane_to_sds >> (i * 2)) & 0x3);
+		}
+
+		lmac->lane_mask = lane_mask;
+		lmac->first_qlm = qlm_ops->qlm_get_lmac_first_qlm(qlm);
+		/* Update the CGX lane mask */
+		cgx->lanes_used_mask |= lane_mask;
+
+		/* max_lane_count is the number of SERDES lanes used by the
+		 * original LMAC type (original means it came about as a result
+		 * of the device tree property QLM-MODE.N0.QLM%d).  The Ethernet
+		 * mode change feature will use max_lane_count to determine if
+		 * the new Ethernet mode (that the user wants to change to at
+		 * run-time) can be accommodated.
+		 */
+		lmac->max_lane_count = lused;
+
+		debug_dts("CGX%d: LANE%d: lmac lane_mask 0x%x, first_qlm %d, qlm %d, cgx_lane_mask 0x%x\n",
+				  cgx_idx, lane, lmac->lane_mask, lmac->first_qlm, lmac->qlm, cgx->lanes_used_mask);
 
 		switch (mode_idx) {
 		case QLM_MODE_10G_KR:
@@ -1335,8 +1386,10 @@ static int octeontx2_fill_cgx_struct(int qlm, int lane, int mode_idx)
 	/* If a QLM/DLM is configured as USXGMII (even if it uses 1 LMAC),
 	 * CGX may not be used by other lanes. Hence always return 4
 	 */
-	if (cgx->usxgmii_mode)
+	if (cgx->usxgmii_mode) {
+		cgx->lanes_used_mask = 0xf;
 		return 4;
+	}
 
 	return (lcnt * lused);
 }
@@ -1779,7 +1832,6 @@ static void octeontx2_fill_cgx_details(const void *fdt)
 	int qlm;
 	int lane_idx;
 	int lnum;
-	int linit;
 	qlm_state_lane_t qlm_state;
 	const qlm_ops_t *qlm_ops;
 
@@ -1801,13 +1853,7 @@ static void octeontx2_fill_cgx_details(const void *fdt)
 					qlm_idx, lane_idx,
 					qlm_state.s.mode,
 					qlm_get_mode_strmap(qlm_state.s.mode).bdk_str);
-			linit = octeontx2_fill_cgx_struct(qlm_idx, lane_idx, qlm_state.s.mode);
-			/* If number of initialized lanes is more
-			 * than 1, then we should skip these
-			 * initializations.
-			 */
-			if (linit > 1)
-				lane_idx += linit - 1;
+			octeontx2_fill_cgx_struct(qlm_idx, lane_idx, qlm_state.s.mode);
 		}
 	}
 	octeontx2_cgx_check_linux(fdt);

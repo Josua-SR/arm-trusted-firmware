@@ -52,7 +52,6 @@ typedef struct cgx_lmac_config {
 	int mode_idx;		/* helper field for the mode mapping */
 	int qlm;		/* from BDK DT */
 	int lane;		/* from BDK DT */
-	int rev_lane;		/* to handle boards that have lane swizzled */
 	/* NOTE: when this bit is set, it doesn't necessarily
 	 * mean the link is up until the user sends LINK UP command
 	 */
@@ -72,6 +71,9 @@ typedef struct cgx_lmac_config {
 	phy_config_t phy_config;
 	sfp_slot_info_t sfp_info;
 	uint64_t supported_link_modes;	/* cgx_mode_t enum */
+	uint32_t lane_mask;
+	int first_qlm;
+	int max_lane_count;
 } cgx_lmac_config_t;
 
 typedef struct cgx_config {
@@ -81,6 +83,7 @@ typedef struct cgx_config {
 	/* for RVU */
 	uint32_t enable:1;
 	uint32_t is_rfoe:1;
+	uint16_t lanes_used_mask;
 	uint16_t network_lane_order;
 	cgx_lmac_config_t lmac_cfg[MAX_LMAC_PER_CGX];
 } cgx_config_t;
