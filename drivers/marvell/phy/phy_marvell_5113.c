@@ -41,6 +41,8 @@ typedef struct {
 		int cpre_line;
 		int cpost_line;
 		int use_20G;
+		int repeater_mode;
+		int num_slices;
 	} port[4];
 } phy_mxd_priv_t;
 
@@ -113,6 +115,7 @@ void phy_marvell_5113_config(int cgx_id, int lmac_id)
 	MXD_BOOL forceReConfig = MXD_FALSE;
 	MXD_STATUS status;
 	MXD_U16 swReset = 1;
+	static int pol_swapped;
 
 	debug_phy_driver("%s: %d:%d\n", __func__, cgx_id, lmac_id);
 
@@ -147,6 +150,8 @@ void phy_marvell_5113_config(int cgx_id, int lmac_id)
 	marvell_5113_priv[cgx_id].port[port].use_20G = 0;
 	marvell_5113_priv[cgx_id].mxddev.use20G = 0;
 	marvell_5113_priv[cgx_id].port[port].completed_an = 0;
+	marvell_5113_priv[cgx_id].port[port].num_slices = 1;
+	marvell_5113_priv[cgx_id].port[port].repeater_mode = 0;
 
 	switch (lmac_cfg->mode_idx) {
 	case QLM_MODE_SGMII:
@@ -254,7 +259,15 @@ void phy_marvell_5113_config(int cgx_id, int lmac_id)
 			host_mode = line_mode = MXD_P50LF;
 		} else {
 			mode_str = "40G-BASE-R";
-			host_mode = line_mode = MXD_P50LN;
+			/* For 40GAUI, in case of eval boards, configure the PHY
+			 * in repeater mode
+			 */
+			if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9", 4)) {
+				marvell_5113_priv[cgx_id].port[port].repeater_mode = 1;
+				marvell_5113_priv[cgx_id].port[port].num_slices = 2;
+				host_mode = line_mode =  MXD_MODE_R25L_R25L;
+			} else
+				host_mode = line_mode = MXD_P50LN;
 		}
 		marvell_5113_priv[cgx_id].port[port].use_an = 0;
 		marvell_5113_priv[cgx_id].mxddev.use20G = 1;
@@ -300,8 +313,16 @@ void phy_marvell_5113_config(int cgx_id, int lmac_id)
 			host_mode = line_mode = MXD_P100LR;
 		} else {
 			mode_str = "80G-BASE-R4";
-			host_mode = line_mode = MXD_P100LN;
-		}
+			/* For 80GAUI, in case of eval boards, configure the PHY
+			 * in repeater mode
+			 */
+			if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9", 4)) {
+				marvell_5113_priv[cgx_id].port[port].repeater_mode = 1;
+				marvell_5113_priv[cgx_id].port[port].num_slices = 4;
+				host_mode = line_mode =  MXD_MODE_R25L_R25L;
+			} else
+				host_mode = line_mode = MXD_P100LN;
+			}
 		marvell_5113_priv[cgx_id].port[port].use_an = 0;
 		marvell_5113_priv[cgx_id].mxddev.use20G = 1;
 		marvell_5113_priv[cgx_id].port[port].use_20G = 1;
@@ -336,15 +357,23 @@ void phy_marvell_5113_config(int cgx_id, int lmac_id)
 				"line_mode %d\n", __func__, port, mode_str,
 				host_mode, line_mode);
 
-	status = mxdSetUserFixedModeSelection(&marvell_5113_priv[cgx_id].mxddev,
-					phy->addr, port,
-					host_mode, line_mode,
+	if (!marvell_5113_priv[cgx_id].port[port].repeater_mode) {
+		status = mxdSetUserFixedModeSelection(&marvell_5113_priv[cgx_id].mxddev,
+				phy->addr, port,
+				host_mode, line_mode,
+				forceReConfig, &result);
+	} else {
+		for (int i = 0; i < marvell_5113_priv[cgx_id].port[port].num_slices; i++) {
+			status = mxdSetFixedModeSelection(&marvell_5113_priv[cgx_id].mxddev,
+					phy->addr, port + i,
+					host_mode,
 					forceReConfig, &result);
-
-	if (status != MXD_OK) {
-		ERROR("%s: SetMode failed, error_result. status 0x%lx\t"
-			"result 0x%x\n", __func__, status, result);
-		return;
+			if (status != MXD_OK) {
+				ERROR("%s: SetMode failed, error_result. status 0x%lx\t"
+				"result 0x%x\n", __func__, status, result);
+				return;
+			}
+		}
 	}
 
 	/* EBB9604 88x5113 module has host/line swapped
@@ -352,11 +381,14 @@ void phy_marvell_5113_config(int cgx_id, int lmac_id)
 	 * 88x5113 "line" side points to CN96
 	 * Patch : Received from Bruce(BDK)
 	 */
-	if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9", 4)) {
+	if ((!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9", 4))
+		&& (!pol_swapped)) {
 		MXD_U16 HostRxPolarities[4] = {0, 1, 0, 1};
 		MXD_U16 HostTxPolarities[4] = {0, 0, 1, 0};
 		MXD_U16 LineRxPolarities[4] = {1, 1, 0, 0};
 		MXD_U16 LineTxPolarities[4] = {0, 0, 1, 1};
+
+		pol_swapped = 1;
 
 		/* Invert host-side input lanes 3 and 1
 		 * Invert line-side input lanes 1 and 0 and
@@ -576,7 +608,11 @@ void phy_marvell_5113_get_link_status(int cgx_id, int lmac_id,
 			  detailedStatus.Per_lane_status.hostCurrent[port],
 			  detailedStatus.Per_lane_status.lineCurrent[port]);
 
-		link->s.link_up = (currentStatus == MXD_LINK_UP);
+		/* For Repeater mode, link status is always 1 */
+		if (!marvell_5113_priv[cgx_id].port[port].repeater_mode)
+			link->s.link_up = (currentStatus == MXD_LINK_UP);
+		else
+			link->s.link_up = 1;
 		link->s.full_duplex = 1;
 
 		switch (speed) {
@@ -600,6 +636,13 @@ void phy_marvell_5113_get_link_status(int cgx_id, int lmac_id,
 				debug_phy_driver("%s(%d): Report 20G speed\n",
 						__func__, port);
 				link->s.speed = CGX_LINK_20G;
+			}
+			link->s.speed = CGX_LINK_25G;
+			if (marvell_5113_priv[cgx_id].port[port].repeater_mode) {
+				if (marvell_5113_priv[cgx_id].port[port].num_slices == 2)
+					link->s.speed = CGX_LINK_40G;
+				else if (marvell_5113_priv[cgx_id].port[port].num_slices == 4)
+					link->s.speed = CGX_LINK_80G;
 			}
 		break;
 		/* FIXME for other modes : 50/100G - 40/80G */
