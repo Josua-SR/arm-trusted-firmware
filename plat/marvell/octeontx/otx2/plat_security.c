@@ -21,42 +21,47 @@ struct ccs_region {
 	unsigned long start;
 	unsigned long end;
 	unsigned int  secure;
+	unsigned int  mandatory;
 };
 
 #define LAST_CCS_REGION (~0U)
 #define MCC_CONFIG_DIS_TADPSN_BIT	BIT(1)
-#define UNKNOWN_VALUE	(~0UL)
+#define SET_BY_BDK	(~0UL)
 
 #define CCS_ASC_REGION_MASK
 
 struct ccs_region ccs_map [] = {
 	/* Secure non preserve region */
 	{
-		.number  = 0,
-		.start   = TZDRAM_BASE,
-		.end     = TZDRAM_BASE + TZDRAM_SIZE - 1,
-		.secure  = 1,
+		.number    = 0,
+		.start     = TZDRAM_BASE,
+		.end       = TZDRAM_BASE + TZDRAM_SIZE - 1,
+		.secure    = 1,
+		.mandatory = 1,
 	},
 	/* Non-secure non preserve region */
 	{
-		.number  = 1,
-		.start   = TZDRAM_BASE + TZDRAM_SIZE,
-		.end     = UNKNOWN_VALUE,
-		.secure  = 0,
+		.number    = 1,
+		.start     = TZDRAM_BASE + TZDRAM_SIZE,
+		.end       = SET_BY_BDK,
+		.secure    = 0,
+		.mandatory = 1,
 	},
 	/* Secure preserve region */
 	{
-		.number  = 2,
-		.start   = UNKNOWN_VALUE,
-		.end     = UNKNOWN_VALUE,
-		.secure  = 1,
+		.number    = 2,
+		.start     = SET_BY_BDK,
+		.end       = SET_BY_BDK,
+		.secure    = 1,
+		.mandatory = 0,
 	},
 	/* Non-secure preserve region */
 	{
-		.number  = 3,
-		.start   = UNKNOWN_VALUE,
-		.end     = UNKNOWN_VALUE,
-		.secure  = 0,
+		.number    = 3,
+		.start     = SET_BY_BDK,
+		.end       = SET_BY_BDK,
+		.secure    = 0,
+		.mandatory = 0,
 	},
 	{
 		.number  = LAST_CCS_REGION,
@@ -136,39 +141,65 @@ void octeontx_security_setup(void)
 		disable_poison();
 
 	while (region->number != LAST_CCS_REGION) {
+		ccs_asc_attr.u = CSR_READ(CAVM_CCS_ASC_REGIONX_ATTR(
+							region->number));
+		if (ccs_asc_attr.u == 0) {
+			/*
+			 * If region is no mandatory and is not setup by BDK
+			 * skip it initialization.
+			 */
+			if (!region->mandatory) {
+				region++;
+				continue;
+			}
+			NOTICE("Mandatory region %d is not setup by BDK\n",
+				region->number);
+			/*
+			 * Try to use configuration of first region. It should
+			 * contain proper LMC_MODE setup.
+			 */
+			if (region->number != 0)
+				ccs_asc_attr.u = CSR_READ(
+						     CAVM_CCS_ASC_REGIONX_ATTR(
+							       region->number));
+		}
+
 		/*
 		 * ATF require some ASC regions to have ceratian start or end.
-		 * If BDK configure regions in different way print error and
-		 * panic.
+		 * If BDK configure regions in different way print warning and
+		 * reconfigure region.
 		 */
-		if (region->start != UNKNOWN_VALUE) {
+		if (region->start != SET_BY_BDK) {
 			bdk_ccs_asc_start.u =
 				CSR_READ(CAVM_CCS_ASC_REGIONX_START(
 							region->number));
 			atf_ccs_asc_start.u = region->start;
 			if (bdk_ccs_asc_start.s.addr !=
 			    atf_ccs_asc_start.s.addr) {
-				ERROR(
+				NOTICE(
 				      "Start of ASC region %d is different for BDK(0x%x) and ATF(0x%x)\n",
 				      region->number, bdk_ccs_asc_start.s.addr,
 				      atf_ccs_asc_start.s.addr);
-				panic();
+				NOTICE("ATF is using its own ASC config\n");
+				CSR_WRITE(CAVM_CCS_ASC_REGIONX_START(
+					region->number), atf_ccs_asc_start.u);
 			}
 		}
-		if (region->end != UNKNOWN_VALUE) {
+		if (region->end != SET_BY_BDK) {
 			bdk_ccs_asc_end.u = CSR_READ(CAVM_CCS_ASC_REGIONX_END(
 							region->number));
 			atf_ccs_asc_end.u = region->end;
 			if (bdk_ccs_asc_end.s.addr != atf_ccs_asc_end.s.addr) {
-				ERROR(
+				NOTICE(
 				      "End of ASC region %d is different for BDK(0x%x) and ATF(0x%x)\n",
 				      region->number, bdk_ccs_asc_end.s.addr,
 				      atf_ccs_asc_end.s.addr);
-				panic();
+				NOTICE("ATF is using its own ASC config\n");
+				CSR_WRITE(CAVM_CCS_ASC_REGIONX_END(
+					region->number), atf_ccs_asc_end.u);
 			}
 		}
 
-		ccs_asc_attr.u = CSR_READ(CAVM_CCS_ASC_REGIONX_ATTR(region->number));
 		/*
 		 * BDK cannot set non-secure regions, do it here.
 		 */
