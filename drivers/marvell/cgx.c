@@ -607,16 +607,6 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 					transmit_np = 1;
 			}
 
-			/* If we received a LP Next Page
-			 * Clear LP extended next page register
-			 */
-			if (lp_xnp[np].u != 0) {
-				/* Clear LP extended next page register */
-				lp_xnp[np].u = 0;
-				CSR_WRITE(CAVM_CGXX_SPUX_AN_LP_XNP
-						  (cgx_id, lmac_id), lp_xnp[np].u);
-			}
-
 			/* Check to see if we are configured to send Extended next pages
 			 * and in a supported Ethernet Consortium lmac_mode
 			 */
@@ -676,27 +666,27 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 				CSR_WRITE(CAVM_CGXX_SPUX_AN_XNP_TX(cgx_id, lmac_id),
 						xnp_tx[np].u);
 				num_pages++;
-				/* Only increase if less than 19 (max index) */
-				if (np < (AN_NP_PRINT_MAX - 1))
-					np++;
 				transmit_np = 0;
 			}
+			/* Only increase if less than 19 (max index) */
+			if (np < (AN_NP_PRINT_MAX - 1))
+				np++;
 		}
 		udelay(1);
 	}
 
-	/* Print AN page data if Next Pages sent */
+	/* Print AN page data if any pages received */
 	if (np > 0) {
 		debug_cgx("%s: %d:%d Number of Next pages transmitted = %d\n"
 				  , __func__, cgx_id, lmac_id, num_pages);
 		for (int i = 0; i < np; i++) {
-			debug_cgx("%s: %d:%d Next Page%d: AN Link Partner Extended Next Page: 0x%llx\n"
+			debug_cgx("%s: %d:%d AN Page%d: AN Link Partner Extended Next Page: 0x%llx\n"
 				      , __func__, cgx_id, lmac_id, i, lp_xnp[i].u);
-			debug_cgx("%s: %d:%d Next Page%d: AN Extended Next Page Tx: 0x%llx\n"
+			debug_cgx("%s: %d:%d AN Page%d: AN Extended Next Page Tx: 0x%llx\n"
 				      , __func__, cgx_id, lmac_id, i, xnp_tx[i].u);
-			debug_cgx("%s: %d:%d Next Page%d: AN Advertisement: 0x%llx\n"
+			debug_cgx("%s: %d:%d AN Page%d: AN Advertisement: 0x%llx\n"
 				      , __func__, cgx_id, lmac_id, i, an_adv[i].u);
-			debug_cgx("%s: %d:%d Next Page%d: Link Partner Base Page: 0x%llx\n"
+			debug_cgx("%s: %d:%d AN Page%d: Link Partner Base Page: 0x%llx\n"
 				      , __func__, cgx_id, lmac_id, i, lp_base[i].u);
 		}
 	}
@@ -814,7 +804,7 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 		rx_signal_detect_us = 10000;
 		rx_signal_stable_us = 10000;
 	} else {
-		rx_signal_detect_us = 100;
+		rx_signal_detect_us = 1;
 		/* Needs to be > 75ms because during AN
 		 * LP may complete an AN restart.  The
 		 * break_link_timer is a max of 75ms
