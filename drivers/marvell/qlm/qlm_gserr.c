@@ -13,7 +13,6 @@
 #include <qlm/qlm_gsern.h>
 #include <qlm/qlm_gserc.h>
 #include <qlm/qlm_gserr.h>
-#include <plat_otx2_configuration.h>
 
 /* Indexed by QLM number and lane */
 static uint64_t prbs_errors[5][4];
@@ -2370,27 +2369,3 @@ int qlm_gserr_change_phy_rate(int module)
 //	/* Done later */
 //	GSER_TRACE(QLM, "GSERR: End of init\n");
 //}
-
-/**
- * Get the LMAC physical lane for the GSER physical lane
- *
- * @param  qlm	  QLM to use
- * @param  lane	  Which lane
- * @return Returns the physical lane
- */
-int qlm_gserr_get_lmac_phy_lane(int qlm, int lane)
-{
-	return lane;
-}
-
-/**
- * Get the LMAC's first GSER associated with the specified GSER.
- * Required for LMAC's that use DLM's
- *
- * @param  qlm	   QLM to use
- * @return Returns the LMAC first GSER
- */
-int qlm_gserr_get_lmac_first_qlm(int qlm)
-{
-	return qlm + plat_octeontx_get_gserp_count();
-}

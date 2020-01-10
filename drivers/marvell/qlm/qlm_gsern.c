@@ -1731,33 +1731,3 @@ void qlm_tx_control_gsern(int qlm, int lane, bool enable_tx)
 			c.s.en_tx_cspd = 1);
 	}
 }
-
-/**
- * Get the LMAC physical lane for the GSER physical lane
- *
- * @param  qlm   QLM to use
- * @param  lane          Which lane
- * @return Returns the LMAC physical lane
- */
-int qlm_gsern_get_lmac_phy_lane(int qlm, int lane)
-{
-	if (gser_is_model(OCTEONTX_CN96XX_PASS1_X) && (qlm == 5))
-		return (lane + 2);
-	else
-		return lane;
-}
-
-/**
- * Get the LMAC's first GSER associated with the specified GSER.
- * Required for LMAC's that use DLM's
- *
- * @param  qlm    QLM to use
- * @return Returns the LMAC first GSER
- */
-int qlm_gsern_get_lmac_first_qlm(int qlm)
-{
-	if (gser_is_model(OCTEONTX_CN96XX_PASS1_X) && (qlm == 5))
-		return 4;
-	else
-		return qlm;
-}

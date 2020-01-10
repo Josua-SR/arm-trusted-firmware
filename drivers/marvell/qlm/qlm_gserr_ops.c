@@ -9,6 +9,7 @@
 #include <octeontx_utils.h>
 #include <qlm/qlm.h>
 #include <qlm/qlm_gserr.h>
+#include <plat_otx2_configuration.h>
 
 static void qlm_gserr_set_state(int qlm, int lane, qlm_state_lane_t state)
 {
@@ -29,6 +30,30 @@ static int qlm_gserr_rx_signal_detect(int qlm, int lane)
 		return 1;
 	else
 		return 0;
+}
+
+/**
+ * Get the LMAC physical lane for the GSER physical lane
+ *
+ * @param  qlm	  QLM to use
+ * @param  lane	  Which lane
+ * @return Returns the physical lane
+ */
+static int qlm_gserr_get_lmac_phy_lane(int qlm, int lane)
+{
+	return lane;
+}
+
+/**
+ * Get the LMAC's first GSER associated with the specified GSER.
+ * Required for LMAC's that use DLM's
+ *
+ * @param  qlm	   QLM to use
+ * @return Returns the LMAC first GSER
+ */
+static int qlm_gserr_get_lmac_first_qlm(int qlm)
+{
+	return qlm + plat_octeontx_get_gserp_count();
 }
 
 const qlm_ops_t qlm_gserr_ops = {

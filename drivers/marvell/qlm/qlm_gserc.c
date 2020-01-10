@@ -13,7 +13,6 @@
 #include <qlm/qlm_gsern.h>
 #include <qlm/qlm_gserc.h>
 #include <qlm/qlm_gserr.h>
-#include <plat_otx2_configuration.h>
 
 /* Indexed by QLM number and lane */
 static uint64_t prbs_errors[5][2];
@@ -2223,53 +2222,3 @@ int qlm_gserc_change_phy_rate(int module)
 //	/* Done later */
 //	GSER_TRACE(QLM, "GSERC: End of init\n");
 //}
-
-/**
- * Get the LMAC physical lane for the GSER physical lane
- *
- * @param  qlm	  QLM to use
- * @param  lane	  Which lane
- * @return Returns the physical lane
- */
-int qlm_gserc_get_lmac_phy_lane(int qlm, int lane)
-{
-	if (gser_is_model(OCTEONTX_LOKI)) {
-		switch (qlm) {
-		case 1:
-		case 3:
-			return (lane + 2);
-		default:
-			return lane;
-		}
-	}
-
-	return lane;
-}
-
-/**
- * Get the LMAC's first GSER associated with the specified GSER.
- * Required for LMAC's that use DLM's
- *
- * @param  qlm	   QLM to use
- * @return Returns the LMAC first GSER
- */
-int qlm_gserc_get_lmac_first_qlm(int qlm)
-{
-	/* Need to add GSERP and GSERR count
-	 * for LOKI
-	 */
-	if (gser_is_model(OCTEONTX_LOKI)) {
-		int gserp_gserr_count = plat_octeontx_get_gserp_count() +
-					plat_octeontx_get_gserr_count();
-
-		switch (qlm) {
-		case 1:
-		case 3:
-			return qlm - 1 + gserp_gserr_count;
-		default:
-			return qlm + gserp_gserr_count;
-		}
-	}
-
-	return qlm;
-}

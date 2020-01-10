@@ -222,22 +222,4 @@ int qlm_gserc_eye_capture(int qlm, int lane, int show_data, gser_qlm_eye_t *eye_
  */
 void qlm_gserc_tx_control(int qlm, int lane, bool enable_tx);
 
-/**
- * Get the LMAC physical lane for the GSER physical lane
- *
- * @param  qlm	  QLM to use
- * @param  lane	  Which lane
- * @return Returns the physical lane
- */
-int qlm_gserc_get_lmac_phy_lane(int qlm, int lane);
-
-/**
- * Get the LMAC's first GSER associated with the specified GSER.
- * Required for LMAC's that use DLM's
- *
- * @param  qlm	   QLM to use
- * @return Returns the LMAC first GSER
- */
-int qlm_gserc_get_lmac_first_qlm(int qlm);
-
 #endif /* _QLM_GSERC_H_ */

@@ -119,6 +119,36 @@ static int qlm_rx_signal_detect_gsern(int qlm, int lane)
 		return 0;
 }
 
+/**
+ * Get the LMAC physical lane for the GSER physical lane
+ *
+ * @param  qlm   QLM to use
+ * @param  lane          Which lane
+ * @return Returns the LMAC physical lane
+ */
+static int qlm_gsern_get_lmac_phy_lane(int qlm, int lane)
+{
+	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1) && (qlm == 5))
+		return (lane + 2);
+	else
+		return lane;
+}
+
+/**
+ * Get the LMAC's first GSER associated with the specified GSER.
+ * Required for LMAC's that use DLM's
+ *
+ * @param  qlm    QLM to use
+ * @return Returns the LMAC first GSER
+ */
+static int qlm_gsern_get_lmac_first_qlm(int qlm)
+{
+	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1) && (qlm == 5))
+		return 4;
+	else
+		return qlm;
+}
+
 const qlm_ops_t qlm_gsern_ops = {
 	.type = QLM_GSERN_TYPE,
 	.qlm_get_state = qlm_get_state_gsern,
