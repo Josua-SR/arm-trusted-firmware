@@ -15,6 +15,22 @@ static void qlm_gserr_set_state(int qlm, int lane, qlm_state_lane_t state)
 	CSR_WRITE(CAVM_GSERRX_SCRATCHX(qlm, lane), state.u);
 }
 
+/**
+ * Check whether SERDES Rx lane is detecting a signal
+ *
+ * @param qlm	  QLM to use
+ * @param lane	  Which lane
+ * @return 0 on successful signal detected, 1 on no signal detected
+ */
+static int qlm_gserr_rx_signal_detect(int qlm, int lane)
+{
+	CSR_INIT(bsts, CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane));
+	if (bsts.s.ln_stat_los)
+		return 1;
+	else
+		return 0;
+}
+
 const qlm_ops_t qlm_gserr_ops = {
 	.type = QLM_GSERR_TYPE,
 	.qlm_get_state = qlm_gserr_get_state,

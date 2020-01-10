@@ -103,6 +103,22 @@ static int qlm_tx_sm_rst_control_gsern(int qlm, uint64_t lane_mask,
 	return 0;
 }
 
+/**
+ * Check whether SERDES Rx lane is detecting a signal
+ *
+ * @param qlm	  QLM to use
+ * @param lane	  Which lane
+ * @return 0 on successful signal detected, 1 on no signal detected
+ */
+static int qlm_rx_signal_detect_gsern(int qlm, int lane)
+{
+	CSR_INIT(rx_idledet_bsts, CAVM_GSERNX_LANEX_RX_IDLEDET_BSTS(qlm, lane));
+	if (rx_idledet_bsts.s.idle)
+		return 1;
+	else
+		return 0;
+}
+
 const qlm_ops_t qlm_gsern_ops = {
 	.type = QLM_GSERN_TYPE,
 	.qlm_get_state = qlm_get_state_gsern,

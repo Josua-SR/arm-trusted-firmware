@@ -231,15 +231,6 @@ int gsern_eye_capture(int qlm, int lane, int show_data, gser_qlm_eye_t *eye_data
 void qlm_tx_control_gsern(int qlm, int lane, bool enable_tx);
 
 /**
- * Check whether SERDES Rx lane is detecting a signal
- *
- * @param qlm	  QLM to use
- * @param lane	  Which lane
- * @return 0 on successful signal detected, 1 on no signal detected
- */
-int qlm_rx_signal_detect_gsern(int qlm, int lane);
-
-/**
  * Get the LMAC physical lane for the GSER physical lane
  *
  * @param  qlm	  QLM to use
