@@ -84,6 +84,7 @@ BL31_SOURCES		+=	plat/marvell/octeontx/otx2/aarch64/plat_octeontx_common.S	\
 				plat/marvell/octeontx/otx2/t96/plat_t96_svc.c  \
 				plat/marvell/octeontx/otx2/lmc_ras.c		\
 				plat/marvell/octeontx/otx2/mdc_ras.c		\
+				plat/marvell/octeontx/otx2/smc_ras.c		\
 				plat/marvell/octeontx/otx2/plat_ras.c		\
 				lib/extensions/ras/std_err_record.c		\
 				lib/extensions/ras/ras_common.c			\

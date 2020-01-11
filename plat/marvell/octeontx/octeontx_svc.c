@@ -20,6 +20,9 @@
 #include <octeontx_dram.h>
 #include <octeontx_trace.h>
 #include <platform_svc.h>
+#if RAS_EXTENSION
+#include <plat_ras.h>
+#endif
 
 /*
  * FIXME: UUID should be different for platforms with different set
@@ -183,6 +186,15 @@ uintptr_t octeontx_svc_smc_handler(uint32_t smc_fid,
 		SMC_RET3(handle, SMC_UNK, 0, 0);
 		break;
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
+
+	case OCTEONTX_EDAC:
+#if RAS_EXTENSION
+		ret = plat_ras_smc_op(x1, x2, x3, x4);
+#else
+		ret = -EINVAL;
+#endif
+		SMC_RET1(handle, ret);
+		break;
 
 	default:
 		return plat_octeontx_svc_smc_handler(smc_fid, x1, x2, x3, x4,

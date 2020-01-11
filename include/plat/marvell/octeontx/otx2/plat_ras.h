@@ -29,6 +29,52 @@ int lmcoe_ras_setup(int mcc, int lmcoe);
 int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe);
 void l2c_flush(void);
 void ras_rewrite_cacheline(uint64_t physaddr, int secure);
+
+/*
+ * SMC OCTEONTX_EDAC for non-standard EDAC pre-RAS. Subject to change.
+ * May persist as a pre-ARMv8.2 interface for cn8xxx etc.
+ * x1(operation)
+ * x2,x3 usually buffer,size, meaning depends on x3(operation)
+ * Operations are
+ * x1 = 0	report version
+ * x1 = 3	inject DRAM ECC fault, x2=target_addr, x3=flags
+ *			flags & 0x7	single bit to corrupt
+ *			flags & 0x8	corrupt multiple bits
+ *			flags & 0x70	cache level to corrupt (L0 == DRAM)
+ *			flags & 0x80	Icache, not Dcache
+ *			flags & 0x100	read-back in EL3
+ *			flags & 0x200	target address EL3-physical, not EL012
+ *		    target addrs 0-3/4-7 are EL0-3 test instr/data targets
+ * x1 = 4	read CAVM_MDC_CONST, returns struct mdc_win_cmd
+ * x1 = 5	read/write MDC, x2=mdc_win_cmd, x3=value, x4=mask
+ *			r/w determined by x2.s.w, where x4 set, x3 bits imposed
+ *			ATF normally imposes further mask
+ * x1 = 6	read MDC_RAS_ROM x2=addr
+ */
+
+#define OCTEONTX_EDAC_VER	0	/* report version */
+#define OCTEONTX_EDAC_INJECT	3	/* x2=addr x3=flags _F_xxx below */
+#define OCTEONTX_EDAC_MDC_CONST	4	/* read CAVM_MDC_CONST */
+#define OCTEONTX_EDAC_MDC_RW	5	/* read/write MDC */
+#define OCTEONTX_EDAC_MDC_ROM	6	/* read MDC_RAS_ROM x2=addr */
+#define OCTEONTX_EDAC_POISON_EN	7	/* x2=0/1 dis/enable poison handling */
+
+#define OCTEONTX_EDAC_F_BITMASK	0x007
+#define OCTEONTX_EDAC_F_MULTI	0x008
+#define OCTEONTX_EDAC_F_CLEVEL	0x070
+#define OCTEONTX_EDAC_F_ICACHE	0x080
+#define OCTEONTX_EDAC_F_REREAD	0x100
+#define OCTEONTX_EDAC_F_PHYS	0x200
+
+extern int64_t plat_ras_smc_op(u_register_t x1, u_register_t x2,
+				u_register_t x3, u_register_t x4);
+extern int64_t plat_ras_lmc_inject(u_register_t x2, u_register_t x3,
+				u_register_t x4);
+extern int64_t plat_ras_mdc_limits(void);
+extern int64_t plat_ras_mdc_rw(u_register_t x2, u_register_t x3,
+				u_register_t x4);
+extern int64_t plat_ras_mdc_rom(u_register_t x2);
+
 extern const char *ras_serr_str[];
 
 /* enable reporting on a _RAS_ERRnn object, with thresh events until irq */

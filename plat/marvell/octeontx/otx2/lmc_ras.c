@@ -790,6 +790,7 @@ static void ras_check_double_bit02(int mcc, int lmcoe,
 	 * CAVM_MCCX_LMCOEX_RAS_ERR02STATUS[V]
 	 */
 	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR02STATUS(mcc, lmcoe), status->u);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR02, mcc, lmcoe);
 }
 
 static void ras_check_double_bit03(int mcc, int lmcoe,
@@ -805,6 +806,7 @@ static void ras_check_double_bit03(int mcc, int lmcoe,
 	 * CAVM_MCCX_LMCOEX_RAS_ERR02STATUS[V]
 	 */
 	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR03STATUS(mcc, lmcoe), status->u);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR03, mcc, lmcoe);
 }
 
 static inline uint64_t virt_to_phys(uint64_t uaddr)
@@ -982,7 +984,7 @@ static int pa_to_lmc(uint64_t pa)
 		uint64_t msk_drop = (1 << lr_bit);
 		uint64_t pnl_hi = pa & ~(msk_drop | (msk_drop - 1));
 		uint64_t pnl_lo = pa & (msk_drop - 1)
-					& ~(CACHE_WRITEBACK_GRANULE - 1);
+				& ~(CACHE_WRITEBACK_GRANULE - 1);
 		uint64_t pa_no_lr = pnl_hi | (pnl_lo << 1);
 		int pa_right = __rxor((adr_ctl.s.md_lr_en << 7) & pa);
 
@@ -992,7 +994,6 @@ static int pa_to_lmc(uint64_t pa)
 		lmc = ccs_lmc_hash(pa_no_lr, pa_right, asc_mcs_en, attr);
 		return lmc;
 	}
-
 	return -1;
 }
 
@@ -1220,6 +1221,8 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 			CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR00MISC0(mcc,
 							lmcoe),
 				  0UL);
+			arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR00,
+				   mcc, lmcoe);
 			/* err_type = "single ERR00"; */
 		} else if (ras_int.s.err01) {
 			/* more single bit errors from MCC */
@@ -1242,6 +1245,8 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 								lmcoe),
 				  0UL);
 			/* err_type = "single ERR01"; */
+			arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR01,
+				   mcc, lmcoe);
 		}
 		err_type = "single";
 		ras_atomic_add64_nosync(
@@ -1451,6 +1456,7 @@ int lmcoe_ras_setup(int mcc, int lmcoe)
 			   c.s.vec |= 1 << spi_shift);
 	}
 	octeontx_write64(vctl, irq);
+	/* Workaround for [stream] security issue; use non-secure register */
 	octeontx_write64(vaddr, CAVM_GICD_SETSPI_NSR | 1);
 
 	debug_ras("addr: 0x%llx, ctl: 0x%llx\n",

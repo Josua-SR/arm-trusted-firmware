@@ -34,8 +34,7 @@
 static int edac_timer = -1; /* periodic poll */
 #endif
 
-volatile int edac_alive; // replace with ...
-volatile int edac_active = 1; /* exclude polling in startup & SMC */
+volatile int edac_active; /* exclude polling in startup & SMC */
 
 const char *ras_serr_str[256] = {
 	[CAVM_RAS_SERR_E_NONE]			= "(none)",
@@ -437,6 +436,34 @@ static void ccu_read_errs(union cavm_mdc_ecc_status mes, int quiet)
 			ccu_read_err(ccu, b, mes, quiet);
 }
 
+static void check_lmc_ras(void)
+{
+	int lmc_no;
+
+	debug2ras("MDC_INT_W1C r %llx\n", CSR_READ(CAVM_MDC_INT_W1C));
+	debug2ras("MDC_ECC_STATUS r %llx\n", CSR_READ(CAVM_MDC_ECC_STATUS));
+
+	for (lmc_no = 0; lmc_no < MAX_LMC; lmc_no++) {
+		union cavm_lmcx_ras_err00status stat;
+
+		stat.u = CSR_READ(CAVM_LMCX_RAS_ERR00STATUS(lmc_no));
+
+		if (!stat.s.v)
+			continue;
+
+#define PR(csr)	debug_ras("%d " #csr " r %llx\n", \
+			lmc_no, CSR_READ(csr(lmc_no)))
+		PR(CAVM_LMCX_RAS_ERR00STATUS);
+		PR(CAVM_LMCX_RAS_ERR00FR);
+		PR(CAVM_LMCX_RAS_ERR00ADDR);
+		PR(CAVM_LMCX_RAS_ERR00CTLR);
+		PR(CAVM_LMCX_RAS_ERR00MISC0);
+		PR(CAVM_LMCX_RAS_ERR00MISC1);
+#undef PR
+		arm_err_nn(1, CAVM_LMCX_RAS_ERR00, lmc_no);
+	}
+}
+
 static int check_cn9xxx_mdc(union cavm_mdc_ecc_status st, int quiet)
 {
 	const char *unit = "";
@@ -564,7 +591,7 @@ uint64_t otx2_mdc_isr(uint32_t id, uint32_t flags, void *cookie)
 {
 	union cavm_mdc_ecc_status st;
 	uint64_t mdc_int = CSR_READ(CAVM_MDC_INT_W1C);
-	int burst = 10;
+	int burst = 0;
 	int quiet = 0;
 
 	if (!~id) {
@@ -576,15 +603,18 @@ uint64_t otx2_mdc_isr(uint32_t id, uint32_t flags, void *cookie)
 		static int seen;
 
 		if (id && ++seen && !(seen & (seen - 1)))
-			debug_ras("%s(%x) #%d\n", __func__, id, seen);
+			debug_ras("%s(%x) st:%llx #%d\n", __func__, id,
+				CSR_READ(CAVM_MDC_ECC_STATUS), seen);
 		if (!mdc_int)
 			return 0;
 	}
 
+	check_lmc_ras();
+
 	do {
-		st.u = CSR_READ(CAVM_MDC_ECC_STATUS);
 		CSR_WRITE(CAVM_MDC_INT_W1C, 1);
-		if (!(st.u && edac_alive))
+		st.u = CSR_READ(CAVM_MDC_ECC_STATUS);
+		if (!st.u)
 			break;
 		quiet |= mdc_dup(st.u);
 	} while (check_cn9xxx_mdc(st, quiet) && --burst > 0);
@@ -691,12 +721,7 @@ int edac_poll(int hd)
 {
 	static int cnt;
 
-	if (++cnt < 5 || !(cnt & (cnt - 1)))
-		debug3ras("%s #%d a%d\n", __func__, cnt, edac_alive);
-
 	/* skip while OCTEONTX_EDAC SMC active */
-	if (!edac_alive)
-		return 0;
 	if (!__atomic_fetch_add(&edac_active, 1, __ATOMIC_SEQ_CST)) {
 		/* one call sufficient, thery don't inspect args ... */
 		otx2_mdc_isr(0, 0, NULL);
@@ -710,13 +735,10 @@ int edac_poll(int hd)
 		 *   tx2_ap_ras_isr(_this_cpu_, 0, NULL);
 		 *   ..
 		 */
+
+		/* age out the duplicate-error filter */
+		mdc_dup(0);
 	}
-
-	if (edac_alive == 1)
-		edac_alive++;
-
-	/* age out the duplicate-error filter */
-	mdc_dup(0);
 
 	__atomic_fetch_sub(&edac_active, 1,
 			   __ATOMIC_SEQ_CST);
@@ -830,7 +852,6 @@ static int ras_init_mccs(void)
 	octeontx_write64(vctl, irq);
 	octeontx_write64(vaddr, CAVM_GICD_SETSPI_NSR | 1);
 
-	CSR_WRITE(CAVM_MDC_INT_W1C, 1ULL);
 	CSR_WRITE(CAVM_MDC_INT_ENA_W1S, 1ULL);
 
 	/* clear any err signatures left from BIST */
@@ -882,9 +903,6 @@ debug_ras("edac_timer %x\n", edac_timer);
 		ERROR("edac_timer error %d\n", edac_timer);
 #endif
 
-	edac_alive = 1; // replace by ...
-	__atomic_fetch_sub(&edac_active, 1, __ATOMIC_SEQ_CST);
-
 	return 0;
 }
 
@@ -905,4 +923,106 @@ int plat_dram_ras_init(void)
 	ras_init_mccs();
 	debug_ras("RAS handlers registered\n");
 	return 0;
+}
+
+/* smc_ras support ... */
+
+static union mdc_const mc;	/* cached geometry */
+static int ce, he, ne, re;	/* endpoints */
+static uint64_t rsp_last = ~0;	/* filters out repeat values */
+
+int64_t plat_ras_mdc_rom(u_register_t addr)
+{
+	return CSR_READ(CAVM_MDC_RAS_ROMX(addr));
+}
+
+int64_t plat_ras_mdc_limits(void)
+{
+	union mdc_win_cmd lim;
+
+	if (!mc.u) {
+		mc.u = CSR_READ(CAVM_MDC_CONST);
+		ce = mc.s.max_chain_id;
+		he = mc.s.max_hub_id;
+		ne = mc.s.max_node_id;
+
+		if (IS_OCTEONTX_PN(read_midr(), T98PARTNUM))
+			re = 0x100 + (31 << 2);
+		else
+			re = 0x80 + (31 << 2);
+	}
+
+	lim.u = 0;
+	lim.s.csr_id = re;
+	lim.s.node_id = ne;
+	lim.s.hub_id = he;
+	lim.s.chain_id = ce;
+
+	return lim.u;
+}
+
+int64_t plat_ras_mdc_rw(u_register_t x2, u_register_t x3, u_register_t x4)
+{
+	union mdc_win_cmd addr = { .u = x2 };
+	union mdc_win_cmd cmd = {.u = 0 };
+	union mdc_win_dat dat = {.u = 0 };
+	union mdc_win_dat rsp;
+
+	int c = addr.s.chain_id;
+	int h = addr.s.hub_id;
+	int n = addr.s.node_id;
+	int r = addr.s.csr_id;
+	int w = addr.s.we;
+	uint32_t val = x3;
+	uint32_t mask = x4;
+
+	plat_ras_mdc_limits();
+
+	if (c > ce || h > he || n > ne || r > re)
+		return -EINVAL;
+	if (r >= 0 && (r & 3))
+		return -EINVAL;
+
+	cmd.s.chain_id = c;
+	cmd.s.hub_id = h;
+	cmd.s.node_id = n;
+	cmd.s.csr_id = r;
+
+	if (!w) {
+		rsp = mdn_rd(cmd);
+		if (rsp.u != rsp_last)
+			printf("%d.%d.%d.%x %llx\n", c, h, n, r, rsp.u);
+		rsp_last = rsp.u;
+		return rsp.u;
+	}
+
+	/* restrict what can be written */
+	switch (r) {
+	case MDN_ECC_CONFIG:
+		/* allow double-bit injection in debug build */
+		mask &= 6;
+#if !DEBUG
+		/* only single-bit injection in normal build */
+		switch (val & mask) {
+		case 0:
+		case 2:
+		case 4:
+			break;
+		default:
+			return -EACCES;
+		}
+#endif
+		break;
+	default:
+		mask = 0;
+		break;
+	}
+	if (!mask)
+		return -EACCES;
+	dat = mdn_rd(cmd);
+	dat.s.data &= ~mask;
+	dat.s.data |= (val & mask);
+	printf("chn %d.%d.%d.%x := %x\n",
+	       c, h, n, r, dat.s.data);
+	return mdn_wr(cmd, dat);
 }

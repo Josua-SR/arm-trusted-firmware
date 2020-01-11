@@ -82,6 +82,7 @@ BL31_SOURCES		+=	plat/marvell/octeontx/otx2/aarch64/plat_octeontx_common.S	\
 				plat/marvell/octeontx/otx2/f95/plat_f95_svc.c  \
 				plat/marvell/octeontx/otx2/lmc_ras.c \
 				plat/marvell/octeontx/otx2/mdc_ras.c		\
+				plat/marvell/octeontx/otx2/smc_ras.c		\
 
 ifdef NT_FW_CONFIG
     $(eval $(call add_define,NT_FW_CONFIG))
