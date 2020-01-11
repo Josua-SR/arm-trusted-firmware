@@ -754,8 +754,6 @@ static int ras_init_mcc(int mcc)
 	int lmcoe;
 
 	debug_ras("%s(%d)\n", __func__, mcc);
-	debug_ras("Installing otx2_mcc_isr\n");
-
 
 	mc.u = CSR_READ(CAVM_MCCX_CONST(mcc));
 
@@ -822,8 +820,6 @@ static int ras_init_mccs(void)
 	ras_log_regions();
 	for (mcc = 0; mcc < num_mccs; mcc++)
 		ras_init_mcc(mcc);
-
-	debug_ras("Registering MDC interrupt handlers\n");
 
 	CSR_WRITE(CAVM_MDC_INT_W1C, ~0ULL);
 	CSR_WRITE(CAVM_MDC_INT_ENA_W1C, ~0ULL);

@@ -189,10 +189,6 @@ void bl31_platform_setup()
 
 	/* Intialize the power controller */
 	plat_pwrc_setup();
-
-#if RAS_EXTENSION
-	ras_init();
-#endif
 }
 
 /*******************************************************************************

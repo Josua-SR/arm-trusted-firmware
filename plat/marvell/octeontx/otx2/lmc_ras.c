@@ -39,7 +39,7 @@
 #include <lib/extensions/ras.h>
 #endif /* RAS_EXTENSION */
 
-#define MAX_MCS				4
+#define MAX_MCS		4
 
 #define ECC_EL3_TEST
 
@@ -1401,8 +1401,7 @@ int lmcoe_ras_setup(int mcc, int lmcoe)
 	union cavm_mccx_lmcoex_ras_int_ena_w1s int_ena;
 	static int irq = -1;
 
-	INFO("%s(%d,%d)\n", __func__, mcc, lmcoe);
-	INFO("Installing otx2_mcc_isr\n");
+	debug_ras("%s(%d,%d)\n", __func__, mcc, lmcoe);
 
 	int vec = lmcoe_ras_int(lmcoe);
 
@@ -1754,3 +1753,12 @@ int64_t plat_ras_lmc_inject(u_register_t x2, u_register_t x3,
 
 	return ret;
 }
+
+/*
+ * Placeholder for real ISR.  This is required by RAS infrastructure changes.
+ */
+uint64_t otx2_lmc_isr(uint32_t id, uint32_t flags, void *cookie)
+{
+	return 0;
+}
+
