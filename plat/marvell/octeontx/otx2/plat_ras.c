@@ -66,7 +66,13 @@ static void plat_ras_initialize_interrupt_array(void)
 {
 	int i, idx = 0;
 
-	/* Configure all MCC LMCOE IRQs */
+	for (i = 0; i < MDC_SPI_IRQS; i++) {
+		otx2_ras_interrupts[idx].intr_number = MDC_SPI_IRQ();
+		otx2_ras_interrupts[idx].err_record =
+				&otx2_err_records[RAS_MDC_HANDLER];
+		idx++;
+	}
+
 	for (i = 0; i < MCC_SPI_IRQS; i++) {
 		otx2_ras_interrupts[idx].intr_number = MCC_SPI_IRQ(i);
 		otx2_ras_interrupts[idx].err_record =
@@ -74,13 +80,14 @@ static void plat_ras_initialize_interrupt_array(void)
 		idx++;
 	}
 
-	/* Configure all MDC IRQs */
-	for (i = 0; i < MDC_SPI_IRQS; i++) {
-		otx2_ras_interrupts[idx].intr_number = MDC_SPI_IRQ();
+#ifdef RAS_LMC_HANDLER
+	for (i = 0; i < LMC_SPI_IRQS; i++) {
+		otx2_ras_interrupts[idx].intr_number = LMC_SPI_IRQ(i);
 		otx2_ras_interrupts[idx].err_record =
-				&otx2_err_records[RAS_MDC_HANDLER];
+				&otx2_err_records[RAS_LMC_HANDLER];
 		idx++;
 	}
+#endif
 }
 
 int otx2_ras_init(void)
