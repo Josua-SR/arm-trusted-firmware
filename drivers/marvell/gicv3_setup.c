@@ -25,6 +25,7 @@
 #include <drivers/arm/gicv3.h>
 #include <plat/common/platform.h>
 #include <bl31/interrupt_mgmt.h>
+#include <octeontx_irqs_def.h>
 
 #ifndef PLAT_RAS_PRI
 #define PLAT_RAS_PRI		PLAT_IRQ_PRI

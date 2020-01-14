@@ -181,11 +181,6 @@ void bl31_platform_setup()
 	octeontx_gic_init();
 	timers_init();
 	octeontx_init_mmap_lock();
-	/* This API is platform dependent. It can be any boot time
-	 * initialization that needs to be performed related to
-	 * firmware services provided in BL31
-	 */
-	plat_octeontx_setup();
 
 	/* Intialize the power controller */
 	plat_pwrc_setup();
@@ -228,6 +223,13 @@ void bl31_plat_arch_setup()
 
 void bl31_plat_runtime_setup(void)
 {
+	timers_start();
+
+	/* This API is platform dependent. It can be any boot time
+	 * initialization that needs to be performed related to
+	 * firmware services provided in BL31
+	 */
+	plat_octeontx_setup();
 #ifndef DEBUG
 	console_uninit();
 #endif

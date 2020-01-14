@@ -217,7 +217,11 @@ int timer_set_period(int hd, uint32_t period)
 int timers_init(void)
 {
 	debug_printf("TIMER: %s\n", __func__);
-	plat_timers_init();
+	return plat_timers_init();
+}
+
+int timers_start(void)
+{
 	return plat_timer_register_irq(hw_timer_isr);
 }
 

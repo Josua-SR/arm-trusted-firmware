@@ -19,14 +19,13 @@
 #include <plat_board_cfg.h>
 #include <plat_flr.h>
 #include <plat_octeontx.h>
-#include <lmc_ras.h>
 #include <octeontx_utils.h>
 #include <octeontx_security.h>
 #include <sh_fwdata.h>
 
 #if RAS_EXTENSION
 #include <plat_ras.h>
-#endif /* RAS_EXTENSION */
+#endif
 
 static int disable_ooo;
 
@@ -53,9 +52,9 @@ void plat_octeontx_setup(void)
 
 #if RAS_EXTENSION
 	otx2_ras_init();
+	plat_dram_ras_init();
 #endif /* RAS_EXTENSION */
 
-	plat_dram_ras_init();
 
 	/* Configure PEM0 (EP) streams to use secure world access.
 	 * PEM0 streams must be secure to support host remote utils' memory

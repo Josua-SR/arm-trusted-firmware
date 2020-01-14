@@ -413,6 +413,13 @@ void plat_add_mmio(void)
 	mmap_add_region(NT_FW_CONFIG_BASE, NT_FW_CONFIG_BASE,
 			NT_FW_CONFIG_LIMIT, (MT_MEMORY | MT_RW | MT_NS));
 #endif
+
+	for (i = 0; i < MAX_CCU; i++) {
+		add_map_record(CAVM_CCU_BAR_E_CCUX_PF_BAR0(i),
+			       CAVM_CCU_BAR_E_CCUX_PF_BAR0_SIZE, attr);
+		add_map_record(CAVM_CCU_BAR_E_CCUX_PF_BAR4(i),
+			       CAVM_CCU_BAR_E_CCUX_PF_BAR4_SIZE, attr);
+	}
 }
 
 void plat_set_gpio_msix_vectors(int gpio_num, int irq_num, int enable)

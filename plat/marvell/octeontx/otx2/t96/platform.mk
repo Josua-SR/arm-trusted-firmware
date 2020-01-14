@@ -83,6 +83,7 @@ BL31_SOURCES		+=	plat/marvell/octeontx/otx2/aarch64/plat_octeontx_common.S	\
 				plat/marvell/octeontx/otx2/plat_legacy_pm_ops.c		\
 				plat/marvell/octeontx/otx2/t96/plat_t96_svc.c  \
 				plat/marvell/octeontx/otx2/lmc_ras.c		\
+				plat/marvell/octeontx/otx2/mdc_ras.c		\
 				plat/marvell/octeontx/otx2/plat_ras.c		\
 				lib/extensions/ras/std_err_record.c		\
 				lib/extensions/ras/ras_common.c			\
@@ -111,7 +112,6 @@ ifdef MARVELL_PHY_6141
     BL31_LIBS         += lib/libphy/libphy_88x6141.a
     BL31_SOURCES      += drivers/marvell/phy/phy_marvell_6141.c
 endif
-
 MARVELL_PHY_1548 := 1
 ifdef MARVELL_PHY_1548
     TF_CFLAGS_aarch64 += -DMARVELL_PHY_1548

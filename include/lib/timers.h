@@ -18,6 +18,7 @@ typedef struct _timer_t {
 } timer_data;
 
 int timers_init(void);
+int timers_start(void);
 
 int timer_stop(int hd);
 int timer_set_period(int hd, uint32_t period);
