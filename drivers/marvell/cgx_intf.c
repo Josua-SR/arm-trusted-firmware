@@ -24,6 +24,7 @@
 #include <gser_internal.h>
 #include <platform_setup.h>
 #include <gsern/gsern.h>
+#include <smi.h>
 
 #ifdef NT_FW_CONFIG
 #include <plat_npc_mcam_profile.h>
@@ -2257,6 +2258,71 @@ void cgx_set_supported_link_modes(int cgx_id, int lmac_id)
 	sh_fwdata_set_supported_link_modes(cgx_id, lmac_id);
 }
 
+static void cgx_check_for_presence_of_phy(int cgx_id, int lmac_id)
+{
+	int mode, dev, reg, phy_id, phy_id_mask, val;
+	cgx_lmac_config_t *lmac;
+	phy_config_t *phy;
+
+	if (strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9", 4))
+		return; /* if board is not ebb9x, then do nothing */
+
+	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	phy = &lmac->phy_config;
+
+	if (!lmac->phy_present)
+		return;
+
+	switch (phy->type) {
+	case PHY_MARVELL_5113:
+		mode = CLAUSE45;
+		dev = PHY_88X5113_ID_DEV;
+		reg = PHY_88X5113_ID_REG;
+		phy_id = PHY_88X5113_ID,
+		phy_id_mask = PHY_88X5113_ID_MASK;
+		break;
+
+	case PHY_VITESSE_8574:
+		mode = CLAUSE22;
+		dev = -1;
+		reg = MII_PHY_ID1_REG;
+		phy_id = PHY_VSC8574_ID1;
+		phy_id_mask = PHY_VSC8574_ID_MASK;
+		break;
+
+	default:
+		return;
+	}
+
+	val = phy_mdio_read(phy, mode, dev, reg) & phy_id_mask;
+	if (val != phy_id) {
+		/* PHY that was specified in device tree is not detected on the
+		 * I/O module.
+		 */
+		switch (lmac->mode_idx) {
+		case QLM_MODE_SGMII:
+		case QLM_MODE_QSGMII:
+			/* These QLM modes require a PHY.
+			 * Keep the lmac->phy_present flag at 1 so that the PHY
+			 * driver will run and report errors (because the PHY is
+			 * missing).
+			 */
+			break;
+
+		default:
+			/* Mark the PHY as not present so that the PHY driver
+			 * will not run; otherwise it will report errors.
+			 * For most Ethernet QLM modes, a PHY is not required.
+			 */
+			debug_cgx_intf("%s: %d:%d PHY type %d not detected in I/O module\n",
+				       __func__, cgx_id, lmac_id, phy->type);
+			lmac->phy_present = 0;
+			memset(phy, 0, sizeof(*phy));
+			break;
+		}
+	}
+}
+
 /* This function should be called once during boot time */
 void cgx_fw_intf_init(void)
 {
@@ -2274,6 +2340,7 @@ void cgx_fw_intf_init(void)
 				lmac_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx].lmac_cfg[lmac];
 				lmac_ctx = &lmac_context[cgx][lmac];
 				if (lmac_cfg->lmac_enable) {
+					cgx_check_for_presence_of_phy(cgx, lmac);
 					if (lmac_cfg->phy_present) {
 						/* If PHY is present, look up for PHY
 						 * driver and init

@@ -43,6 +43,13 @@
 /* PHY Identifies for various PHYs supported */
 #define PHY_VSC8574_ID1			0x0007
 #define PHY_VSC8574_ID2			0x04A2
+#define PHY_88X5113_ID			0x0b40
+#define PHY_88X5113_ID_REG		0x1003
+#define PHY_88X5113_ID_DEV		0x0001
+
+/* PHY ID masks */
+#define PHY_VSC8574_ID_MASK		0xffff
+#define PHY_88X5113_ID_MASK		0xfff0
 
 /* PHY flags */
 #define PHY_FLAG_SUPPORTS_CHANGING_MOD_TYPE 1

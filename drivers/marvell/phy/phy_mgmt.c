@@ -321,7 +321,13 @@ int phy_mdio_read(phy_config_t *phy, int mode, int devad, int reg)
 {
 	int val = 0;
 
+	if (phy->mux_switch)
+		smi_set_switch(phy, 1); /* enable the switch */
+
 	val = smi_read(phy->mdio_bus, mode, phy->addr, devad, reg);
+
+	if (phy->mux_switch)
+		smi_set_switch(phy, 0); /* Disable the switch */
 
 	return val;
 }
