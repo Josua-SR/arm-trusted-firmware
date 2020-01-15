@@ -30,6 +30,7 @@
 
 static int disable_ooo;
 
+extern void plat_armtrace_init(void);
 /* Any SoC family specific setup
  * to be done in BL31 can be initialized
  * in this API. If there are any platform
@@ -63,6 +64,9 @@ void plat_octeontx_setup(void)
 	 * initialization.
 	 */
 	octeontx_configure_pem_ep_security(0 /* PEM0 */, 1 /* secure */);
+
+	/* otx2 trace init */
+	plat_armtrace_init();
 }
 
 /*

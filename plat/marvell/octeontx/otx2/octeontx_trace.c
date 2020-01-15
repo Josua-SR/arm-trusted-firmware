@@ -21,6 +21,40 @@
 /* Secure trace buffer partitioned among all cpus */
 char arm_tracebuf[ARM_TRACEBUF_SIZE] __aligned(CACHE_WRITEBACK_GRANULE);
 
+void plat_armtrace_init(void)
+{
+	int i;
+	uint64_t base1, base2;
+	uint64_t size = PAGE_SIZE;
+	unsigned int attr = MT_DEVICE | MT_RW | MT_NS;
+
+	printf("Disabling ETM/ETR for %d cores\n", PLATFORM_CORE_COUNT);
+
+	/* Ensure trace is stopped before we enter non secure world */
+	for (i = 0; i < PLATFORM_CORE_COUNT; i++) {
+		base1 = ROUND_DOWN(CAVM_TRCX_TRCPRGCTLR(i), PAGE_SIZE);
+		base2 = ROUND_DOWN(CAVM_ETRX_CONTROL(i), PAGE_SIZE);
+		mmap_add_dynamic_region(base1, base1, size, attr);
+		mmap_add_dynamic_region(base2, base2, size, attr);
+
+		/* Unlock ETM */
+		CSR_WRITE(CAVM_TRCX_TRCLAR(i), 0xc5acce55);
+
+		/* Disable ETM */
+		CSR_WRITE(CAVM_TRCX_TRCPRGCTLR(i), 0x0);
+
+		/* Unlock ETR */
+		CSR_WRITE(CAVM_ETRX_LAR(i), 0xc5acce55);
+
+		/* Disable ETR */
+		CSR_WRITE(CAVM_ETRX_CONTROL(i), 0x0);
+
+
+		mmap_remove_dynamic_region(base1, size);
+		mmap_remove_dynamic_region(base2, size);
+	}
+}
+
 uint64_t arm_trace_alloc_sbuf(uint64_t size, uint64_t cpu, int llc_lock_req,
 			      uint64_t *addr)
 {
