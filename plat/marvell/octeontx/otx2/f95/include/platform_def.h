@@ -199,6 +199,7 @@
 #define MAX_RVU_PFS		16
 
 /* Priority levels for OcteonTX platforms */
+#define PLAT_RAS_PRI			0x10
 #define PLAT_IRQ_PRI			0x30
 
 /* OcteonTX platforms use 3 upper bits of secure interrupt priority */
