@@ -17,8 +17,10 @@
  */
 uint64_t otx2_mdc_isr(uint32_t id, uint32_t flags, void *cookie);
 uint64_t otx2_mcc_isr(uint32_t id, uint32_t flags, void *cookie);
+uint64_t otx2_lmc_isr(uint32_t id, uint32_t flags, void *cookie);
 int otx2_mdc_probe(const struct err_record_info *info, int *probe_data);
 int otx2_mcc_probe(const struct err_record_info *info, int *probe_data);
+int otx2_lmc_probe(const struct err_record_info *info, int *probe_data);
 
 /*
  * API of plat_ras.c
@@ -85,10 +87,17 @@ extern const char *ras_serr_str[];
 extern void __arm_err_nn(int thresh, uint64_t fr_r, uint64_t ctlr_r,
 						    uint64_t misc0_r);
 
-/* DEBUG_RAS requires DEBUG, multiplier determines detail depth */
+/* DEBUG_RAS determines depth of debug detail:
+ * when DEBUG==0, all is disabled
+ * when DEBUG==1, multiplier selects:
+ * 0 for suppressing RAS debug even on DEBUG=1 builds;
+ * 1 for normally verbose DEBUG=1 operation;
+ * 2,3.. for increasingly verbose chatter
+ */
 #define DEBUG_RAS (DEBUG * 1)
 
 #ifndef noprintf
+/* tell GCC to check code sanity, even when emitting no debug code */
 __attribute__ ((format (printf, 1, 2)))
 static inline int noprintf(const char *fmt, ...)
 {

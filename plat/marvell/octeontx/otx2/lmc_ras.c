@@ -33,7 +33,6 @@
 #include <drivers/delay_timer.h>
 #include <octeontx_ehf.h>
 #include <lib/el3_runtime/context_mgmt.h>
-#include <octeontx_ehf.h>
 
 #if RAS_EXTENSION
 #include <lib/extensions/ras.h>
@@ -142,8 +141,11 @@ ecc_syndrome_to_bytebit[256] = {
 	[0x10] = 0x94, [0x20] = 0x95, [0x40] = 0x96, [0x80] = 0x97
 };
 
-int64_t __ras_dram_ecc_single_bit_errors[MAX_LMC];
-int64_t __ras_dram_ecc_double_bit_errors[MAX_LMC];
+#ifdef EDAC_POLLED
+static int edac_timer = -1; /* periodic poll */
+#endif
+
+int edac_alive; /* protect against EDAC_POLLED early polling */
 
 /**
  * Add 2 bits into the LMC address to represent the LMC the address
@@ -525,8 +527,10 @@ static uint64_t ras_ccs_convert_lmc_to_pa(uint64_t _lmc_addr,
 
 		attr.u = CSR_READ(CAVM_CCS_ASC_REGIONX_ATTR(region));
 
-		/* check if region is enabled */
-		if (!(attr.s.ns_en || attr.s.s_en))
+		/* check if region is enabled & populated */
+		if (!(attr.s.ns_en | attr.s.s_en))
+			continue;
+		if (!attr.s.lmc_mask)
 			continue;
 
 		debug2ras("ASC_R%d: Checking Conversion from LMC to PA\n",
@@ -951,8 +955,10 @@ static int pa_to_lmc(uint64_t pa)
 			continue;
 		attr.u = CSR_READ(CAVM_CCS_ASC_REGIONX_ATTR(region));
 
-		/* check if region is enabled */
-		if (!(attr.s.ns_en || attr.s.s_en))
+		/* check if region is enabled & populated */
+		if (!(attr.s.ns_en | attr.s.s_en))
+			continue;
+		if (!attr.s.lmc_mask)
 			continue;
 
 		adr_ctl.u = CSR_READ(CAVM_CCS_ADR_CTL);
@@ -1195,8 +1201,6 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 					       &status, &erraddr, &syns_left);
 
 		err_type = "double";
-		ras_atomic_add64_nosync(
-			&__ras_dram_ecc_double_bit_errors[lmc], 1);
 		fatal++;
 	} else if (ras_int.s.err01 || ras_int.s.err00) {
 		/* check for single bit errors
@@ -1250,8 +1254,6 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 				   mcc, lmcoe);
 		}
 		err_type = "single";
-		ras_atomic_add64_nosync(
-			&__ras_dram_ecc_single_bit_errors[lmc], 1);
 	}
 
 	paddr = erraddr.s.paddr;
@@ -1390,6 +1392,77 @@ static int lmcoe_ras_int(int lmcoe)
 	return -1;
 };
 
+/* some events are indexed by linear LMC */
+int lmc_ras_setup(int lmc_no)
+{
+	uint64_t bar4 = CAVM_LMC_BAR_E_LMCX_PF_BAR4(lmc_no);
+	uint64_t vaddr;
+	uint64_t vctl;
+#if !RAS_EXTENSION
+	int rc = 0;
+#endif /* !RAS_EXTENSION */
+	union cavm_lmcx_ras_int_ena_w1s int_ena;
+	static int irq = -1;
+	int vec = CAVM_LMC_INT_VEC_E_RAS_INT;
+
+	debug_ras("%s(%d)\n", __func__, lmc_no);
+
+	if (vec < 0)
+		return -EINVAL;
+
+	CSR_WRITE(CAVM_LMCX_RAS_INT_ENA_W1C(lmc_no),
+		  ~0ULL);
+
+	vaddr = bar4 + 0x10 * vec;
+	vctl = vaddr + 0x8;
+
+	if (irq < 0 || LMC_SPI_IRQS > 1) {
+		irq = LMC_SPI_IRQ(lmc_no);
+#if !RAS_EXTENSION
+		rc = octeontx_ehf_register_irq_handler(irq, otx2_mcc_isr);
+		if (rc) {
+			debug_ras("e?%d otx2_mcc_isr(%x), mcc: %d\n",
+			     rc, irq, mcc);
+			return rc;
+		}
+#endif /* !RAS_EXTENSION */
+	}
+
+	debug_ras("Enable MSIX%d for LMC%d, irq:%d\n",
+	     vec, lmc_no, irq);
+
+	/* configure non-secure register to allow setting of secure SPI */
+	{
+		int reg, spi_shift;
+
+		/* there are 16 2-bit SPI fields in each NSACRX reg */
+		reg = irq / 16;              /* 16 SPIs per reg */
+		spi_shift = (irq % 16) * 2;  /* 2 bits per SPI */
+
+		/* set value of 01 to permit "set pending" */
+		CSR_MODIFY(c, CAVM_GICD_NSACRX(reg),
+			   c.s.vec &= ~(3 << spi_shift);
+			   c.s.vec |= 1 << spi_shift);
+	}
+	octeontx_write64(vctl, irq);
+	/* Workaround for [stream] security issue; use non-secure register */
+	octeontx_write64(vaddr, CAVM_GICD_SETSPI_NSR | 1);
+
+	debug_ras("addr: 0x%llx, ctl: 0x%llx\n",
+	     octeontx_read64(vaddr), octeontx_read64(vctl));
+
+	CSR_WRITE(CAVM_LMCX_RAS_INT_ENA_W1C(lmc_no), ~0ULL);
+
+	arm_err_nn(1, CAVM_LMCX_RAS_ERR00, lmc_no);
+
+	int_ena.u = 0;
+	int_ena.s.err00 = 1;
+	CSR_WRITE(CAVM_LMCX_RAS_INT_ENA_W1S(lmc_no), int_ena.u);
+
+	return 0;
+}
+
+/* others indexed by (MCC, odd/even) */
 int lmcoe_ras_setup(int mcc, int lmcoe)
 {
 	uint64_t bar4 = CAVM_MCC_BAR_E_MCCX_PF_BAR4(mcc);
@@ -1407,6 +1480,9 @@ int lmcoe_ras_setup(int mcc, int lmcoe)
 
 	if (vec < 0)
 		return -EINVAL;
+
+	/* the non-LMCOE events... */
+	lmc_ras_setup(mcc_lmc(mcc, lmcoe));
 
 	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_INT_ENA_W1C(mcc, lmcoe),
 		  ~0ULL);
@@ -1439,8 +1515,9 @@ int lmcoe_ras_setup(int mcc, int lmcoe)
 	debug_ras("Enable MSIX%d for MCC%d.LMCOE.%d, irq:%d\n",
 	     vec, mcc, lmcoe, irq);
 
-	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_INT_ENA_W1C(mcc, lmcoe),
-							~0ULL);
+	CSR_WRITE(
+		CAVM_MCCX_LMCOEX_RAS_INT_ENA_W1C(mcc, lmcoe),
+		~0ULL);
 
 	/* configure non-secure register to allow setting of secure SPI */
 	{
@@ -1462,7 +1539,10 @@ int lmcoe_ras_setup(int mcc, int lmcoe)
 	debug_ras("addr: 0x%llx, ctl: 0x%llx\n",
 	     octeontx_read64(vaddr), octeontx_read64(vctl));
 
-	arm_err_nn(1, CAVM_LMCX_RAS_ERR00, mcc_lmc(mcc, lmcoe));
+	CSR_WRITE(
+		CAVM_MCCX_LMCOEX_RAS_INT_ENA_W1C(mcc, lmcoe),
+		~0ULL);
+
 	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR00, mcc, lmcoe);
 	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR01, mcc, lmcoe);
 	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR02, mcc, lmcoe);
@@ -1482,8 +1562,9 @@ int lmcoe_ras_setup(int mcc, int lmcoe)
 	int_ena.s.err06 = 1;
 	int_ena.s.err07 = 1;
 
-	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_INT_ENA_W1S(mcc, lmcoe),
-		  int_ena.u);
+	CSR_WRITE(
+		CAVM_MCCX_LMCOEX_RAS_INT_ENA_W1S(mcc, lmcoe),
+		int_ena.u);
 
 	return 0;
 }
@@ -1762,3 +1843,20 @@ uint64_t otx2_lmc_isr(uint32_t id, uint32_t flags, void *cookie)
 	return 0;
 }
 
+#if RAS_EXTENSION
+int otx2_lmc_probe(const struct err_record_info *info, int *probe_data)
+{
+	union cavm_lmcx_ras_int lmc_ras_int;
+	int lmc;
+
+	for (lmc = 0; lmc < MAX_LMC; lmc++) {
+		lmc_ras_int.u = CSR_READ(CAVM_LMCX_RAS_INT(lmc));
+		if (lmc_ras_int.u) {
+			*probe_data = lmc;
+			return 1;
+		}
+	}
+
+	return 0;
+}
+#endif /* RAS_EXTENSION */

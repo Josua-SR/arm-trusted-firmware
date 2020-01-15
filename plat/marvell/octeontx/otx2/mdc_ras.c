@@ -631,8 +631,11 @@ int otx2_mcc_probe(const struct err_record_info *info, int *probe_data)
 		for (lmcoe = 0; lmcoe < mcc_const.s.lmcs; lmcoe++) {
 			lmcoe_ras_int.u = CSR_READ(
 					CAVM_MCCX_LMCOEX_RAS_INT(mcc, lmcoe));
-			if (lmcoe_ras_int.u)
+			if (lmcoe_ras_int.u) {
+				lmcoe |= (mcc << 8);
+				*probe_data = lmcoe;
 				return 1;
+			}
 		}
 	}
 

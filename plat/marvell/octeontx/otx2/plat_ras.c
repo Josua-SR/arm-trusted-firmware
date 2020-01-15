@@ -13,12 +13,16 @@
 /*
  * It is number of all RAS interrupts.
  */
-#define NUMBER_OF_RAS_INTERRUPTS	(MDC_SPI_IRQS + \
-					MCC_SPI_IRQS)
+#define NUMBER_OF_RAS_INTERRUPTS	(RAS_PPI_IRQS + \
+					MDC_SPI_IRQS + \
+					MCC_SPI_IRQS + \
+					LMC_SPI_IRQS)
 
-#define RAS_MDC_HANDLER			0
-#define RAS_MCC_HANDLER			1
-#define RAS_HANDLERS			2
+#define RAS_PPI_HANDLER			0
+#define RAS_MDC_HANDLER			1
+#define RAS_MCC_HANDLER			2
+#define RAS_LMC_HANDLER			3
+#define RAS_HANDLERS			4
 
 static int plat_ras_mdc_handler(const struct err_record_info *info,
 		int probe_data, const struct err_handler_data *const data)
@@ -46,9 +50,28 @@ static int plat_ras_mcc_handler(const struct err_record_info *info,
 	return ret;
 }
 
+static int plat_ras_lmc_handler(const struct err_record_info *info,
+		int probe_data, const struct err_handler_data *const data)
+{
+	int ret;
+
+	ret = otx2_lmc_isr(data->interrupt, data->flags, data->cookie);
+
+	/* issue EOI to controller */
+	plat_ic_end_of_interrupt(data->interrupt);
+
+	return ret;
+}
+
 struct ras_interrupt otx2_ras_interrupts[NUMBER_OF_RAS_INTERRUPTS];
 
 struct err_record_info otx2_err_records[RAS_HANDLERS] = {
+#ifdef notyet
+	[RAS_PPI_HANDLER] = {
+		.probe = otx2_ppi_probe,
+		.handler = plat_ras_ppi_handler,
+	},
+#endif
 	[RAS_MDC_HANDLER] = {
 		.probe = otx2_mdc_probe,
 		.handler = plat_ras_mdc_handler,
@@ -56,6 +79,10 @@ struct err_record_info otx2_err_records[RAS_HANDLERS] = {
 	[RAS_MCC_HANDLER] = {
 		.probe = otx2_mcc_probe,
 		.handler = plat_ras_mcc_handler,
+	},
+	[RAS_LMC_HANDLER] = {
+		.probe = otx2_lmc_probe,
+		.handler = plat_ras_lmc_handler,
 	},
 };
 
@@ -66,8 +93,15 @@ static void plat_ras_initialize_interrupt_array(void)
 {
 	int i, idx = 0;
 
+	for (i = 0; i < RAS_PPI_IRQS; i++) {
+		otx2_ras_interrupts[idx].intr_number = RAS_PPI_IRQ(i);
+		otx2_ras_interrupts[idx].err_record =
+				&otx2_err_records[RAS_PPI_HANDLER];
+		idx++;
+	}
+
 	for (i = 0; i < MDC_SPI_IRQS; i++) {
-		otx2_ras_interrupts[idx].intr_number = MDC_SPI_IRQ();
+		otx2_ras_interrupts[idx].intr_number = MDC_SPI_IRQ(i);
 		otx2_ras_interrupts[idx].err_record =
 				&otx2_err_records[RAS_MDC_HANDLER];
 		idx++;
@@ -80,14 +114,12 @@ static void plat_ras_initialize_interrupt_array(void)
 		idx++;
 	}
 
-#ifdef RAS_LMC_HANDLER
 	for (i = 0; i < LMC_SPI_IRQS; i++) {
 		otx2_ras_interrupts[idx].intr_number = LMC_SPI_IRQ(i);
 		otx2_ras_interrupts[idx].err_record =
 				&otx2_err_records[RAS_LMC_HANDLER];
 		idx++;
 	}
-#endif
 }
 
 int otx2_ras_init(void)
