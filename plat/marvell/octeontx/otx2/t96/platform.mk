@@ -85,12 +85,15 @@ BL31_SOURCES		+=	plat/marvell/octeontx/otx2/aarch64/plat_octeontx_common.S	\
 				plat/marvell/octeontx/otx2/plat_npc_mcam_profile.c	\
 				plat/marvell/octeontx/otx2/plat_legacy_pm_ops.c		\
 				plat/marvell/octeontx/otx2/t96/plat_t96_svc.c  \
-				plat/marvell/octeontx/otx2/lmc_ras.c		\
-				plat/marvell/octeontx/otx2/mdc_ras.c		\
-				plat/marvell/octeontx/otx2/smc_ras.c		\
-				plat/marvell/octeontx/otx2/plat_ras.c		\
-				lib/extensions/ras/std_err_record.c		\
-				lib/extensions/ras/ras_common.c			\
+
+ifeq (${RAS_EXTENSION},1)
+BL31_SOURCES		+=	plat/marvell/octeontx/otx2/smc_ras.c
+BL31_SOURCES		+=	plat/marvell/octeontx/otx2/lmc_ras.c
+BL31_SOURCES		+=	plat/marvell/octeontx/otx2/mdc_ras.c
+BL31_SOURCES		+=	plat/marvell/octeontx/otx2/plat_ras.c
+BL31_SOURCES		+=	lib/extensions/ras/std_err_record.c
+BL31_SOURCES		+=	lib/extensions/ras/ras_common.c
+endif
 
 ifdef NT_FW_CONFIG
     $(eval $(call add_define,NT_FW_CONFIG))
