@@ -26,14 +26,9 @@
 #include <tools_share/uuid.h>
 #include <plat/common/platform.h>
 #include <plat_ras.h>
-#include <timers.h>
 #include <drivers/delay_timer.h>
 #include <cavm-csrs-ccu.h>
 #include <octeontx_ehf.h>
-
-#ifdef EDAC_POLLED
-static int edac_timer = -1; /* periodic poll */
-#endif
 
 volatile int edac_active; /* exclude polling in startup & SMC */
 
@@ -716,38 +711,6 @@ int lmcoe_scrubber_setup(int mcc, int lmcoe)
 	return 0;
 }
 
-#ifdef EDAC_POLLED
-//static
-int edac_poll(int hd)
-{
-	static int cnt;
-
-	/* skip while OCTEONTX_EDAC SMC active */
-	if (!__atomic_fetch_add(&edac_active, 1, __ATOMIC_SEQ_CST)) {
-		/* one call sufficient, thery don't inspect args ... */
-		otx2_mdc_isr(0, 0, NULL);
-		otx2_mcc_isr(0, 0, NULL);
-
-		/* and, since they're all sharing the interrupt for ECC events,
-		 * we poll more devices, until their interrupt logic takes over
-		 *   tx2_smmu_ras_isr(0, 0, NULL);
-		 *   tx2_lmc_ras_isr(0, 0, NULL);
-		 *   tx2_nix_ras_isr(0, 0, NULL);
-		 *   tx2_ap_ras_isr(_this_cpu_, 0, NULL);
-		 *   ..
-		 */
-
-		/* age out the duplicate-error filter */
-		mdc_dup(0);
-	}
-
-	__atomic_fetch_sub(&edac_active, 1,
-			   __ATOMIC_SEQ_CST);
-
-	return 0;
-}
-#endif
-
 static int ras_init_mcc(int mcc)
 {
 	union cavm_mccx_const mc;
@@ -888,17 +851,6 @@ static int ras_init_mccs(void)
 			octeontx_write64(r, ~0ull);
 		}
 	}
-
-#ifdef EDAC_POLLED
-	/* until all IRQs serviced correctly, use 1Hz poll */
-	if (edac_timer < 0)
-		edac_timer = timer_create(TM_PERIODIC, 1000, edac_poll);
-debug_ras("edac_timer %x\n", edac_timer);
-	if (edac_timer >= 0)
-		timer_start(edac_timer);
-	else
-		ERROR("edac_timer error %d\n", edac_timer);
-#endif
 
 	return 0;
 }
