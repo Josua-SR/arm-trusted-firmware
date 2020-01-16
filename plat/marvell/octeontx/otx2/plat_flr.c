@@ -9,6 +9,7 @@
 #include <assert.h>
 #include <context.h>
 #include <octeontx_common.h>
+#include <octeontx_mmap_utils.h>
 #include <octeontx_utils.h>
 #include <plat/common/platform.h>
 #include <platform_def.h>
@@ -391,13 +392,14 @@ static int do_alias(void *ctx_h, uintptr_t pa, uint64_t *mask, uint8_t *rt_id,
 	 * Consider mapping func == 0 dynamically for cavm_rvu.c purposes.
 	 */
 	if ((func != 0) || (blk_id != 0)) {
-		rc = mmap_add_dynamic_region((RVU_PFX_FUNCX_BAR2(pf, func) | (blk_id << RVU_FUNC_ADDR_S_BLK_SHIFT)),
-					     (RVU_PFX_FUNCX_BAR2(pf, func) | (blk_id << RVU_FUNC_ADDR_S_BLK_SHIFT)),
-					     RVU_PF_FUNC_BAR2_SIZE,
-					     MT_DEVICE | MT_RW | MT_SECURE);
+		rc = octeontx_mmap_add_dynamic_region_with_sync(
+			(RVU_PFX_FUNCX_BAR2(pf, func) |
+				(blk_id << RVU_FUNC_ADDR_S_BLK_SHIFT)),
+			(RVU_PFX_FUNCX_BAR2(pf, func) |
+				(blk_id << RVU_FUNC_ADDR_S_BLK_SHIFT)),
+			RVU_PF_FUNC_BAR2_SIZE,
+			MT_DEVICE | MT_RW | MT_SECURE);
 		if (rc) {
-			ERROR("Unable to map memory rc=%d, addr=0x%llx, size=0x%llx\n",
-				rc, RVU_PFX_FUNCX_BAR2(pf, func), RVU_PF_FUNC_BAR2_SIZE);
 			return rc;
 		}
 	}
@@ -407,11 +409,11 @@ static int do_alias(void *ctx_h, uintptr_t pa, uint64_t *mask, uint8_t *rt_id,
 
 	/* Unmap this region */
 	if ((func != 0) || (blk_id != 0)) {
-		rc = mmap_remove_dynamic_region((RVU_PFX_FUNCX_BAR2(pf, func) | (blk_id << RVU_FUNC_ADDR_S_BLK_SHIFT)),
-						RVU_PF_FUNC_BAR2_SIZE);
+		rc = octeontx_mmap_remove_dynamic_region_with_sync(
+				(RVU_PFX_FUNCX_BAR2(pf, func) |
+					(blk_id << RVU_FUNC_ADDR_S_BLK_SHIFT)),
+				RVU_PF_FUNC_BAR2_SIZE);
 		if (rc) {
-			ERROR("Unable to remove mapped memory addr=0x%llx, size=0x%llx\n",
-				RVU_PFX_FUNCX_BAR2(pf, func), RVU_PF_FUNC_BAR2_SIZE);
 			return rc;
 		}
 	}
@@ -476,14 +478,12 @@ static int do_sel(void *ctx_h, uintptr_t pa, uint64_t *mask, uint8_t *rt_id,
 		 * RVU_AF_BAR2_SEL register
 		 */
 		addr = (uint64_t *)pa;
-		rc = mmap_add_dynamic_region(ROUND_DOWN(pa, PAGE_SIZE),
-					     ROUND_DOWN(pa, PAGE_SIZE),
-					     PAGE_SIZE,
-					     MT_DEVICE | MT_RW | MT_SECURE);
+		rc = octeontx_mmap_add_dynamic_region_with_sync(
+						ROUND_DOWN(pa, PAGE_SIZE),
+						ROUND_DOWN(pa, PAGE_SIZE),
+						PAGE_SIZE,
+						MT_DEVICE | MT_RW | MT_SECURE);
 		if (rc) {
-			ERROR(
-				"Unable to map memory rc=%d, addr=0x%lx, size=0x%x\n",
-				rc, ROUND_DOWN(pa, PAGE_SIZE), PAGE_SIZE);
 			return rc;
 		}
 	} else {
@@ -495,12 +495,10 @@ static int do_sel(void *ctx_h, uintptr_t pa, uint64_t *mask, uint8_t *rt_id,
 	     __func__, op, blk_id, (*addr & *mask));
 
 	if (!is_sel) {
-		rc = mmap_remove_dynamic_region(ROUND_DOWN(pa, PAGE_SIZE),
+		rc = octeontx_mmap_remove_dynamic_region_with_sync(
+						ROUND_DOWN(pa, PAGE_SIZE),
 						PAGE_SIZE);
 		if (rc) {
-			ERROR(
-				"Unable to remove mapped memory addr=0x%lx, size=0x%x\n",
-				ROUND_DOWN(pa, PAGE_SIZE), PAGE_SIZE);
 			return rc;
 		}
 	}

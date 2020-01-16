@@ -56,6 +56,7 @@
 #endif
 #include <bl31/ehf.h>
 #include <octeontx_ehf.h>
+#include <octeontx_mmap_utils.h>
 
 static entry_point_info_t bl33_image_ep_info, bl32_image_ep_info;
 
@@ -179,6 +180,7 @@ void bl31_platform_setup()
 	octeontx_gic_driver_init();
 	octeontx_gic_init();
 	timers_init();
+	octeontx_init_mmap_lock();
 	/* This API is platform dependent. It can be any boot time
 	 * initialization that needs to be performed related to
 	 * firmware services provided in BL31
