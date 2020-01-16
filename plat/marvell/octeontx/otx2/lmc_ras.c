@@ -34,6 +34,11 @@
 #include <octeontx_ehf.h>
 #include <lib/el3_runtime/context_mgmt.h>
 
+#if SDEI_SUPPORT
+#include <services/sdei.h>
+#include <octeontx_sdei.h>
+#endif
+
 #if RAS_EXTENSION
 #include <lib/extensions/ras.h>
 #endif /* RAS_EXTENSION */
@@ -1372,6 +1377,10 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 	if (av && !(secure ? s_reg : ns_reg))
 		ERROR("ASC_R%d(ns:%d s:%d) but sec:%d\n",
 			reg, ns_reg, s_reg, secure);
+
+#if SDEI_SUPPORT
+	sdei_dispatch_event(OCTEONTX_SDEI_RAS_MCC_EVENT);
+#endif
 
 	if (av && !fatal && repair)
 		ras_rewrite_cacheline(physaddr, secure);
