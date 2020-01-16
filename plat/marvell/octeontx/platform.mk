@@ -79,6 +79,10 @@ BL31_SOURCES		+=	drivers/arm/gic/common/gic_common.c		\
 				plat/common/plat_psci_common.c			\
 				plat/common/plat_gicv3.c			\
 
+ifeq (${SDEI_SUPPORT},1)
+BL31_SOURCES		+=	plat/marvell/octeontx/octeontx_sdei.c
+endif
+
 ENABLE_PLAT_COMPAT	:=	0
 
 CRASH_REPORTING		:=	1

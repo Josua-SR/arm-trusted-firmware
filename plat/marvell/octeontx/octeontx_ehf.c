@@ -31,6 +31,14 @@ ehf_pri_desc_t octeontx_exceptions[] = {
 	/* RAS Priority */
 	EHF_PRI_DESC(OCTEONTX_PRI_BITS, PLAT_RAS_PRI),
 #endif /* PLAT_RAS_PRI */
+
+#if SDEI_SUPPORT
+	/* Critical priority SDEI */
+	EHF_PRI_DESC(OCTEONTX_PRI_BITS, PLAT_SDEI_CRITICAL_PRI),
+
+	/* Normal priority SDEI */
+	EHF_PRI_DESC(OCTEONTX_PRI_BITS, PLAT_SDEI_NORMAL_PRI),
+#endif
 };
 
 /* Plug in OcteonTX2 exceptions to Exception Handling Framework. */

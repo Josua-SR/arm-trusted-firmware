@@ -66,6 +66,20 @@ static void initialize_interrupt_array(interrupt_prop_t *intr_array)
 		idx++;
 	}
 
+	/* If present, configure SDEI SGI (i.e. SDEI EVENT0) */
+#if SDEI_SGI_IRQS
+	/* only one should be present */
+	CASSERT(SDEI_SGI_IRQS == 1, bad_sdei_sgi_irqs_count);
+	/* must be a valid intr */
+	CASSERT(SDEI_SGI_IRQ >= 0, bad_sdei_sgi_irq_value);
+	intr_array[idx].intr_num = SDEI_SGI_IRQ;
+	intr_array[idx].intr_pri = PLAT_SDEI_NORMAL_PRI;
+	intr_array[idx].intr_grp = INTR_TYPE_EL3;
+	/* SGI's have edge-triggered behavior (from GIC v3 spec) */
+	intr_array[idx].intr_cfg = GIC_INTR_CFG_EDGE;
+	idx++;
+#endif
+
 	/* Configure GPIO IRQs */
 	for (i = 0; i < GPIO_SPI_IRQS; i++) {
 		intr_array[idx].intr_num = GPIO_SPI_IRQ(i);

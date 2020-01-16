@@ -53,6 +53,12 @@
 #define GPIO_SPI_IRQ_NSEC(irq)	-1
 #endif
 
+/* SDEI SGI definitions */
+#ifndef SDEI_SGI_IRQ
+#define SDEI_SGI_IRQS		0
+#define SDEI_SGI_IRQ		(-1)
+#endif
+
 /* BPHY definitions */
 #ifndef BPHY_PSM_IRQ
 #define BPHY_PSM_IRQS_NUMBER	0x0

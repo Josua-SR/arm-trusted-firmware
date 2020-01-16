@@ -29,6 +29,10 @@
 #include <drivers/delay_timer.h>
 #include <cavm-csrs-ccu.h>
 #include <octeontx_ehf.h>
+#if SDEI_SUPPORT
+#include <services/sdei.h>
+#include <octeontx_sdei.h>
+#endif
 
 volatile int edac_active; /* exclude polling in startup & SMC */
 
@@ -614,6 +618,10 @@ uint64_t otx2_mdc_isr(uint32_t id, uint32_t flags, void *cookie)
 			break;
 		quiet |= mdc_dup(st.u);
 	} while (check_cn9xxx_mdc(st, quiet) && --burst > 0);
+
+#if SDEI_SUPPORT
+	sdei_dispatch_event(OCTEONTX_SDEI_RAS_MDC_EVENT);
+#endif
 
 	return 0;
 }
