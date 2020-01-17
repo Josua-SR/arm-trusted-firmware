@@ -32,7 +32,8 @@ static int plat_ras_mdc_handler(const struct err_record_info *info,
 	ret = otx2_mdc_isr(data->interrupt, data->flags, data->cookie);
 
 	/* issue EOI to controller */
-	plat_ic_end_of_interrupt(data->interrupt);
+	if (data->interrupt)
+		plat_ic_end_of_interrupt(data->interrupt);
 
 	return ret;
 }
@@ -45,7 +46,8 @@ static int plat_ras_mcc_handler(const struct err_record_info *info,
 	ret = otx2_mcc_isr(data->interrupt, data->flags, data->cookie);
 
 	/* issue EOI to controller */
-	plat_ic_end_of_interrupt(data->interrupt);
+	if (data->interrupt)
+		plat_ic_end_of_interrupt(data->interrupt);
 
 	return ret;
 }
@@ -58,7 +60,8 @@ static int plat_ras_lmc_handler(const struct err_record_info *info,
 	ret = otx2_lmc_isr(data->interrupt, data->flags, data->cookie);
 
 	/* issue EOI to controller */
-	plat_ic_end_of_interrupt(data->interrupt);
+	if (data->interrupt)
+		plat_ic_end_of_interrupt(data->interrupt);
 
 	return ret;
 }
