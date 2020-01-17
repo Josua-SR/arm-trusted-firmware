@@ -656,10 +656,11 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 				xnp_tx[np].s.u = 0;
 			}
 
-			/* Clear AN Page Rx interrupt */
-			CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_int_t,
-					CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
-					an_page_rx, 1);
+			/* Clear AN Page Rx interrupt only as SPUX_INT is W1C */
+			spux_int.u = 0;
+			spux_int.s.an_page_rx = 1;
+			CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
+					spux_int.u);
 
 			/* Send extended next page */
 			if (transmit_np) {
