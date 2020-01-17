@@ -9491,7 +9491,9 @@ union cavm_gsercx_common_phy_ctrl_bcfg
                                                                    0x22 = 10.9375 Gbps.
                                                                    0x23 = 10.3125 Gbps.
                                                                    0x25 = 10 Gbps.
-                                                                   _ Others = Reserved. */
+                                                                   _ Others = Reserved.
+                                                                   CPRI Configuration:
+                                                                   0x0D = 14.7456 Gbps (Reserved). */
         uint64_t phy_ctrl_refclk       : 5;  /**< [  5:  1](R/W) Phy configuration for the ref clock frequency:
                                                                    0x0A = 212.5 MHz.
                                                                    0x0E = 156.25 MHz Ethernet (Default).
@@ -9526,7 +9528,9 @@ union cavm_gsercx_common_phy_ctrl_bcfg
                                                                    0x22 = 10.9375 Gbps.
                                                                    0x23 = 10.3125 Gbps.
                                                                    0x25 = 10 Gbps.
-                                                                   _ Others = Reserved. */
+                                                                   _ Others = Reserved.
+                                                                   CPRI Configuration:
+                                                                   0x0D = 14.7456 Gbps (Reserved). */
         uint64_t phy_ctrl_rate2        : 6;  /**< [ 17: 12](R/W) Phy configuration for rate 2.
                                                                    CPRI Rates:
                                                                    0x11 = 6.144 Gbps.

@@ -5012,9 +5012,15 @@ union cavm_rfoex_rx_ind_jdt_cfg0
         uint64_t jd_size               : 4;  /**< [ 27: 24](R/W) Size of each job descriptor, in units of 8 bytes. Must be even (i.e.,
                                                                  total size must be a multiple of 16 bytes). */
         uint64_t reserved_21_23        : 3;
-        uint64_t end_bswap_enable      : 1;  /**< [ 20: 20](R/W) For all byte-mode data,endianess byte swap enable . Does not change PSW, Logger, JDW writes.
-                                                                 0 = Don't do endianess swap DMA write of packet data.
-                                                                 1 = Do the byte swap for byte DMA data.  byte0-byte15, byte1-byte14, etc. */
+        uint64_t end_bswap_enable      : 1;  /**< [ 20: 20](R/W) Endian byte swap enable. Affects byte-mode (packet) data written to memory
+                                                                 (SMEM or LLC/DRAM):
+                                                                 * 0 = Write the first byte of each 16-byte word to address 15 and the last
+                                                                 byte to address 0.
+                                                                 * 1 = Write the first byte of each 16-byte word to address 0 and the last
+                                                                 byte to address 15. In other words, write the packet data to memory in
+                                                                 network byte order.
+
+                                                                 Does not affect PSW, Logger and JDW writes to memory. */
         uint64_t sample_width          : 8;  /**< [ 19: 12](R/W) For [SAMPLE_MODE]=1, defines width in bits of I an Q samples in the packet
                                                                  data. */
         uint64_t sample_mode           : 1;  /**< [ 11: 11](R/W) Interpret RoE samples. When set, interpret the data following rbMap
@@ -5048,9 +5054,15 @@ union cavm_rfoex_rx_ind_jdt_cfg0
                                                                  bytes as I,Q samples, and expand each [SAMPLE_WIDTH] I/Q sample to a 16-bit sample. */
         uint64_t sample_width          : 8;  /**< [ 19: 12](R/W) For [SAMPLE_MODE]=1, defines width in bits of I an Q samples in the packet
                                                                  data. */
-        uint64_t end_bswap_enable      : 1;  /**< [ 20: 20](R/W) For all byte-mode data,endianess byte swap enable . Does not change PSW, Logger, JDW writes.
-                                                                 0 = Don't do endianess swap DMA write of packet data.
-                                                                 1 = Do the byte swap for byte DMA data.  byte0-byte15, byte1-byte14, etc. */
+        uint64_t end_bswap_enable      : 1;  /**< [ 20: 20](R/W) Endian byte swap enable. Affects byte-mode (packet) data written to memory
+                                                                 (SMEM or LLC/DRAM):
+                                                                 * 0 = Write the first byte of each 16-byte word to address 15 and the last
+                                                                 byte to address 0.
+                                                                 * 1 = Write the first byte of each 16-byte word to address 0 and the last
+                                                                 byte to address 15. In other words, write the packet data to memory in
+                                                                 network byte order.
+
+                                                                 Does not affect PSW, Logger and JDW writes to memory. */
         uint64_t reserved_21_23        : 3;
         uint64_t jd_size               : 4;  /**< [ 27: 24](R/W) Size of each job descriptor, in units of 8 bytes. Must be even (i.e.,
                                                                  total size must be a multiple of 16 bytes). */
@@ -5261,9 +5273,15 @@ union cavm_rfoex_rx_ind_jdt_cfg0
         uint64_t jd_size               : 4;  /**< [ 27: 24](R/W) Size of each job descriptor, in units of 8 bytes. Must be even (i.e.,
                                                                  total size must be a multiple of 16 bytes). [JD_SIZE] must be greater than 0. */
         uint64_t reserved_21_23        : 3;
-        uint64_t end_bswap_enable      : 1;  /**< [ 20: 20](R/W) For all byte-mode data,endianess byte swap enable . Does not change PSW, Logger, JDW writes.
-                                                                 0 = Don't do endianess swap DMA write of packet data.
-                                                                 1 = Do the byte swap for byte DMA data.  byte0-byte15, byte1-byte14, etc. */
+        uint64_t end_bswap_enable      : 1;  /**< [ 20: 20](R/W) Endian byte swap enable. Affects byte-mode (packet) data written to memory
+                                                                 (SMEM or LLC/DRAM):
+                                                                 * 0 = Write the first byte of each 16-byte word to address 15 and the last
+                                                                 byte to address 0.
+                                                                 * 1 = Write the first byte of each 16-byte word to address 0 and the last
+                                                                 byte to address 15. In other words, write the packet data to memory in
+                                                                 network byte order.
+
+                                                                 Does not affect PSW, Logger and JDW writes to memory. */
         uint64_t sample_width          : 8;  /**< [ 19: 12](R/W) For [SAMPLE_MODE]=1, defines width in bits of I an Q samples in the packet
                                                                  data. */
         uint64_t sample_mode           : 1;  /**< [ 11: 11](R/W) Interpret RoE samples. When set, interpret the data following rbMap
@@ -5305,9 +5323,15 @@ union cavm_rfoex_rx_ind_jdt_cfg0
                                                                  Must be zero for eCPRI flows. */
         uint64_t sample_width          : 8;  /**< [ 19: 12](R/W) For [SAMPLE_MODE]=1, defines width in bits of I an Q samples in the packet
                                                                  data. */
-        uint64_t end_bswap_enable      : 1;  /**< [ 20: 20](R/W) For all byte-mode data,endianess byte swap enable . Does not change PSW, Logger, JDW writes.
-                                                                 0 = Don't do endianess swap DMA write of packet data.
-                                                                 1 = Do the byte swap for byte DMA data.  byte0-byte15, byte1-byte14, etc. */
+        uint64_t end_bswap_enable      : 1;  /**< [ 20: 20](R/W) Endian byte swap enable. Affects byte-mode (packet) data written to memory
+                                                                 (SMEM or LLC/DRAM):
+                                                                 * 0 = Write the first byte of each 16-byte word to address 15 and the last
+                                                                 byte to address 0.
+                                                                 * 1 = Write the first byte of each 16-byte word to address 0 and the last
+                                                                 byte to address 15. In other words, write the packet data to memory in
+                                                                 network byte order.
+
+                                                                 Does not affect PSW, Logger and JDW writes to memory. */
         uint64_t reserved_21_23        : 3;
         uint64_t jd_size               : 4;  /**< [ 27: 24](R/W) Size of each job descriptor, in units of 8 bytes. Must be even (i.e.,
                                                                  total size must be a multiple of 16 bytes). [JD_SIZE] must be greater than 0. */
