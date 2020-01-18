@@ -117,8 +117,11 @@ typedef struct mcc_ras_config {
 	uint32_t enabled:1;
 } mcc_ras_config_t;
 
-#define MAX_GHES_OBJ	16
-#define GHES_PTRS	3
+#define MAX_GHES_OBJ		16
+#define GHES_PTR_STAT_ADDR	0
+#define GHES_PTR_STATUS		1
+#define GHES_PTR_RING		2
+#define GHES_PTRS		3
 typedef struct ras_config {
 	mcc_ras_config_t mcc[MAX_MCC];
 

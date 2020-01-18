@@ -219,11 +219,20 @@ void bl31_plat_arch_setup()
 			NS_DMA_MEMORY_SIZE,
 			MT_DEVICE | MT_RW | MT_NS);
 
+	{
+		extern void otx2_map_ghes(void);
+		otx2_map_ghes();
+	}
 	plat_add_mmio_map();
 
 	init_xlat_tables();
 
 	enable_mmu_el3(0);
+}
+
+WEAK void otx2_map_ghes(void)
+{
+	/* for BL2 or cn8xxx */
 }
 
 void bl31_plat_runtime_setup(void)

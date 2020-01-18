@@ -29,6 +29,7 @@
 #include <tools_share/uuid.h>
 #include <plat/common/platform.h>
 #include <plat_ras.h>
+#include <plat_ghes.h>
 #include <timers.h>
 #include <drivers/delay_timer.h>
 #include <octeontx_ehf.h>
@@ -1377,6 +1378,54 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 	if (av && !(secure ? s_reg : ns_reg))
 		ERROR("ASC_R%d(ns:%d s:%d) but sec:%d\n",
 			reg, ns_reg, s_reg, secure);
+
+	{
+		struct otx2_ghes_err_record *err_rec;
+		struct otx2_ghes_err_ring *err_ring;
+		uint32_t total_ring_len, tail, head;
+		struct fdt_ghes *g = otx2_find_ghes("mcc");
+
+		err_ring = g->base[GHES_PTR_RING];
+		total_ring_len = g->size[GHES_PTR_RING];
+		/* TODO: fix me - head/tail/size need one-time init */
+		err_ring->size =
+			(total_ring_len -
+			 offsetof(struct otx2_ghes_err_ring, records[0])) /
+			sizeof(err_ring->records[0]);
+
+		tail = err_ring->tail;
+		/* TODO: fix me - need to check for 'full' condition */
+		(void)tail;
+		head = err_ring->head;
+		err_rec = &err_ring->records[head];
+		memset(err_rec, 0, sizeof(*err_rec));
+
+		/* TODO: fix me */
+		err_rec->severity = fatal ? CPER_SEV_FATAL : CPER_SEV_CORRECTED;
+
+		err_rec->u.mcc.validation_bits |= (CPER_MEM_VALID_PA |
+			CPER_MEM_VALID_CARD | CPER_MEM_VALID_MODULE |
+			CPER_MEM_VALID_BANK | CPER_MEM_VALID_ROW |
+			CPER_MEM_VALID_COLUMN);
+		err_rec->u.mcc.physical_addr = physaddr;
+		err_rec->u.mcc.card = lmc;
+		err_rec->u.mcc.module = dimm;
+		err_rec->u.mcc.bank = bank;
+		err_rec->u.mcc.row = row;
+		err_rec->u.mcc.column = col;
+
+		snprintf(err_rec->fru_text, sizeof(err_rec->fru_text),
+			 "LMC%d: DIMM%d,Rank%d/%d,Bank%02d", lmc, dimm, prank,
+			 lrank, bank);
+		/* Ensure that error record is written fully prior to advancing
+		 * the head (which indicates availability to consumer).
+		 */
+		dsbsy();
+
+		if (++head >= err_ring->size)
+			head = 0;
+		err_ring->head = head;
+	}
 
 #if SDEI_SUPPORT
 	sdei_dispatch_event(OCTEONTX_SDEI_RAS_MCC_EVENT);

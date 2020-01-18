@@ -177,6 +177,7 @@ void otx2_map_ghes(void)
 
 int otx2_ras_init(void)
 {
+	//map_ghes();
 	plat_ras_initialize_interrupt_array();
 	ras_init();
 
