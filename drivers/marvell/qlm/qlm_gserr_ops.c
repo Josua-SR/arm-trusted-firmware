@@ -77,4 +77,9 @@ const qlm_ops_t qlm_gserr_ops = {
 	.qlm_rx_signal_detect = qlm_gserr_rx_signal_detect,
 	.qlm_get_lmac_phy_lane = qlm_gserr_get_lmac_phy_lane,
 	.qlm_get_lmac_first_qlm = qlm_gserr_get_lmac_first_qlm,
+	.qlm_rx_adaptation_cdr_control = qlm_gserr_rx_adaption_cdr_control,
+	.qlm_lane_rst = qlm_gserr_lane_rst,
+	.qlm_link_training_start = qlm_gserr_link_training_start,
+	.qlm_link_training_fail = qlm_gserr_link_training_fail,
+	.qlm_link_training_complete = qlm_gserr_link_training_complete,
 };

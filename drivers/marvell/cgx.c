@@ -235,6 +235,7 @@ static int cgx_xaui_hw_init(int cgx_id, int lmac_id)
 	return 0;
 }
 
+/* This function will restart CGX auto-negotiation */
 static int cgx_restart_an(int cgx_id, int lmac_id)
 {
 	cgx_lmac_config_t *lmac;
@@ -275,13 +276,179 @@ static int cgx_restart_an(int cgx_id, int lmac_id)
 	return 0;
 }
 
+/* Start link training.
+ * return 0 = success, -1 failure
+ */
+static int cgx_link_training_start(int cgx_id, int lmac_id)
+{
+	cavm_cgxx_spux_int_t spux_int;
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+	const qlm_ops_t *qlm_ops;
+	int qlm, num_lanes;
+	uint64_t lane_mask;
+
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
+		cavm_is_model(OCTEONTX_CNF95XX_PASS1_X)) {
+		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
+			CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
+				train_en, 1);
+		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
+				CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
+				train_restart, 1);
+		spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
+		spux_int.s.training_done = 1;
+		CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id), spux_int.u);
+	} else {
+		cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+		lmac = &cgx->lmac_cfg[lmac_id];
+		qlm = lmac->first_qlm;
+		qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+		if (qlm_ops == NULL) {
+			debug_cgx("%s:get_qlm_ops failed %d\n", __func__, qlm);
+			return -1;
+		}
+
+		lane_mask = lmac->lane_mask;
+		/* Start Link Training on all GSER lanes */
+		while (lane_mask) {
+			/* Get the number of lanes on this QLM/DLM */
+			num_lanes = qlm_get_lanes(qlm);
+			for (int lane = 0; lane < num_lanes; lane++) {
+				if (!(lane_mask & (1 << lane)))
+					continue;
+				qlm_ops->qlm_link_training_start(qlm, lane);
+			}
+			lane_mask >>= num_lanes;
+			if (lane_mask)
+				qlm++;
+		}
+	}
+
+	return 0;
+}
+
+/* Wait for link training to complete.  If link training fails
+ * return -1
+ */
+static int cgx_link_training_wait(int cgx_id, int lmac_id)
+{
+	int still_training = 1;
+	uint64_t training_time;
+	cavm_cgxx_spux_int_t spux_int;
+	cgx_lmac_config_t *lmac;
+	const qlm_ops_t *qlm_ops;
+	int qlm, num_lanes;
+	uint64_t lane_mask, lt_mask, mask_idx;
+
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+
+	if (!lmac->use_training) {
+		debug_cgx("%s %d:%d Link training not enabled\n", __func__, cgx_id, lmac_id);
+		return 0;
+	}
+
+	/* Setup Link training timeout (500ms) */
+	training_time = gser_clock_get_count(GSER_CLOCK_TIME) + CGX_POLL_TRAINING_STATUS *
+			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+
+	while (still_training && (gser_clock_get_count(GSERN_CLOCK_TIME)
+			< training_time)) {
+		/* CN96XX A.x/B.x (1.x) and CN95XX A.x (1.x)
+		 * use SPU training registers */
+		if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
+			cavm_is_model(OCTEONTX_CNF95XX_PASS1_X)) {
+			spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
+			if (spux_int.s.training_failure) {
+				/* Training failed, restart */
+				debug_cgx("%s: %d:%d Link Training failed\n"
+						  , __func__, cgx_id, lmac_id);
+				return -1;
+			} else if (spux_int.s.training_done) {
+				debug_cgx("%s: %d:%d Link Training successfully completed\n",
+					__func__, cgx_id, lmac_id);
+				still_training = 0;
+				break;
+			}
+		} else {
+			int gser_qlm;
+
+			/* Check for a link training complete on all lanes */
+			lt_mask = 0;
+			qlm = lmac->first_qlm;
+			qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+			if (qlm_ops == NULL) {
+				debug_cgx("%s:get_qlm_ops failed %d\n", __func__, lmac->first_qlm);
+				return -1;
+			}
+			gser_qlm = qlm;
+			lane_mask = lmac->lane_mask;
+			mask_idx = 0;
+
+			while (lane_mask) {
+				/* Get the number of lanes on this QLM/DLM */
+				num_lanes = qlm_get_lanes(qlm);
+				for (int lane = 0; lane < num_lanes; lane++) {
+					if (!(lane_mask & (1 << lane)))
+						continue;
+					/* Check if link training is complete */
+					if (!qlm_ops->qlm_link_training_complete(qlm, lane))
+						lt_mask = lt_mask | (1 << (lane + mask_idx));
+				}
+				lane_mask >>= num_lanes;
+				mask_idx += num_lanes;
+				if (lane_mask)
+					qlm++;
+			}
+
+			lane_mask = lmac->lane_mask;
+
+			/* Check if all lanes are complete */
+			if (lt_mask == lane_mask) {
+				still_training = 0;
+				break;
+			}
+
+			while (lane_mask) {
+				/* Get the number of lanes on this QLM/DLM */
+				num_lanes = qlm_get_lanes(lmac->first_qlm);
+				for (int lane = 0; lane < num_lanes; lane++) {
+					if (!(lane_mask & (1 << lane)))
+						continue;
+					if (qlm_ops->qlm_link_training_fail(gser_qlm, lane)) {
+						/* Training failed, restart */
+						debug_cgx("%s: %d:%d Link Training failed\n"
+								  , __func__, cgx_id, lmac_id);
+						return -1;
+					}
+				}
+				lane_mask >>= num_lanes;
+				if (lane_mask)
+					gser_qlm++;
+			}
+		}
+		udelay(1);
+	}
+
+	if (still_training) {
+		debug_cgx("%s: %d:%d Link Training timed out\n",
+			__func__, cgx_id, lmac_id);
+		return -1;
+	}
+
+	return 0;
+}
+
 /* This function initializes the CGX LMAC and SERDES
  * after an auto-neg HCD mismatch
  */
 void cgx_an_lmac_serdes_reinit(int cgx_id, int lmac_id, int speed_change, int training_fail)
 {
 	cgx_lmac_config_t *lmac;
-	cavm_cgxx_spux_int_t spux_int;
 
 	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
 
@@ -292,7 +459,7 @@ void cgx_an_lmac_serdes_reinit(int cgx_id, int lmac_id, int speed_change, int tr
 	 */
 	if ((lmac->mode == -1) || (lmac->lane_to_sds == -1)) {
 		debug_cgx("%s: %d:%d mode/lane_to_sds not programmed\n",
-					__func__, cgx_id, lmac_id);
+			__func__, cgx_id, lmac_id);
 		return;
 	}
 
@@ -302,7 +469,7 @@ void cgx_an_lmac_serdes_reinit(int cgx_id, int lmac_id, int speed_change, int tr
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmr_global_config_t,
 		CAVM_CGXX_CMR_GLOBAL_CONFIG(cgx_id), cgx_clk_enable, 1);
 
-	/* disable LMAC */
+	/* Disable LMAC */
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
 		CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id), enable, 0);
 
@@ -328,19 +495,12 @@ void cgx_an_lmac_serdes_reinit(int cgx_id, int lmac_id, int speed_change, int tr
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmr_global_config_t,
 		CAVM_CGXX_CMR_GLOBAL_CONFIG(cgx_id), cgx_clk_enable, 0);
 
-	/* Optionally enable link training */
+	/* Enable link training */
+	/* Only on 96xx A.x/B.x and 95xx A.x */
 	if (lmac->use_training) {
-		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
-			CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
-				train_en, 1);
-		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
-				CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
-				train_restart, 1);
-
-
-		spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
-		spux_int.s.training_done = 1;
-		CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id), spux_int.u);
+		if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
+			cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
+			cgx_link_training_start(cgx_id, lmac_id);
 	}
 
 	/* If a training failure was detected, need to restart AN */
@@ -368,8 +528,6 @@ static int cgx_an_hcd_check(int cgx_id, int lmac_id, int training_fail)
 
 	if (lmac->autoneg_dis)
 		return 0;
-
-	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
 	an_bp_status.u = CSR_READ(CAVM_CGXX_SPUX_AN_BP_STATUS(
 				cgx_id, lmac_id));
@@ -491,50 +649,136 @@ static int cgx_an_hcd_check(int cgx_id, int lmac_id, int training_fail)
 	return 0;
 }
 
-/* Wait for link training to complete.  If link training fails
+/* Change the Reset state of the CGX LMAC SERDES lanes.  If SERDES reset fails
  * return -1
  */
-static int cgx_link_training_wait(int cgx_id, int lmac_id)
+static int cgx_serdes_reset(int cgx_id, int lmac_id, bool reset)
 {
-	int still_training = 1;
-	uint64_t training_time;
-	cavm_cgxx_spux_int_t spux_int;
+	uint64_t lane_mask;
+	int qlm, num_lanes;
+	cgx_lmac_config_t *lmac;
+	const qlm_ops_t *qlm_ops;
+
+	if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
+		cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
+		return 0;
+
+	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	qlm = lmac->first_qlm;
+	lane_mask = lmac->lane_mask;
+	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+	if (qlm_ops == NULL) {
+		debug_cgx("%s:get_qlm_ops failed %d\n", __func__, lmac->first_qlm);
+		return -1;
+	}
+
+	while (lane_mask) {
+		/* Get the number of lanes on this QLM/DLM */
+		num_lanes = qlm_get_lanes(qlm);
+		for (int lane = 0; lane < num_lanes; lane++) {
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			/* Change the SERDES reset state */
+			qlm_ops->qlm_lane_rst(qlm, lane, reset);
+		}
+		lane_mask >>= num_lanes;
+		if (lane_mask)
+			qlm++;
+	}
+
+	return 0;
+}
+
+/* Configure SERDES for autoneg.  If SERDES config fails
+ * return -1
+ */
+static int cgx_autoneg_serdes_enable(int cgx_id, int lmac_id, bool enable)
+{
+	uint64_t lane_mask;
+	int qlm, num_lanes;
+	cgx_lmac_config_t *lmac;
+	const qlm_ops_t *qlm_ops;
+
+	if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
+		cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
+		return 0;
+
+	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	qlm = lmac->first_qlm;
+	lane_mask = lmac->lane_mask;
+	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+	if (qlm_ops == NULL) {
+		debug_cgx("%s:get_qlm_ops failed %d\n", __func__, lmac->first_qlm);
+		return -1;
+	}
+
+	while (lane_mask) {
+		/* Get the number of lanes on this QLM/DLM */
+		num_lanes = qlm_get_lanes(qlm);
+		for (int lane = 0; lane < num_lanes; lane++) {
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			/* Configure Rx Adaptation & CDR */
+			qlm_ops->qlm_rx_adaptation_cdr_control(qlm, lane, enable);
+		}
+		lane_mask >>= num_lanes;
+		if (lane_mask)
+			qlm++;
+	}
+
+	return 0;
+}
+
+/*
+ * Called whenever CGX needs to enable or disable the SERDES transmitter
+ */
+static int cgx_serdes_tx_control(int cgx_id, int lmac_id, bool enable_tx)
+{
+	int qlm, lane, num_lanes;
+	uint64_t lane_mask;
+	const qlm_ops_t *qlm_ops;
+	cavm_cgxx_spux_control1_t spux_ctrl1;
+	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
 
 	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
 
-	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
 
-	if (!lmac->use_training) {
-		debug_cgx("%s %d:%d Link training not enabled\n", __func__, cgx_id, lmac_id);
+	/* Only do first LMAC of USXGMII */
+	if (cgx->usxgmii_mode && (lmac_id > 0))
 		return 0;
-	}
 
-	/* Setup Link training timeout (500ms) */
-	training_time = gser_clock_get_count(GSER_CLOCK_TIME) + CGX_POLL_TRAINING_STATUS *
-			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+	lane_mask = lmac->lane_mask;
 
-	while (still_training && (gser_clock_get_count(GSERN_CLOCK_TIME)
-			< training_time)) {
-		spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(
-				cgx_id, lmac_id));
-		if (spux_int.s.training_failure) {
-			/* Training failed, restart */
-			debug_cgx("%s: %d:%d Link Training failed\n"
-					  , __func__, cgx_id, lmac_id);
-			return -1;
-		} else if (spux_int.s.training_done) {
-			debug_cgx("%s: %d:%d Link Training successfully completed\n",
-				__func__, cgx_id, lmac_id);
-			still_training = 0;
-		}
-		udelay(1);
-	}
-
-	if (still_training) {
-		debug_cgx("%s: %d:%d Link Training timed out\n",
-			__func__, cgx_id, lmac_id);
+	qlm = lmac->first_qlm;
+	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+	if (qlm_ops == NULL) {
+		debug_cgx("%s:get_qlm_ops failed %d\n", __func__, qlm);
 		return -1;
+	}
+
+	/* Always disable TX in loopback mode */
+	spux_ctrl1.u = CSR_READ(CAVM_CGXX_SPUX_CONTROL1(cgx_id, lmac_id));
+	if (spux_ctrl1.s.loopbck)
+		enable_tx = false;
+
+	while (lane_mask) {
+		num_lanes = qlm_get_lanes(qlm);
+		for (lane = 0; lane < num_lanes; lane++) {
+			if (!(lane_mask & (1 << lane)))
+				continue;
+
+			qlm_ops->qlm_tx_control(qlm, lane, enable_tx);
+		}
+		lane_mask >>= num_lanes;
+		if (lane_mask)
+			qlm++;
 	}
 
 	return 0;
@@ -547,7 +791,10 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 {
 	int still_negotiating = 1;
 	uint64_t autoneg_time;
+	uint64_t init_time;
 	cavm_cgxx_spux_int_t spux_int;
+	cavm_cgxx_spux_an_status_t spux_an_status;
+	cavm_cgxx_spux_an_control_t spux_an_ctl;
 	cavm_cgxx_spux_an_adv_t an_adv[AN_NP_PRINT_MAX];
 	cavm_cgxx_spux_an_xnp_tx_t xnp_tx[AN_NP_PRINT_MAX];
 	cavm_cgxx_spux_an_lp_base_t lp_base[AN_NP_PRINT_MAX];
@@ -559,10 +806,15 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 	int is_50gbaser2 = 0;
 	int transmit_np = 0;
 	int np = 0;
+	bool is_gsern = 0;
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
 	debug_cgx("%s: %d:%d\n", __func__, cgx_id, lmac_id);
+
+	if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
+		 cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
+		is_gsern = true;
 
 	if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R)
 		is_25gbaser = 1;
@@ -571,16 +823,22 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 		is_50gbaser2 = 1;
 
 	/* Setup AN timeout */
-	autoneg_time = gser_clock_get_count(GSER_CLOCK_TIME) + CGX_POLL_AN_COMPLETE_STATUS *
+	init_time = gser_clock_get_count(GSER_CLOCK_TIME);
+	autoneg_time = init_time + CGX_POLL_AN_COMPLETE_STATUS *
 			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
 
-	while (gser_clock_get_count(GSERN_CLOCK_TIME)
-		   < autoneg_time) {
+	while (still_negotiating &&
+		   (gser_clock_get_count(GSERN_CLOCK_TIME)
+			< autoneg_time)) {
 		spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(
+				cgx_id, lmac_id));
+
+		spux_an_status.u = CSR_READ(CAVM_CGXX_SPUX_AN_STATUS(
 				cgx_id, lmac_id));
 
 		/* Check if AN completed */
 		if (spux_int.s.an_complete ||
+			spux_an_status.s.an_complete ||
 			spux_int.s.an_link_good) {
 			still_negotiating = 0;
 			break;
@@ -676,6 +934,60 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 		udelay(1);
 	}
 
+	if (still_negotiating)
+		goto AN_failure;
+
+	/* Put the CGX LMAC SERDES lanes in Reset
+	 * if link training is enabled
+	 */
+	if (lmac->use_training) {
+		cgx_serdes_tx_control(cgx_id, lmac_id, false);
+		cgx_serdes_reset(cgx_id, lmac_id, true);
+	}
+
+	cgx_autoneg_serdes_enable(cgx_id, lmac_id, false);
+
+	/* Check auto-neg HCD to see if their is a CGX mismatch.
+	 * Function will restart auto-neg if training failed
+	 */
+	if (cgx_an_hcd_check(cgx_id, lmac_id, 0)) {
+			debug_cgx("%s:%d:%d: Auto-neg HCD mismatch detected.\n",
+			__func__, cgx_id, lmac_id);
+	} else {
+		/* If there was no mismatch S/W needs to
+		 * manually kick off training
+		 * when arb_link_chk_en is enabled
+		 */
+		if (lmac->use_training) {
+			spux_an_ctl.u = CSR_READ(CAVM_CGXX_SPUX_AN_CONTROL(
+							cgx_id, lmac_id));
+			if (!is_gsern ||
+				!spux_an_ctl.s.an_arb_link_chk_en) {
+				cgx_link_training_start(cgx_id, lmac_id);
+				/* Clear the CGX LMAC SERDES reset */
+				cgx_serdes_reset(cgx_id, lmac_id, false);
+				/* Enable the SERDES Tx */
+				cgx_serdes_tx_control(cgx_id, lmac_id, true);
+			} else {
+				/* Enable the SERDES Tx */
+				cgx_serdes_tx_control(cgx_id, lmac_id, true);
+			}
+		}
+		debug_cgx("%s:%d:%d: Auto-neg HCD matches CGX config.\n",
+			__func__, cgx_id, lmac_id);
+	}
+
+	debug_cgx("%s: %d:%d AN successfully completed, AN Completion time: %lld ms\n",
+	    __func__, cgx_id, lmac_id,
+	    ((gser_clock_get_count(GSER_CLOCK_TIME) - init_time) *
+		 1000 / gser_clock_get_rate(GSER_CLOCK_TIME)));
+
+	return 0;
+
+AN_failure:
+	debug_cgx("%s: %d:%d AN timed out\n",
+		__func__, cgx_id, lmac_id);
+
 	/* Print AN page data if any pages received */
 	if (np > 0) {
 		debug_cgx("%s: %d:%d Number of Next pages transmitted = %d\n"
@@ -692,19 +1004,8 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 		}
 	}
 
-	if (still_negotiating) {
-		debug_cgx("%s: %d:%d AN timed out\n",
-			__func__, cgx_id, lmac_id);
-		return -1;
-	}
-
-	debug_cgx("%s: %d:%d AN successfully completed\n",
-		__func__, cgx_id, lmac_id);
-
-	return 0;
+	return -1;
 }
-
-
 
 static int cgx_get_usxgmii_type(int cgx_id, int lmac_id)
 {
@@ -854,14 +1155,8 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 				if (!signal_detect)
 					break;
 				lane_mask >>= num_lanes;
-				if (lane_mask) {
+				if (lane_mask)
 					qlm++;
-					qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-					if (qlm_ops == NULL) {
-						debug_cgx("%s:get_qlm_ops failed %d\n", __func__, qlm);
-						return -1;
-					}
-				}
 			}
 		} while (signal_detect && (gser_clock_get_count(GSER_CLOCK_TIME)
 								   < rx_debounce_time));
@@ -876,63 +1171,6 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 			return -1;
 		}
 	}
-	return 0;
-}
-
-/*
- * Called whenever CGX needs to enable or disable the SERDES transmitter
- */
-static int cgx_serdes_tx_control(int cgx_id, int lmac_id, bool enable_tx)
-{
-	int qlm, lane, num_lanes;
-	uint64_t lane_mask;
-	const qlm_ops_t *qlm_ops;
-	cavm_cgxx_spux_control1_t spux_ctrl1;
-	cgx_config_t *cgx;
-	cgx_lmac_config_t *lmac;
-
-	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
-
-	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
-	lmac = &cgx->lmac_cfg[lmac_id];
-
-	/* Only do first LMAC of USXGMII */
-	if (cgx->usxgmii_mode && (lmac_id > 0))
-		return 0;
-
-	lane_mask = lmac->lane_mask;
-
-	qlm = lmac->first_qlm;
-	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-	if (qlm_ops == NULL) {
-		debug_cgx("%s:get_qlm_ops failed %d\n", __func__, qlm);
-		return -1;
-	}
-
-	/* Always disable TX in loopback mode */
-	spux_ctrl1.u = CSR_READ(CAVM_CGXX_SPUX_CONTROL1(cgx_id, lmac_id));
-	if (spux_ctrl1.s.loopbck)
-		enable_tx = false;
-
-	while (lane_mask) {
-		num_lanes = qlm_get_lanes(qlm);
-		for (lane = 0; lane < num_lanes; lane++) {
-			if (!(lane_mask & (1 << lane)))
-				continue;
-
-			qlm_ops->qlm_tx_control(qlm, lane, enable_tx);
-		}
-		lane_mask >>= num_lanes;
-		if (lane_mask) {
-			qlm++;
-			qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-			if (qlm_ops == NULL) {
-				debug_cgx("%s:get_qlm_ops failed %d\n", __func__, qlm);
-				return -1;
-			}
-		}
-	}
-
 	return 0;
 }
 
@@ -1365,7 +1603,7 @@ static void cgx_set_autoneg(int cgx_id, int lmac_id)
 			(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R))
 			CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
 				CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
-				an_arb_link_chk_en, 1);
+				an_arb_link_chk_en, 0);
 		/* Restart AN */
 		cgx_restart_an(cgx_id, lmac_id);
 		break;
@@ -1821,7 +2059,7 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 	cgx_lmac_config_t *lmac;
 	cavm_cgxx_spux_an_control_t spux_an_ctl;
 	cavm_cgxx_spux_int_t spux_int;
-
+	bool is_gsern = 0;
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
@@ -1829,6 +2067,10 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 		return 1;
 
 	debug_cgx("%s: %d:%d mode %d\n", __func__, cgx_id, lmac_id, lmac->mode);
+
+	if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
+		 cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
+		is_gsern = true;
 
 	if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_USXGMII)
 		return 1;
@@ -1841,9 +2083,7 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 	 * 96XX Ax/Bx (1.x). CGX will automatically complete link
 	 * training if AN HCD matches CGX config
 	 */
-	if (spux_an_ctl.s.an_arb_link_chk_en &&
-		(cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
-		 cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))) {
+	if (spux_an_ctl.s.an_arb_link_chk_en && is_gsern) {
 		/* an_complete means both auto-neg and
 		 * link training (if enabled) were successful
 		 */
@@ -1888,11 +2128,6 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 				goto restart_an;
 			}
 
-			/* Check auto-neg HCD to see if their is a CGX mismatch */
-			if (cgx_an_hcd_check(cgx_id, lmac_id, 0))
-				debug_cgx("%s:%d:%d: Auto-neg HCD mismatch detected.\n",
-					__func__, cgx_id, lmac_id);
-
 			if (cgx_link_training_wait(cgx_id, lmac_id)) {
 				debug_cgx("%s:%d:%d: Link training failed, Restarting AN.\n",
 					__func__, cgx_id, lmac_id);
@@ -1905,39 +2140,15 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 		debug_cgx("%s:%d:%d: Restarting AN.\n",
 			__func__, cgx_id, lmac_id);
 
-		cgx_restart_an(cgx_id, lmac_id);
+		/* Configure SERDES for AN */
+		cgx_autoneg_serdes_enable(cgx_id, lmac_id, true);
 
-		debug_cgx("%s:%d:%d: Waiting for AN to complete.\n",
-			__func__, cgx_id, lmac_id);
+		cgx_restart_an(cgx_id, lmac_id);
 
 		if (cgx_autoneg_wait(cgx_id, lmac_id)) {
 			debug_cgx("%s:%d:%d: AN failed, Restarting AN.\n",
 				__func__, cgx_id, lmac_id);
 			goto restart_an;
-		}
-
-		/* Check auto-neg HCD to see if their is a CGX mismatch.
-		 * If there is an HCD mismatch, after reconfig link
-		 * training will be started
-		 */
-		if (cgx_an_hcd_check(cgx_id, lmac_id, 0)) {
-			debug_cgx("%s:%d:%d: Auto-neg HCD mismatch detected.\n",
-				__func__, cgx_id, lmac_id);
-		} else {
-			/* If there was no mismatch S/W needs to manually kick off training */
-			debug_cgx("%s:%d:%d: Auto-neg HCD matches CGX config.\n",
-				__func__, cgx_id, lmac_id);
-			if (lmac->use_training) {
-				CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
-					CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
-						train_en, 1);
-				CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
-						CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
-						train_restart, 1);
-				spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
-				spux_int.s.training_done = 1;
-				CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id), spux_int.u);
-			}
 		}
 
 		if (cgx_link_training_wait(cgx_id, lmac_id)) {
@@ -1956,6 +2167,7 @@ restart_an:
 	cgx_serdes_tx_control(cgx_id, lmac_id, false);
 	/* Restart AN */
 	cgx_restart_an(cgx_id, lmac_id);
+
 	return 1;
 }
 
@@ -2498,14 +2710,8 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 				}
 			}
 			lane_mask >>= num_lanes;
-			if (lane_mask) {
+			if (lane_mask)
 				qlm++;
-				qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-				if (qlm_ops == NULL) {
-					debug_cgx("%s:get_qlm_ops failed %d\n", __func__, qlm);
-					return -1;
-				}
-			}
 		}
 	}
 

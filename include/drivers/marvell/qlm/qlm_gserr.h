@@ -226,4 +226,51 @@ int qlm_gserr_eye_capture(int qlm, int lane, int show_data, gser_qlm_eye_t *eye_
  */
 void qlm_gserr_tx_control(int qlm, int lane, bool enable_tx);
 
+/**
+ * Get the LMAC's first GSER associated with the specified GSER.
+ * Required for LMAC's that use DLM's
+ *
+ * @param  qlm	   QLM to use
+ * @param  lane	   Which lane
+ * @param  disable Disable Rx adaption and fix CDR
+ * @return Returns the LMAC first GSER
+ */
+void qlm_gserr_rx_adaption_cdr_control(int qlm, int lane, bool disable);
+
+/**
+ * Reset the GSER lane.
+ *
+ * @param  qlm	     QLM to use
+ * @param  lane	     Which lane
+ * @param  reset_en  1) Enable reset 0) Clear reset
+ * @return Returns the LMAC first GSER
+ */
+void qlm_gserr_lane_rst(int qlm, int lane, bool reset);
+
+/**
+ * Configure SERDES for Link Training
+ *
+ * @param qlm	  QLM to use
+ * @param lane	  Which lane
+ */
+void qlm_gserr_link_training_start(int qlm, int lane);
+
+/**
+ * Check whether SERDES Link Training Failed
+ *
+ * @param qlm	  QLM to use
+ * @param lane	  Which lane
+ * @return 0 on no failure, 1 on fail
+ */
+int qlm_gserr_link_training_fail(int qlm, int lane);
+
+/**
+ * Check whether SERDES Link Training Completed
+ *
+ * @param qlm	  QLM to use
+ * @param lane	  Which lane
+ * @return 0 on completion, 1 not complete
+ */
+int qlm_gserr_link_training_complete(int qlm, int lane);
+
 #endif /* _QLM_GSERR_H_ */

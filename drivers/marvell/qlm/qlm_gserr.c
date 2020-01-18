@@ -2389,3 +2389,182 @@ static int qlm_gserr_change_phy_rate(int module)
 //	/* Done later */
 //	GSER_TRACE(QLM, "GSERR: End of init\n");
 //}
+
+/**
+ * Get the LMAC's first GSER associated with the specified GSER.
+ * Required for LMAC's that use DLM's
+ *
+ * @param  qlm	   QLM to use
+ * @param  lane	   Which lane
+ * @param  disable Disable Rx adaption and fix CDR
+ * @return Returns the LMAC first GSER
+ */
+void qlm_gserr_rx_adaption_cdr_control(int qlm, int lane, bool disable)
+{
+	int leq_lfg_start, leq_hfg_sql_start;
+	int leq_mbf_start, leq_mbg_start;
+	int gn_apg_start, rxcdr_bbstep;
+
+	if (disable) {
+		GSER_TRACE(QLM, "GSERR%d.%d: Disabling LEQ and DFE adaptation\n", qlm, lane);
+		leq_lfg_start = 0;
+		leq_hfg_sql_start = 9;
+		leq_mbf_start = 5;
+		leq_mbg_start = 7;
+		gn_apg_start = 3;
+		rxcdr_bbstep = 10;
+	} else {
+		GSER_TRACE(QLM, "GSERR%d.%d: Enabling LEQ and DFE adaptation\n", qlm, lane);
+		leq_lfg_start = 0;
+		leq_hfg_sql_start = 20;
+		leq_mbf_start = 0;
+		leq_mbg_start = 0;
+		gn_apg_start = 7;
+		rxcdr_bbstep = 20;
+	}
+	/* Adjust CDR phase gain */
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_CDR_REFCLK_AFE_CTRL0(qlm, lane),
+		c.s.rxcdr_bbstep = rxcdr_bbstep);
+
+	/* Configure LEQ adaptation */
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_ADAPT_CONT_CFG0(qlm, lane),
+		c.s.en = !disable);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_CTLE_ADAPT_LFG_CFG(qlm, lane),
+		c.s.init1_en = !disable;
+		c.s.init0_en = !disable);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_LEQ_REFCLK_EQ_LFG_CTRL0(qlm, lane),
+		c.s.eq_lfg_start = leq_lfg_start);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_CTLE_ADAPT_APG_CFG(qlm, lane),
+		c.s.init1_en = !disable;
+		c.s.init0_en = !disable);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_LEQ_REFCLK_GN_APG_CTRL0(qlm, lane),
+		c.s.gn_apg_start = gn_apg_start);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_CTLE_ADAPT_HFG_CFG0(qlm, lane),
+		c.s.init1_en = !disable;
+		c.s.init0_en = !disable);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_CTLE_ADAPT_HFG_CFG1(qlm, lane),
+		c.s.init1_en = !disable;
+		c.s.init0_en = !disable);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_LEQ_REFCLK_EQ_HFG_SQL_CTRL0(qlm, lane),
+		c.s.eq_hfg_sql_start = leq_hfg_sql_start);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_CTLE_ADAPT_MBS_CFG0(qlm, lane),
+		c.s.init1_en = !disable;
+		c.s.init0_en = !disable);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_CTLE_ADAPT_MBS_CFG1(qlm, lane),
+		c.s.init1_en = !disable;
+		c.s.init0_en = !disable);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_LEQ_REFCLK_EQ_MB_CTRL1(qlm, lane),
+		c.s.eq_mbg_start = leq_mbg_start;
+		c.s.eq_mbf_start = leq_mbf_start);
+	/* Configure DFE adaptation */
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_DFE_ADAPT_TAP1_CFG(qlm, lane),
+		c.s.tap1_start_val_sel = 0;
+		c.s.tap1_cont_en = !disable;
+		c.s.tap1_eie_en = 0;
+		c.s.tap1_init_en = !disable);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_DFE_ADAPT_TAP2_CFG(qlm, lane),
+		c.s.tap2_start_val_sel = 0;
+		c.s.tap2_cont_en = !disable;
+		c.s.tap2_eie_en = 0;
+		c.s.tap2_init_en = !disable);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_DFE_ADAPT_TAP3_CFG(qlm, lane),
+		c.s.tap3_start_val_sel = 0;
+		c.s.tap3_cont_en = !disable;
+		c.s.tap3_eie_en = 0;
+		c.s.tap3_init_en = !disable);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_DFE_ADAPT_TAP4_CFG(qlm, lane),
+		c.s.tap4_start_val_sel = 0;
+		c.s.tap4_cont_en = !disable;
+		c.s.tap4_eie_en = 0;
+		c.s.tap4_init_en = !disable);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_DFE_ADAPT_TAP5_CFG(qlm, lane),
+		c.s.tap5_start_val_sel = 0;
+		c.s.tap5_cont_en = !disable;
+		c.s.tap5_eie_en = 0;
+		c.s.tap5_init_en = !disable);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_DFE_ADAPT_TAP6_CFG(qlm, lane),
+		c.s.tap6_start_val_sel = 0;
+		c.s.tap6_cont_en = !disable;
+		c.s.tap6_eie_en = 0;
+		c.s.tap6_init_en = !disable);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_DFE_ADAPT_TAP7_CFG(qlm, lane),
+		c.s.tap7_start_val_sel = 0;
+		c.s.tap7_cont_en = !disable;
+		c.s.tap7_eie_en = 0;
+		c.s.tap7_init_en = !disable);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_DFE_ADAPT_TAP8_CFG(qlm, lane),
+		c.s.tap8_start_val_sel = 0;
+		c.s.tap8_cont_en = !disable;
+		c.s.tap8_eie_en = 0;
+		c.s.tap8_init_en = !disable);
+}
+
+/**
+ * Reset the GSER lane.
+ *
+ * @param  qlm	     QLM to use
+ * @param  lane	     Which lane
+ * @param  reset_en  1) Enable reset 0) Clear reset
+ * @return Returns the LMAC first GSER
+ */
+void qlm_gserr_lane_rst(int qlm, int lane, bool reset)
+{
+	if (reset)
+		GSER_TRACE(QLM, "GSERR%d.%d: Setting Lane Reset\n", qlm, lane);
+	else
+		GSER_TRACE(QLM, "GSERR%d.%d: Clearing Lane Reset\n", qlm, lane);
+
+	/* Assert or deassert Lane reset */
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(qlm, lane),
+		c.s.ln_rst = reset);
+
+	/* Wait for state change to complete */
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+	{
+		gser_error("GSERR%d.%d: Wait for GSERRX_LNX_TOP_LN_STAT_STATUS0[STATE_CHGN_RDY]=1 timeout\n", qlm, lane);
+	}
+}
+
+/**
+ * Configure SERDES for Link Training
+ *
+ * @param qlm	  QLM to use
+ * @param lane	  Which lane
+ */
+void qlm_gserr_link_training_start(int qlm, int lane)
+{
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_LT_TX_FSM_CTRL0(qlm, lane),
+		c.s.mr_training_enable = 1);
+}
+
+/**
+ * Check whether SERDES Link Training Failed
+ *
+ * @param qlm	  QLM to use
+ * @param lane	  Which lane
+ * @return 0 on no failure, 1 on fail
+ */
+int qlm_gserr_link_training_fail(int qlm, int lane)
+{
+	GSER_CSR_INIT(fsm_status, CAVM_GSERRX_LNX_LT_TX_FSM_STATUS(qlm, lane));
+	if (fsm_status.s.training_fail)
+		return 1;
+	else
+		return 0;
+}
+
+/**
+ * Check whether SERDES Link Training Completed
+ *
+ * @param qlm	  QLM to use
+ * @param lane	  Which lane
+ * @return 0 on completion, 1 not complete
+ */
+int qlm_gserr_link_training_complete(int qlm, int lane)
+{
+	GSER_CSR_INIT(fsm_ctrl0, CAVM_GSERRX_LNX_LT_TX_FSM_CTRL0(qlm, lane));
+	if (fsm_ctrl0.s.signal_detect)
+		return 0;
+	else
+		return 1;
+}
