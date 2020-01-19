@@ -56,4 +56,16 @@ int octeontx_mmap_remove_dynamic_region_with_sync(uintptr_t base_va,
 	return 0;
 }
 
+int octeontx_xlat_change_mem_attributes(uintptr_t base_va, size_t size,
+			uint32_t attr, uint32_t *old_attr)
+{
+	int rc;
+
+	bakery_lock_get(&mmap_lock);
+	if (old_attr)
+		xlat_get_mem_attributes(base_va, old_attr);
+	rc = xlat_change_mem_attributes(base_va, size, attr);
+	bakery_lock_release(&mmap_lock);
+	return rc;
+}
 #endif /* PLAT_XLAT_TABLES_DYNAMIC */
