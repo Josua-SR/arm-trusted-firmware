@@ -722,13 +722,18 @@ void __arm_err_nn(int thresh, uint64_t fr_r, uint64_t ctlr_r, uint64_t misc0_r)
 		= { .u = octeontx_read64(ctlr_r) };
 	union cavm_lmcx_ras_err00ctlr octlr = ctlr;
 	union cavm_lmcx_ras_err00misc0 omisc0 = misc0;
+	size_t maxval;
 
 	if (fr.s.dui > 1)
 		ctlr.s.dui = 1;
 	if (fr.s.dui > 2)
 		ctlr.s.wdui = 1;
-	if (fr.s.cec)
-		misc0.s.cec = 0x100 - thresh;
+	if (fr.s.cec) {
+		/* calculate max value of counter */
+		misc0.s.cec = -1l;
+		maxval = misc0.s.cec;
+		misc0.s.cec = maxval + 1 - thresh;
+	}
 	if (fr.s.cfi > 1)
 		ctlr.s.cfi = 1;
 	if (fr.s.fi > 1)
@@ -1429,6 +1434,28 @@ int lmcoe_ras_setup(int mcc, int lmcoe)
 	debug_ras("Enable MSIX%d for MCC%d.LMCOE.%d, irq:%d\n",
 	     vec, mcc, lmcoe, irq);
 
+	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_INT_ENA_W1C(mcc, lmcoe),
+							~0ULL);
+
+	/* configure non-secure register to allow setting of secure SPI */
+	{
+		int reg, spi_shift;
+
+		/* there are 16 2-bit SPI fields in each NSACRX reg */
+		reg = irq / 16;              /* 16 SPIs per reg */
+		spi_shift = (irq % 16) * 2;  /* 2 bits per SPI */
+
+		/* set value of 01 to permit "set pending" */
+		CSR_MODIFY(c, CAVM_GICD_NSACRX(reg),
+			   c.s.vec &= ~(3 << spi_shift);
+			   c.s.vec |= 1 << spi_shift);
+	}
+	octeontx_write64(vctl, irq);
+	octeontx_write64(vaddr, CAVM_GICD_SETSPI_NSR | 1);
+
+	debug_ras("addr: 0x%llx, ctl: 0x%llx\n",
+	     octeontx_read64(vaddr), octeontx_read64(vctl));
+
 	arm_err_nn(1, CAVM_LMCX_RAS_ERR00, mcc_lmc(mcc, lmcoe));
 	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR00, mcc, lmcoe);
 	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR01, mcc, lmcoe);
@@ -1439,12 +1466,6 @@ int lmcoe_ras_setup(int mcc, int lmcoe)
 	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR06, mcc, lmcoe);
 	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR07, mcc, lmcoe);
 
-	octeontx_write64(vaddr, CAVM_GICD_SETSPI_SR | 1);
-	octeontx_write64(vctl, irq);
-
-	debug_ras("addr: 0x%llx, ctl: 0x%llx\n",
-	     octeontx_read64(vaddr), octeontx_read64(vctl));
-
 	int_ena.u = 0;
 	int_ena.s.err00 = 1;
 	int_ena.s.err01 = 1;
@@ -1454,6 +1475,7 @@ int lmcoe_ras_setup(int mcc, int lmcoe)
 	int_ena.s.err05 = 1;
 	int_ena.s.err06 = 1;
 	int_ena.s.err07 = 1;
+
 	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_INT_ENA_W1S(mcc, lmcoe),
 		  int_ena.u);
 

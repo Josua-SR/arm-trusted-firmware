@@ -511,7 +511,7 @@ static int check_cn9xxx_mdc(union cavm_mdc_ecc_status st, int quiet)
 				cmd.s.chain_id, cmd.s.hub_id, cmd.s.node_id);
 		const char *blk_type = ras_serr_str[re.s.ras_serr];
 
-		printf("(chn %d.%d.%d block:%2.2x:%s id:%8.8x %d:%c %c %c)\n",
+		printf("(chn %d.%d.%d block:%02x:%s id:%08x %d:%c %c %c)\n",
 			cmd.s.chain_id, cmd.s.hub_id, cmd.s.node_id,
 			re.s.ras_serr, blk_type ?: "-",
 			re.s.ras_id,
@@ -812,8 +812,23 @@ static int ras_init_mccs(void)
 		return rc;
 	}
 #endif /* !RAS_EXTENSION */
-	octeontx_write64(vaddr, ctl);
+
+	/* Workaround for [stream] security issue; use non-secure register */
+	/* configure non-secure register to allow setting of secure SPI */
+	{
+		int reg, spi_shift;
+
+		/* there are 16 2-bit SPI fields in each NSACRX reg */
+		reg = irq / 16;              /* 16 SPIs per reg */
+		spi_shift = (irq % 16) * 2;  /* 2 bits per SPI */
+
+		/* set value of 01 to permit "set pending" */
+		CSR_MODIFY(c, CAVM_GICD_NSACRX(reg),
+			   c.s.vec &= ~(3 << spi_shift);
+			   c.s.vec |= 1 << spi_shift);
+	}
 	octeontx_write64(vctl, irq);
+	octeontx_write64(vaddr, CAVM_GICD_SETSPI_NSR | 1);
 
 	CSR_WRITE(CAVM_MDC_INT_W1C, 1ULL);
 	CSR_WRITE(CAVM_MDC_INT_ENA_W1S, 1ULL);
