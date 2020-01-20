@@ -19,7 +19,7 @@
  * correction of calibration based on temperature settings. This improves the
  * temperature range the GSERR SERDES operate over.
  */
-#define GSER_GSERR_ENABLE_DOSC_TEMP_SKEW 0 // FIXME: Disabled for current firmware
+#define GSER_GSERR_ENABLE_DOSC_TEMP_SKEW 1
 
 static cavm_gserrx_common_phy_ctrl_bcfg_t qlm_gserr_get_clock_mode(int module);
 static cavm_gserrx_lanex_control_bcfg_t qlm_gserr_get_lane_mode(int module, int lane);
@@ -95,7 +95,7 @@ int qlm_gserr_set_mode(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
 	if (bcfg_old.u != bcfg_new.u)
 		qlm_gserr_change_phy_rate(qlm);
 	else
-		GSER_TRACE(QLM, "GSERP%d: PHY rates already correct\n", qlm);
+		GSER_TRACE(QLM, "GSERR%d: PHY rates already correct\n", qlm);
 
 	gser_wait_usec(1000);
 
@@ -116,7 +116,7 @@ int qlm_gserr_set_mode(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
 			gser_wait_usec(1000);
 		}
 		else
-			GSER_TRACE(QLM, "GSERP%d.%d: Lane mode already correct\n", qlm, l);
+			GSER_TRACE(QLM, "GSERR%d.%d: Lane mode already correct\n", qlm, l);
 	}
 
 	return 0;
@@ -891,15 +891,36 @@ int qlm_gserr_tune_lane_tx(int qlm, int lane, int tx_cmain, int tx_cpre, int tx_
  */
 int qlm_gserr_get_tune_lane_tx(int qlm, int lane, int *tx_cmain, int *tx_cpre, int *tx_cpost, int *tx_bs, int *tx_unused)
 {
-	GSER_CSR_INIT(status1, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_STATUS1(qlm, lane));
-	GSER_CSR_INIT(status2, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_STATUS2(qlm, lane));
-	GSER_CSR_INIT(status3, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_STATUS3(qlm, lane));
-	*tx_cmain = status3.s.txeq_c0;
-	*tx_cpre = status2.s.txeq_cm1;
-	*tx_cpost = status1.s.txeq_c1;
+	GSER_CSR_INIT(ctrl1, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL1(qlm, lane));
+	GSER_CSR_INIT(ctrl3, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL3(qlm, lane));
+	GSER_CSR_INIT(ctrl5, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL5(qlm, lane));
+	*tx_cmain = ctrl5.s.drv_swing;
+	*tx_cpre = ctrl3.s.txeq_cm1;
+	*tx_cpost = ctrl1.s.txeq_c1;
 	*tx_bs = -1;
 	*tx_unused = -1;
 	return 0;
+}
+
+/**
+ * This function converts a reflected binary
+ * Gray code number to a binary number.
+ * Each Gray code bit is exclusive-ored with all
+ * more significant bits.
+ *
+ * @param num
+ *
+ * @return
+ */
+static unsigned int gray2binary(unsigned int num)
+{
+	unsigned int mask = num >> 1;
+	while (mask != 0)
+	{
+		num = num ^ mask;
+		mask = mask >> 1;
+	}
+	return num;
 }
 
 /**
@@ -937,11 +958,11 @@ void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 		GSER_CSR_INIT(bcfg, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(qlm));
 		printf("	CMU OK=%d, PHY Rate1=0x%x, Rate2=0x%x\n",
 			cm0_top_phy_if_status.s.cmu_ok, bcfg.s.phy_ctrl_rate1, bcfg.s.phy_ctrl_rate2);
-		GSER_CSR_INIT(status1, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_STATUS1(qlm, qlm_lane));
-		GSER_CSR_INIT(status2, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_STATUS2(qlm, qlm_lane));
-		GSER_CSR_INIT(status3, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_STATUS3(qlm, qlm_lane));
+		GSER_CSR_INIT(ctrl1, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL1(qlm, qlm_lane));
+		GSER_CSR_INIT(ctrl3, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL3(qlm, qlm_lane));
+		GSER_CSR_INIT(ctrl5, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL5(qlm, qlm_lane));
 		printf("  Transmitter Status:\n");
-		printf("	PRE=%d, MAIN=%d, POST=%d\n", status2.s.txeq_cm1, status3.s.txeq_c0, status1.s.txeq_c1);
+		printf("	PRE=%d, MAIN=%d, POST=%d\n", ctrl3.s.txeq_cm1, ctrl5.s.drv_swing, ctrl1.s.txeq_c1);
 	}
 	if (show_rx)
 	{
@@ -987,6 +1008,14 @@ void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 				mbg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN3_RXLEQ_EQ_MBG_O_READ_VAL_3_0_RSVD(qlm));
 				break;
 		}
+		/* These values are encoded as gray codes https://en.wikipedia.org/wiki/Gray_code */
+		att = gray2binary(att);
+		apg = gray2binary(apg);
+		lfg = gray2binary(lfg);
+		hfg = gray2binary(hfg);
+		mbf = gray2binary(mbf);
+		mbg = gray2binary(mbg);
+
 		printf("  Receiver Status:\n");
 		printf("	ATT=%d, APG=%d, LFG=%d, HFG=%d, MBF=%d, MBG=%d\n",
 			att, apg, lfg, hfg, mbf, mbg);
@@ -1132,6 +1161,20 @@ static int mailbox_response(int qlm, uint64_t *arg0, uint64_t *arg1)
  */
 int qlm__gserr_rx_equalization(int qlm, int qlm_lane)
 {
+	/* Update Forcing RX FSM Out of Lock:
+		By setting these fields, the FW will re-calibrate and RX CTRL state
+		machine will go back to the top (idle loop), LOS will drop,
+		calibration and adaptation will happen again and CDR will re-lock:
+		- lane_feature.spare_cfg6[1:1] to use initial adaptation sequence after
+			CDR has relocked.
+		- lane_feature.spare_cfg6[2:2] to use eie adaptation sequence after CDR
+			has relocked.
+		FW will clear these bits when it reads either of them as 1 while in LOCKED
+		state. Allows for forced RX re-calibration/re-adaptation and re-locking
+		of RX CDR without interfering with transmitter operation. */
+	//const int ADAPTION_TYPE_INITIAL = 2;
+	const int ADAPTION_TYPE_RUNNING = 4;
+
 	if (gser_is_platform(GSER_PLATFORM_ASIM))
 		return 0;
 
@@ -1141,64 +1184,30 @@ int qlm__gserr_rx_equalization(int qlm, int qlm_lane)
 	{
 		if ((qlm_lane != -1) && (qlm_lane != lane))
 			continue;
+
 		GSER_CSR_INIT(rxdp_ctrl1, CAVM_GSERRX_LNX_TOP_DPL_RXDP_CTRL1(qlm, lane));
+		if (rxdp_ctrl1.s.rx_dmux_sel)
+		{
+			GSER_TRACE(QLM, "N0.GSERR%d.%d: NED loopback, skipping adaption\n", qlm, lane);
+			continue;
+		}
+
 		GSER_CSR_INIT(bsts, CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane));
 		if (bsts.s.ln_stat_los)
 		{
-			/* No signal is OK in NED loopback */
-			if (!rxdp_ctrl1.s.rx_dmux_sel)
-			{
-				GSER_TRACE(QLM, "N0.GSERR%d.%d: Loss of signal\n", qlm, lane);
-				result = -1;
-				continue;
-			}
+			GSER_TRACE(QLM, "N0.GSERR%d.%d: Loss of signal\n", qlm, lane);
+			result = -1;
+			continue;
 		}
-		else
-			GSER_TRACE(QLM, "N0.GSERR%d.%d: RX signal detected\n", qlm, lane);
-
 		if (!bsts.s.ln_stat_rxvalid)
 		{
 			GSER_TRACE(QLM, "N0.GSERR%d.%d: RX invalid, CDR not locked\n", qlm, lane);
 			result = -1;
 			continue;
 		}
-		else
-			GSER_TRACE(QLM, "N0.GSERR%d.%d: RX valid, CDR locked\n", qlm, lane);
 
-		if (rxdp_ctrl1.s.rx_dmux_sel)
-		{
-			GSER_TRACE(QLM, "N0.GSERR%d.%d: NED loopback, skipping equalization\n", qlm, lane);
-			continue;
-		}
-
-		GSER_TRACE(QLM, "N0.GSERR%d.%d: Lane TXDP Clock Phase Calibration starting\n", qlm, lane);
-		if (mailbox_command(qlm, 0x81, qlm_lane))
-		{
-			gser_error("N0.GSERR%d.%d: Lane TXDP Clock Phase Calibration failed to issue\n", qlm, lane);
-			result = -1;
-			continue;
-		}
-		uint64_t arg0 = 0;
-		uint64_t arg1 = 0;
-		int status = mailbox_response(qlm, &arg0, &arg1);
-		switch (status)
-		{
-			case 0x00: /* Calibration OK */
-				GSER_TRACE(QLM, "N0.GSERR%d.%d: Lane TXDP Clock Phase Calibration: %lu\n", qlm, lane, arg0 & 0xff);
-				break;
-			case 0x01: /* Calibration Railed Low */
-				gser_error("N0.GSERR%d.%d: Lane TXDP Clock Phase Calibration Railed Low\n", qlm, lane);
-				result = -1;
-				break;
-			case 0x02: /* Calibration Railed High */
-				gser_error("N0.GSERR%d.%d: Lane TXDP Clock Phase Calibration Railed High\n", qlm, lane);
-				result = -1;
-				break;
-			default:
-				gser_error("N0.GSERR%d.%d: Lane TXDP Clock Phase Calibration illegal response %d\n", qlm, lane, status);
-				result = -1;
-				break;
-		}
+		GSER_TRACE(QLM, "N0.GSERR%d.%d: RX signal, CDR locked, running adaption\n", qlm, lane);
+		GSER_CSR_WRITE(CAVM_GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD(qlm, lane), ADAPTION_TYPE_RUNNING);
 	}
 	return result;
 }
@@ -1633,7 +1642,7 @@ static cavm_gserrx_lanex_control_bcfg_t qlm_gserr_get_lane_mode(int module, int 
  */
 static int qlm_gserr_change_lane_rate(int module, int lane)
 {
-	GSER_TRACE(QLM, "GSERP%d.%d: Changing lane mode\n", module, lane);
+	GSER_TRACE(QLM, "GSERR%d.%d: Changing lane mode\n", module, lane);
 	/* Lane Rate Change Sequence
 		1. If the Lane is inactive, proceed to Step 5, else if the Lane is
 		already up and connected bring down the CGX LMAC {SPU or GMP}
@@ -1700,6 +1709,10 @@ static int qlm_gserr_change_lane_rate(int module, int lane)
 	cavm_gserrx_lanex_control_bcfg_t bcfg = qlm_gserr_get_lane_mode(module, lane);
 	GSER_CSR_WRITE(CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane), bcfg.u);
 	gser_wait_usec(1);
+	qlm_state_lane_t state = qlm_gserr_get_state(module, lane);
+	bool ena_8b10b = (state.s.baud_mhz <= 6250);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_ADAPT_CFG0(module, lane),
+		c.s.ena_8b10b = ena_8b10b);
 
 	/* 6. Trigger the lane rate change by writing the LN_RATE_CHNG field to
 		load the *new* lane rate settings from Step 5 above.
@@ -1826,7 +1839,7 @@ static int qlm_gserr_change_lane_rate(int module, int lane)
 	/* 21. Bring up the CGX receive side. Refer to the CGX initialization and
 	   link bring-up steps in the CNF95XX B0 HRM. */
 	// FIXME: Should be done in CGX
-	GSER_TRACE(QLM, "GSERP%d.%d: Lane mode change complete\n", module, lane);
+	GSER_TRACE(QLM, "GSERR%d.%d: Lane mode change complete\n", module, lane);
 	return 0;
 }
 
@@ -1841,7 +1854,7 @@ static int qlm_gserr_change_lane_rate(int module, int lane)
 static int qlm_gserr_change_phy_rate(int module)
 {
 	gser_wait_usec(10000); /* No idea why this is needed. 1ms isn't long enough */
-	GSER_TRACE(QLM, "GSERP%d: Changing PHY rates\n", module);
+	GSER_TRACE(QLM, "GSERR%d: Changing PHY rates\n", module);
 	int num_lanes = get_num_lanes(module);
 	/* PHY Rate Change Sequence
 		The PHY Rate 1 and Rate 2 values can be changed without driving the
@@ -1886,11 +1899,11 @@ static int qlm_gserr_change_phy_rate(int module)
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
 		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_TX_RDY, ==, 0, 500))
-			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_tx_rdy]=0\n", module, lane);
+			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_tx_rdy]=0 (change rate)\n", module, lane);
 		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_RX_RDY, ==, 0, 500))
-			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_rx_rdy]=0\n", module, lane);
+			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_rx_rdy]=0 (change rate)\n", module, lane);
 		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 500))
-			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0\n", module, lane);
+			GSER_TRACE(QLM, "GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (change rate)\n", module, lane);
 	}
 
 	/* 4. Wait for the “Lane State Change Ready” to signal that the lane has
@@ -1900,7 +1913,7 @@ static int qlm_gserr_change_phy_rate(int module)
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
 		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 5000))
-			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1\n", module, lane);
+			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (change rate)\n", module, lane);
 	}
 
 	/* 5. Write the new PHY Rate 1 and Rate 2 settings from Table 2
@@ -1922,13 +1935,13 @@ static int qlm_gserr_change_phy_rate(int module)
 		Read/Poll GSERR(0..2)_COMMON_PHY_STATUS_BSTS
 			CM0_STATE_CHNG_RDY=0 //CM0 is transitioning power states */
 	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 0, 500))
-		gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=0\n", module);
+		GSER_TRACE(QLM, "GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=0 (change rate rst)\n", module);
 
 	/* 8. Read/Poll for the CM0 State Change Ready to reassert
 		Read/Poll GSERR(0..2)_COMMON_PHY_STATUS_BSTS
 			CM0_STATE_CHNG_RDY=1 //CM0 is in the Reset power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 5000))
-		gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1\n", module);
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 10000))
+		gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1 (change rate rst)\n", module);
 
 	/* 9. Release the Clock Management Unit reset
 		Write GSERR(0..2)_COMMON_PHY_CTRL_BCFG
@@ -1940,23 +1953,23 @@ static int qlm_gserr_change_phy_rate(int module)
 	   Read/Poll GSERR(0..2)_COMMON_PHY_STATUS_BSTS
 	   CM0_STATE_CHNG_RDY=0 //CM0 is transitioning power states */
 	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 0, 500))
-		gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=0\n", module);
+		GSER_TRACE(QLM, "GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=0 (change rate)\n", module);
 
 	/* 11. Read/Poll for the CM0 State Change Ready to reassert
 	   Read/Poll GSERR(0..2)_COMMON_PHY_STATUS_BSTS
 		CM0_STATE_CHNG_RDY=1 //CM0 has completed power state transtion */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 5000))
-		gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1\n", module);
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 50000))
+		gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1 (change rate)\n", module);
 
 	/* 12. Read/Poll for the CM0 OK flag set
 		Read/Poll GSERR(0..2)_COMMON_PHY_STATUS_BSTS
 			CM0_OK=1 //CM0 status is Active power state */
 	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_OK, ==, 1, 500))
-		gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_ok]=1\n", module);
+		gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_ok]=1 (change rate)\n", module);
 
 	/* Program the new Lane Rates to the new PHY rates, refer to the steps in
 	   Section 1.4 Lane Rate Change. */
-	GSER_TRACE(QLM, "GSERP%d: PHY rate change complete\n", module);
+	GSER_TRACE(QLM, "GSERR%d: PHY rate change complete\n", module);
 	return 0;
 }
 
@@ -1992,7 +2005,7 @@ static int qlm_gserr_change_phy_rate(int module)
 //	{
 //		firmware_file = "/fatfs/serdes/gserr-cn98xx.frm.lzma";
 //		num_gserr = 5;
-//		sensor = 15; /* TSN15 is nearest to GSERR */
+//		sensor = 14; /* TSN14 is nearest to GSERR */
 //	}
 //	else
 //	{
@@ -2052,6 +2065,37 @@ static int qlm_gserr_change_phy_rate(int module)
 //	}
 //	free(firmware);
 //	GSER_TRACE(QLM, "GSERR: Loaded firmware of %lu bytes\n", filesize);
+//
+//	/* Extract the firmware version. The firmware contains 32 bytes of version
+//	   data embedded inside the program image at memory address 0x50.
+//		Bytes Data						   Format
+//		0-15  PHY Digital Architecture	   Null-terminated ASCII string
+//		16	Revision Number				Binary
+//		17	Revision Suffix				Binary
+//		18-19 PHY H/W Platform			   2 ASCII characters
+//		20-21 Development Branch			 Binary
+//		22-23 PHY H/W Rev					2 ASCII characters
+//		24-27 Reserved					   Binary
+//		28-31 F/W Source Repository Revision 32-bit binary number (Big Endian) */
+//	union
+//	{
+//		uint64_t u[2];
+//		char text[16];
+//	} phy_arch;
+//	phy_arch.u[0] = gser_be64_to_cpu(GSER_CSR_READ(CAVM_GSERRX_PMEMX(0, 0x50 / 8)));
+//	phy_arch.u[1] = gser_be64_to_cpu(GSER_CSR_READ(CAVM_GSERRX_PMEMX(0, 0x50 / 8 + 1)));
+//	uint64_t phy_rev = gser_be64_to_cpu(GSER_CSR_READ(CAVM_GSERRX_PMEMX(0, 0x50 / 8 + 2)));
+//	uint64_t phy_svn_rev = gser_be64_to_cpu(GSER_CSR_READ(CAVM_GSERRX_PMEMX(0, 0x50 / 8 + 3)));
+//	int rev_number = gser_extract(phy_rev, 0, 8);
+//	int rev_suffix = gser_extract(phy_rev, 8, 8);
+//	char hw_plat0 = gser_extract(phy_rev, 16, 8);
+//	char hw_plat1 = gser_extract(phy_rev, 24, 8);
+//	int branch = gser_extract(phy_rev, 32, 16);
+//	char hw_rev0 = gser_extract(phy_rev, 48, 8);
+//	char hw_rev1 = gser_extract(phy_rev, 56, 8);
+//	uint32_t svn_rev = gser_be32_to_cpu(gser_extract(phy_svn_rev, 32, 32));
+//	GSER_TRACE(QLM, "GSERR: Firmware Arch:%s Rev:%d.%d Plat:%c%c Branch:%d HW:%c%c SVN:0x%x\n",
+//		phy_arch.text, rev_number, rev_suffix, hw_plat0, hw_plat1, branch, hw_rev0, hw_rev1, svn_rev);
 //
 //	/* 2. For each “Active” QLM Program the Lane Rate and Width parameters for
 //	   each lane.
@@ -2172,7 +2216,7 @@ static int qlm_gserr_change_phy_rate(int module)
 //		if (!gser_is_platform(GSER_PLATFORM_ASIM))
 //		{
 //			GSER_TRACE(QLM, "GSERR%d: Waiting for cm0_state_chng_rdy=1\n", module);
-//			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 1000))
+//			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 10000))
 //				gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1 (after cpu_reset=0)\n", module);
 //			qlm_gserr_poll_error(module);
 //		}
@@ -2226,7 +2270,7 @@ static int qlm_gserr_change_phy_rate(int module)
 //		if (!gser_is_platform(GSER_PLATFORM_ASIM))
 //		{
 //			GSER_TRACE(QLM, "GSERR%d: Waiting for cm0_ok=1, cm0_state_chng_rdy=1\n", module);
-//			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 5000))
+//			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 50000))
 //				gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1 (after cm0_rst=0)\n", module);
 //			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_OK, ==, 1, 10))
 //				gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_ok]=1\n", module);
@@ -2251,8 +2295,12 @@ static int qlm_gserr_change_phy_rate(int module)
 //			int num_lanes = get_num_lanes(module);
 //			for (int lane = 0; lane < num_lanes; lane++)
 //			{
-//				if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 500))
+//				if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 5000))
 //					gser_error("GSERR%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1\n", module);
+//				qlm_state_lane_t state = qlm_gserr_get_state(module, lane);
+//				bool ena_8b10b = (state.s.baud_mhz <= 6250);
+//				GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_ADAPT_CFG0(module, lane),
+//					c.s.ena_8b10b = ena_8b10b);
 //			}
 //			/* Enable the BIST/PRBS clocks before starting each lane */
 //			GSER_TRACE(QLM, "GSERR%d: Enabling BIST/PRBS logic\n", module);
