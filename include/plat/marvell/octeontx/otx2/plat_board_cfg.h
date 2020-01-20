@@ -117,13 +117,27 @@ typedef struct mcc_ras_config {
 	uint32_t enabled:1;
 } mcc_ras_config_t;
 
+#define MAX_GHES_OBJ	16
+#define GHES_PTRS	3
+typedef struct ras_config {
+	mcc_ras_config_t mcc[MAX_MCC];
+
+	struct fdt_ghes {
+		uint32_t id;
+		uint32_t size[GHES_PTRS];
+		void *base[GHES_PTRS];
+		char name[8];
+	} fdt_ghes[MAX_GHES_OBJ];
+	int nr_ghes;
+} ras_config_t;
+
 typedef struct plat_octeontx_board_cfg {
 	board_cfg_t bcfg;
 	rvu_config_t rvu_config;
 	cgx_config_t cgx_cfg[MAX_CGX];
 	qlm_config_t qlm_cfg[MAX_QLM];
 	int qlm_voltage;
-	mcc_ras_config_t mcc_ras_cfg[MAX_MCC];
+	ras_config_t ras_config;
 	uint64_t pf_mac_base; /* PF MAC Address */
 	int pf_mac_num;
 } plat_octeontx_board_cfg_t;

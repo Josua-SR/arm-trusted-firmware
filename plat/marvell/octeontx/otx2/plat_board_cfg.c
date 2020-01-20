@@ -1967,6 +1967,90 @@ static void octeontx2_fill_twsi_slave_details(const void *fdt)
 	plat_octeontx_bcfg->bcfg.slave_twsi.s.addr = twssl_addr;
 }
 
+static void octeontx2_fill_ras_details(const void *fdt)
+{
+	ras_config_t *c = &plat_octeontx_bcfg->ras_config;
+	int offset, child;
+	const fdt32_t *frange;
+	struct range {
+		uint64_t rel;
+		uint64_t abs;
+		uint32_t size;
+	} ranges[GHES_PTRS];
+	int i;
+
+	offset = fdt_path_offset(fdt, "/soc@0/sdei-ghes");
+	debug_dts("%s soc@0/sdei-ghes %d\n", __func__, offset);
+	offset = fdt_node_offset_by_compatible(fdt, 0,
+					"marvell,sdei-ghes");
+	debug_dts("%s sdei-ghes %d\n", __func__, offset);
+
+	/* parse address translation window */
+	frange = fdt_getprop(fdt, offset, "ranges", NULL);
+	for (i = 0; i < GHES_PTRS; i++) {
+		struct range *r = ranges + i;
+		const fdt32_t *foff = frange + 5 * i;
+
+		r->rel = fdt32_to_cpu(foff[0]);
+		r->rel <<= 32;
+		r->rel |= fdt32_to_cpu(foff[1]);
+		r->abs = fdt32_to_cpu(foff[2]);
+		r->abs <<= 32;
+		r->abs |= fdt32_to_cpu(foff[3]);
+		r->size = fdt32_to_cpu(foff[4]);
+		debug_dts("%s r%d %llx %llx %x\n",
+			__func__, i, r->rel, r->abs, r->size);
+	}
+
+	/* parse each GHES subnode */
+	fdt_for_each_subnode(child, fdt, offset) {
+		struct fdt_ghes *g = c->fdt_ghes + c->nr_ghes;
+		const fdt32_t *freg, *fid;
+		const char *name;
+
+		if (c->nr_ghes >= MAX_GHES_OBJ)
+			break;
+
+		name = fdt_get_name(fdt, child, NULL);
+		freg = fdt_getprop(fdt, child, "reg", NULL);
+		fid = fdt_getprop(fdt, child, "event-id", NULL);
+
+		if (!freg || !fid || !name)
+			continue;
+
+		strlcpy(g->name, name, sizeof(g->name));
+		g->id = fdt32_to_cpu(fid[0]);
+
+		for (i = 0; i < GHES_PTRS; i++) {
+			struct range *r = ranges + i;
+			const fdt32_t *foff = freg + 3 * i;
+			uint64_t base;
+
+			base = fdt32_to_cpu(foff[0]);
+			base <<= 32;
+			base |= fdt32_to_cpu(foff[1]);
+			g->size[i] = fdt32_to_cpu(foff[2]);
+
+			/* check against parent range */
+			if (base + g->size[i] > r->rel + r->size ||
+						    base < r->rel) {
+				printf("%s(%s) r%d %x@%llx outside %x@%llx\n",
+					__func__, g->name, i,
+					g->size[i], base,
+					r->size, r->rel);
+				g->base[i] = NULL;
+				g->size[i] = 0;
+			} else {
+				base += r->abs - r->rel;
+				printf("%s (%s) id:%x %x@%llx\n", __func__,
+					g->name, g->id, g->size[i], base);
+				g->base[i] = (void *)base;
+				c->nr_ghes++;
+			}
+		}
+	}
+}
+
 int plat_octeontx_fill_board_details(void)
 {
 	const void *fdt = fdt_ptr;
@@ -1992,6 +2076,7 @@ int plat_octeontx_fill_board_details(void)
 
 	octeontx2_fill_cgx_details(fdt);
 	octeontx2_fill_qlm_details(fdt);
+	octeontx2_fill_ras_details(fdt);
 
 	octeontx2_fill_twsi_slave_details(fdt);
 

@@ -125,6 +125,56 @@ static void plat_ras_initialize_interrupt_array(void)
 	}
 }
 
+struct fdt_ghes *otx2_find_ghes(const char *name)
+{
+	int i;
+	ras_config_t *rc = &plat_octeontx_bcfg->ras_config;
+
+	for (i = 0; i < rc->nr_ghes; i++) {
+		if (strcmp(name, rc->fdt_ghes[i].name))
+			continue;
+		debug_ras("%s(%s) finds entry %d: %p %p %p\n",
+			__func__, name, i,
+			rc->fdt_ghes[i].base[0],
+			rc->fdt_ghes[i].base[1],
+			rc->fdt_ghes[i].base[GHES_PTRS - 1]);
+		return &rc->fdt_ghes[i];
+	}
+	return NULL;
+}
+
+void otx2_map_ghes(void)
+{
+	ras_config_t *rc = &plat_octeontx_bcfg->ras_config;
+	uint64_t lo = ~0ULL;
+	uint64_t hi = 0;
+	int i, j;
+
+	for (i = 0; i < rc->nr_ghes; i++) {
+		struct fdt_ghes *g = &rc->fdt_ghes[i];
+
+		for (j = 0; j < GHES_PTRS; j++) {
+			debug_ras("(%s) %d.%d %x@%p\n",
+				g->name, i, j, g->size[j], g->base[j]);
+			if (!g->size[j])
+				break;
+			if (lo > (uint64_t) g->base[j])
+				lo = (uint64_t) g->base[j];
+			if (hi < (uint64_t) g->base[j] + g->size[j])
+				hi = (uint64_t) g->base[j] + g->size[j];
+			debug_ras("range %llx..%llx\n", lo, hi);
+		}
+	}
+
+	if (lo >= hi)
+		return;
+	lo &= ~PAGE_SIZE_MASK;
+	hi |= PAGE_SIZE_MASK;
+	debug_ras("%s map %llx..%llx\n", __func__, lo, hi + 1 - lo);
+	mmap_add_region(lo, lo, hi + 1 - lo,
+		MT_MEMORY | MT_RW | MT_NS);
+}
+
 int otx2_ras_init(void)
 {
 	plat_ras_initialize_interrupt_array();
