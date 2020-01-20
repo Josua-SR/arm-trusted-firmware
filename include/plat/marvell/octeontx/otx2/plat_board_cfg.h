@@ -16,6 +16,14 @@
 #include <platform_scfg.h>
 #include <octeontx_board_cfg.h>
 
+typedef enum ccs_region_index {
+	SECURE_NONPRESERVE,
+	NSECURE_NONPRESERVE,
+	SECURE_PRESERVE, /* used as ARM Trace Buffer */
+	NSECURE_PRESERVE,
+	CCS_REGION_IDX_MAX,
+} ccs_region_index_t;
+
 typedef struct rvu_sw_rvu_pf {
 	int num_rvu_vfs;
 	int num_msix_vec;
@@ -114,5 +122,6 @@ typedef struct plat_octeontx_board_cfg {
 } plat_octeontx_board_cfg_t;
 
 extern plat_octeontx_board_cfg_t * const plat_octeontx_bcfg;
+uint64_t ccs_region_get_info(ccs_region_index_t index, uint64_t *start);
 
 #endif /* __PLAT_BOARD_CFG_H__ */

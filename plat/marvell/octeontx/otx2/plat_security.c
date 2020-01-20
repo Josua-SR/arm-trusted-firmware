@@ -17,7 +17,7 @@
 #include <octeontx_utils.h>
 
 struct ccs_region {
-	unsigned int  number;
+	ccs_region_index_t  number;
 	unsigned long start;
 	unsigned long end;
 	unsigned int  secure;
@@ -33,7 +33,7 @@ struct ccs_region {
 struct ccs_region ccs_map [] = {
 	/* Secure non preserve region */
 	{
-		.number    = 0,
+		.number    = SECURE_NONPRESERVE,
 		.start     = TZDRAM_BASE,
 		.end       = TZDRAM_BASE + TZDRAM_SIZE - 1,
 		.secure    = 1,
@@ -41,7 +41,7 @@ struct ccs_region ccs_map [] = {
 	},
 	/* Non-secure non preserve region */
 	{
-		.number    = 1,
+		.number    = NSECURE_NONPRESERVE,
 		.start     = TZDRAM_BASE + TZDRAM_SIZE,
 		.end       = SET_BY_BDK,
 		.secure    = 0,
@@ -49,7 +49,7 @@ struct ccs_region ccs_map [] = {
 	},
 	/* Secure preserve region */
 	{
-		.number    = 2,
+		.number    = SECURE_PRESERVE,
 		.start     = SET_BY_BDK,
 		.end       = SET_BY_BDK,
 		.secure    = 1,
@@ -57,7 +57,7 @@ struct ccs_region ccs_map [] = {
 	},
 	/* Non-secure preserve region */
 	{
-		.number    = 3,
+		.number    = NSECURE_PRESERVE,
 		.start     = SET_BY_BDK,
 		.end       = SET_BY_BDK,
 		.secure    = 0,
@@ -67,6 +67,35 @@ struct ccs_region ccs_map [] = {
 		.number  = LAST_CCS_REGION,
 	},
 };
+
+/* Returns start and size info of the region
+ * Assumes region definition used by BDK and ccs_map in ATF are in sync
+ */
+uint64_t ccs_region_get_info(ccs_region_index_t index, uint64_t *start)
+{
+	union cavm_ccs_asc_regionx_attr ccs_asc_attr;
+	uint64_t reg_start, reg_end;
+
+	if (index >= CCS_REGION_IDX_MAX)
+		return 0;
+
+	ccs_asc_attr.u = CSR_READ(CAVM_CCS_ASC_REGIONX_ATTR(index));
+	reg_start = CSR_READ(CAVM_CCS_ASC_REGIONX_START(index));
+	reg_end = CSR_READ(CAVM_CCS_ASC_REGIONX_END(index));
+
+	/* Verify if user hasnt configured yet or misconfigured */
+	if ((!ccs_asc_attr.s.s_en && !ccs_asc_attr.s.ns_en) ||
+	    reg_end < reg_start) {
+		return 0;
+	}
+
+	/* REGIONX_END always reports lower 24 bits as 0 */
+	reg_end |= 0xffffff;
+
+	/* Retrun start and size */
+	*start = reg_start;
+	return reg_end - reg_start + 1;
+}
 
 /*
  * This is workaround for errata NIX-31533
