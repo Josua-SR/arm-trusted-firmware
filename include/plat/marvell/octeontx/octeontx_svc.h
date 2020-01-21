@@ -56,6 +56,11 @@
 #define OCTEONTX_TRC_FREE_SBUF		0xc2000c08
 /* Args: x1 - non secure buffer address, x2 - size */
 #define OCTEONTX_TRC_UNREGISTER_DRVBUF	0xc2000c09
+/* Args: Nil
+ * Returns: Trace buffer size
+ */
+
+#define OCTEONTX_TRC_GET_CPU_BUFSIZE	0xc2000c0a
 
 /*
  * No input
@@ -68,7 +73,7 @@
  */
 #define PLAT_OCTEONTX_SERDES_DBG_GET_MEM	0xc2000d04
 
-#define OCTEONTX_NUM_CALLS		18
+#define OCTEONTX_NUM_CALLS		19
 
 /*
  * Standard OcteonTX SMC responses

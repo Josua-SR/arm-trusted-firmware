@@ -8,6 +8,7 @@
 #ifndef __OCTEONTX_TRACE_H__
 #define __OCTEONTX_TRACE_H__
 
+uint64_t arm_trace_get_cpu_tracebufsize(uint64_t *size);
 uint64_t arm_trace_alloc_sbuf(uint64_t size, uint64_t cpu, int llc_lock_req,
 			      uint64_t *addr);
 int arm_trace_register_drvbuf(uint64_t address, uint64_t size);

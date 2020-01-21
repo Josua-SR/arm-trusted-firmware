@@ -136,7 +136,12 @@ uintptr_t octeontx_svc_smc_handler(uint32_t smc_fid,
 		break;
 
 #if defined ARM_TRACE_SECURE_BUFFER
-	uint64_t address;
+	uint64_t address, size;
+
+	case OCTEONTX_TRC_GET_CPU_BUFSIZE:
+		ret = arm_trace_get_cpu_tracebufsize(&size);
+		SMC_RET2(handle, ret, size);
+		break;
 
 	case OCTEONTX_TRC_ALLOC_SBUF:
 		ret = arm_trace_alloc_sbuf(x1, x2, x3, &address);
