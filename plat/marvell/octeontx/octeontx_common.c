@@ -30,9 +30,6 @@ uint64_t plat_get_syscnt_freq2(void)
 	return OCTEONTX_SYSCNT_FREQ * 1000 * 1000;
 }
 
-#define ROUND_DOWN(val, align)	((val) / (align) * (align))
-#define ROUND_UP(val, align)	(((val) + (align) - 1) / (align) * (align))
-
 void add_map_record(unsigned long addr, unsigned long size, unsigned int attr)
 {
 	/* Round up to sensible boundry */

@@ -87,6 +87,9 @@ DEFINE_RENAME_SYSREG_RW_FUNCS(cvmnvbar_el3, AP_CVM_NVBAR_EL3)
 #define set_bit(reg, bit) reg |= (1ULL<<(bit))
 #define unset_bit(reg, bit) reg &= ~(1ULL<<(bit))
 
+#define ROUND_DOWN(val, align)	((val) / (align) * (align))
+#define ROUND_UP(val, align)	(((val) + (align) - 1) / (align) * (align))
+
 /* LLC cache locking */
 static inline int octeontx_llc_lock(uint64_t phys_addr, uint64_t size)
 {
