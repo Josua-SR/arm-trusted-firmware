@@ -2316,6 +2316,11 @@ static void cgx_check_for_presence_of_phy(int cgx_id, int lmac_id)
 			 */
 			debug_cgx_intf("%s: %d:%d PHY type %d not detected in I/O module\n",
 				       __func__, cgx_id, lmac_id, phy->type);
+			/* In case of 1000 BASE-X without PHY, AN needs
+			 * to be disabled
+			 */
+			if (lmac->mode_idx == QLM_MODE_1G_X)
+				lmac->autoneg_dis = 1;
 			lmac->phy_present = 0;
 			memset(phy, 0, sizeof(*phy));
 			break;
