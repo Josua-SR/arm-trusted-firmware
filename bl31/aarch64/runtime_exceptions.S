@@ -115,7 +115,6 @@
 	cmp	x30, #EC_AARCH64_SMC
 	b.eq	smc_handler64
 
-	/* Synchronous exceptions other than the above are assumed to be EA */
 #if (defined(PLAT_f95) || defined(PLAT_t96) || defined(PLAT_loki) || \
 	defined(PLAT_t98) || defined(PLAT_f95mm))
 	/* -----------------------------------------------------
@@ -128,6 +127,14 @@
 	b.eq	octeontx_io_trap_handler
 #endif
 
+	/*
+	 * The following handles any synchronous exception that is not SMC.
+	 * Right now this only happens when EL0 ISR is returning.
+	 */
+	b	el3_exit_wfi
+
+
+	/* Synchronous exceptions other than the above are assumed to be EA */
 	ldr	x30, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_LR]
 	b	enter_lower_el_sync_ea
 	.endm
