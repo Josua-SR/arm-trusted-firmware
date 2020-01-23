@@ -36,8 +36,10 @@ static unsigned char nt_fw_config_hash_buf[HASH_DER_LEN];
  */
 static auth_param_type_desc_t trusted_nv_ctr = AUTH_PARAM_TYPE_DESC(
 		AUTH_PARAM_NV_CTR, TRUSTED_FW_NVCOUNTER_OID);
+#ifdef CONFIG_NTFW_NVCTR_VAL
 static auth_param_type_desc_t non_trusted_nv_ctr = AUTH_PARAM_TYPE_DESC(
 		AUTH_PARAM_NV_CTR, NON_TRUSTED_FW_NVCOUNTER_OID);
+#endif
 
 static auth_param_type_desc_t subject_pk = AUTH_PARAM_TYPE_DESC(
 		AUTH_PARAM_PUB_KEY, 0);
@@ -264,6 +266,7 @@ static const auth_img_desc_t non_trusted_fw_key_cert = {
 					.data = &raw_data,
 				}
 			},
+#ifdef CONFIG_NTFW_NVCTR_VAL
 			[1] = {
 				.type = AUTH_METHOD_NV_CTR,
 				.param.nv_ctr = {
@@ -271,6 +274,7 @@ static const auth_img_desc_t non_trusted_fw_key_cert = {
 					.plat_nv_ctr = &non_trusted_nv_ctr
 				}
 			}
+#endif
 		},
 		.authenticated_data = (const auth_param_desc_t[COT_MAX_VERIFIED_PARAMS]) {
 			[0] = {
@@ -297,6 +301,7 @@ static const auth_img_desc_t non_trusted_fw_content_cert = {
 					.data = &raw_data,
 				}
 			},
+#ifdef CONFIG_NTFW_NVCTR_VAL
 			[1] = {
 				.type = AUTH_METHOD_NV_CTR,
 				.param.nv_ctr = {
@@ -304,6 +309,7 @@ static const auth_img_desc_t non_trusted_fw_content_cert = {
 					.plat_nv_ctr = &non_trusted_nv_ctr
 				}
 			}
+#endif
 		},
 		.authenticated_data = (const auth_param_desc_t[COT_MAX_VERIFIED_PARAMS]) {
 			[0] = {

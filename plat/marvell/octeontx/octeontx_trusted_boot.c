@@ -187,7 +187,6 @@ int plat_get_rotpk_info(void *cookie, void **key_ptr, unsigned int *key_len,
 int plat_get_nv_ctr(void *cookie, unsigned int *nv_ctr)
 {
 	const char *oid;
-	union cavm_fusf_swx fusf_swx;
 
 	assert(cookie != NULL);
 	assert(nv_ctr != NULL);
@@ -198,8 +197,10 @@ int plat_get_nv_ctr(void *cookie, unsigned int *nv_ctr)
 	if (strcmp(oid, TRUSTED_FW_NVCOUNTER_OID) == 0 ) {
 		nv_ctr_val = plat_get_rom_t_cnt(0);
 		*nv_ctr = nv_ctr_val;
+#ifdef CONFIG_NTFW_NVCTR_VAL
 	/* For Non-Trusted counter, use FUSF_SWX */
 	} else if (strcmp(oid, NON_TRUSTED_FW_NVCOUNTER_OID) == 0) {
+		union cavm_fusf_swx fusf_swx;
 		/*
 		 * NonTrustedNvCounter is stored at
 		 * FUSF_SW(0)[63:32] and FUSF_SW(1)[63:0]
@@ -216,6 +217,7 @@ int plat_get_nv_ctr(void *cookie, unsigned int *nv_ctr)
 			nv_ctr_val += (64 - __builtin_clzl(fusf_swx.s.dat));
 
 		*nv_ctr = nv_ctr_val;
+#endif
 	} else {
 		return 1;
 	}
