@@ -1173,6 +1173,7 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 	/* just for debug... */
 	static int cnt;
 	static uint64_t was[MAX_LMC];
+	struct fdt_ghes *gh;
 
 	status.u = ~0ull;
 	erraddr.u = 0;
@@ -1379,14 +1380,14 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 		ERROR("ASC_R%d(ns:%d s:%d) but sec:%d\n",
 			reg, ns_reg, s_reg, secure);
 
-	{
+	gh = otx2_find_ghes("mcc");
+	if (gh) {
 		struct otx2_ghes_err_record *err_rec;
 		struct otx2_ghes_err_ring *err_ring;
 		uint32_t total_ring_len, tail, head;
-		struct fdt_ghes *g = otx2_find_ghes("mcc");
 
-		err_ring = g->base[GHES_PTR_RING];
-		total_ring_len = g->size[GHES_PTR_RING];
+		err_ring = gh->base[GHES_PTR_RING];
+		total_ring_len = gh->size[GHES_PTR_RING];
 		/* TODO: fix me - head/tail/size need one-time init */
 		err_ring->size =
 			(total_ring_len -
@@ -1425,11 +1426,11 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 		if (++head >= err_ring->size)
 			head = 0;
 		err_ring->head = head;
-	}
 
 #if SDEI_SUPPORT
-	sdei_dispatch_event(OCTEONTX_SDEI_RAS_MCC_EVENT);
+		sdei_dispatch_event(OCTEONTX_SDEI_RAS_MCC_EVENT);
 #endif
+	}
 
 	if (av && !fatal && repair)
 		ras_rewrite_cacheline(physaddr, secure);

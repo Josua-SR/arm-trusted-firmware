@@ -130,7 +130,7 @@ struct fdt_ghes *otx2_find_ghes(const char *name)
 	int i;
 	ras_config_t *rc = &plat_octeontx_bcfg->ras_config;
 
-	for (i = 0; i < rc->nr_ghes; i++) {
+	for (i = 0; rc && i < rc->nr_ghes; i++) {
 		if (strcmp(name, rc->fdt_ghes[i].name))
 			continue;
 		debug_ras("%s(%s) finds entry %d: %p %p %p\n",
