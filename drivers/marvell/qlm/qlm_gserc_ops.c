@@ -54,34 +54,6 @@ static int qlm_gserc_get_lmac_phy_lane(int qlm, int lane)
 	return lane;
 }
 
-/**
- * Get the LMAC's first GSER associated with the specified GSER.
- * Required for LMAC's that use DLM's
- *
- * @param  qlm	   QLM to use
- * @return Returns the LMAC first GSER
- */
-static int qlm_gserc_get_lmac_first_qlm(int qlm)
-{
-	/* Need to add GSERP and GSERR count
-	 * for LOKI
-	 */
-	if (IS_OCTEONTX_PN(read_midr(), LOKIPARTNUM)) {
-		int gserp_gserr_count = plat_octeontx_get_gserp_count() +
-					plat_octeontx_get_gserr_count();
-
-		switch (qlm) {
-		case 1:
-		case 3:
-			return qlm - 1 + gserp_gserr_count;
-		default:
-			return qlm + gserp_gserr_count;
-		}
-	}
-
-	return qlm;
-}
-
 const qlm_ops_t qlm_gserc_ops = {
 	.type = QLM_GSERC_TYPE,
 	.qlm_get_state = qlm_gserc_get_state,
@@ -102,7 +74,6 @@ const qlm_ops_t qlm_gserc_ops = {
 	.qlm_tx_control = qlm_gserc_tx_control,
 	.qlm_rx_signal_detect = qlm_gserc_rx_signal_detect,
 	.qlm_get_lmac_phy_lane = qlm_gserc_get_lmac_phy_lane,
-	.qlm_get_lmac_first_qlm = qlm_gserc_get_lmac_first_qlm,
 	.qlm_rx_adaptation_cdr_control = qlm_gserc_rx_adaption_cdr_control,
 	.qlm_lane_rst = qlm_gserc_lane_rst,
 	.qlm_link_training_start = qlm_gserc_link_training_start,

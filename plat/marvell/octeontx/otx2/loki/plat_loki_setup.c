@@ -127,22 +127,54 @@ int plat_octeontx_get_gserp_count(void)
 	return 1;
 }
 
+int plat_otx2_get_gserx(int qlm, int *shift_from_first)
+{
+	int gserx;
+	int gserp_count;
+	int gserr_count;
+
+	if (qlm >= plat_octeontx_get_gser_count())
+		return -1;
+
+	gserp_count = plat_octeontx_get_gserp_count();
+
+	if (qlm < gserp_count)
+		return -1;
+
+	/* Correct GSERR index */
+	gserx = qlm - gserp_count;
+
+	gserr_count = plat_octeontx_get_gserr_count();
+
+	if (gserx >= gserr_count)
+		/* Correct GSERC index */
+		gserx -= gserr_count;
+
+	if (shift_from_first != NULL) {
+		/*
+		 * There are 5 DLMs, DLM3 and DLM5 are consider shifted
+		 * from the first one (DLM3 by one from DLM2 and
+		 * DLM5 by one from DLM4)
+		 */
+		*shift_from_first = -(gserx % 2);
+	}
+
+	return gserx;
+}
+
 extern const qlm_ops_t qlm_gserc_ops;
 extern const qlm_ops_t qlm_gserr_ops;
 
-const qlm_ops_t *plat_otx2_get_qlm_ops(int *qlm)
+const qlm_ops_t *plat_otx2_get_qlm_ops(int cgx_idx)
 {
-	if (*qlm == 1) {
-		*qlm -= 1;
+	if (cgx_idx < 0 || cgx_idx >= plat_octeontx_get_cgx_count())
+		return NULL;
 
+	if (cgx_idx == 0) {
 		return &qlm_gserr_ops;
-	} else if (*qlm >= 2 && *qlm <= 6) {
-		*qlm -= 2;
-
-		return &qlm_gserc_ops;
 	}
 
-	return NULL;
+	return &qlm_gserc_ops;
 }
 
 int plat_octeontx_get_uaa_count(void)

@@ -288,4 +288,7 @@ int cgx_get_lane_count(int lmac_type);
 int cgx_display_eye(int qlm, int qlm_lane, int show_data);
 int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data);
 
+/* plat APIs specific to Octeon TX2 family */
+int plat_get_cgx_idx(int qlm);
+
 #endif

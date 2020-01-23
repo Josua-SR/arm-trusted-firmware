@@ -134,21 +134,6 @@ static int qlm_gsern_get_lmac_phy_lane(int qlm, int lane)
 		return lane;
 }
 
-/**
- * Get the LMAC's first GSER associated with the specified GSER.
- * Required for LMAC's that use DLM's
- *
- * @param  qlm    QLM to use
- * @return Returns the LMAC first GSER
- */
-static int qlm_gsern_get_lmac_first_qlm(int qlm)
-{
-	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1) && (qlm == 5))
-		return 4;
-	else
-		return qlm;
-}
-
 const qlm_ops_t qlm_gsern_ops = {
 	.type = QLM_GSERN_TYPE,
 	.qlm_get_state = qlm_get_state_gsern,
@@ -170,5 +155,4 @@ const qlm_ops_t qlm_gsern_ops = {
 	.qlm_tx_sm_rst_control = qlm_tx_sm_rst_control_gsern,
 	.qlm_rx_signal_detect = qlm_rx_signal_detect_gsern,
 	.qlm_get_lmac_phy_lane = qlm_gsern_get_lmac_phy_lane,
-	.qlm_get_lmac_first_qlm = qlm_gsern_get_lmac_first_qlm,
 };

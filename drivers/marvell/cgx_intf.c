@@ -809,16 +809,18 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 	int req_speed, valid, lmac_type, ret = 0;
 	cgx_lmac_config_t *lmac;
 	cgx_lmac_context_t *lmac_ctx;
+	cgx_config_t *cgx;
 	int qlm_mode = 0, baud_mhz = 0, req_an = 0, flags = 0;
 	int req_duplex = 0;
-	int qlm = 0, an = 0, invalid_req = 0;
+	int gserx = 0, an = 0, invalid_req = 0;
 	link_state_t link;
 	int lane, lane_count;
 	uint64_t req_mode;
 	uint32_t lane_mask;
 
 	lmac_ctx = &lmac_context[cgx_id][lmac_id];
-	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
 	req_speed = args->speed;
 	req_an = args->an;
 	req_mode = args->mode;
@@ -865,8 +867,6 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 		valid = cgx_check_speed_change_allowed(cgx_id, lmac_id,
 						lmac_type, req_mode);
 		if (valid) {
-			const qlm_ops_t *qlm_ops;
-
 			/* Bring down the CGX link */
 			ret = cgx_link_bringdown(cgx_id, lmac_id);
 
@@ -896,7 +896,7 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 				lmac->fec = CGX_FEC_NONE;
 
 			lmac->mode = lmac_type;
-			qlm = lmac->qlm;
+			gserx = lmac->gserx;
 
 			debug_cgx_intf("%s: Re-configuring serdes for mode %d, baud rate %d, lmac type %d\n",
 						__func__, qlm_mode, baud_mhz,
@@ -905,28 +905,24 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 			/* Configure SerDes for new QLM mode */
 			qlm_state_lane_t state = qlm_build_state(qlm_mode, baud_mhz, flags);
 
-			qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-			if (qlm_ops == NULL) {
-				debug_cgx_intf("%s:get_qlm_ops failed %d\n",
-					__func__, qlm);
-				return -1;
-			}
 			lane_count = cgx_get_lane_count(lmac_type);
 			lane_mask = 0;
 			for (int i = 0; i < lane_count; i++) {
 				lane = (lmac->lane_to_sds >> (i*2)) & 3;
 				lane_mask |= 1 << lane;
-				if (lmac->qlm != lmac->first_qlm && lane > 1)
+				if (lmac->shift_from_first != 0 && lane > 1)
 					lane -= 2; /* adjust for upper DLM */
-				qlm_ops->qlm_set_mode(qlm, lane, qlm_mode, baud_mhz, 0);
+				cgx->qlm_ops->qlm_set_mode(gserx, lane,
+						qlm_mode, baud_mhz, 0);
 			}
 			lmac->lane_mask = lane_mask;
 
 			/* Update the SCRATCHX register with the new link info to the
 			 * original lane
 			 */
-			if (qlm_ops->type == QLM_GSERN_TYPE)
-				qlm_ops->qlm_set_state(lmac->qlm, lmac->lane,
+			if (cgx->qlm_ops->type == QLM_GSERN_TYPE)
+				cgx->qlm_ops->qlm_set_state(lmac->gserx,
+							lmac->lane,
 							state);
 
 			/* Wait 5ms before bringing UP the CGX link */
@@ -1184,11 +1180,11 @@ static int do_prbs(int qlm, int mode, int time)
 	int errors;
 	int time_left, delay;
 	int cgx_id;
+	int gserx;
 #ifdef DEBUG_ATF_CGX_INTF
 	int qlm_idx;
 #endif /* DEBUG_ATF_CGX_INTF */
 	cgx_config_t *cgx_cfg;
-	const qlm_ops_t *qlm_ops;
 	const int DISPLAY_INTERVAL = 5;
 
 	if (qlm >= MAX_QLM || qlm < 0) {
@@ -1199,7 +1195,7 @@ static int do_prbs(int qlm, int mode, int time)
 	cgx_id = plat_get_cgx_idx(qlm);
 	if (cgx_id == -1) {
 		WARN("To QLM%d any CGX cannot by wired.\n", qlm);
-		cgx_cfg = NULL;
+		return -1;
 	} else {
 		cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
 	}
@@ -1211,18 +1207,14 @@ static int do_prbs(int qlm, int mode, int time)
 	debug_cgx_intf("Start PRBS-%d on QLM%d (CGX %d), end in %d sec\n",
 		mode, qlm, cgx_id, time);
 
+	/* gserx index is the same for every lane */
+	gserx = cgx_cfg->lmac_cfg[0].gserx;
 #ifdef DEBUG_ATF_CGX_INTF
-	qlm_idx = qlm;
+	qlm_idx = cgx_cfg->lmac_cfg[0].qlm;
 #endif /* DEBUG_ATF_CGX_INTF */
-	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-	if (qlm_ops == NULL) {
-		WARN("%s:get_qlm_ops failed %d\n",
-			__func__, qlm);
-		return -1;
-	}
 
 	/* Start PRBS */
-	qlm_ops->qlm_enable_prbs(qlm, mode, QLM_DIRECTION_TX);
+	cgx_cfg->qlm_ops->qlm_enable_prbs(gserx, mode, QLM_DIRECTION_TX);
 
 	for (lane = 0; lane < num_lanes; lane++) {
 		/* BDK use here bdk_netphy_get_handle function */
@@ -1238,7 +1230,7 @@ static int do_prbs(int qlm, int mode, int time)
 		}
 	}
 	udelay(1000);  /* Let TX run for 1ms before starting RX */
-	qlm_ops->qlm_enable_prbs(qlm, mode, QLM_DIRECTION_RX);
+	cgx_cfg->qlm_ops->qlm_enable_prbs(gserx, mode, QLM_DIRECTION_RX);
 
 	for (lane = 0; lane < num_lanes; lane++) {
 		/* BDK use here bdk_netphy_get_handle function */
@@ -1263,7 +1255,8 @@ static int do_prbs(int qlm, int mode, int time)
 		mdelay(delay * 1000);
 
 		for (lane = 0; lane < num_lanes; lane++) {
-			errors = qlm_ops->qlm_get_prbs_errors(qlm, lane, 0);
+			errors = cgx_cfg->qlm_ops->qlm_get_prbs_errors(
+							gserx, lane, 0);
 			debug_cgx_intf("Time: %d seconds QLM%d.Lane%d: errors: ",
 				time - time_left, qlm_idx, lane);
 			if (errors != -1)
@@ -1301,7 +1294,7 @@ static int do_prbs(int qlm, int mode, int time)
 
 	debug_cgx_intf("Stopping pattern generator\n");
 	/* Stop PRBS */
-	qlm_ops->qlm_disable_prbs(qlm);
+	cgx_cfg->qlm_ops->qlm_disable_prbs(gserx);
 
 	for (lane = 0; lane < num_lanes; lane++) {
 		/* BDK use here bdk_netphy_get_handle function */
@@ -1367,9 +1360,10 @@ int cgx_display_eye(int qlm, int qlm_lane, int show_data)
 	int eye_area = 0;
 	int eye_width = 0;
 	int eye_height = 0;
-	int qlm_idx;
+	int gserx;
+	int cgx_id;
 	int ec;
-	const qlm_ops_t *qlm_ops;
+	cgx_config_t *cgx_cfg;
 	char color_str[] = "\33[40m"; /* Note: This is modified, not constant */
 
 	if (qlm >= MAX_QLM || qlm < 0) {
@@ -1384,27 +1378,29 @@ int cgx_display_eye(int qlm, int qlm_lane, int show_data)
 		return -1;
 	}
 
-	qlm_idx = qlm;
-	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-	if (qlm_ops == NULL) {
-		WARN("%s:get_qlm_ops failed %d\n",
-			__func__, qlm);
+	cgx_id = plat_get_cgx_idx(qlm);
+	if (cgx_id == -1) {
+		WARN("To QLM%d any CGX cannot by wired.\n", qlm);
 		return -1;
 	}
+	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
 
-	ec = qlm_ops->qlm_eye_capture(qlm, qlm_lane, show_data, &eye);
+	gserx = cgx_cfg->lmac_cfg[qlm_lane].gserx;
+
+	ec = cgx_cfg->qlm_ops->qlm_eye_capture(gserx, qlm_lane,
+						show_data, &eye);
 	if (ec)
 		return ec;
 
 	if (!show_data) {
-		eye.type = qlm_ops->type;
+		eye.type = cgx_cfg->qlm_ops->type;
 		memcpy((void *)(SERDES_EYE_DATA_BASE), &eye,
 				sizeof(gser_qlm_eye_t));
 
 		return CGX_DISPLAY_OK;
 	}
 
-	if (qlm_ops->type == QLM_GSERN_TYPE) {
+	if (cgx_cfg->qlm_ops->type == QLM_GSERN_TYPE) {
 		uint64_t data;
 		for (y = 0; y < eye.height; y++) {
 			for (x = 0; x < eye.width; x++) {
@@ -1442,7 +1438,7 @@ int cgx_display_eye(int qlm, int qlm_lane, int show_data)
 			eye_height = height;
 	}
 
-	printf("\nEye Diagram for QLM %d, Lane %d\n", qlm_idx, qlm_lane);
+	printf("\nEye Diagram for QLM %d, Lane %d\n", qlm, qlm_lane);
 
 	last_color = -1;
 	for (y = 0; y < eye.height; y++) {
@@ -1481,7 +1477,9 @@ int cgx_display_eye(int qlm, int qlm_lane, int show_data)
 int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data)
 {
 	int max_lane;
-	const qlm_ops_t *qlm_ops;
+	int gserx;
+	int cgx_id;
+	cgx_config_t *cgx_cfg;
 
 	if (qlm >= MAX_QLM || qlm < 0) {
 		WARN("%d not in range, available QLM0-%d\n", qlm, MAX_QLM - 1);
@@ -1495,17 +1493,20 @@ int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data)
 		return -1;
 	}
 
-	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-	if (qlm_ops == NULL) {
-		WARN("%s:get_qlm_ops failed %d\n",
-			__func__, qlm);
+	cgx_id = plat_get_cgx_idx(qlm);
+	if (cgx_id == -1) {
+		WARN("To QLM%d any CGX cannot by wired.\n", qlm);
 		return -1;
 	}
+	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+
+	gserx = cgx_cfg->lmac_cfg[qlm_lane].gserx;
 
 	if (show_data) {
-		qlm_ops->qlm_display_settings(qlm, qlm_lane, 1, 1, NULL, 0);
+		cgx_cfg->qlm_ops->qlm_display_settings(gserx, qlm_lane, 1, 1,
+				NULL, 0);
 	} else {
-		qlm_ops->qlm_display_settings(qlm, qlm_lane, 1, 1,
+		cgx_cfg->qlm_ops->qlm_display_settings(gserx, qlm_lane, 1, 1,
 				(char *)(SERDES_SETTINGS_DATA_BASE),
 				SERDES_SETTINGS_DATA_SIZE);
 	}
@@ -2334,8 +2335,23 @@ void cgx_fw_intf_init(void)
 	cgx_config_t *cgx_cfg;
 	cgx_lmac_config_t *lmac_cfg;
 	cgx_lmac_context_t *lmac_ctx;
+	int cgx_idx;
+	const qlm_ops_t *qlm_ops;
 
 	debug_cgx_intf("%s\n", __func__);
+
+	/*
+	 * CGX will be used for first time on BL31.
+	 * Pointers to qlm_ops needs to be refreashed.
+	 */
+	for (cgx_idx = 0; cgx_idx < plat_octeontx_scfg->cgx_count; cgx_idx++) {
+		qlm_ops = plat_otx2_get_qlm_ops(cgx_idx);
+		if (qlm_ops == NULL) {
+			WARN("%s:get_qlm_ops failed for CGX %d\n",
+				__func__, cgx_idx);
+		}
+		plat_octeontx_bcfg->cgx_cfg[cgx_idx].qlm_ops = qlm_ops;
+	}
 
 	for (int cgx = 0; cgx < plat_octeontx_scfg->cgx_count; cgx++) {
 		cgx_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx];

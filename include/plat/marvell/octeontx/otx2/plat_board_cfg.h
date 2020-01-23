@@ -80,7 +80,12 @@ typedef struct cgx_lmac_config {
 	sfp_slot_info_t sfp_info;
 	uint64_t supported_link_modes;	/* cgx_mode_t enum */
 	uint32_t lane_mask;
-	int first_qlm;
+	/*
+	 * Shift from first qlm and gser is always the same it can be easily
+	 * calculated by adding shift value to qlm/gser.
+	 */
+	int shift_from_first;
+	int gserx;
 	int max_lane_count;
 } cgx_lmac_config_t;
 
@@ -94,6 +99,7 @@ typedef struct cgx_config {
 	uint16_t lanes_used_mask;
 	uint16_t network_lane_order;
 	cgx_lmac_config_t lmac_cfg[MAX_LMAC_PER_CGX];
+	const qlm_ops_t *qlm_ops;
 } cgx_config_t;
 
 typedef struct qlm_config {

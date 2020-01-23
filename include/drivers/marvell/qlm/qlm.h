@@ -234,7 +234,6 @@ typedef struct {
 	int (*qlm_tx_sm_rst_control)(int qlm, uint64_t lane_mask, int reset_tx);
 	int (*qlm_rx_signal_detect)(int qlm, int lane);
 	int (*qlm_get_lmac_phy_lane)(int qlm, int lane);
-	int (*qlm_get_lmac_first_qlm)(int qlm);
 	void (*qlm_rx_adaptation_cdr_control)(int qlm, int lane, bool disable);
 	void (*qlm_lane_rst)(int qlm, int lane, bool reset);
 	void (*qlm_link_training_start)(int qlm, int lane);
@@ -245,10 +244,15 @@ typedef struct {
 /* QLM platform specific API */
 
 /*
- * Return struct qlm_ops_t with pointer to functions for specific qlm.
- * It may modify qlm index, and this new qlm value should be use as argument
- * for functions from qlm_ops_t.
+ * Return struct qlm_ops_t with pointer to functions for specific cgx.
  */
-const qlm_ops_t *plat_otx2_get_qlm_ops(int *qlm);
+const qlm_ops_t *plat_otx2_get_qlm_ops(int cgx_idx);
+/*
+ * Return gserx idx from qlm idx. If shift_from_first != NULL it returns
+ * shift value to get first gserx (useful for DLM).
+ * first_qlm = qlm_idx + *shift_from_first
+ * first_gserx = gserx_idx + *shift_from_first
+ */
+int plat_otx2_get_gserx(int qlm, int *shift_from_first);
 
 #endif /* _QLM_H_ */

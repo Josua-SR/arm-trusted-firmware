@@ -121,17 +121,39 @@ int plat_octeontx_get_gserp_count(void)
 	return 0;
 }
 
+int plat_otx2_get_gserx(int qlm, int *shift_from_first)
+{
+	int gserx;
+	int gserp_count;
+
+	if (qlm >= plat_octeontx_get_gser_count())
+		return -1;
+
+	gserp_count = plat_octeontx_get_gserp_count();
+
+	if (qlm < gserp_count)
+		return -1;
+
+	gserx = qlm - gserp_count;
+
+	if (shift_from_first != NULL)
+		*shift_from_first = 0;
+
+	return gserx;
+}
+
 extern const qlm_ops_t qlm_gsern_ops;
 extern const qlm_ops_t qlm_gserr_ops;
 
-const qlm_ops_t *plat_otx2_get_qlm_ops(int *qlm)
+const qlm_ops_t *plat_otx2_get_qlm_ops(int cgx_idx)
 {
-	if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
-		return &qlm_gsern_ops;
-	else if (*qlm >= 0 && *qlm < 3)
-		return &qlm_gserr_ops;
+	if (cgx_idx < 0 || cgx_idx >= plat_octeontx_get_cgx_count())
+		return NULL;
 
-	return NULL;
+	if (IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1))
+		return &qlm_gsern_ops;
+
+	return &qlm_gserr_ops;
 }
 
 int plat_octeontx_get_uaa_count(void)

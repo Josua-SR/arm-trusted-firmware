@@ -1118,44 +1118,31 @@ static int octeontx2_check_qlm_lmacs(int cgx_idx,
 /* Fill CGX structure, if possible.
  * Return the number of lanes used for initialization.
  */
-static int octeontx2_fill_cgx_struct(int qlm, int lane, int mode_idx)
+static int octeontx2_fill_cgx_struct(int cgx_idx, int qlm, int gserx,
+			int shift_from_first, int lane, int mode_idx)
 {
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac, *temp_lmac;
 	int mode;
-	int cgx_idx;
 	int i, j;
 	int lcnt, lused, lane_to_sds;
-	int lane_order, qlm_orig;
+	int lane_order;
 	int phy_lane, found_lane, lane_other;
 	int lane_sds_idx = 0;
-	const qlm_ops_t *qlm_ops;
 	uint32_t lane_mask = 0;
-
-	qlm_orig = qlm;
-
-	if ((mode_idx < QLM_MODE_SGMII) || (mode_idx >= QLM_MODE_LAST)) {
-		debug_dts("QLM%d.LANE%d: not configured for CGX, skip.\n", qlm, lane);
-		return 0;
-	}
-
-	cgx_idx = plat_get_cgx_idx(qlm);
-	if ((cgx_idx < 0) || (cgx_idx >= plat_octeontx_scfg->cgx_count)) {
-		WARN("CGX: QLM%d cannot be configured for CGX.\n", qlm);
-		return 0;
-	}
-	debug_dts("CGX%d: Configure QLM%d Lane%d\n", cgx_idx, qlm, lane);
 
 	cgx = &(plat_octeontx_bcfg->cgx_cfg[cgx_idx]);
 
-	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-	if (qlm_ops == NULL) {
-		INFO("%s:CGX%d: get_qlm_ops failed for QLM %d\n",
-			 __func__, cgx_idx, qlm);
+	if ((mode_idx < QLM_MODE_SGMII) || (mode_idx >= QLM_MODE_LAST)) {
+		debug_dts("QLM%d.LANE%d: not configured for CGX, skip.\n",
+			qlm, lane);
 		return 0;
 	}
 
-	phy_lane = qlm_ops->qlm_get_lmac_phy_lane(qlm, lane);
+	debug_dts("CGX%d: Configure QLM%d GSER%d Lane%d\n",
+		cgx_idx, qlm, gserx, lane);
+
+	phy_lane = cgx->qlm_ops->qlm_get_lmac_phy_lane(gserx, lane);
 	if ((cgx->lanes_used_mask >> phy_lane) & 1) {
 		debug_dts("CGX%d: QLM%d.LANE%d: already configured for CGX, skip.\n",
 				  cgx_idx, qlm, lane);
@@ -1215,7 +1202,7 @@ static int octeontx2_fill_cgx_struct(int qlm, int lane, int mode_idx)
 	 * 0x3210: Default connection, lanes in order
 	 * 0x0123: All lanes are swizzled. 0->3, 1->2, 2->1, 3->0
 	 */
-	lane_order = plat_octeontx_bcfg->cgx_cfg[cgx_idx].network_lane_order;
+	lane_order = cgx->network_lane_order;
 
 	/* For spanning more than one GSER (e.g DLMs) NETWORK-LANE-ORDER should be
 	 * interpreted as below. The lowest lane of the lowest GSER
@@ -1240,7 +1227,9 @@ static int octeontx2_fill_cgx_struct(int qlm, int lane, int mode_idx)
 		/* Fill in the CGX/LMAC structures */
 		lmac->mode = mode;
 		lmac->mode_idx = mode_idx;
-		lmac->qlm = qlm_orig;
+		lmac->qlm = qlm;
+		lmac->gserx = gserx;
+		lmac->shift_from_first = shift_from_first;
 
 		if (mode == CAVM_CGX_LMAC_TYPES_E_USXGMII) {
 			if (!cgx->usxgmii_mode) {
@@ -1280,7 +1269,9 @@ static int octeontx2_fill_cgx_struct(int qlm, int lane, int mode_idx)
 			 */
 			for (i = 0; i < MAX_LMAC_PER_CGX; i++) {
 				phy_lane = lane_to_sds >> (i*2) & 0x3;
-				if (phy_lane == qlm_ops->qlm_get_lmac_phy_lane(qlm, lane)) {
+				if (phy_lane == cgx->qlm_ops->
+							qlm_get_lmac_phy_lane(
+								gserx, lane)) {
 					found_lane = 1;
 					break;
 				}
@@ -1312,7 +1303,7 @@ static int octeontx2_fill_cgx_struct(int qlm, int lane, int mode_idx)
 					    cgx_idx, qlm, lane);
 			break;
 		default:
-			lmac->lane_to_sds = qlm_ops->qlm_get_lmac_phy_lane(qlm, lane);
+			lmac->lane_to_sds = cgx->qlm_ops->qlm_get_lmac_phy_lane(gserx, lane);
 			break;
 		}
 
@@ -1322,7 +1313,6 @@ static int octeontx2_fill_cgx_struct(int qlm, int lane, int mode_idx)
 		}
 
 		lmac->lane_mask = lane_mask;
-		lmac->first_qlm = qlm_ops->qlm_get_lmac_first_qlm(qlm);
 		/* Update the CGX lane mask */
 		cgx->lanes_used_mask |= lane_mask;
 
@@ -1335,8 +1325,11 @@ static int octeontx2_fill_cgx_struct(int qlm, int lane, int mode_idx)
 		 */
 		lmac->max_lane_count = lused;
 
-		debug_dts("CGX%d: LANE%d: lmac lane_mask 0x%x, first_qlm %d, qlm %d, cgx_lane_mask 0x%x\n",
-				  cgx_idx, lane, lmac->lane_mask, lmac->first_qlm, lmac->qlm, cgx->lanes_used_mask);
+		debug_dts(
+			"CGX%d: LANE%d: lmac lane_mask 0x%x, gserx %d, first_gserx %d, qlm %d, cgx_lane_mask 0x%x\n",
+				cgx_idx, lane, lmac->lane_mask, lmac->gserx,
+				lmac->shift_from_first + lmac->gserx,
+				lmac->qlm, cgx->lanes_used_mask);
 
 		switch (mode_idx) {
 		case QLM_MODE_10G_KR:
@@ -1829,31 +1822,53 @@ static void octeontx2_fill_cgx_network_lane_order(const void *fdt)
 static void octeontx2_fill_cgx_details(const void *fdt)
 {
 	int qlm_idx;
-	int qlm;
 	int lane_idx;
 	int lnum;
+	int cgx_idx;
+	int shift_from_first;
+	int gserx;
+	cgx_config_t *cgx;
 	qlm_state_lane_t qlm_state;
 	const qlm_ops_t *qlm_ops;
 
 	octeontx2_fill_cgx_network_lane_order(fdt);
 
-	for (qlm_idx = 0; qlm_idx < plat_octeontx_scfg->gser_count; qlm_idx++) {
-		qlm = qlm_idx;
-		qlm_ops = plat_otx2_get_qlm_ops(&qlm);
+	for (cgx_idx = 0; cgx_idx < plat_octeontx_scfg->cgx_count; cgx_idx++) {
+		qlm_ops = plat_otx2_get_qlm_ops(cgx_idx);
 		if (qlm_ops == NULL) {
-			INFO("%s:get_qlm_ops failed for QLM %d\n",
-				__func__, qlm);
+			INFO("%s:get_qlm_ops failed for CGX %d\n",
+				__func__, cgx_idx);
+		}
+		plat_octeontx_bcfg->cgx_cfg[cgx_idx].qlm_ops = qlm_ops;
+	}
+
+	for (qlm_idx = 0; qlm_idx < plat_octeontx_scfg->gser_count; qlm_idx++) {
+		cgx_idx = plat_get_cgx_idx(qlm_idx);
+		if ((cgx_idx < 0) ||
+		    (cgx_idx >= plat_octeontx_scfg->cgx_count)) {
+			continue;
+		}
+		cgx = &(plat_octeontx_bcfg->cgx_cfg[cgx_idx]);
+
+		if (cgx->qlm_ops == NULL) {
+			WARN("%s:CGX%d: has no qlm_ops\n",  __func__, cgx_idx);
 			continue;
 		}
 
+		gserx = plat_otx2_get_gserx(qlm_idx, &shift_from_first);
+
 		lnum = plat_octeontx_scfg->qlm_max_lane_num[qlm_idx];
 		for (lane_idx = 0; lane_idx < lnum; lane_idx++) {
-			qlm_state = qlm_ops->qlm_get_state(qlm, lane_idx);
+			qlm_state = cgx->qlm_ops->qlm_get_state(gserx,
+								lane_idx);
 			debug_dts("QLM%d.LANE%d: mode=%d:%s\n",
-					qlm_idx, lane_idx,
-					qlm_state.s.mode,
-					qlm_get_mode_strmap(qlm_state.s.mode).bdk_str);
-			octeontx2_fill_cgx_struct(qlm_idx, lane_idx, qlm_state.s.mode);
+				qlm, lane_idx,
+				qlm_state.s.mode,
+				qlm_get_mode_strmap(qlm_state.s.mode).bdk_str);
+
+			octeontx2_fill_cgx_struct(cgx_idx, qlm_idx, gserx,
+						shift_from_first, lane_idx,
+						qlm_state.s.mode);
 		}
 	}
 	octeontx2_cgx_check_linux(fdt);

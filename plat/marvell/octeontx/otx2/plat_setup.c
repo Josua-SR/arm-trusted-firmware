@@ -41,12 +41,12 @@ extern void plat_armtrace_init(void);
 void plat_octeontx_setup(void)
 {
 	sh_fwdata_init();
+
 	/* Initialize CGX framework */
 	cgx_fw_intf_init();
 
 	/* setup gpio interrupt handling */
 	plat_gpio_irq_setup();
-
 
 	/* Workaround for FLR handling on CN9xxx */
 	plat_flr_init();

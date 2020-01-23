@@ -38,21 +38,22 @@ static int is_qlm_configured_as_cgx(int qlm)
 {
 	qlm_state_lane_t qlm_state;
 	int lnum;
-	const qlm_ops_t *qlm_ops;
-#ifdef DEBUG_ATF_PLAT_ECAM
-	int qlm_idx = qlm;
-#endif /* DEBUG_ATF_PLAT_ECAM */
+	int gserx, cgx_idx;
+	cgx_config_t *cgx;
 
-	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-	if (qlm_ops == NULL) {
-		debug_plat_ecam(
-			"%s:get_qlm_ops failed %d\n", __func__, qlm_idx);
+	cgx_idx = plat_get_cgx_idx(qlm);
+
+	cgx = &(plat_octeontx_bcfg->cgx_cfg[cgx_idx]);
+	if (cgx->qlm_ops == NULL) {
+		debug_plat_ecam("%s:CGX%d: has no qlm_ops\n",  __func__, cgx_idx);
 		return 0;
 	}
 
+	gserx = plat_otx2_get_gserx(qlm, NULL);
+
 	lnum = plat_octeontx_scfg->qlm_max_lane_num[qlm];
 	for (int lane = 0; lane < lnum; lane++) {
-		qlm_state = qlm_ops->qlm_get_state(qlm, lane);
+		qlm_state = cgx->qlm_ops->qlm_get_state(gserx, lane);
 		if (qlm_state.s.cgx) {
 			debug_plat_ecam("%s: CGX detected on qlm %d lane %d\n",
 				__func__, qlm_idx, lane);

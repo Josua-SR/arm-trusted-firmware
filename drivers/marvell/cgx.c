@@ -284,8 +284,7 @@ static int cgx_link_training_start(int cgx_id, int lmac_id)
 	cavm_cgxx_spux_int_t spux_int;
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
-	const qlm_ops_t *qlm_ops;
-	int qlm, num_lanes;
+	int qlm, gserx, num_lanes;
 	uint64_t lane_mask;
 
 	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
@@ -304,12 +303,8 @@ static int cgx_link_training_start(int cgx_id, int lmac_id)
 	} else {
 		cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
 		lmac = &cgx->lmac_cfg[lmac_id];
-		qlm = lmac->first_qlm;
-		qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-		if (qlm_ops == NULL) {
-			debug_cgx("%s:get_qlm_ops failed %d\n", __func__, qlm);
-			return -1;
-		}
+		qlm = lmac->qlm + lmac->shift_from_first;
+		gserx = lmac->gserx + lmac->shift_from_first;
 
 		lane_mask = lmac->lane_mask;
 		/* Start Link Training on all GSER lanes */
@@ -319,11 +314,11 @@ static int cgx_link_training_start(int cgx_id, int lmac_id)
 			for (int lane = 0; lane < num_lanes; lane++) {
 				if (!(lane_mask & (1 << lane)))
 					continue;
-				qlm_ops->qlm_link_training_start(qlm, lane);
+				cgx->qlm_ops->qlm_link_training_start(gserx, lane);
 			}
 			lane_mask >>= num_lanes;
-			if (lane_mask)
-				qlm++;
+			qlm++;
+			gserx++;
 		}
 	}
 
@@ -338,14 +333,15 @@ static int cgx_link_training_wait(int cgx_id, int lmac_id)
 	int still_training = 1;
 	uint64_t training_time;
 	cavm_cgxx_spux_int_t spux_int;
+	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
-	const qlm_ops_t *qlm_ops;
-	int qlm, num_lanes;
+	int qlm, gserx, num_lanes;
 	uint64_t lane_mask, lt_mask, mask_idx;
 
 	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
 
-	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
 
 	if (!lmac->use_training) {
 		debug_cgx("%s %d:%d Link training not enabled\n", __func__, cgx_id, lmac_id);
@@ -375,17 +371,10 @@ static int cgx_link_training_wait(int cgx_id, int lmac_id)
 				break;
 			}
 		} else {
-			int gser_qlm;
-
 			/* Check for a link training complete on all lanes */
 			lt_mask = 0;
-			qlm = lmac->first_qlm;
-			qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-			if (qlm_ops == NULL) {
-				debug_cgx("%s:get_qlm_ops failed %d\n", __func__, lmac->first_qlm);
-				return -1;
-			}
-			gser_qlm = qlm;
+			qlm = lmac->qlm + lmac->shift_from_first;
+			gserx = lmac->gserx + lmac->shift_from_first;
 			lane_mask = lmac->lane_mask;
 			mask_idx = 0;
 
@@ -396,13 +385,13 @@ static int cgx_link_training_wait(int cgx_id, int lmac_id)
 					if (!(lane_mask & (1 << lane)))
 						continue;
 					/* Check if link training is complete */
-					if (!qlm_ops->qlm_link_training_complete(qlm, lane))
+					if (!cgx->qlm_ops->qlm_link_training_complete(gserx, lane))
 						lt_mask = lt_mask | (1 << (lane + mask_idx));
 				}
 				lane_mask >>= num_lanes;
 				mask_idx += num_lanes;
-				if (lane_mask)
-					qlm++;
+				qlm++;
+				gserx++;
 			}
 
 			lane_mask = lmac->lane_mask;
@@ -413,13 +402,16 @@ static int cgx_link_training_wait(int cgx_id, int lmac_id)
 				break;
 			}
 
+			qlm = lmac->qlm + lmac->shift_from_first;
+			gserx = lmac->gserx + lmac->shift_from_first;
+
 			while (lane_mask) {
 				/* Get the number of lanes on this QLM/DLM */
-				num_lanes = qlm_get_lanes(lmac->first_qlm);
+				num_lanes = qlm_get_lanes(qlm);
 				for (int lane = 0; lane < num_lanes; lane++) {
 					if (!(lane_mask & (1 << lane)))
 						continue;
-					if (qlm_ops->qlm_link_training_fail(gser_qlm, lane)) {
+					if (cgx->qlm_ops->qlm_link_training_fail(gserx, lane)) {
 						/* Training failed, restart */
 						debug_cgx("%s: %d:%d Link Training failed\n"
 								  , __func__, cgx_id, lmac_id);
@@ -427,8 +419,8 @@ static int cgx_link_training_wait(int cgx_id, int lmac_id)
 					}
 				}
 				lane_mask >>= num_lanes;
-				if (lane_mask)
-					gser_qlm++;
+				qlm++;
+				gserx++;
 			}
 		}
 		udelay(1);
@@ -655,24 +647,21 @@ static int cgx_an_hcd_check(int cgx_id, int lmac_id, int training_fail)
 static int cgx_serdes_reset(int cgx_id, int lmac_id, bool reset)
 {
 	uint64_t lane_mask;
-	int qlm, num_lanes;
+	int qlm, gserx, num_lanes;
+	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
-	const qlm_ops_t *qlm_ops;
 
 	if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
 		cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
 		return 0;
 
-	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
 	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
 
-	qlm = lmac->first_qlm;
+	gserx = lmac->gserx + lmac->shift_from_first;
+	qlm = lmac->qlm + lmac->shift_from_first;
 	lane_mask = lmac->lane_mask;
-	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-	if (qlm_ops == NULL) {
-		debug_cgx("%s:get_qlm_ops failed %d\n", __func__, lmac->first_qlm);
-		return -1;
-	}
 
 	while (lane_mask) {
 		/* Get the number of lanes on this QLM/DLM */
@@ -681,11 +670,11 @@ static int cgx_serdes_reset(int cgx_id, int lmac_id, bool reset)
 			if (!(lane_mask & (1 << lane)))
 				continue;
 			/* Change the SERDES reset state */
-			qlm_ops->qlm_lane_rst(qlm, lane, reset);
+			cgx->qlm_ops->qlm_lane_rst(gserx, lane, reset);
 		}
 		lane_mask >>= num_lanes;
-		if (lane_mask)
-			qlm++;
+		gserx++;
+		qlm++;
 	}
 
 	return 0;
@@ -697,24 +686,21 @@ static int cgx_serdes_reset(int cgx_id, int lmac_id, bool reset)
 static int cgx_autoneg_serdes_enable(int cgx_id, int lmac_id, bool enable)
 {
 	uint64_t lane_mask;
-	int qlm, num_lanes;
+	int qlm, gserx, num_lanes;
+	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
-	const qlm_ops_t *qlm_ops;
 
 	if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
 		cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
 		return 0;
 
-	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
 	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
 
-	qlm = lmac->first_qlm;
+	gserx = lmac->gserx + lmac->shift_from_first;
+	qlm = lmac->qlm + lmac->shift_from_first;
 	lane_mask = lmac->lane_mask;
-	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-	if (qlm_ops == NULL) {
-		debug_cgx("%s:get_qlm_ops failed %d\n", __func__, lmac->first_qlm);
-		return -1;
-	}
 
 	while (lane_mask) {
 		/* Get the number of lanes on this QLM/DLM */
@@ -723,11 +709,11 @@ static int cgx_autoneg_serdes_enable(int cgx_id, int lmac_id, bool enable)
 			if (!(lane_mask & (1 << lane)))
 				continue;
 			/* Configure Rx Adaptation & CDR */
-			qlm_ops->qlm_rx_adaptation_cdr_control(qlm, lane, enable);
+			cgx->qlm_ops->qlm_rx_adaptation_cdr_control(gserx, lane, enable);
 		}
 		lane_mask >>= num_lanes;
-		if (lane_mask)
-			qlm++;
+		gserx++;
+		qlm++;
 	}
 
 	return 0;
@@ -738,9 +724,8 @@ static int cgx_autoneg_serdes_enable(int cgx_id, int lmac_id, bool enable)
  */
 static int cgx_serdes_tx_control(int cgx_id, int lmac_id, bool enable_tx)
 {
-	int qlm, lane, num_lanes;
+	int qlm, gserx, lane, num_lanes;
 	uint64_t lane_mask;
-	const qlm_ops_t *qlm_ops;
 	cavm_cgxx_spux_control1_t spux_ctrl1;
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
@@ -756,12 +741,8 @@ static int cgx_serdes_tx_control(int cgx_id, int lmac_id, bool enable_tx)
 
 	lane_mask = lmac->lane_mask;
 
-	qlm = lmac->first_qlm;
-	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-	if (qlm_ops == NULL) {
-		debug_cgx("%s:get_qlm_ops failed %d\n", __func__, qlm);
-		return -1;
-	}
+	gserx = lmac->gserx + lmac->shift_from_first;
+	qlm = lmac->qlm + lmac->shift_from_first;
 
 	/* Always disable TX in loopback mode */
 	spux_ctrl1.u = CSR_READ(CAVM_CGXX_SPUX_CONTROL1(cgx_id, lmac_id));
@@ -774,11 +755,11 @@ static int cgx_serdes_tx_control(int cgx_id, int lmac_id, bool enable_tx)
 			if (!(lane_mask & (1 << lane)))
 				continue;
 
-			qlm_ops->qlm_tx_control(qlm, lane, enable_tx);
+			cgx->qlm_ops->qlm_tx_control(gserx, lane, enable_tx);
 		}
 		lane_mask >>= num_lanes;
-		if (lane_mask)
-			qlm++;
+		gserx++;
+		qlm++;
 	}
 
 	return 0;
@@ -1010,8 +991,6 @@ AN_failure:
 static int cgx_get_usxgmii_type(int cgx_id, int lmac_id)
 {
 	int type = -1;
-	int qlm;
-	const qlm_ops_t *qlm_ops;
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
 	qlm_state_lane_t qlm_state;
@@ -1022,14 +1001,7 @@ static int cgx_get_usxgmii_type(int cgx_id, int lmac_id)
 	debug_cgx("%s: cgx %d qlm %d lane %d mode %d\n", __func__, cgx_id,
 					lmac->qlm, lmac->lane, lmac->mode);
 
-	qlm = lmac->qlm;
-	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-	if (qlm_ops == NULL) {
-		debug_cgx("%s:get_qlm_ops failed %d\n", __func__, qlm);
-		return -1;
-	}
-
-	qlm_state = qlm_ops->qlm_get_state(qlm, lmac->lane);
+	qlm_state = cgx->qlm_ops->qlm_get_state(lmac->gserx, lmac->lane);
 	/* get the USXGMII type based on baud rate
 	 * and LMACs per CGX
 	 */
@@ -1082,9 +1054,8 @@ static int cgx_get_usxgmii_speed_mbps_from_rate(int rate)
  */
 static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 {
-	int qlm, lane, num_lanes;
+	int qlm, gserx, lane, num_lanes;
 	uint64_t lane_mask;
-	const qlm_ops_t *qlm_ops;
 	cavm_cgxx_spux_control1_t spux_ctrl1;
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
@@ -1132,13 +1103,9 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 				gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
 
 		do {
-			qlm = lmac->first_qlm;
+			gserx = lmac->gserx + lmac->shift_from_first;
+			qlm = lmac->qlm + lmac->shift_from_first;
 			lane_mask = lmac->lane_mask;
-			qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-			if (qlm_ops == NULL) {
-				debug_cgx("%s:get_qlm_ops failed %d\n", __func__, qlm);
-				return -1;
-			}
 
 			while (lane_mask) {
 				/* Get the number of lanes on this QLM/DLM */
@@ -1147,7 +1114,8 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 					if (!(lane_mask & (1 << lane)))
 						continue;
 					/* Fail if Rx signal is not detected */
-					if (qlm_ops->qlm_rx_signal_detect(qlm, lane)) {
+					if (cgx->qlm_ops->qlm_rx_signal_detect(
+								gserx, lane)) {
 						signal_detect = 0;
 						break;
 					}
@@ -1155,8 +1123,8 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 				if (!signal_detect)
 					break;
 				lane_mask >>= num_lanes;
-				if (lane_mask)
-					qlm++;
+				gserx++;
+				qlm++;
 			}
 		} while (signal_detect && (gser_clock_get_count(GSER_CLOCK_TIME)
 								   < rx_debounce_time));
@@ -1270,26 +1238,21 @@ void cgx_lmac_init(int cgx_id, int lmac_id)
 
 int cgx_get_lane_speed(int cgx_id, int lmac_id)
 {
-	int qlm, lane_id, lanes = 0, speed = 0;
+	int gserx, lane_id, lanes = 0, speed = 0;
 	cgx_lmac_config_t *lmac;
 	qlm_state_lane_t qlm_state;
 	cavm_cgxx_spux_control1_t spux_ctrl1;
-	const qlm_ops_t *qlm_ops;
+	cgx_config_t *cgx;
 
-	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
-	qlm = lmac->qlm;
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+	gserx = lmac->gserx;
 	lane_id = lmac->lane;
 
 	debug_cgx("%s: cgx %d qlm %d lane %d mode %d\n", __func__, cgx_id,
-					qlm, lane_id, lmac->mode);
+					lmac->qlm, lane_id, lmac->mode);
 
-	qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-	if (qlm_ops == NULL) {
-		debug_cgx("%s:get_qlm_ops failed %d\n", __func__, qlm);
-		return -1;
-	}
-
-	qlm_state = qlm_ops->qlm_get_state(qlm, lane_id);
+	qlm_state = cgx->qlm_ops->qlm_get_state(gserx, lane_id);
 	/* Ref : Table 38-1 of T9X HRM for encoding, lanes
 	 * baud rate based on LMAC type
 	 */
@@ -2610,7 +2573,7 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id)
 
 int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 {
-	int qlm, lane, num_lanes;
+	int qlm, gserx, lane, num_lanes;
 	uint64_t lane_mask;
 	uint64_t timeout_usec = 150000; /* 150ms */
 	uint64_t timeout;
@@ -2667,12 +2630,15 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 
 	/* If link training is disabled, manually bring up Link */
 	if (!lmac->use_training) {
-		const qlm_ops_t *qlm_ops;
+		cgx_config_t *cgx;
+
+		cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
 
 		/* Perform RX EQU for non-KR interfaces and for the link
 		 * speed >= 10Gbaud - XAUI/XLAUI/XFI
 		 */
-		qlm = lmac->first_qlm;
+		gserx = lmac->gserx + lmac->shift_from_first;
+		qlm = lmac->qlm + lmac->shift_from_first;
 		/* For some boards, lanes are swizzled and the lane
 		 * info in LMAC config structure might not have the
 		 * swapped lane info and hence read it from lane_to_sds
@@ -2680,12 +2646,6 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 
 		lane_mask = lmac->lane_mask;
 
-		qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-		if (qlm_ops == NULL) {
-			debug_cgx("%s:get_qlm_ops failed %d\n",
-					__func__, qlm);
-			return -1;
-		}
 		/* Skip RX adaptation in internal loopback mode */
 		spux_control1.u = CSR_READ(CAVM_CGXX_SPUX_CONTROL1(
 					cgx_id, lmac_id));
@@ -2700,8 +2660,8 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 				if (!plat_octeontx_bcfg->qlm_cfg[qlm].
 							rx_adaptation[lane])
 					continue;
-				if (qlm_ops->qlm_rx_equalization(qlm, lane)
-							== -1) {
+				if (cgx->qlm_ops->qlm_rx_equalization(
+							gserx, lane) == -1) {
 					debug_cgx("%s:RX EQU failed %d:%d\n",
 						__func__, qlm, lane);
 					cgx_set_error_type(cgx_id, lmac_id,
@@ -2710,8 +2670,8 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 				}
 			}
 			lane_mask >>= num_lanes;
-			if (lane_mask)
-				qlm++;
+			gserx++;
+			qlm++;
 		}
 	}
 
@@ -2868,7 +2828,7 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 	cavm_cgxx_spux_br_status2_t spux_br_status2;
 	cavm_cgxx_smux_tx_ctl_t smux_tx_ctl;
 	cavm_cgxx_smux_rx_ctl_t	smux_rx_ctl;
-	int speed = 0, qlm = 0;
+	int speed = 0, first_gserx = 0;
 	cgx_lmac_config_t *lmac = NULL;
 
 	/* Get the LMAC type for each LMAC */
@@ -2946,15 +2906,13 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 					REMOTE_FAULT_TIMEOUT_MS * gser_clock_get_rate(GSER_CLOCK_TIME)/1000;
 				lmac_ctx->s.remote_fault = 1;
 			} else {
-				const qlm_ops_t *qlm_ops;
+				cgx_config_t *cgx;
 				uint64_t lane_mask;
 
-				qlm = lmac->qlm;
-				qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-				if (qlm_ops == NULL) {
-					debug_cgx("%s:get_qlm_ops failed %d\n",	__func__, qlm);
-					return -1;
-				}
+				cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+
+				first_gserx = lmac->gserx +
+						lmac->shift_from_first;
 				lane_mask = lmac->lane_mask;
 
 				if (gser_clock_get_count(GSER_CLOCK_TIME) >= lmac_tmr->remote_fault_timeout) {
@@ -2964,7 +2922,8 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 					/* Other chips will toggle the Tx idle */
 					if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
 						cavm_is_model(OCTEONTX_CNF95XX_PASS1_X)) {
-						qlm_ops->qlm_tx_sm_rst_control(lmac->first_qlm,
+						cgx->qlm_ops->qlm_tx_sm_rst_control(
+								first_gserx,
 								lane_mask, 1);
 					} else
 						cgx_serdes_tx_control(cgx_id, lmac_id, 0);
@@ -2973,7 +2932,8 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 
 					if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
 						cavm_is_model(OCTEONTX_CNF95XX_PASS1_X)) {
-						if (qlm_ops->qlm_tx_sm_rst_control(lmac->first_qlm,
+						if (cgx->qlm_ops->qlm_tx_sm_rst_control(
+								first_gserx,
 								lane_mask, 0))
 							lmac_ctx->s.remote_fault = 1;
 						else
@@ -3198,13 +3158,12 @@ void cgx_lmac_init_link(int cgx_id, int lmac_id)
  */
 void cgx_hw_init(int cgx_id)
 {
-	int lmac_id, qlm_mode, lmac_type, qlm, lane_count;
+	int lmac_id, qlm_mode, lmac_type, lane_count;
 	int baud_rate, flags = 0, lane, ret;
 	qlm_state_lane_t state;
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
 	cavm_cgxx_cmrx_config_t cmr_config;
-	const qlm_ops_t *qlm_ops;
 	uint32_t lane_mask;
 
 	debug_cgx("%s: %d\n", __func__, cgx_id);
@@ -3246,31 +3205,28 @@ void cgx_hw_init(int cgx_id)
 					/* Configure SerDes for new QLM mode */
 					baud_rate = qlm_get_mode_strmap(qlm_mode).baud_rate;
 					state = qlm_build_state(qlm_mode, baud_rate, flags);
-					qlm = lmac->qlm;
-					qlm_ops = plat_otx2_get_qlm_ops(&qlm);
-					if (qlm_ops == NULL) {
-						debug_cgx(
-							"%s:get_qlm_ops failed %d\n",
-							 __func__, qlm);
-						continue;
-					}
 
 					lane_count = cgx_get_lane_count(lmac_type);
 					lane_mask = 0;
 					for (int i = 0; i < lane_count; i++) {
 						lane = (lmac->lane_to_sds >> (i*2)) & 3;
 						lane_mask |= 1 << lane;
-						if (lmac->qlm != lmac->first_qlm && lane > 1)
+						if (lmac->shift_from_first != 0
+						    && lane > 1)
 							lane -= 2; /* adjust for upper DLM */
-						qlm_ops->qlm_set_mode(qlm, lane,
-								qlm_mode, baud_rate,
+						cgx->qlm_ops->qlm_set_mode(
+								lmac->gserx,
+								lane, qlm_mode,
+								baud_rate,
 								flags);
 					}
 					lmac->lane_mask = lane_mask;
 
-					if (qlm_ops->type == QLM_GSERN_TYPE)
-						qlm_ops->qlm_set_state(qlm,
-							    lmac->lane, state);
+					if (cgx->qlm_ops->type == QLM_GSERN_TYPE)
+						cgx->qlm_ops->qlm_set_state(
+								lmac->gserx,
+								lmac->lane,
+								state);
 				}
 				cgx_lmac_init(cgx_id, lmac_id);
 			} else
