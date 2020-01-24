@@ -2042,7 +2042,7 @@ static void octeontx2_fill_ras_details(const void *fdt)
 				g->size[i] = 0;
 			} else {
 				base += r->abs - r->rel;
-				printf("%s (%s) id:%x %x@%llx\n", __func__,
+				debug_dts("%s (%s) id:%x %x@%llx\n", __func__,
 					g->name, g->id, g->size[i], base);
 				g->base[i] = (void *)base;
 				c->nr_ghes++;
