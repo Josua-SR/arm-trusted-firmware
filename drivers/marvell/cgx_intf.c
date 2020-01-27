@@ -745,13 +745,6 @@ static int cgx_check_speed_change_allowed(int cgx_id, int lmac_id, int new_mode,
 	cgx_lmac_config_t *lmac_cfg;
 	int new_lc;
 
-	static int cgx_valid_speed_mode[] = {
-					CAVM_CGX_LMAC_TYPES_E_SGMII,
-					CAVM_CGX_LMAC_TYPES_E_TENG_R,
-					CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R,
-					CAVM_CGX_LMAC_TYPES_E_FORTYG_R,
-					CAVM_CGX_LMAC_TYPES_E_FIFTYG_R};
-
 	debug_cgx_intf("%s: %d:%d mode_bitmask 0x%llx\n",
 		__func__, cgx_id, lmac_id, mode_bitmask);
 	lmac_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
@@ -763,16 +756,13 @@ static int cgx_check_speed_change_allowed(int cgx_id, int lmac_id, int new_mode,
 			lmac_cfg->supported_link_modes);
 		return 0;
 	}
-	for (int i = 0; i < ARRAY_SIZE(cgx_valid_speed_mode); i++) {
-		if (new_mode == cgx_valid_speed_mode[i]) {
-			new_lc = cgx_get_lane_count(new_mode);
-			if (new_lc && lmac_cfg->max_lane_count >= new_lc)
-				change = 1;
-			break;
-		}
-	}
 
-	debug_cgx_intf("%s: %d:%d change %d\n", __func__, cgx_id, lmac_id, change);
+	new_lc = cgx_get_lane_count(new_mode);
+	if (new_lc && lmac_cfg->max_lane_count >= new_lc)
+		change = 1;
+	debug_cgx_intf("%s: %d:%d change %d new_lc %d max lane count %d\n",
+				__func__, cgx_id, lmac_id, change,
+				new_lc, lmac_cfg->max_lane_count);
 	return change;
 }
 
@@ -1009,16 +999,6 @@ int cgx_set_fec_type(int cgx_id, int lmac_id, int req_fec)
 			(lmac->mode == CAVM_CGX_LMAC_TYPES_E_QSGMII)) {
 		ERROR("%s: %d: %d FEC is not applicable for this mode %d\n",
 				__func__, cgx_id, lmac_id, lmac->mode);
-		cgx_set_error_type(cgx_id, lmac_id, CGX_ERR_SET_FEC_INVALID);
-		return -1;
-	}
-
-	/* FIXME: FEC change is not implemented yet for modes with AN/LT
-	 * hence return error for these modes
-	 */
-	if (!lmac->autoneg_dis && lmac->use_training) {
-		ERROR("%s: %d:%d FEC change is not supported for this mode\n",
-			__func__, cgx_id, lmac_id);
 		cgx_set_error_type(cgx_id, lmac_id, CGX_ERR_SET_FEC_INVALID);
 		return -1;
 	}
@@ -2202,11 +2182,13 @@ void cgx_set_supported_link_modes(int cgx_id, int lmac_id)
 	if ((lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_SGMII) ||
 		(lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
 		(lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R)) {
-		uint64_t modes_allowed = (1 << CGX_MODE_1000_BASEX_BIT) |
+		uint64_t modes_allowed = ((1 << CGX_MODE_1000_BASEX_BIT) |
 					 (1 << CGX_MODE_10G_C2C_BIT) |
 					 (1 << CGX_MODE_10G_C2M_BIT) |
 					 (1 << CGX_MODE_10G_KR_BIT) |
-					 (1 << CGX_MODE_20G_C2C_BIT);
+					 (1 << CGX_MODE_20G_C2C_BIT) |
+					(1 << CGX_MODE_25G_C2C_BIT) |
+					(1 << CGX_MODE_25G_C2M_BIT));
 
 		if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "cn33", 4))
 			modes_allowed |= (1 << CGX_MODE_25G_2_C2C_BIT) |
