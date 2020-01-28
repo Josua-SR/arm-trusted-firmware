@@ -110,7 +110,7 @@ void plat_armtrace_init(void)
 	/* Initialize the arm trace buffer base/size */
 	arm_tracebuf_size = ccs_region_get_info(SECURE_PRESERVE, &arm_tracebuf);
 	if (!arm_tracebuf_size) {
-		ERROR("ARM trace buffer not configured\n");
+		INFO("ARM trace buffer not configured\n");
 		goto err;
 	} else {
 		/* Ensure per cpu buffer size is sufficient */
