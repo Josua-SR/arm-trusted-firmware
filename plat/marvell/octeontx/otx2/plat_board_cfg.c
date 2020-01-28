@@ -1862,7 +1862,7 @@ static void octeontx2_fill_cgx_details(const void *fdt)
 			qlm_state = cgx->qlm_ops->qlm_get_state(gserx,
 								lane_idx);
 			debug_dts("QLM%d.LANE%d: mode=%d:%s\n",
-				qlm, lane_idx,
+				qlm_idx, lane_idx,
 				qlm_state.s.mode,
 				qlm_get_mode_strmap(qlm_state.s.mode).bdk_str);
 

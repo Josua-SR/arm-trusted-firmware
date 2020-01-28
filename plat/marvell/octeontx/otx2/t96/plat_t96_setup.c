@@ -193,10 +193,20 @@ int plat_get_cgx_idx(int qlm)
 
 	switch (qlm) {
 	case 3:
+		if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1))
+			idx = 0;
+		else
+			idx = -1;
+		break;
 	case 7:
 		idx = 0;
 		break;
 	case 4:
+		if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1))
+			idx = 1;
+		else
+			idx = -1;
+		break;
 	case 5:
 		idx = 1;
 		break;
