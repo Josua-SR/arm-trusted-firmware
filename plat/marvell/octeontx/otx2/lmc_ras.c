@@ -34,11 +34,7 @@
 #include <drivers/delay_timer.h>
 #include <octeontx_ehf.h>
 #include <lib/el3_runtime/context_mgmt.h>
-
-#if SDEI_SUPPORT
-#include <services/sdei.h>
 #include <octeontx_sdei.h>
-#endif
 
 #if RAS_EXTENSION
 #include <lib/extensions/ras.h>
@@ -1148,6 +1144,8 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 	union cavm_mccx_lmcoex_ras_err00status status;
 	union cavm_mccx_lmcoex_ras_err00addr erraddr;
 	union cavm_mccx_lmcoex_ras_err00misc0 misc0;
+	struct otx2_ghes_err_record *err_rec;
+	struct otx2_ghes_err_ring *err_ring;
 	uint64_t paddr;
 	char *err_type = "";
 	char synstr[256];
@@ -1173,7 +1171,6 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 	/* just for debug... */
 	static int cnt;
 	static uint64_t was[MAX_LMC];
-	struct fdt_ghes *gh;
 
 	status.u = ~0ull;
 	erraddr.u = 0;
@@ -1380,34 +1377,8 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 		ERROR("ASC_R%d(ns:%d s:%d) but sec:%d\n",
 			reg, ns_reg, s_reg, secure);
 
-	gh = otx2_find_ghes("mcc");
-	if (gh) {
-		struct otx2_ghes_err_record *err_rec;
-		struct otx2_ghes_err_ring *err_ring;
-		uint32_t total_ring_len, tail, head;
-
-		err_ring = gh->base[GHES_PTR_RING];
-		total_ring_len = gh->size[GHES_PTR_RING];
-		/* TODO: fix me - head/tail/size need one-time init */
-		err_ring->size =
-			(total_ring_len -
-			 offsetof(struct otx2_ghes_err_ring, records[0])) /
-			sizeof(err_ring->records[0]);
-
-		tail = err_ring->tail;
-		/* TODO: fix me - need to check for 'full' condition */
-		(void)tail;
-		head = err_ring->head;
-		err_rec = &err_ring->records[head];
-		memset(err_rec, 0, sizeof(*err_rec));
-
-		/* TODO: fix me */
-		err_rec->severity = fatal ? CPER_SEV_FATAL : CPER_SEV_CORRECTED;
-
-		err_rec->u.mcc.validation_bits |= (CPER_MEM_VALID_PA |
-			CPER_MEM_VALID_CARD | CPER_MEM_VALID_MODULE |
-			CPER_MEM_VALID_BANK | CPER_MEM_VALID_ROW |
-			CPER_MEM_VALID_COLUMN);
+	err_rec = otx2_begin_ghes("mcc", &err_ring);
+	if (err_rec) {
 		err_rec->u.mcc.physical_addr = physaddr;
 		err_rec->u.mcc.card = lmc;
 		err_rec->u.mcc.module = dimm;
@@ -1415,25 +1386,25 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 		err_rec->u.mcc.row = row;
 		err_rec->u.mcc.column = col;
 
+		err_rec->u.mcc.validation_bits |= (CPER_MEM_VALID_PA |
+			CPER_MEM_VALID_CARD | CPER_MEM_VALID_MODULE |
+			CPER_MEM_VALID_BANK | CPER_MEM_VALID_ROW |
+			CPER_MEM_VALID_COLUMN);
+
+		err_rec->severity = fatal ? CPER_SEV_FATAL : CPER_SEV_CORRECTED;
+
 		snprintf(err_rec->fru_text, sizeof(err_rec->fru_text),
 			 "LMC%d: DIMM%d,Rank%d/%d,Bank%02d", lmc, dimm, prank,
 			 lrank, bank);
-		/* Ensure that error record is written fully prior to advancing
-		 * the head (which indicates availability to consumer).
-		 */
-		dsbsy();
 
-		if (++head >= err_ring->size)
-			head = 0;
-		err_ring->head = head;
-
-#if SDEI_SUPPORT
-		sdei_dispatch_event(OCTEONTX_SDEI_RAS_MCC_EVENT);
-#endif
+		otx2_send_ghes(err_rec, err_ring, OCTEONTX_SDEI_RAS_MCC_EVENT);
 	}
 
 	if (av && !fatal && repair)
 		ras_rewrite_cacheline(physaddr, secure);
+
+	if (av && !secure && err_rec)
+		fatal = 0;
 
 	return fatal;
 }
@@ -1478,9 +1449,9 @@ int lmc_ras_setup(int lmc_no)
 	if (irq < 0 || LMC_SPI_IRQS > 1) {
 		irq = LMC_SPI_IRQ(lmc_no);
 #if !RAS_EXTENSION
-		rc = octeontx_ehf_register_irq_handler(irq, otx2_mcc_isr);
+		rc = octeontx_ehf_register_irq_handler(irq, otx2_lmc_isr);
 		if (rc) {
-			debug_ras("e?%d otx2_mcc_isr(%x), mcc: %d\n",
+			debug_ras("e?%d otx2_lmc_isr(%x), mcc: %d\n",
 			     rc, irq, mcc);
 			return rc;
 		}
@@ -1899,6 +1870,22 @@ int64_t plat_ras_lmc_inject(u_register_t x2, u_register_t x3,
  */
 uint64_t otx2_lmc_isr(uint32_t id, uint32_t flags, void *cookie)
 {
+	int lmc = (uint64_t) cookie;
+	union cavm_lmcx_ras_err00status status;
+	union cavm_lmcx_ras_err00addr erraddr;
+	union cavm_lmcx_ras_err00misc0 m0;
+	union cavm_lmcx_ras_err00misc1 m1;
+
+	status.u  = CSR_READ(CAVM_LMCX_RAS_ERR00STATUS(lmc));
+	erraddr.u = CSR_READ(CAVM_LMCX_RAS_ERR00ADDR(lmc));
+	m0.u = CSR_READ(CAVM_LMCX_RAS_ERR00MISC0(lmc));
+	m1.u = CSR_READ(CAVM_LMCX_RAS_ERR00MISC1(lmc));
+
+	CSR_WRITE(CAVM_LMCX_RAS_ERR00STATUS(lmc), status.u);
+	arm_err_nn(1, CAVM_LMCX_RAS_ERR00, lmc);
+	debug2ras("%s lmc%d st:%llx ad:%llx m0:%llx m1:%llx\n",
+		__func__, lmc, status.u, erraddr.u, m0.u, m1.u);
+
 	return 0;
 }
 

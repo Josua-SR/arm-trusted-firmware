@@ -8,7 +8,13 @@
 #include <lib/extensions/ras.h>
 #include <octeontx_irqs_def.h>
 #include <plat_ras.h>
+#include <plat_ghes.h>
 #include <plat/common/platform.h>
+#include <octeontx_sdei.h>
+
+#if SDEI_SUPPORT
+#include <services/sdei.h>
+#endif
 
 /*
  * It is number of all RAS interrupts.
@@ -141,6 +147,59 @@ struct fdt_ghes *otx2_find_ghes(const char *name)
 		return &rc->fdt_ghes[i];
 	}
 	return NULL;
+}
+
+struct otx2_ghes_err_record *otx2_begin_ghes(const char *name,
+			    struct otx2_ghes_err_ring **ringp)
+{
+	struct otx2_ghes_err_record *err_rec;
+	struct otx2_ghes_err_ring *err_ring;
+	uint32_t total_ring_len, tail, head;
+	struct fdt_ghes *gh;
+
+	gh = otx2_find_ghes("mcc");
+	if (!gh)
+		return NULL;
+
+	err_ring = gh->base[GHES_PTR_RING];
+	total_ring_len = gh->size[GHES_PTR_RING];
+	/* TODO: fix me - head/tail/size need one-time init */
+	err_ring->size =
+		(total_ring_len -
+		 offsetof(struct otx2_ghes_err_ring, records[0])) /
+		sizeof(err_ring->records[0]);
+
+	tail = err_ring->tail;
+	/* TODO: fix me - need to check for 'full' condition */
+	(void)tail;
+	head = err_ring->head;
+	err_rec = &err_ring->records[head];
+	memset(err_rec, 0, sizeof(*err_rec));
+
+	if (ringp)
+		*ringp = err_ring;
+	return err_rec;
+}
+
+void otx2_send_ghes(struct otx2_ghes_err_record *rec,
+		    struct otx2_ghes_err_ring *err_ring,
+		    int event)
+{
+	uint32_t head = err_ring->head;
+
+	/* Ensure that error record is written fully prior to advancing
+	 * the head (which indicates availability to consumer).
+	 */
+	dsbsy();
+
+	if (++head >= err_ring->size)
+		head = 0;
+	err_ring->head = head;
+	dsbsy();
+
+#if SDEI_SUPPORT
+	sdei_dispatch_event(event);
+#endif
 }
 
 void otx2_map_ghes(void)

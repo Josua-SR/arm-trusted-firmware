@@ -122,7 +122,12 @@ struct otx2_ghes_err_ring {
 	struct otx2_ghes_err_record records[1] __aligned(8);
 };
 
-void otx2_map_ghes(void);
+struct otx2_ghes_err_record *otx2_begin_ghes(const char *name,
+		    struct otx2_ghes_err_ring **ringp);
+void otx2_send_ghes(struct otx2_ghes_err_record *rec,
+		    struct otx2_ghes_err_ring *err_ring,
+		    int event);
 struct fdt_ghes *otx2_find_ghes(const char *name);
+void otx2_map_ghes(void);
 
 #endif // __PLAT_GHES_H__
