@@ -62,6 +62,9 @@
 
 #define OCTEONTX_TRC_GET_CPU_BUFSIZE	0xc2000c0a
 
+/* RAS/EDAC support, see plat_ras.h for operations & details */
+#define OCTEONTX_EDAC			0xc2000c0b
+
 /*
  * No input
  * Return:
@@ -73,7 +76,7 @@
  */
 #define PLAT_OCTEONTX_SERDES_DBG_GET_MEM	0xc2000d04
 
-#define OCTEONTX_NUM_CALLS		19
+#define OCTEONTX_NUM_CALLS		20
 
 /*
  * Standard OcteonTX SMC responses
