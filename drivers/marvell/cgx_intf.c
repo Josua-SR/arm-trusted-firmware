@@ -812,7 +812,7 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 	cgx_config_t *cgx;
 	int qlm_mode = 0, baud_mhz = 0, req_an = 0, flags = 0;
 	int req_duplex = 0;
-	int gserx = 0, an = 0, invalid_req = 0;
+	int qlm, gserx = 0, an = 0, invalid_req = 0, num_lanes;
 	link_state_t link;
 	int lane, lane_count;
 	uint64_t req_mode;
@@ -896,7 +896,8 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 				lmac->fec = CGX_FEC_NONE;
 
 			lmac->mode = lmac_type;
-			gserx = lmac->gserx;
+			qlm = lmac->qlm + lmac->shift_from_first;
+			gserx = lmac->gserx + lmac->shift_from_first;
 
 			debug_cgx_intf("%s: Re-configuring serdes for mode %d, baud rate %d, lmac type %d\n",
 						__func__, qlm_mode, baud_mhz,
@@ -910,12 +911,23 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 			for (int i = 0; i < lane_count; i++) {
 				lane = (lmac->lane_to_sds >> (i*2)) & 3;
 				lane_mask |= 1 << lane;
-				if (lmac->shift_from_first != 0 && lane > 1)
-					lane -= 2; /* adjust for upper DLM */
-				cgx->qlm_ops->qlm_set_mode(gserx, lane,
-						qlm_mode, baud_mhz, 0);
 			}
 			lmac->lane_mask = lane_mask;
+
+			while (lane_mask) {
+				/* Get the number of lanes on this QLM/DLM */
+				num_lanes = qlm_get_lanes(qlm);
+				for (int lane = 0; lane < num_lanes; lane++) {
+					if (!(lane_mask & (1 << lane)))
+						continue;
+					/* Change the SERDES speed */
+					cgx->qlm_ops->qlm_set_mode(gserx, lane,
+							qlm_mode, baud_mhz, 0);
+				}
+				lane_mask >>= num_lanes;
+				qlm++;
+				gserx++;
+			}
 
 			/* Update the SCRATCHX register with the new link info to the
 			 * original lane

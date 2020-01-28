@@ -3159,6 +3159,7 @@ void cgx_lmac_init_link(int cgx_id, int lmac_id)
 void cgx_hw_init(int cgx_id)
 {
 	int lmac_id, qlm_mode, lmac_type, lane_count;
+	int qlm, gserx, num_lanes;
 	int baud_rate, flags = 0, lane, ret;
 	qlm_state_lane_t state;
 	cgx_config_t *cgx;
@@ -3206,21 +3207,31 @@ void cgx_hw_init(int cgx_id)
 					baud_rate = qlm_get_mode_strmap(qlm_mode).baud_rate;
 					state = qlm_build_state(qlm_mode, baud_rate, flags);
 
+					qlm = lmac->qlm + lmac->shift_from_first;
+					gserx = lmac->gserx + lmac->shift_from_first;
+
 					lane_count = cgx_get_lane_count(lmac_type);
 					lane_mask = 0;
 					for (int i = 0; i < lane_count; i++) {
 						lane = (lmac->lane_to_sds >> (i*2)) & 3;
 						lane_mask |= 1 << lane;
-						if (lmac->shift_from_first != 0
-						    && lane > 1)
-							lane -= 2; /* adjust for upper DLM */
-						cgx->qlm_ops->qlm_set_mode(
-								lmac->gserx,
-								lane, qlm_mode,
-								baud_rate,
-								flags);
 					}
 					lmac->lane_mask = lane_mask;
+
+					while (lane_mask) {
+						/* Get the number of lanes on this QLM/DLM */
+						num_lanes = qlm_get_lanes(qlm);
+						for (int lane = 0; lane < num_lanes; lane++) {
+							if (!(lane_mask & (1 << lane)))
+								continue;
+							/* Change the SERDES speed */
+							cgx->qlm_ops->qlm_set_mode(gserx, lane,
+								qlm_mode, baud_rate, flags);
+							}
+						lane_mask >>= num_lanes;
+						qlm++;
+						gserx++;
+					}
 
 					if (cgx->qlm_ops->type == QLM_GSERN_TYPE)
 						cgx->qlm_ops->qlm_set_state(
