@@ -118,7 +118,7 @@ BL31_SOURCES		+=	lib/cpus/aarch64/cortex_a53.S		\
 				$(PLAT_COMMON_BASE)/a3700_sip_svc.c	\
 				$(MARVELL_DRV)
 
-mrvl_flash: ${BUILD_PLAT}/${FIP_NAME} ${DOIMAGETOOL}
+mrvl_flash: ${BUILD_PLAT}/${FIP_NAME} ${BUILD_PLAT}/bl1.bin ${DOIMAGETOOL}
 	$(shell truncate -s %128K ${BUILD_PLAT}/bl1.bin)
 	$(shell cat ${BUILD_PLAT}/bl1.bin ${BUILD_PLAT}/${FIP_NAME} > ${BUILD_PLAT}/${BOOT_IMAGE})
 	$(shell truncate -s %4 ${BUILD_PLAT}/${BOOT_IMAGE})
