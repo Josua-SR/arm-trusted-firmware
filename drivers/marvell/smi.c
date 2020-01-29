@@ -16,7 +16,6 @@
 #include <drivers/delay_timer.h>
 #include <string.h>
 #include <plat_board_cfg.h>
-#include <cgx.h>
 #include <sfp_intf.h>
 #include <phy_mgmt.h>
 #include <smi.h>

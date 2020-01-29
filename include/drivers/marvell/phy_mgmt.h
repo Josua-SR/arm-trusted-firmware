@@ -55,6 +55,9 @@
 #define PHY_FLAG_SUPPORTS_CHANGING_MOD_TYPE 1
 #define PHY_FLAG_HAS_FEC_STATS              2
 
+/* Forward declaration of structure from cgx.h */
+typedef union cgx_link_status link_state_t;
+
 /* PHY modulation types */
 typedef enum phy_mod_type {
 	PHY_MOD_TYPE_NRZ,

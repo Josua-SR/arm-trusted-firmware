@@ -8,6 +8,8 @@
 #ifndef __CGX_H__
 #define __CGX_H__
 
+#include <platform_dt.h>
+
 /* max channels per lmac */
 #define MAX_CHAN_PER_LMAC	16
 
@@ -113,6 +115,12 @@
 /* Return codes used by cgx display eye and serdes settings */
 #define CGX_DISPLAY_OK			0
 #define CGX_DISPLAY_PENDING		1
+
+enum cgx_prbs_cmd {
+	CGX_PRBS_START_CMD = 1,
+	CGX_PRBS_STOP_CMD,
+	CGX_PRBS_GET_DATA_CMD
+};
 
 /* enum declaration for FEC */
 typedef enum cgx_fec_type {
@@ -240,6 +248,11 @@ typedef struct cgx_prbs_errors {
 	uint64_t phy_line;
 } cgx_prbs_errors_t;
 
+typedef struct cgx_prbs_data_s {
+	uint64_t num_lanes;
+	cgx_prbs_errors_t errors[MAX_LMAC_PER_CGX];
+} cgx_prbs_data;
+
 extern int spi_config(uint64_t spi_clk, uint32_t mode, int cpol, int cpha,
 		      int spi_con, int cs);
 extern int spi_nor_read(uint8_t *buf, int buf_size, uint32_t addr,
@@ -296,6 +309,11 @@ int qlm_get_baud_rate_for_mode(int qlm_mode);
 
 int cgx_display_eye(int qlm, int qlm_lane, int show_data);
 int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data);
+/*
+ * Meaning of x3 argument depends on cmd. Look for
+ * PLAT_OCTEONTX_SERDES_DBG_PRBS smc description.
+ */
+int cgx_smc_do_prbs(int cmd, int qlm, int x3);
 
 /* plat APIs specific to Octeon TX2 family */
 int plat_get_cgx_idx(int qlm);

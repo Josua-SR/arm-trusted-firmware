@@ -107,6 +107,13 @@ uintptr_t plat_octeontx_svc_smc_handler(uint32_t smc_fid,
 
 		SMC_RET1(handle, ret);
 		break;
+
+	case PLAT_OCTEONTX_SERDES_DBG_PRBS:
+		ret = cgx_smc_do_prbs(x1, x2, x3);
+		ret = ret == CGX_DISPLAY_OK ? SMC_OK : OCTEONTX_SMC_FAIL;
+
+		SMC_RET1(handle, ret);
+		break;
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 
 	default:

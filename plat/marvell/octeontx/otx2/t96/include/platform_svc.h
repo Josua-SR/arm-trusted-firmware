@@ -67,6 +67,21 @@
  */
 #define PLAT_OCTEONTX_SERDES_DBG_GET_CONF	0xc2000d06
 
+/*
+ * x1 - cmd
+ *     1 - CGX_PRBS_START_CMD - start prbs for qlm(x2) in mode(x3)
+ *     2 - CGX_PRBS_STOP_CMD  - stop prbs for qlm(x2)
+ *     3 - CGX_PRBS_GET_DATA_CMD - save errors for running prbs for qlm(x2)
+ *                                 under SERDES_PRBS_DATA_BASE address.
+ * x2 - qlm
+ * x3 - if cmd == 1 then mode else ignored
+ * Return:
+ *	x0:
+ *		0x0 -- Success
+ *		0x2 -- Fail
+ */
+#define PLAT_OCTEONTX_SERDES_DBG_PRBS		0xc2000d07
+
 /* X1 - if <= 0, query for attestation buffer address.
  *      if > 0, specifies nonce len
  */

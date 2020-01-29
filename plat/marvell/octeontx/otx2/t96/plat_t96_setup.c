@@ -412,6 +412,13 @@ void plat_add_mmio()
 		       CAVM_TSN_BAR_E_TSNX_PF_BAR0_SIZE, attr);
 
 	/*
+	 * Map random number generator for gser intertnal
+	 * get random function
+	 */
+	add_map_record(CAVM_RNM_BAR_E_RNM_VF_BAR0_CN9,
+				CAVM_RNM_BAR_E_RNM_VF_BAR0_CN9_SIZE, attr);
+
+	/*
 	 * Shared memory configuration.
 	 * Map additional memory used by RVU/SFP mgmt(shared between AP & MCP).
 	 * Do not use add_map_record, it will round size up
@@ -433,6 +440,9 @@ void plat_add_mmio()
 
 	mmap_add_region(SERDES_SETTINGS_DATA_BASE, SERDES_SETTINGS_DATA_BASE,
 		SERDES_SETTINGS_DATA_SIZE, (MT_MEMORY | MT_RW | MT_NS));
+
+	mmap_add_region(SERDES_PRBS_DATA_BASE, SERDES_PRBS_DATA_BASE,
+		SERDES_PRBS_DATA_SIZE, (MT_MEMORY | MT_RW | MT_NS));
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 }
 

@@ -8,6 +8,7 @@
 /* CGX driver for OcteonTX2 */
 
 #include <arch.h>
+#include <cassert.h>
 #include <stdio.h>
 #include <debug.h>
 #include <string.h>
@@ -1259,14 +1260,18 @@ static int get_prbs_errors(int cgx_id, int num_lanes, int mode,
 							gserx, lane, 0);
 
 		/* BDK use here bdk_netphy_get_handle */
-		if (show_phy_host && cgx_cfg->lmac_cfg[lane].phy_present) {
+		if (!show_phy_host) {
+			errors[lane].phy_host = -2;
+		} else if (cgx_cfg->lmac_cfg[lane].phy_present) {
 			errors[lane].phy_host = phy_get_prbs_errors(cgx_id,
 							lane, 1, 0, mode);
 		} else {
 			errors[lane].phy_host = -1;
 		}
 		/* BDK use here bdk_netphy_get_handle */
-		if (show_phy_line && cgx_cfg->lmac_cfg[lane].phy_present) {
+		if (!show_phy_line) {
+			errors[lane].phy_line = -2;
+		} else if (cgx_cfg->lmac_cfg[lane].phy_present) {
 			errors[lane].phy_line = phy_get_prbs_errors(cgx_id,
 							lane, 0, 0, mode);
 		} else {
@@ -1275,6 +1280,89 @@ static int get_prbs_errors(int cgx_id, int num_lanes, int mode,
 	}
 
 	return 0;
+}
+
+/* This structure is used to keep information about ongoing PRBS commands */
+struct {
+	int show_phy_host;
+	int show_phy_line;
+	int mode;
+	int started;
+} prbs_status[MAX_CGX];
+
+/* Check if memory region for PRBS data is big enough */
+CASSERT(sizeof(cgx_prbs_data) <= SERDES_PRBS_DATA_SIZE,
+	assert_serdes_prbs_data_size_to_small);
+
+int cgx_smc_do_prbs(int cmd, int qlm, int x3)
+{
+	int rc;
+	int num_lanes;
+	int cgx_id;
+	cgx_prbs_data *prbs_data;
+
+	if (qlm >= MAX_QLM || qlm < 0) {
+		WARN("%d not in range, available QLM0-%d\n", qlm, MAX_QLM - 1);
+		return -1;
+	}
+	num_lanes = plat_octeontx_scfg->qlm_max_lane_num[qlm];
+	cgx_id = plat_get_cgx_idx(qlm);
+	if (cgx_id == -1) {
+		WARN("To QLM%d any CGX cannot by wired.\n", qlm);
+		return -1;
+	}
+
+	switch (cmd) {
+	case CGX_PRBS_START_CMD:
+		if (prbs_status[cgx_id].started) {
+			stop_prbs(cgx_id, num_lanes,
+				prbs_status[cgx_id].mode,
+				prbs_status[cgx_id].show_phy_host);
+			prbs_status[cgx_id].started = 0;
+		}
+
+		prbs_status[cgx_id].mode = x3;
+		rc = start_prbs(cgx_id, num_lanes,
+				prbs_status[cgx_id].mode,
+				&prbs_status[cgx_id].show_phy_host,
+				&prbs_status[cgx_id].show_phy_line);
+		if (rc)
+			return -1;
+
+		prbs_status[cgx_id].started = 1;
+		break;
+
+	case CGX_PRBS_STOP_CMD:
+		if (prbs_status[cgx_id].started) {
+			stop_prbs(cgx_id, num_lanes,
+				prbs_status[cgx_id].mode,
+				prbs_status[cgx_id].show_phy_host);
+			prbs_status[cgx_id].started = 0;
+		}
+		break;
+
+	case CGX_PRBS_GET_DATA_CMD:
+		if (!prbs_status[cgx_id].started) {
+			WARN("PRBS for QLM%d is not started\n", qlm);
+			return -1;
+		}
+
+		prbs_data = (cgx_prbs_data *)(SERDES_PRBS_DATA_BASE);
+		prbs_data->num_lanes = num_lanes;
+
+		get_prbs_errors(cgx_id, num_lanes,
+				prbs_status[cgx_id].mode,
+				prbs_status[cgx_id].show_phy_host,
+				prbs_status[cgx_id].show_phy_line,
+				prbs_data->errors);
+		break;
+
+	default:
+		WARN("Unknown PRBS cmd (%d)\n", cmd);
+		return -1;
+	}
+
+	return CGX_DISPLAY_OK;
 }
 
 static int do_prbs(int qlm, int mode, int time)
@@ -1335,14 +1423,14 @@ static int do_prbs(int qlm, int mode, int time)
 
 			if (show_phy_host) {
 				printf(", PHY Host errors: ");
-				if (errors[lane].phy_host != -1)
+				if (errors[lane].phy_host >= 0)
 					printf("%lld", errors[lane].phy_host);
 				else
 					printf("No lock");
 			}
 			if (show_phy_line) {
 				printf(", PHY Line errors: ");
-				if (errors[lane].phy_line != -1)
+				if (errors[lane].phy_line >= 0)
 					printf("%lld", errors[lane].phy_line);
 				else
 					printf("No lock");

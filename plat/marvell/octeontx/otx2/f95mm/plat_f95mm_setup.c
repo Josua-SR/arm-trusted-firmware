@@ -400,6 +400,13 @@ void plat_add_mmio(void)
 		       CAVM_MDC_BAR_E_MDC_PF_BAR4_SIZE, attr);
 
 	/*
+	 * Map random number generator for gser intertnal
+	 * get random function
+	 */
+	add_map_record(CAVM_RNM_BAR_E_RNM_VF_BAR0_CN9,
+				CAVM_RNM_BAR_E_RNM_VF_BAR0_CN9_SIZE, attr);
+
+	/*
 	 * Shared memory configuration.
 	 * Map additional memory used by RVU/SFP mgmt(shared between AP & MCP).
 	 * Do not use add_map_record, it will round size up
