@@ -1163,20 +1163,132 @@ static int cgx_control_higig2(int cgx_id, int lmac_id, int enable)
 }
 
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
+static int start_prbs(int cgx_id, int num_lanes, int mode, int *show_phy_host,
+		int *show_phy_line)
+{
+	int lane;
+	int gserx;
+	cgx_config_t *cgx_cfg;
+
+	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+
+	if (mode == 0) {
+		WARN("PRBS with pattern memory not implemented yet.\n");
+		return -1;
+	}
+
+	/* gserx index is the same for every lane */
+	gserx = cgx_cfg->lmac_cfg[0].gserx;
+
+	/* Start PRBS */
+	cgx_cfg->qlm_ops->qlm_enable_prbs(gserx, mode, QLM_DIRECTION_TX);
+
+	for (lane = 0; lane < num_lanes; lane++) {
+		/* BDK use here bdk_netphy_get_handle function */
+		if (cgx_cfg->lmac_cfg[lane].phy_present) {
+			if (*show_phy_host) {
+				if (phy_enable_prbs(cgx_id, lane, 1, mode, 1))
+					*show_phy_host = 0;
+			}
+			if (*show_phy_host) {
+				if (phy_enable_prbs(cgx_id, lane, 0, mode, 1))
+					*show_phy_line = 0;
+			}
+		}
+	}
+	udelay(1000);  /* Let TX run for 1ms before starting RX */
+	cgx_cfg->qlm_ops->qlm_enable_prbs(gserx, mode, QLM_DIRECTION_RX);
+
+	for (lane = 0; lane < num_lanes; lane++) {
+		/* BDK use here bdk_netphy_get_handle function */
+		if (cgx_cfg->lmac_cfg[lane].phy_present) {
+			if (*show_phy_host) {
+				if (phy_enable_prbs(cgx_id, lane, 1, mode, 1))
+					*show_phy_host = 0;
+			}
+			if (*show_phy_host) {
+				if (phy_enable_prbs(cgx_id, lane, 0, mode, 1))
+					*show_phy_line = 0;
+			}
+		}
+	}
+
+	return 0;
+}
+
+static int stop_prbs(int cgx_id, int num_lanes, int mode, int show_phy_host)
+{
+	int lane;
+	int gserx;
+	cgx_config_t *cgx_cfg;
+
+	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+
+	/* gserx index is the same for every lane */
+	gserx = cgx_cfg->lmac_cfg[0].gserx;
+
+	/* Stop PRBS */
+	cgx_cfg->qlm_ops->qlm_disable_prbs(gserx);
+
+	for (lane = 0; lane < num_lanes; lane++) {
+		/* BDK use here bdk_netphy_get_handle function */
+		if (cgx_cfg->lmac_cfg[lane].phy_present && show_phy_host) {
+			phy_disable_prbs(cgx_id, lane, 1, mode);
+			phy_disable_prbs(cgx_id, lane, 0, mode);
+		}
+	}
+
+	return 0;
+}
+
+static int get_prbs_errors(int cgx_id, int num_lanes, int mode,
+		int show_phy_host, int show_phy_line,
+		cgx_prbs_errors_t *errors)
+{
+	int lane;
+	int gserx;
+	cgx_config_t *cgx_cfg;
+
+	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+
+	/* gserx index is the same for every lane */
+	gserx = cgx_cfg->lmac_cfg[0].gserx;
+
+	for (lane = 0; lane < num_lanes; lane++) {
+		errors[lane].err = cgx_cfg->qlm_ops->qlm_get_prbs_errors(
+							gserx, lane, 0);
+
+		/* BDK use here bdk_netphy_get_handle */
+		if (show_phy_host && cgx_cfg->lmac_cfg[lane].phy_present) {
+			errors[lane].phy_host = phy_get_prbs_errors(cgx_id,
+							lane, 1, 0, mode);
+		} else {
+			errors[lane].phy_host = -1;
+		}
+		/* BDK use here bdk_netphy_get_handle */
+		if (show_phy_line && cgx_cfg->lmac_cfg[lane].phy_present) {
+			errors[lane].phy_line = phy_get_prbs_errors(cgx_id,
+							lane, 0, 0, mode);
+		} else {
+			errors[lane].phy_line = -1;
+		}
+	}
+
+	return 0;
+}
+
 static int do_prbs(int qlm, int mode, int time)
 {
+	int ec;
 	int num_lanes;
 	int lane;
 	int show_phy_host = 1;
 	int show_phy_line = 1;
-	int errors;
 	int time_left, delay;
 	int cgx_id;
-	int gserx;
-#ifdef DEBUG_ATF_CGX_INTF
 	int qlm_idx;
-#endif /* DEBUG_ATF_CGX_INTF */
 	cgx_config_t *cgx_cfg;
+	cgx_prbs_errors_t errors[MAX_LMAC_PER_CGX];
 	const int DISPLAY_INTERVAL = 5;
 
 	if (qlm >= MAX_QLM || qlm < 0) {
@@ -1188,55 +1300,19 @@ static int do_prbs(int qlm, int mode, int time)
 	if (cgx_id == -1) {
 		WARN("To QLM%d any CGX cannot by wired.\n", qlm);
 		return -1;
-	} else {
-		cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
 	}
+	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
 
-	if (mode == 0) {
-		WARN("PRBS with pattern memory not implemented yet.\n");
+	printf("Start PRBS-%d on QLM%d (CGX %d), end in %d sec\n",
+			mode, qlm, cgx_id, time);
+
+	ec = start_prbs(cgx_id, num_lanes, mode, &show_phy_host,
+			&show_phy_line);
+	if (ec)
 		return -1;
-	}
-	debug_cgx_intf("Start PRBS-%d on QLM%d (CGX %d), end in %d sec\n",
-		mode, qlm, cgx_id, time);
 
-	/* gserx index is the same for every lane */
-	gserx = cgx_cfg->lmac_cfg[0].gserx;
-#ifdef DEBUG_ATF_CGX_INTF
+	/* qlm index is the same for every lane */
 	qlm_idx = cgx_cfg->lmac_cfg[0].qlm;
-#endif /* DEBUG_ATF_CGX_INTF */
-
-	/* Start PRBS */
-	cgx_cfg->qlm_ops->qlm_enable_prbs(gserx, mode, QLM_DIRECTION_TX);
-
-	for (lane = 0; lane < num_lanes; lane++) {
-		/* BDK use here bdk_netphy_get_handle function */
-		if (cgx_cfg != NULL && cgx_cfg->lmac_cfg[lane].phy_present) {
-			if (show_phy_host) {
-				if (phy_enable_prbs(cgx_id, lane, 1, mode, 1))
-					show_phy_host = 0;
-			}
-			if (show_phy_host) {
-				if (phy_enable_prbs(cgx_id, lane, 0, mode, 1))
-					show_phy_line = 0;
-			}
-		}
-	}
-	udelay(1000);  /* Let TX run for 1ms before starting RX */
-	cgx_cfg->qlm_ops->qlm_enable_prbs(gserx, mode, QLM_DIRECTION_RX);
-
-	for (lane = 0; lane < num_lanes; lane++) {
-		/* BDK use here bdk_netphy_get_handle function */
-		if (cgx_cfg != NULL && cgx_cfg->lmac_cfg[lane].phy_present) {
-			if (show_phy_host) {
-				if (phy_enable_prbs(cgx_id, lane, 1, mode, 1))
-					show_phy_host = 0;
-			}
-			if (show_phy_host) {
-				if (phy_enable_prbs(cgx_id, lane, 0, mode, 1))
-					show_phy_line = 0;
-			}
-		}
-	}
 
 	/* Wait/display */
 	time_left = time;
@@ -1246,57 +1322,37 @@ static int do_prbs(int qlm, int mode, int time)
 		time_left -= delay;
 		mdelay(delay * 1000);
 
+		get_prbs_errors(cgx_id, num_lanes, mode, show_phy_host,
+				show_phy_line, errors);
+
 		for (lane = 0; lane < num_lanes; lane++) {
-			errors = cgx_cfg->qlm_ops->qlm_get_prbs_errors(
-							gserx, lane, 0);
-			debug_cgx_intf("Time: %d seconds QLM%d.Lane%d: errors: ",
+			printf("Time: %d seconds QLM%d.Lane%d: errors: ",
 				time - time_left, qlm_idx, lane);
-			if (errors != -1)
-				debug_cgx_intf("%d", errors);
+			if (errors[lane].err != -1)
+				printf("%lld", errors[lane].err);
 			else
-				debug_cgx_intf("No lock");
+				printf("No lock");
 
-			if (cgx_cfg != NULL && show_phy_host) {
-				debug_cgx_intf(", PHY Host errors: ");
-				/* BDK use here bdk_netphy_get_handle */
-				if (cgx_cfg->lmac_cfg[lane].phy_present) {
-					errors = phy_get_prbs_errors(cgx_id,
-							lane, 1, 0, mode);
-					if (errors != -1)
-						debug_cgx_intf("%d", errors);
-					else
-						debug_cgx_intf("No lock");
-				}
-			}
-			if (cgx_cfg != NULL && show_phy_line) {
-				debug_cgx_intf(", PHY Line errors: ");
-				/* BDK use here bdk_netphy_get_handle */
-				if (cgx_cfg->lmac_cfg[lane].phy_present) {
-					errors = phy_get_prbs_errors(cgx_id,
-							lane, 0, 0, mode);
-					if (errors != -1)
-						debug_cgx_intf("%d", errors);
-					else
-						debug_cgx_intf("No lock");
-				}
-			}
-			debug_cgx_intf("\n");
-		}
-	}
-
-	debug_cgx_intf("Stopping pattern generator\n");
-	/* Stop PRBS */
-	cgx_cfg->qlm_ops->qlm_disable_prbs(gserx);
-
-	for (lane = 0; lane < num_lanes; lane++) {
-		/* BDK use here bdk_netphy_get_handle function */
-		if (cgx_cfg != NULL && cgx_cfg->lmac_cfg[lane].phy_present) {
 			if (show_phy_host) {
-				phy_disable_prbs(cgx_id, lane, 1, mode);
-				phy_disable_prbs(cgx_id, lane, 0, mode);
+				printf(", PHY Host errors: ");
+				if (errors[lane].phy_host != -1)
+					printf("%lld", errors[lane].phy_host);
+				else
+					printf("No lock");
 			}
+			if (show_phy_line) {
+				printf(", PHY Line errors: ");
+				if (errors[lane].phy_line != -1)
+					printf("%lld", errors[lane].phy_line);
+				else
+					printf("No lock");
+			}
+			printf("\n");
 		}
 	}
+
+	printf("Stopping pattern generator\n");
+	stop_prbs(cgx_id, num_lanes, mode, show_phy_host);
 
 	return 0;
 }

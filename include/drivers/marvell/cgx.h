@@ -234,6 +234,12 @@ typedef struct cgx_speed_mode_map_s {
 	uint64_t mode_bitmask;
 } cgx_speed_mode_map;
 
+typedef struct cgx_prbs_errors {
+	uint64_t err;
+	uint64_t phy_host;
+	uint64_t phy_line;
+} cgx_prbs_errors_t;
+
 extern int spi_config(uint64_t spi_clk, uint32_t mode, int cpol, int cpha,
 		      int spi_con, int cs);
 extern int spi_nor_read(uint8_t *buf, int buf_size, uint32_t addr,
