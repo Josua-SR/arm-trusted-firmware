@@ -1643,6 +1643,14 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 				cgx_set_external_loopback(cgx_id, lmac_id,
 							enable);
 				break;
+			case CGX_CMD_AN_LOOPBACK:
+				if (lmac->autoneg_dis) {
+					WARN("%s: %d:%d command not applicable for AN disabled LMAC,ignoring enabling loopback mode\n",
+						__func__, cgx_id, lmac_id);
+					lmac->an_loopback = 0;
+				} else
+					lmac->an_loopback = enable;
+				break;
 			case CGX_CMD_GET_LINK_STS:
 				CSR_WRITE(CAVM_CGXX_CMRX_SCRATCHX(
 						cgx_id, lmac_id, 0), 0); /* reset */

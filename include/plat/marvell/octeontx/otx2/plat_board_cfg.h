@@ -87,6 +87,7 @@ typedef struct cgx_lmac_config {
 	int shift_from_first;
 	int gserx;
 	int max_lane_count;
+	int an_loopback;
 } cgx_lmac_config_t;
 
 typedef struct cgx_config {

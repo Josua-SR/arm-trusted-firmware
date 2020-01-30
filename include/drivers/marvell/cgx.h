@@ -200,7 +200,7 @@ typedef union cgx_lmac_context {
 		uint64_t rx_link_up:1;
 		/* Used to track if a remote fault is detected. */
 		uint64_t remote_fault:1;
-		uint64_t reserved:25;
+		uint64_t reserved:35;
 	} s;
 } cgx_lmac_context_t;
 
@@ -272,6 +272,7 @@ int cgx_get_supported_fec_type(int cgx_id, int lmac_id);
 int cgx_validate_fec_config(int cgx_id, int lmac_id, int req_fec);
 int cgx_get_lane_speed(int cgx_id, int lmac_id);
 void cgx_lmac_init(int cgx_id, int lmac_id);
+void cgx_set_an_loopback(int cgx_id, int lmac_id, int enable);
 
 /* CGX FW interface APIs */
 void cgx_fw_intf_init(void);

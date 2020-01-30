@@ -1810,6 +1810,14 @@ static int cgx_sgmii_set_mode(int cgx_id, int lmac_id)
 	return 0;
 }
 
+void cgx_set_an_loopback(int cgx_id, int lmac_id, int enable)
+{
+	debug_cgx("%s: %d:%d enable %d\n", __func__,
+			cgx_id, lmac_id, enable);
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spu_dbg_control_t,
+		CAVM_CGXX_SPU_DBG_CONTROL(cgx_id), an_nonce_match_dis, enable);
+}
+
 int cgx_validate_fec_config(int cgx_id, int lmac_id, int req_fec)
 {
 	cgx_lmac_config_t *lmac;
@@ -2575,8 +2583,14 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 			__func__, cgx_id, lmac_id, lmac->mode,
 			!lmac->autoneg_dis, lmac->use_training);
 
-	if (!lmac->autoneg_dis)
+	if (!lmac->autoneg_dis) {
+		/* Configure an_nonce_match_dis bit accordingly based
+		 * on loopback mode set by user
+		 */
+		cgx_set_an_loopback(cgx_id, lmac_id, lmac->an_loopback);
+
 		cgx_serdes_tx_control(cgx_id, lmac_id, true);
+	}
 
 	/* Check if SERDES Rx is detecting a signal
 	 *  on all associated lanes
