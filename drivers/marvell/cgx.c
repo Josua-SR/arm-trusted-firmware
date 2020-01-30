@@ -840,9 +840,9 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 
 			/* Check to see if we are configured to send Extended next pages
 			 * and in a supported Ethernet Consortium lmac_mode
+			 * FIXME: Add support for 25G ethernet consortium
 			 */
-			if ((an_adv[np].s.np && is_25gbaser) ||
-				(an_adv[np].s.np && is_50gbaser2)) {
+			if (an_adv[np].s.np && is_50gbaser2) {
 				switch (num_eth_pages) {
 				case 0: /* Send ethernet consortium header */
 					xnp_tx[np].s.u = 0x4df0353; //0x3530fd40;
@@ -862,10 +862,12 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 					}
 					xnp_tx[np].s.u |= 1 << 24;  /* F1 - Clause 91 FEC ability */
 					xnp_tx[np].s.u |= 1 << 25;  /* F2 - Clause 74 FEC ability */
-					if (lmac->fec != CGX_FEC_NONE) {
-						xnp_tx[np].s.u |= 1 << 26; /* F3 - Claue 91 FEC request */
-						xnp_tx[np].s.u |= 1 << 27; /* F3 - Claue 74 FEC request */
-					}
+					if (lmac->fec == CGX_FEC_RS)
+						/* F3 - Claue 91 RS-FEC request */
+						xnp_tx[np].s.u |= 1 << 26;
+					if (lmac->fec == CGX_FEC_BASE_R)
+						/* F3 - Claue 74 BASE-R FEC request */
+						xnp_tx[np].s.u |= 1 << 27;
 					xnp_tx[np].s.np = 0;
 					xnp_tx[np].s.mp = 0;
 					xnp_tx[np].s.m_u = 0x203;
@@ -1457,12 +1459,18 @@ static void cgx_set_autoneg(int cgx_id, int lmac_id)
 	cavm_cgxx_gmp_pcs_sgmx_an_adv_t sgmx_an_adv;
 	cavm_cgxx_spux_an_adv_t spux_an_adv;
 	cavm_cgxx_gmp_pcs_mrx_control_t pcs_mrx_ctl;
+	bool is_gsern = false;
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
 	debug_cgx("%s: %d:%d, mode=%d an=%d\n", __func__,
 				cgx_id, lmac_id, lmac->mode,
 				!lmac->autoneg_dis);
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		is_gsern = true;
+
 	switch (lmac->mode) {
 	case CAVM_CGX_LMAC_TYPES_E_SGMII:
 	case CAVM_CGX_LMAC_TYPES_E_QSGMII:
@@ -1497,6 +1505,9 @@ static void cgx_set_autoneg(int cgx_id, int lmac_id)
 		break;
 	case CAVM_CGX_LMAC_TYPES_E_TENG_R:
 	case CAVM_CGX_LMAC_TYPES_E_FORTYG_R:
+	case CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R:
+	case CAVM_CGX_LMAC_TYPES_E_FIFTYG_R:
+	case CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R:
 		/* enable AN */
 		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
 				CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
@@ -1513,10 +1524,17 @@ static void cgx_set_autoneg(int cgx_id, int lmac_id)
 		spux_an_adv.s.xnp_able = 1;
 		spux_an_adv.s.pause = 1;
 		spux_an_adv.s.s	= 1;
+		spux_an_adv.s.rf = 1;
+		spux_an_adv.s.asm_dir = 1;
 		if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) {
 			spux_an_adv.s.np = 0;
-			if (lmac->use_training)
+			if (lmac->use_training) {
 				spux_an_adv.s.a10g_kr = 1;
+				if (!is_gsern) {
+					spux_an_adv.s.a25g_kr_cr = 1;
+					spux_an_adv.s.a25g_krs_crs = 1;
+				}
+			}
 			/* only BASE-R ability */
 			if (lmac->fec == CGX_FEC_BASE_R) {
 				spux_an_adv.s.fec_able = 1;
@@ -1527,10 +1545,10 @@ static void cgx_set_autoneg(int cgx_id, int lmac_id)
 			}
 		} else if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R) {
 			spux_an_adv.s.np = 0;
-			if (lmac->use_training)
+			if (lmac->use_training) {
 				spux_an_adv.s.a40g_kr4 = 1;
-			else
 				spux_an_adv.s.a40g_cr4 = 1;
+			}
 			if (lmac->fec == CGX_FEC_BASE_R) {
 				/* only BASE-R ability */
 				spux_an_adv.s.fec_able = 1;
@@ -1539,6 +1557,32 @@ static void cgx_set_autoneg(int cgx_id, int lmac_id)
 				spux_an_adv.s.fec_able = 0;
 				spux_an_adv.s.fec_req = 0;
 			}
+		} else if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R) {
+			/* Program 25G FEC advertisement */
+			if (lmac->fec == CGX_FEC_BASE_R)
+				spux_an_adv.s.a25g_br_fec_req = 1;
+			else if (lmac->fec == CGX_FEC_RS)
+				spux_an_adv.s.a25g_rs_fec_req = 1;
+			spux_an_adv.s.a25g_kr_cr = 1;
+			spux_an_adv.s.a25g_krs_crs = 1;
+			/* Program Next Page so that we can
+			 * support Ethernet Consortium
+			 * FIXME: add 25G Ethernet Consortium
+			 */
+			spux_an_adv.s.np = 0;
+		} else if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_FIFTYG_R) {
+			/* 50GBASE-R2 Autoneg is completed via
+			 * extended next pages
+			 */
+			spux_an_adv.s.np = 1;
+		} else if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R) {
+			/* Program 25G FEC advertisement */
+			if (lmac->fec == CGX_FEC_RS)
+				spux_an_adv.s.a25g_rs_fec_req = 1;
+			spux_an_adv.s.a100g_cr4 = 1;
+			spux_an_adv.s.a100g_kr4 = 1;
+			spux_an_adv.s.a40g_cr4 = 1;
+			spux_an_adv.s.a40g_kr4 = 1;
 		}
 		CSR_WRITE(CAVM_CGXX_SPUX_AN_ADV(cgx_id, lmac_id),
 				spux_an_adv.u);
@@ -1550,8 +1594,7 @@ static void cgx_set_autoneg(int cgx_id, int lmac_id)
 		/* optionally set an_arb_link_chk_en only for pass 1.x
 		 * chips
 		 */
-		if (((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
-		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1))) &&
+		if ((is_gsern) &&
 			((lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
 			(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R)))
 			CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
@@ -1560,7 +1603,6 @@ static void cgx_set_autoneg(int cgx_id, int lmac_id)
 		/* Restart AN */
 		cgx_restart_an(cgx_id, lmac_id);
 		break;
-	/* FIXME: new modes to be supported */
 	default:
 		break;
 	}

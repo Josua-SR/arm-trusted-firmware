@@ -1333,7 +1333,14 @@ static int octeontx2_fill_cgx_struct(int cgx_idx, int qlm, int gserx,
 
 		switch (mode_idx) {
 		case QLM_MODE_10G_KR:
+		case QLM_MODE_25G_KR:
+		case QLM_MODE_25G_CR:
 		case QLM_MODE_40G_KR4:
+		case QLM_MODE_40G_CR4:
+		case QLM_MODE_50G_KR2:
+		case QLM_MODE_50G_CR2:
+		case QLM_MODE_100G_KR4:
+		case QLM_MODE_100G_CR4:
 			lmac->use_training = 1;
 			break;
 		case QLM_MODE_USXGMII_1X1:
