@@ -289,8 +289,8 @@ static int cgx_link_training_start(int cgx_id, int lmac_id)
 
 	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
 
-	if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
-		cavm_is_model(OCTEONTX_CNF95XX_PASS1_X)) {
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1))) {
 		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
 			CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
 				train_en, 1);
@@ -356,8 +356,8 @@ static int cgx_link_training_wait(int cgx_id, int lmac_id)
 			< training_time)) {
 		/* CN96XX A.x/B.x (1.x) and CN95XX A.x (1.x)
 		 * use SPU training registers */
-		if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
-			cavm_is_model(OCTEONTX_CNF95XX_PASS1_X)) {
+		if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1))) {
 			spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
 			if (spux_int.s.training_failure) {
 				/* Training failed, restart */
@@ -446,9 +446,6 @@ void cgx_an_lmac_serdes_reinit(int cgx_id, int lmac_id, int speed_change, int tr
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
-	/* FDT parser should have updated the lmac mode by now.
-	 * check if mode is programmed, if not, return
-	 */
 	if ((lmac->mode == -1) || (lmac->lane_to_sds == -1)) {
 		debug_cgx("%s: %d:%d mode/lane_to_sds not programmed\n",
 			__func__, cgx_id, lmac_id);
@@ -490,8 +487,8 @@ void cgx_an_lmac_serdes_reinit(int cgx_id, int lmac_id, int speed_change, int tr
 	/* Enable link training */
 	/* Only on 96xx A.x/B.x and 95xx A.x */
 	if (lmac->use_training) {
-		if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
-			cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
+		if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+			(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
 			cgx_link_training_start(cgx_id, lmac_id);
 	}
 
@@ -651,8 +648,8 @@ static int cgx_serdes_reset(int cgx_id, int lmac_id, bool reset)
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
 
-	if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
-		cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
 		return 0;
 
 	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
@@ -690,8 +687,8 @@ static int cgx_autoneg_serdes_enable(int cgx_id, int lmac_id, bool enable)
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
 
-	if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
-		cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
 		return 0;
 
 	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
@@ -787,15 +784,10 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 	int is_50gbaser2 = 0;
 	int transmit_np = 0;
 	int np = 0;
-	bool is_gsern = 0;
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
 	debug_cgx("%s: %d:%d\n", __func__, cgx_id, lmac_id);
-
-	if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
-		 cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
-		is_gsern = true;
 
 	if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R)
 		is_25gbaser = 1;
@@ -937,22 +929,18 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 	} else {
 		/* If there was no mismatch S/W needs to
 		 * manually kick off training
-		 * when arb_link_chk_en is enabled
+		 * when arb_link_chk_en is not enabled
 		 */
 		if (lmac->use_training) {
 			spux_an_ctl.u = CSR_READ(CAVM_CGXX_SPUX_AN_CONTROL(
 							cgx_id, lmac_id));
-			if (!is_gsern ||
-				!spux_an_ctl.s.an_arb_link_chk_en) {
+			if (!spux_an_ctl.s.an_arb_link_chk_en) {
 				cgx_link_training_start(cgx_id, lmac_id);
 				/* Clear the CGX LMAC SERDES reset */
 				cgx_serdes_reset(cgx_id, lmac_id, false);
-				/* Enable the SERDES Tx */
-				cgx_serdes_tx_control(cgx_id, lmac_id, true);
-			} else {
-				/* Enable the SERDES Tx */
-				cgx_serdes_tx_control(cgx_id, lmac_id, true);
 			}
+			/* Enable the SERDES Tx */
+			cgx_serdes_tx_control(cgx_id, lmac_id, true);
 		}
 		debug_cgx("%s:%d:%d: Auto-neg HCD matches CGX config.\n",
 			__func__, cgx_id, lmac_id);
@@ -1558,15 +1546,17 @@ static void cgx_set_autoneg(int cgx_id, int lmac_id)
 		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spu_dbg_control_t,
 			CAVM_CGXX_SPU_DBG_CONTROL(cgx_id),
 			an_nonce_match_dis, 0);
-		/* optionally set an_arb_link_chk_en. For CN9XXX pass 1, better
-		 * not to set it due to errata #34763 for LMAC types with
-		 * RS-FEC enabled
+
+		/* optionally set an_arb_link_chk_en only for pass 1.x
+		 * chips
 		 */
-		if ((lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
-			(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R))
+		if (((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1))) &&
+			((lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
+			(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R)))
 			CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
 				CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
-				an_arb_link_chk_en, 0);
+				an_arb_link_chk_en, 1);
 		/* Restart AN */
 		cgx_restart_an(cgx_id, lmac_id);
 		break;
@@ -1646,9 +1636,8 @@ static void cgx_set_fec(int cgx_id, int lmac_id, int req_fec)
 		 * For T9X pass 1.0 and 1.1, always enable RS-FEC
 		 * for 25G
 		 */
-		if ((IS_OCTEONTX_PASS(read_midr(), T96PARTNUM, 1, 0)) ||
-			(IS_OCTEONTX_PASS(read_midr(), T96PARTNUM, 1, 1)) ||
-			(IS_OCTEONTX_PASS(read_midr(), F95PARTNUM, 1, 0))) {
+		if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+			(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1))) {
 			switch (lmac->mode_idx) {
 			case QLM_MODE_25GAUI_C2C:
 			case QLM_MODE_25GAUI_C2M:
@@ -1954,7 +1943,6 @@ int cgx_fec_change(int cgx_id, int lmac_id, int new_fec)
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmr_global_config_t,
 			CAVM_CGXX_CMR_GLOBAL_CONFIG(cgx_id), cgx_clk_enable, 1);
 
-	cgx_serdes_tx_control(cgx_id, lmac_id, false);
 	/* disable LMAC */
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
 			CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id), enable, 0);
@@ -2011,8 +1999,6 @@ int cgx_fec_change(int cgx_id, int lmac_id, int new_fec)
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
 			CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id), enable, 1);
 
-	cgx_serdes_tx_control(cgx_id, lmac_id, true);
-
 	return 0;
 }
 
@@ -2022,7 +2008,6 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 	cgx_lmac_config_t *lmac;
 	cavm_cgxx_spux_an_control_t spux_an_ctl;
 	cavm_cgxx_spux_int_t spux_int;
-	bool is_gsern = 0;
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
@@ -2030,10 +2015,6 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 		return 1;
 
 	debug_cgx("%s: %d:%d mode %d\n", __func__, cgx_id, lmac_id, lmac->mode);
-
-	if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
-		 cavm_is_model(OCTEONTX_CNF95XX_PASS1_X))
-		is_gsern = true;
 
 	if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_USXGMII)
 		return 1;
@@ -2046,7 +2027,7 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 	 * 96XX Ax/Bx (1.x). CGX will automatically complete link
 	 * training if AN HCD matches CGX config
 	 */
-	if (spux_an_ctl.s.an_arb_link_chk_en && is_gsern) {
+	if (spux_an_ctl.s.an_arb_link_chk_en) {
 		/* an_complete means both auto-neg and
 		 * link training (if enabled) were successful
 		 */
@@ -2098,9 +2079,10 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 			}
 		}
 	} else {
-		/* Force link partner to the AN ABILITY DETECT STATE */
-		/* When an_arb_link_chk_en disabled S/W needs to start link training */
-		debug_cgx("%s:%d:%d: Restarting AN.\n",
+		/* Force link partner to the AN ABILITY DETECT STATE.
+		 * When an_arb_link_chk_en disabled S/W needs to start link training
+		 */
+		debug_cgx("%s:%d:%d: Restarting AN\n",
 			__func__, cgx_id, lmac_id);
 
 		/* Configure SERDES for AN */
@@ -2351,7 +2333,6 @@ int cgx_sgmii_set_link_down(int cgx_id, int lmac_id)
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmr_global_config_t,
 		CAVM_CGXX_CMR_GLOBAL_CONFIG(cgx_id), cgx_clk_enable, 1);
 
-	cgx_serdes_tx_control(cgx_id, lmac_id, false);
 	/* disable LMAC */
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
 		CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id), enable, 0);
@@ -2435,7 +2416,6 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id)
 			an_en, 0); /* disable AN for USXGMII */
 	}
 
-	cgx_serdes_tx_control(cgx_id, lmac_id, false);
 	/* disable LMAC */
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
 			CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id),
@@ -2553,8 +2533,9 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id)
 			CAVM_CGXX_SPU_USXGMII_CONTROL(cgx_id),
 			enable, 1);
 
-	/* At this point CGX is driving the serdes. Enable serdes transmitter */
-	/* Only enable serdes transmitter if autoneg is disabled */
+	/* At this point CGX is driving the serdes. Enable serdes transmitter.
+	 * Only enable serdes transmitter if autoneg is disabled
+	 */
 	if (lmac->autoneg_dis)
 		cgx_serdes_tx_control(cgx_id, lmac_id, true);
 
@@ -3006,7 +2987,6 @@ int cgx_xaui_set_link_down(int cgx_id, int lmac_id)
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmr_global_config_t,
 		CAVM_CGXX_CMR_GLOBAL_CONFIG(cgx_id), cgx_clk_enable, 1);
 
-	cgx_serdes_tx_control(cgx_id, lmac_id, false);
 	/* disable LMAC */
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
 		CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id), enable, 0);
