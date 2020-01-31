@@ -722,7 +722,7 @@ static int cgx_get_fec_for_speed(int qlm_mode)
 	return fec;
 }
 
-static int qlm_get_baud_rate_for_mode(int qlm_mode)
+int qlm_get_baud_rate_for_mode(int qlm_mode)
 {
 	int baud_rate = 0;
 

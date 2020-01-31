@@ -52,7 +52,7 @@
 #define CGX_POLL_AN_STATUS		10000 /* 10 ms */
 #define CGX_POLL_AN_COMPLETE_STATUS	500000 /* 500 ms */
 #define CGX_POLL_AN_RESTART_STATUS	80000	/* 80 ms */
-#define CGX_POLL_TRAINING_STATUS	500000	/* 500 ms */
+#define CGX_POLL_TRAINING_STATUS	600000	/* 500 ms */
 #define GSERN_LANEX_TX_RST_SM_TIMEOUT   10000 /* 10 ms */
 #define REMOTE_FAULT_TIMEOUT_MS		10000
 #define TX_IDLE_TOGGLE_US		1000
@@ -285,6 +285,7 @@ int cgx_read_flash_ignore(int cgx_id, int lmac_id, int *ignore);
 int cgx_read_flash_mode_param(int cgx_id, int lmac_id, int *qlm_mode,
 			      int *lmac_mode);
 int cgx_get_lane_count(int lmac_type);
+int qlm_get_baud_rate_for_mode(int qlm_mode);
 
 int cgx_display_eye(int qlm, int qlm_lane, int show_data);
 int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data);
