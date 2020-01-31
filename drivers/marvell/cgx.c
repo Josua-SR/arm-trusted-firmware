@@ -100,6 +100,384 @@ static int cgx_poll_for_csr(uint64_t addr, uint64_t mask,
 	return ret_val;
 }
 
+/* Change the Reset state of the CGX LMAC SERDES lanes.  If SERDES reset fails
+ * return -1
+ */
+static int cgx_serdes_reset(int cgx_id, int lmac_id, bool reset)
+{
+	uint64_t lane_mask;
+	int qlm, gserx, num_lanes;
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		return 0;
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	gserx = lmac->gserx + lmac->shift_from_first;
+	qlm = lmac->qlm + lmac->shift_from_first;
+	lane_mask = lmac->lane_mask;
+
+	while (lane_mask) {
+		/* Get the number of lanes on this QLM/DLM */
+		num_lanes = qlm_get_lanes(qlm);
+		for (int lane = 0; lane < num_lanes; lane++) {
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			/* Change the SERDES reset state */
+			cgx->qlm_ops->qlm_lane_rst(gserx, lane, reset);
+		}
+		lane_mask >>= num_lanes;
+		gserx++;
+		qlm++;
+	}
+
+	return 0;
+}
+
+/* Configure SERDES for autoneg.  If SERDES config fails
+ * return -1
+ */
+static int cgx_autoneg_serdes_enable(int cgx_id, int lmac_id, bool enable)
+{
+	uint64_t lane_mask;
+	int qlm, gserx, num_lanes;
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		return 0;
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	gserx = lmac->gserx + lmac->shift_from_first;
+	qlm = lmac->qlm + lmac->shift_from_first;
+	lane_mask = lmac->lane_mask;
+
+	while (lane_mask) {
+		/* Get the number of lanes on this QLM/DLM */
+		num_lanes = qlm_get_lanes(qlm);
+		for (int lane = 0; lane < num_lanes; lane++) {
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			/* Configure Rx Adaptation & CDR */
+			cgx->qlm_ops->qlm_rx_adaptation_cdr_control(gserx, lane, enable);
+		}
+		lane_mask >>= num_lanes;
+		gserx++;
+		qlm++;
+	}
+
+	return 0;
+}
+
+/*
+ * Called whenever CGX needs to enable or disable the SERDES transmitter
+ */
+static int cgx_serdes_tx_control(int cgx_id, int lmac_id, bool enable_tx)
+{
+	int qlm, gserx, lane, num_lanes;
+	uint64_t lane_mask;
+	cavm_cgxx_spux_control1_t spux_ctrl1;
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+
+	/* Only do first LMAC of USXGMII */
+	if (cgx->usxgmii_mode && (lmac_id > 0))
+		return 0;
+
+	lane_mask = lmac->lane_mask;
+
+	gserx = lmac->gserx + lmac->shift_from_first;
+	qlm = lmac->qlm + lmac->shift_from_first;
+
+	/* Always disable TX in loopback mode */
+	spux_ctrl1.u = CSR_READ(CAVM_CGXX_SPUX_CONTROL1(cgx_id, lmac_id));
+	if (spux_ctrl1.s.loopbck)
+		enable_tx = false;
+
+	while (lane_mask) {
+		num_lanes = qlm_get_lanes(qlm);
+		for (lane = 0; lane < num_lanes; lane++) {
+			if (!(lane_mask & (1 << lane)))
+				continue;
+
+			cgx->qlm_ops->qlm_tx_control(gserx, lane, enable_tx);
+		}
+		lane_mask >>= num_lanes;
+		gserx++;
+		qlm++;
+	}
+
+	return 0;
+}
+
+/*
+ * Called whenever CGX needs know if the SERDES Rx
+ * detects a signal on all associated GSER lanes
+ * return 0 on successful signal detect, -1 on failed signal detect
+ */
+static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
+{
+	int qlm, gserx, lane, num_lanes;
+	uint64_t lane_mask;
+	cavm_cgxx_spux_control1_t spux_ctrl1;
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+	uint64_t rx_debounce_time;
+	int signal_detect;
+	uint64_t stabilization_timeout;
+	int rx_signal_detect_us, rx_signal_stable_us;
+
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+
+	/* Only do first LMAC of USXGMII */
+	if (cgx->usxgmii_mode && (lmac_id > 0))
+		return 0;
+
+	if (lmac->autoneg_dis) {
+		rx_signal_detect_us = 10000;
+		rx_signal_stable_us = 10000;
+	} else {
+		rx_signal_detect_us = 1;
+		/* Needs to be > 75ms because during AN
+		 * LP may complete an AN restart.  The
+		 * break_link_timer is a max of 75ms
+		 */
+		 rx_signal_stable_us = 100000;
+	}
+
+	lane = lmac->lane;
+
+	/* Don't need to look at GSER Rx signals when in internal loopback mode */
+	spux_ctrl1.u = CSR_READ(CAVM_CGXX_SPUX_CONTROL1(cgx_id, lmac_id));
+	if (spux_ctrl1.s.loopbck)
+		return 0;
+
+	stabilization_timeout = gser_clock_get_count(GSER_CLOCK_TIME) + rx_signal_stable_us *
+		gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+
+	while (1) {
+		signal_detect = 1;
+
+		/* Make sure Rx signal is detected for debounce time */
+		rx_debounce_time = gser_clock_get_count(GSER_CLOCK_TIME) + rx_signal_detect_us *
+				gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+
+		do {
+			gserx = lmac->gserx + lmac->shift_from_first;
+			qlm = lmac->qlm + lmac->shift_from_first;
+			lane_mask = lmac->lane_mask;
+
+			while (lane_mask) {
+				/* Get the number of lanes on this QLM/DLM */
+				num_lanes = qlm_get_lanes(qlm);
+				for (lane = 0; lane < num_lanes; lane++) {
+					if (!(lane_mask & (1 << lane)))
+						continue;
+					/* Fail if Rx signal is not detected */
+					if (cgx->qlm_ops->qlm_rx_signal_detect(
+								gserx, lane)) {
+						signal_detect = 0;
+						break;
+					}
+				}
+				if (!signal_detect)
+					break;
+				lane_mask >>= num_lanes;
+				gserx++;
+				qlm++;
+			}
+		} while (signal_detect && (gser_clock_get_count(GSER_CLOCK_TIME)
+								   < rx_debounce_time));
+
+		if (signal_detect)
+			break;
+
+		/* Verify if we are passed the link stabilization time */
+		if (gser_clock_get_count(GSER_CLOCK_TIME) >= stabilization_timeout) {
+			debug_cgx("%s %d:%d QLM%d Lane%d Rx signal detect timeout\n",
+					__func__, cgx_id, lmac_id, qlm, lane);
+			return -1;
+		}
+	}
+	return 0;
+}
+
+/* Start link training.
+ * return 0 = success, -1 failure
+ */
+static int cgx_link_training_start(int cgx_id, int lmac_id)
+{
+	cavm_cgxx_spux_int_t spux_int;
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+	int qlm, gserx, num_lanes;
+	uint64_t lane_mask;
+
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1))) {
+		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
+			CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
+				train_en, 1);
+		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
+				CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
+				train_restart, 1);
+		spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
+		spux_int.s.training_done = 1;
+		CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id), spux_int.u);
+	} else {
+		cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+		lmac = &cgx->lmac_cfg[lmac_id];
+		qlm = lmac->qlm + lmac->shift_from_first;
+		gserx = lmac->gserx + lmac->shift_from_first;
+
+		lane_mask = lmac->lane_mask;
+		/* Start Link Training on all GSER lanes */
+		while (lane_mask) {
+			/* Get the number of lanes on this QLM/DLM */
+			num_lanes = qlm_get_lanes(qlm);
+			for (int lane = 0; lane < num_lanes; lane++) {
+				if (!(lane_mask & (1 << lane)))
+					continue;
+				cgx->qlm_ops->qlm_link_training_start(gserx, lane);
+			}
+			lane_mask >>= num_lanes;
+			qlm++;
+			gserx++;
+		}
+	}
+
+	return 0;
+}
+
+/* Wait for link training to complete.  If link training fails
+ * return -1
+ */
+static int cgx_link_training_wait(int cgx_id, int lmac_id)
+{
+	int still_training = 1;
+	uint64_t training_time;
+	cavm_cgxx_spux_int_t spux_int;
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+	int qlm, gserx, num_lanes;
+	uint64_t lane_mask, lt_mask, mask_idx;
+
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+
+	if (!lmac->use_training) {
+		debug_cgx("%s %d:%d Link training not enabled\n", __func__, cgx_id, lmac_id);
+		return 0;
+	}
+
+	/* Setup Link training timeout (500ms) */
+	training_time = gser_clock_get_count(GSER_CLOCK_TIME) + CGX_POLL_TRAINING_STATUS *
+			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+
+	while (still_training && (gser_clock_get_count(GSERN_CLOCK_TIME)
+			< training_time)) {
+		/* CN96XX A.x/B.x (1.x) and CN95XX A.x (1.x)
+		 * use SPU training registers */
+		if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1))) {
+			spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
+			if (spux_int.s.training_failure) {
+				/* Training failed, restart */
+				debug_cgx("%s: %d:%d Link Training failed\n"
+						  , __func__, cgx_id, lmac_id);
+				return -1;
+			} else if (spux_int.s.training_done) {
+				debug_cgx("%s: %d:%d Link Training successfully completed\n",
+					__func__, cgx_id, lmac_id);
+				still_training = 0;
+				break;
+			}
+		} else {
+			/* Check for a link training complete on all lanes */
+			lt_mask = 0;
+			qlm = lmac->qlm + lmac->shift_from_first;
+			gserx = lmac->gserx + lmac->shift_from_first;
+			lane_mask = lmac->lane_mask;
+			mask_idx = 0;
+
+			while (lane_mask) {
+				/* Get the number of lanes on this QLM/DLM */
+				num_lanes = qlm_get_lanes(qlm);
+				for (int lane = 0; lane < num_lanes; lane++) {
+					if (!(lane_mask & (1 << lane)))
+						continue;
+					/* Check if link training is complete */
+					if (!cgx->qlm_ops->qlm_link_training_complete(gserx, lane))
+						lt_mask = lt_mask | (1 << (lane + mask_idx));
+				}
+				lane_mask >>= num_lanes;
+				mask_idx += num_lanes;
+				qlm++;
+				gserx++;
+			}
+
+			lane_mask = lmac->lane_mask;
+
+			/* Check if all lanes are complete */
+			if (lt_mask == lane_mask) {
+				still_training = 0;
+				break;
+			}
+
+			qlm = lmac->qlm + lmac->shift_from_first;
+			gserx = lmac->gserx + lmac->shift_from_first;
+
+			while (lane_mask) {
+				/* Get the number of lanes on this QLM/DLM */
+				num_lanes = qlm_get_lanes(qlm);
+				for (int lane = 0; lane < num_lanes; lane++) {
+					if (!(lane_mask & (1 << lane)))
+						continue;
+					if (cgx->qlm_ops->qlm_link_training_fail(gserx, lane)) {
+						/* Training failed, restart */
+						debug_cgx("%s: %d:%d Link Training failed\n"
+								  , __func__, cgx_id, lmac_id);
+						return -1;
+					}
+				}
+				lane_mask >>= num_lanes;
+				qlm++;
+				gserx++;
+			}
+		}
+		udelay(1);
+	}
+
+	if (still_training) {
+		debug_cgx("%s: %d:%d Link Training timed out\n",
+			__func__, cgx_id, lmac_id);
+		return -1;
+	}
+
+	return 0;
+}
+
 /* This function initializes CGX in the SGMII/QSGMII modes
  * called one time either during boot or mode change
  */
@@ -276,163 +654,312 @@ static int cgx_restart_an(int cgx_id, int lmac_id)
 	return 0;
 }
 
-/* Start link training.
- * return 0 = success, -1 failure
- */
-static int cgx_link_training_start(int cgx_id, int lmac_id)
+static void cgx_set_fec(int cgx_id, int lmac_id, int req_fec)
 {
-	cavm_cgxx_spux_int_t spux_int;
-	cgx_config_t *cgx;
+	int val = 0;
 	cgx_lmac_config_t *lmac;
-	int qlm, gserx, num_lanes;
-	uint64_t lane_mask;
+	cavm_cgxx_spux_rx_mrk_cnt_t rx_mrk_cnt;
+	cavm_cgxx_spux_tx_mrk_cnt_t tx_mrk_cnt;
+	int mrk_cnt = 0x3FFF;
+	int ram_mrk_cnt;
+	int by_mrk_100g = 1;
 
-	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+	debug_cgx("%s %d:%d fec type %d\n", __func__, cgx_id,
+							lmac_id, req_fec);
 
-	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
-		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1))) {
-		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
-			CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
-				train_en, 1);
-		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
-				CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
-				train_restart, 1);
-		spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
-		spux_int.s.training_done = 1;
-		CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id), spux_int.u);
+	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+
+	if (req_fec == -1) {
+		/* In this case, User did not specify any FEC type.
+		 * By default enable FEC for
+		 * 10G, 25G, 40G, 50G, 100G BASE-R & USXGMII modes
+		 *
+		 * Below table from HRM describes how to enable "fec_en" for each mode.
+		 * fec_en is 2-bits
+		 *
+		 * Bit 0 enables BASE-R FEC. Bit 1 enables RS-FEC (Reed-Solomon FEC).
+		 *
+		 *	Value     LMAC_TYPE         Comment
+		 *	-------   ---------------   ------------
+		 *	0x0       All BASE-R        No FEC
+		 *	0x1       25G_R, 50G_R,     BASE-R FEC enabled
+		 *	0x2       25G_R, 50G_R,     RS-FEC enabled
+		 *	0x3       25G_R, 50G_R,     UNDEFINED
+		 *	0x2,0x3   100G_R, USXGMII   RS-FEC enabled
+		 *	0x2       10G_R, 40G_R      No FEC. 10G_R, 40G_R may only use BASE-R FEC
+		 *	0x1,0x3   10G_R, 40G_R      BASE-R FEC
+		 *	0x1       100G_R            No FEC. 100G_R  may only use RS-FEC
+		 *
+		 */
+		switch (lmac->mode) {
+		case CAVM_CGX_LMAC_TYPES_E_TENG_R:
+		case CAVM_CGX_LMAC_TYPES_E_FORTYG_R:
+			val = CGX_FEC_BASE_R;
+			break;
+		case CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R:
+		case CAVM_CGX_LMAC_TYPES_E_FIFTYG_R:
+			/* RS-FEC considered the default for now */
+			val = CGX_FEC_RS;
+			break;
+		case CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R:
+		case CAVM_CGX_LMAC_TYPES_E_USXGMII:
+			val = CGX_FEC_RS;
+			break;
+		default:
+			val = CGX_FEC_NONE;
+			break;
+		}
+
+		/* FIXME: for now disable FEC by default */
+		val = 0;
+		/* update the board config structure with FEC set */
+		lmac->fec = val;
 	} else {
-		cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
-		lmac = &cgx->lmac_cfg[lmac_id];
-		qlm = lmac->qlm + lmac->shift_from_first;
-		gserx = lmac->gserx + lmac->shift_from_first;
+		/* If user has requested specific FEC type,
+		 * configure the FEC as such
+		 */
+		val = req_fec;
 
-		lane_mask = lmac->lane_mask;
-		/* Start Link Training on all GSER lanes */
-		while (lane_mask) {
-			/* Get the number of lanes on this QLM/DLM */
-			num_lanes = qlm_get_lanes(qlm);
-			for (int lane = 0; lane < num_lanes; lane++) {
-				if (!(lane_mask & (1 << lane)))
-					continue;
-				cgx->qlm_ops->qlm_link_training_start(gserx, lane);
+		/* Workaround for errata GSER-35489
+		 * For T9X pass 1.0 and 1.1, always enable RS-FEC
+		 * for 25G
+		 */
+		if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+			(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1))) {
+			switch (lmac->mode_idx) {
+			case QLM_MODE_25GAUI_C2C:
+			case QLM_MODE_25GAUI_C2M:
+			case QLM_MODE_25G_CR:
+			case QLM_MODE_25G_KR:
+			case QLM_MODE_50GAUI_2_C2C:
+			case QLM_MODE_50GAUI_2_C2M:
+			case QLM_MODE_50G_CR2:
+			case QLM_MODE_50G_KR2:
+			case QLM_MODE_CAUI_4_C2C:
+			case QLM_MODE_CAUI_4_C2M:
+			case QLM_MODE_100G_CR4:
+			case QLM_MODE_100G_KR4:
+				val = CGX_FEC_RS;
+			break;
 			}
-			lane_mask >>= num_lanes;
-			qlm++;
-			gserx++;
+		}
+
+		if (lmac->mode_idx == QLM_MODE_25GAUI_2_C2C ||
+		    lmac->mode_idx == QLM_MODE_50GAUI_4_C2C) {
+			/* Our proprietary 25GBASE-R2 and 50GBASE-R4 do not
+			 * support FEC.
+			 */
+			val = CGX_FEC_NONE;
 		}
 	}
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_fec_control_t,
+				CAVM_CGXX_SPUX_FEC_CONTROL(cgx_id, lmac_id),
+				fec_en, val);
+	/* Program Tx/Rx marker count based on LMAC/FEC settings */
+	switch (lmac->mode) {
+	case CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R:
+		if (val == CGX_FEC_RS)
+			mrk_cnt = 0x13FFC;
+		else
+			mrk_cnt = 0x3FFF;
+	break;
+	case CAVM_CGX_LMAC_TYPES_E_FIFTYG_R:
+		if (val == CGX_FEC_RS) {
+			by_mrk_100g = 0;
+			mrk_cnt = 0x4FFF;
+		} else
+			mrk_cnt = 0x3FFF;
+		break;
+	case CAVM_CGX_LMAC_TYPES_E_USXGMII:
+		if (val == CGX_FEC_RS)
+			mrk_cnt = 0x13FFC;
+		else
+			mrk_cnt = 0x4010;
+		break;
+	default:
+		/* All other modes with/wo FEC */
+		mrk_cnt = 0x3FFF;
+	break;
+	}
 
-	return 0;
+	/* Rapid marker alignment, default is 15: for 100G, it should be 7 */
+	ram_mrk_cnt = (lmac->mode == CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R) ? 7 : 15;
+	debug_cgx("%s: mode %d fec %d program mrk_cnt 0x%x\t"
+		"ram_mrk_cnt 0x%x\n", __func__, lmac->mode, val, mrk_cnt,
+			ram_mrk_cnt);
+
+	rx_mrk_cnt.u = CSR_READ(CAVM_CGXX_SPUX_RX_MRK_CNT(cgx_id,
+						lmac_id));
+	rx_mrk_cnt.s.ram_mrk_cnt = ram_mrk_cnt;
+	rx_mrk_cnt.s.by_mrk_100g = by_mrk_100g;
+	rx_mrk_cnt.s.mrk_cnt = mrk_cnt;
+
+	CSR_WRITE(CAVM_CGXX_SPUX_RX_MRK_CNT(cgx_id, lmac_id),
+				rx_mrk_cnt.u);
+
+	tx_mrk_cnt.u = CSR_READ(CAVM_CGXX_SPUX_TX_MRK_CNT(cgx_id,
+						lmac_id));
+	tx_mrk_cnt.s.ram_mrk_cnt = ram_mrk_cnt;
+	tx_mrk_cnt.s.by_mrk_100g = by_mrk_100g;
+	tx_mrk_cnt.s.mrk_cnt = mrk_cnt;
+	CSR_WRITE(CAVM_CGXX_SPUX_TX_MRK_CNT(cgx_id, lmac_id),
+			tx_mrk_cnt.u);
 }
 
-/* Wait for link training to complete.  If link training fails
- * return -1
- */
-static int cgx_link_training_wait(int cgx_id, int lmac_id)
+static void cgx_set_autoneg(int cgx_id, int lmac_id)
 {
-	int still_training = 1;
-	uint64_t training_time;
-	cavm_cgxx_spux_int_t spux_int;
-	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
-	int qlm, gserx, num_lanes;
-	uint64_t lane_mask, lt_mask, mask_idx;
+	cavm_cgxx_gmp_pcs_anx_adv_t pcs_anx_adv;
+	cavm_cgxx_gmp_pcs_sgmx_an_adv_t sgmx_an_adv;
+	cavm_cgxx_spux_an_adv_t spux_an_adv;
+	cavm_cgxx_gmp_pcs_mrx_control_t pcs_mrx_ctl;
+	bool is_gsern = false;
 
-	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
-	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
-	lmac = &cgx->lmac_cfg[lmac_id];
+	debug_cgx("%s: %d:%d, mode=%d an=%d\n", __func__,
+				cgx_id, lmac_id, lmac->mode,
+				!lmac->autoneg_dis);
 
-	if (!lmac->use_training) {
-		debug_cgx("%s %d:%d Link training not enabled\n", __func__, cgx_id, lmac_id);
-		return 0;
-	}
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		is_gsern = true;
 
-	/* Setup Link training timeout (500ms) */
-	training_time = gser_clock_get_count(GSER_CLOCK_TIME) + CGX_POLL_TRAINING_STATUS *
-			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
-
-	while (still_training && (gser_clock_get_count(GSERN_CLOCK_TIME)
-			< training_time)) {
-		/* CN96XX A.x/B.x (1.x) and CN95XX A.x (1.x)
-		 * use SPU training registers */
-		if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
-		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1))) {
-			spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
-			if (spux_int.s.training_failure) {
-				/* Training failed, restart */
-				debug_cgx("%s: %d:%d Link Training failed\n"
-						  , __func__, cgx_id, lmac_id);
-				return -1;
-			} else if (spux_int.s.training_done) {
-				debug_cgx("%s: %d:%d Link Training successfully completed\n",
-					__func__, cgx_id, lmac_id);
-				still_training = 0;
-				break;
-			}
-		} else {
-			/* Check for a link training complete on all lanes */
-			lt_mask = 0;
-			qlm = lmac->qlm + lmac->shift_from_first;
-			gserx = lmac->gserx + lmac->shift_from_first;
-			lane_mask = lmac->lane_mask;
-			mask_idx = 0;
-
-			while (lane_mask) {
-				/* Get the number of lanes on this QLM/DLM */
-				num_lanes = qlm_get_lanes(qlm);
-				for (int lane = 0; lane < num_lanes; lane++) {
-					if (!(lane_mask & (1 << lane)))
-						continue;
-					/* Check if link training is complete */
-					if (!cgx->qlm_ops->qlm_link_training_complete(gserx, lane))
-						lt_mask = lt_mask | (1 << (lane + mask_idx));
-				}
-				lane_mask >>= num_lanes;
-				mask_idx += num_lanes;
-				qlm++;
-				gserx++;
-			}
-
-			lane_mask = lmac->lane_mask;
-
-			/* Check if all lanes are complete */
-			if (lt_mask == lane_mask) {
-				still_training = 0;
-				break;
-			}
-
-			qlm = lmac->qlm + lmac->shift_from_first;
-			gserx = lmac->gserx + lmac->shift_from_first;
-
-			while (lane_mask) {
-				/* Get the number of lanes on this QLM/DLM */
-				num_lanes = qlm_get_lanes(qlm);
-				for (int lane = 0; lane < num_lanes; lane++) {
-					if (!(lane_mask & (1 << lane)))
-						continue;
-					if (cgx->qlm_ops->qlm_link_training_fail(gserx, lane)) {
-						/* Training failed, restart */
-						debug_cgx("%s: %d:%d Link Training failed\n"
-								  , __func__, cgx_id, lmac_id);
-						return -1;
-					}
-				}
-				lane_mask >>= num_lanes;
-				qlm++;
-				gserx++;
-			}
+	switch (lmac->mode) {
+	case CAVM_CGX_LMAC_TYPES_E_SGMII:
+	case CAVM_CGX_LMAC_TYPES_E_QSGMII:
+		/* Write the Advertisement register to be used */
+		if (lmac->sgmii_1000x_mode) { /* 1000 BASE-X mode */
+			pcs_anx_adv.u = 0;
+			pcs_anx_adv.s.rem_flt = 0; /* Link OK */
+			/* both symmetric & asymmetric pause to local device */
+			pcs_anx_adv.s.pause = 3;
+			/* both half-duplex and full-duplex capable */
+			pcs_anx_adv.s.hfd = 1;
+			pcs_anx_adv.s.fd = 1;
+			CSR_WRITE(CAVM_CGXX_GMP_PCS_ANX_ADV(
+					cgx_id, lmac_id), pcs_anx_adv.u);
+		} else { /* SGMII/QSGMII mode */
+			if (lmac->phy_mode) {	/* PHY mode */
+				sgmx_an_adv.u = 0;
+				sgmx_an_adv.s.dup = 1; /* full duplex */
+				sgmx_an_adv.s.speed = 1; /* 1000Mb/s */
+				CSR_WRITE(CAVM_CGXX_GMP_PCS_SGMX_AN_ADV(
+					cgx_id, lmac_id), sgmx_an_adv.u);
+			} /* nothing to do in MAC mode */
 		}
-		udelay(1);
-	}
 
-	if (still_training) {
-		debug_cgx("%s: %d:%d Link Training timed out\n",
-			__func__, cgx_id, lmac_id);
-		return -1;
-	}
+		pcs_mrx_ctl.u = CSR_READ(CAVM_CGXX_GMP_PCS_MRX_CONTROL(
+						cgx_id, lmac_id));
+		pcs_mrx_ctl.s.an_en = 1;
+		pcs_mrx_ctl.s.rst_an = 1;
+		CSR_WRITE(CAVM_CGXX_GMP_PCS_MRX_CONTROL(
+				cgx_id, lmac_id), pcs_mrx_ctl.u);
 
-	return 0;
+		break;
+	case CAVM_CGX_LMAC_TYPES_E_TENG_R:
+	case CAVM_CGX_LMAC_TYPES_E_FORTYG_R:
+	case CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R:
+	case CAVM_CGX_LMAC_TYPES_E_FIFTYG_R:
+	case CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R:
+		/* enable AN */
+		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
+				CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
+				an_en, 1);
+		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
+				CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
+				xnp_en, 1);
+
+		/* program the negotiation parameters to be advertised */
+		spux_an_adv.u = CSR_READ(CAVM_CGXX_SPUX_AN_ADV(
+						cgx_id, lmac_id));
+		spux_an_adv.u = 0;
+		/* set the default values */
+		spux_an_adv.s.xnp_able = 1;
+		spux_an_adv.s.pause = 1;
+		spux_an_adv.s.s	= 1;
+		spux_an_adv.s.rf = 1;
+		spux_an_adv.s.asm_dir = 1;
+		if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) {
+			spux_an_adv.s.np = 0;
+			if (lmac->use_training) {
+				spux_an_adv.s.a10g_kr = 1;
+				if (!is_gsern) {
+					spux_an_adv.s.a25g_kr_cr = 1;
+					spux_an_adv.s.a25g_krs_crs = 1;
+				}
+			}
+			/* only BASE-R ability */
+			if (lmac->fec == CGX_FEC_BASE_R) {
+				spux_an_adv.s.fec_able = 1;
+				spux_an_adv.s.fec_req = 1;
+			} else {
+				spux_an_adv.s.fec_able = 0;
+				spux_an_adv.s.fec_req = 0;
+			}
+		} else if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R) {
+			spux_an_adv.s.np = 0;
+			if (lmac->use_training) {
+				spux_an_adv.s.a40g_kr4 = 1;
+				spux_an_adv.s.a40g_cr4 = 1;
+			}
+			if (lmac->fec == CGX_FEC_BASE_R) {
+				/* only BASE-R ability */
+				spux_an_adv.s.fec_able = 1;
+				spux_an_adv.s.fec_req = 1;
+			} else {
+				spux_an_adv.s.fec_able = 0;
+				spux_an_adv.s.fec_req = 0;
+			}
+		} else if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R) {
+			/* Program 25G FEC advertisement */
+			if (lmac->fec == CGX_FEC_BASE_R)
+				spux_an_adv.s.a25g_br_fec_req = 1;
+			else if (lmac->fec == CGX_FEC_RS)
+				spux_an_adv.s.a25g_rs_fec_req = 1;
+			spux_an_adv.s.a25g_kr_cr = 1;
+			spux_an_adv.s.a25g_krs_crs = 1;
+			/* Program Next Page so that we can
+			 * support Ethernet Consortium
+			 * FIXME: add 25G Ethernet Consortium
+			 */
+			spux_an_adv.s.np = 0;
+		} else if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_FIFTYG_R) {
+			/* 50GBASE-R2 Autoneg is completed via
+			 * extended next pages
+			 */
+			spux_an_adv.s.np = 1;
+		} else if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R) {
+			/* Program 25G FEC advertisement */
+			if (lmac->fec == CGX_FEC_RS)
+				spux_an_adv.s.a25g_rs_fec_req = 1;
+			spux_an_adv.s.a100g_cr4 = 1;
+			spux_an_adv.s.a100g_kr4 = 1;
+			spux_an_adv.s.a40g_cr4 = 1;
+			spux_an_adv.s.a40g_kr4 = 1;
+		}
+		CSR_WRITE(CAVM_CGXX_SPUX_AN_ADV(cgx_id, lmac_id),
+				spux_an_adv.u);
+
+		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spu_dbg_control_t,
+			CAVM_CGXX_SPU_DBG_CONTROL(cgx_id),
+			an_nonce_match_dis, 0);
+
+		/* optionally set an_arb_link_chk_en only for pass 1.x
+		 * chips
+		 */
+		if ((is_gsern) &&
+			((lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
+			(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R)))
+			CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
+				CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
+				an_arb_link_chk_en, 1);
+		/* Restart AN */
+		cgx_restart_an(cgx_id, lmac_id);
+		break;
+	default:
+		break;
+	}
 }
 
 /* This function initializes the CGX LMAC and SERDES
@@ -634,130 +1161,6 @@ static int cgx_an_hcd_check(int cgx_id, int lmac_id, int training_fail)
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
 		CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
 		an_en, 0);
-
-	return 0;
-}
-
-/* Change the Reset state of the CGX LMAC SERDES lanes.  If SERDES reset fails
- * return -1
- */
-static int cgx_serdes_reset(int cgx_id, int lmac_id, bool reset)
-{
-	uint64_t lane_mask;
-	int qlm, gserx, num_lanes;
-	cgx_config_t *cgx;
-	cgx_lmac_config_t *lmac;
-
-	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
-		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
-		return 0;
-
-	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
-	lmac = &cgx->lmac_cfg[lmac_id];
-	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
-
-	gserx = lmac->gserx + lmac->shift_from_first;
-	qlm = lmac->qlm + lmac->shift_from_first;
-	lane_mask = lmac->lane_mask;
-
-	while (lane_mask) {
-		/* Get the number of lanes on this QLM/DLM */
-		num_lanes = qlm_get_lanes(qlm);
-		for (int lane = 0; lane < num_lanes; lane++) {
-			if (!(lane_mask & (1 << lane)))
-				continue;
-			/* Change the SERDES reset state */
-			cgx->qlm_ops->qlm_lane_rst(gserx, lane, reset);
-		}
-		lane_mask >>= num_lanes;
-		gserx++;
-		qlm++;
-	}
-
-	return 0;
-}
-
-/* Configure SERDES for autoneg.  If SERDES config fails
- * return -1
- */
-static int cgx_autoneg_serdes_enable(int cgx_id, int lmac_id, bool enable)
-{
-	uint64_t lane_mask;
-	int qlm, gserx, num_lanes;
-	cgx_config_t *cgx;
-	cgx_lmac_config_t *lmac;
-
-	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
-		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
-		return 0;
-
-	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
-	lmac = &cgx->lmac_cfg[lmac_id];
-	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
-
-	gserx = lmac->gserx + lmac->shift_from_first;
-	qlm = lmac->qlm + lmac->shift_from_first;
-	lane_mask = lmac->lane_mask;
-
-	while (lane_mask) {
-		/* Get the number of lanes on this QLM/DLM */
-		num_lanes = qlm_get_lanes(qlm);
-		for (int lane = 0; lane < num_lanes; lane++) {
-			if (!(lane_mask & (1 << lane)))
-				continue;
-			/* Configure Rx Adaptation & CDR */
-			cgx->qlm_ops->qlm_rx_adaptation_cdr_control(gserx, lane, enable);
-		}
-		lane_mask >>= num_lanes;
-		gserx++;
-		qlm++;
-	}
-
-	return 0;
-}
-
-/*
- * Called whenever CGX needs to enable or disable the SERDES transmitter
- */
-static int cgx_serdes_tx_control(int cgx_id, int lmac_id, bool enable_tx)
-{
-	int qlm, gserx, lane, num_lanes;
-	uint64_t lane_mask;
-	cavm_cgxx_spux_control1_t spux_ctrl1;
-	cgx_config_t *cgx;
-	cgx_lmac_config_t *lmac;
-
-	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
-
-	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
-	lmac = &cgx->lmac_cfg[lmac_id];
-
-	/* Only do first LMAC of USXGMII */
-	if (cgx->usxgmii_mode && (lmac_id > 0))
-		return 0;
-
-	lane_mask = lmac->lane_mask;
-
-	gserx = lmac->gserx + lmac->shift_from_first;
-	qlm = lmac->qlm + lmac->shift_from_first;
-
-	/* Always disable TX in loopback mode */
-	spux_ctrl1.u = CSR_READ(CAVM_CGXX_SPUX_CONTROL1(cgx_id, lmac_id));
-	if (spux_ctrl1.s.loopbck)
-		enable_tx = false;
-
-	while (lane_mask) {
-		num_lanes = qlm_get_lanes(qlm);
-		for (lane = 0; lane < num_lanes; lane++) {
-			if (!(lane_mask & (1 << lane)))
-				continue;
-
-			cgx->qlm_ops->qlm_tx_control(gserx, lane, enable_tx);
-		}
-		lane_mask >>= num_lanes;
-		gserx++;
-		qlm++;
-	}
 
 	return 0;
 }
@@ -1035,101 +1438,6 @@ static int cgx_get_usxgmii_speed_mbps_from_rate(int rate)
 	}
 	debug_cgx("%s: rate %d speed %d\n", __func__, rate, speed);
 	return speed;
-}
-
-/*
- * Called whenever CGX needs know if the SERDES Rx
- * detects a signal on all associated GSER lanes
- * return 0 on successful signal detect, -1 on failed signal detect
- */
-static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
-{
-	int qlm, gserx, lane, num_lanes;
-	uint64_t lane_mask;
-	cavm_cgxx_spux_control1_t spux_ctrl1;
-	cgx_config_t *cgx;
-	cgx_lmac_config_t *lmac;
-	uint64_t rx_debounce_time;
-	int signal_detect;
-	uint64_t stabilization_timeout;
-	int rx_signal_detect_us, rx_signal_stable_us;
-
-	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
-
-	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
-	lmac = &cgx->lmac_cfg[lmac_id];
-
-	/* Only do first LMAC of USXGMII */
-	if (cgx->usxgmii_mode && (lmac_id > 0))
-		return 0;
-
-	if (lmac->autoneg_dis) {
-		rx_signal_detect_us = 10000;
-		rx_signal_stable_us = 10000;
-	} else {
-		rx_signal_detect_us = 1;
-		/* Needs to be > 75ms because during AN
-		 * LP may complete an AN restart.  The
-		 * break_link_timer is a max of 75ms
-		 */
-		 rx_signal_stable_us = 100000;
-	}
-
-	lane = lmac->lane;
-
-	/* Don't need to look at GSER Rx signals when in internal loopback mode */
-	spux_ctrl1.u = CSR_READ(CAVM_CGXX_SPUX_CONTROL1(cgx_id, lmac_id));
-	if (spux_ctrl1.s.loopbck)
-		return 0;
-
-	stabilization_timeout = gser_clock_get_count(GSER_CLOCK_TIME) + rx_signal_stable_us *
-		gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
-
-	while (1) {
-		signal_detect = 1;
-
-		/* Make sure Rx signal is detected for debounce time */
-		rx_debounce_time = gser_clock_get_count(GSER_CLOCK_TIME) + rx_signal_detect_us *
-				gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
-
-		do {
-			gserx = lmac->gserx + lmac->shift_from_first;
-			qlm = lmac->qlm + lmac->shift_from_first;
-			lane_mask = lmac->lane_mask;
-
-			while (lane_mask) {
-				/* Get the number of lanes on this QLM/DLM */
-				num_lanes = qlm_get_lanes(qlm);
-				for (lane = 0; lane < num_lanes; lane++) {
-					if (!(lane_mask & (1 << lane)))
-						continue;
-					/* Fail if Rx signal is not detected */
-					if (cgx->qlm_ops->qlm_rx_signal_detect(
-								gserx, lane)) {
-						signal_detect = 0;
-						break;
-					}
-				}
-				if (!signal_detect)
-					break;
-				lane_mask >>= num_lanes;
-				gserx++;
-				qlm++;
-			}
-		} while (signal_detect && (gser_clock_get_count(GSER_CLOCK_TIME)
-								   < rx_debounce_time));
-
-		if (signal_detect)
-			break;
-
-		/* Verify if we are passed the link stabilization time */
-		if (gser_clock_get_count(GSER_CLOCK_TIME) >= stabilization_timeout) {
-			debug_cgx("%s %d:%d QLM%d Lane%d Rx signal detect timeout\n",
-					__func__, cgx_id, lmac_id, qlm, lane);
-			return -1;
-		}
-	}
-	return 0;
 }
 
 /* This function initializes the CGX LMAC for
@@ -1450,314 +1758,6 @@ int cgx_sgmii_set_link_speed(int cgx_id, int lmac_id,
 			CAVM_CGXX_GMP_GMI_PRTX_CFG(cgx_id, lmac_id));
 
 	return 0;
-}
-
-static void cgx_set_autoneg(int cgx_id, int lmac_id)
-{
-	cgx_lmac_config_t *lmac;
-	cavm_cgxx_gmp_pcs_anx_adv_t pcs_anx_adv;
-	cavm_cgxx_gmp_pcs_sgmx_an_adv_t sgmx_an_adv;
-	cavm_cgxx_spux_an_adv_t spux_an_adv;
-	cavm_cgxx_gmp_pcs_mrx_control_t pcs_mrx_ctl;
-	bool is_gsern = false;
-
-	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
-
-	debug_cgx("%s: %d:%d, mode=%d an=%d\n", __func__,
-				cgx_id, lmac_id, lmac->mode,
-				!lmac->autoneg_dis);
-
-	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
-		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
-		is_gsern = true;
-
-	switch (lmac->mode) {
-	case CAVM_CGX_LMAC_TYPES_E_SGMII:
-	case CAVM_CGX_LMAC_TYPES_E_QSGMII:
-		/* Write the Advertisement register to be used */
-		if (lmac->sgmii_1000x_mode) { /* 1000 BASE-X mode */
-			pcs_anx_adv.u = 0;
-			pcs_anx_adv.s.rem_flt = 0; /* Link OK */
-			/* both symmetric & asymmetric pause to local device */
-			pcs_anx_adv.s.pause = 3;
-			/* both half-duplex and full-duplex capable */
-			pcs_anx_adv.s.hfd = 1;
-			pcs_anx_adv.s.fd = 1;
-			CSR_WRITE(CAVM_CGXX_GMP_PCS_ANX_ADV(
-					cgx_id, lmac_id), pcs_anx_adv.u);
-		} else { /* SGMII/QSGMII mode */
-			if (lmac->phy_mode) {	/* PHY mode */
-				sgmx_an_adv.u = 0;
-				sgmx_an_adv.s.dup = 1; /* full duplex */
-				sgmx_an_adv.s.speed = 1; /* 1000Mb/s */
-				CSR_WRITE(CAVM_CGXX_GMP_PCS_SGMX_AN_ADV(
-					cgx_id, lmac_id), sgmx_an_adv.u);
-			} /* nothing to do in MAC mode */
-		}
-
-		pcs_mrx_ctl.u = CSR_READ(CAVM_CGXX_GMP_PCS_MRX_CONTROL(
-						cgx_id, lmac_id));
-		pcs_mrx_ctl.s.an_en = 1;
-		pcs_mrx_ctl.s.rst_an = 1;
-		CSR_WRITE(CAVM_CGXX_GMP_PCS_MRX_CONTROL(
-				cgx_id, lmac_id), pcs_mrx_ctl.u);
-
-		break;
-	case CAVM_CGX_LMAC_TYPES_E_TENG_R:
-	case CAVM_CGX_LMAC_TYPES_E_FORTYG_R:
-	case CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R:
-	case CAVM_CGX_LMAC_TYPES_E_FIFTYG_R:
-	case CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R:
-		/* enable AN */
-		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
-				CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
-				an_en, 1);
-		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
-				CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
-				xnp_en, 1);
-
-		/* program the negotiation parameters to be advertised */
-		spux_an_adv.u = CSR_READ(CAVM_CGXX_SPUX_AN_ADV(
-						cgx_id, lmac_id));
-		spux_an_adv.u = 0;
-		/* set the default values */
-		spux_an_adv.s.xnp_able = 1;
-		spux_an_adv.s.pause = 1;
-		spux_an_adv.s.s	= 1;
-		spux_an_adv.s.rf = 1;
-		spux_an_adv.s.asm_dir = 1;
-		if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) {
-			spux_an_adv.s.np = 0;
-			if (lmac->use_training) {
-				spux_an_adv.s.a10g_kr = 1;
-				if (!is_gsern) {
-					spux_an_adv.s.a25g_kr_cr = 1;
-					spux_an_adv.s.a25g_krs_crs = 1;
-				}
-			}
-			/* only BASE-R ability */
-			if (lmac->fec == CGX_FEC_BASE_R) {
-				spux_an_adv.s.fec_able = 1;
-				spux_an_adv.s.fec_req = 1;
-			} else {
-				spux_an_adv.s.fec_able = 0;
-				spux_an_adv.s.fec_req = 0;
-			}
-		} else if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R) {
-			spux_an_adv.s.np = 0;
-			if (lmac->use_training) {
-				spux_an_adv.s.a40g_kr4 = 1;
-				spux_an_adv.s.a40g_cr4 = 1;
-			}
-			if (lmac->fec == CGX_FEC_BASE_R) {
-				/* only BASE-R ability */
-				spux_an_adv.s.fec_able = 1;
-				spux_an_adv.s.fec_req = 1;
-			} else {
-				spux_an_adv.s.fec_able = 0;
-				spux_an_adv.s.fec_req = 0;
-			}
-		} else if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R) {
-			/* Program 25G FEC advertisement */
-			if (lmac->fec == CGX_FEC_BASE_R)
-				spux_an_adv.s.a25g_br_fec_req = 1;
-			else if (lmac->fec == CGX_FEC_RS)
-				spux_an_adv.s.a25g_rs_fec_req = 1;
-			spux_an_adv.s.a25g_kr_cr = 1;
-			spux_an_adv.s.a25g_krs_crs = 1;
-			/* Program Next Page so that we can
-			 * support Ethernet Consortium
-			 * FIXME: add 25G Ethernet Consortium
-			 */
-			spux_an_adv.s.np = 0;
-		} else if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_FIFTYG_R) {
-			/* 50GBASE-R2 Autoneg is completed via
-			 * extended next pages
-			 */
-			spux_an_adv.s.np = 1;
-		} else if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R) {
-			/* Program 25G FEC advertisement */
-			if (lmac->fec == CGX_FEC_RS)
-				spux_an_adv.s.a25g_rs_fec_req = 1;
-			spux_an_adv.s.a100g_cr4 = 1;
-			spux_an_adv.s.a100g_kr4 = 1;
-			spux_an_adv.s.a40g_cr4 = 1;
-			spux_an_adv.s.a40g_kr4 = 1;
-		}
-		CSR_WRITE(CAVM_CGXX_SPUX_AN_ADV(cgx_id, lmac_id),
-				spux_an_adv.u);
-
-		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spu_dbg_control_t,
-			CAVM_CGXX_SPU_DBG_CONTROL(cgx_id),
-			an_nonce_match_dis, 0);
-
-		/* optionally set an_arb_link_chk_en only for pass 1.x
-		 * chips
-		 */
-		if ((is_gsern) &&
-			((lmac->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
-			(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R)))
-			CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
-				CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
-				an_arb_link_chk_en, 1);
-		/* Restart AN */
-		cgx_restart_an(cgx_id, lmac_id);
-		break;
-	default:
-		break;
-	}
-}
-
-static void cgx_set_fec(int cgx_id, int lmac_id, int req_fec)
-{
-	int val = 0;
-	cgx_lmac_config_t *lmac;
-	cavm_cgxx_spux_rx_mrk_cnt_t rx_mrk_cnt;
-	cavm_cgxx_spux_tx_mrk_cnt_t tx_mrk_cnt;
-	int mrk_cnt = 0x3FFF;
-	int ram_mrk_cnt;
-	int by_mrk_100g = 1;
-
-	debug_cgx("%s %d:%d fec type %d\n", __func__, cgx_id,
-							lmac_id, req_fec);
-
-	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
-
-	if (req_fec == -1) {
-		/* In this case, User did not specify any FEC type.
-		 * By default enable FEC for
-		 * 10G, 25G, 40G, 50G, 100G BASE-R & USXGMII modes
-		 *
-		 * Below table from HRM describes how to enable "fec_en" for each mode.
-		 * fec_en is 2-bits
-		 *
-		 * Bit 0 enables BASE-R FEC. Bit 1 enables RS-FEC (Reed-Solomon FEC).
-		 *
-		 *	Value     LMAC_TYPE         Comment
-		 *	-------   ---------------   ------------
-		 *	0x0       All BASE-R        No FEC
-		 *	0x1       25G_R, 50G_R,     BASE-R FEC enabled
-		 *	0x2       25G_R, 50G_R,     RS-FEC enabled
-		 *	0x3       25G_R, 50G_R,     UNDEFINED
-		 *	0x2,0x3   100G_R, USXGMII   RS-FEC enabled
-		 *	0x2       10G_R, 40G_R      No FEC. 10G_R, 40G_R may only use BASE-R FEC
-		 *	0x1,0x3   10G_R, 40G_R      BASE-R FEC
-		 *	0x1       100G_R            No FEC. 100G_R  may only use RS-FEC
-		 *
-		 */
-		switch (lmac->mode) {
-		case CAVM_CGX_LMAC_TYPES_E_TENG_R:
-		case CAVM_CGX_LMAC_TYPES_E_FORTYG_R:
-			val = CGX_FEC_BASE_R;
-			break;
-		case CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R:
-		case CAVM_CGX_LMAC_TYPES_E_FIFTYG_R:
-			/* RS-FEC considered the default for now */
-			val = CGX_FEC_RS;
-			break;
-		case CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R:
-		case CAVM_CGX_LMAC_TYPES_E_USXGMII:
-			val = CGX_FEC_RS;
-			break;
-		default:
-			val = CGX_FEC_NONE;
-			break;
-		}
-
-		/* FIXME: for now disable FEC by default */
-		val = 0;
-		/* update the board config structure with FEC set */
-		lmac->fec = val;
-	} else {
-		/* If user has requested specific FEC type,
-		 * configure the FEC as such
-		 */
-		val = req_fec;
-
-		/* Workaround for errata GSER-35489
-		 * For T9X pass 1.0 and 1.1, always enable RS-FEC
-		 * for 25G
-		 */
-		if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
-			(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1))) {
-			switch (lmac->mode_idx) {
-			case QLM_MODE_25GAUI_C2C:
-			case QLM_MODE_25GAUI_C2M:
-			case QLM_MODE_25G_CR:
-			case QLM_MODE_25G_KR:
-			case QLM_MODE_50GAUI_2_C2C:
-			case QLM_MODE_50GAUI_2_C2M:
-			case QLM_MODE_50G_CR2:
-			case QLM_MODE_50G_KR2:
-			case QLM_MODE_CAUI_4_C2C:
-			case QLM_MODE_CAUI_4_C2M:
-			case QLM_MODE_100G_CR4:
-			case QLM_MODE_100G_KR4:
-				val = CGX_FEC_RS;
-			break;
-			}
-		}
-
-		if (lmac->mode_idx == QLM_MODE_25GAUI_2_C2C ||
-		    lmac->mode_idx == QLM_MODE_50GAUI_4_C2C) {
-			/* Our proprietary 25GBASE-R2 and 50GBASE-R4 do not
-			 * support FEC.
-			 */
-			val = CGX_FEC_NONE;
-		}
-	}
-	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_fec_control_t,
-				CAVM_CGXX_SPUX_FEC_CONTROL(cgx_id, lmac_id),
-				fec_en, val);
-	/* Program Tx/Rx marker count based on LMAC/FEC settings */
-	switch (lmac->mode) {
-	case CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R:
-		if (val == CGX_FEC_RS)
-			mrk_cnt = 0x13FFC;
-		else
-			mrk_cnt = 0x3FFF;
-	break;
-	case CAVM_CGX_LMAC_TYPES_E_FIFTYG_R:
-		if (val == CGX_FEC_RS) {
-			by_mrk_100g = 0;
-			mrk_cnt = 0x4FFF;
-		} else
-			mrk_cnt = 0x3FFF;
-		break;
-	case CAVM_CGX_LMAC_TYPES_E_USXGMII:
-		if (val == CGX_FEC_RS)
-			mrk_cnt = 0x13FFC;
-		else
-			mrk_cnt = 0x4010;
-		break;
-	default:
-		/* All other modes with/wo FEC */
-		mrk_cnt = 0x3FFF;
-	break;
-	}
-
-	/* Rapid marker alignment, default is 15: for 100G, it should be 7 */
-	ram_mrk_cnt = (lmac->mode == CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R) ? 7 : 15;
-	debug_cgx("%s: mode %d fec %d program mrk_cnt 0x%x\t"
-		"ram_mrk_cnt 0x%x\n", __func__, lmac->mode, val, mrk_cnt,
-			ram_mrk_cnt);
-
-	rx_mrk_cnt.u = CSR_READ(CAVM_CGXX_SPUX_RX_MRK_CNT(cgx_id,
-						lmac_id));
-	rx_mrk_cnt.s.ram_mrk_cnt = ram_mrk_cnt;
-	rx_mrk_cnt.s.by_mrk_100g = by_mrk_100g;
-	rx_mrk_cnt.s.mrk_cnt = mrk_cnt;
-
-	CSR_WRITE(CAVM_CGXX_SPUX_RX_MRK_CNT(cgx_id, lmac_id),
-				rx_mrk_cnt.u);
-
-	tx_mrk_cnt.u = CSR_READ(CAVM_CGXX_SPUX_TX_MRK_CNT(cgx_id,
-						lmac_id));
-	tx_mrk_cnt.s.ram_mrk_cnt = ram_mrk_cnt;
-	tx_mrk_cnt.s.by_mrk_100g = by_mrk_100g;
-	tx_mrk_cnt.s.mrk_cnt = mrk_cnt;
-	CSR_WRITE(CAVM_CGXX_SPUX_TX_MRK_CNT(cgx_id, lmac_id),
-			tx_mrk_cnt.u);
 }
 
 static int cgx_usxgmii_spux_reset(int cgx_id, int lmac_id, int an_en)
