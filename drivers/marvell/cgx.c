@@ -255,11 +255,7 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 		rx_signal_stable_us = 10000;
 	} else {
 		rx_signal_detect_us = 1;
-		/* Needs to be > 75ms because during AN
-		 * LP may complete an AN restart.  The
-		 * break_link_timer is a max of 75ms
-		 */
-		 rx_signal_stable_us = 100000;
+		rx_signal_stable_us = 10000;
 	}
 
 	lane = lmac->lane;
@@ -1381,7 +1377,9 @@ static int cgx_an_hcd_check(int cgx_id, int lmac_id, int training_fail)
 static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 {
 	int still_negotiating = 1;
-	uint64_t autoneg_time;
+	bool anpage_rcvd = false;
+	uint64_t anpage_timeout;
+	uint64_t autoneg_timeout;
 	uint64_t init_time;
 	cavm_cgxx_spux_int_t spux_int;
 	cavm_cgxx_spux_an_status_t spux_an_status;
@@ -1410,12 +1408,14 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 
 	/* Setup AN timeout */
 	init_time = gser_clock_get_count(GSER_CLOCK_TIME);
-	autoneg_time = init_time + CGX_POLL_AN_COMPLETE_STATUS *
+	autoneg_timeout = init_time + CGX_POLL_AN_COMPLETE_STATUS *
+			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+	anpage_timeout = init_time + CGX_POLL_AN_PAGE_STATUS *
 			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
 
 	while (still_negotiating &&
-		   (gser_clock_get_count(GSERN_CLOCK_TIME)
-			< autoneg_time)) {
+			(gser_clock_get_count(GSERN_CLOCK_TIME)
+			< autoneg_timeout)) {
 		spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(
 				cgx_id, lmac_id));
 
@@ -1430,7 +1430,14 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 			break;
 		}
 
+		/* Check if any AN pages are received */
+		if (!anpage_rcvd &&
+			(gser_clock_get_count(GSERN_CLOCK_TIME)
+				> anpage_timeout))
+			break;
+
 		if (spux_int.s.an_page_rx) {
+			anpage_rcvd = true;
 			lp_xnp[np].u = CSR_READ(CAVM_CGXX_SPUX_AN_LP_XNP(
 						   cgx_id, lmac_id));
 			lp_base[np].u = CSR_READ(CAVM_CGXX_SPUX_AN_LP_BASE(
@@ -1581,6 +1588,16 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 AN_failure:
 	debug_cgx("%s: %d:%d AN timed out\n",
 		__func__, cgx_id, lmac_id);
+
+	if (!anpage_rcvd) {
+		/* Check if we are receiving a signal */
+		if (cgx_serdes_rx_signal_detect(cgx_id, lmac_id))
+			debug_cgx("%s: %d:%d Did not receive AN page. No Rx signal\n",
+				__func__, cgx_id, lmac_id);
+		else
+			debug_cgx("%s: %d:%d Did not receive AN page\n",
+				__func__, cgx_id, lmac_id);
+	}
 
 	/* Print AN page data if any pages received */
 	if (np > 0) {
@@ -2309,6 +2326,7 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 	if (spux_an_ctl.s.an_arb_link_chk_en && is_gsern) {
 		/* Enable the SERDES Tx */
 		cgx_serdes_tx_control(cgx_id, lmac_id, true);
+
 		/* an_complete means both auto-neg and
 		 * link training (if enabled) were successful
 		 */
@@ -2521,7 +2539,9 @@ int cgx_sgmii_set_link_up(int cgx_id, int lmac_id)
 		CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id),
 		enable, 1);
 
+	/* Enable serdes transmitter */
 	cgx_serdes_tx_control(cgx_id, lmac_id, true);
+
 	/* disable GMI */
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_gmp_pcs_miscx_ctl_t,
 			CAVM_CGXX_GMP_PCS_MISCX_CTL(cgx_id, lmac_id),
@@ -3239,7 +3259,7 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 								first_gserx,
 								lane_mask, 1);
 					} else
-						cgx_serdes_tx_control(cgx_id, lmac_id, 0);
+						cgx_serdes_tx_control(cgx_id, lmac_id, false);
 
 					udelay(TX_IDLE_TOGGLE_US);
 
@@ -3252,7 +3272,7 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 						else
 							lmac_ctx->s.remote_fault = 0;
 					} else
-						cgx_serdes_tx_control(cgx_id, lmac_id, 1);
+						cgx_serdes_tx_control(cgx_id, lmac_id, true);
 				}
 			}
 		} else {
