@@ -233,9 +233,9 @@ void qlm_gserr_tx_control(int qlm, int lane, bool enable_tx);
  * @param  qlm	   QLM to use
  * @param  lane	   Which lane
  * @param  disable Disable Rx adaption and fix CDR
- * @return Returns the LMAC first GSER
+ * @param  is_10g  true if speed is 10G
  */
-void qlm_gserr_rx_adaption_cdr_control(int qlm, int lane, bool disable);
+void qlm_gserr_rx_adaption_cdr_control(int qlm, int lane, bool disable, bool is_10g);
 
 /**
  * Reset the GSER lane.
@@ -243,7 +243,6 @@ void qlm_gserr_rx_adaption_cdr_control(int qlm, int lane, bool disable);
  * @param  qlm	     QLM to use
  * @param  lane	     Which lane
  * @param  reset_en  1) Enable reset 0) Clear reset
- * @return Returns the LMAC first GSER
  */
 void qlm_gserr_lane_rst(int qlm, int lane, bool reset);
 
@@ -252,8 +251,9 @@ void qlm_gserr_lane_rst(int qlm, int lane, bool reset);
  *
  * @param qlm	  QLM to use
  * @param lane	  Which lane
+ * @param en      0=Disable Training, 1=Enable Training
  */
-void qlm_gserr_link_training_start(int qlm, int lane);
+void qlm_gserr_link_training_config(int qlm, int lane, bool en);
 
 /**
  * Check whether SERDES Link Training Failed

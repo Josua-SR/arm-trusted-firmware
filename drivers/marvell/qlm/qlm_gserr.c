@@ -2397,9 +2397,9 @@ static int qlm_gserr_change_phy_rate(int module)
  * @param  qlm	   QLM to use
  * @param  lane	   Which lane
  * @param  disable Disable Rx adaption and fix CDR
- * @return Returns the LMAC first GSER
+ * @param  is_10g  true if speed is 10G
  */
-void qlm_gserr_rx_adaption_cdr_control(int qlm, int lane, bool disable)
+void qlm_gserr_rx_adaption_cdr_control(int qlm, int lane, bool disable, bool is_10g)
 {
 	int leq_lfg_start, leq_hfg_sql_start;
 	int leq_mbf_start, leq_mbg_start;
@@ -2415,11 +2415,19 @@ void qlm_gserr_rx_adaption_cdr_control(int qlm, int lane, bool disable)
 		rxcdr_bbstep = 10;
 	} else {
 		GSER_TRACE(QLM, "GSERR%d.%d: Enabling LEQ and DFE adaptation\n", qlm, lane);
-		leq_lfg_start = 0;
-		leq_hfg_sql_start = 20;
-		leq_mbf_start = 0;
-		leq_mbg_start = 0;
-		gn_apg_start = 7;
+		if (is_10g) {
+			leq_lfg_start = 0;
+			leq_hfg_sql_start = 20;
+			leq_mbf_start = 0;
+			leq_mbg_start = 0;
+			gn_apg_start = 7;
+		} else { /* 25Gb/s Settings */
+			leq_lfg_start = 6;
+			leq_hfg_sql_start = 24;
+			leq_mbf_start = 8;
+			leq_mbg_start = 8;
+			gn_apg_start = 4;
+		}
 		rxcdr_bbstep = 20;
 	}
 	/* Adjust CDR phase gain */
@@ -2514,15 +2522,55 @@ void qlm_gserr_lane_rst(int qlm, int lane, bool reset)
 	else
 		GSER_TRACE(QLM, "GSERR%d.%d: Clearing Lane Reset\n", qlm, lane);
 
+	if (reset) {
+		GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(qlm, lane),
+			c.s.ln_ctrl_tx_en = 0);
+		gser_wait_usec(1);
+	}
+
 	/* Assert or deassert Lane reset */
 	GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(qlm, lane),
 		c.s.ln_rst = reset);
 
-	/* Wait for state change to complete */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+	if (reset) {
+		/* Wait for the PHY firmware to signal that the Lane is in the Reset
+			power state which is signaled by the lane Tx and Rx blocks negating
+			the Tx/Rx ready signals.
+			Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+				LN_TX_RDY=0 Lane Tx is not ready
+				LN_RX_RDY=0 Lane Rx is not ready
+				LN_STATE_CHNG_RDY = 0 Lane is transitioning states */
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane), GSERRX_STATUS_BSTS_LN_TX_RDY, ==, 0, 500))
+			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_tx_rdy]=0 (lane is reset)\n", qlm, lane);
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane), GSERRX_STATUS_BSTS_LN_RX_RDY, ==, 0, 500))
+			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_rx_rdy]=0 (lane is reset)\n", qlm, lane);
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 500))
+		{
+			/* This happens fast, so sometimes we miss it */
+			//gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0\n (lane is reset)", module, lane);
+		}
+	} 
+	else 
 	{
-		gser_error("GSERR%d.%d: Wait for GSERRX_LNX_TOP_LN_STAT_STATUS0[STATE_CHGN_RDY]=1 timeout\n", qlm, lane);
+		/* Read/Poll for the GSERR to set the Lane State Change Ready flag and
+		drive the Lane Tx and Rx ready flags to signal that the lane as
+		returned to the ACTIVE state.
+		Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+			LN_TX_RDY=1 Lane Tx is ready
+			LN_RX_RDY=1 Lane Rx is ready
+			LN_STATE_CHNG_RDY = 1 Lane is in the “Active” power state */
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane), GSERRX_STATUS_BSTS_LN_TX_RDY, ==, 1, 5000))
+			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_tx_rdy]=1 (reset done)\n", qlm, lane);
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane), GSERRX_STATUS_BSTS_LN_RX_RDY, ==, 1, 5000))
+			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_rx_rdy]=1 (reset done)\n", qlm, lane);
 	}
+
+	/* 4. Wait for the “Lane State Change Ready” to signal that the lane has
+		transitioned to the “Reset” state.
+		Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+		gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (lane is reset)\n", qlm, lane);
 }
 
 /**
@@ -2530,11 +2578,13 @@ void qlm_gserr_lane_rst(int qlm, int lane, bool reset)
  *
  * @param qlm	  QLM to use
  * @param lane	  Which lane
+ * @param en      0=Disable Training, 1=Enable Training
  */
-void qlm_gserr_link_training_start(int qlm, int lane)
+void qlm_gserr_link_training_config(int qlm, int lane, bool en)
 {
+	/* Set/Clear Training enable */
 	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_LT_TX_FSM_CTRL0(qlm, lane),
-		c.s.mr_training_enable = 1);
+		c.s.mr_training_enable = en);
 }
 
 /**

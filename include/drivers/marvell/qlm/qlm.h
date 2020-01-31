@@ -234,9 +234,9 @@ typedef struct {
 	int (*qlm_tx_sm_rst_control)(int qlm, uint64_t lane_mask, int reset_tx);
 	int (*qlm_rx_signal_detect)(int qlm, int lane);
 	int (*qlm_get_lmac_phy_lane)(int qlm, int lane);
-	void (*qlm_rx_adaptation_cdr_control)(int qlm, int lane, bool disable);
+	void (*qlm_rx_adaptation_cdr_control)(int qlm, int lane, bool disable, bool is_10g);
 	void (*qlm_lane_rst)(int qlm, int lane, bool reset);
-	void (*qlm_link_training_start)(int qlm, int lane);
+	void (*qlm_link_training_config)(int qlm, int lane, bool en);
 	int (*qlm_link_training_fail)(int qlm, int lane);
 	int (*qlm_link_training_complete)(int qlm, int lane);
 } qlm_ops_t;
