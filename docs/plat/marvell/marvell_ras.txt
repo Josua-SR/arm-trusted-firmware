@@ -1,0 +1,47 @@
+OcteonTX2 RAS implementation
+============================
+
+OcteonTX2 implements the ARMv8 RAS (Reliability, Availability & Serviceability)
+specification.
+
+This decouples the tracking of hardware exception events from any outage to
+the data being transferred, allowing a RAS-aware OS (such as Linux 4.18 onward)
+to handle the outage as it sees fit, by analysing the context in which the data
+is being used.
+
+Uncorrectable errors in memory/cache transactions cause a "poisoned" cacheline
+to be left in place of the error, to be discovered later by the eventual user,
+while ATF handles the immedate exception, logging the details of hardware unit
+and physical address impacted, for later remedy
+ATF enables relevant exceptions in OcteonTX2 hardware units (MDC, MCC, LMC) and
+both:
+
+- reports these to serial console
+- logs to a standard error-logging framework (GHES/HEST) understood by RAS-aware
+  OS software
+
+While the access procedure for GHES is well defined in a UEFI/ACPI platform,
+many OcteonTX2 embedded deployments will use ATF & DeviceTree rather than ACPI,
+so a custom platform device in linux-4.18 is provided to derive GHES location
+from device tree, and register the HEST, so the error indications flow to the
+standard processing of a kernel built with **MEMORY_FAILURE=y** option, which is
+notified in the standard fashion with an SDEI, and acts to contain uncorrectable
+errors, retire troublesome pages, and abort/restart impacted subsystems.
+
+The full RAS model is not available in kernels before 4.18, so in this case the
+error indications are passed to the processing of the legacy EDAC model.
+
+For details of the Device Tree "sdei-ghes" node describing this shared-memory
+communication area, see the following kernel document:
+  Documentation/devicetree/bindings/edac/marvell-sdei-ghes.txt
+
+To assist in verifying this reporting path, and any customer-developed code
+which continues the processing from the details provided by standard RAS & EDAC
+kernel interfaces, a set of SMC services is defined between kernels and ATF to
+force error injection via the LMC/MCC/MDC memory/cache interfaces, to model the
+response to a genuine outage.
+The API details of this OCTEONTX_EDAC SMC are outlined in ATF's
+  include/plat/marvell/octeontx/otx2/plat_ras.h
+
+The ability to inject multi-bit errors compromises system integrity, so is
+disabled in the regular DEBUG=0 ATF builds.
