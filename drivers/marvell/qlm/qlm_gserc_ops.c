@@ -76,7 +76,7 @@ const qlm_ops_t qlm_gserc_ops = {
 	.qlm_get_lmac_phy_lane = qlm_gserc_get_lmac_phy_lane,
 	.qlm_rx_adaptation_cdr_control = qlm_gserc_rx_adaption_cdr_control,
 	.qlm_lane_rst = qlm_gserc_lane_rst,
-	.qlm_link_training_start = qlm_gserc_link_training_start,
+	.qlm_link_training_config = qlm_gserc_link_training_config,
 	.qlm_link_training_fail = qlm_gserc_link_training_fail,
 	.qlm_link_training_complete = qlm_gserc_link_training_complete,
 };
