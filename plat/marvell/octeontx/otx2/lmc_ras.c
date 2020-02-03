@@ -5,8 +5,7 @@
  * https://spdx.org/licenses
  */
 
-/* EDAC driver for OcteonTX2 */
-/* some code derived from BDK e2557f367 */
+/* RAS/EDAC driver for OcteonTX2 */
 
 #include <arch.h>
 #include <stdint.h>

@@ -19,6 +19,7 @@
 #include <plat_otx2_configuration.h>
 #include <plat_octeontx.h>
 #include <octeontx_irqs_def.h>
+#include <plat_scfg.h>
 #include <qlm/qlm.h>
 
 #define CAVM_BPHY_BAR_E_BPHY_PF_BAR0 (0x860000000000ll)
@@ -168,7 +169,7 @@ int plat_octeontx_get_rvu_count(void)
 
 int plat_octeontx_get_mcc_count(void)
 {
-	return 1;
+	return MAX_MCC;
 }
 
 /* Return number of lanes available for different QLMs. */

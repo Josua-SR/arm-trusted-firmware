@@ -13,7 +13,6 @@
 #include <octeontx_common.h>
 #include <gpio_octeontx.h>
 #include <octeontx_utils.h>
-#include <platform_scfg.h>
 #include <octeontx_plat_configuration.h>
 #include <plat_otx2_configuration.h>
 #include <plat_octeontx.h>
