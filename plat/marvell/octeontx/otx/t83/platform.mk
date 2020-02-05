@@ -6,6 +6,9 @@
 # Include common Marvell platform's makefile helper
 include plat/marvell/octeontx/platform.mk
 
+PLAT_XLAT_TABLES_DYNAMIC := 1
+$(eval $(call add_define,PLAT_XLAT_TABLES_DYNAMIC))
+
 PLAT_INCLUDES		+=	-Iinclude/plat/marvell/octeontx/otx			\
 				-Iplat/marvell/octeontx/otx/t83/include		\
 
