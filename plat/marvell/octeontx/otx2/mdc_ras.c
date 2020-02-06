@@ -29,6 +29,7 @@
 #include <drivers/delay_timer.h>
 #include <cavm-csrs-ccu.h>
 #include <octeontx_ehf.h>
+#include <octeontx_plat_configuration.h>
 #if SDEI_SUPPORT
 #include <services/sdei.h>
 #include <octeontx_sdei.h>
@@ -445,6 +446,9 @@ static void check_lmc_ras(void)
 
 	for (lmc_no = 0; lmc_no < MAX_LMC; lmc_no++) {
 		union cavm_lmcx_ras_err00status stat;
+
+		if (!plat_octeontx_is_lmc_enabled(lmc_no))
+			continue;
 
 		stat.u = CSR_READ(CAVM_LMCX_RAS_ERR00STATUS(lmc_no));
 

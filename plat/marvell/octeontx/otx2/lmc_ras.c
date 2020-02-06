@@ -34,6 +34,7 @@
 #include <octeontx_ehf.h>
 #include <lib/el3_runtime/context_mgmt.h>
 #include <octeontx_sdei.h>
+#include <octeontx_plat_configuration.h>
 
 #if RAS_EXTENSION
 #include <lib/extensions/ras.h>
@@ -1895,6 +1896,8 @@ int otx2_lmc_probe(const struct err_record_info *info, int *probe_data)
 	int lmc;
 
 	for (lmc = 0; lmc < MAX_LMC; lmc++) {
+		if (!plat_octeontx_is_lmc_enabled(lmc))
+			continue;
 		lmc_ras_int.u = CSR_READ(CAVM_LMCX_RAS_INT(lmc));
 		if (lmc_ras_int.u) {
 			*probe_data = lmc;
