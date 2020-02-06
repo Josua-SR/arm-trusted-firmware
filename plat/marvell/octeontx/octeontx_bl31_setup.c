@@ -197,6 +197,7 @@ void bl31_platform_setup()
  ******************************************************************************/
 void bl31_plat_arch_setup()
 {
+	uintptr_t ns_dma_memory_base = octeontx_dram_size() - NS_DMA_MEMORY_SIZE;
 	mmap_add_region(BL_CODE_BASE, BL_CODE_BASE,
 			BL31_END - BL_CODE_BASE,
 			MT_MEMORY | MT_RW | MT_SECURE);
@@ -213,6 +214,10 @@ void bl31_plat_arch_setup()
 			BL_COHERENT_RAM_END - BL_COHERENT_RAM_BASE,
 			MT_MEMORY | MT_RW | MT_SECURE);
 #endif
+
+	mmap_add_region(ns_dma_memory_base, ns_dma_memory_base,
+			NS_DMA_MEMORY_SIZE,
+			MT_DEVICE | MT_RW | MT_NS);
 
 	{
 		extern void otx2_map_ghes(void);
@@ -241,10 +246,5 @@ void bl31_plat_runtime_setup(void)
 	plat_octeontx_setup();
 #ifndef DEBUG
 	console_uninit();
-#endif
-#if defined(PLAT_XLAT_TABLES_DYNAMIC)
-	/* Unmap the nonsecure region */
-	octeontx_mmap_remove_dynamic_region_with_sync(NS_IMAGE_BASE,
-						      NS_IMAGE_MAX_SIZE);
 #endif
 }

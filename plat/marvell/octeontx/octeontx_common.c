@@ -13,7 +13,6 @@
 #include <libfdt.h>
 #include <octeontx_utils.h>
 #include <octeontx_common.h>
-#include <octeontx_mmap_utils.h>
 
 #pragma weak plat_flr_init
 
@@ -58,13 +57,7 @@ static void plat_add_mmio_common(void)
 	mmap_add_region(BOARD_CFG_BASE, BOARD_CFG_BASE, BOARD_CFG_MAX_SIZE, attr);
 
 	attr = MT_MEMORY | MT_RW | MT_NS;
-#if defined(IMAGE_BL31) && defined(PLAT_XLAT_TABLES_DYNAMIC)
-	octeontx_mmap_add_dynamic_region_with_sync(NS_IMAGE_BASE,
-						   NS_IMAGE_BASE,
-						   NS_IMAGE_MAX_SIZE, attr);
-#else
 	mmap_add_region(NS_IMAGE_BASE, NS_IMAGE_BASE, NS_IMAGE_MAX_SIZE, attr);
-#endif
 }
 
 void plat_add_mmio_map()
