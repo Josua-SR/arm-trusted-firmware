@@ -676,7 +676,7 @@ static struct ras_dram_lmc_map *ras_dram_get_lmc_map(int lmc)
 {
 	static int once;
 
-	if (!once) {
+	if (!once && !is_asim()) {
 		union cavm_mccx_const mcc_const;
 		union cavm_mccx_lmcoex_const oeconst;
 		struct ras_dram_lmc_map *lm;
@@ -700,10 +700,33 @@ static struct ras_dram_lmc_map *ras_dram_get_lmc_map(int lmc)
 		}
 
 		once++;
+	} else if (!once && is_asim()) {
+		/* h/w discovery invalid in ASIM, force layout */
+		if (cavm_is_model(OCTEONTX_CN96XX)) {
+			plat_lmc_map[0] = (struct ras_dram_lmc_map) {
+				.lmc = 0, .mcc = 1, .lmcoe = 0, .valid = 1 };
+			plat_lmc_map[1] = (struct ras_dram_lmc_map) {
+				.lmc = 1, .mcc = 0, .lmcoe = 0, .valid = 1 };
+			plat_lmc_map[2] = (struct ras_dram_lmc_map) {
+				.lmc = 2, .mcc = 1, .lmcoe = 1, .valid = 1 };
+		} else if (cavm_is_model(OCTEONTX_CNF95XX)) {
+			plat_lmc_map[0] = (struct ras_dram_lmc_map) {
+				.lmc = 0, .mcc = 0, .lmcoe = 0, .valid = 1 };
+			plat_lmc_map[1] = (struct ras_dram_lmc_map) {
+				.valid = 0 };
+			plat_lmc_map[2] = (struct ras_dram_lmc_map) {
+				.lmc = 2, .mcc = 0, .lmcoe = 1, .valid = 1 };
+		} else {
+			ERROR("RAS support mis-configured for this chip.\n");
+		}
+
+		once++;
 	}
 
-	if (lmc > MAX_LMC || !plat_lmc_map[lmc].valid)
+	if (lmc > MAX_LMC || !plat_lmc_map[lmc].valid) {
+		ERROR("Unsupported LMC%d map requested\n", lmc);
 		return NULL;
+	}
 
 	return &plat_lmc_map[lmc];
 }
@@ -713,7 +736,7 @@ static int mcc_lmc(int mcc, int lmcoe)
 	int lmc;
 	struct ras_dram_lmc_map *lm = ras_dram_get_lmc_map(0);
 
-	for (lmc = 0; lmc < MAX_LMC; lmc++, lm++)
+	for (lmc = 0; !!lm && (lmc < MAX_LMC); lmc++, lm++)
 		if (lm->valid && lm->mcc == mcc && lm->lmcoe == lmcoe)
 			return lmc;
 	return -1;
@@ -1425,7 +1448,7 @@ static int lmcoe_ras_int(int lmcoe)
 /* some events are indexed by linear LMC */
 int lmc_ras_setup(int lmc_no)
 {
-	uint64_t bar4 = CAVM_LMC_BAR_E_LMCX_PF_BAR4(lmc_no);
+	uint64_t bar4;
 	uint64_t vaddr;
 	uint64_t vctl;
 #if !RAS_EXTENSION
@@ -1433,12 +1456,15 @@ int lmc_ras_setup(int lmc_no)
 #endif /* !RAS_EXTENSION */
 	union cavm_lmcx_ras_int_ena_w1s int_ena;
 	static int irq = -1;
-	int vec = CAVM_LMC_INT_VEC_E_RAS_INT;
+	int vec;
 
 	debug_ras("%s(%d)\n", __func__, lmc_no);
 
-	if (vec < 0)
+	if ((unsigned int)lmc_no > MAX_LMC)
 		return -EINVAL;
+
+	bar4 = CAVM_LMC_BAR_E_LMCX_PF_BAR4(lmc_no);
+	vec = CAVM_LMC_INT_VEC_E_RAS_INT;
 
 	CSR_WRITE(CAVM_LMCX_RAS_INT_ENA_W1C(lmc_no),
 		  ~0ULL);
@@ -1519,16 +1545,6 @@ int lmcoe_ras_setup(int mcc, int lmcoe)
 
 	vaddr = bar4 + 0x10 * vec;
 	vctl = vaddr + 0x8;
-
-	if (is_asim() && cavm_is_model(OCTEONTX_CN96XX)) {
-		/* hw discovery fails, force t96 layout */
-		plat_lmc_map[0] =  (struct ras_dram_lmc_map) {
-			.lmc = 0, .mcc = 1, .lmcoe = 0, .valid = 1 };
-		plat_lmc_map[1] =  (struct ras_dram_lmc_map) {
-			.lmc = 1, .mcc = 0, .lmcoe = 0, .valid = 1 };
-		plat_lmc_map[2] =  (struct ras_dram_lmc_map) {
-			.lmc = 2, .mcc = 1, .lmcoe = 1, .valid = 1 };
-	}
 
 	if (irq < 0 || MCC_SPI_IRQS > 1) {
 		irq = MCC_SPI_IRQ(vec + mcc * 10);
