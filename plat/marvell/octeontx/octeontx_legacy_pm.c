@@ -233,6 +233,11 @@ static void __dead2 octeontx_legacy_system_reset(void)
 	union cavm_rst_soft_rst rst_soft_rst;
 	union cavm_rst_ocx rst_ocx;
 
+	dcsw_op_all(DCCISW);
+	l2c_flush();
+	__asm__ volatile("ic iallu\n"
+			 "isb\n");
+
 	rst_ocx.u = 0;
 	CSR_WRITE(CAVM_RST_OCX, rst_ocx.u);
 
