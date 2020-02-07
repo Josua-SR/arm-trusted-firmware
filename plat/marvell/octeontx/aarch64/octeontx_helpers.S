@@ -11,7 +11,6 @@
 #include <assert_macros.S>
 #include <cpu_macros.S>
 #include <drivers/arm/pl011.h>
-#include <drivers/console.h>
 
 	/* Global functions */
 	.globl	plat_is_my_cpu_primary
@@ -82,27 +81,15 @@ endfunc plat_secondary_cold_boot_setup
 	 * int plat_crash_console_init(void)
 	 * Function to initialize the crash console
 	 * without a C Runtime to print crash report.
-	 * Clobber list : x0, x1, x2, x3, x4, x6, x7, x14
+	 * Clobber list : x0, x1, x2, x3, x4
 	 * ---------------------------------------------
 	 */
 func plat_crash_console_init
-	/* Save link register */
-	mov	x4, x30
-	/* Switch to crash console */
-	mov	w0, #CONSOLE_FLAG_CRASH
-	bl	console_switch_state
 	/* Register UAA0 as pl011 console */
 	mov_imm	x0, 0x87E028000000
 	mov_imm	x1, 7273800
 	mov_imm	x2, 115200
-	adr	x3, console_struct
-	bl	console_pl011_register
-	/* Switch registered console to crash console */
-	adr	x0, console_struct
-	mov	w1, #CONSOLE_FLAG_CRASH
-	bl	console_set_scope
-	mov	x30, x4
-	ret
+	b	console_pl011_core_init
 endfunc plat_crash_console_init
 
 	/* ---------------------------------------------
@@ -119,7 +106,7 @@ func plat_crash_console_putc
 	 * console_putc will return from this function
 	 * ---------------------------------------------
 	 */
-	b	console_putc
+	b	console_pl011_core_putc
 endfunc plat_crash_console_putc
 
 	/* ---------------------------------------------
@@ -132,7 +119,7 @@ endfunc plat_crash_console_putc
 	 */
 func plat_crash_console_flush
 	mov_imm	x0, 0x87E028000000
-	b	console_pl011_flush
+	b	console_pl011_core_flush
 endfunc plat_crash_console_flush
 
 	/* --------------------------------------------------------
@@ -155,13 +142,6 @@ endfunc platform_mem_init
 	 */
 octeontx_sec_entry_point:
 	.quad	0
-
-	/* --------------------------------------------------
-	 * Reserve space for console_pl011_t structure
-	 * --------------------------------------------------
-	 */
-console_struct:
-	.space	CONSOLE_T_PL011_BASE + REGSZ
 
 func octeontx_io_trap_handler
 	ret
