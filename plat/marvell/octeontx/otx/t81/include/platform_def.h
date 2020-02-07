@@ -89,7 +89,7 @@
 
 /* Location of trusted dram on the base OcteonTX. */
 #define TZDRAM_BASE			0x00000000
-#define TZDRAM_SIZE			0x00400000
+#define TZDRAM_SIZE			0x01000000
 
 #define FDT_MAX_SIZE			0x20000
 #define FDT_BASE			(TZDRAM_BASE + TZDRAM_SIZE - FDT_MAX_SIZE)
@@ -123,7 +123,7 @@
 #define TSP_SEC_MEM_SIZE		TZDRAM_SIZE
 
 /* Load address of BL33 in the OcteonTX port. */
-#define NS_IMAGE_BASE			0x00500000
+#define NS_IMAGE_BASE			0x02800000
 #define NS_IMAGE_MAX_SIZE		(0x40000000 - NS_IMAGE_BASE)
 
 /* Number of TWSI interfaces */
