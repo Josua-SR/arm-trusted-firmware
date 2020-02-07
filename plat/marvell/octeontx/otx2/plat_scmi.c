@@ -17,6 +17,9 @@
 #include <octeontx_utils.h>
 #include <plat_scmi.h>
 
+#include "cavm-csrs-cpc.h"
+#include "cavm-csrs-xcp.h"
+
 #undef DEBUG_SCMI_ATF
 
 #ifdef DEBUG_SCMI_ATF

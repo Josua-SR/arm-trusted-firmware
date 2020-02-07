@@ -16,6 +16,8 @@
 #include <stdlib.h>
 #include <strtol.h>
 
+#include "cavm-csrs-rnm.h"
+
 int gser_is_platform(int plat)
 {
 	return !strncmp(plat_octeontx_bcfg->bcfg.board_model,

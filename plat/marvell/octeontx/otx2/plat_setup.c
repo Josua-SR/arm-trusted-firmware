@@ -27,6 +27,9 @@
 #include <plat_ras.h>
 #endif
 
+#include "cavm-csrs-fusf.h"
+#include "cavm-csrs-gpio.h"
+
 static int disable_ooo;
 
 extern void plat_armtrace_init(void);

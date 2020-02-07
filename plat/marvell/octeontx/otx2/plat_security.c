@@ -16,6 +16,14 @@
 #include <octeontx_dram.h>
 #include <octeontx_utils.h>
 
+#include "cavm-csrs-ap.h"
+#include "cavm-csrs-ccs.h"
+#include "cavm-csrs-iobn.h"
+#include "cavm-csrs-mcc.h"
+#include "cavm-csrs-pccpf.h"
+#include "cavm-csrs-pem.h"
+#include "cavm-csrs-smmu.h"
+
 struct ccs_region {
 	ccs_region_index_t  number;
 	unsigned long start;

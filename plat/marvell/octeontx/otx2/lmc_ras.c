@@ -40,6 +40,11 @@
 #include <lib/extensions/ras.h>
 #endif /* RAS_EXTENSION */
 
+#include "cavm-csrs-ccs.h"
+#include "cavm-csrs-gic.h"
+#include "cavm-csrs-lmc.h"
+#include "cavm-csrs-mcc.h"
+
 #define MAX_MCS		4
 
 #define ECC_EL3_TEST

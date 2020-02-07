@@ -11,6 +11,9 @@
 #include <octeontx_plat_configuration.h>
 #include <plat_octeontx.h>
 
+/* This file map memory for different blocks so it needs all csrs definitions */
+#include "cavm-csrs.h"
+
 /*
  * SATA to GSER mapping
  * SATA(0-1) --- GSER3

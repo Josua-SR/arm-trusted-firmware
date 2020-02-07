@@ -26,6 +26,9 @@
 #include <plat_npc_mcam_profile.h>
 #endif
 
+#include "cavm-csrs-rst.h"
+#include "cavm-csrs-rvu.h"
+
 #undef DEBUG_ATF_SH_MEM_MGMT
 
 #ifdef DEBUG_ATF_SH_MEM_MGMT

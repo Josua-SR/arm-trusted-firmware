@@ -20,6 +20,9 @@
 #include <plat_scfg.h>
 #include <qlm/qlm.h>
 
+/* This file map memory for different blocks so it needs all csrs definitions */
+#include "cavm-csrs.h"
+
 static uint64_t msix_addr_save;
 
 int plat_octeontx_get_ecams_count(void)

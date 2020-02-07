@@ -7,6 +7,8 @@
 #ifndef _QLM_GSERR_H__
 #define _QLM_GSERR_H__
 
+#include "cavm-csrs-gserr.h"
+
 #define GSERRX_LNX_DRV_REFCLK_TXEQ_STATUS0_ACK		BIT(0)
 #define GSERRX_PHY0_MB_CMD_FLAG_DATA			BIT(0)
 #define GSERRX_PHY0_MB_RSP_FLAG_DATA			BIT(0)

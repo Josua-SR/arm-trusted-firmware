@@ -21,6 +21,11 @@
 #include <rvu.h>
 #include <strtol.h>
 
+#include "cavm-csrs-cgx.h"
+#include "cavm-csrs-ecam.h"
+#include "cavm-csrs-gpio.h"
+#include "cavm-csrs-rst.h"
+
 /* define DEBUG_ATF_DTS to enable debug logs */
 #undef DEBUG_ATF_DTS
 

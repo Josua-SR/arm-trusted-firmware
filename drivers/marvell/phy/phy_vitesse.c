@@ -21,6 +21,8 @@
 #include <phy_mgmt.h>
 #include <smi.h>
 
+#include "cavm-csrs-cgx.h"
+
 /* define DEBUG_ATF_VITESSE_PHY_DRIVER to enable debug logs */
 #undef DEBUG_ATF_VITESSE_PHY_DRIVER	/* Generic PHY Driver logs */
 

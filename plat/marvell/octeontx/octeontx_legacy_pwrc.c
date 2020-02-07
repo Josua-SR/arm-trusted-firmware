@@ -13,6 +13,7 @@
 #include <arch_helpers.h>
 #include <debug.h>
 
+#include "cavm-csrs-rst.h"
 
 static int wait_for_core()
 {

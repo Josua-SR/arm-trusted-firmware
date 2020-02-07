@@ -22,6 +22,8 @@
 #include <octeontx_utils.h>
 #include <gser_internal.h>
 
+#include "cavm-csrs-cgx.h"
+
 /* define DEBUG_ATF_CGX to enable debug logs */
 #undef DEBUG_ATF_CGX
 

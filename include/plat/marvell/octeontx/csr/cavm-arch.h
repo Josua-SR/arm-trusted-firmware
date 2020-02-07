@@ -40,7 +40,6 @@
 #include "cavm-numa.h"
 #include "cavm-csr.h"
 #include "cavm-csr-plat.h"
-#include "cavm-csrs.h"
 #ifndef CAVM_BUILD_HOST
 #include "cavm-lmt.h"
 #endif

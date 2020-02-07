@@ -14,6 +14,8 @@
 #include <octeontx_utils.h>
 #include <platform_irqs_def.h>
 
+#include "cavm-csrs-gic.h"
+
 #undef GICD_SETSPI_NSR
 #undef GICD_CLRSPI_NSR
 #undef GICD_SETSPI_SR

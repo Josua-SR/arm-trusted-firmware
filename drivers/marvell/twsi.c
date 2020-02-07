@@ -12,6 +12,8 @@
 #include <twsi_core.h>
 #include <twsi.h>
 
+#include "cavm-csrs-mio_tws.h"
+
 #undef DEBUG_ATF_TWSI
 
 #ifdef DEBUG_ATF_TWSI

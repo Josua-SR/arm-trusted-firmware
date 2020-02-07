@@ -30,6 +30,9 @@
 #include <octeontx_irqs_def.h>
 #include <gti_watchdog.h>
 
+#include "cavm-csrs-gti.h"
+#include "cavm-csrs-rst.h"
+
 #undef DEBUG_GTI_WDOG
 
 #ifdef DEBUG_GTI_WDOG

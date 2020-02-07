@@ -25,6 +25,9 @@
 #include <sh_fwdata.h>
 #include <octeontx_attestation.h>
 
+#include "cavm-csrs-fusf.h"
+#include "cavm-csrs-rnm.h"
+
 #define containerof(ptr, type, member) \
 	(type *)((void *)ptr - offsetof(type, member))
 

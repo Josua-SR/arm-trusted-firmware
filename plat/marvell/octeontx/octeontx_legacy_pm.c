@@ -25,6 +25,8 @@
 #include <plat_octeontx.h>
 #include <octeontx_legacy_pm.h>
 
+#include "cavm-csrs-rst.h"
+
 #undef GICD_SETSPI_NSR
 #undef GICD_CLRSPI_NSR
 #undef GICD_SETSPI_SR

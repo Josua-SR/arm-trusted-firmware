@@ -35,6 +35,14 @@
 #include <octeontx_sdei.h>
 #endif
 
+#include "cavm-csrs-ccs.h"
+#include "cavm-csrs-ccu.h"
+#include "cavm-csrs-dab_ras.h"
+#include "cavm-csrs-gic.h"
+#include "cavm-csrs-lmc.h"
+#include "cavm-csrs-mcc.h"
+#include "cavm-csrs-mdc.h"
+
 volatile int edac_active; /* exclude polling in startup & SMC */
 
 const char *ras_serr_str[256] = {

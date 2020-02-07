@@ -16,6 +16,9 @@
 #include <plat_fuse.h>
 #include <octeontx_irqs_def.h>
 
+/* This file map memory for different blocks so it needs all csrs definitions */
+#include "cavm-csrs.h"
+
 /*
  * SATA to GSER mapping
  * SATA(0-1) --- GSER4

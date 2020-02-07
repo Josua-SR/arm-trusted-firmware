@@ -18,6 +18,8 @@
 #include <octeontx_ehf.h>
 #include <timers_octeontx.h>
 
+#include "cavm-csrs-rst.h"
+
 #undef DEBUG_TIMERS
 
 #ifdef DEBUG_TIMERS

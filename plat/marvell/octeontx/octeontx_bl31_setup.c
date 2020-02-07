@@ -63,6 +63,8 @@
 #include <lib/extensions/ras.h>
 #endif /* RAS_EXTENSION */
 
+#include "cavm-csrs-uaa.h"
+
 static entry_point_info_t bl33_image_ep_info, bl32_image_ep_info;
 
 #if ENABLE_ATTESTATION_SERVICE

@@ -33,6 +33,8 @@
 #include <octeontx_irqs_def.h>
 #include <arm_sysreg.h>
 
+#include "cavm-csrs-gpio.h"
+
 uint64_t gpio_intrx_base;
 int gpio_intercept_interrupts;
 

@@ -9,6 +9,8 @@
 #include <octeontx_common.h>
 #include <qlm/qlm.h>
 
+#include "cavm-csrs-cgx.h"
+
 static const struct qlm_mode_strmap_s qlmmode_strmap[] = {
 	/* These modes are defined to have a 1 to 1 reflection from the
 	 * QLM/LANE mode to the array index.

@@ -15,6 +15,9 @@
 #include <octeontx_board_cfg_setup.h>
 #include <strtol.h>
 
+#include "cavm-csrs-gpio.h"
+#include "cavm-csrs-rst.h"
+
 static void octeontx_boot_device_from_strapx()
 {
 	cavm_gpio_strap_t gpio_strap;

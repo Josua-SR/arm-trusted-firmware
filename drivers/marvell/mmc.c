@@ -24,6 +24,10 @@
 #include <drivers/io/io_mmc.h>
 #include <mmc.h>
 
+#include "cavm-csrs-gpio.h"
+#include "cavm-csrs-mio_emm.h"
+#include "cavm-csrs-rst.h"
+
 static file_state_t mmc_current_file = { 0 };
 static mio_emm_driver_t mmc_drv = { 0 };
 

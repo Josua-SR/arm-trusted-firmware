@@ -15,6 +15,8 @@
 #include <octeontx_common.h>
 #include <octeontx_mmap_utils.h>
 
+#include "cavm-csrs-rst.h"
+
 #pragma weak plat_flr_init
 
 extern void plat_add_mmio();

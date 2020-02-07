@@ -67,6 +67,8 @@
 #include <mbedtls/oid.h>
 #endif
 
+#include "cavm-csrs-uaa.h"
+
 /* Pointer to memory visible to both BL2 and BL31 for passing data */
 extern unsigned char **bl2_el_change_mem_ptr;
 

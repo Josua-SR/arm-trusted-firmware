@@ -12,6 +12,8 @@
 #include <twsi_core.h>
 #include <smbus.h>
 
+#include "cavm-csrs-mio-tws.h"
+
 #define DEBUG_ATF_SMBUS
 
 #ifdef DEBUG_ATF_SMBUS

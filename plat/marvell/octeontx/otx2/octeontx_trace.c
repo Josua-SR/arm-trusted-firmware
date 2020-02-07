@@ -19,6 +19,9 @@
 #include <octeontx_mmap_utils.h>
 #include <plat_board_cfg.h>
 
+#include "cavm-csrs-dab_etr.h"
+#include "cavm-csrs-dab_trc.h"
+
 #define ARM_CPU_TRACEBUFSIZE_MIN 0x100000 /* 1M */
 #define PAGE_SIZE_MAX PAGE_SIZE_64KB
 

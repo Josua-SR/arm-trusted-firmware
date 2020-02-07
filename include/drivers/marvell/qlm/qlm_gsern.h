@@ -7,6 +7,11 @@
 #ifndef _QLM_GSERN_H_
 #define _QLM_GSERN_H_
 
+#include "cavm-csrs-gsern.h"
+#include "cavm-csrs-pem.h"
+#include "cavm-csrs-rst.h"
+#include "cavm-csrs-tsn.h"
+
 /*
  * Setup the PEM to either driver or receive reset from PRST based on RC or EP
  *

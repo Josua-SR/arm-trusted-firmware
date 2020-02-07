@@ -21,6 +21,8 @@
 #include <smi.h>
 #include <twsi.h>
 
+#include "cavm-csrs-smi.h"
+
 /* SMI driver for OcteonTX (CN8xxx and CN9xxx) */
 
 #undef DEBUG_ATF_SMI

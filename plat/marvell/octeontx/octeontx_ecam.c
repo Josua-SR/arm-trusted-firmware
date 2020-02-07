@@ -16,6 +16,15 @@
 #include <platform_def.h>
 #include <octeontx_irqs_def.h>
 
+#include "cavm-csrs-ecam.h"
+#include "cavm-csrs-gic.h"
+#include "cavm-csrs-gti.h"
+#include "cavm-csrs-iobn.h"
+#include "cavm-csrs-pccbr.h"
+#include "cavm-csrs-pccpf.h"
+#include "cavm-csrs-pem.h"
+#include "cavm-csrs-smmu.h"
+
 #undef DEBUG_ATF_ECAM
 
 #ifdef DEBUG_ATF_ECAM

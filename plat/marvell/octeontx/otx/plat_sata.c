@@ -19,6 +19,9 @@
 #include <plat_scfg.h>
 #include <octeontx_dram.h>
 
+#include "cavm-csrs-gser.h"
+#include "cavm-csrs-sata.h"
+
 #undef SATA_DEBUG
 
 #define PM_DISABLE_PARTIAL	0x1

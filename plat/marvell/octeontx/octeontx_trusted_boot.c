@@ -16,6 +16,8 @@
 #include <mbedtls/sha256.h>
 #include <plat_octeontx.h>
 
+#include "cavm-csrs-fusf.h"
+
 #define ROTPK_BYTES			64
 
 /* SHA256 algorithm */

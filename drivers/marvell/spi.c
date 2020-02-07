@@ -19,6 +19,9 @@
 #include <debug.h>
 #include <plat_board_cfg.h>
 
+#include "cavm-csrs-mpi.h"
+#include "cavm-csrs-rst.h"
+
 static file_state_t current_file = { 0 };
 
 uint32_t spi_mode;

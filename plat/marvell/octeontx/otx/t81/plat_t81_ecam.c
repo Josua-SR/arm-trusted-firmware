@@ -16,6 +16,11 @@
 #include <octeontx_utils.h>
 #include <plat_fuse.h>
 
+#include "cavm-csrs-ecam.h"
+#include "cavm-csrs-gser.h"
+#include "cavm-csrs-pccpf.h"
+#include "cavm-csrs-rst.h"
+
 #ifdef DEBUG_ATF_PLAT_ECAM
 #define debug_plat_ecam printf
 #else

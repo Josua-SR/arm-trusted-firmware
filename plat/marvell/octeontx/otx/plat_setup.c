@@ -16,6 +16,9 @@
 #include <plat_fuse.h>
 #include <octeontx_utils.h>
 
+#include "cavm-csrs-fusf.h"
+#include "cavm-csrs-mio_fus.h"
+
 /* Any SoC family specific setup
  * to be done in BL31 can be initialized
  * in this API. If there are any platform

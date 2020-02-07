@@ -31,6 +31,8 @@
 #include <plat_npc_mcam_profile.h>
 #endif
 
+#include "cavm-csrs-cgx.h"
+
 /* define DEBUG_ATF_CGX_INTF to enable debug logs */
 #undef DEBUG_ATF_CGX_INTF
 

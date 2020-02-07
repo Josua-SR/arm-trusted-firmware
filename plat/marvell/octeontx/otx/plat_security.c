@@ -14,6 +14,11 @@
 #include <octeontx_security.h>
 #include <octeontx_dram.h>
 
+#include "cavm-csrs-ap.h"
+#include "cavm-csrs-l2c.h"
+#include "cavm-csrs-pccpf.h"
+#include "cavm-csrs-smmu.h"
+
 struct l2c_region {
 	unsigned int  number;
 	unsigned long start;

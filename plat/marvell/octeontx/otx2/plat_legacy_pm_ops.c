@@ -10,6 +10,8 @@
 #include <octeontx_common.h>
 #include <octeontx_legacy_pm.h>
 
+#include "cavm-csrs-rst.h"
+
 /*******************************************************************************
  * FVP handler to reboot the system
  ******************************************************************************/

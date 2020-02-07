@@ -18,6 +18,13 @@
 #include <plat_scfg.h>
 #include <octeontx_irqs_def.h>
 
+#include "cavm-csrs-ecam.h"
+#include "cavm-csrs-gic.h"
+#include "cavm-csrs-gpio.h"
+#include "cavm-csrs-gser.h"
+#include "cavm-csrs-pccpf.h"
+#include "cavm-csrs-rst.h"
+
 #ifdef DEBUG_ATF_PLAT_ECAM
 #define debug_plat_ecam printf
 #else

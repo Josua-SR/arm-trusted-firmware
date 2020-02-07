@@ -20,6 +20,16 @@
 #include <plat_scfg.h>
 #include <plat_otx2_configuration.h>
 
+#include "cavm-csrs-cpt.h"
+#include "cavm-csrs-ndc.h"
+#include "cavm-csrs-nix.h"
+#include "cavm-csrs-npa.h"
+#include "cavm-csrs-pccpf.h"
+#include "cavm-csrs-pem.h"
+#include "cavm-csrs-rvu.h"
+#include "cavm-csrs-sso.h"
+#include "cavm-csrs-tim.h"
+
 #ifdef DEBUG_ATF_RVU
 #define debug_rvu printf
 #else

@@ -21,6 +21,10 @@
 #include <rvu.h>
 #include <qlm/qlm.h>
 
+#include "cavm-csrs-ecam.h"
+#include "cavm-csrs-pccpf.h"
+#include "cavm-csrs-gsern.h"
+
 #undef DEBUG_ATF_PLAT_ECAM
 
 #ifdef DEBUG_ATF_PLAT_ECAM

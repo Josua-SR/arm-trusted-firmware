@@ -15,6 +15,9 @@
 #include <octeontx_common.h>
 #include <twsi_core.h>
 
+#include "cavm-csrs-mio_tws.h"
+#include "cavm-csrs-rst.h"
+
 #undef DEBUG_ATF_TWSI
 
 #ifdef DEBUG_ATF_TWSI

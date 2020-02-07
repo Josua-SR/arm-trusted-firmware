@@ -22,6 +22,9 @@
 #include <plat_otx2_configuration.h>
 #include <qlm/qlm.h>
 
+#include "cavm-csrs-ecam.h"
+#include "cavm-csrs-pccpf.h"
+
 #ifdef DEBUG_ATF_PLAT_ECAM
 #define debug_plat_ecam printf
 #else
