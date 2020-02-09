@@ -4,4 +4,4 @@
 # Copyright (C) 2018 Marvell International Ltd.
 #
 # commit id of base tag for this branch
-7f6d8f49aa916a526c2ce227606cc51eebd0c950 Merge pull request #1358 from omasab/sgi575_mt_flag
+a04808c16cfc126d9fe572ae7c4b5a3d39de5796 (tag v2.2) Merge "Update TF-A version to 2.2" into integration
