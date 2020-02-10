@@ -425,7 +425,7 @@ void phy_marvell_5123_get_link_status(int cgx_id, int lmac_id,
 				port_num, &currentStatus, &latchedStatus,
 				&statusDetail);
 		if (status != MCD_OK)
-			WARN("%s: port %d mcdCheckLinkStatus() failed",
+			debug_phy_driver("%s: port %d mcdCheckLinkStatus() failed",
 					__func__, port_num);
 		debug_phy_driver("%s: port %d PHY link is %d\n", __func__,
 					port_num, currentStatus);

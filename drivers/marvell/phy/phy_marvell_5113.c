@@ -588,7 +588,7 @@ void phy_marvell_5113_get_link_status(int cgx_id, int lmac_id,
 						&currentStatus, &latchedStatus,
 						&detailedStatus);
 		if (status != MXD_OK)
-			ERROR("%s: mxdCheckLinkStatus failed %ld\n",
+			debug_phy_driver("%s: mxdCheckLinkStatus failed %ld\n",
 				__func__, status);
 
 		status = mxdGetModeSpeed(&marvell_5113_priv[cgx_id].mxddev,
@@ -596,7 +596,7 @@ void phy_marvell_5113_get_link_status(int cgx_id, int lmac_id,
 					phy_side, port, &speed,
 					&pcsType);
 		if (status != MXD_OK) {
-			ERROR("%s: mxdGetModeSpeed failed %ld\n",
+			debug_phy_driver("%s: mxdGetModeSpeed failed %ld\n",
 				__func__, status);
 			return;
 		}
