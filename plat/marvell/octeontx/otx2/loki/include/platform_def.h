@@ -153,6 +153,27 @@
 #define NT_FW_CONFIG_LIMIT		0x0
 #endif
 
+/*
+ * Memory used to return data from eye capture and serdes settings
+ * commands to non secure world
+ */
+#ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
+/* Size of gser_qlm_eye_t page aligned*/
+#define SERDES_EYE_DATA_SIZE		0x9000
+#define SERDES_SETTINGS_DATA_SIZE	0x1000
+#define SERDES_PRBS_DATA_SIZE		0x1000
+#else /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
+#define SERDES_EYE_DATA_SIZE		0x0
+#define SERDES_SETTINGS_DATA_SIZE	0x0
+#define SERDES_PRBS_DATA_SIZE		0x0
+#endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
+
+#define SERDES_EYE_DATA_BASE		(NT_FW_CONFIG_BASE + NT_FW_CONFIG_LIMIT)
+#define SERDES_SETTINGS_DATA_BASE	(SERDES_EYE_DATA_BASE + \
+					 SERDES_EYE_DATA_SIZE)
+#define SERDES_PRBS_DATA_BASE		(SERDES_SETTINGS_DATA_BASE + \
+					 SERDES_SETTINGS_DATA_SIZE)
+
 /* Load address of BL33 in the OcteonTX2 port. */
 #define NS_IMAGE_BASE			0x04000000
 #define NS_IMAGE_MAX_SIZE		(0x40000000 - NS_IMAGE_BASE)

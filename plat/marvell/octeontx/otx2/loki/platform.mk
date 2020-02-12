@@ -14,6 +14,12 @@ ifdef SCMI_WITH_LEGACY_PM
     $(eval $(call add_define,SCMI_WITH_LEGACY_PM))
 endif
 
+# Define DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS to enable diagnostic cmds
+#DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS		:=	1
+ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
+    $(eval $(call add_define,DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS))
+endif
+
 ARM_ARCH_MINOR		:=	2
 # Allow to use armv8.2 specific instructions
 TF_CFLAGS_aarch64	:=	$(patsubst -march=%, -march=armv8.2-a, $(TF_CFLAGS_aarch64))
