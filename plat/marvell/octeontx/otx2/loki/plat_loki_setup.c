@@ -196,8 +196,8 @@ int plat_octeontx_get_mcc_count(void)
 /* Return number of lanes available for different QLMs. */
 int plat_get_max_lane_num(int qlm)
 {
-	/* QLMx where x > 2 is in fact DLMx */
-	if (qlm > 2)
+	/* QLMx where x >= 2 is in fact DLMx */
+	if (qlm >= 2)
 		return 2;
 	return 4;
 }
