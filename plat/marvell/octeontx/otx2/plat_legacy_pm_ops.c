@@ -19,6 +19,11 @@ static void __dead2 plat_octeontx_legacy_system_reset(void)
 	union cavm_rst_boot rst_boot;
 	union cavm_rst_chip_domain_w1s rst_chip;
 
+	dcsw_op_all(DCCISW);
+	l2c_flush();
+	__asm__ volatile("ic iallu\n"
+			 "isb\n");
+
 	// SCP should auto restart after reset
 	rst_boot.s.rboot = 0;
 	CSR_WRITE(CAVM_RST_BOOT, rst_boot.u);
