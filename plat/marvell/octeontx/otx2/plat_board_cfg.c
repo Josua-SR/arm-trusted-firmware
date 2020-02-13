@@ -1142,13 +1142,6 @@ static int octeontx2_fill_cgx_struct(int cgx_idx, int qlm, int gserx,
 	debug_dts("CGX%d: Configure QLM%d GSER%d Lane%d\n",
 		cgx_idx, qlm, gserx, lane);
 
-	phy_lane = cgx->qlm_ops->qlm_get_lmac_phy_lane(gserx, lane);
-	if ((cgx->lanes_used_mask >> phy_lane) & 1) {
-		debug_dts("CGX%d: QLM%d.LANE%d: already configured for CGX, skip.\n",
-				  cgx_idx, qlm, lane);
-		return 0;
-	}
-
 	if (cgx->lmac_count >= MAX_LMAC_PER_CGX) {
 		WARN("CGX%d: already configured, not configuring QLM%d, Lane%d\n",
 				cgx_idx, qlm, lane);
@@ -1169,11 +1162,35 @@ static int octeontx2_fill_cgx_struct(int cgx_idx, int qlm, int gserx,
 			(mode_idx == QLM_MODE_USXGMII_4X1)) &&
 			(cgx->lmac_count)) {
 		/* if LMACs in the same CGX for which USXGMII is configured,
-		 * are configured with different modes already, UXSGMII cannot be
+		 * are configured with different modes already, UXSGMII cannot
 		 * configured
 		 */
 		WARN("CGX%d: cannot configure USXGMII for this CGX\n",
 				cgx_idx);
+		return 0;
+	}
+
+	/* Obtain lane order from NETWORK-LANE-ORDER property parsed
+	 * from BDK DT
+	 * Examples:
+	 * 0x3210: Default connection, lanes in order
+	 * 0x0123: All lanes are swizzled. 0->3, 1->2, 2->1, 3->0
+	 */
+	lane_order = cgx->network_lane_order;
+
+	/* lane_to_sds(8 bits) is an array of 2-bit values that map each
+	 * logical PCS lane in the LMAC to a physical SerDes lane.
+	 * Extract the lane info from lane order and build lane_to_sds.
+	 */
+	lane_to_sds = ((((lane_order >> 12) & 3) << 6) |
+			(((lane_order >> 8) & 3) << 4) |
+			(((lane_order >> 4) & 3) << 2) |
+			(((lane_order >> 0) & 3)));
+
+	phy_lane = cgx->qlm_ops->qlm_get_lmac_phy_lane(gserx, lane, lane_to_sds);
+	if ((cgx->lanes_used_mask >> phy_lane) & 1) {
+		debug_dts("CGX%d: QLM%d.LANE%d:%d: already configured for CGX, skip.\n",
+				  cgx_idx, qlm, lane, phy_lane);
 		return 0;
 	}
 
@@ -1196,14 +1213,6 @@ static int octeontx2_fill_cgx_struct(int cgx_idx, int qlm, int gserx,
 	}
 
 	mode = qlm_get_mode_strmap(mode_idx).mode;
-	/* Obtain lane order from NETWORK-LANE-ORDER property parsed
-	 * from BDK DT
-	 * Examples:
-	 * 0x3210: Default connection, lanes in order
-	 * 0x0123: All lanes are swizzled. 0->3, 1->2, 2->1, 3->0
-	 */
-	lane_order = cgx->network_lane_order;
-
 	/* For spanning more than one GSER (e.g DLMs) NETWORK-LANE-ORDER should be
 	 * interpreted as below. The lowest lane of the lowest GSER
 	 * maps to the LMAC physical lane 0 and the highest lane
@@ -1215,14 +1224,6 @@ static int octeontx2_fill_cgx_struct(int cgx_idx, int qlm, int gserx,
 
 	for (i = 0; i < lcnt; i++) {
 		lmac = &cgx->lmac_cfg[cgx->lmac_count];
-		/* lane_to_sds(8 bits) is an array of 2-bit values that map each
-		 * logical PCS lane in the LMAC to a physical SerDes lane.
-		 * Extract the lane info from lane order and build lane_to_sds.
-		 */
-		lane_to_sds = ((((lane_order >> 12) & 3) << 6) |
-			(((lane_order >> 8) & 3) << 4) |
-			(((lane_order >> 4) & 3) << 2) |
-			(((lane_order >> 0) & 3)));
 
 		/* Fill in the CGX/LMAC structures */
 		lmac->mode = mode;
@@ -1256,6 +1257,7 @@ static int octeontx2_fill_cgx_struct(int cgx_idx, int qlm, int gserx,
 
 		found_lane = 0;
 
+		int temp_phy_lane;
 		switch (mode) {
 		case CAVM_CGX_LMAC_TYPES_E_XAUI:
 		case CAVM_CGX_LMAC_TYPES_E_FORTYG_R:
@@ -1267,19 +1269,18 @@ static int octeontx2_fill_cgx_struct(int cgx_idx, int qlm, int gserx,
 			/* The RXAUI mode is always using a double lane. So
 			 * the lane value can be 0 or 2.
 			 */
-			for (i = 0; i < MAX_LMAC_PER_CGX; i++) {
-				phy_lane = lane_to_sds >> (i*2) & 0x3;
-				if (phy_lane == cgx->qlm_ops->
-							qlm_get_lmac_phy_lane(
-								gserx, lane)) {
+			for (j = 0; j < MAX_LMAC_PER_CGX; j++) {
+				temp_phy_lane = lane_to_sds >> (j*2) & 0x3;
+				if (temp_phy_lane == cgx->qlm_ops->qlm_get_lmac_phy_lane(
+						gserx, lane, lane_to_sds)) {
 					found_lane = 1;
 					break;
 				}
 			}
-			lane_sds_idx = i;
+			lane_sds_idx = j;
 
 			/* If the CGX physical lane associated with the GSER
-			 * lane is found than the first 2 lanes in the
+			 * lane is found, then the first 2 lanes in the
 			 * network lane order are associated with this QLM
 			 * otherwise it is in the upper 2 lanes in the
 			 * network lane order.
@@ -1297,20 +1298,20 @@ static int octeontx2_fill_cgx_struct(int cgx_idx, int qlm, int gserx,
 						 cgx_idx, lane_other);
 					return 0;
 				}
-				lmac->lane_to_sds = (lane_to_sds >> ((i >> 1)*4)) & 0xF;
+				lmac->lane_to_sds = (lane_to_sds >> ((j >> 1)*4)) & 0xF;
 			} else
 				WARN("CGX%d: Unable to find QLM%d LANE%d in the network-lane-order.\n",
 					    cgx_idx, qlm, lane);
 			break;
 		default:
-			lmac->lane_to_sds = cgx->qlm_ops->qlm_get_lmac_phy_lane(gserx, lane);
+			lmac->lane_to_sds = cgx->qlm_ops->qlm_get_lmac_phy_lane(gserx,
+							lane, lane_to_sds);
 			break;
 		}
 
 		/* Create the GSER lane_mask */
-		for (i = 0; i < lused; i++) {
-			lane_mask |= 1 << ((lmac->lane_to_sds >> (i * 2)) & 0x3);
-		}
+		for (j = 0; j < lused; j++)
+			lane_mask |= 1 << ((lmac->lane_to_sds >> (j * 2)) & 0x3);
 
 		lmac->lane_mask = lane_mask;
 		/* Update the CGX lane mask */

@@ -126,12 +126,14 @@ static int qlm_rx_signal_detect_gsern(int qlm, int lane)
  * @param  lane          Which lane
  * @return Returns the LMAC physical lane
  */
-static int qlm_gsern_get_lmac_phy_lane(int qlm, int lane)
+static int qlm_gsern_get_lmac_phy_lane(int qlm, int lane, int lane_to_sds)
 {
+	int phy_lane;
 	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1) && (qlm == 5))
-		return (lane + 2);
-	else
-		return lane;
+		lane += 2;
+
+	phy_lane = ((lane_to_sds >> (lane * 2)) & 0x3);
+	return phy_lane;
 }
 
 const qlm_ops_t qlm_gsern_ops = {

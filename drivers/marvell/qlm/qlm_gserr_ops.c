@@ -39,9 +39,12 @@ static int qlm_gserr_rx_signal_detect(int qlm, int lane)
  * @param  lane	  Which lane
  * @return Returns the physical lane
  */
-static int qlm_gserr_get_lmac_phy_lane(int qlm, int lane)
+static int qlm_gserr_get_lmac_phy_lane(int qlm, int lane, int lane_to_sds)
 {
-	return lane;
+	int phy_lane;
+
+	phy_lane = ((lane_to_sds >> (lane * 2)) & 0x3);
+	return phy_lane;
 }
 
 const qlm_ops_t qlm_gserr_ops = {
