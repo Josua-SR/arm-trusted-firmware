@@ -2871,13 +2871,13 @@ union cavm_gpio_misc_supply
                                                                  0x1 = 2.5 V.
                                                                  0x2/0x3 = 1.8 V.
                                                                  _ All other values reserved. */
-        uint64_t vdet_tws_avs          : 2;  /**< [  1:  0](RO/H) Sensed I/O power supply setting for TWSI and AVS:
+        uint64_t vdet_tws_avs          : 2;  /**< [  1:  0](RO/H) Sensed I/O power supply setting for TWSI:
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
                                                                  0x2/0x3 = 1.8 V.
                                                                  _ All other values reserved. */
 #else /* Word 0 - Little Endian */
-        uint64_t vdet_tws_avs          : 2;  /**< [  1:  0](RO/H) Sensed I/O power supply setting for TWSI and AVS:
+        uint64_t vdet_tws_avs          : 2;  /**< [  1:  0](RO/H) Sensed I/O power supply setting for TWSI:
                                                                  0x0 = 3.3 V.
                                                                  0x1 = 2.5 V.
                                                                  0x2/0x3 = 1.8 V.

@@ -15588,8 +15588,8 @@ union cavm_pemx_s_rst_ctl
                                                                  1 = Core domain reset.
 
                                                                  On cold reset, this field is initialized as follows:
-                                                                 _ 0 when PEM()_CFG[HOSTD] = 0.
-                                                                 _ 1 when PEM()_CFG[HOSTD] = 1. */
+                                                                 _ 0 when PEM()_CFG[HOSTMD] = 0.
+                                                                 _ 1 when PEM()_CFG[HOSTMD] = 1. */
         uint64_t rst_l2                : 1;  /**< [ 12: 12](SR/W) Powerdown event internal reset enable.
                                                                  0 = PEM going into powerdown (L2) does not cause an internal reset.
                                                                  1 = PEM going into powerdown (L2) causes the internal reset
@@ -15809,8 +15809,8 @@ union cavm_pemx_s_rst_ctl
                                                                  1 = Core domain reset.
 
                                                                  On cold reset, this field is initialized as follows:
-                                                                 _ 0 when PEM()_CFG[HOSTD] = 0.
-                                                                 _ 1 when PEM()_CFG[HOSTD] = 1. */
+                                                                 _ 0 when PEM()_CFG[HOSTMD] = 0.
+                                                                 _ 1 when PEM()_CFG[HOSTMD] = 1. */
         uint64_t reserved_14_63        : 50;
 #endif /* Word 0 - End */
     } s;

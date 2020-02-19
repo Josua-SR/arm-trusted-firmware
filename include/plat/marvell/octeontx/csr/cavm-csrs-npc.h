@@ -3015,13 +3015,13 @@ union cavm_npc_af_lkup_resultx
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t data                  : 64; /**< [ 63:  0](RO/H) Software lookup result data with format NPC_RESULT_S. Reading these six
                                                                  registers is not an atomic operation. Therefore, the various [DATA] fields may
-                                                                 contain information across multiple packets. If [DATA] coherrency is critical,
+                                                                 contain information across multiple packets. If [DATA] coherency is critical,
                                                                  software must ensure only one packet is marked for capture before sending or
                                                                  allowing another packet. */
 #else /* Word 0 - Little Endian */
         uint64_t data                  : 64; /**< [ 63:  0](RO/H) Software lookup result data with format NPC_RESULT_S. Reading these six
                                                                  registers is not an atomic operation. Therefore, the various [DATA] fields may
-                                                                 contain information across multiple packets. If [DATA] coherrency is critical,
+                                                                 contain information across multiple packets. If [DATA] coherency is critical,
                                                                  software must ensure only one packet is marked for capture before sending or
                                                                  allowing another packet. */
 #endif /* Word 0 - End */

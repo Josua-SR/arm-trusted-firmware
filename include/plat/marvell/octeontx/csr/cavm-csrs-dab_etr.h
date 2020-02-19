@@ -1997,7 +1997,7 @@ union cavm_etrx_ramsize
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_etrx_ramsize_s cnf95xx; */
-    /* struct cavm_etrx_ramsize_s f95mm; */
+    /* struct cavm_etrx_ramsize_cn98xx f95mm; */
     /* struct cavm_etrx_ramsize_cn98xx loki; */
 };
 typedef union cavm_etrx_ramsize cavm_etrx_ramsize_t;
@@ -2163,7 +2163,7 @@ union cavm_etrx_status
 #endif /* Word 0 - End */
     } cn98xx;
     /* struct cavm_etrx_status_s cnf95xx; */
-    /* struct cavm_etrx_status_s f95mm; */
+    /* struct cavm_etrx_status_cn98xx f95mm; */
     /* struct cavm_etrx_status_cn98xx loki; */
 };
 typedef union cavm_etrx_status cavm_etrx_status_t;

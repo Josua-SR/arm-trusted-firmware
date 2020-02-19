@@ -2618,7 +2618,7 @@ union cavm_mdbwx_adr_error_jce_w0
         uint64_t ls_word               : 64; /**< [ 63:  0](R/W) The first word of the PSM command to send on an address error. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
-    /* struct cavm_mdbwx_adr_error_jce_w0_cnf95xxp2 f95mm; */
+    /* struct cavm_mdbwx_adr_error_jce_w0_s f95mm; */
 };
 typedef union cavm_mdbwx_adr_error_jce_w0 cavm_mdbwx_adr_error_jce_w0_t;
 
@@ -2666,7 +2666,7 @@ union cavm_mdbwx_adr_error_jce_w1
         uint64_t ms_word               : 64; /**< [ 63:  0](R/W) The second word of the PSM command to send on an address error. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
-    /* struct cavm_mdbwx_adr_error_jce_w1_cnf95xxp2 f95mm; */
+    /* struct cavm_mdbwx_adr_error_jce_w1_s f95mm; */
 };
 typedef union cavm_mdbwx_adr_error_jce_w1 cavm_mdbwx_adr_error_jce_w1_t;
 

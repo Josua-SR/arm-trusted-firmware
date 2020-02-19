@@ -5750,35 +5750,35 @@ union cavm_trcx_trcpidr2
         uint32_t reserved_8_31         : 24;
         uint32_t revision              : 4;  /**< [  7:  4](RO) Architectural revision, as assigned by Arm. */
         uint32_t jedec                 : 1;  /**< [  3:  3](RO) JEDEC assigned. */
-        uint32_t des_1                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
+        uint32_t des_1                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
 #else /* Word 0 - Little Endian */
-        uint32_t des_1                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
+        uint32_t des_1                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
         uint32_t jedec                 : 1;  /**< [  3:  3](RO) JEDEC assigned. */
         uint32_t revision              : 4;  /**< [  7:  4](RO) Architectural revision, as assigned by Arm. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_trcx_trcpidr2_s cn8; */
-    struct cavm_trcx_trcpidr2_cn9
+    /* struct cavm_trcx_trcpidr2_s cn9; */
+    /* struct cavm_trcx_trcpidr2_s cn96xx; */
+    /* struct cavm_trcx_trcpidr2_s cn98xx; */
+    struct cavm_trcx_trcpidr2_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_8_31         : 24;
         uint32_t revision              : 4;  /**< [  7:  4](RO) Architectural revision, as assigned by Arm. */
         uint32_t jedec                 : 1;  /**< [  3:  3](RO) JEDEC assigned. */
-        uint32_t des_1                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
+        uint32_t des_1                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
 #else /* Word 0 - Little Endian */
-        uint32_t des_1                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
+        uint32_t des_1                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
         uint32_t jedec                 : 1;  /**< [  3:  3](RO) JEDEC assigned. */
         uint32_t revision              : 4;  /**< [  7:  4](RO) Architectural revision, as assigned by Arm. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
-    } cn9;
-    /* struct cavm_trcx_trcpidr2_cn9 cn96xx; */
-    /* struct cavm_trcx_trcpidr2_s cn98xx; */
-    /* struct cavm_trcx_trcpidr2_s cnf95xxp1; */
-    /* struct cavm_trcx_trcpidr2_cn9 cnf95xxp2; */
-    /* struct cavm_trcx_trcpidr2_cn9 f95mm; */
-    /* struct cavm_trcx_trcpidr2_cn9 loki; */
+    } cnf95xxp1;
+    /* struct cavm_trcx_trcpidr2_s cnf95xxp2; */
+    /* struct cavm_trcx_trcpidr2_s f95mm; */
+    /* struct cavm_trcx_trcpidr2_s loki; */
 };
 typedef union cavm_trcx_trcpidr2 cavm_trcx_trcpidr2_t;
 
@@ -5872,35 +5872,35 @@ union cavm_trcx_trcpidr4
         uint32_t reserved_8_31         : 24;
         uint32_t size                  : 4;  /**< [  7:  4](RO) Size of the component. Log\<sub\>2\</sub\> of the number of 4KB pages from the
                                                                  start of the component to the end of the component ID registers. */
-        uint32_t des_2                 : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Cavium. */
+        uint32_t des_2                 : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Marvell (Cavium). */
 #else /* Word 0 - Little Endian */
-        uint32_t des_2                 : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Cavium. */
+        uint32_t des_2                 : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Marvell (Cavium). */
         uint32_t size                  : 4;  /**< [  7:  4](RO) Size of the component. Log\<sub\>2\</sub\> of the number of 4KB pages from the
                                                                  start of the component to the end of the component ID registers. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_trcx_trcpidr4_s cn8; */
-    struct cavm_trcx_trcpidr4_cn9
+    /* struct cavm_trcx_trcpidr4_s cn9; */
+    /* struct cavm_trcx_trcpidr4_s cn96xx; */
+    /* struct cavm_trcx_trcpidr4_s cn98xx; */
+    struct cavm_trcx_trcpidr4_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_8_31         : 24;
         uint32_t size                  : 4;  /**< [  7:  4](RO) Size of the component. Log\<sub\>2\</sub\> of the number of 4KB pages from the
                                                                  start of the component to the end of the component ID registers. */
-        uint32_t des_2                 : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Marvell (Cavium). */
+        uint32_t des_2                 : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Cavium. */
 #else /* Word 0 - Little Endian */
-        uint32_t des_2                 : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Marvell (Cavium). */
+        uint32_t des_2                 : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Cavium. */
         uint32_t size                  : 4;  /**< [  7:  4](RO) Size of the component. Log\<sub\>2\</sub\> of the number of 4KB pages from the
                                                                  start of the component to the end of the component ID registers. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
-    } cn9;
-    /* struct cavm_trcx_trcpidr4_cn9 cn96xx; */
-    /* struct cavm_trcx_trcpidr4_s cn98xx; */
-    /* struct cavm_trcx_trcpidr4_s cnf95xxp1; */
-    /* struct cavm_trcx_trcpidr4_cn9 cnf95xxp2; */
-    /* struct cavm_trcx_trcpidr4_cn9 f95mm; */
-    /* struct cavm_trcx_trcpidr4_cn9 loki; */
+    } cnf95xxp1;
+    /* struct cavm_trcx_trcpidr4_s cnf95xxp2; */
+    /* struct cavm_trcx_trcpidr4_s f95mm; */
+    /* struct cavm_trcx_trcpidr4_s loki; */
 };
 typedef union cavm_trcx_trcpidr4 cavm_trcx_trcpidr4_t;
 

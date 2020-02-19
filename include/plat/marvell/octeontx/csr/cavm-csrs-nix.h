@@ -13988,7 +13988,51 @@ union cavm_nixx_af_mdqx_shape
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_mdqx_shape_s cn; */
+    /* struct cavm_nixx_af_mdqx_shape_s cn9; */
+    /* struct cavm_nixx_af_mdqx_shape_s cn96xxp1; */
+    struct cavm_nixx_af_mdqx_shape_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_27_63        : 37;
+        uint64_t schedule_list         : 2;  /**< [ 26: 25](R/W) Shaper scheduling list. Restricts shaper scheduling to specific lists.
+                                                                   0x0 = Normal (selected for nearly all scheduling/shaping applications).
+                                                                   0x1 = Green-only.
+                                                                   0x2 = Yellow-only.
+                                                                   0x3 = Red-only.
+
+                                                                 Internal:
+                                                                 Deprecated feature. */
+        uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
+                                                                 and shaping calculations such that only the value of [ADJUST] is used. */
+        uint64_t reserved_13_23        : 11;
+        uint64_t yellow_disable        : 1;  /**< [ 12: 12](R/W) See NIX_AF_TL2()_SHAPE[YELLOW_DISABLE]. */
+        uint64_t red_disable           : 1;  /**< [ 11: 11](R/W) See NIX_AF_TL2()_SHAPE[RED_DISABLE]. */
+        uint64_t red_algo              : 2;  /**< [ 10:  9](R/W) See NIX_AF_TL2()_SHAPE[RED_ALGO]. */
+        uint64_t adjust                : 9;  /**< [  8:  0](R/W) See NIX_AF_TL2()_SHAPE[ADJUST]. */
+#else /* Word 0 - Little Endian */
+        uint64_t adjust                : 9;  /**< [  8:  0](R/W) See NIX_AF_TL2()_SHAPE[ADJUST]. */
+        uint64_t red_algo              : 2;  /**< [ 10:  9](R/W) See NIX_AF_TL2()_SHAPE[RED_ALGO]. */
+        uint64_t red_disable           : 1;  /**< [ 11: 11](R/W) See NIX_AF_TL2()_SHAPE[RED_DISABLE]. */
+        uint64_t yellow_disable        : 1;  /**< [ 12: 12](R/W) See NIX_AF_TL2()_SHAPE[YELLOW_DISABLE]. */
+        uint64_t reserved_13_23        : 11;
+        uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
+                                                                 and shaping calculations such that only the value of [ADJUST] is used. */
+        uint64_t schedule_list         : 2;  /**< [ 26: 25](R/W) Shaper scheduling list. Restricts shaper scheduling to specific lists.
+                                                                   0x0 = Normal (selected for nearly all scheduling/shaping applications).
+                                                                   0x1 = Green-only.
+                                                                   0x2 = Yellow-only.
+                                                                   0x3 = Red-only.
+
+                                                                 Internal:
+                                                                 Deprecated feature. */
+        uint64_t reserved_27_63        : 37;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_nixx_af_mdqx_shape_cn96xxp3 cn98xx; */
+    /* struct cavm_nixx_af_mdqx_shape_s cnf95xxp1; */
+    /* struct cavm_nixx_af_mdqx_shape_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_nixx_af_mdqx_shape_cn96xxp3 f95mm; */
+    /* struct cavm_nixx_af_mdqx_shape_cn96xxp3 loki; */
 };
 typedef union cavm_nixx_af_mdqx_shape cavm_nixx_af_mdqx_shape_t;
 
@@ -15971,8 +16015,7 @@ union cavm_nixx_af_pse_channel_level
                                                                  1 = Selects TL3 as the channel level.
 
                                                                  [BP_LEVEL] determines whether NIX_AF_TL3_TL2()_LINK()_CFG registers are associated with
-                                                                 the TL3 or TL2 shaping queues. Likewise, [BP_LEVEL] determines whether link credits
-                                                                 (NIX_AF_TX_LINK()_NORM_CREDIT) are managed at the TL3 or TL2 level. */
+                                                                 the TL3 or TL2 shaping queues. */
 #else /* Word 0 - Little Endian */
         uint64_t bp_level              : 1;  /**< [  0:  0](R/W) Channel and link backpressure level. Channels and links can be configured to backpressure
                                                                  at level 2 or 3 of the PSE hierarchy.
@@ -15980,8 +16023,7 @@ union cavm_nixx_af_pse_channel_level
                                                                  1 = Selects TL3 as the channel level.
 
                                                                  [BP_LEVEL] determines whether NIX_AF_TL3_TL2()_LINK()_CFG registers are associated with
-                                                                 the TL3 or TL2 shaping queues. Likewise, [BP_LEVEL] determines whether link credits
-                                                                 (NIX_AF_TX_LINK()_NORM_CREDIT) are managed at the TL3 or TL2 level. */
+                                                                 the TL3 or TL2 shaping queues. */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -16578,7 +16620,61 @@ union cavm_nixx_af_pse_shaper_cfg
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_pse_shaper_cfg_s cn; */
+    /* struct cavm_nixx_af_pse_shaper_cfg_s cn9; */
+    /* struct cavm_nixx_af_pse_shaper_cfg_s cn96xxp1; */
+    struct cavm_nixx_af_pse_shaper_cfg_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_2_63         : 62;
+        uint64_t color_aware           : 1;  /**< [  1:  1](R/W) Color aware. Selects how PSE shapers take into account
+                                                                 the color of the incoming packet. It follows RFC-2698.
+                                                                 0 = Color blind.
+                                                                 1 = Color aware. */
+        uint64_t red_send_as_yellow    : 1;  /**< [  0:  0](R/W) Red send as yellow. Configures the way packets colored
+                                                                 NIX_COLORRESULT_E::RED_SEND are handled by the TL4 through TL2 shapers.
+                                                                 Normally packets colored
+                                                                 NIX_COLORRESULT_E::RED_DROP do not decrement the PIR in TL4 through TL2
+                                                                 shapers while packets colored YELLOW do. (Neither
+                                                                 NIX_COLORRESULT_E::RED_DROP nor YELLOW packets decrement the CIR in TL4
+                                                                 through TL2 shapers.)  Packets colored NIX_COLORRESULT_E::RED_SEND are
+                                                                 treated as either NIX_COLORRESULT_E::RED_DROP or YELLOW in the TL4 through
+                                                                 TL2 shapers as follows:
+                                                                 0 = Treat NIX_COLORRESULT_E::RED_SEND as NIX_COLORRESULT_E::RED_DROP.
+                                                                 1 = Treat NIX_COLORRESULT_E::RED_SEND as YELLOW.
+
+                                                                 In the TL1 shapers, NIX_COLORRESULT_E::RED_DROP packets do not decrement
+                                                                 the CIR, while YELLOW do. NIX_COLORRESULT_E::RED_SEND packets are always
+                                                                 treated the same as YELLOW is in the TL1 shapers, irrespective of
+                                                                 [RED_SEND_AS_YELLOW]. */
+#else /* Word 0 - Little Endian */
+        uint64_t red_send_as_yellow    : 1;  /**< [  0:  0](R/W) Red send as yellow. Configures the way packets colored
+                                                                 NIX_COLORRESULT_E::RED_SEND are handled by the TL4 through TL2 shapers.
+                                                                 Normally packets colored
+                                                                 NIX_COLORRESULT_E::RED_DROP do not decrement the PIR in TL4 through TL2
+                                                                 shapers while packets colored YELLOW do. (Neither
+                                                                 NIX_COLORRESULT_E::RED_DROP nor YELLOW packets decrement the CIR in TL4
+                                                                 through TL2 shapers.)  Packets colored NIX_COLORRESULT_E::RED_SEND are
+                                                                 treated as either NIX_COLORRESULT_E::RED_DROP or YELLOW in the TL4 through
+                                                                 TL2 shapers as follows:
+                                                                 0 = Treat NIX_COLORRESULT_E::RED_SEND as NIX_COLORRESULT_E::RED_DROP.
+                                                                 1 = Treat NIX_COLORRESULT_E::RED_SEND as YELLOW.
+
+                                                                 In the TL1 shapers, NIX_COLORRESULT_E::RED_DROP packets do not decrement
+                                                                 the CIR, while YELLOW do. NIX_COLORRESULT_E::RED_SEND packets are always
+                                                                 treated the same as YELLOW is in the TL1 shapers, irrespective of
+                                                                 [RED_SEND_AS_YELLOW]. */
+        uint64_t color_aware           : 1;  /**< [  1:  1](R/W) Color aware. Selects how PSE shapers take into account
+                                                                 the color of the incoming packet. It follows RFC-2698.
+                                                                 0 = Color blind.
+                                                                 1 = Color aware. */
+        uint64_t reserved_2_63         : 62;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_nixx_af_pse_shaper_cfg_cn96xxp3 cn98xx; */
+    /* struct cavm_nixx_af_pse_shaper_cfg_s cnf95xxp1; */
+    /* struct cavm_nixx_af_pse_shaper_cfg_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_nixx_af_pse_shaper_cfg_cn96xxp3 f95mm; */
+    /* struct cavm_nixx_af_pse_shaper_cfg_cn96xxp3 loki; */
 };
 typedef union cavm_nixx_af_pse_shaper_cfg cavm_nixx_af_pse_shaper_cfg_t;
 
@@ -20425,7 +20521,7 @@ union cavm_nixx_af_sdp_link_credit
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_nixx_af_sdp_link_credit_s cn9; */
-    struct cavm_nixx_af_sdp_link_credit_cn96xx
+    struct cavm_nixx_af_sdp_link_credit_cn96xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_63           : 1;
@@ -20458,11 +20554,79 @@ union cavm_nixx_af_sdp_link_credit
         uint64_t reserved_32_62        : 31;
         uint64_t reserved_63           : 1;
 #endif /* Word 0 - End */
-    } cn96xx;
-    /* struct cavm_nixx_af_sdp_link_credit_cn96xx cn98xx; */
-    /* struct cavm_nixx_af_sdp_link_credit_s cnf95xx; */
-    /* struct cavm_nixx_af_sdp_link_credit_s f95mm; */
-    /* struct cavm_nixx_af_sdp_link_credit_cn96xx loki; */
+    } cn96xxp1;
+    struct cavm_nixx_af_sdp_link_credit_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_63           : 1;
+        uint64_t reserved_32_62        : 31;
+        uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT].
+
+                                                                 The recommended value for SDP is [CC_UNIT_CNT] = (16 * Max_SDP_Data_Rate),
+                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate.
+
+                                                                 Internal:
+                                                                 SDP value is sized for specified data rate with 2000 ns round trip latency,
+                                                                 similar to the LBK value of NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT]. */
+        uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_PACKET_CNT]. Must be less than 512. */
+        uint64_t cc_enable             : 1;  /**< [  1:  1](R/W) Credit enable. Enables [CC_UNIT_CNT] and [CC_PACKET_CNT] link credit
+                                                                 processing. Must be one when SDP is used. All the Link credit backpressure only applies at TL1. */
+        uint64_t reserved_0            : 1;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0            : 1;
+        uint64_t cc_enable             : 1;  /**< [  1:  1](R/W) Credit enable. Enables [CC_UNIT_CNT] and [CC_PACKET_CNT] link credit
+                                                                 processing. Must be one when SDP is used. All the Link credit backpressure only applies at TL1. */
+        uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_PACKET_CNT]. Must be less than 512. */
+        uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT].
+
+                                                                 The recommended value for SDP is [CC_UNIT_CNT] = (16 * Max_SDP_Data_Rate),
+                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate.
+
+                                                                 Internal:
+                                                                 SDP value is sized for specified data rate with 2000 ns round trip latency,
+                                                                 similar to the LBK value of NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT]. */
+        uint64_t reserved_32_62        : 31;
+        uint64_t reserved_63           : 1;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_nixx_af_sdp_link_credit_cn96xxp3 cn98xx; */
+    /* struct cavm_nixx_af_sdp_link_credit_s cnf95xxp1; */
+    struct cavm_nixx_af_sdp_link_credit_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t pse_pkt_id_lmt        : 1;  /**< [ 63: 63](R/W) If one, limit the pse_pkt_id to only 32 packet IDs, else normal (512). For diagnostic use only. */
+        uint64_t reserved_32_62        : 31;
+        uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT].
+
+                                                                 The recommended value for SDP is [CC_UNIT_CNT] = (16 * Max_SDP_Data_Rate),
+                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate.
+
+                                                                 Internal:
+                                                                 SDP value is sized for specified data rate with 2000 ns round trip latency,
+                                                                 similar to the LBK value of NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT]. */
+        uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_PACKET_CNT]. Must be less than 512. */
+        uint64_t cc_enable             : 1;  /**< [  1:  1](R/W) Credit enable. Enables [CC_UNIT_CNT] and [CC_PACKET_CNT] link credit
+                                                                 processing. Must be one when SDP is used. All the Link credit backpressure only applies at TL1. */
+        uint64_t reserved_0            : 1;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0            : 1;
+        uint64_t cc_enable             : 1;  /**< [  1:  1](R/W) Credit enable. Enables [CC_UNIT_CNT] and [CC_PACKET_CNT] link credit
+                                                                 processing. Must be one when SDP is used. All the Link credit backpressure only applies at TL1. */
+        uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_PACKET_CNT]. Must be less than 512. */
+        uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) See NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT].
+
+                                                                 The recommended value for SDP is [CC_UNIT_CNT] = (16 * Max_SDP_Data_Rate),
+                                                                 e.g. [CC_UNIT_CNT] = 800 for 50 Gbps max SDP data rate.
+
+                                                                 Internal:
+                                                                 SDP value is sized for specified data rate with 2000 ns round trip latency,
+                                                                 similar to the LBK value of NIX_AF_TX_LINK()_NORM_CREDIT[CC_UNIT_CNT]. */
+        uint64_t reserved_32_62        : 31;
+        uint64_t pse_pkt_id_lmt        : 1;  /**< [ 63: 63](R/W) If one, limit the pse_pkt_id to only 32 packet IDs, else normal (512). For diagnostic use only. */
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_nixx_af_sdp_link_credit_cnf95xxp2 f95mm; */
+    /* struct cavm_nixx_af_sdp_link_credit_cn96xxp3 loki; */
 };
 typedef union cavm_nixx_af_sdp_link_credit cavm_nixx_af_sdp_link_credit_t;
 
@@ -25781,7 +25945,10 @@ union cavm_nixx_af_tl2x_shape
                                                                    0x0 = Normal (selected for nearly all scheduling/shaping applications).
                                                                    0x1 = Green-only.
                                                                    0x2 = Yellow-only.
-                                                                   0x3 = Red-only. */
+                                                                   0x3 = Red-only.
+
+                                                                 Internal:
+                                                                 Deprecated feature. */
         uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
                                                                  and shaping calculations such that only the value of [ADJUST] is used. */
         uint64_t reserved_13_23        : 11;
@@ -25869,7 +26036,10 @@ union cavm_nixx_af_tl2x_shape
                                                                    0x0 = Normal (selected for nearly all scheduling/shaping applications).
                                                                    0x1 = Green-only.
                                                                    0x2 = Yellow-only.
-                                                                   0x3 = Red-only. */
+                                                                   0x3 = Red-only.
+
+                                                                 Internal:
+                                                                 Deprecated feature. */
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -27576,7 +27746,51 @@ union cavm_nixx_af_tl3x_shape
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_tl3x_shape_s cn; */
+    /* struct cavm_nixx_af_tl3x_shape_s cn9; */
+    /* struct cavm_nixx_af_tl3x_shape_s cn96xxp1; */
+    struct cavm_nixx_af_tl3x_shape_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_27_63        : 37;
+        uint64_t schedule_list         : 2;  /**< [ 26: 25](R/W) Shaper scheduling list. Restricts shaper scheduling to specific lists.
+                                                                   0x0 = Normal (selected for nearly all scheduling/shaping applications).
+                                                                   0x1 = Green-only.
+                                                                   0x2 = Yellow-only.
+                                                                   0x3 = Red-only.
+
+                                                                 Internal:
+                                                                 Deprecated feature. */
+        uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
+                                                                 and shaping calculations such that only the value of [ADJUST] is used. */
+        uint64_t reserved_13_23        : 11;
+        uint64_t yellow_disable        : 1;  /**< [ 12: 12](R/W) See NIX_AF_TL2()_SHAPE[YELLOW_DISABLE]. */
+        uint64_t red_disable           : 1;  /**< [ 11: 11](R/W) See NIX_AF_TL2()_SHAPE[RED_DISABLE]. */
+        uint64_t red_algo              : 2;  /**< [ 10:  9](R/W) See NIX_AF_TL2()_SHAPE[RED_ALGO]. */
+        uint64_t adjust                : 9;  /**< [  8:  0](R/W) See NIX_AF_TL2()_SHAPE[ADJUST]. */
+#else /* Word 0 - Little Endian */
+        uint64_t adjust                : 9;  /**< [  8:  0](R/W) See NIX_AF_TL2()_SHAPE[ADJUST]. */
+        uint64_t red_algo              : 2;  /**< [ 10:  9](R/W) See NIX_AF_TL2()_SHAPE[RED_ALGO]. */
+        uint64_t red_disable           : 1;  /**< [ 11: 11](R/W) See NIX_AF_TL2()_SHAPE[RED_DISABLE]. */
+        uint64_t yellow_disable        : 1;  /**< [ 12: 12](R/W) See NIX_AF_TL2()_SHAPE[YELLOW_DISABLE]. */
+        uint64_t reserved_13_23        : 11;
+        uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
+                                                                 and shaping calculations such that only the value of [ADJUST] is used. */
+        uint64_t schedule_list         : 2;  /**< [ 26: 25](R/W) Shaper scheduling list. Restricts shaper scheduling to specific lists.
+                                                                   0x0 = Normal (selected for nearly all scheduling/shaping applications).
+                                                                   0x1 = Green-only.
+                                                                   0x2 = Yellow-only.
+                                                                   0x3 = Red-only.
+
+                                                                 Internal:
+                                                                 Deprecated feature. */
+        uint64_t reserved_27_63        : 37;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_nixx_af_tl3x_shape_cn96xxp3 cn98xx; */
+    /* struct cavm_nixx_af_tl3x_shape_s cnf95xxp1; */
+    /* struct cavm_nixx_af_tl3x_shape_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_nixx_af_tl3x_shape_cn96xxp3 f95mm; */
+    /* struct cavm_nixx_af_tl3x_shape_cn96xxp3 loki; */
 };
 typedef union cavm_nixx_af_tl3x_shape cavm_nixx_af_tl3x_shape_t;
 
@@ -28106,8 +28320,7 @@ union cavm_nixx_af_tl3_tl2x_linkx_cfg
                                                                  multiple TL3/TL2 queues transmit to the same CGX/LBK channel, then this bit
                                                                  should be clear for those TL3/TL2 queues. */
         uint64_t ena                   : 1;  /**< [ 12: 12](R/W) Enable. When set, the TL3/TL2 queue can transmit on relative channel number
-                                                                 [RELCHAN] of this link, and will respond to backpressure from link credits
-                                                                 (NIX_AF_TX_LINK()_NORM_CREDIT). If
+                                                                 [RELCHAN] of this link. If
                                                                  [BP_ENA] is set, the queue also responds to channel backpressure.
 
                                                                  When this bit is clear for all links of a TL3/TL2 queue, and
@@ -28120,8 +28333,7 @@ union cavm_nixx_af_tl3_tl2x_linkx_cfg
         uint64_t relchan               : 8;  /**< [  7:  0](R/W) Relative channel number within this link. See [ENA]. */
         uint64_t reserved_8_11         : 4;
         uint64_t ena                   : 1;  /**< [ 12: 12](R/W) Enable. When set, the TL3/TL2 queue can transmit on relative channel number
-                                                                 [RELCHAN] of this link, and will respond to backpressure from link credits
-                                                                 (NIX_AF_TX_LINK()_NORM_CREDIT). If
+                                                                 [RELCHAN] of this link. If
                                                                  [BP_ENA] is set, the queue also responds to channel backpressure.
 
                                                                  When this bit is clear for all links of a TL3/TL2 queue, and
@@ -29629,7 +29841,49 @@ union cavm_nixx_af_tl4x_sdp_link_cfg
         uint64_t reserved_14_63        : 50;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_tl4x_sdp_link_cfg_s cn; */
+    /* struct cavm_nixx_af_tl4x_sdp_link_cfg_s cn9; */
+    /* struct cavm_nixx_af_tl4x_sdp_link_cfg_s cn96xxp1; */
+    struct cavm_nixx_af_tl4x_sdp_link_cfg_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_14_63        : 50;
+        uint64_t bp_ena                : 1;  /**< [ 13: 13](R/W) Backpressure enable. When set, the TL4 queue responds to backpressure from
+                                                                 (NIX_AF_SDP_HW_XOFF()/_SW_XOFF()[CHAN_XOFF]\<[RELCHAN]\>).
+
+                                                                 Only one TL4 queue may be backpressured by a given SDP channel. If multiple TL4
+                                                                 queues transmit to the same SDP channel, then this bit should be clear for those
+                                                                 TL4 queues. */
+        uint64_t ena                   : 1;  /**< [ 12: 12](R/W) Enable.
+                                                                 0 = The TL4 queue will not transmit to SDP and may transmit to CGX and/or LBK.
+                                                                 1 = The TL4 queue may only transmit to SDP. If [BP_ENA] is set, the queue also responds to channel
+                                                                 backpressure. */
+        uint64_t reserved_8_11         : 4;
+        uint64_t relchan               : 8;  /**< [  7:  0](R/W) Relative channel number. When [BP_ENA] is set, this is the
+                                                                 NIX_CHAN_E::SDP_CH() index of the SDP channel that may backpressure the TL4
+                                                                 queue. */
+#else /* Word 0 - Little Endian */
+        uint64_t relchan               : 8;  /**< [  7:  0](R/W) Relative channel number. When [BP_ENA] is set, this is the
+                                                                 NIX_CHAN_E::SDP_CH() index of the SDP channel that may backpressure the TL4
+                                                                 queue. */
+        uint64_t reserved_8_11         : 4;
+        uint64_t ena                   : 1;  /**< [ 12: 12](R/W) Enable.
+                                                                 0 = The TL4 queue will not transmit to SDP and may transmit to CGX and/or LBK.
+                                                                 1 = The TL4 queue may only transmit to SDP. If [BP_ENA] is set, the queue also responds to channel
+                                                                 backpressure. */
+        uint64_t bp_ena                : 1;  /**< [ 13: 13](R/W) Backpressure enable. When set, the TL4 queue responds to backpressure from
+                                                                 (NIX_AF_SDP_HW_XOFF()/_SW_XOFF()[CHAN_XOFF]\<[RELCHAN]\>).
+
+                                                                 Only one TL4 queue may be backpressured by a given SDP channel. If multiple TL4
+                                                                 queues transmit to the same SDP channel, then this bit should be clear for those
+                                                                 TL4 queues. */
+        uint64_t reserved_14_63        : 50;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_nixx_af_tl4x_sdp_link_cfg_cn96xxp3 cn98xx; */
+    /* struct cavm_nixx_af_tl4x_sdp_link_cfg_s cnf95xxp1; */
+    /* struct cavm_nixx_af_tl4x_sdp_link_cfg_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_nixx_af_tl4x_sdp_link_cfg_cn96xxp3 f95mm; */
+    /* struct cavm_nixx_af_tl4x_sdp_link_cfg_cn96xxp3 loki; */
 };
 typedef union cavm_nixx_af_tl4x_sdp_link_cfg cavm_nixx_af_tl4x_sdp_link_cfg_t;
 
@@ -29699,7 +29953,51 @@ union cavm_nixx_af_tl4x_shape
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_tl4x_shape_s cn; */
+    /* struct cavm_nixx_af_tl4x_shape_s cn9; */
+    /* struct cavm_nixx_af_tl4x_shape_s cn96xxp1; */
+    struct cavm_nixx_af_tl4x_shape_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_27_63        : 37;
+        uint64_t schedule_list         : 2;  /**< [ 26: 25](R/W) Shaper scheduling list. Restricts shaper scheduling to specific lists.
+                                                                   0x0 = Normal (selected for nearly all scheduling/shaping applications).
+                                                                   0x1 = Green-only.
+                                                                   0x2 = Yellow-only.
+                                                                   0x3 = Red-only.
+
+                                                                 Internal:
+                                                                 Deprecated feature. */
+        uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
+                                                                 and shaping calculations such that only the value of [ADJUST] is used. */
+        uint64_t reserved_13_23        : 11;
+        uint64_t yellow_disable        : 1;  /**< [ 12: 12](R/W) See NIX_AF_TL2()_SHAPE[YELLOW_DISABLE]. */
+        uint64_t red_disable           : 1;  /**< [ 11: 11](R/W) See NIX_AF_TL2()_SHAPE[RED_DISABLE]. */
+        uint64_t red_algo              : 2;  /**< [ 10:  9](R/W) See NIX_AF_TL2()_SHAPE[RED_ALGO]. */
+        uint64_t adjust                : 9;  /**< [  8:  0](R/W) See NIX_AF_TL2()_SHAPE[ADJUST]. */
+#else /* Word 0 - Little Endian */
+        uint64_t adjust                : 9;  /**< [  8:  0](R/W) See NIX_AF_TL2()_SHAPE[ADJUST]. */
+        uint64_t red_algo              : 2;  /**< [ 10:  9](R/W) See NIX_AF_TL2()_SHAPE[RED_ALGO]. */
+        uint64_t red_disable           : 1;  /**< [ 11: 11](R/W) See NIX_AF_TL2()_SHAPE[RED_DISABLE]. */
+        uint64_t yellow_disable        : 1;  /**< [ 12: 12](R/W) See NIX_AF_TL2()_SHAPE[YELLOW_DISABLE]. */
+        uint64_t reserved_13_23        : 11;
+        uint64_t length_disable        : 1;  /**< [ 24: 24](R/W) Length disable. Disables the use of packet lengths in DWRR scheduling
+                                                                 and shaping calculations such that only the value of [ADJUST] is used. */
+        uint64_t schedule_list         : 2;  /**< [ 26: 25](R/W) Shaper scheduling list. Restricts shaper scheduling to specific lists.
+                                                                   0x0 = Normal (selected for nearly all scheduling/shaping applications).
+                                                                   0x1 = Green-only.
+                                                                   0x2 = Yellow-only.
+                                                                   0x3 = Red-only.
+
+                                                                 Internal:
+                                                                 Deprecated feature. */
+        uint64_t reserved_27_63        : 37;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_nixx_af_tl4x_shape_cn96xxp3 cn98xx; */
+    /* struct cavm_nixx_af_tl4x_shape_s cnf95xxp1; */
+    /* struct cavm_nixx_af_tl4x_shape_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_nixx_af_tl4x_shape_cn96xxp3 f95mm; */
+    /* struct cavm_nixx_af_tl4x_shape_cn96xxp3 loki; */
 };
 typedef union cavm_nixx_af_tl4x_shape cavm_nixx_af_tl4x_shape_t;
 
@@ -30304,7 +30602,97 @@ union cavm_nixx_af_tx_linkx_norm_credit
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_tx_linkx_norm_credit_s cn; */
+    /* struct cavm_nixx_af_tx_linkx_norm_credit_s cn9; */
+    /* struct cavm_nixx_af_tx_linkx_norm_credit_s cn96xxp1; */
+    struct cavm_nixx_af_tx_linkx_norm_credit_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_32_63        : 32;
+        uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) Link-credit unit count. This value, plus 1 MTU, represents the maximum outstanding
+                                                                 credit units for this link. A credit unit is 16 bytes. Note that this
+                                                                 20-bit field represents a two's complement signed value that decrements
+                                                                 towards zero as credits are used.
+                                                                 Packets are not allowed to flow when the count is less than zero. As such, the most
+                                                                 significant bit should normally be programmed as zero (positive count). This gives a
+                                                                 maximum value for this field of 2^19 - 1.
+
+                                                                 In order to prevent blocking between CGX LMACs, [CC_ENABLE] should be set to 1 and
+                                                                 [CC_UNIT_CNT] should be less than
+
+                                                                 _     ((LMAC TX buffer size in CGX) - (MTU excluding FCS))/16
+
+                                                                 The LMAC TX buffer size is defined by CGX()_CMR_TX_LMACS[LMACS]. For example, if
+                                                                 CGX()_CMR_TX_LMACS[LMACS]=0x4 (16 KB per LMAC) and the LMAC's MTU excluding FCS
+                                                                 is 9212 bytes (9216 minus 4 byte FCS), then [CC_UNIT_CNT] should be \< (16384 - 9212)/16 =
+                                                                 448.
+
+                                                                 The recommended configuration for LBK is [CC_ENABLE] = 1 and
+                                                                 [CC_UNIT_CNT] = (16 * Max_LBK_Data_Rate),
+                                                                 e.g. [CC_UNIT_CNT] = 1600 for 100 Gbps max LBK data rate.
+
+                                                                 Internal:
+                                                                 LBK value is sized for specified data rate with 2000 ns round trip latency,
+                                                                 e.g. for 100 Gbps:
+
+                                                                 _ Minimum LBK in-flight data = 100*2000/128b = 1563 credit units.
+
+                                                                 Note: maximum LBK in-fligh data = initial_value + MTU. */
+        uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) Link-credit packet count. This value, plus 1, represents the maximum outstanding
+                                                                 packet count for this link. Note that this 10-bit field represents a two's
+                                                                 complement signed value that decrements towards zero as credits are used.
+                                                                 Packets are not allowed to flow
+                                                                 when the count is less than zero. As such the most significant bit should normally be
+                                                                 programmed as zero (positive count). This gives a maximum value for this field of 2^9 - 1. */
+        uint64_t cc_enable             : 1;  /**< [  1:  1](R/W) Credit enable. Enables [CC_UNIT_CNT] and [CC_PACKET_CNT] link credit processing.
+                                                                 All the Link credit backpressure only applies at TL1. */
+        uint64_t reserved_0            : 1;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0            : 1;
+        uint64_t cc_enable             : 1;  /**< [  1:  1](R/W) Credit enable. Enables [CC_UNIT_CNT] and [CC_PACKET_CNT] link credit processing.
+                                                                 All the Link credit backpressure only applies at TL1. */
+        uint64_t cc_packet_cnt         : 10; /**< [ 11:  2](R/W/H) Link-credit packet count. This value, plus 1, represents the maximum outstanding
+                                                                 packet count for this link. Note that this 10-bit field represents a two's
+                                                                 complement signed value that decrements towards zero as credits are used.
+                                                                 Packets are not allowed to flow
+                                                                 when the count is less than zero. As such the most significant bit should normally be
+                                                                 programmed as zero (positive count). This gives a maximum value for this field of 2^9 - 1. */
+        uint64_t cc_unit_cnt           : 20; /**< [ 31: 12](R/W/H) Link-credit unit count. This value, plus 1 MTU, represents the maximum outstanding
+                                                                 credit units for this link. A credit unit is 16 bytes. Note that this
+                                                                 20-bit field represents a two's complement signed value that decrements
+                                                                 towards zero as credits are used.
+                                                                 Packets are not allowed to flow when the count is less than zero. As such, the most
+                                                                 significant bit should normally be programmed as zero (positive count). This gives a
+                                                                 maximum value for this field of 2^19 - 1.
+
+                                                                 In order to prevent blocking between CGX LMACs, [CC_ENABLE] should be set to 1 and
+                                                                 [CC_UNIT_CNT] should be less than
+
+                                                                 _     ((LMAC TX buffer size in CGX) - (MTU excluding FCS))/16
+
+                                                                 The LMAC TX buffer size is defined by CGX()_CMR_TX_LMACS[LMACS]. For example, if
+                                                                 CGX()_CMR_TX_LMACS[LMACS]=0x4 (16 KB per LMAC) and the LMAC's MTU excluding FCS
+                                                                 is 9212 bytes (9216 minus 4 byte FCS), then [CC_UNIT_CNT] should be \< (16384 - 9212)/16 =
+                                                                 448.
+
+                                                                 The recommended configuration for LBK is [CC_ENABLE] = 1 and
+                                                                 [CC_UNIT_CNT] = (16 * Max_LBK_Data_Rate),
+                                                                 e.g. [CC_UNIT_CNT] = 1600 for 100 Gbps max LBK data rate.
+
+                                                                 Internal:
+                                                                 LBK value is sized for specified data rate with 2000 ns round trip latency,
+                                                                 e.g. for 100 Gbps:
+
+                                                                 _ Minimum LBK in-flight data = 100*2000/128b = 1563 credit units.
+
+                                                                 Note: maximum LBK in-fligh data = initial_value + MTU. */
+        uint64_t reserved_32_63        : 32;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_nixx_af_tx_linkx_norm_credit_cn96xxp3 cn98xx; */
+    /* struct cavm_nixx_af_tx_linkx_norm_credit_s cnf95xxp1; */
+    /* struct cavm_nixx_af_tx_linkx_norm_credit_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_nixx_af_tx_linkx_norm_credit_cn96xxp3 f95mm; */
+    /* struct cavm_nixx_af_tx_linkx_norm_credit_cn96xxp3 loki; */
 };
 typedef union cavm_nixx_af_tx_linkx_norm_credit cavm_nixx_af_tx_linkx_norm_credit_t;
 

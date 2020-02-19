@@ -9957,7 +9957,7 @@ union cavm_rasx_pidr2
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
-    /* struct cavm_rasx_pidr2_s cn98xx; */
+    /* struct cavm_rasx_pidr2_cn96xxp3 cn98xx; */
     /* struct cavm_rasx_pidr2_s cnf95xxp1; */
     /* struct cavm_rasx_pidr2_cn96xxp3 cnf95xxp2; */
     /* struct cavm_rasx_pidr2_cn96xxp3 f95mm; */
@@ -10075,7 +10075,7 @@ union cavm_rasx_pidr4
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
-    /* struct cavm_rasx_pidr4_s cn98xx; */
+    /* struct cavm_rasx_pidr4_cn96xxp3 cn98xx; */
     /* struct cavm_rasx_pidr4_s cnf95xxp1; */
     /* struct cavm_rasx_pidr4_cn96xxp3 cnf95xxp2; */
     /* struct cavm_rasx_pidr4_cn96xxp3 f95mm; */

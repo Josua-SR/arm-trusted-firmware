@@ -1177,6 +1177,45 @@ union cavm_xcpx_cwd_wdog
                                                                  0x0 = Off.
                                                                  0x1 = (Maskable) Interrupt only.
                                                                  0x2 = (Maskable) Interrupt + NMI.
+                                                                 0x3 = (Maskable) Interrupt + NMI + XCP domain reset. */
+#else /* Word 0 - Little Endian */
+        uint32_t mode                  : 2;  /**< [  1:  0](R/W) Watchdog mode:
+                                                                 0x0 = Off.
+                                                                 0x1 = (Maskable) Interrupt only.
+                                                                 0x2 = (Maskable) Interrupt + NMI.
+                                                                 0x3 = (Maskable) Interrupt + NMI + XCP domain reset. */
+        uint32_t state                 : 2;  /**< [  3:  2](R/W/H) Watchdog state. The number of watchdog time expirations since last core poke. Cleared on
+                                                                 write to associated XCP()_CWD_POKE. */
+        uint32_t len                   : 9;  /**< [ 12:  4](R/W) Watchdog time-expiration length. The most-significant nine bits of a 17-bit value to be
+                                                                 decremented every 10.24 us. */
+        uint32_t cnt                   : 17; /**< [ 29: 13](R/W/H) Number of 10.24 us intervals until next watchdog expiration. Set on write to
+                                                                 associated XCP()_CWD_POKE.
+
+                                                                 Typically on each write to XCP()_CWD_WDOG, [CNT] should be set to [LEN] * 0x100. */
+        uint32_t dstop                 : 1;  /**< [ 30: 30](R/W) Debug-stop enable. Debug stop is asserted if the local XCP is in debug mode. */
+        uint32_t gstop                 : 1;  /**< [ 31: 31](R/W) Global-stop enable. Global stop is asserted if the other XCP or any of the Arm
+                                                                 cores are in debug mode. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_xcpx_cwd_wdog_cn96xxp3 cn98xx; */
+    struct cavm_xcpx_cwd_wdog_cnf95xxp1
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t gstop                 : 1;  /**< [ 31: 31](R/W) Global-stop enable. Global stop is asserted if the other XCP or any of the Arm
+                                                                 cores are in debug mode. */
+        uint32_t dstop                 : 1;  /**< [ 30: 30](R/W) Debug-stop enable. Debug stop is asserted if the local XCP is in debug mode. */
+        uint32_t cnt                   : 17; /**< [ 29: 13](R/W/H) Number of 10.24 us intervals until next watchdog expiration. Set on write to
+                                                                 associated XCP()_CWD_POKE.
+
+                                                                 Typically on each write to XCP()_CWD_WDOG, [CNT] should be set to [LEN] * 0x100. */
+        uint32_t len                   : 9;  /**< [ 12:  4](R/W) Watchdog time-expiration length. The most-significant nine bits of a 17-bit value to be
+                                                                 decremented every 10.24 us. */
+        uint32_t state                 : 2;  /**< [  3:  2](R/W/H) Watchdog state. The number of watchdog time expirations since last core poke. Cleared on
+                                                                 write to associated XCP()_CWD_POKE. */
+        uint32_t mode                  : 2;  /**< [  1:  0](R/W) Watchdog mode:
+                                                                 0x0 = Off.
+                                                                 0x1 = (Maskable) Interrupt only.
+                                                                 0x2 = (Maskable) Interrupt + NMI.
                                                                  0x3 = (Maskable) Interrupt + NMI + MCP or SCP domain reset. */
 #else /* Word 0 - Little Endian */
         uint32_t mode                  : 2;  /**< [  1:  0](R/W) Watchdog mode:
@@ -1196,9 +1235,8 @@ union cavm_xcpx_cwd_wdog
         uint32_t gstop                 : 1;  /**< [ 31: 31](R/W) Global-stop enable. Global stop is asserted if the other XCP or any of the Arm
                                                                  cores are in debug mode. */
 #endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_xcpx_cwd_wdog_cn96xxp3 cn98xx; */
-    /* struct cavm_xcpx_cwd_wdog_cn96xxp3 cnf95xx; */
+    } cnf95xxp1;
+    /* struct cavm_xcpx_cwd_wdog_cn96xxp3 cnf95xxp2; */
     /* struct cavm_xcpx_cwd_wdog_cn96xxp3 f95mm; */
     /* struct cavm_xcpx_cwd_wdog_cn96xxp3 loki; */
 };

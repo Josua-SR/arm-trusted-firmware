@@ -1399,7 +1399,51 @@ union cavm_dmapx_jdx_cfg3
                                                                  operation in Q14 format. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_dmapx_jdx_cfg3_s cn; */
+    /* struct cavm_dmapx_jdx_cfg3_s cn9; */
+    /* struct cavm_dmapx_jdx_cfg3_s cnf95xxp1; */
+    struct cavm_dmapx_jdx_cfg3_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t dmp_comp_coeffq       : 16; /**< [ 63: 48](R/W) Imaginary part of complex coefficient applied to all REs befire soft demapping
+                                                                 operation in Q14 format. */
+        uint64_t dmp_comp_coeffi       : 16; /**< [ 47: 32](R/W) Real part of complex coefficient applied to all REs befire soft demapping operation in Q14 format. */
+        uint64_t reserved_22_31        : 10;
+        uint64_t ndft_indx             : 6;  /**< [ 21: 16](R/W) See DMAP_NDFT_IDX_E. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t idft_dft              : 1;  /**< [ 12: 12](R/W) Set to 0 for DFT or 1 for IDFT. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t rs_bits_last          : 5;  /**< [  8:  4](R/W) Parameter used to control the output scaling at the last stage of DFT/IDFT.
+                                                                 Set to 15 for unity DFT gain. */
+        uint64_t reserved_3            : 1;
+        uint64_t num_layers            : 3;  /**< [  2:  0](R/W) Number of layers.
+                                                                 0x1 = 1 layer.
+                                                                 0x2 = 2 layers.
+                                                                 0x3 = 3 layers.
+                                                                 0x4 = 4 layers.
+                                                                 For LTE, num_layers \<= 2.
+                                                                 For NR, num_layers \<= 4. */
+#else /* Word 0 - Little Endian */
+        uint64_t num_layers            : 3;  /**< [  2:  0](R/W) Number of layers.
+                                                                 0x1 = 1 layer.
+                                                                 0x2 = 2 layers.
+                                                                 0x3 = 3 layers.
+                                                                 0x4 = 4 layers.
+                                                                 For LTE, num_layers \<= 2.
+                                                                 For NR, num_layers \<= 4. */
+        uint64_t reserved_3            : 1;
+        uint64_t rs_bits_last          : 5;  /**< [  8:  4](R/W) Parameter used to control the output scaling at the last stage of DFT/IDFT.
+                                                                 Set to 15 for unity DFT gain. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t idft_dft              : 1;  /**< [ 12: 12](R/W) Set to 0 for DFT or 1 for IDFT. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t ndft_indx             : 6;  /**< [ 21: 16](R/W) See DMAP_NDFT_IDX_E. */
+        uint64_t reserved_22_31        : 10;
+        uint64_t dmp_comp_coeffi       : 16; /**< [ 47: 32](R/W) Real part of complex coefficient applied to all REs befire soft demapping operation in Q14 format. */
+        uint64_t dmp_comp_coeffq       : 16; /**< [ 63: 48](R/W) Imaginary part of complex coefficient applied to all REs befire soft demapping
+                                                                 operation in Q14 format. */
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_dmapx_jdx_cfg3_cnf95xxp2 loki; */
 };
 typedef union cavm_dmapx_jdx_cfg3 cavm_dmapx_jdx_cfg3_t;
 

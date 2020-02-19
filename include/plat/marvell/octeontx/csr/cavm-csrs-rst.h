@@ -200,7 +200,7 @@ union cavm_rst_boot_stat_s
  * Structure rst_cold_data2_s
  *
  * RST Cold Data 2 Field Structure
- * This structure specifies the bit flags used for communication between SCP_BL1 and CAVM software.
+ * This structure specifies the bit flags used for communication between SCP BL1 and CAVM software.
  */
 union cavm_rst_cold_data2_s
 {
@@ -208,8 +208,8 @@ union cavm_rst_cold_data2_s
     struct cavm_rst_cold_data2_s_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t reserved_8_63         : 56;
-        uint64_t cust                  : 4;  /**< [  7:  4] For customer use. */
+        uint64_t reserved_12_63        : 52;
+        uint64_t cust                  : 8;  /**< [ 11:  4] For customer use. */
         uint64_t cavm_to_scp_vrm_problem : 1; /**< [  3:  3] CAVM sets to tell SCP to not proceed if the PMBus configuration failed. */
         uint64_t scp_to_cavm_vrm_problem : 1; /**< [  2:  2] SCP sets to tell CAVM to not proceed if the AVS bus is not working. */
         uint64_t reserved_1            : 1;
@@ -219,8 +219,8 @@ union cavm_rst_cold_data2_s
         uint64_t reserved_1            : 1;
         uint64_t scp_to_cavm_vrm_problem : 1; /**< [  2:  2] SCP sets to tell CAVM to not proceed if the AVS bus is not working. */
         uint64_t cavm_to_scp_vrm_problem : 1; /**< [  3:  3] CAVM sets to tell SCP to not proceed if the PMBus configuration failed. */
-        uint64_t cust                  : 4;  /**< [  7:  4] For customer use. */
-        uint64_t reserved_8_63         : 56;
+        uint64_t cust                  : 8;  /**< [ 11:  4] For customer use. */
+        uint64_t reserved_12_63        : 52;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_rst_cold_data2_s_s cn; */

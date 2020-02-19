@@ -3294,7 +3294,7 @@ union cavm_dbgx_edpidr2
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
-    /* struct cavm_dbgx_edpidr2_s cn98xx; */
+    /* struct cavm_dbgx_edpidr2_cn96xxp3 cn98xx; */
     /* struct cavm_dbgx_edpidr2_s cnf95xxp1; */
     /* struct cavm_dbgx_edpidr2_cn96xxp3 cnf95xxp2; */
     /* struct cavm_dbgx_edpidr2_cn96xxp3 f95mm; */
@@ -3425,7 +3425,7 @@ union cavm_dbgx_edpidr4
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } cn96xxp3;
-    /* struct cavm_dbgx_edpidr4_s cn98xx; */
+    /* struct cavm_dbgx_edpidr4_cn96xxp3 cn98xx; */
     /* struct cavm_dbgx_edpidr4_s cnf95xxp1; */
     /* struct cavm_dbgx_edpidr4_cn96xxp3 cnf95xxp2; */
     /* struct cavm_dbgx_edpidr4_cn96xxp3 f95mm; */

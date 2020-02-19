@@ -3160,9 +3160,9 @@ union cavm_gicd_pidr2
                                                                    0x4 = GICv4.
                                                                    0x5-0xF = Reserved. */
         uint32_t usesjepcode           : 1;  /**< [  3:  3](RO) JEDEC assigned. */
-        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
+        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
 #else /* Word 0 - Little Endian */
-        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
+        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
         uint32_t usesjepcode           : 1;  /**< [  3:  3](RO) JEDEC assigned. */
         uint32_t archrev               : 4;  /**< [  7:  4](RO) Architectural revision:
                                                                    0x1 = GICv1.
@@ -3174,9 +3174,7 @@ union cavm_gicd_pidr2
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_gicd_pidr2_s cn8; */
-    /* struct cavm_gicd_pidr2_s cn9; */
-    /* struct cavm_gicd_pidr2_s cn96xxp1; */
-    struct cavm_gicd_pidr2_cn96xxp3
+    struct cavm_gicd_pidr2_cn9
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_8_31         : 24;
@@ -3187,9 +3185,9 @@ union cavm_gicd_pidr2
                                                                    0x4 = GICv4.
                                                                    0x5-0xF = Reserved. */
         uint32_t usesjepcode           : 1;  /**< [  3:  3](RO) JEDEC assigned. */
-        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
+        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
 #else /* Word 0 - Little Endian */
-        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
+        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
         uint32_t usesjepcode           : 1;  /**< [  3:  3](RO) JEDEC assigned. */
         uint32_t archrev               : 4;  /**< [  7:  4](RO) Architectural revision:
                                                                    0x1 = GICv1.
@@ -3199,11 +3197,13 @@ union cavm_gicd_pidr2
                                                                    0x5-0xF = Reserved. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_gicd_pidr2_cn96xxp3 cn98xx; */
-    /* struct cavm_gicd_pidr2_cn96xxp3 cnf95xx; */
-    /* struct cavm_gicd_pidr2_cn96xxp3 f95mm; */
-    /* struct cavm_gicd_pidr2_cn96xxp3 loki; */
+    } cn9;
+    /* struct cavm_gicd_pidr2_cn9 cn96xxp1; */
+    /* struct cavm_gicd_pidr2_s cn96xxp3; */
+    /* struct cavm_gicd_pidr2_s cn98xx; */
+    /* struct cavm_gicd_pidr2_s cnf95xx; */
+    /* struct cavm_gicd_pidr2_s f95mm; */
+    /* struct cavm_gicd_pidr2_s loki; */
 };
 typedef union cavm_gicd_pidr2 cavm_gicd_pidr2_t;
 
@@ -3274,32 +3274,32 @@ union cavm_gicd_pidr4
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_8_31         : 24;
         uint32_t cnt_4k                : 4;  /**< [  7:  4](RO) This field is 0x4, indicating a 64 KB software-visible page. */
-        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Cavium. */
+        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Marvell (Cavium). */
 #else /* Word 0 - Little Endian */
-        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Cavium. */
+        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Marvell (Cavium). */
         uint32_t cnt_4k                : 4;  /**< [  7:  4](RO) This field is 0x4, indicating a 64 KB software-visible page. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_gicd_pidr4_s cn8; */
-    /* struct cavm_gicd_pidr4_s cn9; */
-    /* struct cavm_gicd_pidr4_s cn96xxp1; */
-    struct cavm_gicd_pidr4_cn96xxp3
+    struct cavm_gicd_pidr4_cn9
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_8_31         : 24;
         uint32_t cnt_4k                : 4;  /**< [  7:  4](RO) This field is 0x4, indicating a 64 KB software-visible page. */
-        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Marvell (Cavium). */
+        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Cavium. */
 #else /* Word 0 - Little Endian */
-        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Marvell (Cavium). */
+        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Cavium. */
         uint32_t cnt_4k                : 4;  /**< [  7:  4](RO) This field is 0x4, indicating a 64 KB software-visible page. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_gicd_pidr4_cn96xxp3 cn98xx; */
-    /* struct cavm_gicd_pidr4_cn96xxp3 cnf95xx; */
-    /* struct cavm_gicd_pidr4_cn96xxp3 f95mm; */
-    /* struct cavm_gicd_pidr4_cn96xxp3 loki; */
+    } cn9;
+    /* struct cavm_gicd_pidr4_cn9 cn96xxp1; */
+    /* struct cavm_gicd_pidr4_s cn96xxp3; */
+    /* struct cavm_gicd_pidr4_s cn98xx; */
+    /* struct cavm_gicd_pidr4_s cnf95xx; */
+    /* struct cavm_gicd_pidr4_s f95mm; */
+    /* struct cavm_gicd_pidr4_s loki; */
 };
 typedef union cavm_gicd_pidr4 cavm_gicd_pidr4_t;
 
@@ -5326,9 +5326,9 @@ union cavm_gicrx_pidr2
                                                                    0x4 = GICv4.
                                                                    0x5-0xF = Reserved. */
         uint32_t usesjepcode           : 1;  /**< [  3:  3](RO) JEDEC assigned. */
-        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
+        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
 #else /* Word 0 - Little Endian */
-        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
+        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
         uint32_t usesjepcode           : 1;  /**< [  3:  3](RO) JEDEC assigned. */
         uint32_t archrev               : 4;  /**< [  7:  4](RO) Architectural revision:
                                                                    0x1 = GICv1.
@@ -5340,9 +5340,7 @@ union cavm_gicrx_pidr2
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_gicrx_pidr2_s cn8; */
-    /* struct cavm_gicrx_pidr2_s cn9; */
-    /* struct cavm_gicrx_pidr2_s cn96xxp1; */
-    struct cavm_gicrx_pidr2_cn96xxp3
+    struct cavm_gicrx_pidr2_cn9
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_8_31         : 24;
@@ -5353,9 +5351,9 @@ union cavm_gicrx_pidr2
                                                                    0x4 = GICv4.
                                                                    0x5-0xF = Reserved. */
         uint32_t usesjepcode           : 1;  /**< [  3:  3](RO) JEDEC assigned. */
-        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
+        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
 #else /* Word 0 - Little Endian */
-        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
+        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
         uint32_t usesjepcode           : 1;  /**< [  3:  3](RO) JEDEC assigned. */
         uint32_t archrev               : 4;  /**< [  7:  4](RO) Architectural revision:
                                                                    0x1 = GICv1.
@@ -5365,11 +5363,13 @@ union cavm_gicrx_pidr2
                                                                    0x5-0xF = Reserved. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_gicrx_pidr2_cn96xxp3 cn98xx; */
-    /* struct cavm_gicrx_pidr2_cn96xxp3 cnf95xx; */
-    /* struct cavm_gicrx_pidr2_cn96xxp3 f95mm; */
-    /* struct cavm_gicrx_pidr2_cn96xxp3 loki; */
+    } cn9;
+    /* struct cavm_gicrx_pidr2_cn9 cn96xxp1; */
+    /* struct cavm_gicrx_pidr2_s cn96xxp3; */
+    /* struct cavm_gicrx_pidr2_s cn98xx; */
+    /* struct cavm_gicrx_pidr2_s cnf95xx; */
+    /* struct cavm_gicrx_pidr2_s f95mm; */
+    /* struct cavm_gicrx_pidr2_s loki; */
 };
 typedef union cavm_gicrx_pidr2 cavm_gicrx_pidr2_t;
 
@@ -8028,9 +8028,9 @@ union cavm_gits_pidr2
                                                                    0x4 = GICv4.
                                                                    0x5-0xF = Reserved. */
         uint32_t usesjepcode           : 1;  /**< [  3:  3](RO) JEDEC assigned. */
-        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
+        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
 #else /* Word 0 - Little Endian */
-        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
+        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
         uint32_t usesjepcode           : 1;  /**< [  3:  3](RO) JEDEC assigned. */
         uint32_t archrev               : 4;  /**< [  7:  4](RO) Architectural revision:
                                                                    0x1 = GICv1.
@@ -8042,9 +8042,7 @@ union cavm_gits_pidr2
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_gits_pidr2_s cn8; */
-    /* struct cavm_gits_pidr2_s cn9; */
-    /* struct cavm_gits_pidr2_s cn96xxp1; */
-    struct cavm_gits_pidr2_cn96xxp3
+    struct cavm_gits_pidr2_cn9
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_8_31         : 24;
@@ -8055,9 +8053,9 @@ union cavm_gits_pidr2
                                                                    0x4 = GICv4.
                                                                    0x5-0xF = Reserved. */
         uint32_t usesjepcode           : 1;  /**< [  3:  3](RO) JEDEC assigned. */
-        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
+        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
 #else /* Word 0 - Little Endian */
-        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Marvell (Cavium) code is 0x4C. */
+        uint32_t jepid                 : 3;  /**< [  2:  0](RO) JEP106 identification code \<6:4\>. Cavium code is 0x4C. */
         uint32_t usesjepcode           : 1;  /**< [  3:  3](RO) JEDEC assigned. */
         uint32_t archrev               : 4;  /**< [  7:  4](RO) Architectural revision:
                                                                    0x1 = GICv1.
@@ -8067,11 +8065,13 @@ union cavm_gits_pidr2
                                                                    0x5-0xF = Reserved. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_gits_pidr2_cn96xxp3 cn98xx; */
-    /* struct cavm_gits_pidr2_cn96xxp3 cnf95xx; */
-    /* struct cavm_gits_pidr2_cn96xxp3 f95mm; */
-    /* struct cavm_gits_pidr2_cn96xxp3 loki; */
+    } cn9;
+    /* struct cavm_gits_pidr2_cn9 cn96xxp1; */
+    /* struct cavm_gits_pidr2_s cn96xxp3; */
+    /* struct cavm_gits_pidr2_s cn98xx; */
+    /* struct cavm_gits_pidr2_s cnf95xx; */
+    /* struct cavm_gits_pidr2_s f95mm; */
+    /* struct cavm_gits_pidr2_s loki; */
 };
 typedef union cavm_gits_pidr2 cavm_gits_pidr2_t;
 
@@ -8142,32 +8142,32 @@ union cavm_gits_pidr4
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_8_31         : 24;
         uint32_t cnt_4k                : 4;  /**< [  7:  4](RO) 4 KB Count. This field is 0x4, indicating this is a 64 KB software-visible page. */
-        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Cavium. */
+        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Marvell (Cavium). */
 #else /* Word 0 - Little Endian */
-        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Cavium. */
+        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Marvell (Cavium). */
         uint32_t cnt_4k                : 4;  /**< [  7:  4](RO) 4 KB Count. This field is 0x4, indicating this is a 64 KB software-visible page. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_gits_pidr4_s cn8; */
-    /* struct cavm_gits_pidr4_s cn9; */
-    /* struct cavm_gits_pidr4_s cn96xxp1; */
-    struct cavm_gits_pidr4_cn96xxp3
+    struct cavm_gits_pidr4_cn9
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_8_31         : 24;
         uint32_t cnt_4k                : 4;  /**< [  7:  4](RO) 4 KB Count. This field is 0x4, indicating this is a 64 KB software-visible page. */
-        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Marvell (Cavium). */
+        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Cavium. */
 #else /* Word 0 - Little Endian */
-        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Marvell (Cavium). */
+        uint32_t continuation_code     : 4;  /**< [  3:  0](RO) JEP106 continuation code, least significant nibble. Indicates Cavium. */
         uint32_t cnt_4k                : 4;  /**< [  7:  4](RO) 4 KB Count. This field is 0x4, indicating this is a 64 KB software-visible page. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_gits_pidr4_cn96xxp3 cn98xx; */
-    /* struct cavm_gits_pidr4_cn96xxp3 cnf95xx; */
-    /* struct cavm_gits_pidr4_cn96xxp3 f95mm; */
-    /* struct cavm_gits_pidr4_cn96xxp3 loki; */
+    } cn9;
+    /* struct cavm_gits_pidr4_cn9 cn96xxp1; */
+    /* struct cavm_gits_pidr4_s cn96xxp3; */
+    /* struct cavm_gits_pidr4_s cn98xx; */
+    /* struct cavm_gits_pidr4_s cnf95xx; */
+    /* struct cavm_gits_pidr4_s f95mm; */
+    /* struct cavm_gits_pidr4_s loki; */
 };
 typedef union cavm_gits_pidr4 cavm_gits_pidr4_t;
 

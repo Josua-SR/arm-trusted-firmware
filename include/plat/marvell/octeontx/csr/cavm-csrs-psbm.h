@@ -85,6 +85,7 @@
 #define CAVM_PSBM_SYS_MAP_E_LMCX_CNF95XX(a) (0x00 | a>>1)
 #define CAVM_PSBM_SYS_MAP_E_LMCX_F95MM(a) (0x00 | a>>1)
 #define CAVM_PSBM_SYS_MAP_E_LMCX_LOKI(a) (0x00 | a>>1)
+#define CAVM_PSBM_SYS_MAP_E_RSVDX(a) (4 + (a))
 
 /**
  * Register (NCB32b) psbm_ap#_data#

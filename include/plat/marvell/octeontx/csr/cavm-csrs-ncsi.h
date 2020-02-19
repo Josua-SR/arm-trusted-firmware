@@ -367,7 +367,61 @@ union cavm_ncsi_cmd_sw_processx
                                                                  the MCP code is loaded. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_ncsi_cmd_sw_processx_s cn; */
+    /* struct cavm_ncsi_cmd_sw_processx_s cn9; */
+    /* struct cavm_ncsi_cmd_sw_processx_s cn96xxp1; */
+    struct cavm_ncsi_cmd_sw_processx_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t cmd                   : 64; /**< [ 63:  0](R/W) NCSI_CMD_SW_PROCESS(0) for NCSI commands 0 through 63 (0x3F).
+                                                                 NCSI_CMD_SW_PROCESS(1) for NCSI commands 64 (0x40) through 127 (0x7F).
+
+                                                                 Allows the MCP to choose to override the NCSI hardware handling of any of the
+                                                                 hardware not implemented commands by setting the appropriate bits.
+
+                                                                 If a bit is clear, receiving the corresponding command code is handled by NCSI
+                                                                 hardware. If NCSI hardware does not implement that command code (as defined by
+                                                                 NCSI Control Packet Type Enumeration) it will respond with:
+                                                                    * response_code = 0x3 =\> Command Unsupported.
+                                                                    * reason_code 0x7fff =\> Unknown / Unsupported Command Type.
+                                                                    * response type = command type.
+
+                                                                 If a bit is set the corresponding command code will be sent to the MCP and MCP
+                                                                 will generate the response.
+                                                                 All command codes which are not implemented by NCSI hardware can be handled by
+                                                                 MCP software; see "Command Interception".
+
+                                                                 Bits 0 through 7 should remain 0 as NCSI hardware must process these commands
+                                                                 which in turn control hardware channel and package state machines.
+
+                                                                 Resets to 0x0, which allows NCSI hardware to properly return unsupported until
+                                                                 the MCP code is loaded. */
+#else /* Word 0 - Little Endian */
+        uint64_t cmd                   : 64; /**< [ 63:  0](R/W) NCSI_CMD_SW_PROCESS(0) for NCSI commands 0 through 63 (0x3F).
+                                                                 NCSI_CMD_SW_PROCESS(1) for NCSI commands 64 (0x40) through 127 (0x7F).
+
+                                                                 Allows the MCP to choose to override the NCSI hardware handling of any of the
+                                                                 hardware not implemented commands by setting the appropriate bits.
+
+                                                                 If a bit is clear, receiving the corresponding command code is handled by NCSI
+                                                                 hardware. If NCSI hardware does not implement that command code (as defined by
+                                                                 NCSI Control Packet Type Enumeration) it will respond with:
+                                                                    * response_code = 0x3 =\> Command Unsupported.
+                                                                    * reason_code 0x7fff =\> Unknown / Unsupported Command Type.
+                                                                    * response type = command type.
+
+                                                                 If a bit is set the corresponding command code will be sent to the MCP and MCP
+                                                                 will generate the response.
+                                                                 All command codes which are not implemented by NCSI hardware can be handled by
+                                                                 MCP software; see "Command Interception".
+
+                                                                 Bits 0 through 7 should remain 0 as NCSI hardware must process these commands
+                                                                 which in turn control hardware channel and package state machines.
+
+                                                                 Resets to 0x0, which allows NCSI hardware to properly return unsupported until
+                                                                 the MCP code is loaded. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_ncsi_cmd_sw_processx_cn96xxp3 cn98xx; */
 };
 typedef union cavm_ncsi_cmd_sw_processx cavm_ncsi_cmd_sw_processx_t;
 
@@ -1948,7 +2002,24 @@ union cavm_ncsi_rx_frm_ctl
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_ncsi_rx_frm_ctl_s cn; */
+    /* struct cavm_ncsi_rx_frm_ctl_s cn8; */
+    /* struct cavm_ncsi_rx_frm_ctl_s cn9; */
+    /* struct cavm_ncsi_rx_frm_ctl_s cn96xxp1; */
+    struct cavm_ncsi_rx_frm_ctl_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_3_63         : 61;
+        uint64_t fcs                   : 1;  /**< [  2:  2](R/W) Append the Ethernet FCS on each pass through packet going to RMII. */
+        uint64_t pad                   : 1;  /**< [  1:  1](R/W) Append PAD bytes such that minimum-sized pass through packet is sent over RMII. */
+        uint64_t preamble              : 1;  /**< [  0:  0](R/W) Prepend the Ethernet preamble on each pass through transfer over RMII */
+#else /* Word 0 - Little Endian */
+        uint64_t preamble              : 1;  /**< [  0:  0](R/W) Prepend the Ethernet preamble on each pass through transfer over RMII */
+        uint64_t pad                   : 1;  /**< [  1:  1](R/W) Append PAD bytes such that minimum-sized pass through packet is sent over RMII. */
+        uint64_t fcs                   : 1;  /**< [  2:  2](R/W) Append the Ethernet FCS on each pass through packet going to RMII. */
+        uint64_t reserved_3_63         : 61;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_ncsi_rx_frm_ctl_cn96xxp3 cn98xx; */
 };
 typedef union cavm_ncsi_rx_frm_ctl cavm_ncsi_rx_frm_ctl_t;
 
@@ -2100,7 +2171,24 @@ union cavm_ncsi_rx_min_pkt
         uint64_t reserved_6_63         : 58;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_ncsi_rx_min_pkt_s cn; */
+    /* struct cavm_ncsi_rx_min_pkt_s cn8; */
+    /* struct cavm_ncsi_rx_min_pkt_s cn9; */
+    /* struct cavm_ncsi_rx_min_pkt_s cn96xxp1; */
+    struct cavm_ncsi_rx_min_pkt_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_6_63         : 58;
+        uint64_t min_size              : 6;  /**< [  5:  0](R/W) Minimum frame size in bytes before the FCS is applied for packets going to the RMII
+                                                                 interface and include Preamble/SFD. Padding is only appended when NCSI_RX_FRM_CTL[PAD] is set.
+                                                                 The reset value pads to 60 bytes. */
+#else /* Word 0 - Little Endian */
+        uint64_t min_size              : 6;  /**< [  5:  0](R/W) Minimum frame size in bytes before the FCS is applied for packets going to the RMII
+                                                                 interface and include Preamble/SFD. Padding is only appended when NCSI_RX_FRM_CTL[PAD] is set.
+                                                                 The reset value pads to 60 bytes. */
+        uint64_t reserved_6_63         : 58;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_ncsi_rx_min_pkt_cn96xxp3 cn98xx; */
 };
 typedef union cavm_ncsi_rx_min_pkt cavm_ncsi_rx_min_pkt_t;
 
@@ -2385,7 +2473,36 @@ union cavm_ncsi_secure_config
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_ncsi_secure_config_s cn; */
+    /* struct cavm_ncsi_secure_config_s cn8; */
+    /* struct cavm_ncsi_secure_config_s cn9; */
+    /* struct cavm_ncsi_secure_config_s cn96xxp1; */
+    struct cavm_ncsi_secure_config_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_2_63         : 62;
+        uint64_t ncsien                : 1;  /**< [  1:  1](SR/W) Master enable for the NCSI block. Clear this bit to activate an internal soft
+                                                                 reset. Soft reset will apply to all logic blocks except the registers, with the
+                                                                 exception of NCSI_CONFIG[PKG_ID] which is cleared. */
+        uint64_t ncsisecen             : 1;  /**< [  0:  0](SR/W) For BMC access using the OEM command, allow or deny secure access into CNXXXX.
+                                                                 Also see NCSI_TX_NCP_PERM()_TABLE_HI/NCSI_TX_NCP_PERM()_TABLE_LOW.
+                                                                 0 = OEM command address must pass the permission table filter before being forwarded to
+                                                                 the MRML. Access to NCSI_CPU2BMC_MSG and NCSI_BMC2CPU_MSG are always allowed.
+                                                                 1 = Bypass the permissions table and allow any secure or nonsecure register access
+                                                                 in the RSL address space. */
+#else /* Word 0 - Little Endian */
+        uint64_t ncsisecen             : 1;  /**< [  0:  0](SR/W) For BMC access using the OEM command, allow or deny secure access into CNXXXX.
+                                                                 Also see NCSI_TX_NCP_PERM()_TABLE_HI/NCSI_TX_NCP_PERM()_TABLE_LOW.
+                                                                 0 = OEM command address must pass the permission table filter before being forwarded to
+                                                                 the MRML. Access to NCSI_CPU2BMC_MSG and NCSI_BMC2CPU_MSG are always allowed.
+                                                                 1 = Bypass the permissions table and allow any secure or nonsecure register access
+                                                                 in the RSL address space. */
+        uint64_t ncsien                : 1;  /**< [  1:  1](SR/W) Master enable for the NCSI block. Clear this bit to activate an internal soft
+                                                                 reset. Soft reset will apply to all logic blocks except the registers, with the
+                                                                 exception of NCSI_CONFIG[PKG_ID] which is cleared. */
+        uint64_t reserved_2_63         : 62;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_ncsi_secure_config_cn96xxp3 cn98xx; */
 };
 typedef union cavm_ncsi_secure_config cavm_ncsi_secure_config_t;
 
