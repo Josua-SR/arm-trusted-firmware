@@ -475,11 +475,23 @@ static int spi_block_seek(io_entity_t *entity, int mode,
 	return result;
 }
 
+static inline void spi_update_addr_mode(int *addr_mode)
+{
+	if (cavm_is_model(OCTEONTX_CN8XXX)) {
+		int boot_method;
+
+		boot_method = CSR_READ(CAVM_GPIO_STRAP) & 0xF;
+		if (boot_method == CAVM_RST_BOOT_METHOD_E_SPI32)
+			*addr_mode = SPI_ADDRESSING_32BIT;
+	}
+}
+
 static int spi_block_read(io_entity_t *entity, uintptr_t buffer,
 			     size_t length, size_t *length_read)
 {
 	file_state_t *fp;
 	ssize_t ret;
+	int addr_mode = SPI_ADDRESSING_24BIT;
 
 	assert(entity != NULL);
 	assert(buffer != (uintptr_t)NULL);
@@ -487,10 +499,10 @@ static int spi_block_read(io_entity_t *entity, uintptr_t buffer,
 
 	fp = (file_state_t *)entity->info;
 
+	spi_update_addr_mode(&addr_mode);
 	ret = spi_nor_read((void *)buffer, length,
 			   fp->offset_address + fp->file_pos,
-			   SPI_ADDRESSING_24BIT, fp->spi_con,
-			   fp->cs);
+			   addr_mode, fp->spi_con, fp->cs);
 	if (ret < 0)
 		return ret;
 
