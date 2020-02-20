@@ -131,7 +131,8 @@
 	 * The following handles any synchronous exception that is not SMC.
 	 * Right now this only happens when EL0 ISR is returning.
 	 */
-	b	el3_exit_wfi
+	cmp	x30, #EC_WFE_WFI
+	b.eq	el3_exit_wfi
 
 
 	/* Synchronous exceptions other than the above are assumed to be EA */
