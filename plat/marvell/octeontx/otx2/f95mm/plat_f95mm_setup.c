@@ -241,14 +241,10 @@ void plat_add_mmio(void)
 
 	add_map_record(CAVM_CCS_BAR_E_CCS_PF_BAR0,
 			CAVM_CCS_BAR_E_CCS_PF_BAR0_SIZE, attr);
-	add_map_record(CAVM_MIO_BOOT_BAR_E_MIO_BOOT_PF_BAR0,
-			CAVM_MIO_BOOT_BAR_E_MIO_BOOT_PF_BAR0_SIZE, attr);
 	add_map_record(CAVM_MIO_EMM_BAR_E_MIO_EMM_PF_BAR0_CN9,
 			CAVM_MIO_EMM_BAR_E_MIO_EMM_PF_BAR0_CN9_SIZE, attr);
 	add_map_record(CAVM_MIO_EMM_BAR_E_MIO_EMM_PF_BAR4,
 			CAVM_MIO_EMM_BAR_E_MIO_EMM_PF_BAR4_SIZE, attr);
-	add_map_record(CAVM_FUS_BAR_E_FUS_PF_BAR0,
-			CAVM_FUS_BAR_E_FUS_PF_BAR0_SIZE, attr);
 	add_map_record(CAVM_FUSF_BAR_E_FUSF_PF_BAR0,
 			CAVM_FUSF_BAR_E_FUSF_PF_BAR0_SIZE, attr);
 
@@ -303,10 +299,6 @@ void plat_add_mmio(void)
 		add_map_record(CAVM_GSERR_BAR_E_GSERRX_PF_BAR0(i),
 			       CAVM_GSERR_BAR_E_GSERRX_PF_BAR0_SIZE, attr);
 
-	add_map_record(CAVM_DAP_BAR_E_DAP_PF_BAR0,
-			CAVM_DAP_BAR_E_DAP_PF_BAR0_SIZE, attr);
-	add_map_record(CAVM_DAP_BAR_E_DAP_PF_BAR2_CN9,
-			CAVM_DAP_BAR_E_DAP_PF_BAR2_CN9_SIZE, attr);
 	add_map_record(CAVM_GPIO_BAR_E_GPIO_PF_BAR0_CN9,
 			CAVM_GPIO_BAR_E_GPIO_PF_BAR0_CN9_SIZE, attr);
 	add_map_record(CAVM_GPIO_BAR_E_GPIO_PF_BAR4,
