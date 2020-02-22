@@ -181,6 +181,16 @@ void sh_fwdata_set_supported_link_modes(int cgx_id, int lmac_id)
 			fwdata->supported_link_modes);
 }
 
+void sh_fwdata_update_mac_addr(uint64_t mac, int pf_id)
+{
+	struct sh_fwdata *fwdata = (struct sh_fwdata *)get_sh_fwdata_base();
+
+	if (pf_id >= PF_MACNUM_MAX)
+		return;
+
+	fwdata->pf_macs[pf_id] = mac;
+}
+
 void sh_fwdata_update_phy_mod_type(int cgx_id, int lmac_id)
 {
 	struct cgx_lmac_fwdata_s *fwdata;

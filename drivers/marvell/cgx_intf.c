@@ -1691,6 +1691,7 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 		(request_id == CGX_CMD_GET_MKEX_SIZE) ||
 		(request_id == CGX_CMD_GET_MKEX_PROFILE) ||
 #endif
+		(request_id == CGX_CMD_SET_MAC_ADDR) ||
 		(request_id == CGX_CMD_GET_FWD_BASE) ||
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
 		(request_id == CGX_CMD_PRBS) ||
@@ -1746,6 +1747,10 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 				scratchx0.u);
 			break;
 
+		case CGX_CMD_SET_MAC_ADDR:
+			sh_fwdata_update_mac_addr(scratchx1.s.mac_args.addr,
+						  scratchx1.s.mac_args.pf_id);
+			break;
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
 		case CGX_CMD_PRBS:
 			do_prbs(scratchx1.s.prbs_args.qlm,
