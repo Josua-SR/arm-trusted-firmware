@@ -9,5 +9,6 @@
 #define __OCTEONTX_DRAM_H__
 
 uint64_t octeontx_dram_size();
+uint64_t memory_region_get_info(int index, uint64_t *start);
 
 #endif /* __OCTEONTX_DRAM_H__ */

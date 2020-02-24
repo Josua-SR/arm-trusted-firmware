@@ -97,6 +97,11 @@ uint64_t ccs_region_get_info(ccs_region_index_t index, uint64_t *start)
 	return reg_end - reg_start + 1;
 }
 
+uint64_t memory_region_get_info(int index, uint64_t *start)
+{
+	return ccs_region_get_info(index, start);
+}
+
 /*
  * This is workaround for errata NIX-31533
  */
@@ -160,6 +165,7 @@ void octeontx_security_setup(void)
 	union cavm_ccs_asc_regionx_end bdk_ccs_asc_end, atf_ccs_asc_end;
 	struct ccs_region *region = ccs_map;
 	uint64_t midr;
+	uint64_t start, end;
 
 	midr = read_midr();
 
@@ -243,6 +249,18 @@ void octeontx_security_setup(void)
 			region->secure ? "" : "non-",
 			CSR_READ(CAVM_CCS_ASC_REGIONX_ATTR(region->number)));
 
+		start = CSR_READ(CAVM_CCS_ASC_REGIONX_START(region->number));
+		end = CSR_READ(CAVM_CCS_ASC_REGIONX_END(region->number)) | 0xffffff;
+		if ((end - start)) {
+			if (region->number == SECURE_PRESERVE)
+				NOTICE("Secure Preserved Memory Region: %llx to %llx (%lldKB)\n",
+				       start, end,
+				       ((end - start + 1) / 1024));
+			if (region->number == NSECURE_PRESERVE)
+				NOTICE("Non-Secure Preserved Memory Region: %llx to %llx (%lldKB)\n",
+				       start, end,
+				       ((end - start + 1) / 1024));
+		}
 		region++;
 	}
 

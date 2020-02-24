@@ -13,6 +13,7 @@
 #include <string.h>
 #include <debug.h>
 #include <plat_scfg.h>
+#include <plat_board_cfg.h>
 #include <octeontx_dram.h>
 
 static inline uint32_t popcnt(uint64_t val)
@@ -37,6 +38,7 @@ uint64_t octeontx_dram_size()
 	uint64_t rank_size, memsize = 0;
 	int num_ranks, lmc;
 	union cavm_lmcx_config lmcx_config;
+	uint64_t addr = 0;
 
 	for (lmc = 0; lmc < MAX_LMC; lmc++) {
 		if (!plat_octeontx_scfg->scfg.is_lmc_enabled[lmc])
@@ -53,6 +55,9 @@ uint64_t octeontx_dram_size()
 		ERROR("DRAM size for ASIM/EMUL-platform not configured\n");
 		memsize = 2ull << 30; //2GB to align with BDK
 	}
+
+	memsize -= memory_region_get_info(SECURE_PRESERVE, &addr);
+	memsize -= memory_region_get_info(NSECURE_PRESERVE, &addr);
 
 	return memsize;
 }

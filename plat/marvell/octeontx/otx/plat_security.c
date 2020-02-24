@@ -64,6 +64,40 @@ struct l2c_region l2c_map [] = {
 };
 
 
+/* Returns start and size info of the region
+ * Assumes region definition used by BDK and ccs_map in ATF are in sync
+ */
+uint64_t l2c_region_get_info(l2c_region_index_t index, uint64_t *start)
+{
+	union cavm_l2c_asc_regionx_attr l2c_asc_attr;
+	uint64_t reg_start, reg_end;
+
+	if (index >= L2C_REGION_IDX_MAX)
+		return 0;
+
+	l2c_asc_attr.u = CSR_READ(CAVM_L2C_ASC_REGIONX_ATTR(index));
+	reg_start = CSR_READ(CAVM_L2C_ASC_REGIONX_START(index));
+	reg_end = CSR_READ(CAVM_L2C_ASC_REGIONX_END(index));
+
+	/* Verify if user hasnt configured yet or misconfigured */
+	if ((!l2c_asc_attr.s.s_en && !l2c_asc_attr.s.ns_en) ||
+	    reg_end < reg_start) {
+		return 0;
+	}
+
+	/* REGIONX_END always reports lower 24 bits as 0 */
+	reg_end |= 0xffffff;
+
+	/* Retrun start and size */
+	*start = reg_start;
+	return reg_end - reg_start + 1;
+}
+
+uint64_t memory_region_get_info(int index, uint64_t *start)
+{
+	return l2c_region_get_info(index, start);
+}
+
 /* Flush the L2 Cache */
 void l2c_flush(void)
 {
@@ -110,6 +144,7 @@ void octeontx_security_setup(void)
 	union cavm_l2c_asc_regionx_start bdk_l2c_asc_start, atf_l2c_asc_start;
 	union cavm_l2c_asc_regionx_end bdk_l2c_asc_end, atf_l2c_asc_end;
 	struct l2c_region *region = l2c_map;
+	uint64_t start, end;
 
 	while (region->number != LAST_L2C_REGION) {
 		l2c_asc_attr.u = CSR_READ(CAVM_L2C_ASC_REGIONX_ATTR(
@@ -186,6 +221,18 @@ void octeontx_security_setup(void)
 			region->secure ? "" : "non-",
 			CSR_READ(CAVM_L2C_ASC_REGIONX_ATTR(region->number)));
 
+		start = CSR_READ(CAVM_L2C_ASC_REGIONX_START(region->number));
+		end = CSR_READ(CAVM_L2C_ASC_REGIONX_END(region->number)) | 0xffffff;
+		if ((end - start)) {
+			if (region->number == SECURE_PRESERVE)
+				NOTICE("Secure Preserved Memory Region: %llx to %llx (%lldKB)\n",
+				       start, end,
+				       ((end - start + 1) / 1024));
+			if (region->number == NSECURE_PRESERVE)
+				NOTICE("Non-Secure Preserved Memory Region: %llx to %llx (%lldKB)\n",
+				       start, end,
+				       ((end - start + 1) / 1024));
+		}
 		region++;
 	}
 

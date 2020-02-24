@@ -10,6 +10,14 @@
 
 #include <octeontx_board_cfg.h>
 
+typedef enum l2c_region_index {
+	SECURE_NONPRESERVE,
+	NSECURE_NONPRESERVE,
+	SECURE_PRESERVE, /* used as ARM Trace Buffer */
+	NSECURE_PRESERVE,
+	L2C_REGION_IDX_MAX,
+} l2c_region_index_t;
+
 typedef struct plat_octeontx_board_cfg {
 	board_cfg_t bcfg;
 
