@@ -19,6 +19,7 @@
 #include <debug.h>
 #include <plat_board_cfg.h>
 
+#include "cavm-csrs-gpio.h"
 #include "cavm-csrs-mpi.h"
 #include "cavm-csrs-rst.h"
 
