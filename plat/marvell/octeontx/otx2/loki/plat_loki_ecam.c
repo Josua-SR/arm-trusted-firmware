@@ -7,6 +7,7 @@
 
 #include <platform_def.h>
 #include <platform_setup.h>
+#include <platform_irqs_def.h>
 #include <octeontx_common.h>
 
 #include <debug.h>
@@ -22,6 +23,7 @@
 #include <plat_otx2_configuration.h>
 #include <qlm/qlm.h>
 
+#include "cavm-csrs.h"
 #include "cavm-csrs-ecam.h"
 #include "cavm-csrs-pccpf.h"
 
@@ -151,6 +153,7 @@ static void init_cgx(uint64_t config_base, uint64_t config_size)
 static void init_bphy(uint64_t config_base, uint64_t config_size)
 {
 	struct pcie_config *pconfig = (struct pcie_config *)config_base;
+	uint64_t vector_ptr;
 	union cavm_pccpf_xxx_vsec_sctl vsec_sctl;
 	uint8_t bir = 0;
 	uint16_t tbl_sz = 0;
@@ -161,6 +164,7 @@ static void init_bphy(uint64_t config_base, uint64_t config_size)
 	vsec_sctl.u = octeontx_read32(config_base + CAVM_PCCPF_XXX_VSEC_SCTL);
 	vsec_sctl.cn9.msix_sec_en = 1;
 	vsec_sctl.cn9.msix_sec_phys = 1;
+	vsec_sctl.cn9.msix_phys = 1;
 	octeontx_write32(config_base + CAVM_PCCPF_XXX_VSEC_SCTL, vsec_sctl.u);
 
 	enable_msix(config_base, pconfig->cap_pointer, &tbl_sz, &bir);
@@ -169,6 +173,12 @@ static void init_bphy(uint64_t config_base, uint64_t config_size)
 		debug_plat_ecam("MSI-X vector base: %llx\n",
 				get_bar_val(pconfig, bir));
 	}
+
+	/* Setup MSIX Vector0 for non-secure world */
+	vector_ptr = CAVM_PSM_MSIX_VECX_ADDR(CAVM_PSM_INT_VEC_E_GPINTX(0));
+	octeontx_write64(vector_ptr, CAVM_GICD_SETSPI_NSR);
+	vector_ptr += 8;
+	octeontx_write64(vector_ptr, BPHY_PSM_IRQ(0));
 }
 
 /* used for any device which just needs MSIX enabled */

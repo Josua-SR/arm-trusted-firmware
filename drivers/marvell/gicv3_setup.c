@@ -93,6 +93,11 @@ static void initialize_interrupt_array(interrupt_prop_t *intr_array)
 
 	/* Configure BPHY PSM IRQs */
 	for (i = 0; i < BPHY_PSM_IRQS_NUMBER; i++) {
+		/* vector0 is reserved in loki */
+		if (!i && IS_OCTEONTX_PN(read_midr(), LOKIPARTNUM)) {
+			continue;
+		}
+
 		intr_array[idx].intr_num = BPHY_PSM_IRQ(i);
 		intr_array[idx].intr_pri = PLAT_IRQ_PRI;
 		intr_array[idx].intr_grp = INTR_TYPE_EL3;
