@@ -1412,7 +1412,8 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 	init_time = gser_clock_get_count(GSER_CLOCK_TIME);
 	autoneg_timeout = init_time + CGX_POLL_AN_COMPLETE_STATUS *
 			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
-	anpage_timeout = init_time + CGX_POLL_AN_PAGE_STATUS *
+	/* 80 ms timeout */
+	anpage_timeout = init_time + CGX_POLL_AN_RESTART_STATUS *
 			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
 
 	while (still_negotiating &&
@@ -2907,8 +2908,8 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 {
 	int qlm, gserx, lane, num_lanes;
 	uint64_t lane_mask;
-	uint64_t timeout_usec = 150000; /* 150ms */
-	uint64_t timeout;
+	uint64_t stabilization_timeout_usec = 10000; /* 10ms */
+	uint64_t stabilization_timeout;
 	uint64_t debounce_usec = 100000; /* 100ms */
 	uint64_t debounce_time;
 	int link_up = 1;
@@ -3050,8 +3051,10 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_FIFTYG_R) ||
 		(lmac->mode == CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R)) &&
 		(strncmp(plat_octeontx_bcfg->bcfg.board_model, "asim-", 5))) {
-		/* Wait up to 50ms for an error-free link */
-		timeout = gser_clock_get_count(GSER_CLOCK_TIME) + timeout_usec *
+
+		/* Allow link to stabilize before declaring the link down */
+		stabilization_timeout = gser_clock_get_count(GSER_CLOCK_TIME) +
+			stabilization_timeout_usec *
 			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
 
 		while (1) {
@@ -3089,7 +3092,13 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 			if (link_up)
 				break;
 
-			if (gser_clock_get_count(GSER_CLOCK_TIME) >= timeout) {
+			/* Verify if we are passed the link stabilization time */
+			if (gser_clock_get_count(GSER_CLOCK_TIME) >= stabilization_timeout) {
+				debug_cgx("%s: %d:%d Link error timeout\n",
+					__func__, cgx_id, lmac_id);
+				spux_status1.u = CSR_READ(
+							CAVM_CGXX_SPUX_STATUS1(
+							cgx_id, lmac_id));
 				debug_cgx("%s: %d:%d Link error timeout %lld\n",
 					__func__, cgx_id, lmac_id, timeout);
 				spux_status1.u = CSR_READ(

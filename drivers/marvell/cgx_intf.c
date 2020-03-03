@@ -317,7 +317,7 @@ static int cgx_link_bringup(int cgx_id, int lmac_id)
 	cgx_lmac_context_t *lmac_ctx;
 	cgx_lmac_timers_t *lmac_tmr;
 	link_state_t link;
-	int count = 0, count1 = 0;
+	int count = 0;
 
 	/* get the lmac type and based on lmac
 	 * type, initialize SGMII/XAUI link
@@ -532,19 +532,8 @@ retry_link:
 		}
 
 		/* Only check full link (Tx and Rx) is up after verifying Rx is up */
-		if (lmac_ctx->s.rx_link_up) {
-			if (cgx_xaui_get_link(cgx_id, lmac_id, &link, lmac_ctx, lmac_tmr) == -1) {
-				/* if link is not up, retry */
-				if (count1++ < 5) {
-					debug_cgx_intf("%s %d:%d Link down,\t"
-						"retrying link\n", __func__,
-						cgx_id, lmac_id);
-					/* clear the error when retrying */
-					cgx_set_error_type(cgx_id, lmac_id, 0);
-					goto retry_link;
-				}
-			}
-		}
+		if (lmac_ctx->s.rx_link_up)
+			cgx_xaui_get_link(cgx_id, lmac_id, &link, lmac_ctx, lmac_tmr);
 
 		if (link.s.link_up == 1) {	/* link is up */
 			if (cgx_get_error_type(cgx_id, lmac_id) &
@@ -2219,6 +2208,7 @@ static int cgx_poll_for_link_cb(int timer)
 			}
 		}
 	}
+
 	return 0;
 }
 

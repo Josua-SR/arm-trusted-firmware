@@ -53,7 +53,6 @@
 /* TIMEOUT for different usecases */
 #define CGX_POLL_AN_STATUS		10000 /* 10 ms */
 #define CGX_POLL_AN_COMPLETE_STATUS	500000 /* 500 ms */
-#define CGX_POLL_AN_PAGE_STATUS		300000	/* 300 ms */
 #define CGX_POLL_AN_RESTART_STATUS	80000	/* 80 ms */
 #define CGX_POLL_TRAINING_STATUS	600000	/* 500 ms */
 #define GSERN_LANEX_TX_RST_SM_TIMEOUT   10000 /* 10 ms */
