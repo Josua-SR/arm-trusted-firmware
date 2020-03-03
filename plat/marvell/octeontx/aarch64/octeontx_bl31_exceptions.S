@@ -197,7 +197,6 @@ func el3_invoke_elx_kernel_callback
 	 * X0 holds the kernel callback
 	 * X1 holds spsr_el3
 	 * X2 holds scr_el3
-	 * X3 holds ELx mode
 	 */
 
 	/*
@@ -205,28 +204,12 @@ func el3_invoke_elx_kernel_callback
 	 * nop
 	 */
 
-	msr	S3_5_C13_C0_1, x3			/* contextidr_el12 */
 	msr scr_el3, x2
 	msr spsr_el3, x1
 	msr elr_el3, x0
 
 	msr spsel, #1
 	nop
-
-	ldp     x0, x1, [sp, #CTX_EL3STATE_OFFSET + CTX_SPSR_EL3]
-	/*
-	 * Load saved EL3 sysregs into kernel's ELR_ELx and SPSR_ELx to simulate
-	 * an exception return.
-	 * NOTE: H/W register aliasing for VHE will only happen in EL2 context,
-	 * not in EL3, will need to explicitly specify here the correct
-	 * ELx sysregs.
-	 */
-	/*
-	msr	elr_el2, x1
-	msr	spsr_el2, x0
-	*/
-	msr	S3_5_C4_C0_1, x1			/* elr_el12 */
-	msr	S3_5_C4_C0_0, x0			/* spsr_el12 */
 
 	ldp	x0, x1, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X0]
 	ldp	x2, x3, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X2]
