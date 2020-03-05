@@ -2508,9 +2508,8 @@ static void cgx_check_for_presence_of_phy(int cgx_id, int lmac_id)
 		 * I/O module.
 		 */
 		switch (lmac->mode_idx) {
-		case QLM_MODE_SGMII:
 		case QLM_MODE_QSGMII:
-			/* These QLM modes require a PHY.
+			/* This QLM mode require a PHY.
 			 * Keep the lmac->phy_present flag at 1 so that the PHY
 			 * driver will run and report errors (because the PHY is
 			 * missing).
