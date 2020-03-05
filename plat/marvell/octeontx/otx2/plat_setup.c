@@ -304,6 +304,9 @@ void plat_octeontx_cpu_setup(void)
 	 */
 	set_bit(cvmctl_el1, 61);
 
+	/* Errata AP-38511 : Disable WFE */
+	set_bit(cvmctl_el1, 34);
+
 	/*
 	 * Set cvm_ctl_el1[5] to workaround debug state execution in
 	 * incorrect EL
