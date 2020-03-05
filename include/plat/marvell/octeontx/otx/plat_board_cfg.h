@@ -9,6 +9,7 @@
 #define __PLAT_BOARD_CFG_H__
 
 #include <octeontx_board_cfg.h>
+#include <platform_scfg.h>
 
 typedef enum l2c_region_index {
 	SECURE_NONPRESERVE,

@@ -11,6 +11,15 @@
 #define FALSE 0
 #define TRUE 1
 
+#define STREAM_DMN_SHIFT 16
+#define STREAM_BUS_SHIFT 8
+#define STREAM_DEV_SHIFT 3
+/* extract domain/bus/dev from streamid */
+#define STREAM_DMN_IDX(streamid) (((streamid) >> STREAM_DMN_SHIFT) & 0x3f)
+#define STREAM_BUS_IDX(streamid) (((streamid) >> STREAM_BUS_SHIFT) & 0xff)
+#define STREAM_DEV_IDX(streamid) (((streamid) >> STREAM_DEV_SHIFT) & 0x1f)
+#define STREAM_RSL_IDX(streamid) (((streamid) & 0xff))
+
 #define OCTEONTX_ECAM_MAX_BUS	256
 #define OCTEONTX_ECAM_MAX_DEV	32
 #define OCTEONTX_ECAM_MAX_FUNC	256
@@ -251,4 +260,6 @@ int enable_msix(uint64_t config_base, uint8_t cap_pointer, uint16_t *table_size,
 		uint8_t *bir);
 void octeontx_pci_init(void);
 
+/* This API must be provided by each family */
+void octeontx_init_iobn(uint64_t config_base, uint64_t config_size);
 #endif /* __OCTEONTX_ECAM_H__ */

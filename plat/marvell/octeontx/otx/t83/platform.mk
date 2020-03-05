@@ -22,6 +22,7 @@ BL2_SOURCES		+=	plat/marvell/octeontx/otx/t83/plat_t83_ecam.c	\
 				plat/marvell/octeontx/otx/aarch64/plat_helpers.S		\
 				plat/marvell/octeontx/otx/plat_board_cfg.c			\
 				plat/marvell/octeontx/otx/plat_scfg.c				\
+				plat/marvell/octeontx/otx/plat_otx_iobn.c			\
 
 BL31_SOURCES		+=	plat/marvell/octeontx/otx/aarch64/plat_octeontx_common.S	\
 				plat/marvell/octeontx/otx/aarch64/plat_helpers.S	\

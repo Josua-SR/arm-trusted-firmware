@@ -60,6 +60,7 @@ BL2_SOURCES		+=	plat/marvell/octeontx/otx2/f95/plat_f95_ecam.c		\
 				plat/marvell/octeontx/otx2/aarch64/plat_helpers.S		\
 				plat/marvell/octeontx/otx2/plat_board_cfg.c			\
 				plat/marvell/octeontx/otx2/plat_scfg.c				\
+				plat/marvell/octeontx/otx2/plat_otx2_iobn.c			\
 
 BL31_LIBS               +=      lib/libphy/libphy_88x5113.a     \
 
