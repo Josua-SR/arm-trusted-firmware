@@ -233,6 +233,6 @@ int gsern_eye_capture(int qlm, int lane, int show_data, gser_qlm_eye_t *eye_data
  * @param lane	  Which lane
  * @param enable_tx True to enable transmitter, false to disable
  */
-void qlm_tx_control_gsern(int qlm, int lane, bool enable_tx);
+int qlm_tx_control_gsern(int qlm, int lane, int enable_tx);
 
 #endif /* _QLM_GSERN_H_ */

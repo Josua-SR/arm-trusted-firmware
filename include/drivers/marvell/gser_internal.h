@@ -93,6 +93,7 @@
 #define gser_clock_get_rate(...)	GTI_RATE
 #define gser_extracts			octeontx_bit_extract
 #define gser_extract			octeontx_bit_extract
+#define gser_insert			octeontx_bit_insert
 #define qlm_eye_t			gser_qlm_eye_t
 #define gser_build_mask			octeontx_build_mask
 #define gser_be16_to_cpu		cavm_be16_to_cpu

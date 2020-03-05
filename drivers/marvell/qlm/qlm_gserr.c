@@ -15,19 +15,42 @@
 #include <qlm/qlm_gserr.h>
 
 /**
+ * Define to enable or disable lanes 2-3. Used to keep differences between
+ * GSERR, GSERC, and GSERJ minimal
+ */
+#define QUAD_LANE 1
+
+/**
  * This define controls whether VCO_DOSC_TEMP_SKEW is set in GSERR, enabling the
  * correction of calibration based on temperature settings. This improves the
  * temperature range the GSERR SERDES operate over.
  */
 #define GSER_GSERR_ENABLE_DOSC_TEMP_SKEW 1
 
+/**
+ * DOSC skew threshold. The default of 10% is way too large. Encoded at percent
+ * times 10. 8 represents 0.8%
+ */
+#define GSER_GSERR_DOSC_SKEW_THRESHOLD 8 /* 0.8% */
+
 static cavm_gserrx_common_phy_ctrl_bcfg_t qlm_gserr_get_clock_mode(int module);
 static cavm_gserrx_lanex_control_bcfg_t qlm_gserr_get_lane_mode(int module, int lane);
 static int qlm_gserr_change_lane_rate(int module, int lane);
 static int qlm_gserr_change_phy_rate(int module);
 
+typedef enum
+{
+	LANE_STATE_TX_OFF,
+	LANE_STATE_TX_ON,
+	LANE_STATE_AN,
+	LANE_STATE_TRAINING,
+	LANE_STATE_CGX,
+} lane_state_t;
+
 /* Indexed by QLM number and lane */
+static int num_gserr = 0;
 static uint64_t prbs_errors[5][4];
+static lane_state_t lane_state[5][4];
 
 /**
  * Function to return the number of lanes in the SERDES group
@@ -466,6 +489,7 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 				c.s.ctrl_src_ovr_en = 1;
 				c.s.ctrl_src_ovr_val = ctrl_src_ovr_val);
 			break;
+#if QUAD_LANE
 		case 2:
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
 				c.s.ctrl_src_ovr_en = 1;
@@ -476,6 +500,7 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 				c.s.ctrl_src_ovr_en = 1;
 				c.s.ctrl_src_ovr_val = ctrl_src_ovr_val);
 			break;
+#endif
 	}
 
 	/* 5. Configure the clocks for the Transmit FIFO and Receiver gearbox clocks.
@@ -509,6 +534,7 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CLK_RXB(module), clk_rxb.u);
 			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CLK_RXF(module), clk_rxf.u);
 			break;
+#if QUAD_LANE
 		case 2:
 			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CLK_TXB(module), clk_txb.u);
 			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CLK_TXF(module), clk_txf.u);
@@ -521,6 +547,7 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CLK_RXB(module), clk_rxb.u);
 			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CLK_RXF(module), clk_rxf.u);
 			break;
+#endif
 	}
 
 	/* 6. Enable the clocks for the Transmit FIFO and Receiver gearbox clocks.
@@ -548,6 +575,7 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CLK_TXF(module), clk_txf.u);
 			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CLK_RXB(module), clk_rxb.u);
 			break;
+#if QUAD_LANE
 		case 2:
 			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CLK_TXB(module), clk_txb.u);
 			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CLK_TXF(module), clk_txf.u);
@@ -558,6 +586,7 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CLK_TXF(module), clk_txf.u);
 			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CLK_RXB(module), clk_rxb.u);
 			break;
+#endif
 	}
 
 	/* 7. Wait 1 microsecond for the clocks to settle. */
@@ -582,6 +611,7 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CG_CTRL(module),
 				c.s.clk_rx = 1);
 			break;
+#if QUAD_LANE
 		case 2:
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CG_CTRL(module),
 				c.s.clk_rx = 1);
@@ -590,6 +620,7 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CG_CTRL(module),
 				c.s.clk_rx = 1);
 			break;
+#endif
 	}
 
 	/* 10. Wait 1 microsecond for the clocks to settle. */
@@ -655,6 +686,7 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD(module), GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD_RXDP_SW_RESET, ==, 0, 10000))
 				gser_error("GSERR%d.%d: Wait for GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD[rxdp_sw_reset]=0 timeout\n", module, lane);
 			break;
+#if QUAD_LANE
 		case 2:
 			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD(module), GSERRX_PHY0_TOP_RESET_CTRL_LN2_RSVD_RXDP_SW_RESET, ==, 0, 10000))
 				gser_error("GSERR%d.%d: Wait for GSERRX_PHY0_TOP_RESET_CTRL_LN2_RSVD[rxdp_sw_reset]=0 timeout\n", module, lane);
@@ -663,6 +695,7 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD(module), GSERRX_PHY0_TOP_RESET_CTRL_LN3_RSVD_RXDP_SW_RESET, ==, 0, 10000))
 				gser_error("GSERR%d.%d: Wait for GSERRX_PHY0_TOP_RESET_CTRL_LN3_RSVD[rxdp_sw_reset]=0 timeout\n", module, lane);
 			break;
+#endif
 	}
 
 	/*  Step 2. For each GSERR lane configured for NED loopback disable the Rx
@@ -703,6 +736,7 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD(module),
 				c.s.rxdp_sw_reset = 0);
 			break;
+#if QUAD_LANE
 		case 2:
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN2_RSVD(module),
 				c.s.rxdp_sw_reset = 1);
@@ -715,6 +749,7 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN3_RSVD(module),
 				c.s.rxdp_sw_reset = 0);
 			break;
+#endif
 	}
 	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_DPL_RXDP_CTRL1(module, lane),
 		c.s.rx_fifo_en = 1);
@@ -933,7 +968,7 @@ static unsigned int gray2binary(unsigned int num)
  * @param show_rx  Display RX parameters
  */
 /*
- * Modified in qlm-gserr.patch applied by gsern-update script in SDK
+ * Modified in qlm-gserr.patch applied by gser-update script in SDK
  */
 //void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_rx)
 //{
@@ -991,6 +1026,7 @@ void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 				mbf = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN1_RXLEQ_EQ_MBF_O_READ_VAL_3_0_RSVD(qlm));
 				mbg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN1_RXLEQ_EQ_MBG_O_READ_VAL_3_0_RSVD(qlm));
 				break;
+#if QUAD_LANE
 			case 2:
 				att = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN2_RXLEQ_PLE_ATT_O_READ_VAL_2_0_RSVD(qlm));
 				apg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN2_RXLEQ_GN_APG_O_READ_VAL_2_0_RSVD(qlm));
@@ -1007,6 +1043,7 @@ void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 				mbf = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN3_RXLEQ_EQ_MBF_O_READ_VAL_3_0_RSVD(qlm));
 				mbg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN3_RXLEQ_EQ_MBG_O_READ_VAL_3_0_RSVD(qlm));
 				break;
+#endif
 		}
 		/* These values are encoded as gray codes https://en.wikipedia.org/wiki/Gray_code */
 		att = gray2binary(att);
@@ -1358,6 +1395,390 @@ int qlm_gserr_eye_capture(int qlm, int lane, int show_data, qlm_eye_t *eye_data)
 }
 
 /**
+ * Called to turn on or off the special clock settings need for AN
+ *
+ * @param node   Which node to use
+ * @param module Which serdes module to use
+ * @param lane   Which lane to use
+ * @param use_an True if AN clocks should be active
+ */
+static void qlm_gserr_use_an_clocks(int module, int lane, bool use_an)
+{
+	GSER_TRACE(QLM, "GSERR%d.%d: AN clocks are %s\n", module, lane, use_an ? "on" : "off");
+	/* Override clocks for lanes that need AN */
+	switch (lane)
+	{
+		case 0:
+			/* Set clock mux overrides and divider values appropriately for 20bit
+			   clock @1.25Gbps (see below) */
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN0_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
+				c.s.ctrl_src_ovr_val = 1;
+				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0;
+				c.s.ctrl_div_ovr_val = 1;
+				c.s.ctrl_div_ovr_en = (use_an) ? 1 : 0);
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN0_CLK_TXB(module),
+				c.s.ctrl_src_ovr_val = 2;
+				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0);
+			break;
+		case 1:
+			/* Set clock mux overrides and divider values appropriately for 20bit
+			   clock @1.25Gbps (see below) */
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
+				c.s.ctrl_src_ovr_val = 1;
+				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0;
+				c.s.ctrl_div_ovr_val = 1;
+				c.s.ctrl_div_ovr_en = (use_an) ? 1 : 0);
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CLK_TXB(module),
+				c.s.ctrl_src_ovr_val = 2;
+				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0);
+			break;
+		case 2:
+			/* Set clock mux overrides and divider values appropriately for 20bit
+			   clock @1.25Gbps (see below) */
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
+				c.s.ctrl_src_ovr_val = 1;
+				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0;
+				c.s.ctrl_div_ovr_val = 1;
+				c.s.ctrl_div_ovr_en = (use_an) ? 1 : 0);
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CLK_TXB(module),
+				c.s.ctrl_src_ovr_val = 2;
+				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0);
+			break;
+		case 3:
+			/* Set clock mux overrides and divider values appropriately for 20bit
+			   clock @1.25Gbps (see below) */
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
+				c.s.ctrl_src_ovr_val = 1;
+				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0;
+				c.s.ctrl_div_ovr_val = 1;
+				c.s.ctrl_div_ovr_en = (use_an) ? 1 : 0);
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CLK_TXB(module),
+				c.s.ctrl_src_ovr_val = 2;
+				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0);
+			break;
+	}
+	gser_wait_usec(1000); /* Needed for some unknown reason */
+}
+
+/**
+ * Send the AN/training handshake to the serdes firmware
+ *
+ * @param node   Which node to use
+ * @param module Which serdes module to use
+ * @param lane   Which lane to use
+ *
+ * @return Zero on success, negative on failure
+ */
+static int firmware_handshake(int module, int lane)
+{
+	/* Check that the AN handshake is supported */
+	GSER_CSR_INIT(cfg6, CAVM_GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane));
+	if ((cfg6.s.data & (1 << 3)) == 0)
+	{
+		gser_error("GSERR%d.%d: Firmware doesn't report AN feature\n", module, lane);
+		return -1;
+	}
+	if (cfg6.s.data & (1 << 4))
+	{
+		gser_error("GSERR%d.%d: Firmware has AN start pending\n", module, lane);
+		return -1;
+	}
+
+	GSER_TRACE(QLM, "GSERR%d.%d: Handshake\n", module, lane);
+	gser_wait_usec(1000); /* Needed for some unknown reason */
+	/* Set handshake bit lane_feature.spare_cfg6[4] = 1 (make sure to
+	   read/modify/write register to avoid overwriting the enable bit). This
+	   will start AN running. FW will read bit and set it back to 0, when
+	   it's started AN */
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane),
+		c.s.data |= 1 << 4);
+	/* Make sure the firmware ACKed the AN start */
+	do
+	{
+		gser_wait_usec(100);
+		cfg6.u = GSER_CSR_READ(CAVM_GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane));
+	} while (cfg6.s.data & (1 << 4));
+	gser_wait_usec(1000); /* Needed for some unknown reason */
+	return 0;
+}
+
+/**
+ * After training completes, it is necessary to reset and change the mode of the
+ * RX fifo. This function does this.
+ *
+ * @param node   Which node to use
+ * @param module Which serdes module to use
+ * @param lane   Which lane to use
+ */
+static void qlm_gserr_training_fifo(int module, int lane)
+{
+	cavm_gserrx_phy0_top_clock_ln0_clk_rxb_t clk_rxb = {.u = 0};
+	clk_rxb.s.ctrl_src_ovr_val = 1;
+	switch (lane)
+	{
+		case 0:
+			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN0_CLK_RXB(module), clk_rxb.u);
+			clk_rxb.s.ctrl_src_ovr_en = 1;
+			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN0_CLK_RXB(module), clk_rxb.u);
+			break;
+		case 1:
+			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CLK_RXB(module), clk_rxb.u);
+			clk_rxb.s.ctrl_src_ovr_en = 1;
+			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CLK_RXB(module), clk_rxb.u);
+			break;
+#if QUAD_LANE
+		case 2:
+			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CLK_RXB(module), clk_rxb.u);
+			clk_rxb.s.ctrl_src_ovr_en = 1;
+			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CLK_RXB(module), clk_rxb.u);
+			break;
+		case 3:
+			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CLK_RXB(module), clk_rxb.u);
+			clk_rxb.s.ctrl_src_ovr_en = 1;
+			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CLK_RXB(module), clk_rxb.u);
+			break;
+#endif
+	}
+	gser_wait_usec(1);
+	switch (lane)
+	{
+		case 0:
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN0_RSVD(module), GSERRX_PHY0_TOP_RESET_CTRL_LN0_RSVD_RXDP_SW_RESET, ==, 0, 10000))
+				gser_error("GSERR%d.%d: Wait for GSERRX_PHY0_TOP_RESET_CTRL_LN0_RSVD[rxdp_sw_reset]=0 timeout\n", module, lane);
+			break;
+		case 1:
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD(module), GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD_RXDP_SW_RESET, ==, 0, 10000))
+				gser_error("GSERR%d.%d: Wait for GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD[rxdp_sw_reset]=0 timeout\n", module, lane);
+			break;
+#if QUAD_LANE
+		case 2:
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD(module), GSERRX_PHY0_TOP_RESET_CTRL_LN2_RSVD_RXDP_SW_RESET, ==, 0, 10000))
+				gser_error("GSERR%d.%d: Wait for GSERRX_PHY0_TOP_RESET_CTRL_LN2_RSVD[rxdp_sw_reset]=0 timeout\n", module, lane);
+			break;
+		case 3:
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD(module), GSERRX_PHY0_TOP_RESET_CTRL_LN3_RSVD_RXDP_SW_RESET, ==, 0, 10000))
+				gser_error("GSERR%d.%d: Wait for GSERRX_PHY0_TOP_RESET_CTRL_LN3_RSVD[rxdp_sw_reset]=0 timeout\n", module, lane);
+			break;
+#endif
+	}
+
+	qlm_state_lane_t state = qlm_gserr_get_state(module, lane);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_RX_GEARBOX_CTRL0_RSVD(module, lane),
+		c.s.mode = (state.s.baud_mhz == 10312) ? 7 : 1; /* 7=10G, 1=25G */
+		c.s.select = 1);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_DPL_RXDP_CTRL1(module, lane),
+		c.s.rx_fifo_en = 0);
+	switch (lane)
+	{
+		case 0:
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN0_RSVD(module),
+				c.s.rxdp_sw_reset = 1);
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN0_RSVD(module),
+				c.s.rxdp_sw_reset = 0);
+			break;
+		case 1:
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD(module),
+				c.s.rxdp_sw_reset = 1);
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD(module),
+				c.s.rxdp_sw_reset = 0);
+			break;
+#if QUAD_LANE
+		case 2:
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN2_RSVD(module),
+				c.s.rxdp_sw_reset = 1);
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN2_RSVD(module),
+				c.s.rxdp_sw_reset = 0);
+			break;
+		case 3:
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN3_RSVD(module),
+				c.s.rxdp_sw_reset = 1);
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN3_RSVD(module),
+				c.s.rxdp_sw_reset = 0);
+			break;
+#endif
+	}
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_DPL_RXDP_CTRL1(module, lane),
+		c.s.rx_fifo_en = 1);
+}
+
+/**
+ * Show the current state of a serdes lane
+ *
+ * @param node   Which node to use
+ * @param module Which serdes module to use
+ * @param lane   Which lane to use
+ */
+static void show_lane_state(int module, int lane)
+{
+/*
+ * Added in qlm-gserr.patch applied by gser-update script in SDK
+ * Suppress unused variable warning when debug prints are disabled.
+ */
+#ifdef DEBUG_ATF_GSER
+	const char *str = "UNKNOWN";
+	switch (lane_state[module][lane])
+	{
+		case LANE_STATE_TX_OFF:
+			str = "Off";
+			break;
+		case LANE_STATE_TX_ON:
+			str = "On";
+			break;
+		case LANE_STATE_AN:
+			str = "AN";
+			break;
+		case LANE_STATE_TRAINING:
+			str = "Training";
+			break;
+		case LANE_STATE_CGX:
+			str = "CGX";
+			break;
+	}
+	GSER_TRACE(QLM, "GSERR%d.%d: Lane: %s\n", module, lane, str);
+/*
+ * Added in qlm-gserr.patch applied by gser-update script in SDK
+ */
+#endif
+}
+
+/**
+ * Update the state of a serdes lane based on changes in AN, training, and CGX
+ *
+ * @param node   Which node to use
+ * @param module Which serdes module to use
+ * @param lane   Which lane to use
+ */
+static void update_lane_state(int module, int lane)
+{
+	GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+	GSER_CSR_INIT(bsts, CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane));
+	GSER_CSR_INIT(status, CAVM_GSERRX_LNX_LT_TX_FSM_STATUS(module, lane));
+	bool need_an = (bcfg.s.ln_an_cfg != 0);
+	bool rx_signal = (bsts.s.ln_stat_los == 0);
+
+	switch (lane_state[module][lane])
+	{
+		case LANE_STATE_TX_OFF:
+			/* SERDES are off, nothing to do */
+			return;
+		case LANE_STATE_TX_ON:
+			/* See if we need to start AN */
+			if (need_an)
+			{
+				if (bcfg.s.ln_an_cfg == 2)
+				{
+					/* Start AN */
+					GSER_TRACE(QLM, "GSERR%d.%d: Starting AN\n", module, lane);
+					lane_state[module][lane] = LANE_STATE_AN;
+					qlm_gserr_use_an_clocks(module, lane, true);
+					firmware_handshake(module, lane);
+				}
+				else
+				{
+					GSER_TRACE(QLM, "GSERR%d.%d: Lane is slave during AN\n", module, lane);
+					lane_state[module][lane] = LANE_STATE_TRAINING;
+					qlm_gserr_use_an_clocks(module, lane, false);
+				}
+			}
+			else
+			{
+				if (rx_signal)
+				{
+					GSER_TRACE(QLM, "GSERR%d.%d: RX signal detected\n", module, lane);
+					lane_state[module][lane] = LANE_STATE_CGX;
+				}
+			}
+			return;
+		case LANE_STATE_AN:
+		{
+			if (bsts.s.ln_an_stat_resolved)
+			{
+				GSER_TRACE(QLM, "GSERR%d.%d: AN resolved %d, start training\n", module, lane, bsts.s.ln_an_link_sel);
+				lane_state[module][lane] = LANE_STATE_TRAINING;
+				qlm_gserr_use_an_clocks(module, lane, false);
+				firmware_handshake(module, lane);
+			}
+			return;
+		}
+		case LANE_STATE_TRAINING:
+		{
+			/* See if training is complete */
+			if (bsts.s.ln_lt_sigdet)
+			{
+				lane_state[module][lane] = LANE_STATE_CGX;
+				qlm_gserr_training_fifo(module, lane);
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_link_stat = bsts.s.ln_an_link_sel);
+				gser_wait_usec(1000); /* Needed for some unknown reason */
+				GSER_TRACE(QLM, "GSERR%d.%d: Training finished\n", module, lane);
+			}
+			else if (status.s.training_fail || !status.s.training)
+			{
+				GSER_TRACE(QLM, "GSERR%d.%d: Training failed, restarting AN\n", module, lane);
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_link_stat = 0);
+				lane_state[module][lane] = LANE_STATE_TX_ON;
+			}
+			else
+			{
+				//GSER_TRACE(QLM, "GSERR%d.%d: Training running\n", module, lane);
+			}
+			return;
+		}
+		case LANE_STATE_CGX:
+		{
+			/* CGX should be ready to link up */
+			if (need_an && !rx_signal)
+			{
+				GSER_TRACE(QLM, "GSERR%d.%d: Loss of signal, restart\n", module, lane);
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_link_stat = 0);
+				lane_state[module][lane] = LANE_STATE_TX_ON;
+			}
+			return;
+		}
+	}
+}
+
+/**
+ * Update the state of all serdes lanes
+ *
+ * @param node   Which node to use
+ */
+static void update_all_lane_state()
+{
+	if (num_gserr == 0)
+	{
+		if (gser_is_model(OCTEONTX_CN96XX))
+			num_gserr = 3;
+		else if (gser_is_model(OCTEONTX_CNF95XX))
+			num_gserr = 3;
+		else if (gser_is_model(OCTEONTX_LOKI))
+			num_gserr = 1;
+		else if (gser_is_model(OCTEONTX_F95MM))
+			num_gserr = 1;
+		else if (gser_is_model(OCTEONTX_CN98XX))
+			num_gserr = 5;
+		else
+		{
+			gser_error("GSERR: Unrecognized chip\n");
+			return;
+		}
+	}
+
+	/* Loop twice in case a later lane is connected to an early lane */
+	for (int count = 0; count < 2; count++)
+	{
+		for (int module = 0; module < num_gserr; module++)
+		{
+			int num_lanes = get_num_lanes(module);
+			for (int lane = 0; lane < num_lanes; lane++)
+				update_lane_state(module, lane);
+		}
+	}
+}
+
+/**
  * Manually turn on or off the SERDES transmitter
  *
  * @param node	  Node to use in numa setup
@@ -1365,12 +1786,105 @@ int qlm_gserr_eye_capture(int qlm, int lane, int show_data, qlm_eye_t *eye_data)
  * @param lane	  Which lane
  * @param enable_tx True to enable transmitter, false to disable
  */
-void qlm_gserr_tx_control(int qlm, int lane, bool enable_tx)
+int qlm_gserr_tx_control(int qlm, int lane, int enable_tx)
 {
-	GSER_TRACE(QLM, "GSERR%d.%d: %s TX\n", qlm, lane, (enable_tx) ? "Enable" : "Disable");
 	int en = (enable_tx) ? 1 : 0;
 	GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(qlm, lane),
 		c.s.ln_ctrl_tx_en = en);
+	lane_state[qlm][lane] = en ? LANE_STATE_TX_ON : LANE_STATE_TX_OFF;
+	update_all_lane_state();
+	show_lane_state(qlm, lane);
+	return 0;
+}
+
+/**
+ * Called when networking needs to start or restart AN. This function may be
+ * called multiple times before AN is finished.
+ *
+ * @param node   Node to setup
+ * @param module QLM/DLM to setup
+ * @param lane   Lane to setup
+ * @param unused Unused argument. Present so a number of QLM functions have the same signature
+ *			   for easy calling in the network driver
+ *
+ * @return Zero on success, negative on failure. Network driver shouldn't continue with
+ *		 AN until this returns 0
+ */
+int qlm_gserr_start_an(int module, int lane, int unused)
+{
+	update_all_lane_state();
+	show_lane_state(module, lane);
+	switch (lane_state[module][lane])
+	{
+		case LANE_STATE_TX_OFF:
+		case LANE_STATE_TX_ON:
+			return -1;
+		case LANE_STATE_AN:
+		case LANE_STATE_TRAINING:
+		case LANE_STATE_CGX:
+			return 0;
+	}
+	return -1;
+}
+
+/**
+ * Called when networking needs to finish AN. The start AN function will always
+ * be called at least once before this function is called
+ *
+ * @param node   Node to setup
+ * @param module QLM/DLM to setup
+ * @param lane   Lane to setup
+ * @param start_training
+ *			   True if we need to start training right after AN
+ *
+ * @return Zero on success, negative on failure. Network driver shouldn't continue until
+ *		 this returns 0
+ */
+int qlm_gserr_finish_an(int module, int lane, int start_training)
+{
+	update_all_lane_state();
+	show_lane_state(module, lane);
+	switch (lane_state[module][lane])
+	{
+		case LANE_STATE_TX_OFF:
+		case LANE_STATE_TX_ON:
+		case LANE_STATE_AN:
+			return -1;
+		case LANE_STATE_TRAINING:
+		case LANE_STATE_CGX:
+			return 0;
+	}
+	return -1;
+}
+
+/**
+ * Called when networking needs to complete training. This function may be
+ * called multiple times before training is finished.
+ *
+ * @param node   Node to setup
+ * @param module QLM/DLM to setup
+ * @param lane   Lane to setup
+ * @param unused Unused argument. Present so a number of QLM functions have the same signature
+ *			   for easy calling in the network driver
+ *
+ * @return Zero when training is complete, positive if training is still running,
+ *		 negative on training failure
+ */
+int qlm_gserr_finish_training(int module, int lane, int unused)
+{
+	update_all_lane_state();
+	show_lane_state(module, lane);
+	switch (lane_state[module][lane])
+	{
+		case LANE_STATE_TX_OFF:
+		case LANE_STATE_TX_ON:
+		case LANE_STATE_AN:
+		case LANE_STATE_TRAINING:
+			return -1;
+		case LANE_STATE_CGX:
+			return 0;
+	}
+	return -1;
 }
 
 /**
@@ -1973,57 +2487,488 @@ static int qlm_gserr_change_phy_rate(int module)
 	return 0;
 }
 
-/**
- * Initialize function removed by gser-update script (qlm.sed)
- */
-//void qlm_gserr_init()
+//write_dmem is used only in initialize function
+//which is removed by gser-update script (qlm.sed)
+//static void write_dmem(int module, int offset, uint8_t data)
 //{
-//	const char *firmware_file = NULL;
-//	int num_gserr = -1;
-//	int sensor;
+//	int bit = 24 - (offset & 3) * 8;
+//	int word = offset >> 2;
+//	uint32_t tmp = GSER_CSR_READ(CAVM_GSERRX_DMEMX(module, word));
+//	tmp = gser_insert(tmp, data, bit, 8);
+//	GSER_CSR_WRITE(CAVM_GSERRX_DMEMX(module, word), tmp);
+//}
+
+//qlm_gserx_config_an is used only in initialize function
+//which is removed by gser-update script (qlm.sed)
+//static void qlm_gserr_config_an(int module, int lane)
+//{
+//	qlm_state_lane_t qlm_state = qlm_gserr_get_state(module, lane);
+//	bool use_an;
+//	bool use_training;
+//	int an_lane_mode;
+//	int qlm_offset = 0;
 //
-//	/* Figure out which firmware file to use */
 //	if (gser_is_model(OCTEONTX_CN96XX))
-//	{
-//		firmware_file = "/fatfs/serdes/gserr-cn96xx.frm.lzma";
-//		num_gserr = 3;
-//		sensor = 10; /* TSN10 is nearest to GSERR */
-//	}
+//		qlm_offset = 5; /* From GSERR_MIN in bdk-qlm-cn96xx-gserr.c */
 //	else if (gser_is_model(OCTEONTX_CNF95XX))
-//	{
-//		firmware_file = "/fatfs/serdes/gserr-cnf95xx.frm.lzma";
-//		num_gserr = 3;
-//		sensor = 2;  /* TSN2 is nearest to GSERR */
-//	}
+//		qlm_offset = 0; /* From GSERR_MIN in bdk-qlm-cnf95xx-gserr.c */
 //	else if (gser_is_model(OCTEONTX_LOKI))
-//	{
-//		firmware_file = "/fatfs/serdes/gserr-loki.frm.lzma";
-//		num_gserr = 1;
-//		sensor = 2;  /* TSN2 is nearest to GSERR */
-//	}
+//		qlm_offset = 1; /* From GSERR_MIN in bdk-qlm-loki.c */
+//	else if (gser_is_model(OCTEONTX_F95MM))
+//		qlm_offset = 0; /* From GSERR_MIN in bdk-qlm-f95mm.c */
 //	else if (gser_is_model(OCTEONTX_CN98XX))
-//	{
-//		firmware_file = "/fatfs/serdes/gserr-cn98xx.frm.lzma";
-//		num_gserr = 5;
-//		sensor = 14; /* TSN14 is nearest to GSERR */
-//	}
+//		qlm_offset = 9; /* From GSERR_MIN in bdk-qlm-cn98xx.c */
 //	else
 //	{
 //		gser_error("GSERR: Unrecognized chip\n");
 //		return;
 //	}
 //
-//	GSER_CSR_INIT(gserrx_init_ctl, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(0));
-//	if (!gserrx_init_ctl.s.cpu_reset)
+//	/* Determine which CGX maps to this GSERR module and lane */
+//	bool is_split = false;
+//	bool is_upper = false;
+//	int cgx = qlm_to_network(qlm_offset + module, &is_split, &is_upper);
+//	/* Lane order can change mapping for CGX lmac to lane */
+//	int lane_order = gser_config_get_int(GSER_CONFIG_NETWORK_LANE_ORDER, cgx);
+//	/* Find which lmac coresponds to this lane */
+//	int lmac;
+//	for (lmac = 0; lmac < 4; lmac++)
 //	{
-//		GSER_TRACE(QLM, "GSERR: Already running, forcing a reset\n");
-//		for (int module = 0; module < num_gserr; module++)
-//			GSER_CSR_MODIFY(c, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(module),
-//				c.s.cm0_rst = 1;
-//				c.s.por = 1;
-//				c.s.cpu_reset = 1;
-//				c.s.apb_reset = 1);
-//		gser_wait_usec(1000);
+//		int lmac_lane = (lane_order >> (lmac * 4)) & 0xf;
+//		if (lane == lmac_lane)
+//			break;
+//	}
+//	gser_netphy_flags_t net_flags = gser_config_get_int(GSER_CONFIG_NETWORK_FLAGS, cgx, lmac);
+//	GSER_TRACE(QLM, "GSERR%d.%d: Maps to CGX%d, LMAC%d, with flags 0x%x\n", module, lane, cgx, lmac, net_flags);
+//
+//	switch (qlm_state.s.mode)
+//	{
+//		case QLM_MODE_10G_KR:
+//		case QLM_MODE_25G_CR:
+//		case QLM_MODE_25G_KR:
+//			use_an = true;
+//			use_training = true;
+//			an_lane_mode = 2; /* AN master on all lanes */
+//			break;
+//		case QLM_MODE_50G_CR2:
+//		case QLM_MODE_50G_KR2:
+//			use_an = true;
+//			use_training = true;
+//			/* AN master on all even lanes, slave on odd */
+//			an_lane_mode = 1;
+//			if (lmac == 0)
+//				an_lane_mode = 2;
+//			if (lmac == 2)
+//				an_lane_mode = 2;
+//			break;
+//		case QLM_MODE_40G_CR4:
+//		case QLM_MODE_40G_KR4:
+//		case QLM_MODE_100G_CR4:
+//		case QLM_MODE_100G_KR4:
+//			use_an = true;
+//			use_training = true;
+//			/* AN master on first lane, slave on all others */
+//			an_lane_mode = 1;
+//			if (lmac == 0)
+//				an_lane_mode = 2;
+//			break;
+//		default:
+//			lmac = 0;
+//			use_an = false;
+//			use_training = false;
+//			an_lane_mode = 0; /* Skipping AN as default */
+//			break;
+//	}
+//
+//	/* Program the AN config structure for this lane */
+//	const int AN_CFG_DATA_ADDR = 0x0;
+//	const int AN_CFG_DATA_STRUCT_SIZE = 0x6b;
+//	/* First 4 bytes are indexes into AN_CFG_DATA_STRUCT for each lane. These
+//	   are always sequencial in our setup */
+//	write_dmem(module, AN_CFG_DATA_ADDR+0, 0x00);
+//	write_dmem(module, AN_CFG_DATA_ADDR+1, 0x01);
+//	write_dmem(module, AN_CFG_DATA_ADDR+2, 0x02);
+//	write_dmem(module, AN_CFG_DATA_ADDR+3, 0x03);
+//	int lane_offset = AN_CFG_DATA_ADDR + 4 + AN_CFG_DATA_STRUCT_SIZE * lane;
+//	/* 0x0 nonce_seed 7:0 Seed value for TX Nonce Generator
+//	   The lane number (0-3) will be added to this value to guarantee that each
+//	   lane has a unique TX nonce */
+//	write_dmem(module, lane_offset++, 0xa0 + module * 4);
+//	/* 0x1 priority_1g_kx 7:0 Resolution priority for 1000BASE-KX */
+//	write_dmem(module, lane_offset++, 15);
+//	/* 0x2 priority_10g_kx4 7:0 Resolution priority for 10GBASE-KX
+//	   Not supported by the PHY */
+//	write_dmem(module, lane_offset++, 14);
+//	/* 0x3 priority_10g_kr 7:0 Resolution priority for 10GBASE-KR */
+//	write_dmem(module, lane_offset++, 13);
+//	/* 0x4 priority_40g_kr4 7:0 Resolution priority for 40GBASE-KR4 */
+//	write_dmem(module, lane_offset++, 8);
+//	/* 0x5 priority_40g_cr4 7:0 Resolution priority for 40GBASE-CR4 */
+//	write_dmem(module, lane_offset++, 7);
+//	/* 0x6 priority_100g_cr10 7:0 Resolution priority for 100GBASE-CR10
+//	   Not supported by the PHY */
+//	write_dmem(module, lane_offset++, 4);
+//	/* 0x7 priority_100g_kp4 7:0 Resolution priority for 100GBASE-KP4
+//	   Not supported by the PHY */
+//	write_dmem(module, lane_offset++, 3);
+//	/* 0x8 priority_100g_kr4 7:0 Resolution priority for 100GBASE-KR4 */
+//	write_dmem(module, lane_offset++, 2);
+//	/* 0x9 priority_100g_cr4 7:0 Resolution priority for 100GBASE-CR4 */
+//	write_dmem(module, lane_offset++, 1);
+//	/* 0xA priority_25g_gr_s 7:0 Resolution priority for 802.3by 25GBASE-CR-S / 25GBASE-KR-S */
+//	write_dmem(module, lane_offset++, 10);
+//	/* 0xB priority_25g_gr 7:0 Resolution priority for 802.3by 25GBASE-CR / 25GBASE-KR */
+//	write_dmem(module, lane_offset++, 9);
+//	/* 0xC priority_25g_kr 7:0 Resolution priority for 25G/50G Consortium 25GBASE-KR */
+//	write_dmem(module, lane_offset++, 12);
+//	/* 0xD priority_25g_cr 7:0 Resolution priority for 25G/50G Consortium 25GBASE-CR */
+//	write_dmem(module, lane_offset++, 11);
+//	/* 0xE priority_50g_kr2 7:0 Resolution priority for 25G/50G Consortium 50GBASE-KR2 */
+//	write_dmem(module, lane_offset++, 6);
+//	/* 0xF priority_50g_cr2 7:0 Resolution priority for 25G/50G Consortium 50GBASE-CR2 */
+//	write_dmem(module, lane_offset++, 5);
+//	/* 0x10 tech_abilities_15_8
+//	   0:0 Advertise 100GBASE-CR4 in Base Page bit A8
+//	   1:1 Advertise 802.3by 25GBASE-KR-S or 25GBASE-CR-S in Base Page bit A9
+//	   2:2 Advertise 802.3by 25GBASE-KR or 25GBASE-CR in Base Page bit A10
+//	   3:3 Advertise 25G/50G Consortium 25GBASE-KR in 25G/50G Consortium OUI Next Page
+//	   4:4 Advertise 25G/50G Consortium 50GBASE-CR in 25G/50G Consortium OUI Next Page
+//	   5:5 Advertise 25G/50G Consortium 25GBASE-KR2 in 25G/50G Consortium OUI Next Page
+//	   6:6 Advertise 25G/50G Consortium 50GBASE-CR2 in 25G/50G Consortium OUI Next Page
+//	   7:7 Reserved */
+//	uint8_t tech_abilities_15_8 = 0;
+//	if (qlm_state.s.mode == QLM_MODE_100G_CR4)
+//		tech_abilities_15_8 |= 1 << 0;
+//	if ((qlm_state.s.mode == QLM_MODE_25G_CR) || (qlm_state.s.mode == QLM_MODE_25G_KR))
+//		tech_abilities_15_8 |= 1 << 2;
+//	// FIXME: Consortium
+//	write_dmem(module, lane_offset++, tech_abilities_15_8);
+//	/* 0x11 tech_abilities_7_0
+//	   0:0 Advertise 1000BASE-KX in Base Page bit A0
+//	   1:1 Advertise 10GBASE-KX4 in Base Page bit A1
+//			Not supported by the PHY
+//	   2:2 Advertise 10GBASE-KR in Base Page bit A2
+//	   3:3 Advertise 40GBASE-KR4 in Base Page bit A3
+//	   4:4 Advertise 40GBASE-CR4 in Base Page bit A4
+//	   5:5 Advertise 100GBASE-CR10 in Base Page bit A5
+//			Not supported by the PHY
+//	   6:6 Advertise 100GBASE-KP4 in Base Page bit A6
+//			Not supported by the PHY
+//	   7:7 Advertise 100GBASE-KR4 in Base Page bit A7 */
+//	uint8_t tech_abilities_7_0 = 0;
+//	if (qlm_state.s.mode == QLM_MODE_10G_KR)
+//		tech_abilities_7_0 |= 1 << 2;
+//	if (qlm_state.s.mode == QLM_MODE_40G_KR4)
+//		tech_abilities_7_0 |= 1 << 3;
+//	if (qlm_state.s.mode == QLM_MODE_40G_CR4)
+//		tech_abilities_7_0 |= 1 << 4;
+//	if (qlm_state.s.mode == QLM_MODE_100G_KR4)
+//		tech_abilities_7_0 |= 1 << 7;
+//	write_dmem(module, lane_offset++, tech_abilities_7_0);
+//	/* 0x12 eee_tech_abilities_15_8 (RESERVED)
+//	   0:0 Advertise 100GBASE-CR4 has EEE deep sleep capability
+//	   1:1 Advertise 802.3by 25GBASE-KR-S or 25GBASE-CR-S has EEE deep sleep capability
+//	   2:2 Advertise 802.3by 25GBASE-KR or 25GBASE-CR has EEE deep sleep capability
+//	   3:3 Advertise 25G/50G Consortium 25GBASE-KR has EEE deep sleep capability
+//	   4:4 Advertise 25G/50G Consortium 50GBASE-CR has EEE deep sleep capability
+//	   5:5 Advertise 25G/50G Consortium 25GBASE-KR2 has EEE deep sleep capability
+//	   6:6 Advertise 25G/50G Consortium 50GBASE-CR2 has EEE deep sleep capability
+//	   7:7 Reserved */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x13 eee_tech_abilities_7_0 (RESERVED)
+//	   0:0 Advertise 1000BASE-KX has EEE capability
+//	   1:1 Advertise 10GBASE-KX4 has EEE capability
+//			Not supported by the PHY
+//	   2:2 Advertise 10GBASE-KR has EEE capability
+//	   3:3 Advertise 40GBASE-KR4 has EEE deep sleep capability
+//	   4:4 Advertise 40GBASE-CR4 has EEE deep sleep capability
+//	   5:5 Advertise 100GBASE-CR10 has EEE deep sleep capability
+//			Not supported by the PHY
+//	   6:6 Advertise 100GBASE-KP4 has EEE deep sleep capability
+//			Not supported by the PHY
+//	   7:7 Advertise 100GBASE-KR4 has EEE deep sleep capability */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x14 fec
+//	   0:0 Advertise Clause 74 FEC (Fire Code) Ability in Base Page F0 bit
+//	   1:1 Request Clause 74 FEC (Fire Code) in Base Page F1 bit
+//	   2:2 Request Clause 91 FEC (Reed Solomon) for 8023.by 25GBASE-KR or
+//			25GBASE-CR in Base Page F2 bit
+//	   3:3 Request Clause 74 FEC (Fire Code) for 8023.by 25GBASE-KR or
+//			25GBASE-CR-S or 25GBASE-KR-S or 25GBASE-CR-S in Base Page F3 bit
+//	   4:4 Advertise Clause 91 FEC (Reed Solomon) Ability in 25G/50G Consortium
+//			OUI Next Pages
+//	   5:5 Advertise Clause 74 FEC (Fire Code) Ability in 25G/50G Consortium
+//			OUI Next Pages
+//	   6:6 Request Clause 91 FEC (Reed Solomon) in 25G/50G Consortium OUI Next Pages
+//	   7:7 Request Clause 74 FEC (Fire Code) in 25G/50G Consortium OUI Next Page */
+//	uint8_t fec = 0;
+//	if (net_flags & GSER_NETPHY_FLAG_FEC) /* Fire Code */
+//	{
+//		fec |= 1 << 0;
+//		fec |= 1 << 1;
+//		fec |= 1 << 3;
+//		fec |= 1 << 5;
+//		fec |= 1 << 7;
+//	}
+//	if (net_flags & GSER_NETPHY_FLAG_RS_FEC) /* Reed Solomon */
+//	{
+//		fec |= 1 << 2;
+//		fec |= 1 << 4;
+//		fec |= 1 << 6;
+//	}
+//	write_dmem(module, lane_offset++, fec);
+//	/* 0x15 pause
+//	   0:0 Advertise Pause Ability in Base Page bit C0
+//	   1:1 Advertise Pause ASM_DIR Ability in Base Page C1 */
+//	write_dmem(module, lane_offset++, 0x03);
+//	/* 0x16 np_cfg
+//	   0:0 Send 25G/50G Consortium OUI tagged Next Pages to advertise 25G/50G
+//			abilities during negotiation
+//	   1:1 Send a Device ID Next Pages during negotiation
+//	   2:2 Send an EEE technology Next Page during negotiation
+//			(RESERVED setting – leave at 0, as the AFE does support EEE functionality). */
+//	uint8_t np_cfg = 0;
+//	if ((qlm_state.s.mode == QLM_MODE_50G_CR2) || (qlm_state.s.mode == QLM_MODE_50G_KR2))
+//		np_cfg |= 1 << 0;
+//	write_dmem(module, lane_offset++, np_cfg);
+//	/* 0x17 reserved 7:0 N/A */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x18 consortium_oui_23_16 7:0 OUI to use for the OUI field in 25G/50G Consortium OUI tagged Next Pages (Bits 23:16) */
+//	// FIXME: Consortium
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x19 consortium_oui_15_8 7:0 OUI to use for the OUI field in 25G/50G Consortium OUI tagged Next Pages (Bits 15:8) */
+//	// FIXME: Consortium
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x1A consortium_oui_7_0 7:0 OUI to use for the OUI field in 25G/50G Consortium OUI tagged Next Pages (Bits 7:0) */
+//	// FIXME: Consortium
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x1B device_id_31_24 7:0 32-bit PHY Device ID to send in Device ID Next Pages (Bits 32:24) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x1C device_id_31_25 7:0 32-bit PHY Device ID to send in Device ID Next Pages (Bits 23:16) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x1D device_id_31_26 7:0 32-bit PHY Device ID to send in Device ID Next Pages (Bits 15:8) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x1E device_id_31_27 7:0 32-bit PHY Device ID to send in Device ID Next Pages (Bits 7:0) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x1F num_custom_tx_nps 7:0 How many custom Next Pages to send (Maximum 10)
+//	   These are in addition to Device ID, EEE technology, and 25G/50G Consortium Next Pages */
+//	write_dmem(module, lane_offset++, 0x00);
+//
+//	/* 0x20 custom_tx_nps0_47_41 7:0 1st Custom Next Page to send (Bits 47:41) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x21 custom_tx_nps0_40_32 7:0 1st Custom Next Page to send (Bits 40:32) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x22 custom_tx_nps0_31_24 7:0 1st Custom Next Page to send (Bits 31:24) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x23 custom_tx_nps0_23_16 7:0 1st Custom Next Page to send (Bits 23:16) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x24 custom_tx_nps0_15_8 7:0 1st Custom Next Page to send (Bits 15:8) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x25 custom_tx_nps0_7_0 7:0 1st Custom Next Page to send (Bits 7:0) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x26 custom_tx_nps1_47_41 7:0 2nd Custom Next Page to send (Bits 47:41) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x27 custom_tx_nps1_40_32 7:0 2nd Custom Next Page to send (Bits 40:32) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x28 custom_tx_nps1_31_24 7:0 2nd Custom Next Page to send (Bits 31:24) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x29 custom_tx_nps1_23_16 7:0 2nd Custom Next Page to send (Bits 23:16) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x2A custom_tx_nps1_15_8 7:0 2nd Custom Next Page to send (Bits 15:8) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x2B custom_tx_nps1_7_0 7:0 2nd Custom Next Page to send (Bits 7:0) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x2C custom_tx_nps2_47_41 7:0 3rd Custom Next Page to send (Bits 47:41) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x2D custom_tx_nps2_40_32 7:0 3rd Custom Next Page to send (Bits 40:32) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x2E custom_tx_nps2_31_24 7:0 3rd Custom Next Page to send (Bits 31:24) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x2F custom_tx_nps2_23_16 7:0 3rd Custom Next Page to send (Bits 23:16) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x30 custom_tx_nps2_15_8 7:0 3rd Custom Next Page to send (Bits 15:8) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x31 custom_tx_nps2_7_0 7:0 3rd Custom Next Page to send (Bits 7:0) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x32 custom_tx_nps3_47_41 7:0 4th Custom Next Page to send (Bits 47:41) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x33 custom_tx_nps3_40_32 7:0 4th Custom Next Page to send (Bits 40:32) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x34 custom_tx_nps3_31_24 7:0 4th Custom Next Page to send (Bits 31:24) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x35 custom_tx_nps3_23_16 7:0 4th Custom Next Page to send (Bits 23:16) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x36 custom_tx_nps3_15_8 7:0 4th Custom Next Page to send (Bits 15:8) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x37 custom_tx_nps3_7_0 7:0 4th Custom Next Page to send (Bits 7:0) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x38 custom_tx_nps4_47_41 7:0 5th Custom Next Page to send (Bits 47:41) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x39 custom_tx_nps4_40_32 7:0 5th Custom Next Page to send (Bits 40:32) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x3A custom_tx_nps4_31_24 7:0 5th Custom Next Page to send (Bits 31:24) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x3B custom_tx_nps4_23_16 7:0 5th Custom Next Page to send (Bits 23:16) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x3C custom_tx_nps4_15_8 7:0 5th Custom Next Page to send (Bits 15:8) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x3D custom_tx_nps4_7_0 7:0 5th Custom Next Page to send (Bits 7:0) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x3E custom_tx_nps5_47_41 7:0 6th Custom Next Page to send (Bits 47:41) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x3F custom_tx_nps5_40_32 7:0 6th Custom Next Page to send (Bits 40:32) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x40 custom_tx_nps5_31_24 7:0 6th Custom Next Page to send (Bits 31:24) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x41 custom_tx_nps5_23_16 7:0 6th Custom Next Page to send (Bits 23:16) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x42 custom_tx_nps5_15_8 7:0 6th Custom Next Page to send (Bits 15:8) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x43 custom_tx_nps5_7_0 7:0 6th Custom Next Page to send (Bits 7:0) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x44 custom_tx_nps6_47_41 7:0 7th Custom Next Page to send (Bits 47:41) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x45 custom_tx_nps6_40_32 7:0 7th Custom Next Page to send (Bits 40:32) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x46 custom_tx_nps6_31_24 7:0 7th Custom Next Page to send (Bits 31:24) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x47 custom_tx_nps6_23_16 7:0 7th Custom Next Page to send (Bits 23:16) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x48 custom_tx_nps6_15_8 7:0 7th Custom Next Page to send (Bits 15:8) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x49 custom_tx_nps6_7_0 7:0 7th Custom Next Page to send (Bits 7:0) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x4A custom_tx_nps7_47_41 7:0 8th Custom Next Page to send (Bits 47:41) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x4B custom_tx_nps7_40_32 7:0 8th Custom Next Page to send (Bits 40:32) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x4C custom_tx_nps7_31_24 7:0 8th Custom Next Page to send (Bits 31:24) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x4D custom_tx_nps7_23_16 7:0 8th Custom Next Page to send (Bits 23:16) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x4E custom_tx_nps7_15_8 7:0 8th Custom Next Page to send (Bits 15:8) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x4F custom_tx_nps7_7_0 7:0 8th Custom Next Page to send (Bits 7:0) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x50 custom_tx_nps8_47_41 7:0 9th Custom Next Page to send (Bits 47:41) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x51 custom_tx_nps8_40_32 7:0 9th Custom Next Page to send (Bits 40:32) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x52 custom_tx_nps8_31_24 7:0 9th Custom Next Page to send (Bits 31:24) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x53 custom_tx_nps8_23_16 7:0 9th Custom Next Page to send (Bits 23:16) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x54 custom_tx_nps8_15_8 7:0 9th Custom Next Page to send (Bits 15:8) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x55 custom_tx_nps8_7_0 7:0 9th Custom Next Page to send (Bits 7:0) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x56 custom_tx_nps9_47_41 7:0 10th Custom Next Page to send (Bits 47:41) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x57 custom_tx_nps9_40_32 7:0 10th Custom Next Page to send (Bits 40:32) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x58 custom_tx_nps9_31_24 7:0 10th Custom Next Page to send (Bits 31:24) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x59 custom_tx_nps9_23_16 7:0 10th Custom Next Page to send (Bits 23:16) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x5A custom_tx_nps9_15_8 7:0 10th Custom Next Page to send (Bits 15:8) */
+//	write_dmem(module, lane_offset++, 0x00);
+//	/* 0x5B custom_tx_nps9_7_0 7:0 10th Custom Next Page to send (Bits 7:0) */
+//	write_dmem(module, lane_offset++, 0x00);
+//
+//	/* 0x5C width_1g_kx 7:0 Parallel width to use for 1000BASE-KX */
+//	write_dmem(module, lane_offset++, 0x02);
+//	/* 0x5D width_10g_kx4 7:0 Parallel width to use for 10GBASE-KX
+//	   Not supported by the PHY */
+//	write_dmem(module, lane_offset++, 0x02);
+//	/* 0x5E width_10g_kr 7:0 Parallel interface width to use for 10GBASE-KR */
+//	write_dmem(module, lane_offset++, 0x02);
+//	/* 0x5F width_40g_kr4 7:0 Parallel interface width to use for 40GBASE-KR4 */
+//	write_dmem(module, lane_offset++, 0x02);
+//	/* 0x60 width_40g_cr4 7:0 Parallel interface width to use for 40GBASE-CR4 */
+//	write_dmem(module, lane_offset++, 0x02);
+//	/* 0x61 width_100g_cr10 7:0 Parallel interface width to use for 100GBASE-CR10
+//	   Not supported by the PHY */
+//	write_dmem(module, lane_offset++, 0x04);
+//	/* 0x62 width_100g_kp4 7:0 Parallel interface width to use for 100GBASE-KP4
+//	   Not supported by the PHY */
+//	write_dmem(module, lane_offset++, 0x04);
+//	/* 0x63 width_100g_kr4 7:0 Parallel interface width to use for 100GBASE-KR4 */
+//	write_dmem(module, lane_offset++, 0x04);
+//	/* 0x64 width_100g_cr4 7:0 Parallel interface width to use for 100GBASE-CR4 */
+//	write_dmem(module, lane_offset++, 0x04);
+//	/* 0x65 width_25g_gr_s 7:0 Parallel interface width to use for 802.3by 25GBASE-CR-S / 25GBASE-KR-S */
+//	write_dmem(module, lane_offset++, 0x04);
+//	/* 0x66 width_25g_gr 7:0 Parallel interface width to use for 802.3by 25GBASE-CR / 25GBASE-KR */
+//	write_dmem(module, lane_offset++, 0x04);
+//	/* 0x67 width_25g_kr 7:0 Parallel interface width to use for 25G/50G Consortium 25GBASE-KR */
+//	write_dmem(module, lane_offset++, 0x04);
+//	/* 0x68 width_25g_cr 7:0 Parallel interface width to use for 25G/50G Consortium 25GBASE-CR */
+//	write_dmem(module, lane_offset++, 0x04);
+//	/* 0x69 width_50g_kr2 7:0 Parallel interface width to use for 25G/50G Consortium 50GBASE-KR2 */
+//	write_dmem(module, lane_offset++, 0x04);
+//	/* 0x6A width_50g_cr2 7:0 Parallel interface width to use for 25G/50G Consortium 50GBASE-CR2 */
+//	write_dmem(module, lane_offset++, 0x04);
+//	if (lane_offset != AN_CFG_DATA_ADDR + 4 + AN_CFG_DATA_STRUCT_SIZE * (lane + 1))
+//		gser_fatal("GSERR%d.%d: Incorrect offset into DMEM %d\n", module, lane, lane_offset);
+//
+//	/* Enable or disable training after AN */
+//	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_LT_TX_FSM_CTRL0(module, lane),
+//		c.s.mr_training_enable = (use_training) ? 1 : 0);
+//	/* Disable auto rate change in the PHY. Rate change handshaking is enabled
+//	   by default (to disable feature, set lane_feature.spare_cfg6[3] = 0 */
+//	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane),
+//		c.s.data &= 0xf7);
+//	/* Configure how the lane handles AN */
+//	/* 0 = No AN, 1 = AN Slave, 2 = AN Master */
+//	GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+//		c.s.ln_an_cfg = an_lane_mode);
+//	/* Override clocks for lanes that need AN */
+//	qlm_gserr_use_an_clocks(module, lane, use_an);
+//}
+
+/**
+ * Reset the QLM layer
+ */
+void qlm_gserr_init_reset()
+{
+	update_all_lane_state();
+	GSER_CSR_INIT(gserrx_init_ctl, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(0));
+	if (!gserrx_init_ctl.s.cpu_reset)
+	{
+		GSER_TRACE(QLM, "GSERR: Already running, forcing a reset\n");
+		for (int module = 0; module < num_gserr; module++)
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(module),
+				c.s.cm0_rst = 1;
+				c.s.por = 1;
+				c.s.cpu_reset = 1;
+				c.s.apb_reset = 1);
+		gser_wait_usec(1000);
+	}
+}
+
+/**
+ * Initialize function removed by gser-update script (qlm.sed)
+ */
+//void qlm_gserr_init()
+//{
+//	const char *firmware_file = "/fatfs/serdes/gserr-cn9xxx.frm.lzma";
+//	int sensor;
+//
+//	/* Figure out which firmware file to use */
+//	if (gser_is_model(OCTEONTX_CN96XX))
+//		sensor = 10; /* TSN10 is nearest to GSERR */
+//	else if (gser_is_model(OCTEONTX_CNF95XX))
+//		sensor = 2;  /* TSN2 is nearest to GSERR */
+//	else if (gser_is_model(OCTEONTX_LOKI))
+//		sensor = 2;  /* TSN2 is nearest to GSERR */
+//	else if (gser_is_model(OCTEONTX_F95MM))
+//		sensor = 7;  /* TSN7 is nearest to GSERR */
+//	else if (gser_is_model(OCTEONTX_CN98XX))
+//		sensor = 14; /* TSN14 is nearest to GSERR */
+//	else
+//	{
+//		gser_error("GSERR: Unrecognized chip\n");
+//		return;
 //	}
 //
 //	/* Open the firmware file */
@@ -2179,18 +3124,16 @@ static int qlm_gserr_change_phy_rate(int module)
 //				c.s.fast_sim = 1);
 //		}
 //
-//		/* Reference clock should be running now */
-//		int hz = qlm_gserr_measure_refclock(module);
-//		GSER_TRACE(QLM, "GSERR%d: Reference clock at %dHz\n", module, hz);
-//
 //		/* Program the temperature into the GSERR */
 //		GSER_CSR_INIT(temp_result, CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
+//		while (!temp_result.s.temp_valid && !gser_is_platform(GSER_PLATFORM_ASIM))
+//			temp_result.u = GSER_CSR_READ(CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
 //		int temp = gser_extracts(temp_result.s.temp_corrected, 2, 8);
 //		temp += 40;
 //		if (temp < 0)
 //			temp = 0;
-//		if (temp > 255)
-//			temp = 255;
+//		if (temp > 125 + 40)
+//			temp = 125 + 40;
 //		/* We program the temperature regrdless of GSER_GSERR_ENABLE_DOSC_TEMP_SKEW.
 //		   This allows checking that the correct value is programmed without
 //		   performing DOSC_TEMP_SKEW */
@@ -2198,6 +3141,11 @@ static int qlm_gserr_change_phy_rate(int module)
 //			c.s.temp_value = temp);
 //		GSER_CSR_MODIFY(c, CAVM_GSERRX_CM0_FEATURE_PLL_CAL_EN_CFG1_RSVD(module),
 //			c.s.vco_dosc_temp_skew = GSER_GSERR_ENABLE_DOSC_TEMP_SKEW);
+//
+//		/* Program AN structures */
+//		int num_lanes = get_num_lanes(module);
+//		for (int lane = 0; lane < num_lanes; lane++)
+//			qlm_gserr_config_an(module, lane);
 //
 //		/* 5) Take the CPU out of reset so it will boot and run the PHY firmware
 //			Write GSERR()_COMMON_PHY_CTRL_BCFG
@@ -2215,6 +3163,9 @@ static int qlm_gserr_change_phy_rate(int module)
 //								// If PHY_ERROR=1'b1 then throw an Error Message else continue to poll for CM0_STATE_CHNG_RDY=1. */
 //		if (!gser_is_platform(GSER_PLATFORM_ASIM))
 //		{
+//			/* This wait may be required to avoid false sampling of
+//			   cm0_state_chng_rdy (its a negative pulse according to ScottM) */
+//			gser_wait_usec(10);
 //			GSER_TRACE(QLM, "GSERR%d: Waiting for cm0_state_chng_rdy=1\n", module);
 //			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 10000))
 //				gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1 (after cpu_reset=0)\n", module);
@@ -2237,6 +3188,13 @@ static int qlm_gserr_change_phy_rate(int module)
 //
 //	while (1)
 //	{
+//		/* the DOSC threshold must be written before CMU_RESET is deasserted.
+//		   Adjust the DOSC skew threshold. The default of 10% is way too large */
+//		GSER_CSR_MODIFY(c, CAVM_GSERRX_CM0_FEATURE_SPARE_CFG5_RSVD(module),
+//			c.s.data = GSER_GSERR_DOSC_SKEW_THRESHOLD);
+//		/* This wait may be required to avoid racing with CMU_reset */
+//		gser_wait_usec(50);
+//
 //		/* 7) Take the GSERR PHY clock management unit (CM0) out of reset.
 //			Write GSERR(0..2)_COMMON_PHY_CTRL_BCFG
 //			CM0_RST=0 - Release CMU from reset */
@@ -2276,6 +3234,11 @@ static int qlm_gserr_change_phy_rate(int module)
 //				gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_ok]=1\n", module);
 //			qlm_gserr_poll_error(module);
 //		}
+//
+//		/* Reference clock is now measurable */
+//		int hz = qlm_gserr_measure_refclock(module);
+//		GSER_TRACE(QLM, "GSERR%d: Reference clock at %dHz\n", module, hz);
+//
 //		if (module == module_last)
 //			break;
 //		module += module_inc;
@@ -2291,12 +3254,16 @@ static int qlm_gserr_change_phy_rate(int module)
 //	{
 //		for (int module = 0; module < num_gserr; module++)
 //		{
-//			GSER_TRACE(QLM, "GSERR%d: Waiting for ln_state_chng_rdy=1\n", module);
 //			int num_lanes = get_num_lanes(module);
 //			for (int lane = 0; lane < num_lanes; lane++)
 //			{
-//				if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 5000))
-//					gser_error("GSERR%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1\n", module);
+//				GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+//				if (bcfg.s.ln_an_cfg == 0)
+//				{
+//					GSER_TRACE(QLM, "GSERR%d.%d: Waiting for ln_state_chng_rdy=1\n", module, lane);
+//					if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 5000))
+//						gser_error("GSERR%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1\n", module);
+//				}
 //				qlm_state_lane_t state = qlm_gserr_get_state(module, lane);
 //				bool ena_8b10b = (state.s.baud_mhz <= 6250);
 //				GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_ADAPT_CFG0(module, lane),
@@ -2310,12 +3277,14 @@ static int qlm_gserr_change_phy_rate(int module)
 //			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CG_CTRL(module),
 //				c.s.bist_rx = 1;
 //				c.s.bist_tx = 1);
+//#if QUAD_LANE
 //			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CG_CTRL(module),
 //				c.s.bist_rx = 1;
 //				c.s.bist_tx = 1);
 //			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CG_CTRL(module),
 //				c.s.bist_rx = 1;
 //				c.s.bist_tx = 1);
+//#endif
 //		}
 //	}
 //	/* 11) Take the lanes out of reset
@@ -2355,16 +3324,20 @@ static int qlm_gserr_change_phy_rate(int module)
 //	{
 //		for (int module = 0; module < num_gserr; module++)
 //		{
-//			GSER_TRACE(QLM, "GSERR%d: Waiting for ln_tx_rdy=1\n", module);
 //			int num_lanes = get_num_lanes(module);
 //			for (int lane = 0; lane < num_lanes; lane++)
 //			{
-//				if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_TX_RDY, ==, 1, 5000))
-//					gser_error("GSERR%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_tx_rdy]=1\n", module);
-//				if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_RX_RDY, ==, 1, 500))
-//					gser_error("GSERR%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_rx_rdy]=1\n", module);
-//				if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 500))
-//					gser_error("GSERR%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1\n", module);
+//				GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+//				if (bcfg.s.ln_an_cfg == 0)
+//				{
+//					GSER_TRACE(QLM, "GSERR%d.%d: Waiting for ln_tx_rdy=1\n", module, lane);
+//					if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_TX_RDY, ==, 1, 5000))
+//						gser_error("GSERR%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_tx_rdy]=1\n", module);
+//					if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_RX_RDY, ==, 1, 500))
+//						gser_error("GSERR%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_rx_rdy]=1\n", module);
+//					if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 500))
+//						gser_error("GSERR%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1\n", module);
+//				}
 //			}
 //		}
 //	}
@@ -2383,6 +3356,8 @@ static int qlm_gserr_change_phy_rate(int module)
 //		{
 //			GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
 //				c.s.cfg_cgx = 1);
+//			lane_state[module][lane] = LANE_STATE_TX_OFF;
+//			show_lane_state(module, lane);
 //		}
 //	}
 //	/* 14) The CGX MAC transmitter can be started at this point */

@@ -1723,12 +1723,13 @@ int qlm_set_mode_gsern(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
  * @param lane	  Which lane
  * @param enable_tx True to enable transmitter, false to disable
  */
-void qlm_tx_control_gsern(int qlm, int lane, bool enable_tx)
+int qlm_tx_control_gsern(int qlm, int lane, int enable_tx)
 {
 	/*
 	 * Modified in qlm-gsern.patch applied by gsern-update script in SDK
 	 */
 	// GSER_TRACE(QLM, "GSERN0.%d: %s TX - Not implemented\n", qlm, lane, (enable_tx) ? "Enable" : "Disable"); //FIXME
+	// return -1;
 	if (enable_tx) {
 		/* Clear all the Tx overrides */
 		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TX_DRV_BCFG(qlm, lane),
@@ -1741,13 +1742,15 @@ void qlm_tx_control_gsern(int qlm, int lane, bool enable_tx)
 			srcmx_bcfg.s.tx_ctrl_sel == 0x0 ||
 			srcmx_bcfg.s.tx_data_sel == 0x10 ||
 			srcmx_bcfg.s.tx_data_sel == 0x0)
-			return;
+			return -1;
 
 		/* Set the gsern Tx overrides to force Tx idle */
 		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_TX_DRV_BCFG(qlm, lane),
 				c.s.tx_cspd = 1;
 				c.s.en_tx_cspd = 1);
 	}
+
+	return 0;
 	/*
 	 * End of modification
 	 */
