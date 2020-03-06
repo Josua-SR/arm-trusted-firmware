@@ -420,6 +420,27 @@ static uint64_t ehf_el3_interrupt_handler(uint32_t id, uint32_t flags,
 	/* Having acknowledged the interrupt, get the running priority */
 	pri = plat_ic_get_running_priority();
 
+	/*
+	 * Use platform interrupt priority when "Idle Priority" is returned
+	 * by GIC (exceptional condition).
+	 */
+	#define GIC_IDLE_PRIORITY 0xff
+	if (pri == GIC_IDLE_PRIORITY) {
+		int plat_pri;
+
+		/* Retrieve platform interrupt priority setting. */
+		plat_pri = plat_ic_get_interrupt_priority(intr);
+		/* If unable to determine platform interrupt priority, panic. */
+		if (plat_pri < 0) {
+			ERROR("Unable to retrieve platform priority, int %d\n",
+			      intr);
+			panic();
+		}
+
+		/* Continue, using platform interrupt priority setting. */
+		pri = plat_pri;
+	}
+
 	/* Check EL3 interrupt priority is in secure range */
 	assert(IS_PRI_SECURE(pri));
 
