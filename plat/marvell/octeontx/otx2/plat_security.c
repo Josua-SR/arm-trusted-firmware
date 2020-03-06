@@ -342,14 +342,10 @@ void octeontx_configure_mmc_security(int secure)
 			CSR_WRITE(CAVM_IOBNX_RSLX_STREAMS(
 					iobn_idx, rsl_idx), iobn_rslx_stream.u);
 
-			iobn_domx_busx_stream.u = CSR_READ(
-				CAVM_IOBNX_DOMX_BUSX_STREAMS(iobn_idx,
-				domain_idx, bus_idx));
-			iobn_domx_busx_stream.s.strm_nsec = 1;
-			iobn_domx_busx_stream.s.phys_nsec = 1;
-			CSR_WRITE(CAVM_IOBNX_DOMX_BUSX_STREAMS(
-					iobn_idx, domain_idx, bus_idx),
-					iobn_domx_busx_stream.u);
+			/*
+			 * Do not change IOBNX_DOMX_BUSX_STREAMS
+			 * (changing IOBNX_RSLX_STREAMS was sufficient).
+			 */
 		}
 	}
 }
