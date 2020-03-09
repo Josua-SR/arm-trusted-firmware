@@ -43,6 +43,7 @@
 
 /* These constants represent the possible QLM reference clock speeds in Hz */
 #define REF_100MHZ 100000000
+#define REF_122MHZ 122800000
 #define REF_125MHZ 125000000
 #define REF_156MHZ 156250000
 

@@ -82,6 +82,21 @@ qlm_state_lane_t qlm_gserc_get_state(int qlm, int lane)
 }
 
 /**
+ * Return true if the given lane is CPRI. CGX returns false
+ *
+ * @param node   Node to query
+ * @param qlm	Index into GSER* group
+ * @param lane   Lane in GSER
+ *
+ * @return True if using CPRI
+ */
+static bool gserc_is_cpri(int qlm, int lane)
+{
+	qlm_state_lane_t state = {.u = GSER_CSR_READ(CAVM_GSERCX_SCRATCHX(qlm, lane))};
+	return state.s.mode == QLM_MODE_CPRI;
+}
+
+/**
  * For chips that don't use pin strapping, this function programs
  * the QLM to the specified mode
  *
@@ -155,7 +170,12 @@ int qlm_gserc_set_mode(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
 int qlm_gserc_measure_refclock(int qlm)
 {
 	if (gser_is_platform(GSER_PLATFORM_ASIM))
-		return REF_156MHZ;
+	{
+		if (gserc_is_cpri(qlm, 0))
+			return REF_122MHZ;
+		else
+			return REF_156MHZ;
+	}
 
 	GSER_CSR_INIT(ctr_start, CAVM_GSERCX_REFCLK_CTR(qlm));
 	uint64_t start = gser_clock_get_count(GSER_CLOCK_TIME);
@@ -2035,8 +2055,16 @@ static cavm_gsercx_common_phy_ctrl_bcfg_t qlm_gserc_get_clock_mode(int module)
 		module, phy_ctrl_rate1, phy_ctrl_rate2);
 
 	GSER_CSR_INIT(bcfg, CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(module));
-	bcfg.s.refclk_input_sel = 2;
-	bcfg.s.phy_ctrl_refclk = 0x0e; /* From CNF95XX_B0_GSERC_Programming_v1p0.pdf */
+	if (need_cpri_9g || need_cpri_6g)
+	{
+		bcfg.s.refclk_input_sel = (module == 0) ? 0 : 1;
+		bcfg.s.phy_ctrl_refclk = 0x14;
+	}
+	else
+	{
+		bcfg.s.refclk_input_sel = 2;
+		bcfg.s.phy_ctrl_refclk = 0x0e;
+	}
 	bcfg.s.phy_ctrl_rate1 = phy_ctrl_rate1;
 	bcfg.s.phy_ctrl_rate2 = phy_ctrl_rate2;
 
@@ -2077,16 +2105,16 @@ static cavm_gsercx_lanex_control_bcfg_t qlm_gserc_get_lane_mode(int module, int 
 			ln_ctrl_tx_rate = 0x1; /* PHY rate 2 */
 			ln_ctrl_rx_rate = 0x1; /* PHY rate 2 */
 			tx_clk_mux_sel = 0x0; /* PHY rate 1 */
-			ln_ctrl_tx_width = 0x1; /* 20 bit */
-			ln_ctrl_rx_width = 0x1; /* 20 bit */
+			ln_ctrl_tx_width = 0x3; /* 20 bit */
+			ln_ctrl_rx_width = 0x3; /* 20 bit */
 			break;
 		case 3072: /* CPRI */
 		case 4915: /* CPRI */
 			ln_ctrl_tx_rate = 0x1; /* PHY rate 2 */
 			ln_ctrl_rx_rate = 0x5; /* PHY rate 2 divide by 2 */
 			tx_clk_mux_sel = 0x0; /* PHY rate 1 */
-			ln_ctrl_tx_width = 0x1; /* 20 bit */
-			ln_ctrl_rx_width = 0x1; /* 20 bit */
+			ln_ctrl_tx_width = 0x3; /* 20 bit */
+			ln_ctrl_rx_width = 0x3; /* 20 bit */
 			break;
 		case 2500:
 		case 3125:
@@ -2337,8 +2365,10 @@ static int qlm_gserc_change_lane_rate(int module, int lane)
 	/* 15. Enable the Tx/Rx FIFOs between CGX and GSERC
 		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
 			CFG_CGX = 1 Enable Tx and Rx Async FIFOs to CGX */
+	bool is_cpri = gserc_is_cpri(module, lane);
 	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-		c.s.cfg_cgx = 1);
+		c.s.cfg_cpri = is_cpri;
+		c.s.cfg_cgx = !is_cpri);
 
 	/* 16. CGX should start transmitting now, refer to the CGX initialization
 		and link bring-up section in the CNF95XX B0 HRM. */
@@ -3343,8 +3373,10 @@ void qlm_gserc_init_reset()
 //		int num_lanes = get_num_lanes(module);
 //		for (int lane = 0; lane < num_lanes; lane++)
 //		{
+//			bool is_cpri = gserc_is_cpri(module, lane);
 //			GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-//				c.s.cfg_cgx = 1);
+//				c.s.cfg_cpri = is_cpri;
+//				c.s.cfg_cgx = !is_cpri);
 //			lane_state[module][lane] = LANE_STATE_TX_OFF;
 //			show_lane_state(module, lane);
 //		}

@@ -126,16 +126,29 @@ int qlm_gserr_set_mode(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
 	for (int l = start_lane; l <= end_lane; l++)
 	{
 		bool need_change = (bcfg_old.u != bcfg_new.u);
+		/*
+		 * need_full_reset removed in qlm-gserr.patch applied by
+		 * gser-update script in SDK. For now qlm_gserr_init is not
+		 * available in ATF.
+		 */
+		//bool need_full_reset = false;
 		if (!need_change)
 		{
 			GSER_CSR_INIT(lane_old, CAVM_GSERRX_LANEX_CONTROL_BCFG(qlm, l));
 			cavm_gserrx_lanex_control_bcfg_t lane_new = qlm_gserr_get_lane_mode(qlm, l);
 			need_change = (lane_old.u != lane_new.u);
+			//need_full_reset = (lane_new.s.ln_an_cfg == 3) || lane_old.s.ln_an_cfg;
 		}
 		if (need_change)
 		{
 			gser_wait_usec(1000);
-			qlm_gserr_change_lane_rate(qlm, l);
+			//if (need_full_reset)
+			//{
+			//	qlm_gserr_init_reset();
+			//	qlm_gserr_init();
+			//}
+			//else
+				qlm_gserr_change_lane_rate(qlm, l);
 			gser_wait_usec(1000);
 		}
 		else
@@ -1485,7 +1498,15 @@ static int firmware_handshake(int module, int lane)
 	}
 
 	GSER_TRACE(QLM, "GSERR%d.%d: Handshake\n", module, lane);
-	gser_wait_usec(1000); /* Needed for some unknown reason */
+	/* Needed for some unknown reason.
+	   The 10ms below was found by trial and error. Test:
+		1ms: Hot plug fails to bring link up
+		2ms: Hot plug fails to bring link up
+		5ms: Hot plug fails to bring link up
+		6ms: Hot plug success 25G-KR, fail 10G-KR
+		8ms: Hot plug success 25G-KR, fail 10G-KR
+		10ms: Hot plug success */
+	gser_wait_usec(10000);
 	/* Set handshake bit lane_feature.spare_cfg6[4] = 1 (make sure to
 	   read/modify/write register to avoid overwriting the enable bit). This
 	   will start AN running. FW will read bit and set it back to 0, when
@@ -2109,8 +2130,24 @@ static cavm_gserrx_lanex_control_bcfg_t qlm_gserr_get_lane_mode(int module, int 
 
 	bool is_dual;
 	bool is_quad;
+	int ln_an_cfg = 0;
 	switch (state.s.mode)
 	{
+		case QLM_MODE_10G_KR:
+		case QLM_MODE_40G_CR4:
+		case QLM_MODE_40G_KR4:
+		case QLM_MODE_25G_CR:
+		case QLM_MODE_25G_KR:
+		case QLM_MODE_50G_CR2:
+		case QLM_MODE_50G_KR2:
+		case QLM_MODE_100G_CR4:
+		case QLM_MODE_100G_KR4:
+			/* 3 is not a valid AN value. We use it to signal that the entire
+			   GSERR complex needs refresh to apply AN changes */
+			ln_an_cfg = 3;
+			is_dual = false;
+			is_quad = false;
+			break;
 		case QLM_MODE_RXAUI: /* Lane sync across two lanes */
 			is_dual = true;
 			is_quad = false;
@@ -2138,8 +2175,8 @@ static cavm_gserrx_lanex_control_bcfg_t qlm_gserr_get_lane_mode(int module, int 
 	bcfg.s.tx_clk_mux_sel = tx_clk_mux_sel;
 	bcfg.s.cgx_quad = is_quad;
 	bcfg.s.cgx_dual = is_dual;
-	bcfg.s.ln_link_stat = 0; /* No AN from PHY */
-	bcfg.s.ln_an_cfg = 0; /* No AN from PHY */
+	bcfg.s.ln_link_stat = 0;
+	bcfg.s.ln_an_cfg = ln_an_cfg;
 
 	return bcfg;
 }
@@ -2593,7 +2630,10 @@ static int qlm_gserr_change_phy_rate(int module)
 //	/* 0x0 nonce_seed 7:0 Seed value for TX Nonce Generator
 //	   The lane number (0-3) will be added to this value to guarantee that each
 //	   lane has a unique TX nonce */
-//	write_dmem(module, lane_offset++, 0xa0 + module * 4);
+//	uint8_t nonce = 0;
+//	while ((nonce < 1) || (nonce >= 0xfd))
+//		nonce = gser_rng_get_random8();
+//	write_dmem(module, lane_offset++, nonce);
 //	/* 0x1 priority_1g_kx 7:0 Resolution priority for 1000BASE-KX */
 //	write_dmem(module, lane_offset++, 15);
 //	/* 0x2 priority_10g_kx4 7:0 Resolution priority for 10GBASE-KX
@@ -2640,8 +2680,12 @@ static int qlm_gserr_change_phy_rate(int module)
 //	if (qlm_state.s.mode == QLM_MODE_100G_CR4)
 //		tech_abilities_15_8 |= 1 << 0;
 //	if ((qlm_state.s.mode == QLM_MODE_25G_CR) || (qlm_state.s.mode == QLM_MODE_25G_KR))
+//	{
 //		tech_abilities_15_8 |= 1 << 2;
-//	// FIXME: Consortium
+//		tech_abilities_15_8 |= 1 << 3;
+//	}
+//	if ((qlm_state.s.mode == QLM_MODE_50G_CR2) || (qlm_state.s.mode == QLM_MODE_50G_KR2))
+//		tech_abilities_15_8 |= 1 << 6;
 //	write_dmem(module, lane_offset++, tech_abilities_15_8);
 //	/* 0x11 tech_abilities_7_0
 //	   0:0 Advertise 1000BASE-KX in Base Page bit A0
@@ -2734,14 +2778,11 @@ static int qlm_gserr_change_phy_rate(int module)
 //	/* 0x17 reserved 7:0 N/A */
 //	write_dmem(module, lane_offset++, 0x00);
 //	/* 0x18 consortium_oui_23_16 7:0 OUI to use for the OUI field in 25G/50G Consortium OUI tagged Next Pages (Bits 23:16) */
-//	// FIXME: Consortium
-//	write_dmem(module, lane_offset++, 0x00);
+//	write_dmem(module, lane_offset++, 0x6a);
 //	/* 0x19 consortium_oui_15_8 7:0 OUI to use for the OUI field in 25G/50G Consortium OUI tagged Next Pages (Bits 15:8) */
-//	// FIXME: Consortium
-//	write_dmem(module, lane_offset++, 0x00);
+//	write_dmem(module, lane_offset++, 0x73);
 //	/* 0x1A consortium_oui_7_0 7:0 OUI to use for the OUI field in 25G/50G Consortium OUI tagged Next Pages (Bits 7:0) */
-//	// FIXME: Consortium
-//	write_dmem(module, lane_offset++, 0x00);
+//	write_dmem(module, lane_offset++, 0x7d);
 //	/* 0x1B device_id_31_24 7:0 32-bit PHY Device ID to send in Device ID Next Pages (Bits 32:24) */
 //	write_dmem(module, lane_offset++, 0x00);
 //	/* 0x1C device_id_31_25 7:0 32-bit PHY Device ID to send in Device ID Next Pages (Bits 23:16) */

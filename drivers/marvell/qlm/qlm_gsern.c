@@ -1688,6 +1688,7 @@ int qlm_set_mode_gsern(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
 			is_network = true;
 			break;
 		case QLM_MODE_SATA:
+		case QLM_MODE_CPRI:
 		case QLM_MODE_LAST:
 			return -1;
 	}

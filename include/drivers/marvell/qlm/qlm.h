@@ -104,6 +104,8 @@ typedef enum {
 	 * 20G (CN93XX QLMs)
 	 */
 	QLM_MODE_USXGMII_1X1,
+	/* CPRI, not eCPRI (CN9XXX BPHY) */
+	QLM_MODE_CPRI,
 	QLM_MODE_LAST,
 } qlm_modes_t;
 
