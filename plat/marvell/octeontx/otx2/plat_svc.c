@@ -47,7 +47,7 @@ uintptr_t plat_octeontx_svc_smc_handler(uint32_t smc_fid,
 
 	switch (smc_fid) {
 	case PLAT_OCTEONTX_DISABLE_RVU_LFS:
-		ret = octeontx2_clear_lf_to_pf_mapping(x1);
+		ret = octeontx2_clear_lf_to_pf_mapping();
 		SMC_RET1(handle, ret);
 		break;
 

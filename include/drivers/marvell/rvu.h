@@ -103,7 +103,7 @@ typedef enum {
 } rvu_device;
 
 
-int octeontx2_clear_lf_to_pf_mapping();
-void octeontx_rvu_init();
+int octeontx2_clear_lf_to_pf_mapping(void);
+void octeontx_rvu_init(void);
 
 #endif

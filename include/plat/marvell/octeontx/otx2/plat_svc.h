@@ -8,7 +8,11 @@
 #ifndef __PLAT_SVC_H__
 #define __PLAT_SVC_H__
 
-/* x1 - node number */
+/*
+ * No input
+ * Return:
+ *	0x0 -- Success
+ */
 #define PLAT_OCTEONTX_DISABLE_RVU_LFS	0xc2000b01
 
 #define PLAT_OCTEONTX_FLSF_FW_BOOTED	0xc2000b02

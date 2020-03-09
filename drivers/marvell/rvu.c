@@ -38,7 +38,7 @@
 
 static struct rvu_device rvu_dev[MAX_RVU_PFS];
 
-static inline int octeontx_get_msix_for_npa()
+static inline int octeontx_get_msix_for_npa(void)
 {
 	union cavm_npa_priv_lfx_int_cfg npa_int_cfg;
 	int lf = 0;
@@ -48,7 +48,7 @@ static inline int octeontx_get_msix_for_npa()
 	return npa_int_cfg.s.msix_size;
 }
 
-static inline int octeontx_get_msix_for_cgx()
+static inline int octeontx_get_msix_for_cgx(void)
 {
 	int lf = 0, nix = 0;
 	union cavm_nixx_priv_lfx_int_cfg nixx_int_cfg;
@@ -65,7 +65,7 @@ static void octeontx_init_rvu_af(int *hwvf)
 	rvu_dev[RVU_AF].first_hwvf = *hwvf;
 	rvu_dev[RVU_AF].pf_num_msix_vec = plat_octeontx_bcfg->rvu_config.admin_pf.num_msix_vec;
 	rvu_dev[RVU_AF].vf_num_msix_vec = RVU_VF_INT_VEC_COUNT +
-					  octeontx_get_msix_for_cgx(0);
+					  octeontx_get_msix_for_cgx();
 	rvu_dev[RVU_AF].pf_res_ena = FALSE;
 	rvu_dev[RVU_AF].pci.pf_devid = CAVM_PCC_DEV_IDL_E_RVU_AF & DEVID_MASK;
 	rvu_dev[RVU_AF].pci.vf_devid = CAVM_PCC_DEV_IDL_E_SW_RVU_AF_VF & DEVID_MASK;
@@ -263,7 +263,7 @@ static int octeontx_init_rvu_from_fdt(void)
 }
 
 /* returns max PFs supported by RVU */
-static int octeontx_get_max_rvu_pfs()
+static int octeontx_get_max_rvu_pfs(void)
 {
 	union cavm_rvu_priv_const priv_const;
 
@@ -282,7 +282,7 @@ static int octeontx_get_max_rvu_vfs(void)
 	return priv_const.s.max_vfs_per_pf;
 }
 
-static void dump_rvu_devs()
+static void dump_rvu_devs(void)
 {
 	int pf;
 
@@ -304,7 +304,7 @@ static void dump_rvu_devs()
 }
 
 /* set mailbox memory*/
-static void mailbox_enable()
+static void mailbox_enable(void)
 {
 	int pf;
 	static uint64_t vf_base = VF_MBOX_BASE;
@@ -323,7 +323,7 @@ static void mailbox_enable()
 }
 
 /* Initialize PCI PF_DEVID and VF_DEVID */
-static void config_rvu_pci()
+static void config_rvu_pci(void)
 {
 	cavm_rvu_priv_pfx_id_cfg_t pf_id_cfg;
 	int pf;
@@ -337,7 +337,7 @@ static void config_rvu_pci()
 	}
 }
 
-static void msix_error_print_map()
+static void msix_error_print_map(void)
 {
 	int pf;
 
@@ -351,7 +351,7 @@ static void msix_error_print_map()
 /*
  * Configure AF interrupt map at PF's MSI-X table.
  */
-static void conf_msix_admin_blk_offset()
+static void conf_msix_admin_blk_offset(void)
 {
 	union cavm_rvu_priv_pfx_int_cfg af_int_cfg;
 	union cavm_nixx_priv_af_int_cfg nix_int_cfg;
@@ -427,7 +427,7 @@ static void conf_msix_admin_blk_offset()
 	assert(af_msix_used <= rvu_dev[0].pf_num_msix_vec);
 }
 
-static int msix_enable()
+static int msix_enable(void)
 {
 	uint32_t msix_offset = 0;
 	int pf;
@@ -659,7 +659,7 @@ static void reset_rvu_pf(int pf)
 }
 
 /* Returns max LFs supported by NPA */
-static int octeontx2_get_max_npa_lfs()
+static int octeontx2_get_max_npa_lfs(void)
 {
 	cavm_npa_af_const_t npa_af_const;
 
@@ -710,7 +710,7 @@ static void rvu_errata_35948(void)
 }
 
 /* Exported functions */
-int octeontx2_clear_lf_to_pf_mapping()
+int octeontx2_clear_lf_to_pf_mapping(void)
 {
 	int pf, lf;
 
@@ -727,7 +727,7 @@ int octeontx2_clear_lf_to_pf_mapping()
 	return 0;
 }
 
-void octeontx_rvu_init()
+void octeontx_rvu_init(void)
 {
 	int pf, rc;
 	int npalf_id = 0, nixlf_id = 0;
