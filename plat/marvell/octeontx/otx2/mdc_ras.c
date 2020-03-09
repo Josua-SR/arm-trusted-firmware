@@ -818,22 +818,8 @@ static int ras_init_mccs(void)
 	}
 #endif /* !RAS_EXTENSION */
 
-	/* Workaround for [stream] security issue; use non-secure register */
-	/* configure non-secure register to allow setting of secure SPI */
-	{
-		int reg, spi_shift;
-
-		/* there are 16 2-bit SPI fields in each NSACRX reg */
-		reg = irq / 16;              /* 16 SPIs per reg */
-		spi_shift = (irq % 16) * 2;  /* 2 bits per SPI */
-
-		/* set value of 01 to permit "set pending" */
-		CSR_MODIFY(c, CAVM_GICD_NSACRX(reg),
-			   c.s.vec &= ~(3 << spi_shift);
-			   c.s.vec |= 1 << spi_shift);
-	}
 	octeontx_write64(vctl, irq);
-	octeontx_write64(vaddr, CAVM_GICD_SETSPI_NSR | 1);
+	octeontx_write64(vaddr, CAVM_GICD_SETSPI_SR | 1);
 
 	CSR_WRITE(CAVM_MDC_INT_ENA_W1S, 1ULL);
 

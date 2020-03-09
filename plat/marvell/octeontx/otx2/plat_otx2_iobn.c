@@ -83,6 +83,12 @@ void octeontx_init_iobn(uint64_t config_base, uint64_t config_size)
 		{ CAVM_PCC_DEV_CON_E_GPIO_CN9, 1, 1 /* strm */, 0 /* phys */ },
 		/* To get secure interrupts for BPHY, PHYS_NSEC must == 0 */
 		{ CAVM_PCC_DEV_CON_E_BPHY, 1, 1 /* strm */, 0 /* phys */ },
+#if RAS_EXTENSION
+		/* for RAS secure IRQs, these need strm_nsec==phys_nsec==0 */
+		{ CAVM_PCC_DEV_CON_E_LMCX(0), MAX_LMC, 0, 0 },
+		{ CAVM_PCC_DEV_CON_E_MCCX(0), MAX_MCC, 0, 0 },
+		{ CAVM_PCC_DEV_CON_E_MDC, 1, 0, 0 },
+#endif /* RAS_EXTENSION */
 	};
 	/* These settings are platform-specific */
 	struct otx2_stream_security_setting *plat_streams;

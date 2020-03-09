@@ -1492,22 +1492,8 @@ int lmc_ras_setup(int lmc_no)
 	debug_ras("Enable MSIX%d for LMC%d, irq:%d\n",
 	     vec, lmc_no, irq);
 
-	/* configure non-secure register to allow setting of secure SPI */
-	{
-		int reg, spi_shift;
-
-		/* there are 16 2-bit SPI fields in each NSACRX reg */
-		reg = irq / 16;              /* 16 SPIs per reg */
-		spi_shift = (irq % 16) * 2;  /* 2 bits per SPI */
-
-		/* set value of 01 to permit "set pending" */
-		CSR_MODIFY(c, CAVM_GICD_NSACRX(reg),
-			   c.s.vec &= ~(3 << spi_shift);
-			   c.s.vec |= 1 << spi_shift);
-	}
 	octeontx_write64(vctl, irq);
-	/* Workaround for [stream] security issue; use non-secure register */
-	octeontx_write64(vaddr, CAVM_GICD_SETSPI_NSR | 1);
+	octeontx_write64(vaddr, CAVM_GICD_SETSPI_SR | 1);
 
 	debug_ras("addr: 0x%llx, ctl: 0x%llx\n",
 	     octeontx_read64(vaddr), octeontx_read64(vctl));
@@ -1570,22 +1556,8 @@ int lmcoe_ras_setup(int mcc, int lmcoe)
 		CAVM_MCCX_LMCOEX_RAS_INT_ENA_W1C(mcc, lmcoe),
 		~0ULL);
 
-	/* configure non-secure register to allow setting of secure SPI */
-	{
-		int reg, spi_shift;
-
-		/* there are 16 2-bit SPI fields in each NSACRX reg */
-		reg = irq / 16;              /* 16 SPIs per reg */
-		spi_shift = (irq % 16) * 2;  /* 2 bits per SPI */
-
-		/* set value of 01 to permit "set pending" */
-		CSR_MODIFY(c, CAVM_GICD_NSACRX(reg),
-			   c.s.vec &= ~(3 << spi_shift);
-			   c.s.vec |= 1 << spi_shift);
-	}
 	octeontx_write64(vctl, irq);
-	/* Workaround for [stream] security issue; use non-secure register */
-	octeontx_write64(vaddr, CAVM_GICD_SETSPI_NSR | 1);
+	octeontx_write64(vaddr, CAVM_GICD_SETSPI_SR | 1);
 
 	debug_ras("addr: 0x%llx, ctl: 0x%llx\n",
 	     octeontx_read64(vaddr), octeontx_read64(vctl));
@@ -1693,8 +1665,9 @@ static int dram_inject_error(struct elx_map *m, int bit, int flags)
 
 	if (m->mapped) {
 		dcivac((uint64_t)m->mapped);
-		printf("Injected error va:0x%llx, pa:%p, lmc%d\n",
-			m->va, m->mapped, m->lmcx);
+		printf("Injected error va:0x%llx, pa:%p, lmc%d (mcc%d)\n",
+			m->va, m->mapped, m->lmcx,
+			plat_lmc_map[m->lmcx].mcc);
 
 		if (reread) {
 			/* Read back the data which should now cause an error */
