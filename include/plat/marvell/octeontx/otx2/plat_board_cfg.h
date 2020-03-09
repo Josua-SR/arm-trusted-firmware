@@ -135,15 +135,6 @@ typedef struct ras_config {
 	int nr_ghes;
 } ras_config_t;
 
-/* Used to initialize individual device IOBN security settings */
-struct otx2_stream_security_setting {
-	uint32_t streamid;    /* id of instance 0, see CAVM_PCC_DEV_CON_E_xxx */
-	int      instances;   /* # of stream instances */
-	/* following are applied to BOTH BUSX & DEVX/RSLX */
-	int      strm_nsec;
-	int      phys_nsec;
-};
-
 typedef struct plat_octeontx_board_cfg {
 	board_cfg_t bcfg;
 	rvu_config_t rvu_config;

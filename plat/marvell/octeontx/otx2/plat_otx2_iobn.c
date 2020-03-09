@@ -15,6 +15,7 @@
 #include <octeontx_utils.h>
 #include <platform_def.h>
 #include <octeontx_irqs_def.h>
+#include <plat_otx2_configuration.h>
 
 #include "cavm-csrs-ecam.h"
 #include "cavm-csrs-iobn.h"
@@ -66,11 +67,9 @@ void octeontx_init_iobn(uint64_t config_base, uint64_t config_size)
 	union cavm_ecamx_domx_const domx_const;
 	int iobn5_domain_max;
 	int set_all_domains;
-	int strm_nsec, phys_nsec;
+	int strm_nsec, phys_nsec, num_stream_settings, num_common;
 	uint32_t streamid;
 	/*
-	 * Settings in this table are common to all OTX2 platforms.
-	 *
 	 * This array contains specific permissions settings for
 	 * individual streams (i.e. devices).
 	 *
@@ -78,30 +77,64 @@ void octeontx_init_iobn(uint64_t config_base, uint64_t config_size)
 	 *   strm_nsec = 1
 	 *   phys_nsec = 1
 	 */
-	struct otx2_stream_security_setting stream_settings[] = {
+	/* Settings in this table are common to all OTX2 platforms. */
+	struct otx2_stream_security_setting common_streams[] = {
 		/* To get secure interrupts for GPIO, PHYS_NSEC must == 0 */
 		{ CAVM_PCC_DEV_CON_E_GPIO_CN9, 1, 1 /* strm */, 0 /* phys */ },
 		/* To get secure interrupts for BPHY, PHYS_NSEC must == 0 */
 		{ CAVM_PCC_DEV_CON_E_BPHY, 1, 1 /* strm */, 0 /* phys */ },
 	};
+	/* These settings are platform-specific */
+	struct otx2_stream_security_setting *plat_streams;
+	/* The current element of the 'set' of common + platform settings */
+	struct otx2_stream_security_setting *stream_settings;
+
+	/*
+	 * Implementation note: this function traverses the entire list of
+	 * devices, setting appropriate security settings for each,
+	 * whith is either a default value, or one specified for the device.
+	 *
+	 * There is a set of devices which require specific settings.
+	 * This set is comprised of two lists, the the family-specific
+	 * (i.e. common) settings, and the platform-specific settings.
+	 * When traversing the set, the current element is referred to
+	 * as 'stream_settings'.
+	 *
+	 * The variable 'num_stream_settings' holds the count of all the
+	 * elments in both lists.
+	 * The variable 'num_common' serves as the separator
+	 * to distinguish between the two lists.
+	 */
 
 	vsec_ctl.u = octeontx_read32(config_base + CAVM_PCCPF_XXX_VSEC_CTL);
 	iobn_nr = vsec_ctl.s.inst_num;
 
+	/* Retrieve platform stream settings and determine count. */
+	plat_streams = plat_get_otx2_stream_security(&j);
+	/* (boolean)pointer should equal (boolean) count */
+	assert(!((plat_streams != NULL) ^ (j != 0)));
+
+	num_common = ARRAY_SIZE(common_streams);
+	num_stream_settings = num_common + j;
+
 	/*
-	 * Allow all IO units to access non-secure memory.
-	 * Program secure devices individually as needed
-	 * (per 'stream_settings[]' above).
+	 * Allow all IO units to access non-secure memory (default).
+	 * Program secure devices individually as needed per 'stream_settings'.
 	 */
 	for (rsl_idx = 0; rsl_idx < 256; rsl_idx++) {
 		CSR_WRITE(CAVM_IOBNX_RSLX_STREAMS(iobn_nr, rsl_idx), 0x3);
 
-		/* check if individual streams require RSLX setting */
-		for (j = 0; j < ARRAY_SIZE(stream_settings); j++) {
+		/* check if any individual streams require RSLX setting */
+		for (j = 0; j < num_stream_settings; j++) {
+			/* find correct element in appropriate list */
+			if (j < num_common)
+				stream_settings = &common_streams[j];
+			else
+				stream_settings = &plat_streams[j - num_common];
 			/* Iterate all instances of the stream */
-			for (inst = 0; inst < stream_settings[j].instances;
+			for (inst = 0; inst < stream_settings->instances;
 			     inst++) {
-				streamid = stream_settings[j].streamid + inst;
+				streamid = stream_settings->streamid + inst;
 
 				/* A stream will use DEVX or RSLX, not both */
 				if (!stream_uses_rslx_or_devx(streamid))
@@ -115,9 +148,9 @@ void octeontx_init_iobn(uint64_t config_base, uint64_t config_size)
 					CAVM_IOBNX_RSLX_STREAMS(iobn_nr,
 								rsl_idx),
 					c.s.strm_nsec =
-						stream_settings[j].strm_nsec;
+						stream_settings->strm_nsec;
 					c.s.phys_nsec =
-						stream_settings[j].phys_nsec);
+						stream_settings->phys_nsec);
 			}
 		}
 	}
@@ -153,15 +186,21 @@ void octeontx_init_iobn(uint64_t config_base, uint64_t config_size)
 				  iobn_nr, domain, bus), 0x3);
 
 			/* check if individual streams require BUSX setting */
-			for (j = 0; j < ARRAY_SIZE(stream_settings); j++) {
-				strm_nsec = stream_settings[j].strm_nsec;
-				phys_nsec = stream_settings[j].phys_nsec;
+			for (j = 0; j < num_stream_settings; j++) {
+				/* find correct element in appropriate list */
+				if (j < num_common)
+					stream_settings = &common_streams[j];
+				else
+					stream_settings =
+						&plat_streams[j - num_common];
+				strm_nsec = stream_settings->strm_nsec;
+				phys_nsec = stream_settings->phys_nsec;
 
 				/* Iterate all instances of the stream */
 				for (inst = 0; inst <
-				     stream_settings[j].instances;
+				     stream_settings->instances;
 				     inst++) {
-					streamid = stream_settings[j].streamid;
+					streamid = stream_settings->streamid;
 					streamid += inst;
 
 					/* Verify stream uses this domain/bus */
@@ -202,15 +241,21 @@ void octeontx_init_iobn(uint64_t config_base, uint64_t config_size)
 				  iobn_nr, domain, dev), 0x3);
 
 			/* check if individual streams require DEVX setting */
-			for (j = 0; j < ARRAY_SIZE(stream_settings); j++) {
-				strm_nsec = stream_settings[j].strm_nsec;
-				phys_nsec = stream_settings[j].phys_nsec;
+			for (j = 0; j < num_stream_settings; j++) {
+				/* find correct element in appropriate list */
+				if (j < num_common)
+					stream_settings = &common_streams[j];
+				else
+					stream_settings =
+						&plat_streams[j - num_common];
+				strm_nsec = stream_settings->strm_nsec;
+				phys_nsec = stream_settings->phys_nsec;
 
 				/* Iterate all instances of the stream */
 				for (inst = 0; inst <
-				     stream_settings[j].instances;
+				     stream_settings->instances;
 				     inst++) {
-					streamid = stream_settings[j].streamid;
+					streamid = stream_settings->streamid;
 					streamid += inst;
 
 					/* stream uses DEVX or RSLX, not both */

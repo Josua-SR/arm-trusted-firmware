@@ -518,3 +518,32 @@ void plat_set_bphy_psm_msix_vectors(int msix_num, int irq_num, int enable)
 		octeontx_write64(vector_ptr, irq_num);
 	}
 }
+
+/*
+ * This API should be provided by each [otx2] platform that requires
+ * individual IOBN security settings.
+ *
+ * During IOBN initialization, this API is invoked to retrieve any
+ * platform-specific stream settings which need to be configured.
+ *
+ * The family-specific stream security settings (i.e. common across platforms)
+ * are provided by 'octeontx_init_iobn()'.
+ *
+ * Please refer to 'octeontx_init_iobn()'.
+ *
+ * On entry,
+ *   void
+ *
+ * Returns,
+ *   array of 'struct otx2_stream_security_setting'
+ *   size of array (via ptr)
+ */
+struct otx2_stream_security_setting *plat_get_otx2_stream_security(int *count)
+{
+	static struct otx2_stream_security_setting stream_settings[] = {
+		/* no platform-specific stream security settings */
+	};
+
+	*count = ARRAY_SIZE(stream_settings);
+	return stream_settings;
+}
