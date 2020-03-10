@@ -60,6 +60,7 @@ typedef struct cgx_lmac_config {
 	int mode_idx;		/* helper field for the mode mapping */
 	int qlm;		/* from BDK DT */
 	int lane;		/* from BDK DT */
+	int first_phy_lane;	/* 1st Physical lane */
 	/* NOTE: when this bit is set, it doesn't necessarily
 	 * mean the link is up until the user sends LINK UP command
 	 */
@@ -143,6 +144,7 @@ typedef struct plat_octeontx_board_cfg {
 	ras_config_t ras_config;
 	uint64_t pf_mac_base; /* PF MAC Address */
 	int pf_mac_num;
+	int qlm_auto_config;
 } plat_octeontx_board_cfg_t;
 
 extern plat_octeontx_board_cfg_t * const plat_octeontx_bcfg;

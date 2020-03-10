@@ -260,7 +260,7 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 		rx_signal_stable_us = 10000;
 	}
 
-	lane = lmac->lane;
+	lane = lmac->first_phy_lane;
 
 	/* Don't need to look at GSER Rx signals when in internal loopback mode */
 	spux_ctrl1.u = CSR_READ(CAVM_CGXX_SPUX_CONTROL1(cgx_id, lmac_id));
@@ -1632,9 +1632,9 @@ static int cgx_get_usxgmii_type(int cgx_id, int lmac_id)
 	lmac = &cgx->lmac_cfg[lmac_id];
 
 	debug_cgx("%s: cgx %d qlm %d lane %d mode %d\n", __func__, cgx_id,
-					lmac->qlm, lmac->lane, lmac->mode);
+					lmac->qlm, lmac->first_phy_lane, lmac->mode);
 
-	qlm_state = cgx->qlm_ops->qlm_get_state(lmac->gserx, lmac->lane);
+	qlm_state = cgx->qlm_ops->qlm_get_state(lmac->gserx, lmac->first_phy_lane);
 	/* get the USXGMII type based on baud rate
 	 * and LMACs per CGX
 	 */
@@ -1738,7 +1738,7 @@ void cgx_lmac_init(int cgx_id, int lmac_id)
 		/* Program the lane and sub type */
 		usxgmii_ctrl.u = CSR_READ(
 					CAVM_CGXX_SPU_USXGMII_CONTROL(cgx_id));
-		usxgmii_ctrl.s.sds_id = lmac->lane;
+		usxgmii_ctrl.s.sds_id = lmac->first_phy_lane;
 		usxgmii_ctrl.s.usxgmii_type = cgx_get_usxgmii_type(cgx_id, lmac_id);
 		CSR_WRITE(CAVM_CGXX_SPU_USXGMII_CONTROL(cgx_id),
 					usxgmii_ctrl.u);
@@ -1785,7 +1785,7 @@ int cgx_get_lane_speed(int cgx_id, int lmac_id)
 	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
 	lmac = &cgx->lmac_cfg[lmac_id];
 	gserx = lmac->gserx;
-	lane_id = lmac->lane;
+	lane_id = lmac->first_phy_lane;
 
 	debug_cgx("%s: cgx %d qlm %d lane %d mode %d\n", __func__, cgx_id,
 					lmac->qlm, lane_id, lmac->mode);
@@ -3579,7 +3579,7 @@ void cgx_hw_init(int cgx_id)
 					if (cgx->qlm_ops->type == QLM_GSERN_TYPE)
 						cgx->qlm_ops->qlm_set_state(
 								lmac->gserx,
-								lmac->lane,
+								lmac->first_phy_lane,
 								state);
 				}
 				cgx_lmac_init(cgx_id, lmac_id);
