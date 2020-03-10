@@ -11,17 +11,14 @@
 
 static const unsigned char plat_octeontx_power_domain_tree_desc[] = {
 	/* No of root nodes */
-	PLATFORM_MAX_NODES,
+	[0] = PLATFORM_NODE_COUNT,
 	/* No of clusters */
-	PLATFORM_MAX_CLUSTERS_PER_NODE,
-	PLATFORM_MAX_CLUSTERS_PER_NODE,
+	[1 ... PLATFORM_NODE_COUNT]
+		= PLATFORM_MAX_CLUSTERS_PER_NODE,
 	/* No of CPU cores */
-	PLATFORM_MAX_CPUS_PER_CLUSTER,
-	PLATFORM_MAX_CPUS_PER_CLUSTER,
-	PLATFORM_MAX_CPUS_PER_CLUSTER,
-	PLATFORM_MAX_CPUS_PER_CLUSTER,
-	PLATFORM_MAX_CPUS_PER_CLUSTER,
-	PLATFORM_MAX_CPUS_PER_CLUSTER,
+	[1 + PLATFORM_NODE_COUNT ...
+		1 + PLATFORM_NODE_COUNT + PLATFORM_CLUSTER_COUNT - 1] =
+			PLATFORM_CORE_PER_CLUSTER,
 };
 
 /*******************************************************************************
@@ -40,7 +37,7 @@ const unsigned char *plat_get_power_domain_tree_desc(void)
  ******************************************************************************/
 int plat_core_pos_by_mpidr(u_register_t mpidr)
 {
-	unsigned int cluster_id, cpu_id, node_id;
+	unsigned int cpu_id_upper2bits, cpu_id, node_id;
 
 	mpidr &= MPIDR_AFFINITY_MASK;
 
@@ -48,18 +45,21 @@ int plat_core_pos_by_mpidr(u_register_t mpidr)
 		return -1;
 
 	node_id = (mpidr >> MPIDR_AFF2_SHIFT) & MPIDR_AFFLVL_MASK;
-	cluster_id = (mpidr >> MPIDR_AFF1_SHIFT) & MPIDR_AFFLVL_MASK;
+	/*
+	 * cpu_id on OcteonTX is splited across AFF0 and AFF1 fields.
+	 * AF1 holds upper 2 bits of cpu_id and AF0 holds lower 4 bits.
+	 */
+	cpu_id_upper2bits = (mpidr >> MPIDR_AFF1_SHIFT) & MPIDR_AFFLVL_MASK;
 	cpu_id = (mpidr >> MPIDR_AFF0_SHIFT) & MPIDR_AFFLVL_MASK;
+	cpu_id |= cpu_id_upper2bits << 4;
 
 	if (node_id >= PLATFORM_MAX_NODES)
 		return -1;
 
-	if (cluster_id >= PLATFORM_MAX_CLUSTERS_PER_NODE)
+	if (cpu_id >= PLATFORM_MAX_CPUS_PER_CLUSTER *
+			PLATFORM_MAX_CLUSTERS_PER_NODE)
 		return -1;
-
-	if (cpu_id >= PLATFORM_MAX_CPUS_PER_CLUSTER)
-		return -1;
-	return (cpu_id + (cluster_id << 4) + (node_id *
+	return (cpu_id + (node_id *
 			PLATFORM_MAX_CLUSTERS_PER_NODE *
 			PLATFORM_MAX_CPUS_PER_CLUSTER));
 }
