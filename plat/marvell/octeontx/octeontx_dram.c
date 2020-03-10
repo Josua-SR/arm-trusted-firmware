@@ -37,29 +37,7 @@ static inline uint32_t popcnt(uint64_t val)
 
 uint64_t octeontx_dram_size()
 {
-	uint64_t rank_size, memsize = 0;
-	int num_ranks, lmc;
-	union cavm_lmcx_config lmcx_config;
 	uint64_t addr = 0;
 
-	for (lmc = 0; lmc < MAX_LMC; lmc++) {
-		if (!plat_octeontx_scfg->scfg.is_lmc_enabled[lmc])
-			continue;
-
-		lmcx_config.u = CSR_READ(CAVM_LMCX_CONFIG(lmc));
-		num_ranks = popcnt(lmcx_config.s.init_status);
-		rank_size = 1ull << (28 + lmcx_config.s.pbank_lsb - lmcx_config.s.rank_ena);
-		memsize += rank_size * num_ranks;
-	}
-
-	/* Safenet for ASIM without configured DRAM size */
-	if (memsize == 0) {
-		ERROR("DRAM size for ASIM/EMUL-platform not configured\n");
-		memsize = 2ull << 30; //2GB to align with BDK
-	}
-
-	memsize -= memory_region_get_info(SECURE_PRESERVE, &addr);
-	memsize -= memory_region_get_info(NSECURE_PRESERVE, &addr);
-
-	return memsize;
+	return memory_region_get_info(NSECURE_NONPRESERVE, &addr);
 }
