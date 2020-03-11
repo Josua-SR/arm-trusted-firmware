@@ -64,28 +64,34 @@
 #define PCI_MSI_CAP_ID_NEXT_CTRL_REG	0x50
 #define PCI_MSI_ENABLE_MASK		BIT(16)
 
-#define PCIE_MSIX_CAP_ID_NEXT_CTRL_REG		0xb0
-#define PCIE_MSIX_CAP_NEXT_OFFSET_MASK		0xff00
-#define PCIE_MSIX_ENABLE_MASK			BIT(31)
-#define PCIE_MSIX_TABLE_SIZE			(0xf << 16)
-#define PCIE_MSIX_TABLE_OFFSET			0x00fe0000
-#define PCIE_MSIX_MSG_BIR			2
-#define PCIE_PBA_OFFSET				0x00fd0000
-#define PCIE_PBA_BIR				2
+#define PCIE_MSIX_CAP_ID_NEXT_CTRL_REG	0xb0
+#define PCIE_MSIX_CAP_ID		0x3
+#define PCIE_MSIX_ENABLE_MASK		BIT(31)
+#define PCIE_MSIX_TABLE_ENTRIES		(512 - 1) /* 0 => 1 entry */
+#define PCIE_MSIX_TABLE_SIZE		(PCIE_MSIX_TABLE_ENTRIES << 16)
+#define PCIE_MSIX_TABLE_OFFSET		0x1000
+#define PCIE_MSIX_MSG_BIR		2
+#define PCIE_PBA_OFFSET			0x1800
+#define PCIE_PBA_BIR			2
 
-#define PCIE_LANE_EQ_CTRL01_REG			0x164
-#define PCIE_LANE_EQ_CTRL23_REG			0x168
-#define PCIE_LANE_EQ_SETTING			0x55555555
+#define PCIE_LANE_EQ_CTRL01_REG		0x164
+#define PCIE_LANE_EQ_CTRL23_REG		0x168
+#define PCIE_LANE_EQ_SETTING		0x55555555
 
-#define PCIE_LINK_FLUSH_CONTROL_OFF_REG		0x8cc
-#define PCIE_AUTO_FLUSH_EN_MASK			0x1
+#define PCIE_LINK_FLUSH_CONTROL_OFF_REG	0x8cc
+#define PCIE_AUTO_FLUSH_EN_MASK		0x1
 
-#define PCIE_REQ_RESET				0x8058
-#define PCIE_LINK_REQ_RST_MASK			0x2
+#define PCIE_REQ_RESET			0x8058
+#define PCIE_LINK_REQ_RST_MASK		0x2
+
+#define PCIE_NUM_OF_VFS_TO_CONFIGURE	0x4
+#define PCIE_VF_REGS_OFFSET		0x1000
 
 void dw_pcie_configure(uintptr_t regs_base, uint32_t cap_speed)
 {
 	uint32_t reg;
+	uint32_t i;
+	uintptr_t offset;
 
 	/*
 	 * Set the correct hints for lane equalization.
@@ -165,20 +171,25 @@ void dw_pcie_configure(uintptr_t regs_base, uint32_t cap_speed)
 	mmio_write_32(regs_base + PCI_MSI_CAP_ID_NEXT_CTRL_REG, reg);
 
 	/*
-	 * PCIE MSI-X capability
+	 * Setup PCIE MSI-X capability structures for PF0 and its first VFs
 	 */
-	mmio_write_32(regs_base + PCIE_MSIX_CAP_ID_NEXT_CTRL_REG + 0x4,
-		      PCIE_MSIX_TABLE_OFFSET | PCIE_MSIX_MSG_BIR);
-	mmio_write_32(regs_base + PCIE_MSIX_CAP_ID_NEXT_CTRL_REG + 0x8,
-		      PCIE_PBA_OFFSET | PCIE_PBA_BIR);
-	/*
-	 * Remove VPD capability following the PCIE MSI-X capability entry,
-	 * since we don't support it.
-	 */
-	reg = mmio_read_32(regs_base + PCIE_MSIX_CAP_ID_NEXT_CTRL_REG);
-	reg &= ~PCIE_MSIX_CAP_NEXT_OFFSET_MASK;
-	reg |= PCIE_MSIX_ENABLE_MASK | PCIE_MSIX_TABLE_SIZE;
-	mmio_write_32(regs_base + PCIE_MSIX_CAP_ID_NEXT_CTRL_REG, reg);
+	for (i = 0, offset = 0; i <= PCIE_NUM_OF_VFS_TO_CONFIGURE;
+	     i++, offset += PCIE_VF_REGS_OFFSET) {
+		/* PCI MSI-X Capability ID Next Control Register */
+		mmio_write_32(regs_base + offset +
+			      PCIE_MSIX_CAP_ID_NEXT_CTRL_REG,
+			      PCIE_MSIX_ENABLE_MASK |
+			      PCIE_MSIX_TABLE_SIZE  |
+			      PCIE_MSIX_CAP_ID);
+		/* MSI-X Table offset Register */
+		mmio_write_32(regs_base + offset +
+			      PCIE_MSIX_CAP_ID_NEXT_CTRL_REG + 0x4,
+			      PCIE_MSIX_TABLE_OFFSET | PCIE_MSIX_MSG_BIR);
+		/* MSI-X PBA offset Register */
+		mmio_write_32(regs_base + offset +
+			      PCIE_MSIX_CAP_ID_NEXT_CTRL_REG + 0x8,
+			      PCIE_PBA_OFFSET | PCIE_PBA_BIR);
+	}
 }
 
 int dw_pcie_link_up(uintptr_t regs_base, uint32_t cap_speed, int is_end_point)
