@@ -192,7 +192,7 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 	MYD_U16 lane;
 	MYD_U32 mode_option;
 	MYD_DEV_PTR myd_dev;
-	PMYD_MODE_CONFIG myd_host_config, myd_line_config;
+	PMYD_MODE_CONFIG myd_host_config;
 
 	debug_phy_driver("%s: %d:%d\n", __func__, cgx_id, lmac_id);
 
@@ -290,20 +290,35 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 	lane = lmac_cfg->lane_to_sds & 3;
 	myd_dev = phy->priv;
 	myd_host_config = &myd_dev->hostConfig[0][lane];
-	myd_line_config = &myd_dev->lineConfig[0][lane];
-
-	if (host_mode == myd_host_config->opMode &&
-	    line_mode == myd_line_config->opMode) {
-		/* There are no mode changes.  There is nothing to do. */
-		return;
-	}
 
 	if (myd_host_config->opMode == MYD_P25YN && host_mode != MYD_P25YN) {
 		/* undo the 25GBASE-R2 hack */
 		myd_write_mdio(phy->priv, phy->addr, 4, 0xF06C, 0);
 	}
 
-	mode_option = MYD_MODE_FORCE_RECONFIG;
+	debug_phy_driver("%s: %d:%d Tune RX equalizer at 6141 PHY line side\n",
+			 __func__, cgx_id, lmac_id);
+	/* Tune CTLE coefficients for cable lengths 0.5m to 3m */
+	/* MYD_MODE_CTLE */
+	myd_dev->modeParams.hostMaxHF = MYD_MODE_OPTION_IGNORE;
+	myd_dev->modeParams.hostMinHF = MYD_MODE_OPTION_IGNORE;
+	myd_dev->modeParams.hostMaxLF = MYD_MODE_OPTION_IGNORE;
+	myd_dev->modeParams.hostMinLF = MYD_MODE_OPTION_IGNORE;
+
+	myd_dev->modeParams.lineMaxHF = 0x6;
+	myd_dev->modeParams.lineMinHF = MYD_MODE_OPTION_IGNORE;
+	myd_dev->modeParams.lineMaxLF = MYD_MODE_OPTION_IGNORE;
+	myd_dev->modeParams.lineMinLF = MYD_MODE_OPTION_IGNORE;
+
+	/* MYD_MODE_INIT_CTLE */
+	myd_dev->modeParams.hostInitHF = MYD_MODE_OPTION_IGNORE;
+	myd_dev->modeParams.hostInitLF = MYD_MODE_OPTION_IGNORE;
+	myd_dev->modeParams.lineInitHF = 0;
+	myd_dev->modeParams.lineInitLF = 4;
+
+	mode_option = MYD_MODE_CTLE | MYD_MODE_INIT_CTLE |
+		      MYD_MODE_FORCE_RECONFIG;
+
 	status = mydSetModeSelection(phy->priv, phy->addr, lane, host_mode,
 				     line_mode, mode_option,
 				     &result);
@@ -408,6 +423,28 @@ void phy_marvell_6141_get_link_status(int cgx_id, int lmac_id,
 		      __func__, cgx_id, lmac_id,
 		      myd_mode_config->speed);
 		break;
+	}
+
+	if (link->s.speed == CGX_LINK_50G &&
+	    myd_mode_config->opMode !=MYD_P50UP) {
+		int val, err_blks_counter, ber_counter;
+
+		val = smi_read(phy->mdio_bus, CLAUSE45, phy->addr,
+			       MYD_LINE_SIDE, 0x1021);
+
+		if (val & 0x4000)
+			debug_phy_driver("%d:%d PHY line side PCS has high BER\n",
+					 cgx_id, lmac_id);
+
+		ber_counter = (val & 0x3F00) >> 8;
+		if (ber_counter)
+			debug_phy_driver("%d:%d PHY line side PCS BER counter = %d\n",
+					 cgx_id, lmac_id, ber_counter);
+
+		err_blks_counter = val & 0xFF;
+		if (err_blks_counter)
+			debug_phy_driver("%d:%d PHY line side PCS errored blocks counter = %d\n",
+					 cgx_id, lmac_id, err_blks_counter);
 	}
 }
 
