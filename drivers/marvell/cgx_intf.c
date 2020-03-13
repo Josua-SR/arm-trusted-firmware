@@ -2329,6 +2329,7 @@ void cgx_set_supported_link_modes(int cgx_id, int lmac_id)
 		if (lmac_cfg->sfp_info.is_sfp) {
 			lmac_cfg->supported_link_modes |=
 				((1 << CGX_MODE_1000_BASEX_BIT) |
+				(1 << CGX_MODE_SGMII_BIT) |
 				(1 << CGX_MODE_10G_C2C_BIT) |
 				(1 << CGX_MODE_10G_C2M_BIT) |
 				(1 << CGX_MODE_10G_KR_BIT) |
@@ -2348,6 +2349,7 @@ void cgx_set_supported_link_modes(int cgx_id, int lmac_id)
 		(lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
 		(lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R)) {
 		uint64_t modes_allowed = ((1 << CGX_MODE_1000_BASEX_BIT) |
+					 (1 << CGX_MODE_SGMII_BIT) |
 					 (1 << CGX_MODE_10G_C2C_BIT) |
 					 (1 << CGX_MODE_10G_C2M_BIT) |
 					 (1 << CGX_MODE_10G_KR_BIT) |
