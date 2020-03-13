@@ -1,5 +1,5 @@
 /*******************************************************************************
-Copyright (C) 2014 - 2018, Marvell International Ltd. and its affiliates
+Copyright (C) 2014 - 2019, Marvell International Ltd. and its affiliates
 If you received this File from Marvell and you have entered into a commercial
 license agreement (a "Commercial License") with Marvell, the File is licensed
 to you under the terms of the applicable Commercial License.
@@ -8,7 +8,7 @@ to you under the terms of the applicable Commercial License.
 /********************************************************************
 This file contains functions for initializing the driver, setting up 
 the user-provide MDIO access functions, chip reset and various driver
-initialization operations for the Marvell X7120/X6181/X6141 Device.
+initialization operations for the Marvell X7120/X6181/X6141/X6142 Device.
 ********************************************************************/
 
 #ifndef MYDINITIALIZATION_H
@@ -65,11 +65,11 @@ extern "C" {
            for API call.
 
  Returns:
-   MYD_OK    - on success
-   MYD_FAIL  - on error
+   Returns MYD_OK when mydInitDriver() success. Otherwise, one of the MYD_STATUS_xxx 
+   status codes will be returned.
 
  Description:
-   Marvell X7120/X6181/X6141 Driver Initialization Routine.
+   Marvell X7120 family Driver Initialization Routine.
    This is the first routine that needs be called by system software.
    It takes parameters from system software, and returns a pointer (*dev)
    to a data structure which includes information related to this Marvell PHY
@@ -93,7 +93,7 @@ extern "C" {
    to MYD_TRUE will allow more time for the EEPROM image to load to the RAM after a 
    hardware reset. The devEEPROM will be set if mydLoadEEPROMImageToRAM is called.
 
-   An MYD_DEV is required for each of Marvell X7120/X6181/X6141 device in the system. 
+   An MYD_DEV is required for each of Marvell X7120/X6181/X6141/X6142 device in the system. 
    For example, if there are two X7120 devices, two MYD_DEV are required.   
 
    The download will only be executed if both Serdes and SBus images are 
@@ -203,11 +203,11 @@ MYD_STATUS mydReloadDriver
    i.e. loopbacks, polarity changes, etc...  The client application will need to re-query 
    and track any state change.  
      
-   The mydReloadDriver reads back the mode registers for all lanes.  However, if an 
-   existing mode is switched to another mode with a smaller lane count, the may be stale 
-   info in the mode registers.  The read back the Repeater MYD_R400U and MYD_R200L on 
-   reloading the device structure will report back as MYD_R50U on all 8 lanes for MYD_R400U 
-   and MYD_R25L for MYD_R200L respectively.
+   The mydReloadDriver reads back the mode registers for all lanes. The read back of the
+   repeater modes MYD_R400U and MYD_R200L when reloading the device structure will report
+   back as MYD_R50U on all 8 lanes for MYD_R400U and MYD_R25L for MYD_R200L respectively.
+   If an existing mode is switched from 8 lanes repeater modes, there may be stale
+   info in the mode registers.
 
 *******************************************************************************/
 MYD_STATUS mydReloadDriver

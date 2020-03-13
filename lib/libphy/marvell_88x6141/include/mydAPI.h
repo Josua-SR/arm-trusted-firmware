@@ -1,5 +1,5 @@
 /*******************************************************************************
-Copyright (C) 2014 - 2018, Marvell International Ltd. and its affiliates
+Copyright (C) 2014 - 2019, Marvell International Ltd. and its affiliates
 If you received this File from Marvell and you have entered into a commercial
 license agreement (a "Commercial License") with Marvell, the File is licensed
 to you under the terms of the applicable Commercial License.
@@ -8,7 +8,7 @@ to you under the terms of the applicable Commercial License.
 /********************************************************************
 This file contains function prototypes for mode selections, interrupts
 and real-time controls, configurations and status for the 
-Marvell X7120/X6181/X6141 PHY.
+Marvell X7120/X6181/X6141/X6142 PHY.
 ********************************************************************/
 #ifndef MYD_API_H
 #define MYD_API_H
@@ -19,7 +19,7 @@ Marvell X7120/X6181/X6141 PHY.
 #endif
 
 #define MYD_API_MAJOR_VERSION 1
-#define MYD_API_MINOR_VERSION 2
+#define MYD_API_MINOR_VERSION 3
 #define MYD_API_BUILD_ID 0
 
 /* These macros are handy for calling a function when you want to test the
@@ -64,6 +64,12 @@ Marvell X7120/X6181/X6141 PHY.
             {   MYD_DBG_ERROR("MYD_CHECK_DEV_SIDE: incorrect host/side selection: %u at %s: line:%u\n", \
                               XhostLineSel, __FUNCTION__,__LINE__);                                     \
                return MYD_FAIL;}                                                                        \
+                                                                                                        \
+            if ((XpDev->deviceId == MYD_DEV_X6142) && (XhostLineSel == MYD_HOST_SIDE))                  \
+            {   if (XlaneOffset >= 2)                                                     \
+                {   MYD_DBG_ERROR("MYD_CHECK_DEV_SIDE: only 2 host lane is supported on X6142.\n");     \
+                    return MYD_FAIL;}                                                                   \
+            }                                                                                           \
         }
 #endif
 
@@ -72,7 +78,8 @@ Marvell X7120/X6181/X6141 PHY.
 #define MYD_STATUS_MODE_GENERAL_ERROR      0x1  /* Mode selection general error */
 #define MYD_STATUS_MODE_GROUP_ERROR        0x2  /* Grouped mode selected on individual non-grouped lane mode */
 #define MYD_STATUS_MODE_NON_GROUP_ERROR    0x3  /* Individual non-grouped lane mode selected in grouped mode */
-#define MYD_STATUS_MODE_HOST_LINE_ERROR    0x4  /* Combination of host and line mode selection invalid    */
+#define MYD_STATUS_MODE_HOST_LINE_ERROR    0x4  /* Combination of host and line mode selection invalid */
+#define MYD_STATUS_MODE_OPTION_ERROR       0x5  /* Combination of mode option is invalid */
 
 /******************************************************************************
 MYD_VOID mydGetAPIVersion
@@ -124,18 +131,29 @@ MYD_VOID mydGetAPIVersion
 */
 
 /*  Mode Option List */
-#define MYD_MODE_FORCE_RECONFIG (1<<0) /* force override current operational mode;
-                                          this option needs to be set when switching 
-                                          between modes of different number of lane used.  
-                                          e.g. changing from a 2-lane P100UP to a 1-lane 
-                                          P50UP on the same port and laneOffset */
-
+#define MYD_MODE_FORCE_RECONFIG   (1<<0) /* force override current operational mode;
+                                            this option needs to be set when switching 
+                                            between modes of different number of lane used.  
+                                            e.g. changing from a 2-lane P100UP to a 1-lane 
+                                            P50UP on the same port and laneOffset */
+ 
                                          /* iCal Effort 0.5 default if iCal option bit 1:2 not set */
 #define MYD_MODE_ICAL_EFFORT_0    (1<<1) /* shorten linkup time for some modes */
 #define MYD_MODE_ICAL_EFFORT_1    (1<<2) /* improves performance for some modes */
 #define MYD_MODE_ICAL_EFFORT_0_FV (1<<3) /* iCal Effort 0 Fixed Vernier */
-#define MYD_MODE_SHORT_CHANNEL    (1<<4) /* Long channel (default) */
-#define MYD_MODE_TEMPERATURE_RAMP (1<<5) /* No temperature ramp (default) PAM4 signal only*/
+#define MYD_MODE_INIT_CTLE        (1<<4) /* Option to set the line/host CTLE HF/LF initial values 
+                                            in mode selection.
+                                            Refer to xxInitHF/xxInitHF in MYD_MODE_OPTION_STRUCT
+                                            for ranges in these values */
+#define MYD_MODE_CTLE             (1<<5) /* Option to set the line/host CTLE HF/LF in
+                                            mode selection.
+                                            Refer to xxMaxHF/xxMinLF in MYD_MODE_OPTION_STRUCT
+                                            for ranges in these values */
+#define MYD_MODE_TEMPERATURE_RAMP (1<<6) /* Option to set the Common mode adjustment for
+                                            line and/or host sides */  
+#define MYD_MODE_CHANNEL_LEN      (1<<7) /* Long or Short channel
+                                            Refer to channel options in MYD_MODE_OPTION_STRUCT
+                                            for option available to line/host */
 
 /******************************************************************************
 MYD_STATUS mydSetModeSelection
@@ -185,9 +203,31 @@ MYD_STATUS mydSetModeSelection
     single PCS block.  
 
     When switching between a group to a non-group mode or vise-versa, a hardware 
-    reset will be issued since the SerDes configuration is significantly different 
+    reset is needed since the SerDes configuration is significantly different 
     in the PCS block. Any existing operational mode settings in the device 
-    structure(pDev) will be reset and will be configured to the requested mode.
+    structure(pDev) will be reset and will be configured to the requested mode  
+    when the hardware reset is issued.
+
+    The modeOption provides an option to customize certain mode setting with 
+    pre-defined values for the MYD_MODE_OPTION_PARAMS structure. Refer to the 
+    "Mode Option List" for the mode option selections.  
+
+    Example on using the modeOption:
+    - optional setting using MYD_MODE_CTLE mode options to modify the CTLE HF/LF 
+    pDev->modeParams.hostMaxHF = 0x6;
+    pDev->modeParams.hostMinHF = MYD_MODE_OPTION_IGNORE;
+    pDev->modeParams.hostMaxLF = MYD_MODE_OPTION_DEFAULT;
+    pDev->modeParams.hostMinLF = MYD_MODE_OPTION_IGNORE;
+
+    pDev->modeParams.lineMaxHF = MYD_MODE_OPTION_IGNORE;
+    pDev->modeParams.lineMinHF = 0x3;
+    pDev->modeParams.lineMaxLF = MYD_MODE_OPTION_DEFAULT;
+    pDev->modeParams.lineMinLF = 0x2;
+
+    modeOption = MYD_MODE_CTLE | MYD_MODE_FORCE_RECONFIG;
+
+    status = mydSetModeSelection(pDev, mdioPort, laneOffset, hostMode, lineMode, 
+                                 modeOption, &result);
 
  Side effects:
     The current link state will be interrupted and reset to the requested operational 
@@ -201,12 +241,14 @@ MYD_STATUS mydSetModeSelection
     lane offset 0 and 2 should be used when calling this API. For 200G, only 
     lane offset 0 should be used.
 
-    When switching between a group to a non-group mode or vise-versa within a port, the 
-    MYD_MODE_FORCE_RECONFIG must be set, otherwise, an error status will be returned.
+    It is recommended to issue a hardware reset when switching between a group to a 
+    non-group mode or vise-versa within a port. 
 
-    The MYD_MODE_FORCE_RECONFIG needs to be set when switching between modes of different 
-    number of lane used.  e.g. changing from a 2-lane P100UP to a 1-lane P50UP on the same 
-    port and laneOffset, the MYD_MODE_FORCE_RECONFIG must be set.
+    There are limitations on using the MYD_MODE_FORCE_RECONFIG when switching between 
+    modes of different number of lane used. E.g. changing from a 2-lane P100UP to 
+    a 1-lane P50UP on the same port and laneOffset 0, the MYD_MODE_FORCE_RECONFIG 
+    must be set. This only applies is the new mode starts on laneOffset 0. Otherwise, 
+    a hardware reset will be needed.
     
     The MYD_MODE_ICAL_EFFORT_0 option allows to speed up the linkup time on some
     operational modes. This option may change in future releases.
@@ -1499,6 +1541,344 @@ MYD_STATUS mydGetDPFaultConfig
     OUT MYD_U16 *txType,
     OUT MYD_U16 *rxType
 );
+
+#define MYD_ANEG_TIMER_0  0  /* 1.65s default */
+#define MYD_ANEG_TIMER_1  1  /* 3s */
+#define MYD_ANEG_TIMER_2  2  /* 5s */
+#define MYD_ANEG_TIMER_3  3  /* 5.11s */
+/*******************************************************************
+MYD_STATUS mydExtendDeviceAutoNegTimer
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 extendANegTimerOption
+);
+
+ Inputs:
+    pDev - pointer to MYD_DEV initialized by mydInitDriver() call
+    extendANegTimerOption - MYD_ANEG_TIMER_x defined above
+    
+ Outputs:
+    none
+
+ Returns:
+    MYD_OK - if successfully set
+    MYD_FAIL - otherwise returns MYD_FAIL
+
+ Description:
+    This function is called before calling the AN mode settings. 
+    The extended AN time will allow more time for the auto negotiation 
+    to complete. 
+
+ Side effects:
+    None
+
+ Notes/Warnings:
+    This API to extend the AN timer is not needed in most cases.  This
+    is only needed on certain features that requires a longer auto
+    negotiation time.
+*******************************************************************/
+MYD_STATUS mydExtendDeviceAutoNegTimer
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 extendANegTimerOption
+);
+
+/* The mydNIMBxxx API requires the supported NIMB firmware */
+#define MYD_NIMB_EYE_DELTA_DEFAULT 0
+#define MYD_NIMB_EYE_DELTA_UPDATE  1
+/*******************************************************************************
+MYD_STATUS mydNIMBSetEyeCoeff
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 mdioPort,
+    IN MYD_U16 laneOffset, ;unused; reserve for future
+    IN MYD_U16 minEyeVal,
+    IN MYD_U16 maxEyeDeltaLine,
+    IN MYD_U16 maxEyeDeltaHost,
+    IN MYD_U16 eyeCoeffOptions
+);
+
+ Inputs:
+    pDev - pointer to MYD_DEV initialized by mydInitDriver() call
+    mdioPort - MDIO port address, 0-31
+    laneOffset - 0..3 for lanes 0-3
+    minEyeVal - Trigger calibration if min eye value <= this parameter
+    maxEyeDeltaLine - Line lanes: Trigger calibration if max eye deviation to 
+                      average value >= this parameter
+    maxEyeDeltaHost - Host lanes: Trigger calibration if max eye deviation to 
+                      average value >= this parameter
+    eyeCoeffOptions - MYD_NIMB_EYE_DELTA_DEFAULT=0; MYD_NIMB_EYE_DELTA_UPDATE=1
+       if MYD_NIMB_EYE_DELTA_DEFAULT, the min and max Eye fields will not be used
+    
+ Outputs:
+    none
+
+ Returns:
+    MYD_OK - if successfully set
+    MYD_FAIL - otherwise returns MYD_FAIL
+
+ Description:
+    This function set the NIMB register to configure the min/max to trigger 
+    the iCal calibration. These values need to be set before calling mydNIMBSetOp
+    to start the auto calibration.
+
+ Side effects:
+    None
+
+ Notes/Warnings:
+    The API requires the supported NIMB firmware.
+
+    This API feature is only supported in Repeater modes R50U and R400U only
+    Refer to the mydSampleNIMB_ANegLaneSwap_iCal sample API on using this usage
+*******************************************************************************/
+MYD_STATUS mydNIMBSetEyeCoeff
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 mdioPort,
+    IN MYD_U16 laneOffset, /* unused. reserve for future */
+    IN MYD_U16 minEyeVal,
+    IN MYD_U16 maxEyeDeltaLine,
+    IN MYD_U16 maxEyeDeltaHost,
+    IN MYD_U16 eyeCoeffOptions
+);
+
+#define MYD_NIMB_OP_DISABLED  0 /* 1.0xC8F4 bit 0 disabled  */
+#define MYD_NIMB_OP_ENABLED   1 /* 1.0xC8F4 bit 0 enabled*/
+#define MYD_NIMB_OP_TEMP_RAMP 3 /* 1.0xC8F4 bit 0 and 1 enabled */
+/*******************************************************************************
+MYD_STATUS mydNIMBSetOp
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 mdioPort,
+    IN MYD_U16 laneOffset, 
+    IN MYD_U16 opOption    
+);
+
+ Inputs:
+    pDev - pointer to MYD_DEV initialized by mydInitDriver() call
+    mdioPort - MDIO port address, 0-31
+    laneOffset - 0..3 for lanes 0-3
+    opOption - refers to MYD_NIMB_OP_xxx options
+
+ Outputs:
+    none
+
+ Returns:
+    MYD_OK - if successfully set
+    MYD_FAIL - otherwise returns MYD_FAIL
+
+ Description:
+    This function enables or disables the NIMB firmware to start/stop the iCal 
+    polling, calibration, AN lane swap, temperature ramp, etc...
+
+    For iCal polling and calibration, the minEyeVal and maxEyeVal values need to be set 
+    in mydNIMBSetEyeCoeff before starting the auto calibration.
+
+    For AN lane swap, the mydNIMBSetANegLaneSwap need to be called with the lane swap 
+    selections before starting the operation.
+
+    For temperature ramp, the mydNIMBSetTempRamp need to be called before starting the 
+    operation. 
+
+ Side effects:
+    None
+
+ Notes/Warnings:
+    Calling this function requires blocking all other caller from issuing 
+    interrupt read/write calls to the SerDes and SBus master.
+
+    The mydNIMBSetOp must be stopped when calling API that issues 
+    interrupt calls to the SerDes and SBus master. 
+    All APIs that required MYD_ENABLE_SERDES_API definition issued interrupt. 
+
+    The API requires the supported NIMB firmware.
+
+    This API feature is only supported in R50U and R400U Repeater modes only.
+
+    Refer to the mydSampleNIMB_ANegLaneSwap_iCal sample API on using this usage
+*******************************************************************************/
+MYD_STATUS mydNIMBSetOp
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 mdioPort,
+    IN MYD_U16 laneOffset, 
+    IN MYD_U16 opOption 
+);
+
+/*******************************************************************************
+MYD_STATUS mydNIMBGetOpStatus
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 mdioPort,
+    IN MYD_U16 laneOffset, - unused; reserve for future
+    OUT MYD_U16 *opStatus
+);
+
+ Inputs:
+    pDev - pointer to MYD_DEV initialized by mydInitDriver() call
+    mdioPort - MDIO port address, 0-31
+    laneOffset - 0..3 for lanes 0-3
+
+ Outputs:
+    opStatus - 1 = auto iCal running; 0 = stop
+
+ Returns:
+    MYD_OK - if successfully set
+    MYD_FAIL - otherwise returns MYD_FAIL
+
+ Description:
+    This function retrieves the operational state of the NIMB firmware for the 
+    iCal polling, calibration, AN lane swap, temperature ramp, etc... 
+
+ Side effects:
+    None
+
+ Notes/Warnings:
+    The API requires the supported NIMB firmware.
+
+    This API feature is only supported in Repeater modes R50U and R400U only
+    Refer to the mydSampleNIMB_ANegLaneSwap_iCal sample API on using this usage
+*******************************************************************************/
+MYD_STATUS mydNIMBGetOpStatus
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 mdioPort,
+    IN MYD_U16 laneOffset, 
+    OUT MYD_U16 *opStatus
+);
+
+/*******************************************************************
+MYD_STATUS mydNIMBSetANegLaneSwap
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 mdioPort,
+    IN MYD_U16 host_or_line,
+    IN MYD_U16 autoNegLaneSwapVal
+);
+
+ Inputs:
+    pDev - pointer to MYD_DEV initialized by mydInitDriver() call
+    mdioPort - MDIO port address, 0-31
+    host_or_line - host or line interface
+    autoNegLaneSwapVal - lane swap option based on the mode
+
+ Outputs:
+    None
+
+ Returns:
+    MYD_OK - if successfully set
+    MYD_FAIL - otherwise returns MYD_FAIL
+
+ Description:
+    This function accesses NIMB register to set as the ANEG initiator 
+    lane. Providing a 0 for the autoNegLaneSwapVal will clear this register.
+    example: autoNegLaneSwapVal = 0x0AA8 (0000 1010 1010 1000)
+             200GR4 repeater AN mode running R4 on all lanes
+             where AN on lane3 instead of lane0
+
+     NIMB 3|4.F08F register to set the ANEG initiator lane
+        15:12 Reset lane 
+        11:10 lane3 (10 = R4, 01 = R2, 00 = R1)
+        9:8   lane2 (10 = R4, 01 = R2, 00 = R1)
+        7:6   lane1 (10 = R4, 01 = R2, 00 = R1)
+        5:4   lane0 (10 = R4, 01 = R2, 00 = R1)
+        3:0   ANEG initiator lane (one bit for a lane)
+
+ Side effects:
+    None
+
+ Notes/Warnings:
+    The API requires the supported NIMB firmware.
+    To clear the ANEG initiator lane register, issue autoNegLaneSwapVal = 0 
+    to reset this register and restore the AN mode with AN on lane 0.
+    Refers to sample code mydSampleNIMB_ANegLaneSwap_iCal() for more info  
+    on using the mydNIMBSetANegLaneSwap() API
+    Do not call this API if AN lane swapped is not needed on the Repeater
+    AN modes.
+*******************************************************************/
+MYD_STATUS mydNIMBSetANegLaneSwap
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 mdioPort,
+    IN MYD_U16 host_or_line,
+    IN MYD_U16 autoNegLaneSwapVal
+);
+
+/*******************************************************************************
+MYD_STATUS mydNIMBSetTempRamp
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 mdioPort,
+    IN MYD_U16 tempThreshold1,
+    IN MYD_U16 tempThreshold2,
+    IN MYD_U16 tempThreshold3,
+    IN MYD_U16 tempThreshold4,
+    IN MYD_U16 tempRampOption
+)
+
+ Inputs:
+    pDev - pointer to MYD_DEV initialized by mydInitDriver() call
+    mdioPort - MDIO port address, 0-31
+    tempThreshold1 - threshold1 increment rate
+    tempThreshold2 - threshold2 decrement rate
+    tempThreshold3 - threshold3 increment rate
+    tempThreshold4 - threshold4 decrement rate
+    tempRampOption - 0 to use default (all tempThreshold values will be ignored)
+                     1 to use all tempThreshold values                   
+
+ Outputs:
+    None
+
+ Returns:
+    MYD_OK - if successfully set
+    MYD_FAIL - otherwise returns MYD_FAIL
+
+ Description:
+    This function set the NIMB register for the temperature threshold values for 
+    temperature ramp. This feature will make BER smoother during temperature 
+    ramping.
+    After these values are set, it requires to call mydNIMBSetOp() with the  
+    MYD_NIMB_OP_TEMP_RAMP option to enable the firmware temperature ramp
+    feature.
+
+    Temperature ramp is only supported on PAM4 PCS modes including: 
+    P50UP/P50QP/P50UP/P100QP/P200UP/P200QP
+
+    Example:
+    // using default threshold
+    mydNIMBSetTempRamp(devPtr, mdioPort, 0, 0, 0, 0, 0);
+    
+    // if using user defined threshold
+    // 1024, -1024, 1024, -1024 for threshold 1/2/3/4 respectively
+    mydNIMBSetTempRamp(devPtr, mdioPort, 0x400, 0xFC00, 0x400, 0xFC00, 1); 
+
+    // Enable temperature ramp in NIMB firmware with above configurations
+    mydNIMBSetOp(devPtr, mdioPort, 0, MYD_NIMB_OP_TEMP_RAMP);
+
+ Side effects:
+    None
+
+ Notes/Warnings:
+    The API requires the supported NIMB firmware.
+
+    The MYD_MODE_TEMPERATURE_RAMP option in mydSetModeSelection should be used 
+    when calling the mydNIMBSetTempRamp() API.
+
+    After mydNIMBSetTempRamp() values are set,  mydNIMBSetOp() must be called with 
+    the MYD_NIMB_OP_TEMP_RAMP option to enable the firmware temperature ramp feature.
+*******************************************************************************/
+MYD_STATUS mydNIMBSetTempRamp
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 mdioPort,
+    IN MYD_U16 tempThreshold1,
+    IN MYD_U16 tempThreshold2,
+    IN MYD_U16 tempThreshold3,
+    IN MYD_U16 tempThreshold4,
+    IN MYD_U16 tempRampOption
+);
+
+/* End of mydNIMBxxx API */
 
 #if C_LINKAGE
 #if defined __cplusplus

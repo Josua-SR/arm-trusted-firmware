@@ -60,6 +60,7 @@ void phy_marvell_6141_probe(int cgx_id, int lmac_id)
 	int val;
 	MYD_U16 serdesRevision = 0;
 	MYD_U16 sbmRevision = 0;
+	MYD_U8 major, minor, buildID;
 
 	debug_phy_driver("%s: %d:%d\n", __func__, cgx_id, lmac_id);
 
@@ -68,6 +69,9 @@ void phy_marvell_6141_probe(int cgx_id, int lmac_id)
 
 	if (((MYD_DEV_PTR)phy->priv)->devEnabled)
 		return;
+
+	mydGetAPIVersion(&major, &minor, &buildID);
+	NOTICE("MYD API version %d.%d.%d\n", major, minor, buildID);
 
 	/* Look for indication of recent cold reset. */
 	val = smi_read(phy->mdio_bus, CLAUSE45, phy->addr, MYD_LINE_SIDE,

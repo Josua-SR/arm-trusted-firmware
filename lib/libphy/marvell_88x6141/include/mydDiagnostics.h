@@ -1,5 +1,5 @@
 /*******************************************************************************
-Copyright (C) 2014 - 2018, Marvell International Ltd. and its affiliates
+Copyright (C) 2014 - 2019, Marvell International Ltd. and its affiliates
 If you received this File from Marvell and you have entered into a commercial
 license agreement (a "Commercial License") with Marvell, the File is licensed
 to you under the terms of the applicable Commercial License.
@@ -8,7 +8,7 @@ to you under the terms of the applicable Commercial License.
 /********************************************************************
 This file contains functions and global data for higher-level functions 
 using MDIO access to enable test modes, loopbacks, and other diagnostic 
-functions for the Marvell X7120/X6181/X6141 PHY.
+functions for the Marvell X7120/X6181/X6141/X6142 PHY.
 ********************************************************************/
 #ifndef MYDDIAG_H
 #define MYDDIAG_H
@@ -1283,7 +1283,8 @@ MYD_STATUS mydDiagStateDump
     host_or_line - interface to be modified (MYD_HOST_SIDE or MYD_LINE_SIDE)
     laneOffset - 0..3 for lanes 0-3
     stateDumpOptions - various state dump options; 0:default is all
- 
+                       (reserved for future use)
+
  Outputs:
     pStateDumpInfo - retrieves the info in the MYD_STATE_DUMP structure. All the 
           Rx state dump info will be displayed in the logging output. See  
@@ -1323,6 +1324,142 @@ MYD_STATUS mydDiagStateDump
 );
 
 
+typedef struct _MYD_TX_FFE_CONFIG
+{
+    MYD_16 preCursor;
+    MYD_16 attenuation;
+    MYD_16 postCursor;
+    MYD_16 reserved0;      /* reserved field */
+    MYD_16 reserved1;      /* reserved field */
+    MYD_16 reserved2;      /* reserved field */
+    MYD_16 reserved3;      /* reserved field */
+} MYD_TX_FFE_CONFIG, *PMYD_TX_FFE_CONFIG;
+
+/*******************************************************************************
+MYD_STATUS mydSetTxFFE
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 mdioPort,     
+    IN MYD_U16 host_or_line,
+    IN MYD_U16 laneOffset,
+    IN MYD_TX_FFE_CONFIG txFFEConfig,
+    IN MYD_U16 enableInitialTaps,
+    IN MYD_U16 swReset
+);
+
+ Inputs:
+    pDev - pointer to MYD_DEV initialized by mydInitDriver() call
+    mdioPort - MDIO port address, 0-31
+    host_or_line - interface to be modified (MYD_HOST_SIDE or MYD_LINE_SIDE)
+    laneOffset - 0..3 for lanes 0-3
+
+    txFFEConfig -
+        The recommended Tx FFE ranges are as follows: 
+        preCursor   - Pre-cursor setting range [0 to 15] 
+        attenuation - Attenuator setting range [0 to 23]
+        postCursor  - Post-cursor setting [0 to 15]
+
+        The device can support the Tx FFE ranges below but may not apply to most
+        environment. These extended ranges may be used for testing and validation.
+        preCursor   - Pre-cursor setting range [-7 to 15]
+        attenuation - Attenuator setting range [0 to 31]
+        postCursor  - Post-cursor setting [-31 to 31]
+
+    enableInitialTaps - MYD_ENABLE:enable initial taps command to serdes, else 
+                        MYD_DISABLE:do not send initial taps command to serdes
+    swReset - 1:issue s/w reset to apply set Tx FFE change; 0:s/w reset not issue
+    
+ Outputs:
+    None
+
+ Returns:
+    MYD_OK - if set Tx FFE is successfully issued
+    MYD_FAIL - otherwise returns MYD_FAIL
+
+ Description:
+    This function set the Tx FFE with the given input parameters. To change 
+    the Tx FFE on a given lane, provide the preCursor, attenuation and postCursor
+    in the MYD_TX_FFE_CONFIG txFFEConfig structure with the reset enabled bit 
+    set(swReset:1) and enableInitialTaps sets to MYD_ENABLE. The reset is issued 
+    to the host or line on a MDIO port.  
+
+    If enableInitialTaps is set to MYD_DISABLE, the TxFFE values will not be 
+    applied.
+
+ Side effects:
+    None
+
+ Notes/Warnings:
+    None
+*******************************************************************************/
+MYD_STATUS mydSetTxFFE
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 mdioPort,     
+    IN MYD_U16 host_or_line,
+    IN MYD_U16 laneOffset,
+    IN MYD_TX_FFE_CONFIG txFFEConfig,
+    IN MYD_U16 enableInitialTaps,
+    IN MYD_U16 swReset
+);
+
+/*******************************************************************************
+MYD_STATUS mydGetTxFFE
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 mdioPort,     
+    IN MYD_U16 host_or_line,
+    IN MYD_U16 laneOffset,
+    OUT MYD_TX_FFE_CONFIG txFFEConfig
+);
+
+ Inputs:
+    pDev - pointer to MYD_DEV initialized by mydInitDriver() call
+    mdioPort - MDIO port address, 0-31
+    host_or_line - interface to be modified (MYD_HOST_SIDE or MYD_LINE_SIDE)
+    laneOffset - 0..3 for lanes 0-3
+    
+ Outputs:
+    txFFEConfig -
+        preCursor   - Pre-cursor setting range [-7 to 15] 
+        attenuation - Attenuator setting range [0 to 31]
+        postCursor  - Post-cursor setting [-31 to 31]
+
+ Returns:
+    MYD_OK - if read Tx FFE is successfully issued
+    MYD_FAIL - otherwise returns MYD_FAIL
+
+ Description:
+    This function reads the Tx FFE with the given input parameters. The
+    values are returned in the MYD_TX_FFE_CONFIG txFFEConfig structure.
+    Refers to the mydSetTxFFE API for the setting ranges.
+
+ Side effects:
+    None
+
+ Notes/Warnings:
+    The recommended Tx FFE ranges are as follows: 
+    preCursor   - Pre-cursor setting range [0 to 15] 
+    attenuation - Attenuator setting range [0 to 23]
+    postCursor  - Post-cursor setting [0 to 15]
+
+    The device can support the Tx FFE ranges below but may not apply to most
+    environment. These extended ranges may be used for testings and validations.
+    preCursor   - Pre-cursor setting range [-7 to 15]
+    attenuation - Attenuator setting range [0 to 31]
+    postCursor  - Post-cursor setting [-31 to 31]
+
+ *******************************************************************************/
+MYD_STATUS mydGetTxFFE
+(
+    IN MYD_DEV_PTR pDev,
+    IN MYD_U16 mdioPort,     
+    IN MYD_U16 host_or_line,
+    IN MYD_U16 laneOffset,
+    OUT PMYD_TX_FFE_CONFIG txFFEConfig
+);
+
+
 #if C_LINKAGE
 #if defined __cplusplus
 }
@@ -1330,4 +1467,3 @@ MYD_STATUS mydDiagStateDump
 #endif
 
 #endif /* defined MYDDIAG_H */
-

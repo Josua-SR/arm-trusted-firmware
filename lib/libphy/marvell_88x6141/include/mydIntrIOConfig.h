@@ -1,5 +1,5 @@
 /*******************************************************************************
-Copyright (C) 2014 - 2018, Marvell International Ltd. and its affiliates
+Copyright (C) 2014 - 2019, Marvell International Ltd. and its affiliates
 If you received this File from Marvell and you have entered into a commercial
 license agreement (a "Commercial License") with Marvell, the File is licensed
 to you under the terms of the applicable Commercial License.
@@ -8,7 +8,7 @@ to you under the terms of the applicable Commercial License.
 /********************************************************************
 This file contains functions, data structures and definitions for All
 levels, interrupt functions, Real-time Status and I/O pin mode
-configurations for the Marvell X7120/X6181/X6141 PHY.
+configurations for the Marvell X7120/X6181/X6141/X6142 PHY.
 ********************************************************************/
 #ifndef MYD_INTR_IO_H
 #define MYD_INTR_IO_H
@@ -22,6 +22,8 @@ configurations for the Marvell X7120/X6181/X6141 PHY.
 /******************************************************************************
  DO NOT modify enumerations - order and values are closely coupled to the code
  and register bit definitions.
+
+ X6142 shares the same structure as the X7120 device
 ******************************************************************************/
 typedef enum _MYD_PIN_ID
 {
@@ -1534,11 +1536,13 @@ MYD_STATUS mydGetGPIOPinData
 #define MYD_LED_CONFIG_UNCHANGED                0xFF     /* Keep the settings unchanged */
 
 /* LED Activities Definitions */
+#define MYD_LED_ACT_BLINK_OFF                   0x0     /* Disable Blink (for blink activity) */
 #define MYD_LED_ACT_SOLID_OFF                   0x0     /* Solid OFF */
 #define MYD_LED_ACT_LANE_TX_RX                  0x1     /* Lane transmit or receive activity */
 #define MYD_LED_ACT_LANE_TX                     0x2     /* Lane transmit activity */
 #define MYD_LED_ACT_LANE_RX                     0x3     /* Lane receive activity */
 #define MYD_LED_ACT_LANE_LINK_UP                0x6     /* Lane receiver link up */
+#define MYD_LED_ACT_FORCE_BLINK                 0x7     /* Force Blink (for blink activity) */
 #define MYD_LED_ACT_SOLID_ON                    0x7     /* Solid ON */
 #define MYD_LED_ACT_BLINK_MIX                   0xA     /* Blink Mix */
 #define MYD_LED_ACT_SOLID_MIX                   0xB     /* Solid Mix */
@@ -1560,20 +1564,16 @@ typedef struct _MYD_LED_CTRL MYD_LED_CTRL;
         MYD_HOST_SIDE = System side (Host side)
         MYD_LED_CONFIG_UNCHANGED
     blinkActivity - The activity has higher priority than the solid activity
-        MYD_LED_ACT_SOLID_OFF
+        MYD_LED_ACT_BLINK_OFF
         MYD_LED_ACT_LANE_TX_RX
         MYD_LED_ACT_LANE_TX
         MYD_LED_ACT_LANE_RX
         MYD_LED_ACT_LANE_LINK_UP
-        MYD_LED_ACT_SOLID_ON
+        MYD_LED_ACT_FORCE_BLINK
         MYD_LED_ACT_BLINK_MIX
         MYD_LED_ACT_SOLID_MIX
         MYD_LED_CONFIG_UNCHANGED
     solidActivity - Solid activity has lower priority than the blink activity
-        e.g. If blinkActivity = MYD_LED_ACT_LANE_TX, solidActivity = MYD_LED_ACT_LANE_LINK_UP,
-             LED will be solid on when the link is up and start blinking when a receive activity
-             presents. If blinkActivity = solidActivity = MYD_LED_ACT_LANE_LINK_UP,
-             LED will blink when link up.
         MYD_LED_ACT_SOLID_OFF
         MYD_LED_ACT_LANE_TX_RX
         MYD_LED_ACT_LANE_TX
@@ -1581,6 +1581,17 @@ typedef struct _MYD_LED_CTRL MYD_LED_CTRL;
         MYD_LED_ACT_LANE_LINK_UP
         MYD_LED_ACT_SOLID_ON
         MYD_LED_CONFIG_UNCHANGED
+
+        e.g.
+             1. If blinkActivity = MYD_LED_ACT_LANE_TX, solidActivity = MYD_LED_ACT_LANE_LINK_UP,
+                LED will be solid on when the link is up and start blinking when a receive activity
+                presents.
+             2. If blinkActivity = solidActivity = MYD_LED_ACT_LANE_LINK_UP, LED will blink when link up.
+             3. If blinkActivity = MYD_LED_ACT_BLINK_OFF, solidActivity = MYD_LED_ACT_SOLID_ON,
+                LED will be solid on
+             4. If blinkActivity = MYD_LED_ACT_FORCE_BLINK, solidActivity = MYD_LED_ACT_SOLID_OFF,
+                LED will be blinking.
+
     polarity - Decide if LED pin will be driven high/low or in tri-state
         MYD_LED_ACTIVE_LOW
         MYD_LED_ACTIVE_HIGH

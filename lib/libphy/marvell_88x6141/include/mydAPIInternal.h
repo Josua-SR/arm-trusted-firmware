@@ -1,5 +1,5 @@
 /*******************************************************************************
-Copyright (C) 2014 - 2018, Marvell International Ltd. and its affiliates
+Copyright (C) 2014 - 2019, Marvell International Ltd. and its affiliates
 If you received this File from Marvell and you have entered into a commercial
 license agreement (a "Commercial License") with Marvell, the File is licensed
 to you under the terms of the applicable Commercial License.
@@ -7,7 +7,7 @@ to you under the terms of the applicable Commercial License.
 
 /********************************************************************
 This file contains functions and data that are strictly internal
-for the proper functioning of the API on the Marvell X7120/X6181/X6141 PHY.
+for the proper functioning of the API on the Marvell X7120/X6181/X6141/X6142 PHY.
 ********************************************************************/
 #ifndef MYDINTRNL_H
 #define MYDINTRNL_H
@@ -151,15 +151,6 @@ MYD_STATUS mydConfigAutoNeg
     IN MYD_U16 laneOffset,
     IN MYD_OP_MODE opMode,
     IN MYD_U16 enableFlag /* MYD_ENABLE or MYD_DISABLE */
-);
-
-/*******************************************************************
- MYD_STATUS mydExtendDeviceAutoNegTimer
-    Used internally for mode configuration to extent the AN timer. 
-*******************************************************************/
-MYD_STATUS mydExtendDeviceAutoNegTimer
-(
-    IN MYD_DEV_PTR pDev
 );
 
 /*******************************************************************

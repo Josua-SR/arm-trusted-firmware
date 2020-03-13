@@ -1,5 +1,5 @@
 /*******************************************************************************
-Copyright (C) 2014 - 2018, Marvell International Ltd. and its affiliates
+Copyright (C) 2014 - 2019, Marvell International Ltd. and its affiliates
 If you received this File from Marvell and you have entered into a commercial
 license agreement (a "Commercial License") with Marvell, the File is licensed
 to you under the terms of the applicable Commercial License.
@@ -7,7 +7,7 @@ to you under the terms of the applicable Commercial License.
 
 /********************************************************************
 This file contains functions global register definitions for the
-registers in the Marvell X7120/X6181/X6141 PHYs.
+registers in the Marvell X7120/X6181/X6141/X6142 PHYs.
 ********************************************************************/
 #ifndef APIREGS_H
 #define APIREGS_H
@@ -17,7 +17,7 @@ registers in the Marvell X7120/X6181/X6141 PHYs.
 #endif
 #endif
 
-/* Marvell X7120/X6181/X6141 Device Number Definitions */
+/* Marvell X7120/X6181/X6141/X6142 Device Number Definitions */
 #define MYD_PMA_DEV    1
 #define MYD_LINE_SIDE  3
 #define MYD_HOST_SIDE  4

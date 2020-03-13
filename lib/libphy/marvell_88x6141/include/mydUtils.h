@@ -1,5 +1,5 @@
 /*******************************************************************************
-Copyright (C) 2014 - 2018, Marvell International Ltd. and its affiliates
+Copyright (C) 2014 - 2019, Marvell International Ltd. and its affiliates
 If you received this File from Marvell and you have entered into a commercial
 license agreement (a "Commercial License") with Marvell, the File is licensed
 to you under the terms of the applicable Commercial License.
@@ -7,7 +7,7 @@ to you under the terms of the applicable Commercial License.
 
 /********************************************************************
 This file contains common utility functions use across the Marvell
-X7120/X6181/X6141 PHYs API driver (MYD).
+X7120/X6181/X6141/X6142 PHYs API driver (MYD).
 ********************************************************************/
 #ifndef MYD_UTILS_H
 #define MYD_UTILS_H

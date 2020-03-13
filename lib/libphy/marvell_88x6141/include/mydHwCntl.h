@@ -1,5 +1,5 @@
 /*******************************************************************************
-Copyright (C) 2014 - 2018, Marvell International Ltd. and its affiliates
+Copyright (C) 2014 - 2019, Marvell International Ltd. and its affiliates
 If you received this File from Marvell and you have entered into a commercial
 license agreement (a "Commercial License") with Marvell, the File is licensed
 to you under the terms of the applicable Commercial License.
@@ -8,7 +8,7 @@ to you under the terms of the applicable Commercial License.
 /********************************************************************
 This file contains functions and global data for interfacing with 
 the host's hardware-specific MDIO and general-purpose
-IO in order to control and query the Marvell X7120/X6181/X6141 PHY.
+IO in order to control and query the Marvell X7120/X6181/X6141/X6142 PHY.
 
 These functions as written were tested with a USB-interface to
 access Marvell's EVK. If the user passes a NULL pointer into mydInitDriver 

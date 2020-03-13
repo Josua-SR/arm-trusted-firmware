@@ -1,5 +1,5 @@
 /*******************************************************************************
-Copyright (C) 2014 - 2018, Marvell International Ltd. and its affiliates
+Copyright (C) 2014 - 2019, Marvell International Ltd. and its affiliates
 If you received this File from Marvell and you have entered into a commercial
 license agreement (a "Commercial License") with Marvell, the File is licensed
 to you under the terms of the applicable Commercial License.
@@ -7,7 +7,7 @@ to you under the terms of the applicable Commercial License.
 
 /********************************************************************
 This file contains common types and defines across the Marvell
-X7120/X6181/X6141 PHYs API driver (MYD).
+X7120/X6181/X6141/X6142 PHYs API driver (MYD).
 ********************************************************************/
 #ifndef MYD_TYPES_H
 #define MYD_TYPES_H
@@ -108,8 +108,8 @@ typedef enum {
 
 typedef MYD_U32 MYD_STATUS;
 
-#define MYD_NUM_LANES            4 /* number of lanes */
-#define MYD_MAX_PORTS            4 /* number of lanes */
+#define MYD_NUM_LANES   4 /* number of lanes */
+#define MYD_MAX_PORTS   4 /* max number of ports */
 
 typedef enum _MYD_INTERFACE {
     MYD_HOST_MODE_IDX = 0,
@@ -182,12 +182,23 @@ R = RS-FEC (528, 514)
 P = RS-FEC (544, 514)
 
 *****************************************************/
-/* NOTE: 
+/* 
+   NOTE: 
+   Number of port(s) and lanes on device:
+     X6141: 1-port with 4-lane on both host and line sides
+     X7120: 4-port with 4-lane on both host and line sides
+     X6142: 4-port with 4-lane on line side and 2-lane host side
+
+   Certain modes are not supported in some device. For example, 
+   the X6142 device will not support mode that requires 4-lane 
+   on host interface. 
+
    The MYD_OP_MODE list shows all modes that will be supported 
    in future releases. Not all modes are supported yet.  
-   Only modes that are listed as "Supported" is implemented
-   and tested.  
+   Only modes that are listed as "Supported" are available
+   and validated.  
    Refers to the datasheet for more information on these modes. 
+   
 */
 /* opModeTable needs to match up with MYD_OP_MODE */
 typedef enum
@@ -213,8 +224,8 @@ typedef enum
                    
     MYD_P25YN,     /* 2 lane PCS mode */  /* Supported version 1.1 and newer */  /* 14 */
     MYD_P25YF,     /* 2 lane PCS mode */  /* Supported version 1.1 and newer */
-    MYD_P25ZN,     /* 2 lane PCS mode */  /* Supported version 1.1 and newer */ /* work-in-progress */
-    MYD_P25ZF,     /* 2 lane PCS mode */  /* Supported version 1.1 and newer */ /* work-in-progress */
+    MYD_P25ZN,     /* 2 lane PCS mode */  /* work-in-progress */
+    MYD_P25ZF,     /* 2 lane PCS mode */  /* work-in-progress */
     MYD_P25AN,     /* 4 lane PCS mode */  /* Supported version 1.1 and newer */
     MYD_P25GN,     /* 4 lane PCS mode */  /* Supported version 1.1 and newer */
     MYD_P25GF,     /* 4 lane PCS mode */  /* Supported version 1.1 and newer */
@@ -247,10 +258,10 @@ typedef enum
     MYD_P40JR,     /* 2 lane PCS mode */  /* Supported version 1.1 and newer */
                                                              
     MYD_P50LN,     /* 4 lane PCS mode */  /* Supported version 1.1 and newer */  /* 47 */
-    MYD_P50CN,     /* 4 lane PCS mode */  /* Supported version 1.1 and newer */ /* work-in-progress */
-    MYD_P50CF,     /* 4 lane PCS mode */  /* Supported version 1.1 and newer */ /* work-in-progress */
-    MYD_P50KN,     /* 4 lane PCS mode */  /* Supported version 1.1 and newer */ /* work-in-progress */
-    MYD_P50KF,     /* 4 lane PCS mode */  /* Supported version 1.1 and newer */ /* work-in-progress */
+    MYD_P50CN,     /* 4 lane PCS mode */  /* work-in-progress */
+    MYD_P50CF,     /* 4 lane PCS mode */  /* work-in-progress */
+    MYD_P50KN,     /* 4 lane PCS mode */  /* work-in-progress */
+    MYD_P50KF,     /* 4 lane PCS mode */  /* work-in-progress */
     MYD_P50LF,     /* 4 lane PCS mode */  /* Supported version 1.1 and newer */
     MYD_P50MN,     /* 2 lane PCS mode */  /* Supported version 1.1 and newer */
     MYD_P50MF,     /* 2 lane PCS mode */  /* Supported version 1.1 and newer */
@@ -336,21 +347,21 @@ typedef enum
     MYD_R100Q,   /* 2 lane Repeater mode */  /* Supported version 1.1 and newer */
                  
     MYD_R200L,   /* 8 lane Repeater mode */  /* Supported version 1.0 and newer */
-    MYD_R200K,   /* 8 lane Repeater mode */  /* Supported version 1.1 and newer */ /* work-in-progress */
+    MYD_R200K,   /* 8 lane Repeater mode */  /* work-in-progress */
     MYD_R200U,   /* 4 lane Repeater mode */  /* Supported version 1.0 and newer */
     MYD_R200Q,   /* 4 lane Repeater mode */  /* Supported version 1.1 and newer */
                  
     MYD_R400U,   /* 8 lane Repeater mode */  /* Supported version 1.0 and newer */
-    MYD_R400Q,   /* 8 lane Repeater mode */
+    MYD_R400Q,   /* 8 lane Repeater mode */  /* Supported version 1.1 and newer */
                  
-    MYD_R50LP,   /* 2 lane Repeater mode */
-    MYD_R50CP,   /* 2 lane Repeater mode */
+    MYD_R50LP,   /* 2 lane Repeater mode */  /* work-in-progress */
+    MYD_R50CP,   /* 2 lane Repeater mode */  /* work-in-progress */
                  
-    MYD_R100LP,  /* 4 lane Repeater mode */
-    MYD_R100CP,  /* 4 lane Repeater mode */
+    MYD_R100LP,  /* 4 lane Repeater mode */  /* work-in-progress */
+    MYD_R100CP,  /* 4 lane Repeater mode */  /* work-in-progress */
 
-    MYD_RXLA,
-    MYD_RXLB,
+    MYD_RXLA,                                /* work-in-progress */
+    MYD_RXLB,                                /* work-in-progress */
 
     MYD_OP_MODE_COUNT
 } MYD_OP_MODE;
@@ -437,11 +448,18 @@ typedef enum
 #define MYD_MOD_100GR4           0x0000
 #define MYD_MOD_100GR2           0x0800
 
+/*
+  Number of port(s) and lanes on device:
+    X6141: 1-port with 4-lane on both host and line sides
+    X7120: 4-port with 4-lane on both host and line sides
+    X6142: 4-port with 4-lane on line side and 2-lane host side
+*/
 typedef enum
 {
     MYD_DEV_X6181   = 0,
     MYD_DEV_X7120   = 1,
     MYD_DEV_X6141   = 2,
+    MYD_DEV_X6142   = 3,
     MYD_DEV_UNKNOWN = 0xFF
 } MYD_DEVICE_ID;
 
@@ -453,6 +471,7 @@ typedef enum
 } MYD_DEVICE_REV;
 
 #define MYD_X7120_PORT_COUNT  4
+#define MYD_X6142_PORT_COUNT  4
 #define MYD_X6181_PORT_COUNT  2
 #define MYD_X6141_PORT_COUNT  1
 
@@ -471,12 +490,71 @@ typedef struct _MYD_MODE_CONFIG
     MYD_U16        reserved2;      /* reserved field */
 } MYD_MODE_CONFIG, *PMYD_MODE_CONFIG;
 
+typedef enum
+{
+    MYD_CHANNEL_IGNORE = 0,
+    MYD_CHANNEL_SHORT   = 1,
+    MYD_CHANNEL_LONG    = 2,
+} MYD_CHANNEL_LEN_OPTION;
+
+#define MYD_MODE_OPTION_IGNORE  0xFADE
+#define MYD_MODE_OPTION_DEFAULT 0xDEFA
+
+#define MYD_MODE_DEF_HF_MAX  0x6
+#define MYD_MODE_DEF_HF_MIN  0x5
+#define MYD_MODE_DEF_LF_MAX  0x5
+#define MYD_MODE_DEF_LF_MIN  0x2
+#define MYD_MODE_DEF_TEMP_RAMP 0x22C
+#define MYD_MODE_DEF_CHANNEL_SHORT 0xFFD8
+#define MYD_MODE_DEF_CHANNEL_LONG  0x2
+
+typedef struct _MYD_MODE_OPTION_STRUCT
+{
+    /* When the MYD_MODE_xxx option is set, all the fields within the option must be 
+       assigned to a value. Use MYD_MODE_OPTION_IGNORE to ignore setting it or
+       use MYD_MODE_OPTION_DEFAULT to use the pre-defined value.  Refer to the 
+       sample API in mydSample.c on using these options */
+
+   /* MYD_MODE_INIT_CTLE option */
+    MYD_U16 hostInitHF;   /* Overwrite initial High-Frequency range [0-15] */
+    MYD_U16 hostInitLF;   /* Overwrite initial Low-Frequency range [0-15]  */
+    MYD_U16 lineInitHF;   /* Overwrite initial High-Frequency range [0-15] */
+    MYD_U16 lineInitLF;   /* Overwrite initial Low-Frequency range [0-15]  */
+
+    /* MYD_MODE_CTLE option */
+    MYD_U16 hostMaxHF;   /* 0x6(default) High-Frequency range [0-15] */
+    MYD_U16 hostMinHF;   /* 0x5(default) High-Frequency range [0-15] */
+    MYD_U16 hostMaxLF;   /* 0x5(default) Low-Frequency range [0-15]  */
+    MYD_U16 hostMinLF;   /* 0x2(default) Low-Frequency range [0-15]  */
+
+    MYD_U16 lineMaxHF;   /* 0x6(default) High-Frequency range [0-15] */
+    MYD_U16 lineMinHF;   /* 0x5(default) High-Frequency range [0-15] */
+    MYD_U16 lineMaxLF;   /* 0x5(default) Low-Frequency range [0-15]  */
+    MYD_U16 lineMinLF;   /* 0x2(default) Low-Frequency range [0-15]  */
+
+    /* MYD_MODE_CHANNEL_LEN option */
+    MYD_CHANNEL_LEN_OPTION hostChannelLenOption; /* MYD_CHANNEL_SHORT or MYD_CHANNEL_LONG */
+    MYD_U16 hostChannelLenVal;  /* Long:0x2(default) Long range [0-3]
+                                   Short:0xFFD8(-40 default)  
+                                   Short settings: 0xFFD8, 0xFFEC, 0x0, 0x14, 0x28, 0x3C */
+
+    MYD_CHANNEL_LEN_OPTION lineChannelLenOption; /* MYD_CHANNEL_SHORT or MYD_CHANNEL_LONG */
+    MYD_U16 lineChannelLenVal;  /* Long:0x2(default) Long range [0-3]
+                                   Short:0xFFD8(-40 default)  
+                                   Short settings: 0xFFD8, 0xFFEC, 0x0, 0x14, 0x28, 0x3C */
+
+    /* MYD_MODE_TEMPERATURE_RAMP option */
+    MYD_U16 hostTemperatureRampVal;  /* Both host/line: 0x22C(default Common mode) */
+    MYD_U16 lineTemperatureRampVal;  /* settings: 0x220, 0x224, 0x228, 0x22C, 
+                                                  0x230, 0x234, 0x238, 0x23C */
+}MYD_MODE_OPTION_STRUCT;
+
 struct _MYD_DEV
 {
     OUT MYD_DEVICE_ID   deviceId;      /* type of device and capabilities */
     OUT MYD_DEVICE_REV  chipRevision;  /* revision */
     IN  MYD_U16         mdioPort;      /* 1st port MDIO number */
-    OUT MYD_U16         portCount;     /* 1,2,4 ports count for X6141, X6181 and X7120 respectively */
+    OUT MYD_U16         portCount;     /* 1,2,4,4 ports count for X6141, X6181, X6142,and X7120 respectively */
 
     OUT MYD_MODE_CONFIG hostConfig[MYD_MAX_PORTS][MYD_NUM_LANES]; /* host mode of operation, per lane depending on mode */
     OUT MYD_MODE_CONFIG lineConfig[MYD_MAX_PORTS][MYD_NUM_LANES]; /* line mode of operation, per lane depending on mode */
@@ -487,6 +565,8 @@ struct _MYD_DEV
 
     IN FMYD_READ_MDIO   fmydReadMdio;  /* passed in function for MDIO Read  */
     IN FMYD_WRITE_MDIO  fmydWriteMdio; /* passed in function for MDIO Write */
+
+    IN MYD_MODE_OPTION_STRUCT  modeParams; /* optional mode params used in mydSetModeSelection  */
 
     IN MYD_PVOID        hostContext; /* user specific data for host to pass to the low layer */
 #if MYD_ENABLE_SERDES_API
@@ -519,7 +599,7 @@ struct _MYD_DEV
 #define MYD_STATUS_UNKNOWN_HW_MOD          0x19 /*Unknown HW Mode */
 #define MYD_STATUS_ERR_DEV_ID              0x1a /*Error device ID */
 #define MYD_STATUS_ERR_VERSION             0x1b /*Error Version */
-#define MYD_STATUS_ERR_DEV                 0x1c /*Invalid device stucture */
+#define MYD_STATUS_ERR_DEV                 0x1c /*Invalid device structure */
 #define MYD_STATUS_ERR_INIT                0x1d /*Driver init error */
 #define MYD_STATUS_FIRMWARE_ERR            0x1e /*Load firmware error */
 #define MYD_STATUS_SERDES_INIT_ERR         0x1f /*Fail to init SERDES */

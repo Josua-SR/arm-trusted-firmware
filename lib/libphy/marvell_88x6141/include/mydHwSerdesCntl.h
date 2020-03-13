@@ -1,5 +1,5 @@
 /*******************************************************************************
-Copyright (C) 2014 - 2018, Marvell International Ltd. and its affiliates
+Copyright (C) 2014 - 2019, Marvell International Ltd. and its affiliates
 If you received this File from Marvell and you have entered into a commercial
 license agreement (a "Commercial License") with Marvell, the File is licensed
 to you under the terms of the applicable Commercial License.
@@ -7,7 +7,8 @@ to you under the terms of the applicable Commercial License.
 
 /********************************************************************
 This file contains function prototypes to call Serdes API functions, 
-Serdes features and diagnostic operations for the Marvell X7120/X6181/X6141 Device.  
+Serdes features and diagnostic operations for the 
+Marvell X7120/X6181/X6141/X6142 Device.  
 The Serdes API component is included by default with define 
 MYD_ENABLE_SERDES_API.
 ********************************************************************/
@@ -22,7 +23,10 @@ MYD_ENABLE_SERDES_API.
 
 /* 
    Below mapping applies to the 4-port X7120. For 1-port X6141, only 
-   Port 0 mapping applies.
+   Port 0 mapping applies. 
+   
+   For X6142 4-port device, the line side has 4 SerDes lanes and host side 
+   has 2 SerDes lanes.  Valid host side SerDesID are 1,2,9,10,17,18,25,26.
 
    The MYD_MAPPED_SERDES_ID returns the matching SerDes lane with the given
    parameters below.  Use the MYD_HOST_MODE_IDX and MYD_LINE_MODE_IDX
@@ -544,6 +548,9 @@ MYD_STATUS mydSerdesGetRevision
     None
 
  Notes/Warnings:
+    After a firmware download or EEPROM loading, wait for at least 4 secs 
+    before reading the SerDes firmware revision.
+
     Calling this function requires blocking all other caller from issuing 
     interrupt read/write calls to the SerDes and SBus master.
 *******************************************************************************/

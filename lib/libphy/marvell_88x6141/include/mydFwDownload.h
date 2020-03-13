@@ -1,5 +1,5 @@
 /*******************************************************************************
-Copyright (C) 2014 - 2018, Marvell International Ltd. and its affiliates
+Copyright (C) 2014 - 2019, Marvell International Ltd. and its affiliates
 If you received this File from Marvell and you have entered into a commercial
 license agreement (a "Commercial License") with Marvell, the File is licensed
 to you under the terms of the applicable Commercial License.
@@ -9,7 +9,7 @@ to you under the terms of the applicable Commercial License.
 This file contains functions prototypes and global defines/data for
 higher-level functions using MDIO access to download firmware
 into the internal RAM or attached flash memory of the Marvell 
-X7120/X6181/X6141 PHYs.
+X7120/X6181/X6141/X6142 PHYs.
 ********************************************************************/
 #ifndef MYDDL_H
 #define MYDDL_H
