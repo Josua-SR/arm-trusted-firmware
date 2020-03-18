@@ -163,6 +163,9 @@ void plat_octeontx_cpu_setup(void)
 			/* Enable SSO switch tag */
 			set_bit(cvmmemctl1_el1, 6);
 		}
+		/* Allow read/write ops to CVM_CTL, CVM_MEMCTL from EL2/EL3 */
+		write_cvm_access_el2(read_cvm_access_el2() & ~(1 << 0));
+		write_cvm_access_el3(read_cvm_access_el3() & ~(1 << 0));
 	}
 
 	/*
