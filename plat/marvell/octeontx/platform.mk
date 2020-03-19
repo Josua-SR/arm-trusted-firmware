@@ -78,7 +78,6 @@ BL31_SOURCES		+=	drivers/arm/gic/common/gic_common.c		\
 				plat/marvell/octeontx/octeontx_svc.c				\
 				plat/common/plat_psci_common.c			\
 				plat/common/plat_gicv3.c			\
-				plat/marvell/octeontx/aarch64/octeontx_bl31_exceptions.S	\
 
 ifeq (${SDEI_SUPPORT},1)
 BL31_SOURCES		+=	plat/marvell/octeontx/octeontx_sdei.c

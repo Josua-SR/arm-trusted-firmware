@@ -22,6 +22,8 @@
 	.globl	platform_mem_init
 	.globl	octeontx_sec_entry_point
 
+	.weak octeontx_io_trap_handler
+
 	/* -----------------------------------------------------
 	 * unsigned int plat_is_my_cpu_primary(void);
 	 *
@@ -140,3 +142,7 @@ endfunc platform_mem_init
 	 */
 octeontx_sec_entry_point:
 	.quad	0
+
+func octeontx_io_trap_handler
+	ret
+endfunc octeontx_io_trap_handler

@@ -115,6 +115,26 @@
 	cmp	x30, #EC_AARCH64_SMC
 	b.eq	smc_handler64
 
+#if (defined(PLAT_f95) || defined(PLAT_t96) || defined(PLAT_loki) || \
+	defined(PLAT_t98) || defined(PLAT_f95mm))
+	/* -----------------------------------------------------
+	 * Handle Cavium-specific trap - synchronous data abort
+	 * with (as per ARM's ARM DDI0487B) EC = 0x1f, which
+	 * is IMPLEMENTATION_DEFINED
+	 * -----------------------------------------------------
+	 */
+	cmp	x30, #EC_CAVIUM_IO_TRAP
+	b.eq	octeontx_io_trap_handler
+#endif
+
+	/*
+	 * The following handles any synchronous exception that is not SMC.
+	 * Right now this only happens when EL0 ISR is returning.
+	 */
+	cmp	x30, #EC_WFE_WFI
+	b.eq	el3_exit_wfi
+
+
 	/* Synchronous exceptions other than the above are assumed to be EA */
 	ldr	x30, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_LR]
 	b	enter_lower_el_sync_ea
