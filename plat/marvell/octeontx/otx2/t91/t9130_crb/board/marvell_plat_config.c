@@ -82,8 +82,11 @@ int marvell_get_io_win_memory_map(int ap_index, struct addr_map_win **win,
 struct addr_map_win iob_memory_map_cp0[] = {
 	/* SPI1_CS0 (RUNIT) window */
 	{0x00000000f9000000,	0x1000000,	RUNIT_TID},
+	{0x00000000e1000000,	0x1000000,	PEX2_TID},
+	/* PEX1_X1 window */
+	{0x00000000e0000000,	0x1000000,	PEX1_TID},
 	/* PEX0_X4 window */
-	{0x0000008000000000,	0x800000000,	PEX0_TID},
+	{0x00000000c0000000,	0x20000000,	PEX0_TID},
 };
 
 int marvell_get_iob_memory_map(struct addr_map_win **win, uint32_t *size,
@@ -114,7 +117,7 @@ struct addr_map_win ccu_memory_map[] = {	/* IO window */
 	{PLAT_MARVELL_LLC_SRAM_BASE, PLAT_MARVELL_LLC_SRAM_SIZE, DRAM_0_TID},
 #endif
 	{0x00000000f2000000,	0xe000000,	IO_0_TID}, /* IO window */
-	{0x0000008000000000,	0x800000000,	IO_0_TID}, /* IO window */
+	{0x00000000c0000000,	0x22000000,	IO_0_TID}, /* IO window */
 #endif
 };
 
