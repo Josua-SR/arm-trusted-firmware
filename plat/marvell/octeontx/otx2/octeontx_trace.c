@@ -74,7 +74,7 @@ static inline bool is_address_region_arm_tracebuf(uint64_t addr, uint64_t size)
 		return true;
 }
 
-void plat_armtrace_init(void)
+void plat_armtrace_stop(void)
 {
 	int i;
 	uint64_t base1, base2;
@@ -83,7 +83,6 @@ void plat_armtrace_init(void)
 
 	VERBOSE("Disabling ETM/ETR for %d cores\n", PLATFORM_CORE_COUNT);
 
-	/* Ensure trace is stopped before we enter non secure world */
 	for (i = 0; i < PLATFORM_CORE_COUNT; i++) {
 		base1 = ROUND_DOWN(CAVM_TRCX_TRCPRGCTLR(i), PAGE_SIZE);
 		base2 = ROUND_DOWN(CAVM_ETRX_CONTROL(i), PAGE_SIZE);
@@ -109,6 +108,19 @@ void plat_armtrace_init(void)
 		octeontx_mmap_remove_dynamic_region_with_sync(base1, size);
 		octeontx_mmap_remove_dynamic_region_with_sync(base2, size);
 	}
+
+	return;
+
+err:
+	ERROR("Failed to disable ETM/ETR\n");
+}
+
+void plat_armtrace_init(void)
+{
+	uint64_t size;
+
+	/* Ensure trace is stopped before we enter non secure world */
+	plat_armtrace_stop();
 
 	/* Initialize the arm trace buffer base/size */
 	arm_tracebuf_size = ccs_region_get_info(SECURE_PRESERVE, &arm_tracebuf);

@@ -77,6 +77,10 @@ struct gti_shared_addr_t {
 
 struct gti_shared_addr_t gti_shared_addr[GTI_MAX_PAGES];
 
+#if defined ARM_TRACE_SECURE_BUFFER
+extern void plat_armtrace_stop(void);
+#endif
+
 void prepare_elx_kernel_callback(int el_mode)
 {
 	uint64_t spsr;
@@ -174,6 +178,12 @@ uint64_t gti_cwd_irq_handler(uint32_t id, uint32_t flags, void *cookie)
 {
 	int el_mode;
 
+#if defined ARM_TRACE_SECURE_BUFFER
+	/* Ensure we stop the ARM Trace, so that the trace data
+	 * relevant to this watchdog interrupt doesn't get overwritten.
+	 */
+	plat_armtrace_stop();
+#endif
 	if ((in_use_lock++) == 0) {
 		g_intid = id;
 		el_mode = prepare_elx_restore_context();
