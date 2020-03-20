@@ -248,7 +248,25 @@ void octeontx_security_setup(void)
 		 */
 		ccs_asc_attr.s.s_en  = region->secure;
 		ccs_asc_attr.s.ns_en = !region->secure;
-		CSR_WRITE(CAVM_CCS_ASC_REGIONX_ATTR(region->number), ccs_asc_attr.u);
+
+#if !defined PLAT_ARMTRACEBUF_NO_WT
+		union cavm_ccs_asc_regionx_attr ccs_asc_attr_wt;
+
+		INFO("Configuring Secure preserve region as writethrough\n");
+		if (region->number == SECURE_PRESERVE) {
+			ccs_asc_attr_wt.u = ccs_asc_attr.u;
+			/* Enable writethrough */
+			ccs_asc_attr_wt.s.write_through = 1;
+			CSR_WRITE(CAVM_CCS_ASC_REGIONX_ATTR(region->number),
+				  ccs_asc_attr_wt.u);
+		} else {
+			CSR_WRITE(CAVM_CCS_ASC_REGIONX_ATTR(region->number),
+				  ccs_asc_attr.u);
+		}
+#else
+		CSR_WRITE(CAVM_CCS_ASC_REGIONX_ATTR(region->number),
+			  ccs_asc_attr.u);
+#endif
 
 		VERBOSE("Mark memory region %d:: %llx to %llx as %ssecure (%llx)\n",
 			region->number,
