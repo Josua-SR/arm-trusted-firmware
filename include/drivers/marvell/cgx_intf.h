@@ -104,6 +104,7 @@ enum cgx_cmd_id {
 	CGX_CMD_GET_PERSIST_IGNORE,
 	CGX_CMD_SET_PERSIST_IGNORE,
 	CGX_CMD_SET_MAC_ADDR,
+	CGX_CMD_SET_PTP_MODE,
 };
 
 /* async event ids */

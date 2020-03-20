@@ -317,4 +317,6 @@ int cgx_smc_do_prbs(int cmd, int qlm, int x3);
 /* plat APIs specific to Octeon TX2 family */
 int plat_get_cgx_idx(int qlm);
 
+int cgx_set_ptp_mode(int cgx_id, int lmac_id, int enable);
+
 #endif

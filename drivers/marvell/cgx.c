@@ -3611,6 +3611,30 @@ void cgx_hw_init(int cgx_id)
 	}
 }
 
+int cgx_set_ptp_mode(int cgx_id, int lmac_id, int enable)
+{
+	debug_cgx("%s: %d %d enable %d\n", __func__, cgx_id, lmac_id, enable);
+
+	if (enable) {
+		CAVM_MODIFY_CGX_CSR(cavm_cgxx_gmp_gmi_rxx_frm_ctl_t,
+				CAVM_CGXX_GMP_GMI_RXX_FRM_CTL(cgx_id, lmac_id),
+				ptp_mode, 1);
+
+		CAVM_MODIFY_CGX_CSR(cavm_cgxx_smux_rx_frm_ctl_t,
+				CAVM_CGXX_SMUX_RX_FRM_CTL(cgx_id, lmac_id),
+				ptp_mode, 1);
+	} else {
+		CAVM_MODIFY_CGX_CSR(cavm_cgxx_gmp_gmi_rxx_frm_ctl_t,
+				CAVM_CGXX_GMP_GMI_RXX_FRM_CTL(cgx_id, lmac_id),
+				ptp_mode, 0);
+
+		CAVM_MODIFY_CGX_CSR(cavm_cgxx_smux_rx_frm_ctl_t,
+				CAVM_CGXX_SMUX_RX_FRM_CTL(cgx_id, lmac_id),
+				ptp_mode, 0);
+	}
+	return 0;
+}
+
 int cgx_get_lane_count(int lmac_type)
 {
 	/* Lookup table for finding out the number of SERDES lanes used by an

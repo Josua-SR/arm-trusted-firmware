@@ -1915,6 +1915,9 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 			case CGX_CMD_HIGIG:
 				ret = cgx_control_higig2(cgx_id, lmac_id, enable);
 			break;
+			case CGX_CMD_SET_PTP_MODE:
+				ret = cgx_set_ptp_mode(cgx_id, lmac_id, enable);
+			break;
 			/* FIXME: add support for other commands */
 			default:
 				debug_cgx_intf("%s: %d:%d Invalid request %d\n",
