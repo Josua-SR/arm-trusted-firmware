@@ -32,29 +32,11 @@ endfunc plat_my_core_pos
 /* Main entry point for Cavium-specific trapping mechanism */
 func octeontx_io_trap_handler
 	/*
-	 * Mainline save_x18_to_x29_sp_el0 macro is defined
-	 * at runtime_exceptions.S, so platform code has to duplicate
-	 * code to store GP regs on stack.
-	 *
-	 * Save GP registers on entrypoint.
+	 * Save general purpose and ARMv8.3-PAuth registers (if enabled).
+	 * If Secure Cycle Counter is not disabled in MDCR_EL3 when
+	 * ARMv8.5-PMU is implemented, save PMCR_EL0 and disable Cycle Counter.
 	 */
-	stp	x0, x1, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X0]
-	stp	x2, x3, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X2]
-	stp	x4, x5, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X4]
-	stp	x6, x7, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X6]
-	stp	x8, x9, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X8]
-	stp	x10, x11, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X10]
-	stp	x12, x13, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X12]
-	stp	x14, x15, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X14]
-	stp	x16, x17, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X16]
-	stp	x18, x19, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X18]
-	stp	x20, x21, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X20]
-	stp	x22, x23, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X22]
-	stp	x24, x25, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X24]
-	stp	x26, x27, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X26]
-	stp	x28, x29, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X28]
-	mrs	x18, sp_el0
-	str	x18, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_SP_EL0]
+	bl	save_gp_pmcr_pauth_regs
 
 	mov	x0, sp
 
@@ -64,7 +46,7 @@ func octeontx_io_trap_handler
 	 * structure prior to the last ERET from EL3.
 	 */
 	ldr	x12, [x0, #CTX_EL3STATE_OFFSET + CTX_RUNTIME_SP]
-	msr	spsel, #0
+	msr	spsel, #MODE_SP_EL0
 
 	/*
 	 * Save the SPSR_EL3, ELR_EL3, & SCR_EL3 for more scalability
