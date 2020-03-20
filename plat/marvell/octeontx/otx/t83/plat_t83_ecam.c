@@ -239,7 +239,8 @@ static int cn83xx_is_bus_disabled(struct ecam_device *dev)
 
 static inline int cn83xx_skip_bus(struct ecam_device *dev)
 {
-	return (((dev->ecam == 1) && (dev->bus > 0)) || (dev->bus > 1));
+	return (((dev->ecam == 1) && (dev->bus > 0)) ||
+		((dev->ecam == 0) && (dev->bus > 11)));
 }
 
 static inline void cn83xx_disable_bus(struct ecam_device *dev)
