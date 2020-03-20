@@ -20,6 +20,7 @@ typedef enum l2c_region_index {
 
 typedef struct plat_octeontx_board_cfg {
 	board_cfg_t bcfg;
+	int qlm_auto_config;
 
 	int gpio_intercept_intr;
 } plat_octeontx_board_cfg_t;
