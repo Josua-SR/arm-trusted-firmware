@@ -243,20 +243,22 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 	uint64_t stabilization_timeout;
 	int rx_signal_detect_us, rx_signal_stable_us;
 
-	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
-
 	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
 	lmac = &cgx->lmac_cfg[lmac_id];
+
+	if (lmac->autoneg_dis)
+		debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
 
 	/* Only do first LMAC of USXGMII */
 	if (cgx->usxgmii_mode && (lmac_id > 0))
 		return 0;
 
-	if (lmac->autoneg_dis) {
-		rx_signal_detect_us = 10000;
-		rx_signal_stable_us = 10000;
-	} else {
+	/* AN signal detect is a 1us check */
+	if (!lmac->autoneg_dis) {
 		rx_signal_detect_us = 1;
+		rx_signal_stable_us = 1;
+	} else {
+		rx_signal_detect_us = 10000;
 		rx_signal_stable_us = 10000;
 	}
 
@@ -309,8 +311,9 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 
 		/* Verify if we are passed the link stabilization time */
 		if (gser_clock_get_count(GSER_CLOCK_TIME) >= stabilization_timeout) {
-			debug_cgx("%s %d:%d QLM%d Lane%d Rx signal detect timeout\n",
-					__func__, cgx_id, lmac_id, qlm, lane);
+			if (lmac->autoneg_dis)
+				printf("%s %d:%d QLM%d Lane%d Rx signal detect timeout\n",
+						__func__, cgx_id, lmac_id, qlm, lane);
 			return -1;
 		}
 	}
@@ -1380,9 +1383,11 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 {
 	int still_negotiating = 1;
 	bool anpage_rcvd = false;
+	bool signal_detect = false;
 	uint64_t anpage_timeout;
 	uint64_t autoneg_timeout;
 	uint64_t init_time;
+	uint64_t an_signal_timeout;
 	cavm_cgxx_spux_int_t spux_int;
 	cavm_cgxx_spux_an_status_t spux_an_status;
 	cavm_cgxx_spux_an_control_t spux_an_ctl;
@@ -1397,10 +1402,15 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 	int is_50gbaser2 = 0;
 	int transmit_np = 0;
 	int np = 0, ret = 0;
+	bool is_gsern = false;
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
 	debug_cgx("%s: %d:%d\n", __func__, cgx_id, lmac_id);
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		is_gsern = true;
 
 	if (lmac->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R)
 		is_25gbaser = 1;
@@ -1412,15 +1422,17 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 	init_time = gser_clock_get_count(GSER_CLOCK_TIME);
 	autoneg_timeout = init_time + CGX_POLL_AN_COMPLETE_STATUS *
 			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
-	/* 80 ms timeout */
 	anpage_timeout = init_time + CGX_POLL_AN_RESTART_STATUS *
 			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+	an_signal_timeout = init_time + CGX_POLL_AN_RX_SIGNAL *
+			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
 
-	while (still_negotiating &&
-			(gser_clock_get_count(GSERN_CLOCK_TIME)
-			< autoneg_timeout)) {
-		spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(
-				cgx_id, lmac_id));
+	if (is_gsern) {
+		while (still_negotiating &&
+				(gser_clock_get_count(GSERN_CLOCK_TIME)
+				< autoneg_timeout)) {
+			spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(
+					cgx_id, lmac_id));
 
 		spux_an_status.u = CSR_READ(CAVM_CGXX_SPUX_AN_STATUS(
 				cgx_id, lmac_id));
@@ -1433,11 +1445,20 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 			break;
 		}
 
-		/* Check if any AN pages are received */
-		if (!anpage_rcvd &&
-			(gser_clock_get_count(GSERN_CLOCK_TIME)
-				> anpage_timeout))
-			break;
+			/* Check if we have detecting an AN signal */
+			if (!signal_detect &&
+				(gser_clock_get_count(GSERN_CLOCK_TIME)
+					> an_signal_timeout))
+				break;
+
+			if (!cgx_serdes_rx_signal_detect(cgx_id, lmac_id))
+				signal_detect = true;
+
+			/* Check if any AN pages are received */
+			if (!anpage_rcvd &&
+				(gser_clock_get_count(GSERN_CLOCK_TIME)
+					> anpage_timeout))
+				break;
 
 		if (spux_int.s.an_page_rx) {
 			anpage_rcvd = true;
@@ -1528,8 +1549,25 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 			/* Only increase if less than 19 (max index) */
 			if (np < (AN_NP_PRINT_MAX - 1))
 				np++;
+			}
+			udelay(1);
 		}
-		udelay(1);
+	} else {
+		while (still_negotiating &&
+				(gser_clock_get_count(GSER_CLOCK_TIME)
+				< autoneg_timeout)) {
+			/* Check if we have detected an AN signal */
+			if (!signal_detect &&
+				(gser_clock_get_count(GSERN_CLOCK_TIME)
+					> an_signal_timeout))
+				break;
+
+			if (!cgx_serdes_rx_signal_detect(cgx_id, lmac_id))
+				signal_detect = true;
+
+			/* FIXME: add support for RAMBUS AN */
+			udelay(1);
+		}
 	}
 
 	if (still_negotiating)
@@ -1589,17 +1627,34 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 	return 0;
 
 AN_failure:
-	debug_cgx("%s: %d:%d AN timed out\n",
-		__func__, cgx_id, lmac_id);
-
-	if (!anpage_rcvd) {
-		/* Check if we are receiving a signal */
-		if (cgx_serdes_rx_signal_detect(cgx_id, lmac_id))
-			debug_cgx("%s: %d:%d Did not receive AN page. No Rx signal\n",
+	if (!is_gsern) {
+		if (!signal_detect) {
+			debug_cgx("%s: %d:%d No signal detected during AN\n",
 				__func__, cgx_id, lmac_id);
-		else
+			cgx_set_error_type(cgx_id, lmac_id,
+					CGX_ERR_SERDES_RX_NO_SIGNAL);
+		} else {
+			debug_cgx("%s: %d:%d AN timed out\n",
+				__func__, cgx_id, lmac_id);
+			cgx_set_error_type(cgx_id, lmac_id,
+				CGX_ERR_AN_CPT_FAIL);
+		}
+	} else {
+		if (!signal_detect) {
+			debug_cgx("%s: %d:%d No signal detected during AN\n",
+				__func__, cgx_id, lmac_id);
+			cgx_set_error_type(cgx_id, lmac_id,
+					CGX_ERR_SERDES_RX_NO_SIGNAL);
+		} else if (!anpage_rcvd) {
 			debug_cgx("%s: %d:%d Did not receive AN page\n",
 				__func__, cgx_id, lmac_id);
+			cgx_set_error_type(cgx_id, lmac_id,
+				CGX_ERR_AN_CPT_FAIL);
+		} else {
+			debug_cgx("%s: %d:%d AN timed out\n",
+				__func__, cgx_id, lmac_id);
+			cgx_set_error_type(cgx_id, lmac_id,
+				CGX_ERR_AN_CPT_FAIL);
 	}
 
 	/* Print AN page data if any pages received */
@@ -1615,6 +1670,7 @@ AN_failure:
 				      , __func__, cgx_id, lmac_id, i, an_adv[i].u);
 			debug_cgx("%s: %d:%d AN Page%d: Link Partner Base Page: 0x%llx\n"
 				      , __func__, cgx_id, lmac_id, i, lp_base[i].u);
+			}
 		}
 	}
 
