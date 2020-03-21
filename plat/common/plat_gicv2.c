@@ -299,9 +299,3 @@ unsigned int plat_ic_get_interrupt_id(unsigned int raw)
 
 	return id;
 }
-
-unsigned int plat_ic_get_interrupt_priority(unsigned int id)
-{
-	return gicv2_get_interrupt_priority(id);
-}
-

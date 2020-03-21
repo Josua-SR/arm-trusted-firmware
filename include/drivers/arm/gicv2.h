@@ -183,7 +183,6 @@ void gicv2_set_interrupt_pending(unsigned int id);
 void gicv2_clear_interrupt_pending(unsigned int id);
 unsigned int gicv2_set_pmr(unsigned int mask);
 void gicv2_interrupt_set_cfg(unsigned int id, unsigned int cfg);
-int gicv2_get_interrupt_priority(unsigned int id);
 
 #endif /* __ASSEMBLER__ */
 #endif /* GICV2_H */

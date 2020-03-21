@@ -1164,29 +1164,3 @@ int gicv3_rdistif_probe(const uintptr_t gicr_frame)
 #endif
 	return 0; /* Found matching GICR frame */
 }
-
-/*
- * Retrieve interrupt priority for specified interrupt.
- *
- * on entry,
- *  id: interrupt for which priority is requested
- * returns,
- *  priority value of specified interrupt OR
- *  -1 if specified interrupt not found
- */
-int gicv3_get_interrupt_priority(unsigned int id)
-{
-	const interrupt_prop_t *intr_list;
-	unsigned int i, intr_count;
-
-	assert(gicv3_driver_data != NULL);
-	intr_list = gicv3_driver_data->interrupt_props;
-	intr_count = gicv3_driver_data->interrupt_props_num;
-
-	/* Search for matching interrupt. */
-	for (i = 0; i < intr_count; i++)
-		if (intr_list[i].intr_num == id)
-			return intr_list[i].intr_pri;
-
-	return -1;
-}

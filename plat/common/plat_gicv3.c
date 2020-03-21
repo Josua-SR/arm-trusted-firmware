@@ -292,11 +292,6 @@ unsigned int plat_ic_get_interrupt_id(unsigned int raw)
 	return gicv3_is_intr_id_special_identifier(id) ?
 			INTR_ID_UNAVAILABLE : id;
 }
-
-unsigned int plat_ic_get_interrupt_priority(unsigned int id)
-{
-	return gicv3_get_interrupt_priority(id);
-}
 #endif
 #ifdef IMAGE_BL32
 
