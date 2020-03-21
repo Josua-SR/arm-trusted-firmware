@@ -557,9 +557,9 @@ int gicv2_get_interrupt_priority(unsigned int id)
 	const interrupt_prop_t *intr_list;
 	unsigned int i, intr_count;
 
-	assert(driver_data != NULL);
-	intr_list = driver_data->interrupt_props;
-	intr_count = driver_data->interrupt_props_num;
+	assert(gicv2_driver_data != NULL);
+	intr_list = gicv2_driver_data->interrupt_props;
+	intr_count = gicv2_driver_data->interrupt_props_num;
 
 	/* Search for matching interrupt. */
 	for (i = 0; i < intr_count; i++)
