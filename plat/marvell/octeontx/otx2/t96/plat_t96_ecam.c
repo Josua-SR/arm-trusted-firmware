@@ -554,6 +554,13 @@ static int cn96xx_get_secure_settings(struct ecam_device *dev, uint64_t pconfig)
 		sdev++;
 	}
 
+	if (sdev->devid == CAVM_PCC_DEV_IDL_E_SMI && dev->config.s.is_secure) {
+		if (plat_octeontx_bcfg->show_smi_in_nsw) {
+			/* Do not hide SMI from non-secure world */
+			dev->config.s.is_secure = 0;
+		}
+	}
+
 	sdev = secure_mcp_devs;
 	while (sdev->devid != ECAM_INVALID_PCC_IDL_ID) {
 		if (cn96xx_matched_dev(sdev, pccpf_id.u, vsec_ctl.u)) {

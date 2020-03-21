@@ -145,6 +145,7 @@ typedef struct plat_octeontx_board_cfg {
 	uint64_t pf_mac_base; /* PF MAC Address */
 	int pf_mac_num;
 	int qlm_auto_config;
+	int show_smi_in_nsw; /* flag to show or hide SMI in non-secure world */
 } plat_octeontx_board_cfg_t;
 
 extern plat_octeontx_board_cfg_t * const plat_octeontx_bcfg;

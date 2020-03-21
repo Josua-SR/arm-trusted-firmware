@@ -2118,6 +2118,26 @@ static void octeontx2_fill_ras_details(const void *fdt)
 	}
 }
 
+static void octeontx2_fill_show_smi_flag(const void *fdt)
+{
+	int offset;
+
+	/* By default, hide SMI from non-secure world */
+	plat_octeontx_bcfg->show_smi_in_nsw = 0;
+
+	if (fdt_check_header(fdt))
+		return;
+
+	offset = fdt_node_offset_by_compatible(fdt, -1,
+					"cavium,thunder-8890-mdio-nexus");
+	if (offset > 0) {
+		if (fdt_getprop(fdt, offset, "octeontx,enable-mdio-access",
+				NULL)) {
+			plat_octeontx_bcfg->show_smi_in_nsw = 1;
+		}
+	}
+}
+
 int plat_octeontx_fill_board_details(void)
 {
 	const void *fdt = fdt_ptr;
@@ -2146,6 +2166,8 @@ int plat_octeontx_fill_board_details(void)
 	octeontx2_fill_ras_details(fdt);
 
 	octeontx2_fill_twsi_slave_details(fdt);
+
+	octeontx2_fill_show_smi_flag(fdt);
 
 	return 0;
 }
