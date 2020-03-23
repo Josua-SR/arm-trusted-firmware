@@ -393,14 +393,10 @@ unsigned int ehf_is_ns_preemption_allowed(void)
 static uint64_t ehf_el3_interrupt_handler(uint32_t id, uint32_t flags,
 		void *handle, void *cookie)
 {
-#	define IAR_RETRIES 1
-#	define GIC_IDLE_PRIORITY 0xff
 	int ret = 0;
 	uint32_t intr_raw;
 	unsigned int intr, pri, idx;
 	ehf_handler_t handler;
-	uint64_t icc_ap0r0_el1[2];
-	int iar_cnt = 0;
 
 	/*
 	 * Top-level interrupt type handler from Interrupt Management Framework
@@ -409,8 +405,6 @@ static uint64_t ehf_el3_interrupt_handler(uint32_t id, uint32_t flags,
 	 */
 	assert(id == INTR_ID_UNAVAILABLE);
 
-	icc_ap0r0_el1[0] = read_icc_ap0r0_el1();
-
 	/*
 	 * Acknowledge interrupt. Proceed with handling only for valid interrupt
 	 * IDs. This situation may arise because of Interrupt Management
@@ -418,7 +412,6 @@ static uint64_t ehf_el3_interrupt_handler(uint32_t id, uint32_t flags,
 	 * acknowledged here, the interrupt was either deasserted, or there was
 	 * a higher-priority interrupt of another type.
 	 */
-ack_intr:
 	intr_raw = plat_ic_acknowledge_interrupt();
 	intr = plat_ic_get_interrupt_id(intr_raw);
 	if (intr == INTR_ID_UNAVAILABLE)
@@ -426,18 +419,6 @@ ack_intr:
 
 	/* Having acknowledged the interrupt, get the running priority */
 	pri = plat_ic_get_running_priority();
-
-	icc_ap0r0_el1[1] = read_icc_ap0r0_el1();
-
-	/* Workaround for bug; check for spurious intr. */
-	if ((icc_ap0r0_el1[1] == icc_ap0r0_el1[0]) &&
-	    (pri == GIC_IDLE_PRIORITY)) {
-
-		if (++iar_cnt > IAR_RETRIES)
-			return 0;
-
-		goto ack_intr;
-	}
 
 	/* Check EL3 interrupt priority is in secure range */
 	assert(IS_PRI_SECURE(pri));
