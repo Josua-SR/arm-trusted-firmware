@@ -317,7 +317,9 @@ static int cgx_link_bringup(int cgx_id, int lmac_id)
 	cgx_lmac_context_t *lmac_ctx;
 	cgx_lmac_timers_t *lmac_tmr;
 	link_state_t link;
-	int count = 0;
+	int sig_fail_count = 0, an_lt_fail_count = 0;
+	int lp_fail_count = 0, phy_fail_count = 0;
+	int fail_count = 0;
 
 	/* get the lmac type and based on lmac
 	 * type, initialize SGMII/XAUI link
@@ -498,7 +500,7 @@ retry_link:
 			phy_get_link_status(cgx_id, lmac_id, &link);
 
 			if (!link.s.link_up) {
-				if (count++ < 5)
+				if (phy_fail_count++ < PHY_FAIL_RETRIES)
 					goto retry_link;
 
 				debug_cgx_intf("%s:%d:%d link status is down\n",
@@ -508,7 +510,7 @@ retry_link:
 				link.s.full_duplex = 0;
 				link.s.speed = CGX_LINK_NONE;
 				link.s.fec = lmac_cfg->fec;
-				count = 0; /* reset the counter */
+				phy_fail_count = 0; /* reset the counter */
 				goto cgx_err; /* To poll for the link */
 			}
 			cgx_set_link_state(cgx_id, lmac_id, &link, 0);
@@ -516,24 +518,65 @@ retry_link:
 		/* Check if Rx link is down */
 		if (!lmac_ctx->s.rx_link_up) {
 			if (cgx_xaui_set_link_up(cgx_id, lmac_id) == -1) {
+				/* Need to retry on a Rx Signal detect
+				 * failure a min of 80ms to account
+				 * for an AN restart
+				 */
+				if (cgx_get_error_type(cgx_id, lmac_id) ==
+					CGX_ERR_SERDES_RX_NO_SIGNAL) {
+					if (sig_fail_count++ < SIG_FAIL_RETRIES) {
+						printf("%s: %d:%d Signal Detect failed,\t"
+							"retrying link\n", __func__,
+							cgx_id, lmac_id);
 				/* if init link fails, retry */
-				lmac_ctx->s.rx_link_up = 0;
-				if (count++ < 5) {
-					debug_cgx_intf("%s: %d:%d Init failed,\t"
+						cgx_set_error_type(cgx_id, lmac_id, 0);
+						goto retry_link;
+					}
+				} else if (cgx_get_error_type(cgx_id, lmac_id) ==
+					CGX_ERR_AN_CPT_FAIL) {
+					if (an_lt_fail_count++ < AN_LT_FAIL_RETRIES) {
+						printf("%s: %d:%d AN Init failed,\t"
 						"retrying link\n", __func__,
 						cgx_id, lmac_id);
 					/* clear the error when retrying */
 					cgx_set_error_type(cgx_id, lmac_id, 0);
 					goto retry_link;
 				}
-			} else {
+				} else if (cgx_get_error_type(cgx_id, lmac_id) ==
+					CGX_ERR_TRAINING_FAIL) {
+					if (an_lt_fail_count++ < AN_LT_FAIL_RETRIES) {
+						printf("%s: %d:%d Link Training failed,\t"
+							"retrying link\n", __func__,
+							cgx_id, lmac_id);
+						cgx_set_error_type(cgx_id, lmac_id, 0);
+						goto retry_link;
+					}
+				} else {
+					if (fail_count++ < ETH_FAIL_RETRIES) {
+						printf("%s: %d:%d Ethernet Init failed,\t"
+							"retrying link\n", __func__,
+							cgx_id, lmac_id);
+						cgx_set_error_type(cgx_id, lmac_id, 0);
+						goto retry_link;
+					}
+				}
+			} else
 				lmac_ctx->s.rx_link_up = 1;
-			}
 		}
 
 		/* Only check full link (Tx and Rx) is up after verifying Rx is up */
-		if (lmac_ctx->s.rx_link_up)
-			cgx_xaui_get_link(cgx_id, lmac_id, &link, lmac_ctx, lmac_tmr);
+		if (lmac_ctx->s.rx_link_up) {
+			if (cgx_xaui_get_link(cgx_id, lmac_id, &link, lmac_ctx, lmac_tmr) == -1) {
+				if (lp_fail_count++ < LP_FAIL_RETRIES) {
+					debug_cgx_intf("%s %d:%d Link down,\t"
+						"retrying link\n", __func__,
+						cgx_id, lmac_id);
+					/* clear the error when retrying */
+					cgx_set_error_type(cgx_id, lmac_id, 0);
+					goto retry_link;
+				}
+			}
+		}
 
 		if (link.s.link_up == 1) {	/* link is up */
 			if (cgx_get_error_type(cgx_id, lmac_id) &

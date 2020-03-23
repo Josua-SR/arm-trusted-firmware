@@ -60,6 +60,13 @@
 #define REMOTE_FAULT_TIMEOUT_MS		10000
 #define TX_IDLE_TOGGLE_US		1000
 
+/* Max retries for different failures */
+#define SIG_FAIL_RETRIES 10
+#define AN_LT_FAIL_RETRIES 3
+#define PHY_FAIL_RETRIES 5
+#define LP_FAIL_RETRIES 5
+#define ETH_FAIL_RETRIES 5
+
 /* Maximum number of extended next page prints */
 #define AN_NP_PRINT_MAX 20
 
