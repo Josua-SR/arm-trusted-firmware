@@ -282,7 +282,15 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 		do {
 			gserx = lmac->gserx + lmac->shift_from_first;
 			qlm = lmac->qlm + lmac->shift_from_first;
-			lane_mask = lmac->lane_mask;
+			if (lmac->autoneg_dis)
+				lane_mask = lmac->lane_mask;
+			else {
+				/* If AN is enabled only check
+				 * for signal on AN master lane
+				 */
+				lane_mask = 0;
+				lane_mask |= 1 << lmac->lane_an_master;
+			}
 
 			while (lane_mask) {
 				/* Get the number of lanes on this QLM/DLM */
@@ -881,6 +889,11 @@ static void cgx_set_autoneg(int cgx_id, int lmac_id)
 	case CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R:
 	case CAVM_CGX_LMAC_TYPES_E_FIFTYG_R:
 	case CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R:
+		/* For all non-GSERN serdes, rambus AN is used and hence
+		 * CGX AN needs to be disabled
+		 */
+		if (!is_gsern)
+			break;
 		/* enable AN */
 		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
 				CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
@@ -1183,16 +1196,14 @@ int cgx_an_lmac_serdes_reinit(int cgx_id, int lmac_id, int lmac_type_req,
 	cgx_set_fec(cgx_id, lmac_id, lmac->fec);
 
 	/* configure and enable AN, if AN is desired */
-	if (an_en)
-		cgx_set_autoneg(cgx_id, lmac_id);
-	else { /* disable AN */
 		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
 				CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
 				an_en, 0);
 		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_usx_an_control_t,
 				CAVM_CGXX_SPUX_USX_AN_CONTROL(cgx_id, lmac_id),
 				an_en, 0);
-	}
+	if (an_en)
+		cgx_set_autoneg(cgx_id, lmac_id);
 
 	/* Enable link training only on 96xx
 	 * A.x/B.x and 95xx A.x
@@ -1398,15 +1409,28 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 	int num_pages = 0;
 	int num_eth_pages = 0;
 	cgx_lmac_config_t *lmac;
+	cgx_config_t *cgx;
 	int is_25gbaser = 0;
 	int is_50gbaser2 = 0;
 	int transmit_np = 0;
 	int np = 0, ret = 0;
 	bool is_gsern = false;
+	/* Variables required for non-GSERN AN */
+	int lane, gserx, qlm, num_lanes;
 
-	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
 
 	debug_cgx("%s: %d:%d\n", __func__, cgx_id, lmac_id);
+	gserx = lmac->gserx;
+	qlm = lmac->qlm;
+	num_lanes = qlm_get_lanes(qlm);
+	if (num_lanes == 1)
+		lane = 0;
+	else if (num_lanes == 2)
+		lane = lmac->lane_an_master % 2;
+	else
+		lane = lmac->lane_an_master;
 
 	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
 		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
@@ -1422,7 +1446,7 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 	init_time = gser_clock_get_count(GSER_CLOCK_TIME);
 	autoneg_timeout = init_time + CGX_POLL_AN_COMPLETE_STATUS *
 			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
-	anpage_timeout = init_time + CGX_POLL_AN_RESTART_STATUS *
+	anpage_timeout = init_time + CGX_POLL_AN_PAGE_STATUS *
 			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
 	an_signal_timeout = init_time + CGX_POLL_AN_RX_SIGNAL *
 			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
@@ -1565,7 +1589,10 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 			if (!cgx_serdes_rx_signal_detect(cgx_id, lmac_id))
 				signal_detect = true;
 
-			/* FIXME: add support for RAMBUS AN */
+			if (!cgx->qlm_ops->qlm_an_complete(gserx, lane)) {
+				still_negotiating = 0;
+				break;
+			}
 			udelay(1);
 		}
 	}
@@ -1573,6 +1600,13 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 	if (still_negotiating)
 		goto AN_failure;
 
+	if (!is_gsern) {
+		cgx->qlm_ops->qlm_set_phy_strap(gserx, lane);
+		debug_cgx("%s: %d:%d AN successfully completed, AN Completion time: %lld ms\n",
+			__func__, cgx_id, lmac_id,
+			((gser_clock_get_count(GSER_CLOCK_TIME) - init_time) *
+			 1000 / gser_clock_get_rate(GSER_CLOCK_TIME)));
+	} else {
 	/* Put the CGX LMAC SERDES lanes in Reset
 	 * if link training is enabled
 	 */
@@ -1593,12 +1627,9 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 			__func__, cgx_id, lmac_id);
 
 		/* Always need to start Link training for non-GSERN chips */
-		if (!(IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) &&
-			!(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1))) {
 			cgx_link_training_start(cgx_id, lmac_id, true);
 			/* Enable the SERDES Tx */
 			cgx_serdes_tx_control(cgx_id, lmac_id, true);
-		}
 	} else {
 		/* If there was no mismatch S/W needs to
 		 * manually kick off training
@@ -1623,6 +1654,7 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 	    __func__, cgx_id, lmac_id,
 	    ((gser_clock_get_count(GSER_CLOCK_TIME) - init_time) *
 		 1000 / gser_clock_get_rate(GSER_CLOCK_TIME)));
+	}
 
 	return 0;
 
@@ -1655,20 +1687,20 @@ AN_failure:
 				__func__, cgx_id, lmac_id);
 			cgx_set_error_type(cgx_id, lmac_id,
 				CGX_ERR_AN_CPT_FAIL);
-	}
+		}
 
-	/* Print AN page data if any pages received */
-	if (np > 0) {
-		debug_cgx("%s: %d:%d Number of Next pages transmitted = %d\n"
+		/* Print AN page data if any pages received */
+		if (np > 0) {
+			debug_cgx("%s: %d:%d Number of Next pages transmitted = %d\n"
 				  , __func__, cgx_id, lmac_id, num_pages);
-		for (int i = 0; i < np; i++) {
-			debug_cgx("%s: %d:%d AN Page%d: AN Link Partner Extended Next Page: 0x%llx\n"
-				      , __func__, cgx_id, lmac_id, i, lp_xnp[i].u);
-			debug_cgx("%s: %d:%d AN Page%d: AN Extended Next Page Tx: 0x%llx\n"
+			for (int i = 0; i < np; i++) {
+				debug_cgx("%s: %d:%d AN Page%d: AN Link Partner Extended Next Page: 0x%llx\n",
+					__func__, cgx_id, lmac_id, i, lp_xnp[i].u);
+				debug_cgx("%s: %d:%d AN Page%d: AN Extended Next Page Tx: 0x%llx\n"
 				      , __func__, cgx_id, lmac_id, i, xnp_tx[i].u);
-			debug_cgx("%s: %d:%d AN Page%d: AN Advertisement: 0x%llx\n"
-				      , __func__, cgx_id, lmac_id, i, an_adv[i].u);
-			debug_cgx("%s: %d:%d AN Page%d: Link Partner Base Page: 0x%llx\n"
+				debug_cgx("%s: %d:%d AN Page%d: AN Advertisement: 0x%llx\n"
+					      , __func__, cgx_id, lmac_id, i, an_adv[i].u);
+				debug_cgx("%s: %d:%d AN Page%d: Link Partner Base Page: 0x%llx\n"
 				      , __func__, cgx_id, lmac_id, i, lp_base[i].u);
 			}
 		}
@@ -2354,13 +2386,15 @@ int cgx_fec_change(int cgx_id, int lmac_id, int new_fec)
 static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 {
 	int training_fail = 0, ret;
+	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
 	cavm_cgxx_spux_an_control_t spux_an_ctl;
 	cavm_cgxx_spux_int_t spux_int;
 	bool is_gsern = 0;
-	int qlm_mode = 0, lmac_mode = 0;
+	int gserx, lane, qlm, num_lanes;
 
-	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
 
 	if (lmac->autoneg_dis)
 		return 1;
@@ -2382,7 +2416,7 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 	 * 96XX Ax/Bx (1.x). CGX will automatically complete link
 	 * training if AN HCD matches CGX config
 	 */
-	if (spux_an_ctl.s.an_arb_link_chk_en && is_gsern) {
+	if (is_gsern && spux_an_ctl.s.an_arb_link_chk_en) {
 		/* Enable the SERDES Tx */
 		cgx_serdes_tx_control(cgx_id, lmac_id, true);
 
@@ -2424,6 +2458,8 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 			if (training_fail) {
 				debug_cgx("%s:%d:%d: Link training failed, Restarting AN.\n",
 					__func__, cgx_id, lmac_id);
+				cgx_set_error_type(cgx_id, lmac_id,
+					CGX_ERR_TRAINING_FAIL);
 				goto restart_an;
 			}
 		} else {
@@ -2436,59 +2472,40 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 			if (cgx_link_training_wait(cgx_id, lmac_id)) {
 				debug_cgx("%s:%d:%d: Link training failed, Restarting AN.\n",
 					__func__, cgx_id, lmac_id);
+				cgx_set_error_type(cgx_id, lmac_id,
+					CGX_ERR_TRAINING_FAIL);
 				goto restart_an;
 			}
 		}
 	} else {
-		/* Force link partner to the AN ABILITY DETECT STATE.
-		 * When an_arb_link_chk_en disabled S/W needs to start link training
+		/* For all non-GSERN serdes, AN config is already
+		 * setup, set the hand-shaking bit and wait for
+		 * AN to complete
 		 */
-		debug_cgx("%s:%d:%d: Restarting AN\n",
-			__func__, cgx_id, lmac_id);
+		gserx = lmac->gserx;
+		qlm = lmac->qlm;
+		num_lanes = qlm_get_lanes(qlm);
 
-		/* Disable the SERDES Tx */
-		cgx_serdes_tx_control(cgx_id, lmac_id, false);
-
-		/* Configure SERDES for AN and restart AN
-		 * non-GSERN AN must have SERDES configured
-		 * for in 10Gb/s per lane SERDES mode
+		/* Set lane # to support any
+		 * lane module type (SLM, DLM, QLM)
+		 * 9XXX does not support AN on 1 LMAC
+		 * across multiple lane modules
 		 */
-		if (!is_gsern) {
-			switch (lmac->mode_idx) {
-			case QLM_MODE_50G_CR2:
-			case QLM_MODE_50G_KR2:
-			case QLM_MODE_25G_CR:
-			case QLM_MODE_25G_KR:
-				qlm_mode = QLM_MODE_10G_KR;
-				lmac_mode = CAVM_CGX_LMAC_TYPES_E_TENG_R;
-				break;
-			case QLM_MODE_100G_CR4:
-				qlm_mode = QLM_MODE_40G_CR4;
-				lmac_mode = CAVM_CGX_LMAC_TYPES_E_FORTYG_R;
-				break;
-			case QLM_MODE_100G_KR4:
-				qlm_mode = QLM_MODE_40G_KR4;
-				lmac_mode = CAVM_CGX_LMAC_TYPES_E_FORTYG_R;
-				break;
-			default:
-				qlm_mode = lmac->mode_idx;
-				lmac_mode = lmac->mode;
-				break;
-			}
-		}
+		if (num_lanes == 1)
+			lane = 0;
+		else if (num_lanes == 2)
+			lane = lmac->lane_an_master % 2;
+		else
+			lane = lmac->lane_an_master;
 
-		if (cgx_an_lmac_serdes_reinit(cgx_id, lmac_id, lmac_mode,
-					qlm_mode, lmac->fec, true, 0)) {
-			debug_cgx("%s:%d:%d: Failed to initialize SERDES LMAC, Restarting AN.\n",
-					__func__, cgx_id, lmac_id);
-			return -1;
-		}
+		debug_cgx("%s:%d:%d: starting AN gserx %d lane %d\n",
+			__func__, cgx_id, lmac_id, gserx, lane);
 
-		/* Configure SERDES to receive AN frames */
-		cgx_autoneg_serdes_enable(cgx_id, lmac_id, true, true);
+		/*  PCS link is down, so clear ln_link_stat when restarting AN */
+		cgx->qlm_ops->qlm_clear_link_stat(gserx, lane);
 
-		cgx_restart_an(cgx_id, lmac_id);
-		cgx_serdes_reset(cgx_id, lmac_id, false);
+		/* Start AN */
+		cgx->qlm_ops->qlm_start_an(gserx, lane);
 
 		/* Enable the SERDES Tx */
 		cgx_serdes_tx_control(cgx_id, lmac_id, true);
@@ -2502,23 +2519,25 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 		if (cgx_link_training_wait(cgx_id, lmac_id)) {
 			debug_cgx("%s:%d:%d: Link training failed, Restarting AN.\n",
 				__func__, cgx_id, lmac_id);
+			cgx->qlm_ops->qlm_get_link_training_status(gserx, lane);
+			cgx_set_error_type(cgx_id, lmac_id,
+				CGX_ERR_TRAINING_FAIL);
 			goto restart_an;
 		}
-
-		/* Disable training */
-		cgx_link_training_start(cgx_id, lmac_id, false);
+		return 0;
 	}
 
-	return 0;
-
 restart_an:
-	/* Disable SERDES Tx. S/W needs to be ready to respond to
-	 * AN before enabling Tx
-	 */
-	cgx_serdes_tx_control(cgx_id, lmac_id, false);
-	/* Restart AN */
-	cgx_restart_an(cgx_id, lmac_id);
-
+	if (is_gsern) {
+		/* Disable SERDES Tx. S/W needs to be ready to respond to
+		 * AN before enabling Tx
+		 */
+		cgx_serdes_tx_control(cgx_id, lmac_id, false);
+		/* Restart AN */
+		cgx_restart_an(cgx_id, lmac_id);
+	} else {
+		cgx_serdes_tx_control(cgx_id, lmac_id, false);
+	}
 	return -1;
 }
 
@@ -2886,17 +2905,15 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id)
 	/* Configure FEC type */
 	cgx_set_fec(cgx_id, lmac_id, lmac->fec);
 
-	/* configure and enable AN, if AN is desired */
-	if (!lmac->autoneg_dis)
-		cgx_set_autoneg(cgx_id, lmac_id);
-	else { /* disable AN */
 		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_an_control_t,
 				CAVM_CGXX_SPUX_AN_CONTROL(cgx_id, lmac_id),
 				an_en, 0);
 		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_usx_an_control_t,
 				CAVM_CGXX_SPUX_USX_AN_CONTROL(cgx_id, lmac_id),
 				an_en, 0);
-	}
+	/* configure and enable AN, if AN is desired */
+	if (!lmac->autoneg_dis)
+		cgx_set_autoneg(cgx_id, lmac_id);
 
 	/* Program the rate type in case of USXGMII. rate type to be
 	 * obtained from PHY's link speed
@@ -2976,7 +2993,12 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 	cavm_cgxx_spux_br_status2_t br_status2;
 	cavm_cgxx_spux_control1_t spux_control1;
 	cavm_cgxx_smux_rx_ctl_t	smux_rx_ctl;
+	bool is_gsern = 0;
 
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		is_gsern = true;
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
 	debug_cgx("%s: %d:%d mode %d AN enable %d training %d\n",
@@ -2987,12 +3009,11 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 		/* Configure an_nonce_match_dis bit accordingly based
 		 * on loopback mode set by user
 		 */
-		cgx_set_an_loopback(cgx_id, lmac_id, lmac->an_loopback);
+		if (is_gsern)
+			cgx_set_an_loopback(cgx_id, lmac_id, lmac->an_loopback);
 
 		/* Complete AN and link training */
 		if (cgx_complete_sw_an(cgx_id, lmac_id) != 0) {
-			cgx_set_error_type(cgx_id, lmac_id,
-				CGX_ERR_AN_CPT_FAIL);
 			return -1;
 		} else {
 			if (lmac->use_training)
@@ -3002,9 +3023,12 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 				debug_cgx("%s: %d:%d AN completed successfully\n",
 						__func__, cgx_id, lmac_id);
 
-			/* Clear interrupts used for auto-neg/link training */
-			CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
-				CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id)));
+			/* Clear interrupts used for auto-neg/link training in case of
+			 * GSERN serdes
+			 */
+			if (is_gsern)
+				CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
+					CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id)));
 		}
 
 	} else {
@@ -3018,7 +3042,6 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 					CGX_ERR_SERDES_RX_NO_SIGNAL);
 			return -1;
 		}
-	}
 
 	/* If link training is disabled, manually bring up Link */
 	if (!lmac->use_training) {
@@ -3064,6 +3087,7 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 			lane_mask >>= num_lanes;
 			gserx++;
 			qlm++;
+			}
 		}
 	}
 
@@ -3248,7 +3272,7 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 			__func__, cgx_id, lmac_id,
 			spux_status1.u, smux_tx_ctl.u, smux_rx_ctl.u);
 		debug_cgx("%s: %d:%d speed obtained %d\n", __func__,
-					cgx_id, lmac_id, speed);
+			cgx_id, lmac_id, speed);
 		result->s.speed = CGX_LINK_NONE;
 		/* obtain the speed enum based on the speed in Mbps */
 		for (int i = CGX_LINK_NONE; i < CGX_LINK_MAX; i++) {
@@ -3304,7 +3328,7 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 			/* Check if we need to start the remote fault timeout */
 			if (!lmac_ctx->s.remote_fault) {
 				debug_cgx("%s: %d:%d Remote fault detected\n",
-						__func__, cgx_id, lmac_id);
+				   __func__, cgx_id, lmac_id);
 				lmac_tmr->remote_fault_timeout = gser_clock_get_count(GSER_CLOCK_TIME) +
 					REMOTE_FAULT_TIMEOUT_MS * gser_clock_get_rate(GSER_CLOCK_TIME)/1000;
 				lmac_ctx->s.remote_fault = 1;

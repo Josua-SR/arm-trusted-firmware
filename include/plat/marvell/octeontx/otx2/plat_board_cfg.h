@@ -89,6 +89,7 @@ typedef struct cgx_lmac_config {
 	int gserx;
 	int max_lane_count;
 	int an_loopback;
+	int lane_an_master;
 } cgx_lmac_config_t;
 
 typedef struct cgx_config {

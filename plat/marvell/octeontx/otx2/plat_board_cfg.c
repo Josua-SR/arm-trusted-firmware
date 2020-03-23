@@ -1352,6 +1352,8 @@ static int octeontx2_fill_cgx_struct(int cgx_idx, int qlm, int gserx,
 							lane, lane_to_sds);
 			break;
 		}
+		/* Set AN master lane to LMAC logical lane 0 */
+		lmac->lane_an_master = lmac->lane_to_sds & 0x3;
 
 		/* Create the GSER lane_mask */
 		for (j = 0; j < lused; j++)
