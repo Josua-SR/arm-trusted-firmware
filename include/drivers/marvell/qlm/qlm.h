@@ -241,6 +241,11 @@ typedef struct {
 	void (*qlm_link_training_config)(int qlm, int lane, bool en);
 	int (*qlm_link_training_fail)(int qlm, int lane);
 	int (*qlm_link_training_complete)(int qlm, int lane);
+	void (*qlm_start_an)(int qlm, int lane);
+	void (*qlm_set_phy_strap)(int qlm, int lane);
+	int (*qlm_an_complete)(int qlm, int lane);
+	void (*qlm_get_link_training_status)(int qlm, int lane);
+	void (*qlm_clear_link_stat)(int qlm, int lane);
 } qlm_ops_t;
 
 /* QLM platform specific API */

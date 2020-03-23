@@ -276,6 +276,116 @@ static int qlm_gserr_link_training_complete(int qlm, int lane)
 	else
 		return 1;
 }
+
+/**
+ * Set GSERR handshake bit to start AN
+ *
+ * @param  qlm    Index into GSER* group
+ * @param lane       Which lane
+ */
+static void qlm_gserr_start_an(int qlm, int lane)
+{
+	/* AN Handshaking bit assignments
+	 * GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD[data]
+	 * data[3] = Handshake enable
+	 * data[4] = Handshake ready
+	 */
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD(qlm, lane),
+				c.s.data &= 0xf7);
+}
+
+/**
+ * Set Phy Strap
+ *
+ * @param qlm    Index into GSER* group
+ * @param lane      Which lane
+ */
+static void qlm_gserr_set_phy_strap(int qlm, int lane)
+{
+	/* Read GSERRX_LANEX_CONTROL_BCFG Fields. Read initially
+	 * from GSERRX_LANEX_STATUS_BSTS [ln_an_link_sel]
+	 */
+	GSER_CSR_INIT(status_bsts, CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane));
+	/* Write value from above into GSERRX_LANEX_CONTROL_BCFG [ln_link_stat] */
+	GSER_CSR_MODIFY(control_bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(qlm, lane),
+		control_bcfg.s.ln_link_stat = status_bsts.s.ln_an_link_sel);
+}
+
+/**
+ * Check whether SERDES AN Completed
+ *
+ * @param qlm	  QLM to use
+ * @param lane	  Which lane
+ * @return 0 on completion, 1 not complete
+ */
+static int qlm_gserr_an_complete(int qlm, int lane)
+{
+	GSER_CSR_INIT(lane_status, CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane));
+	if (lane_status.s.ln_an_stat_resolved)
+		return 0;
+	else
+		return 1;
+}
+
+/**
+ * Read CSRs to determine Link Training Status
+ *
+ * @param  qlm   Index into GSER* group
+ * @param  lane    Which lane
+ */
+static void qlm_gserr_get_link_training_status(int qlm, int lane)
+{
+	GSER_CSR_INIT(fsm_ctrl5, CAVM_GSERRX_LNX_LT_TX_FSM_CTRL5(qlm, lane));
+	printf("GSERR%d_LN%d_LT_TX_FSM_CTRL5\n", qlm, lane);
+	printf("remote_rx_ready: %d\trx_trained: %d\n",
+		fsm_ctrl5.s.remote_rx_ready,
+		fsm_ctrl5.s.rx_trained);
+
+	GSER_CSR_INIT(fsm_status, CAVM_GSERRX_LNX_LT_TX_FSM_STATUS(qlm, lane));
+	printf("GSERR%d_LN%d_LT_TX_FSM_STATUS\n", qlm, lane);
+	printf("fsm_local_rx_ready: %d\tsignal_detect: %d\ttraining_fail: %d\n",
+			fsm_status.s.fsm_local_rx_ready,
+			fsm_status.s.signal_detect,
+			fsm_status.s.training_fail);
+
+	GSER_CSR_INIT(fsm_state_status0, CAVM_GSERRX_LNX_LT_TX_FSM_STATE_STATUS0(qlm, lane));
+	printf("GSERR%d_LN%d_LT_TX_FSM_STATE_STATUS0\n", qlm, lane);
+	printf("prev1: %d\tcurrent: %d\n",
+			fsm_state_status0.s.prev1,
+			fsm_state_status0.s.current);
+
+	GSER_CSR_INIT(fsm_state_status1, CAVM_GSERRX_LNX_LT_TX_FSM_STATE_STATUS1(qlm, lane));
+		printf("GSERR%d_LN%d_LT_TX_FSM_STATE_STATUS1\n", qlm, lane);
+		printf("prev2: %d\tprev3: %d\n",
+				fsm_state_status1.s.prev2,
+				fsm_state_status1.s.prev3);
+}
+
+static void qlm_gserr_clear_link_stat(int qlm, int lane)
+{
+	GSER_CSR_MODIFY(control_bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(
+		qlm, lane),
+		control_bcfg.s.ln_link_stat = 0);
+}
+
+/**
+ * Manually turn on or off the SERDES transmitter
+ *
+ * @param node	  Node to use in numa setup
+ * @param qlm	   QLM to use
+ * @param lane	  Which lane
+ * @param enable_tx True to enable transmitter, false to disable
+ */
+static int qlm_gserr_tx_control(int qlm, int lane, int enable_tx)
+{
+	int en = (enable_tx) ? 1 : 0;
+
+	GSER_TRACE(QLM, "GSERR%d.%d: %s TX\n", qlm, lane, (enable_tx) ? "Enable" : "Disable");
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(qlm, lane),
+		c.s.ln_ctrl_tx_en = en);
+	return 0;
+}
+
 const qlm_ops_t qlm_gserr_ops = {
 	.type = QLM_GSERR_TYPE,
 	.qlm_get_state = qlm_gserr_get_state,
@@ -301,4 +411,9 @@ const qlm_ops_t qlm_gserr_ops = {
 	.qlm_link_training_config = qlm_gserr_link_training_config,
 	.qlm_link_training_fail = qlm_gserr_link_training_fail,
 	.qlm_link_training_complete = qlm_gserr_link_training_complete,
+	.qlm_start_an = qlm_gserr_start_an,
+	.qlm_set_phy_strap = qlm_gserr_set_phy_strap,
+	.qlm_an_complete = qlm_gserr_an_complete,
+	.qlm_get_link_training_status = qlm_gserr_get_link_training_status,
+	.qlm_clear_link_stat = qlm_gserr_clear_link_stat,
 };

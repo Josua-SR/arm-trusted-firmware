@@ -226,6 +226,6 @@ int qlm_gserr_eye_capture(int qlm, int lane, int show_data, gser_qlm_eye_t *eye_
  * @param lane	  Which lane
  * @param enable_tx True to enable transmitter, false to disable
  */
-int qlm_gserr_tx_control(int qlm, int lane, int enable_tx);
+int qlm_gserr_tx_control_bdk(int qlm, int lane, int enable_tx);
 
 #endif /* _QLM_GSERR_H_ */

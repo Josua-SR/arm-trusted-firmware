@@ -1807,7 +1807,7 @@ static void update_all_lane_state()
  * @param lane	  Which lane
  * @param enable_tx True to enable transmitter, false to disable
  */
-int qlm_gserr_tx_control(int qlm, int lane, int enable_tx)
+int qlm_gserr_tx_control_bdk(int qlm, int lane, int enable_tx)
 {
 	int en = (enable_tx) ? 1 : 0;
 	GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(qlm, lane),
@@ -1831,7 +1831,7 @@ int qlm_gserr_tx_control(int qlm, int lane, int enable_tx)
  * @return Zero on success, negative on failure. Network driver shouldn't continue with
  *		 AN until this returns 0
  */
-int qlm_gserr_start_an(int module, int lane, int unused)
+int qlm_gserr_start_an_bdk(int module, int lane, int unused)
 {
 	update_all_lane_state();
 	show_lane_state(module, lane);
