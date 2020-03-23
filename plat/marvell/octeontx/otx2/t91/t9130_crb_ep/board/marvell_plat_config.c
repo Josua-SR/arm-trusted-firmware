@@ -81,10 +81,11 @@ int marvell_get_io_win_memory_map(int ap_index, struct addr_map_win **win,
  *****************************************************************************
  */
 struct addr_map_win iob_memory_map_cp0[] = {
+	/* PEX0_X4 window */
+	/*0x800000000 should be first due to DIOB config*/
+	{0x0000008000000000,	0x800000000,	PEX0_TID},
 	/* SPI1_CS0 (RUNIT) window */
 	{0x00000000f9000000,	0x1000000,	RUNIT_TID},
-	/* PEX0_X4 window */
-	{0x0000008000000000,	0x800000000,	PEX0_TID},
 };
 
 int marvell_get_iob_memory_map(struct addr_map_win **win, uint32_t *size,
