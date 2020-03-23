@@ -290,13 +290,8 @@ void plat_octeontx_cpu_setup(void)
 		set_bit(cvmctl2_el1, 3);
 	}
 
-	/* Errata AP-36933 */
-	if (IS_OCTEONTX_PN(midr, T96PARTNUM)
-	    || IS_OCTEONTX_VAR(midr, F95PARTNUM, 1)
-	    || IS_OCTEONTX_PASS(midr, LOKIPARTNUM, 1, 0)
-	    || IS_OCTEONTX_PASS(midr, T98PARTNUM, 1, 0))
-		/* cvmctl_el1[54] = DISABLE_LDP_STP_FISS */
-		set_bit(cvmctl_el1, 54);
+	/* Errata AP-36933, cvmctl_el1[54] = DISABLE_LDP_STP_FISS */
+	set_bit(cvmctl_el1, 54);
 
 	/*
 	 * Disable v8.5 store barrier for better performance on all models.
