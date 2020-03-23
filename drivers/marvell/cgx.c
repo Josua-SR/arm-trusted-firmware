@@ -3244,9 +3244,11 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 		result->s.link_up = 1;
 		result->s.full_duplex = 1;
 		speed = cgx_get_lane_speed(cgx_id, lmac_id);
-		debug_cgx("%s: spux_status1 0x%llx, smux_tx_ctl 0x%llx smux_rx_ctl 0x%llx\n",
-			__func__, spux_status1.u, smux_tx_ctl.u, smux_rx_ctl.u);
-		debug_cgx("%s: speed obtained %d\n", __func__, speed);
+		debug_cgx("%s: %d:%d spux_status1 0x%llx, smux_tx_ctl 0x%llx smux_rx_ctl 0x%llx\n",
+			__func__, cgx_id, lmac_id,
+			spux_status1.u, smux_tx_ctl.u, smux_rx_ctl.u);
+		debug_cgx("%s: %d:%d speed obtained %d\n", __func__,
+					cgx_id, lmac_id, speed);
 		result->s.speed = CGX_LINK_NONE;
 		/* obtain the speed enum based on the speed in Mbps */
 		for (int i = CGX_LINK_NONE; i < CGX_LINK_MAX; i++) {
@@ -3256,13 +3258,14 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 			}
 		}
 		if (lmac_ctx->s.remote_fault) {
-			debug_cgx("%s: Remote fault cleared\n",
-			   __func__);
+			debug_cgx("%s: %d:%d Remote fault cleared\n",
+			   __func__, cgx_id, lmac_id);
 			lmac_ctx->s.remote_fault = 0;
 		}
 	} else {
-		debug_cgx("%s: spux_status1 0x%llx, smux_tx_ctl 0x%llx smux_rx_ctl 0x%llx\n",
-			__func__, spux_status1.u, smux_tx_ctl.u, smux_rx_ctl.u);
+		debug_cgx("%s: %d:%d spux_status1 0x%llx, smux_tx_ctl 0x%llx smux_rx_ctl 0x%llx\n",
+			__func__, cgx_id, lmac_id,
+			spux_status1.u, smux_tx_ctl.u, smux_rx_ctl.u);
 		uint64_t ber_cnt = 0;
 		uint64_t err_blks = 0;
 
@@ -3288,11 +3291,11 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 				lmac_ctx->s.rx_link_up = 0;
 				if ((smux_rx_ctl.s.status == 1) ||
 					(!spux_status1.s.rcv_lnk)) {
-					debug_cgx("%s: Local Rx fault detected, reinitializing Rx link\n",
-				       __func__);
+					debug_cgx("%s: %d:%d Local Rx fault detected, reinitializing Rx link\n",
+					   __func__, cgx_id, lmac_id);
 				} else
-					debug_cgx("%s: Errors detected (err_blk = %lld, ber_cnt = %lld), reinitializing Rx link\n",
-				       __func__, err_blks, ber_cnt);
+					debug_cgx("%s: %d:%d Errors detected (err_blk = %lld, ber_cnt = %lld), reinitializing Rx link\n",
+					   __func__, cgx_id, lmac_id, err_blks, ber_cnt);
 			}
 		}
 
@@ -3300,8 +3303,8 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 		if (smux_rx_ctl.s.status == 2) {
 			/* Check if we need to start the remote fault timeout */
 			if (!lmac_ctx->s.remote_fault) {
-				debug_cgx("%s: Remote fault detected\n",
-				   __func__);
+				debug_cgx("%s: %d:%d Remote fault detected\n",
+						__func__, cgx_id, lmac_id);
 				lmac_tmr->remote_fault_timeout = gser_clock_get_count(GSER_CLOCK_TIME) +
 					REMOTE_FAULT_TIMEOUT_MS * gser_clock_get_rate(GSER_CLOCK_TIME)/1000;
 				lmac_ctx->s.remote_fault = 1;
@@ -3316,8 +3319,8 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 				lane_mask = lmac->lane_mask;
 
 				if (gser_clock_get_count(GSER_CLOCK_TIME) >= lmac_tmr->remote_fault_timeout) {
-					debug_cgx("%s: Remote fault timeout, Resetting Tx\n",
-					   __func__);
+					debug_cgx("%s: %d:%d Remote fault timeout, Resetting Tx\n",
+					   __func__, cgx_id, lmac_id);
 					/* 96XX Pass 1.x and 95XX pass 1.x require a Tx state machine reset */
 					/* Other chips will toggle the Tx idle */
 					if (cavm_is_model(OCTEONTX_CN96XX_PASS1_X) ||
@@ -3344,8 +3347,8 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 			}
 		} else {
 			if (lmac_ctx->s.remote_fault) {
-				debug_cgx("%s: Remote fault cleared\n",
-					__func__);
+				debug_cgx("%s: %d:%d Remote fault cleared\n",
+				   __func__, cgx_id, lmac_id);
 				lmac_ctx->s.remote_fault = 0;
 			}
 		}
