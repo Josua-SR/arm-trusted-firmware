@@ -117,8 +117,6 @@ void octeontx_init_iobn(uint64_t config_base, uint64_t config_size)
 
 	/* Retrieve platform stream settings and determine count. */
 	plat_streams = plat_get_otx2_stream_security(&j);
-	/* (boolean)pointer should equal (boolean) count */
-	assert(!((plat_streams != NULL) ^ (j != 0)));
 
 	num_common = ARRAY_SIZE(common_streams);
 	num_stream_settings = num_common + j;
