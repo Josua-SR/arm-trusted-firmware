@@ -20,7 +20,6 @@
 #include <bl31/interrupt_mgmt.h>
 #include <octeontx_irqs_def.h>
 
-#include <octeontx_utils.h>
 #include <octeontx_ecam.h>
 #include <octeontx_ehf.h>
 #include <octeontx_svc.h>
@@ -260,12 +259,6 @@ int bphy_psm_install_irq(uint64_t irq_num, uint64_t sp, uint64_t  cpu,
 	uint64_t el_mode;
 
 	INFO("Entering %s\n", __func__);
-
-	/* vector0 is reserved in loki */
-	if (!irq_num && IS_OCTEONTX_PN(read_midr(), LOKIPARTNUM)) {
-		return -1;
-	}
-
 	/* Lock */
 	while (__atomic_fetch_add(&bphy_ints[irq_num].lock, 1,
 				 __ATOMIC_SEQ_CST) != 0)
@@ -354,12 +347,6 @@ int bphy_psm_install_irq(uint64_t irq_num, uint64_t sp, uint64_t  cpu,
 void bphy_psm_clear_irq(uint64_t irq_num)
 {
 	INFO("%s\n", __func__);
-
-	/* vector0 is reserved in loki */
-	if (!irq_num && IS_OCTEONTX_PN(read_midr(), LOKIPARTNUM)) {
-		return;
-	}
-
 	/* Lock */
 	while (__atomic_fetch_add(&bphy_ints[irq_num].lock, 1,
 				 __ATOMIC_SEQ_CST) != 0)
@@ -401,11 +388,6 @@ int cavm_register_bphy_intr_handlers(void)
 	int i, rc = 0;
 
 	for (i = 0; i < MAX_BPHY_PSM_INTS; i++) {
-		/* vector0 is reserved in loki */
-		if (!i && IS_OCTEONTX_PN(read_midr(), LOKIPARTNUM)) {
-			continue;
-		}
-
 		rc = octeontx_ehf_register_irq_handler(BPHY_PSM_IRQ(i),
 							bphy_psm_irq_handler);
 		if (rc) {
