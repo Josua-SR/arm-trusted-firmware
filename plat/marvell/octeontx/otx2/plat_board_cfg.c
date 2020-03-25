@@ -1559,7 +1559,7 @@ static void octeontx2_cgx_lmacs_check_linux(const void *fdt,
 	char sfpname[16], qsfpname[16];
 
 	for (lmac_idx = 0; lmac_idx < cgx->lmac_count; lmac_idx++) {
-		int lane, num_lanes = 0;
+		int lane = 0;
 		lmac = &cgx->lmac_cfg[lmac_idx];
 
 		debug_dts("%s: plat_octeontx_bcfg->qlm_auto_config %d lmac_idx %d lane %d lmac->first_phy_lane %d\n",
@@ -1573,30 +1573,26 @@ static void octeontx2_cgx_lmacs_check_linux(const void *fdt,
 		 * qlm_auto_config and assign the lane index
 		 * to parse the DT.
 		 */
-		if ((lmac->mode_idx == QLM_MODE_RXAUI) ||
-			(lmac->mode_idx == QLM_MODE_25GAUI_2_C2C) ||
-			(lmac->mode_idx == QLM_MODE_40GAUI_2_C2C) ||
-			(lmac->mode_idx == QLM_MODE_50GAUI_2_C2C) ||
-			(lmac->mode_idx == QLM_MODE_50GAUI_2_C2M) ||
-			(lmac->mode_idx == QLM_MODE_50G_CR2) ||
-			(lmac->mode_idx == QLM_MODE_50G_KR2))
-			num_lanes = 2;
-
 		debug_dts("%s: plat_octeontx_bcfg->qlm_auto_config %d lmac_idx %d lane %d lmac->first_phy_lane %d num_lanes %d\n", __func__, plat_octeontx_bcfg->qlm_auto_config,
-			lmac_idx, lmac->lane, lmac->first_phy_lane, num_lanes);
+			lmac_idx, lmac->lane, lmac->first_phy_lane, lmac->max_lane_count);
 
 		/* In case of MODE that is using 2 lanes, lane index
 		 * should be aligned to obtain the correct DT entry
 		 */
-		if (plat_octeontx_bcfg->qlm_auto_config) {
-			lane = lmac_idx;
-			if ((num_lanes == 2) && lane)
-				lane += 1;
-		} else {
+		if ((!plat_octeontx_bcfg->qlm_auto_config)
+			&& (lmac->max_lane_count != 4)) {
 			lane = lmac->first_phy_lane;
-			if ((num_lanes == 2) &&
+			if ((lmac->max_lane_count == 2) &&
 				(lmac->lane != lmac->first_phy_lane))
 				lane -= 1;
+		} else {
+			/* If AUTO-CONFIG is 1 or AUTO-CONFIG is 0
+			 * and if the number of lanes is not 1 or 2,
+			 * lane index should be same as LMAC index
+			 */
+			lane = lmac_idx;
+			if ((lmac->max_lane_count == 2) && lane)
+				lane += 1;
 		}
 
 		snprintf(name, sizeof(name), "%s@%d%d",
