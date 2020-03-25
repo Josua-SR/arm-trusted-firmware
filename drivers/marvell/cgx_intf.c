@@ -2112,7 +2112,6 @@ static int cgx_get_link_status(int cgx_id, int lmac_id,
 				link_state_t *link)
 {
 	cgx_lmac_config_t *lmac = NULL;
-	phy_config_t *phy = NULL;
 	int ret = 0;
 	cgx_lmac_context_t *lmac_ctx;
 	cgx_lmac_timers_t *lmac_tmr;
@@ -2128,7 +2127,6 @@ static int cgx_get_link_status(int cgx_id, int lmac_id,
 
 	/* Get the LMAC type for each LMAC */
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
-	phy = &lmac->phy_config;
 
 	debug_cgx_intf("%s: mode %d\n", __func__, lmac->mode);
 
@@ -2137,12 +2135,10 @@ static int cgx_get_link_status(int cgx_id, int lmac_id,
 
 	if (lmac->phy_present) {
 		/* Get the PHY link status */
-		if (lmac->mdio_bus_dbg != phy->mdio_bus) {
-			if (phy_get_link_status(cgx_id, lmac_id, link) == -1) {
-				debug_cgx_intf("%s: %d:%d phy_get_link_status failed\n",
-					__func__, cgx_id, lmac_id);
-				return -1;
-			}
+		if (phy_get_link_status(cgx_id, lmac_id, link) == -1) {
+			debug_cgx_intf("%s: %d:%d phy_get_link_status failed\n",
+				__func__, cgx_id, lmac_id);
+			return -1;
 		}
 		/* For non-SGMII cases, still continue to read the
 		 * CGX registers to know the link status if the

@@ -31,18 +31,6 @@
 #define PLAT_OCTEONTX_OOO_CONFIG	0xc2000b04
 
 /*
- * X1 - CGX_LMAC_ID [0:3 LMAC, 4:7 CGX], X2 - CLAUSE MODE, X3 - phy address,
- * X4 - device address, X5 - register address
- */
-#define PLAT_OCTEONTX_MDIO_DBG_READ		0xc2000d01
-
-/*
- * X1 - CGX_LMAC_ID [0:3 LMAC, 4:7 CGX], X2 - CLAUSE MODE, X3 - phy address,
- * X4 - device address, X5 - register address, X6 - register value
- */
-#define PLAT_OCTEONTX_MDIO_DBG_WRITE		0xc2000d02
-
-/*
  * No input
  * Return:
  *	x0:
@@ -106,9 +94,5 @@ uintptr_t otx2_svc_smc_handler(uint32_t smc_fid,
 
 int octeontx2_configure_ooo(int x1);
 
-int mdio_debug_read(int cgxlmac_id, int mode, int phyaddr, int devad,
-		    int regnum);
-int mdio_debug_write(int cgxlmac_id, int mode, int phyaddr, int devad,
-		     int regnum, uint16_t value);
 #endif /* __PLAT_SVC_H__ */
 

@@ -1533,7 +1533,6 @@ static int octeontx2_cgx_get_phy_info(const void *fdt, int lmac_offset, int cgx_
 				(phy->type == PHY_VITESSE_8574))
 			lmac->autoneg_dis = 0;
 	}
-	lmac->mdio_bus_dbg = -1;
 	return 0;
 }
 
