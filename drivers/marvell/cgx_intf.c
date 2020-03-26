@@ -1692,9 +1692,7 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 	int ret = 0, val = 0;
 	int enable = 0; /* read from scratch1 - cmd_args */
 	int request_id = 0, err_type = 0, req_fec, phy_mod_type, ignore;
-#if defined(PLAT_t96)
 	int mode;
-#endif
 	union cgx_scratchx0 scratchx0;
 	union cgx_scratchx1 scratchx1;
 	link_state_t link;
