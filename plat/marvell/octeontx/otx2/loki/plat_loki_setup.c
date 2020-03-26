@@ -212,6 +212,7 @@ int plat_get_cgx_idx(int qlm)
 		break;
 	case 6:
 		idx = 3;
+		break;
 	default:
 		idx = -1;
 		break;
