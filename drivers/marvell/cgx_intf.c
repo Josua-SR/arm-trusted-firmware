@@ -1939,7 +1939,6 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 					sh_fwdata_update_phy_fec_stats(cgx_id,
 								       lmac_id);
 			break;
-#if defined(PLAT_t96)
 			case CGX_CMD_MODE_CHANGE:
 				/* Read the command arguments from SCRATCH(1) */
 				scratchx1.u = CSR_READ(CAVM_CGXX_CMRX_SCRATCHX(
@@ -1954,7 +1953,6 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 						"Flash update mode failed\n");
 				}
 			break;
-#endif
 			case CGX_CMD_HIGIG:
 				ret = cgx_control_higig2(cgx_id, lmac_id, enable);
 			break;
