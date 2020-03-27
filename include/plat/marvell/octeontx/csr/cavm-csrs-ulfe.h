@@ -27,8 +27,319 @@
  */
 union cavm_ulfe_normal_job_s
 {
-    uint64_t u[29];
+    uint64_t u[31];
     struct cavm_ulfe_normal_job_s_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t config_type           : 1;  /**< [ 63: 63] Job configuration type. Must be 0x1 for normal symbol jobs. */
+        uint64_t ant_idx               : 6;  /**< [ 62: 57] Antenna index. Valid range is [0,47]. */
+        uint64_t trch_fe_enable        : 1;  /**< [ 56: 56] Traffic channel frontend processing control:
+                                                                 0x0 = Disable traffic channel processing.
+                                                                 0x1 = Enable traffic channel processing. */
+        uint64_t fft_size_idx          : 2;  /**< [ 55: 54] FFT size index.
+                                                                 0x0 = 512 point FFT.
+                                                                 0x1 = 1024 point FFT.
+                                                                 0x2 = 2048 point FFT.
+                                                                 0x3 = 4096 point FFT. */
+        uint64_t scs                   : 3;  /**< [ 53: 51] Subcarrier spacing:
+                                                                 0x0 = 15 kHz.
+                                                                 0x1 = 30 kHz.
+                                                                 0x2 = 60 kHz.
+                                                                 0x3 = 120 kHz.
+                                                                 0x4 = 240 kHz.
+                                                                 0x5-0x7 = Reserved. */
+        uint64_t cp_size               : 9;  /**< [ 50: 42] Cyclic prefix size. The cyclic prefix is 4 x [CP_SIZE] samples. Valid
+                                                                 range of [CP_SIZE] is [0,256]. */
+        uint64_t num_rb                : 9;  /**< [ 41: 33] Number of RBs. Valid range is [6,275]. */
+        uint64_t dcrm_enable           : 1;  /**< [ 32: 32] Enable DC removal:
+                                                                 0x0 = Disable (bypass) DC removal filter.
+                                                                 0x1 = Enable DC removal filter. */
+        uint64_t dcrm_mode             : 1;  /**< [ 31: 31] DC removal mode:
+                                                                 0x0 = Filter mode.
+                                                                 0x1 = Block average mode. */
+        uint64_t dcrm_coef             : 4;  /**< [ 30: 27] DC removal filter coefficient. See [DCRM_COEF_EXP]. */
+        uint64_t dcrm_coef_exp         : 5;  /**< [ 26: 22] DC removal filter coefficient exponent. The DC removal filter coefficient is
+                                                                 [DCRM_COEF] x 2^(-[DCRM_COEF_EXP]). Valid range is [4,20]. */
+        uint64_t dcrm_block_size       : 2;  /**< [ 21: 20] Block size in DC removal mode.
+                                                                 0x0 = 30720.
+                                                                 0x1 = 30720 x 2.
+                                                                 0x2 = 30720 x 4.
+                                                                 0x3 = 30720 x 8. */
+        uint64_t freq_shift_enable     : 1;  /**< [ 19: 19] Enables frequency shift when set. */
+        uint64_t trch_hf_downshift     : 1;  /**< [ 18: 18] Half-tone down shift for traffic channels.
+                                                                 0x0 = Disable half tone down shift.
+                                                                 0x1 = Enable half tone down shift. */
+        uint64_t freq_shift            : 18; /**< [ 17:  0] Frequency shift, in units of 100 Hz. This is a two's-complement signed value,
+                                                                 with a valid range of [-131072,131071]. */
+#else /* Word 0 - Little Endian */
+        uint64_t freq_shift            : 18; /**< [ 17:  0] Frequency shift, in units of 100 Hz. This is a two's-complement signed value,
+                                                                 with a valid range of [-131072,131071]. */
+        uint64_t trch_hf_downshift     : 1;  /**< [ 18: 18] Half-tone down shift for traffic channels.
+                                                                 0x0 = Disable half tone down shift.
+                                                                 0x1 = Enable half tone down shift. */
+        uint64_t freq_shift_enable     : 1;  /**< [ 19: 19] Enables frequency shift when set. */
+        uint64_t dcrm_block_size       : 2;  /**< [ 21: 20] Block size in DC removal mode.
+                                                                 0x0 = 30720.
+                                                                 0x1 = 30720 x 2.
+                                                                 0x2 = 30720 x 4.
+                                                                 0x3 = 30720 x 8. */
+        uint64_t dcrm_coef_exp         : 5;  /**< [ 26: 22] DC removal filter coefficient exponent. The DC removal filter coefficient is
+                                                                 [DCRM_COEF] x 2^(-[DCRM_COEF_EXP]). Valid range is [4,20]. */
+        uint64_t dcrm_coef             : 4;  /**< [ 30: 27] DC removal filter coefficient. See [DCRM_COEF_EXP]. */
+        uint64_t dcrm_mode             : 1;  /**< [ 31: 31] DC removal mode:
+                                                                 0x0 = Filter mode.
+                                                                 0x1 = Block average mode. */
+        uint64_t dcrm_enable           : 1;  /**< [ 32: 32] Enable DC removal:
+                                                                 0x0 = Disable (bypass) DC removal filter.
+                                                                 0x1 = Enable DC removal filter. */
+        uint64_t num_rb                : 9;  /**< [ 41: 33] Number of RBs. Valid range is [6,275]. */
+        uint64_t cp_size               : 9;  /**< [ 50: 42] Cyclic prefix size. The cyclic prefix is 4 x [CP_SIZE] samples. Valid
+                                                                 range of [CP_SIZE] is [0,256]. */
+        uint64_t scs                   : 3;  /**< [ 53: 51] Subcarrier spacing:
+                                                                 0x0 = 15 kHz.
+                                                                 0x1 = 30 kHz.
+                                                                 0x2 = 60 kHz.
+                                                                 0x3 = 120 kHz.
+                                                                 0x4 = 240 kHz.
+                                                                 0x5-0x7 = Reserved. */
+        uint64_t fft_size_idx          : 2;  /**< [ 55: 54] FFT size index.
+                                                                 0x0 = 512 point FFT.
+                                                                 0x1 = 1024 point FFT.
+                                                                 0x2 = 2048 point FFT.
+                                                                 0x3 = 4096 point FFT. */
+        uint64_t trch_fe_enable        : 1;  /**< [ 56: 56] Traffic channel frontend processing control:
+                                                                 0x0 = Disable traffic channel processing.
+                                                                 0x1 = Enable traffic channel processing. */
+        uint64_t ant_idx               : 6;  /**< [ 62: 57] Antenna index. Valid range is [0,47]. */
+        uint64_t config_type           : 1;  /**< [ 63: 63] Job configuration type. Must be 0x1 for normal symbol jobs. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t cprm_mode             : 1;  /**< [127:127] CP removal mode.
+                                                                 0x0 = N_FFT samples.
+                                                                 0x1 = [CPRM_OFFSET1] samples and then zeros.
+
+                                                                 Note that CP removal block is bypassed during the second pass. */
+        uint64_t user_def_phase        : 12; /**< [126:115] User defined phase rotation. Rotated phase is \pi x [USER_DEF_PHASE]/2048. Two's
+                                                                 complement value in the range [-2048,2047]. */
+        uint64_t iss_enable            : 1;  /**< [114:114] Input signal scaler control.
+                                                                 0x0 = Disable (bypass) ISS.
+                                                                 0x1 = Enable ISS. */
+        uint64_t iss_mode              : 2;  /**< [113:112] Input signal scaler mode:
+                                                                 0x0 = Gain hold.
+                                                                 0x1 = Gain update.
+                                                                 0x2 = Fixed gain.
+                                                                 0x3 = Reserved. */
+        uint64_t iss_target_level      : 6;  /**< [111:106] Input signal scaler target level. Target level for [ISS_MODE] = 0x1. Fixed gain
+                                                                 for [ISS_MODE] = 0x2. */
+        uint64_t iss_gain_limit        : 6;  /**< [105:100] Input signal scaler gain limit. ISS gain is limited to this value only when
+                                                                 [ISS_MODE] = 0x1. Valid range is [-32,31]. */
+        uint64_t cprm_offset0          : 11; /**< [ 99: 89] CP removal offset for first process. Valid range is [0,1024]. */
+        uint64_t cprm_offset1          : 11; /**< [ 88: 78] CP removal offset for second process. Valid range is [0,1024]. */
+        uint64_t fft_enable            : 1;  /**< [ 77: 77] Enable FFT. */
+        uint64_t dcrm_reset            : 1;  /**< [ 76: 76] DC removal reset control.
+                                                                 0x0 = Do nothing.
+                                                                 0x1 = Reset the DC removal state variables (i.e., sample count, block
+                                                                 sum, and DC estimate). */
+        uint64_t reserved_64_75        : 12;
+#else /* Word 1 - Little Endian */
+        uint64_t reserved_64_75        : 12;
+        uint64_t dcrm_reset            : 1;  /**< [ 76: 76] DC removal reset control.
+                                                                 0x0 = Do nothing.
+                                                                 0x1 = Reset the DC removal state variables (i.e., sample count, block
+                                                                 sum, and DC estimate). */
+        uint64_t fft_enable            : 1;  /**< [ 77: 77] Enable FFT. */
+        uint64_t cprm_offset1          : 11; /**< [ 88: 78] CP removal offset for second process. Valid range is [0,1024]. */
+        uint64_t cprm_offset0          : 11; /**< [ 99: 89] CP removal offset for first process. Valid range is [0,1024]. */
+        uint64_t iss_gain_limit        : 6;  /**< [105:100] Input signal scaler gain limit. ISS gain is limited to this value only when
+                                                                 [ISS_MODE] = 0x1. Valid range is [-32,31]. */
+        uint64_t iss_target_level      : 6;  /**< [111:106] Input signal scaler target level. Target level for [ISS_MODE] = 0x1. Fixed gain
+                                                                 for [ISS_MODE] = 0x2. */
+        uint64_t iss_mode              : 2;  /**< [113:112] Input signal scaler mode:
+                                                                 0x0 = Gain hold.
+                                                                 0x1 = Gain update.
+                                                                 0x2 = Fixed gain.
+                                                                 0x3 = Reserved. */
+        uint64_t iss_enable            : 1;  /**< [114:114] Input signal scaler control.
+                                                                 0x0 = Disable (bypass) ISS.
+                                                                 0x1 = Enable ISS. */
+        uint64_t user_def_phase        : 12; /**< [126:115] User defined phase rotation. Rotated phase is \pi x [USER_DEF_PHASE]/2048. Two's
+                                                                 complement value in the range [-2048,2047]. */
+        uint64_t cprm_mode             : 1;  /**< [127:127] CP removal mode.
+                                                                 0x0 = N_FFT samples.
+                                                                 0x1 = [CPRM_OFFSET1] samples and then zeros.
+
+                                                                 Note that CP removal block is bypassed during the second pass. */
+#endif /* Word 1 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
+        uint64_t cyclic_time_shift_enable : 1;/**< [191:191] Enable cyclic time shift for both passes. */
+        uint64_t cyclic_time_shift0    : 13; /**< [190:178] Cyclic time shift for the first pass. Two's complement value in the range [-4096,4095]. */
+        uint64_t cyclic_time_shift1    : 13; /**< [177:165] Cyclic time shift for the second pass. Two's complement value in the range [-4096,4095]. */
+        uint64_t reserved_128_164      : 37;
+#else /* Word 2 - Little Endian */
+        uint64_t reserved_128_164      : 37;
+        uint64_t cyclic_time_shift1    : 13; /**< [177:165] Cyclic time shift for the second pass. Two's complement value in the range [-4096,4095]. */
+        uint64_t cyclic_time_shift0    : 13; /**< [190:178] Cyclic time shift for the first pass. Two's complement value in the range [-4096,4095]. */
+        uint64_t cyclic_time_shift_enable : 1;/**< [191:191] Enable cyclic time shift for both passes. */
+#endif /* Word 2 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
+        uint64_t bwp_weight1           : 32; /**< [255:224] Complex weight for BWP 1 with the following bit map, [imag real(LSB)]. */
+        uint64_t bwp_weight2           : 32; /**< [223:192] Complex weight for BWP 2 with the following bit map, [imag real(LSB)]. */
+#else /* Word 3 - Little Endian */
+        uint64_t bwp_weight2           : 32; /**< [223:192] Complex weight for BWP 2 with the following bit map, [imag real(LSB)]. */
+        uint64_t bwp_weight1           : 32; /**< [255:224] Complex weight for BWP 1 with the following bit map, [imag real(LSB)]. */
+#endif /* Word 3 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
+        uint64_t bwp_weight3           : 32; /**< [319:288] Complex weight for BWP 3 with the following bit map, [imag real(LSB)]. */
+        uint64_t bwp_weight4           : 32; /**< [287:256] Complex weight for BWP 4 with the following bit map, [imag real(LSB)]. */
+#else /* Word 4 - Little Endian */
+        uint64_t bwp_weight4           : 32; /**< [287:256] Complex weight for BWP 4 with the following bit map, [imag real(LSB)]. */
+        uint64_t bwp_weight3           : 32; /**< [319:288] Complex weight for BWP 3 with the following bit map, [imag real(LSB)]. */
+#endif /* Word 4 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
+        uint64_t bwp_weight5           : 32; /**< [383:352] Complex weight for BWP 5 with the following bit map, [imag real(LSB)]. */
+        uint64_t bwp_weight_exp        : 4;  /**< [351:348] Block exponent for BWP weights. Valid range is [0,15]. */
+        uint64_t td_rssi_db_adj        : 12; /**< [347:336] TD-RSSI dB adjustment value. The adjustment value added to dB value converted
+                                                                 from the TD-RSSI measurement. Valid range is [-2048,2047] which is equivalent to
+                                                                 [-204.8, 204.7] dB in dB unit. */
+        uint64_t reserved_320_335      : 16;
+#else /* Word 5 - Little Endian */
+        uint64_t reserved_320_335      : 16;
+        uint64_t td_rssi_db_adj        : 12; /**< [347:336] TD-RSSI dB adjustment value. The adjustment value added to dB value converted
+                                                                 from the TD-RSSI measurement. Valid range is [-2048,2047] which is equivalent to
+                                                                 [-204.8, 204.7] dB in dB unit. */
+        uint64_t bwp_weight_exp        : 4;  /**< [351:348] Block exponent for BWP weights. Valid range is [0,15]. */
+        uint64_t bwp_weight5           : 32; /**< [383:352] Complex weight for BWP 5 with the following bit map, [imag real(LSB)]. */
+#endif /* Word 5 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 6 - Big Endian */
+        uint64_t rach_fe_enable0       : 1;  /**< [447:447] Enable RACH front-end 0. */
+        uint64_t reserved_384_446      : 63;
+#else /* Word 6 - Little Endian */
+        uint64_t reserved_384_446      : 63;
+        uint64_t rach_fe_enable0       : 1;  /**< [447:447] Enable RACH front-end 0. */
+#endif /* Word 6 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 7 - Big Endian */
+        uint64_t reserved_448_511      : 64;
+#else /* Word 7 - Little Endian */
+        uint64_t reserved_448_511      : 64;
+#endif /* Word 7 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 8 - Big Endian */
+        uint64_t reserved_512_575      : 64;
+#else /* Word 8 - Little Endian */
+        uint64_t reserved_512_575      : 64;
+#endif /* Word 8 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 9 - Big Endian */
+        uint64_t reserved_576_639      : 64;
+#else /* Word 9 - Little Endian */
+        uint64_t reserved_576_639      : 64;
+#endif /* Word 9 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 10 - Big Endian */
+        uint64_t reserved_640_703      : 64;
+#else /* Word 10 - Little Endian */
+        uint64_t reserved_640_703      : 64;
+#endif /* Word 10 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 11 - Big Endian */
+        uint64_t reserved_704_767      : 64;
+#else /* Word 11 - Little Endian */
+        uint64_t reserved_704_767      : 64;
+#endif /* Word 11 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 12 - Big Endian */
+        uint64_t reserved_768_831      : 64;
+#else /* Word 12 - Little Endian */
+        uint64_t reserved_768_831      : 64;
+#endif /* Word 12 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 13 - Big Endian */
+        uint64_t reserved_832_895      : 64;
+#else /* Word 13 - Little Endian */
+        uint64_t reserved_832_895      : 64;
+#endif /* Word 13 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 14 - Big Endian */
+        uint64_t reserved_896_959      : 64;
+#else /* Word 14 - Little Endian */
+        uint64_t reserved_896_959      : 64;
+#endif /* Word 14 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 15 - Big Endian */
+        uint64_t reserved_960_1023     : 64;
+#else /* Word 15 - Little Endian */
+        uint64_t reserved_960_1023     : 64;
+#endif /* Word 15 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 16 - Big Endian */
+        uint64_t reserved_1024_1087    : 64;
+#else /* Word 16 - Little Endian */
+        uint64_t reserved_1024_1087    : 64;
+#endif /* Word 16 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 17 - Big Endian */
+        uint64_t reserved_1088_1151    : 64;
+#else /* Word 17 - Little Endian */
+        uint64_t reserved_1088_1151    : 64;
+#endif /* Word 17 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 18 - Big Endian */
+        uint64_t reserved_1152_1215    : 64;
+#else /* Word 18 - Little Endian */
+        uint64_t reserved_1152_1215    : 64;
+#endif /* Word 18 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 19 - Big Endian */
+        uint64_t reserved_1216_1279    : 64;
+#else /* Word 19 - Little Endian */
+        uint64_t reserved_1216_1279    : 64;
+#endif /* Word 19 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 20 - Big Endian */
+        uint64_t reserved_1280_1343    : 64;
+#else /* Word 20 - Little Endian */
+        uint64_t reserved_1280_1343    : 64;
+#endif /* Word 20 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 21 - Big Endian */
+        uint64_t reserved_1344_1407    : 64;
+#else /* Word 21 - Little Endian */
+        uint64_t reserved_1344_1407    : 64;
+#endif /* Word 21 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 22 - Big Endian */
+        uint64_t reserved_1408_1471    : 64;
+#else /* Word 22 - Little Endian */
+        uint64_t reserved_1408_1471    : 64;
+#endif /* Word 22 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 23 - Big Endian */
+        uint64_t reserved_1472_1535    : 64;
+#else /* Word 23 - Little Endian */
+        uint64_t reserved_1472_1535    : 64;
+#endif /* Word 23 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 24 - Big Endian */
+        uint64_t reserved_1536_1599    : 64;
+#else /* Word 24 - Little Endian */
+        uint64_t reserved_1536_1599    : 64;
+#endif /* Word 24 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 25 - Big Endian */
+        uint64_t reserved_1600_1663    : 64;
+#else /* Word 25 - Little Endian */
+        uint64_t reserved_1600_1663    : 64;
+#endif /* Word 25 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 26 - Big Endian */
+        uint64_t reserved_1664_1727    : 64;
+#else /* Word 26 - Little Endian */
+        uint64_t reserved_1664_1727    : 64;
+#endif /* Word 26 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 27 - Big Endian */
+        uint64_t reserved_1728_1791    : 64;
+#else /* Word 27 - Little Endian */
+        uint64_t reserved_1728_1791    : 64;
+#endif /* Word 27 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 28 - Big Endian */
+        uint64_t reserved_1792_1855    : 64;
+#else /* Word 28 - Little Endian */
+        uint64_t reserved_1792_1855    : 64;
+#endif /* Word 28 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 29 - Big Endian */
+        uint64_t reserved_1856_1919    : 64;
+#else /* Word 29 - Little Endian */
+        uint64_t reserved_1856_1919    : 64;
+#endif /* Word 29 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 30 - Big Endian */
+        uint64_t reserved_1920_1983    : 64;
+#else /* Word 30 - Little Endian */
+        uint64_t reserved_1920_1983    : 64;
+#endif /* Word 30 - End */
+    } s;
+    /* struct cavm_ulfe_normal_job_s_s cn9; */
+    struct cavm_ulfe_normal_job_s_cnf95xx
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t config_type           : 1;  /**< [ 63: 63] Job configuration type. Must be 0x1 for normal symbol jobs. */
@@ -593,8 +904,601 @@ union cavm_ulfe_normal_job_s
         uint64_t sc_att_scidx5         : 12; /**< [1855:1844] Subcarrier index 5 for subcarrier-wise attenuation. See
                                                                  [SC_ATT_SCIDX0]. */
 #endif /* Word 28 - End */
-    } s;
-    /* struct cavm_ulfe_normal_job_s_s cn; */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 29 - Big Endian */
+#else /* Word 29 - Little Endian */
+#endif /* Word 29 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 30 - Big Endian */
+#else /* Word 30 - Little Endian */
+#endif /* Word 30 - End */
+    } cnf95xx;
+    struct cavm_ulfe_normal_job_s_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t config_type           : 1;  /**< [ 63: 63] Job configuration type. Must be 0x1 for normal symbol jobs. */
+        uint64_t ant_idx               : 6;  /**< [ 62: 57] Antenna index. Valid range is [0,47]. */
+        uint64_t trch_fe_enable        : 1;  /**< [ 56: 56] Traffic channel frontend processing control:
+                                                                 0x0 = Disable traffic channel processing.
+                                                                 0x1 = Enable traffic channel processing. */
+        uint64_t fft_size_idx          : 2;  /**< [ 55: 54] FFT size index.
+                                                                 0x0 = 512 point FFT.
+                                                                 0x1 = 1024 point FFT.
+                                                                 0x2 = 2048 point FFT.
+                                                                 0x3 = 4096 point FFT. */
+        uint64_t scs                   : 3;  /**< [ 53: 51] Subcarrier spacing:
+                                                                 0x0 = 15 kHz.
+                                                                 0x1 = 30 kHz.
+                                                                 0x2 = 60 kHz.
+                                                                 0x3 = 120 kHz.
+                                                                 0x4 = 240 kHz.
+                                                                 0x5-0x7 = Reserved. */
+        uint64_t cp_size               : 9;  /**< [ 50: 42] Cyclic prefix size. The cyclic prefix is 4 x [CP_SIZE] samples. Valid
+                                                                 range of [CP_SIZE] is [0,256]. */
+        uint64_t num_rb                : 9;  /**< [ 41: 33] Number of RBs. Valid range is [6,275]. */
+        uint64_t dcrm_enable           : 1;  /**< [ 32: 32] Enable DC removal:
+                                                                 0x0 = Disable (bypass) DC removal filter.
+                                                                 0x1 = Enable DC removal filter. */
+        uint64_t dcrm_mode             : 1;  /**< [ 31: 31] DC removal mode:
+                                                                 0x0 = Filter mode.
+                                                                 0x1 = Block average mode. */
+        uint64_t dcrm_coef             : 4;  /**< [ 30: 27] DC removal filter coefficient. See [DCRM_COEF_EXP]. */
+        uint64_t dcrm_coef_exp         : 5;  /**< [ 26: 22] DC removal filter coefficient exponent. The DC removal filter coefficient is
+                                                                 [DCRM_COEF] x 2^(-[DCRM_COEF_EXP]). Valid range is [4,20]. */
+        uint64_t dcrm_block_size       : 2;  /**< [ 21: 20] Block size in DC removal mode.
+                                                                 0x0 = 30720.
+                                                                 0x1 = 30720 x 2.
+                                                                 0x2 = 30720 x 4.
+                                                                 0x3 = 30720 x 8. */
+        uint64_t freq_shift_enable     : 1;  /**< [ 19: 19] Enables frequency shift when set. */
+        uint64_t trch_hf_downshift     : 1;  /**< [ 18: 18] Half-tone down shift for traffic channels.
+                                                                 0x0 = Disable half tone down shift.
+                                                                 0x1 = Enable half tone down shift. */
+        uint64_t freq_shift            : 18; /**< [ 17:  0] Frequency shift, in units of 100 Hz. This is a two's-complement signed value,
+                                                                 with a valid range of [-131072,131071]. */
+#else /* Word 0 - Little Endian */
+        uint64_t freq_shift            : 18; /**< [ 17:  0] Frequency shift, in units of 100 Hz. This is a two's-complement signed value,
+                                                                 with a valid range of [-131072,131071]. */
+        uint64_t trch_hf_downshift     : 1;  /**< [ 18: 18] Half-tone down shift for traffic channels.
+                                                                 0x0 = Disable half tone down shift.
+                                                                 0x1 = Enable half tone down shift. */
+        uint64_t freq_shift_enable     : 1;  /**< [ 19: 19] Enables frequency shift when set. */
+        uint64_t dcrm_block_size       : 2;  /**< [ 21: 20] Block size in DC removal mode.
+                                                                 0x0 = 30720.
+                                                                 0x1 = 30720 x 2.
+                                                                 0x2 = 30720 x 4.
+                                                                 0x3 = 30720 x 8. */
+        uint64_t dcrm_coef_exp         : 5;  /**< [ 26: 22] DC removal filter coefficient exponent. The DC removal filter coefficient is
+                                                                 [DCRM_COEF] x 2^(-[DCRM_COEF_EXP]). Valid range is [4,20]. */
+        uint64_t dcrm_coef             : 4;  /**< [ 30: 27] DC removal filter coefficient. See [DCRM_COEF_EXP]. */
+        uint64_t dcrm_mode             : 1;  /**< [ 31: 31] DC removal mode:
+                                                                 0x0 = Filter mode.
+                                                                 0x1 = Block average mode. */
+        uint64_t dcrm_enable           : 1;  /**< [ 32: 32] Enable DC removal:
+                                                                 0x0 = Disable (bypass) DC removal filter.
+                                                                 0x1 = Enable DC removal filter. */
+        uint64_t num_rb                : 9;  /**< [ 41: 33] Number of RBs. Valid range is [6,275]. */
+        uint64_t cp_size               : 9;  /**< [ 50: 42] Cyclic prefix size. The cyclic prefix is 4 x [CP_SIZE] samples. Valid
+                                                                 range of [CP_SIZE] is [0,256]. */
+        uint64_t scs                   : 3;  /**< [ 53: 51] Subcarrier spacing:
+                                                                 0x0 = 15 kHz.
+                                                                 0x1 = 30 kHz.
+                                                                 0x2 = 60 kHz.
+                                                                 0x3 = 120 kHz.
+                                                                 0x4 = 240 kHz.
+                                                                 0x5-0x7 = Reserved. */
+        uint64_t fft_size_idx          : 2;  /**< [ 55: 54] FFT size index.
+                                                                 0x0 = 512 point FFT.
+                                                                 0x1 = 1024 point FFT.
+                                                                 0x2 = 2048 point FFT.
+                                                                 0x3 = 4096 point FFT. */
+        uint64_t trch_fe_enable        : 1;  /**< [ 56: 56] Traffic channel frontend processing control:
+                                                                 0x0 = Disable traffic channel processing.
+                                                                 0x1 = Enable traffic channel processing. */
+        uint64_t ant_idx               : 6;  /**< [ 62: 57] Antenna index. Valid range is [0,47]. */
+        uint64_t config_type           : 1;  /**< [ 63: 63] Job configuration type. Must be 0x1 for normal symbol jobs. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t cprm_mode             : 1;  /**< [127:127] CP removal mode.
+                                                                 0x0 = N_FFT samples.
+                                                                 0x1 = [CPRM_OFFSET1] samples and then zeros.
+
+                                                                 Note that CP removal block is bypassed during the second pass. */
+        uint64_t user_def_phase        : 12; /**< [126:115] User defined phase rotation. Rotated phase is \pi x [USER_DEF_PHASE]/2048. Two's
+                                                                 complement value in the range [-2048,2047]. */
+        uint64_t iss_enable            : 1;  /**< [114:114] Input signal scaler control.
+                                                                 0x0 = Disable (bypass) ISS.
+                                                                 0x1 = Enable ISS. */
+        uint64_t iss_mode              : 2;  /**< [113:112] Input signal scaler mode:
+                                                                 0x0 = Gain hold.
+                                                                 0x1 = Gain update.
+                                                                 0x2 = Fixed gain.
+                                                                 0x3 = Reserved. */
+        uint64_t iss_target_level      : 6;  /**< [111:106] Input signal scaler target level. Target level for [ISS_MODE] = 0x1. Fixed gain
+                                                                 for [ISS_MODE] = 0x2. */
+        uint64_t iss_gain_limit        : 6;  /**< [105:100] Input signal scaler gain limit. ISS gain is limited to this value only when
+                                                                 [ISS_MODE] = 0x1. Valid range is [-32,31]. */
+        uint64_t cprm_offset0          : 11; /**< [ 99: 89] CP removal offset for first process. Valid range is [0,1024]. */
+        uint64_t cprm_offset1          : 11; /**< [ 88: 78] CP removal offset for second process. Valid range is [0,1024]. */
+        uint64_t fft_enable            : 1;  /**< [ 77: 77] Enable FFT. */
+        uint64_t dcrm_reset            : 1;  /**< [ 76: 76] DC removal reset control.
+                                                                 0x0 = Do nothing.
+                                                                 0x1 = Reset the DC removal state variables (i.e., sample count, block
+                                                                 sum, and DC estimate). */
+        uint64_t reserved_64_75        : 12;
+#else /* Word 1 - Little Endian */
+        uint64_t reserved_64_75        : 12;
+        uint64_t dcrm_reset            : 1;  /**< [ 76: 76] DC removal reset control.
+                                                                 0x0 = Do nothing.
+                                                                 0x1 = Reset the DC removal state variables (i.e., sample count, block
+                                                                 sum, and DC estimate). */
+        uint64_t fft_enable            : 1;  /**< [ 77: 77] Enable FFT. */
+        uint64_t cprm_offset1          : 11; /**< [ 88: 78] CP removal offset for second process. Valid range is [0,1024]. */
+        uint64_t cprm_offset0          : 11; /**< [ 99: 89] CP removal offset for first process. Valid range is [0,1024]. */
+        uint64_t iss_gain_limit        : 6;  /**< [105:100] Input signal scaler gain limit. ISS gain is limited to this value only when
+                                                                 [ISS_MODE] = 0x1. Valid range is [-32,31]. */
+        uint64_t iss_target_level      : 6;  /**< [111:106] Input signal scaler target level. Target level for [ISS_MODE] = 0x1. Fixed gain
+                                                                 for [ISS_MODE] = 0x2. */
+        uint64_t iss_mode              : 2;  /**< [113:112] Input signal scaler mode:
+                                                                 0x0 = Gain hold.
+                                                                 0x1 = Gain update.
+                                                                 0x2 = Fixed gain.
+                                                                 0x3 = Reserved. */
+        uint64_t iss_enable            : 1;  /**< [114:114] Input signal scaler control.
+                                                                 0x0 = Disable (bypass) ISS.
+                                                                 0x1 = Enable ISS. */
+        uint64_t user_def_phase        : 12; /**< [126:115] User defined phase rotation. Rotated phase is \pi x [USER_DEF_PHASE]/2048. Two's
+                                                                 complement value in the range [-2048,2047]. */
+        uint64_t cprm_mode             : 1;  /**< [127:127] CP removal mode.
+                                                                 0x0 = N_FFT samples.
+                                                                 0x1 = [CPRM_OFFSET1] samples and then zeros.
+
+                                                                 Note that CP removal block is bypassed during the second pass. */
+#endif /* Word 1 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
+        uint64_t cyclic_time_shift_enable : 1;/**< [191:191] Enable cyclic time shift for both passes. */
+        uint64_t cyclic_time_shift0    : 13; /**< [190:178] Cyclic time shift for the first pass. Two's complement value in the range [-4096,4095]. */
+        uint64_t cyclic_time_shift1    : 13; /**< [177:165] Cyclic time shift for the second pass. Two's complement value in the range [-4096,4095]. */
+        uint64_t k0                    : 12; /**< [164:153] Subcarrier offset (i.e., parameter k0):
+                                                                 Range [-2048:2047], in 2's complement form. */
+        uint64_t signal_level_normalize : 1; /**< [152:152] Enable signal level normalization. */
+        uint64_t calibration_enable    : 1;  /**< [151:151] Enable antenna calibration. */
+        uint64_t second_pass_out       : 1;  /**< [150:150] Second pass output control.
+                                                                 0x0 = Do not send the second pass output.
+                                                                 0x1 = Send the second pass output. */
+        uint64_t measurement_reset     : 3;  /**< [149:147] Reset meausrement values. Each bit, when set, resets the
+                                                                 accumulated of values for a given measurement:
+                                                                 * bit\<0\> = TD-RSSI.
+                                                                 * bit\<1\> = FD-RSSI.
+                                                                 * bit\<2\> = FD-XCORR. */
+        uint64_t measurement_trigger   : 3;  /**< [146:144] Trigger meausrement accumulation. Each bit, when set, triggers the
+                                                                 accumulation of a measured value for the current symbol:
+                                                                 * bit\<0\> = TD-RSSI.
+                                                                 * bit\<1\> = FD-RSSI.
+                                                                 * bit\<2\> = FD-XCORR.
+
+                                                                 Accumulated values can be reported via DMA by setting
+                                                                 [MEASUREMENT_REPORT] for this job or on a subsequent symbol job. */
+        uint64_t measurement_report    : 3;  /**< [143:141] Enable meausrement report outputs. Each bit, when set, enables the
+                                                                 DMA output of a given measurement report:
+                                                                 * bit\<0\> = TD-RSSI report.
+                                                                 * bit\<1\> = FD-RSSI report.
+                                                                 * bit\<2\> = FD-XCORR report. */
+        uint64_t rach_config_update    : 1;  /**< [140:140] RACH configuration update:
+                                                                 0x0 = No update.
+                                                                 0x1 = Update RACH FE configuration according to job config. */
+        uint64_t bwp_map_update        : 1;  /**< [139:139] BWP map update control:
+                                                                 0x0 = No update.
+                                                                 0x1 = Update BWP map according to job config. */
+        uint64_t reserved_128_138      : 11;
+#else /* Word 2 - Little Endian */
+        uint64_t reserved_128_138      : 11;
+        uint64_t bwp_map_update        : 1;  /**< [139:139] BWP map update control:
+                                                                 0x0 = No update.
+                                                                 0x1 = Update BWP map according to job config. */
+        uint64_t rach_config_update    : 1;  /**< [140:140] RACH configuration update:
+                                                                 0x0 = No update.
+                                                                 0x1 = Update RACH FE configuration according to job config. */
+        uint64_t measurement_report    : 3;  /**< [143:141] Enable meausrement report outputs. Each bit, when set, enables the
+                                                                 DMA output of a given measurement report:
+                                                                 * bit\<0\> = TD-RSSI report.
+                                                                 * bit\<1\> = FD-RSSI report.
+                                                                 * bit\<2\> = FD-XCORR report. */
+        uint64_t measurement_trigger   : 3;  /**< [146:144] Trigger meausrement accumulation. Each bit, when set, triggers the
+                                                                 accumulation of a measured value for the current symbol:
+                                                                 * bit\<0\> = TD-RSSI.
+                                                                 * bit\<1\> = FD-RSSI.
+                                                                 * bit\<2\> = FD-XCORR.
+
+                                                                 Accumulated values can be reported via DMA by setting
+                                                                 [MEASUREMENT_REPORT] for this job or on a subsequent symbol job. */
+        uint64_t measurement_reset     : 3;  /**< [149:147] Reset meausrement values. Each bit, when set, resets the
+                                                                 accumulated of values for a given measurement:
+                                                                 * bit\<0\> = TD-RSSI.
+                                                                 * bit\<1\> = FD-RSSI.
+                                                                 * bit\<2\> = FD-XCORR. */
+        uint64_t second_pass_out       : 1;  /**< [150:150] Second pass output control.
+                                                                 0x0 = Do not send the second pass output.
+                                                                 0x1 = Send the second pass output. */
+        uint64_t calibration_enable    : 1;  /**< [151:151] Enable antenna calibration. */
+        uint64_t signal_level_normalize : 1; /**< [152:152] Enable signal level normalization. */
+        uint64_t k0                    : 12; /**< [164:153] Subcarrier offset (i.e., parameter k0):
+                                                                 Range [-2048:2047], in 2's complement form. */
+        uint64_t cyclic_time_shift1    : 13; /**< [177:165] Cyclic time shift for the second pass. Two's complement value in the range [-4096,4095]. */
+        uint64_t cyclic_time_shift0    : 13; /**< [190:178] Cyclic time shift for the first pass. Two's complement value in the range [-4096,4095]. */
+        uint64_t cyclic_time_shift_enable : 1;/**< [191:191] Enable cyclic time shift for both passes. */
+#endif /* Word 2 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
+        uint64_t bwp_weight1           : 32; /**< [255:224] Complex weight for BWP 1 with the following bit map, [imag real(LSB)]. */
+        uint64_t bwp_weight2           : 32; /**< [223:192] Complex weight for BWP 2 with the following bit map, [imag real(LSB)]. */
+#else /* Word 3 - Little Endian */
+        uint64_t bwp_weight2           : 32; /**< [223:192] Complex weight for BWP 2 with the following bit map, [imag real(LSB)]. */
+        uint64_t bwp_weight1           : 32; /**< [255:224] Complex weight for BWP 1 with the following bit map, [imag real(LSB)]. */
+#endif /* Word 3 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
+        uint64_t bwp_weight3           : 32; /**< [319:288] Complex weight for BWP 3 with the following bit map, [imag real(LSB)]. */
+        uint64_t bwp_weight4           : 32; /**< [287:256] Complex weight for BWP 4 with the following bit map, [imag real(LSB)]. */
+#else /* Word 4 - Little Endian */
+        uint64_t bwp_weight4           : 32; /**< [287:256] Complex weight for BWP 4 with the following bit map, [imag real(LSB)]. */
+        uint64_t bwp_weight3           : 32; /**< [319:288] Complex weight for BWP 3 with the following bit map, [imag real(LSB)]. */
+#endif /* Word 4 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
+        uint64_t bwp_weight5           : 32; /**< [383:352] Complex weight for BWP 5 with the following bit map, [imag real(LSB)]. */
+        uint64_t bwp_weight_exp        : 4;  /**< [351:348] Block exponent for BWP weights. Valid range is [0,15]. */
+        uint64_t td_rssi_db_adj        : 12; /**< [347:336] TD-RSSI dB adjustment value. The adjustment value added to dB value converted
+                                                                 from the TD-RSSI measurement. Valid range is [-2048,2047] which is equivalent to
+                                                                 [-204.8, 204.7] dB in dB unit. */
+        uint64_t reserved_320_335      : 16;
+#else /* Word 5 - Little Endian */
+        uint64_t reserved_320_335      : 16;
+        uint64_t td_rssi_db_adj        : 12; /**< [347:336] TD-RSSI dB adjustment value. The adjustment value added to dB value converted
+                                                                 from the TD-RSSI measurement. Valid range is [-2048,2047] which is equivalent to
+                                                                 [-204.8, 204.7] dB in dB unit. */
+        uint64_t bwp_weight_exp        : 4;  /**< [351:348] Block exponent for BWP weights. Valid range is [0,15]. */
+        uint64_t bwp_weight5           : 32; /**< [383:352] Complex weight for BWP 5 with the following bit map, [imag real(LSB)]. */
+#endif /* Word 5 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 6 - Big Endian */
+        uint64_t rach_fe_enable0       : 1;  /**< [447:447] Enable RACH front-end 0. */
+        uint64_t rach_freq_shift0      : 27; /**< [446:420] Frequency shift in RACH FE0. The frequency shift will be
+                                                                 (-[RACH_FREQ_SHIFT0]*7.5) kHz regardless of SCS.
+                                                                 Note that the frequency of the input signal is shifted in the negative direction. */
+        uint64_t oversample_ratio0     : 2;  /**< [419:418] Oversampling ratio for RACH FE0:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t decim_ratio0          : 6;  /**< [417:412] CIC decimation ratio for RACH FE0:
+                                                                 0x0, 0x1 =  Bypass.
+                                                                 0x2-0x30 =  [DECIM_RATIO0]-1 input samples of every [DECIM_RATIO0] samples. */
+        uint64_t output_level_atten0   : 5;  /**< [411:407] Output level attenuation for RACH FE0. Valid range is [0,26] which is equivalent
+                                                                 to [0,-156] dB attenuation with 6 dB step. */
+        uint64_t state_reset0          : 1;  /**< [406:406] RACH FE0 sample rate converter/TD-RSSI reset.
+                                                                 0x0 = Hold.
+                                                                 0x1 = Reset (set to 0). */
+        uint64_t rach_wr_offset0       : 2;  /**< [405:404] Write offset for RACH FE0. */
+        uint64_t reserved_384_403      : 20;
+#else /* Word 6 - Little Endian */
+        uint64_t reserved_384_403      : 20;
+        uint64_t rach_wr_offset0       : 2;  /**< [405:404] Write offset for RACH FE0. */
+        uint64_t state_reset0          : 1;  /**< [406:406] RACH FE0 sample rate converter/TD-RSSI reset.
+                                                                 0x0 = Hold.
+                                                                 0x1 = Reset (set to 0). */
+        uint64_t output_level_atten0   : 5;  /**< [411:407] Output level attenuation for RACH FE0. Valid range is [0,26] which is equivalent
+                                                                 to [0,-156] dB attenuation with 6 dB step. */
+        uint64_t decim_ratio0          : 6;  /**< [417:412] CIC decimation ratio for RACH FE0:
+                                                                 0x0, 0x1 =  Bypass.
+                                                                 0x2-0x30 =  [DECIM_RATIO0]-1 input samples of every [DECIM_RATIO0] samples. */
+        uint64_t oversample_ratio0     : 2;  /**< [419:418] Oversampling ratio for RACH FE0:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t rach_freq_shift0      : 27; /**< [446:420] Frequency shift in RACH FE0. The frequency shift will be
+                                                                 (-[RACH_FREQ_SHIFT0]*7.5) kHz regardless of SCS.
+                                                                 Note that the frequency of the input signal is shifted in the negative direction. */
+        uint64_t rach_fe_enable0       : 1;  /**< [447:447] Enable RACH front-end 0. */
+#endif /* Word 6 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 7 - Big Endian */
+        uint64_t rach_fe_enable1       : 1;  /**< [511:511] Enable RACH front-end 1. */
+        uint64_t rach_freq_shift1      : 27; /**< [510:484] Frequency shift in RACH FE1. See [RACH_FREQ_SHIFT0]. */
+        uint64_t oversample_ratio1     : 2;  /**< [483:482] Oversampling ratio for RACH FE1:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t decim_ratio1          : 6;  /**< [481:476] CIC decimation ratio for RACH FE1:
+
+                                                                 _ 0x0, 0x1 = Bypass.
+
+                                                                 _ 0x2-0x30 = Decimate [DECIM_RATIO1]-1 input samples of every [DECIM_RATIO1] samples. */
+        uint64_t output_level_atten1   : 5;  /**< [475:471] Output level attenuation for RACH FE1. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t state_reset1          : 1;  /**< [470:470] RACH FE1 sample rate converter/TD-RSSI reset.
+                                                                 0x0 =  Hold.
+                                                                 0x1 =  Reset (set to 0). */
+        uint64_t rach_wr_offset1       : 2;  /**< [469:468] Write offset for RACH FE 1. */
+        uint64_t reserved_448_467      : 20;
+#else /* Word 7 - Little Endian */
+        uint64_t reserved_448_467      : 20;
+        uint64_t rach_wr_offset1       : 2;  /**< [469:468] Write offset for RACH FE 1. */
+        uint64_t state_reset1          : 1;  /**< [470:470] RACH FE1 sample rate converter/TD-RSSI reset.
+                                                                 0x0 =  Hold.
+                                                                 0x1 =  Reset (set to 0). */
+        uint64_t output_level_atten1   : 5;  /**< [475:471] Output level attenuation for RACH FE1. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t decim_ratio1          : 6;  /**< [481:476] CIC decimation ratio for RACH FE1:
+
+                                                                 _ 0x0, 0x1 = Bypass.
+
+                                                                 _ 0x2-0x30 = Decimate [DECIM_RATIO1]-1 input samples of every [DECIM_RATIO1] samples. */
+        uint64_t oversample_ratio1     : 2;  /**< [483:482] Oversampling ratio for RACH FE1:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t rach_freq_shift1      : 27; /**< [510:484] Frequency shift in RACH FE1. See [RACH_FREQ_SHIFT0]. */
+        uint64_t rach_fe_enable1       : 1;  /**< [511:511] Enable RACH front-end 1. */
+#endif /* Word 7 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 8 - Big Endian */
+        uint64_t rach_fe_enable2       : 1;  /**< [575:575] Enable RACH front-end 2. */
+        uint64_t rach_freq_shift2      : 27; /**< [574:548] Frequency shift in RACH FE2. See [RACH_FREQ_SHIFT0]. */
+        uint64_t oversample_ratio2     : 2;  /**< [547:546] Oversampling ratio for RACH FE2:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t decim_ratio2          : 6;  /**< [545:540] CIC decimation ratio for RACH FE2:
+
+                                                                 _ 0x0, 0x1 = Bypass.
+
+                                                                 _ 0x2-0x30 = Decimate [DECIM_RATIO2]-1 input samples of every [DECIM_RATIO2] samples. */
+        uint64_t output_level_atten2   : 5;  /**< [539:535] Output level attenuation for RACH FE2. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t state_reset2          : 1;  /**< [534:534] RACH FE1 sample rate converter/TD-RSSI reset.
+                                                                 0x0 =  Hold.
+                                                                 0x1 =  Reset (set to 0). */
+        uint64_t rach_wr_offset2       : 2;  /**< [533:532] Write offset for RACH FE 2. */
+        uint64_t reserved_512_531      : 20;
+#else /* Word 8 - Little Endian */
+        uint64_t reserved_512_531      : 20;
+        uint64_t rach_wr_offset2       : 2;  /**< [533:532] Write offset for RACH FE 2. */
+        uint64_t state_reset2          : 1;  /**< [534:534] RACH FE1 sample rate converter/TD-RSSI reset.
+                                                                 0x0 =  Hold.
+                                                                 0x1 =  Reset (set to 0). */
+        uint64_t output_level_atten2   : 5;  /**< [539:535] Output level attenuation for RACH FE2. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t decim_ratio2          : 6;  /**< [545:540] CIC decimation ratio for RACH FE2:
+
+                                                                 _ 0x0, 0x1 = Bypass.
+
+                                                                 _ 0x2-0x30 = Decimate [DECIM_RATIO2]-1 input samples of every [DECIM_RATIO2] samples. */
+        uint64_t oversample_ratio2     : 2;  /**< [547:546] Oversampling ratio for RACH FE2:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t rach_freq_shift2      : 27; /**< [574:548] Frequency shift in RACH FE2. See [RACH_FREQ_SHIFT0]. */
+        uint64_t rach_fe_enable2       : 1;  /**< [575:575] Enable RACH front-end 2. */
+#endif /* Word 8 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 9 - Big Endian */
+        uint64_t rach_fe_enable3       : 1;  /**< [639:639] Enable RACH front-end 3. */
+        uint64_t rach_freq_shift3      : 27; /**< [638:612] Frequency shift in RACH FE3. See [RACH_FREQ_SHIFT0]. */
+        uint64_t oversample_ratio3     : 2;  /**< [611:610] Oversampling ratio for RACH FE3:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t decim_ratio3          : 6;  /**< [609:604] CIC decimation ratio for RACH FE3:
+
+                                                                 _ 0x0, 0x1 = Bypass.
+
+                                                                 _ 0x2-0x30 = Decimate [DECIM_RATIO1]-1 input samples of every [DECIM_RATIO1] samples. */
+        uint64_t output_level_atten3   : 5;  /**< [603:599] Output level attenuation for RACH FE3. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t state_reset3          : 1;  /**< [598:598] RACH FE1 sample rate converter/TD-RSSI reset.
+                                                                 0x0 =  Hold.
+                                                                 0x1 =  Reset (set to 0). */
+        uint64_t rach_wr_offset3       : 2;  /**< [597:596] Write offset for RACH FE 3. */
+        uint64_t reserved_576_595      : 20;
+#else /* Word 9 - Little Endian */
+        uint64_t reserved_576_595      : 20;
+        uint64_t rach_wr_offset3       : 2;  /**< [597:596] Write offset for RACH FE 3. */
+        uint64_t state_reset3          : 1;  /**< [598:598] RACH FE1 sample rate converter/TD-RSSI reset.
+                                                                 0x0 =  Hold.
+                                                                 0x1 =  Reset (set to 0). */
+        uint64_t output_level_atten3   : 5;  /**< [603:599] Output level attenuation for RACH FE3. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t decim_ratio3          : 6;  /**< [609:604] CIC decimation ratio for RACH FE3:
+
+                                                                 _ 0x0, 0x1 = Bypass.
+
+                                                                 _ 0x2-0x30 = Decimate [DECIM_RATIO1]-1 input samples of every [DECIM_RATIO1] samples. */
+        uint64_t oversample_ratio3     : 2;  /**< [611:610] Oversampling ratio for RACH FE3:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t rach_freq_shift3      : 27; /**< [638:612] Frequency shift in RACH FE3. See [RACH_FREQ_SHIFT0]. */
+        uint64_t rach_fe_enable3       : 1;  /**< [639:639] Enable RACH front-end 3. */
+#endif /* Word 9 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 10 - Big Endian */
+        uint64_t rach_fe_enable4       : 1;  /**< [703:703] Enable RACH front-end 4. */
+        uint64_t rach_freq_shift4      : 27; /**< [702:676] Frequency shift in RACH FE4. See [RACH_FREQ_SHIFT0]. */
+        uint64_t oversample_ratio4     : 2;  /**< [675:674] Oversampling ratio for RACH FE4:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t decim_ratio4          : 6;  /**< [673:668] CIC decimation ratio for RACH FE4:
+
+                                                                 _ 0x0, 0x1 = Bypass.
+
+                                                                 _ 0x2-0x30 = Decimate [DECIM_RATIO4]-1 input samples of every [DECIM_RATIO4] samples. */
+        uint64_t output_level_atten4   : 5;  /**< [667:663] Output level attenuation for RACH FE4. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t state_reset4          : 1;  /**< [662:662] RACH FE4 sample rate converter/TD-RSSI reset.
+                                                                 0x0 =  Hold.
+                                                                 0x1 =  Reset (set to 0). */
+        uint64_t rach_wr_offset4       : 2;  /**< [661:660] Write offset for RACH FE 4. */
+        uint64_t reserved_640_659      : 20;
+#else /* Word 10 - Little Endian */
+        uint64_t reserved_640_659      : 20;
+        uint64_t rach_wr_offset4       : 2;  /**< [661:660] Write offset for RACH FE 4. */
+        uint64_t state_reset4          : 1;  /**< [662:662] RACH FE4 sample rate converter/TD-RSSI reset.
+                                                                 0x0 =  Hold.
+                                                                 0x1 =  Reset (set to 0). */
+        uint64_t output_level_atten4   : 5;  /**< [667:663] Output level attenuation for RACH FE4. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t decim_ratio4          : 6;  /**< [673:668] CIC decimation ratio for RACH FE4:
+
+                                                                 _ 0x0, 0x1 = Bypass.
+
+                                                                 _ 0x2-0x30 = Decimate [DECIM_RATIO4]-1 input samples of every [DECIM_RATIO4] samples. */
+        uint64_t oversample_ratio4     : 2;  /**< [675:674] Oversampling ratio for RACH FE4:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t rach_freq_shift4      : 27; /**< [702:676] Frequency shift in RACH FE4. See [RACH_FREQ_SHIFT0]. */
+        uint64_t rach_fe_enable4       : 1;  /**< [703:703] Enable RACH front-end 4. */
+#endif /* Word 10 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 11 - Big Endian */
+        uint64_t bwp_weight_map0       : 64; /**< [767:704] "Bandwidth part (BWP) weight map for RB0 to RB15. Contains a four-bit
+                                                                 BWP index for each RB to select one of BWP #1 to BWP #5, or 0 for no
+                                                                 BWP." */
+#else /* Word 11 - Little Endian */
+        uint64_t bwp_weight_map0       : 64; /**< [767:704] "Bandwidth part (BWP) weight map for RB0 to RB15. Contains a four-bit
+                                                                 BWP index for each RB to select one of BWP #1 to BWP #5, or 0 for no
+                                                                 BWP." */
+#endif /* Word 11 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 12 - Big Endian */
+        uint64_t bwp_weight_map1       : 64; /**< [831:768] Bandwidth part (BWP) weight map for RB16 to RB31. */
+#else /* Word 12 - Little Endian */
+        uint64_t bwp_weight_map1       : 64; /**< [831:768] Bandwidth part (BWP) weight map for RB16 to RB31. */
+#endif /* Word 12 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 13 - Big Endian */
+        uint64_t bwp_weight_map2       : 64; /**< [895:832] Bandwidth part (BWP) weight map for RB32 to RB47. */
+#else /* Word 13 - Little Endian */
+        uint64_t bwp_weight_map2       : 64; /**< [895:832] Bandwidth part (BWP) weight map for RB32 to RB47. */
+#endif /* Word 13 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 14 - Big Endian */
+        uint64_t bwp_weight_map3       : 64; /**< [959:896] Bandwidth part (BWP) weight map for RB48 to RB63. */
+#else /* Word 14 - Little Endian */
+        uint64_t bwp_weight_map3       : 64; /**< [959:896] Bandwidth part (BWP) weight map for RB48 to RB63. */
+#endif /* Word 14 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 15 - Big Endian */
+        uint64_t bwp_weight_map4       : 64; /**< [1023:960] Bandwidth part (BWP) weight map for RB64 to RB79. */
+#else /* Word 15 - Little Endian */
+        uint64_t bwp_weight_map4       : 64; /**< [1023:960] Bandwidth part (BWP) weight map for RB64 to RB79. */
+#endif /* Word 15 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 16 - Big Endian */
+        uint64_t bwp_weight_map5       : 64; /**< [1087:1024] Bandwidth part (BWP) weight map for RB80 to RB95. */
+#else /* Word 16 - Little Endian */
+        uint64_t bwp_weight_map5       : 64; /**< [1087:1024] Bandwidth part (BWP) weight map for RB80 to RB95. */
+#endif /* Word 16 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 17 - Big Endian */
+        uint64_t bwp_weight_map6       : 64; /**< [1151:1088] Bandwidth part (BWP) weight map for RB96 to RB111. */
+#else /* Word 17 - Little Endian */
+        uint64_t bwp_weight_map6       : 64; /**< [1151:1088] Bandwidth part (BWP) weight map for RB96 to RB111. */
+#endif /* Word 17 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 18 - Big Endian */
+        uint64_t bwp_weight_map7       : 64; /**< [1215:1152] Bandwidth part (BWP) weight map for RB112 to RB127. */
+#else /* Word 18 - Little Endian */
+        uint64_t bwp_weight_map7       : 64; /**< [1215:1152] Bandwidth part (BWP) weight map for RB112 to RB127. */
+#endif /* Word 18 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 19 - Big Endian */
+        uint64_t bwp_weight_map8       : 64; /**< [1279:1216] Bandwidth part (BWP) weight map for RB128 to RB143. */
+#else /* Word 19 - Little Endian */
+        uint64_t bwp_weight_map8       : 64; /**< [1279:1216] Bandwidth part (BWP) weight map for RB128 to RB143. */
+#endif /* Word 19 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 20 - Big Endian */
+        uint64_t bwp_weight_map9       : 64; /**< [1343:1280] Bandwidth part (BWP) weight map for RB144 to RB159. */
+#else /* Word 20 - Little Endian */
+        uint64_t bwp_weight_map9       : 64; /**< [1343:1280] Bandwidth part (BWP) weight map for RB144 to RB159. */
+#endif /* Word 20 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 21 - Big Endian */
+        uint64_t bwp_weight_map10      : 64; /**< [1407:1344] Bandwidth part (BWP) weight map for RB160 to RB175. */
+#else /* Word 21 - Little Endian */
+        uint64_t bwp_weight_map10      : 64; /**< [1407:1344] Bandwidth part (BWP) weight map for RB160 to RB175. */
+#endif /* Word 21 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 22 - Big Endian */
+        uint64_t bwp_weight_map11      : 64; /**< [1471:1408] Bandwidth part (BWP) weight map for RB176 to RB191. */
+#else /* Word 22 - Little Endian */
+        uint64_t bwp_weight_map11      : 64; /**< [1471:1408] Bandwidth part (BWP) weight map for RB176 to RB191. */
+#endif /* Word 22 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 23 - Big Endian */
+        uint64_t bwp_weight_map12      : 64; /**< [1535:1472] Bandwidth part (BWP) weight map for RB192 to RB207. */
+#else /* Word 23 - Little Endian */
+        uint64_t bwp_weight_map12      : 64; /**< [1535:1472] Bandwidth part (BWP) weight map for RB192 to RB207. */
+#endif /* Word 23 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 24 - Big Endian */
+        uint64_t bwp_weight_map13      : 64; /**< [1599:1536] Bandwidth part (BWP) weight map for RB208 to RB223. */
+#else /* Word 24 - Little Endian */
+        uint64_t bwp_weight_map13      : 64; /**< [1599:1536] Bandwidth part (BWP) weight map for RB208 to RB223. */
+#endif /* Word 24 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 25 - Big Endian */
+        uint64_t bwp_weight_map14      : 64; /**< [1663:1600] Bandwidth part (BWP) weight map for RB224 to RB239. */
+#else /* Word 25 - Little Endian */
+        uint64_t bwp_weight_map14      : 64; /**< [1663:1600] Bandwidth part (BWP) weight map for RB224 to RB239. */
+#endif /* Word 25 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 26 - Big Endian */
+        uint64_t bwp_weight_map15      : 64; /**< [1727:1664] Bandwidth part (BWP) weight map for RB240 to RB255. */
+#else /* Word 26 - Little Endian */
+        uint64_t bwp_weight_map15      : 64; /**< [1727:1664] Bandwidth part (BWP) weight map for RB240 to RB255. */
+#endif /* Word 26 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 27 - Big Endian */
+        uint64_t bwp_weight_map16      : 64; /**< [1791:1728] Bandwidth part (BWP) weight map for RB256 to RB271. */
+#else /* Word 27 - Little Endian */
+        uint64_t bwp_weight_map16      : 64; /**< [1791:1728] Bandwidth part (BWP) weight map for RB256 to RB271. */
+#endif /* Word 27 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 28 - Big Endian */
+        uint64_t bwp_weight_map17      : 12; /**< [1855:1844] Bandwidth part (BWP) weight map for RB272 to RB274. */
+        uint64_t reserved_1792_1843    : 52;
+#else /* Word 28 - Little Endian */
+        uint64_t reserved_1792_1843    : 52;
+        uint64_t bwp_weight_map17      : 12; /**< [1855:1844] Bandwidth part (BWP) weight map for RB272 to RB274. */
+#endif /* Word 28 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 29 - Big Endian */
+        uint64_t sc_att_scidx0         : 12; /**< [1919:1908] Subcarrier index 0 for subcarrier-wise attenuation. All 6 subcarrier indexes
+                                                                 must be listed in the ascending order (lower index first). Valid range is
+                                                                 [3329,0]. Subcarrier index larger than 3329 is disregarded. */
+        uint64_t sc_att_scidx1         : 12; /**< [1907:1896] Subcarrier index 1 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_scidx2         : 12; /**< [1895:1884] Subcarrier index 2 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_scidx3         : 12; /**< [1883:1872] Subcarrier index 3 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_scidx4         : 12; /**< [1871:1860] Subcarrier index 4 for subcarrier-wise attenuation. See [SC_ATT_SCIDX0]. */
+        uint64_t reserved_1856_1859    : 4;
+#else /* Word 29 - Little Endian */
+        uint64_t reserved_1856_1859    : 4;
+        uint64_t sc_att_scidx4         : 12; /**< [1871:1860] Subcarrier index 4 for subcarrier-wise attenuation. See [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_scidx3         : 12; /**< [1883:1872] Subcarrier index 3 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_scidx2         : 12; /**< [1895:1884] Subcarrier index 2 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_scidx1         : 12; /**< [1907:1896] Subcarrier index 1 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_scidx0         : 12; /**< [1919:1908] Subcarrier index 0 for subcarrier-wise attenuation. All 6 subcarrier indexes
+                                                                 must be listed in the ascending order (lower index first). Valid range is
+                                                                 [3329,0]. Subcarrier index larger than 3329 is disregarded. */
+#endif /* Word 29 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 30 - Big Endian */
+        uint64_t sc_att_scidx5         : 12; /**< [1983:1972] Subcarrier index 5 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_bitmap         : 12; /**< [1971:1960] Subcarrier attenuation bitmap for six subcarriers with 2-bit switches for the
+                                                                 attenuation of each subcarrier. Switches for 6 subcarriers are mapped in-order
+                                                                 with subcarrier 0 in the most-signficant bits, and subcarrier 5 in the least
+                                                                 significant bits. Each 2-bit switch specifies the attenuation as:
+                                                                 0x0 = No scaling.
+                                                                 0x1 = -6 dB attenuation.
+                                                                 0x2 = -12 dB attenuation.
+                                                                 0x3 = zeroing (set the selected subcarrier to 0). */
+        uint64_t reserved_1920_1959    : 40;
+#else /* Word 30 - Little Endian */
+        uint64_t reserved_1920_1959    : 40;
+        uint64_t sc_att_bitmap         : 12; /**< [1971:1960] Subcarrier attenuation bitmap for six subcarriers with 2-bit switches for the
+                                                                 attenuation of each subcarrier. Switches for 6 subcarriers are mapped in-order
+                                                                 with subcarrier 0 in the most-signficant bits, and subcarrier 5 in the least
+                                                                 significant bits. Each 2-bit switch specifies the attenuation as:
+                                                                 0x0 = No scaling.
+                                                                 0x1 = -6 dB attenuation.
+                                                                 0x2 = -12 dB attenuation.
+                                                                 0x3 = zeroing (set the selected subcarrier to 0). */
+        uint64_t sc_att_scidx5         : 12; /**< [1983:1972] Subcarrier index 5 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+#endif /* Word 30 - End */
+    } f95mm;
 };
 
 /**

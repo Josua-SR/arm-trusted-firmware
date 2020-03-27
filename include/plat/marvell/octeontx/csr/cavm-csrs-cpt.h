@@ -1972,7 +1972,10 @@ union cavm_cptx_af_diag
         uint64_t reserved_10_11        : 2;
         uint64_t force_cptclk          : 1;  /**< [  9:  9](RAZ) When this bit is set to one, it forces the CPTCLK clock tree to always be on.
 
-                                                                 For diagnostic use only. */
+                                                                 For diagnostic use only.
+
+                                                                 Internal:
+                                                                 Note CPT-38429. */
         uint64_t forceclk              : 1;  /**< [  8:  8](R/W) When this bit is set to one, it forces CPT clocks on. For diagnostic use only. */
         uint64_t ld_infl               : 8;  /**< [  7:  0](R/W) Maximum number of in-flight data fetch transactions on the NCB. Larger values
                                                                  may improve CPT performance but may starve other devices on the same NCB. Values
@@ -1984,7 +1987,10 @@ union cavm_cptx_af_diag
         uint64_t forceclk              : 1;  /**< [  8:  8](R/W) When this bit is set to one, it forces CPT clocks on. For diagnostic use only. */
         uint64_t force_cptclk          : 1;  /**< [  9:  9](RAZ) When this bit is set to one, it forces the CPTCLK clock tree to always be on.
 
-                                                                 For diagnostic use only. */
+                                                                 For diagnostic use only.
+
+                                                                 Internal:
+                                                                 Note CPT-38429. */
         uint64_t reserved_10_11        : 2;
         uint64_t ncb_clken             : 1;  /**< [ 12: 12](R/W) When one, force the NCB interface conditional clocking
                                                                  and NCBI bus clock to be always on.

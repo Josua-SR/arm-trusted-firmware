@@ -18226,7 +18226,61 @@ union cavm_pciercx_link_cap2
         uint32_t reserved_25_31        : 7;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pciercx_link_cap2_s cn; */
+    /* struct cavm_pciercx_link_cap2_s cn9; */
+    /* struct cavm_pciercx_link_cap2_s cn96xxp1; */
+    struct cavm_pciercx_link_cap2_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_25_31        : 7;
+        uint32_t trtds                 : 1;  /**< [ 24: 24](RO/WRSL) Two retimers presence detect supported.
+
+                                                                 This bit must be set to in a Port when the SLSV indicates support
+                                                                 for a Link speed of 16.0 GT/s or higher.
+
+                                                                 It is permitted to be set to 1b regardless of the SLSV if the RTDS bit
+                                                                 is also set to 1b. */
+        uint32_t rtds                  : 1;  /**< [ 23: 23](RO/WRSL) Retimer presence detect supported. */
+        uint32_t reserved_9_22         : 14;
+        uint32_t cls                   : 1;  /**< [  8:  8](RO) Crosslink supported. */
+        uint32_t slsv                  : 7;  /**< [  7:  1](RO/WRSL) Supported link speeds vector. Indicates the supported link speeds of the associated port.
+                                                                 For each bit, a value of 1 b indicates that the corresponding link speed is supported;
+                                                                 otherwise, the link speed is not supported. Bit definitions are:
+
+                                                                 _ Bit \<1\> = 2.5 GT/s.
+                                                                 _ Bit \<2\> = 5.0 GT/s.
+                                                                 _ Bit \<3\> = 8.0 GT/s.
+                                                                 _ Bit \<4\> = 16.0 GT/s.
+
+                                                                 _ Bits \<7:5\> are reserved. */
+        uint32_t reserved_0            : 1;
+#else /* Word 0 - Little Endian */
+        uint32_t reserved_0            : 1;
+        uint32_t slsv                  : 7;  /**< [  7:  1](RO/WRSL) Supported link speeds vector. Indicates the supported link speeds of the associated port.
+                                                                 For each bit, a value of 1 b indicates that the corresponding link speed is supported;
+                                                                 otherwise, the link speed is not supported. Bit definitions are:
+
+                                                                 _ Bit \<1\> = 2.5 GT/s.
+                                                                 _ Bit \<2\> = 5.0 GT/s.
+                                                                 _ Bit \<3\> = 8.0 GT/s.
+                                                                 _ Bit \<4\> = 16.0 GT/s.
+
+                                                                 _ Bits \<7:5\> are reserved. */
+        uint32_t cls                   : 1;  /**< [  8:  8](RO) Crosslink supported. */
+        uint32_t reserved_9_22         : 14;
+        uint32_t rtds                  : 1;  /**< [ 23: 23](RO/WRSL) Retimer presence detect supported. */
+        uint32_t trtds                 : 1;  /**< [ 24: 24](RO/WRSL) Two retimers presence detect supported.
+
+                                                                 This bit must be set to in a Port when the SLSV indicates support
+                                                                 for a Link speed of 16.0 GT/s or higher.
+
+                                                                 It is permitted to be set to 1b regardless of the SLSV if the RTDS bit
+                                                                 is also set to 1b. */
+        uint32_t reserved_25_31        : 7;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pciercx_link_cap2_cn96xxp3 cn98xx; */
+    /* struct cavm_pciercx_link_cap2_s cnf95xx; */
+    /* struct cavm_pciercx_link_cap2_cn96xxp3 loki; */
 };
 typedef union cavm_pciercx_link_cap2 cavm_pciercx_link_cap2_t;
 
@@ -21522,7 +21576,29 @@ union cavm_pciercx_pl16g_status
         uint32_t reserved_5_31         : 27;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pciercx_pl16g_status_s cn; */
+    /* struct cavm_pciercx_pl16g_status_s cn9; */
+    /* struct cavm_pciercx_pl16g_status_s cn96xxp1; */
+    struct cavm_pciercx_pl16g_status_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_5_31         : 27;
+        uint32_t leq_req               : 1;  /**< [  4:  4](R/W/H) Link equalization request 16.0 GT/s. */
+        uint32_t eq_cpl_p3             : 1;  /**< [  3:  3](RO/H) Equalization 16.0 GT/s phase 3 successful. */
+        uint32_t eq_cpl_p2             : 1;  /**< [  2:  2](RO/H) Equalization 16.0 GT/s phase 3 successful. */
+        uint32_t eq_cpl_p1             : 1;  /**< [  1:  1](RO/H) Equalization 16.0 GT/s phase 3 successful. */
+        uint32_t eq_cpl                : 1;  /**< [  0:  0](RO/H) Equalization 16.0 GT/s complete. */
+#else /* Word 0 - Little Endian */
+        uint32_t eq_cpl                : 1;  /**< [  0:  0](RO/H) Equalization 16.0 GT/s complete. */
+        uint32_t eq_cpl_p1             : 1;  /**< [  1:  1](RO/H) Equalization 16.0 GT/s phase 3 successful. */
+        uint32_t eq_cpl_p2             : 1;  /**< [  2:  2](RO/H) Equalization 16.0 GT/s phase 3 successful. */
+        uint32_t eq_cpl_p3             : 1;  /**< [  3:  3](RO/H) Equalization 16.0 GT/s phase 3 successful. */
+        uint32_t leq_req               : 1;  /**< [  4:  4](R/W/H) Link equalization request 16.0 GT/s. */
+        uint32_t reserved_5_31         : 27;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pciercx_pl16g_status_cn96xxp3 cn98xx; */
+    /* struct cavm_pciercx_pl16g_status_s cnf95xx; */
+    /* struct cavm_pciercx_pl16g_status_cn96xxp3 loki; */
 };
 typedef union cavm_pciercx_pl16g_status cavm_pciercx_pl16g_status_t;
 

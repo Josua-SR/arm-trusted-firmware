@@ -18620,7 +18620,7 @@ static inline uint64_t CAVM_CGXX_SPUX_BR_ALGN_STATUS(uint64_t a, uint64_t b)
  *
  * In RS-FEC mode the LNx_MAPPING field is valid when that lane has achieved alignment
  * marker lock on the receive side (i.e. the associated
- * CGX_SPU(0..3)_RSFEC_STATUS[AMPS_LOCK] = 1), and is invalid otherwise. When valid,
+ * CGX()_SPU()_RSFEC_STATUS[AMPS_LOCK] = 1), and is invalid otherwise. When valid,
  * it returns the actual detected receive FEC lane number based on the received
  * alignment marker contents received on that logical lane therefore expect for RS-FEC
  * that LNx_MAPPING = x.

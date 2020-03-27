@@ -4720,7 +4720,94 @@ union cavm_mhbwx_jd_cfg
         uint64_t addr_range_chk_ena    : 1;  /**< [ 63: 63](R/W) L2C/DDR and SMEM address range check enable. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_mhbwx_jd_cfg_s cn; */
+    /* struct cavm_mhbwx_jd_cfg_s cn9; */
+    /* struct cavm_mhbwx_jd_cfg_s cnf95xxp1; */
+    struct cavm_mhbwx_jd_cfg_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t addr_range_chk_ena    : 1;  /**< [ 63: 63](R/W) L2C/DDR and SMEM address range check enable. */
+        uint64_t ghb_throttle_dis      : 1;  /**< [ 62: 62](R/W) GHAB interface throttle disable. */
+        uint64_t reserved_58_61        : 4;
+        uint64_t ghb_rd_weight         : 6;  /**< [ 57: 52](R/W) The weighted round-robin arbitration weight used in the GHAB when
+                                                                 arbitrating for read requests from this MHAB. A value of zero will
+                                                                 only allow requests when there are no competing requests from other
+                                                                 MHABs in the same GHAB, or when all competing MHABs have an effective
+                                                                 weight of zero. A higher weight guarantees a greater share of the GHAB
+                                                                 bandwidth. */
+        uint64_t reserved_50_51        : 2;
+        uint64_t ghb_wr_weight         : 6;  /**< [ 49: 44](R/W) The weighted round-robin arbitration weight used in the GHAB when
+                                                                 arbitrating for write requests from this MHAB. A value of zero will
+                                                                 only allow requests when there are no competing requests from other
+                                                                 MHABs in the same GHAB, or when all competing MHABs have an effective
+                                                                 weight of zero. A higher weight guarantees a greater share of the GHAB
+                                                                 bandwidth. */
+        uint64_t ghb_rd_off_rate       : 8;  /**< [ 43: 36](R/W) This field specifies the number of cycles a GHAB idle gap can be.
+                                                                 An idle gap is a gap inserted during a bursty transfer.
+                                                                 A value of 0 means no gaps. */
+        uint64_t ghb_rd_on_rate        : 8;  /**< [ 35: 28](R/W) This field specifies the number of contiguous cycles a bursty GHAB transfer can be.
+                                                                 A value of 0 stops all GHAB transactions. This field should never be set to 0. */
+        uint64_t ghb_wr_off_rate       : 8;  /**< [ 27: 20](R/W) This field specifies the number of cycles a GHAB idle gap can be.
+                                                                 An idle gap is a gap inserted during a bursty transfer.
+                                                                 A value of 0 means no gaps. */
+        uint64_t ghb_wr_on_rate        : 8;  /**< [ 19: 12](R/W) This field specifies the number of contiguous cycles a bursty GHAB transfer can be.
+                                                                 A value of 0 stops all GHAB transactions. This field should never be set to 0.
+                                                                 For writes to L2C/DDR, HW allows up to seven cycles over the ON rate limit if the
+                                                                 terminal count does not align to the cacheline boundary. */
+        uint64_t reserved_8_11         : 4;
+        uint64_t timeout_mult          : 4;  /**< [  7:  4](R/W) This set of bits, specifies the timeout multiplier used when
+                                                                 calculating job timeout thresholds. See MHBW_JD_HDR_WORD_0_S[TOTH] for
+                                                                 details. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t jd_fetch_cmd_type     : 2;  /**< [  1:  0](R/W) Specifies the command type used when reading a job descriptor
+                                                                 (including subdescriptor sections) from main memory. Command types
+                                                                 are enumerated in MHBW_PNB_RD_CMD_E.  Note that if
+                                                                 MHBW_PNB_RD_CMD_E::LDWB is specified, then any requests for less than
+                                                                 128 bytes will be automatically converted to type LDT to avoid
+                                                                 accidental loss of data. */
+#else /* Word 0 - Little Endian */
+        uint64_t jd_fetch_cmd_type     : 2;  /**< [  1:  0](R/W) Specifies the command type used when reading a job descriptor
+                                                                 (including subdescriptor sections) from main memory. Command types
+                                                                 are enumerated in MHBW_PNB_RD_CMD_E.  Note that if
+                                                                 MHBW_PNB_RD_CMD_E::LDWB is specified, then any requests for less than
+                                                                 128 bytes will be automatically converted to type LDT to avoid
+                                                                 accidental loss of data. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t timeout_mult          : 4;  /**< [  7:  4](R/W) This set of bits, specifies the timeout multiplier used when
+                                                                 calculating job timeout thresholds. See MHBW_JD_HDR_WORD_0_S[TOTH] for
+                                                                 details. */
+        uint64_t reserved_8_11         : 4;
+        uint64_t ghb_wr_on_rate        : 8;  /**< [ 19: 12](R/W) This field specifies the number of contiguous cycles a bursty GHAB transfer can be.
+                                                                 A value of 0 stops all GHAB transactions. This field should never be set to 0.
+                                                                 For writes to L2C/DDR, HW allows up to seven cycles over the ON rate limit if the
+                                                                 terminal count does not align to the cacheline boundary. */
+        uint64_t ghb_wr_off_rate       : 8;  /**< [ 27: 20](R/W) This field specifies the number of cycles a GHAB idle gap can be.
+                                                                 An idle gap is a gap inserted during a bursty transfer.
+                                                                 A value of 0 means no gaps. */
+        uint64_t ghb_rd_on_rate        : 8;  /**< [ 35: 28](R/W) This field specifies the number of contiguous cycles a bursty GHAB transfer can be.
+                                                                 A value of 0 stops all GHAB transactions. This field should never be set to 0. */
+        uint64_t ghb_rd_off_rate       : 8;  /**< [ 43: 36](R/W) This field specifies the number of cycles a GHAB idle gap can be.
+                                                                 An idle gap is a gap inserted during a bursty transfer.
+                                                                 A value of 0 means no gaps. */
+        uint64_t ghb_wr_weight         : 6;  /**< [ 49: 44](R/W) The weighted round-robin arbitration weight used in the GHAB when
+                                                                 arbitrating for write requests from this MHAB. A value of zero will
+                                                                 only allow requests when there are no competing requests from other
+                                                                 MHABs in the same GHAB, or when all competing MHABs have an effective
+                                                                 weight of zero. A higher weight guarantees a greater share of the GHAB
+                                                                 bandwidth. */
+        uint64_t reserved_50_51        : 2;
+        uint64_t ghb_rd_weight         : 6;  /**< [ 57: 52](R/W) The weighted round-robin arbitration weight used in the GHAB when
+                                                                 arbitrating for read requests from this MHAB. A value of zero will
+                                                                 only allow requests when there are no competing requests from other
+                                                                 MHABs in the same GHAB, or when all competing MHABs have an effective
+                                                                 weight of zero. A higher weight guarantees a greater share of the GHAB
+                                                                 bandwidth. */
+        uint64_t reserved_58_61        : 4;
+        uint64_t ghb_throttle_dis      : 1;  /**< [ 62: 62](R/W) GHAB interface throttle disable. */
+        uint64_t addr_range_chk_ena    : 1;  /**< [ 63: 63](R/W) L2C/DDR and SMEM address range check enable. */
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_mhbwx_jd_cfg_cnf95xxp2 f95mm; */
+    /* struct cavm_mhbwx_jd_cfg_cnf95xxp2 loki; */
 };
 typedef union cavm_mhbwx_jd_cfg cavm_mhbwx_jd_cfg_t;
 

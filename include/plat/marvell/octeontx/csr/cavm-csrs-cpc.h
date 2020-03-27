@@ -274,6 +274,182 @@ union cavm_cpc_dvfs_config_s
                                                                  power 30%, etc.  Default is 50.  Only used in THERMAL_BUDGET and
                                                                  POWER_CAPPED modes. */
         uint64_t avs_safemode_enable   : 1;  /**< [223:223] When avs_safemode is enabled, RCLK and CPTCLK go to min speed when AVS failures are detected. */
+        uint64_t reserved_222          : 1;
+        uint64_t scp_uart_redirect_num : 4;  /**< [221:218] Selects which AP UART to connect to the SCP UART. 0x0 selects no
+                                                                 redirection. When redirection is in use, a terminal program running on the AP
+                                                                 (talking to UART [SCP_UART_REDIRECT_NUM]) can connect to the SCP CLI running on
+                                                                 UART [SCP_UART_NUM]. */
+        uint64_t twsi_slave_addr       : 7;  /**< [217:211] The I2C address of the TWSI slave controller. */
+        uint64_t twsi_slave_bus        : 3;  /**< [210:208] The TWSI controller number that processes TWSI slave transactions from chip side. */
+        uint64_t wakeup_mode           : 2;  /**< [207:206] Enumerated by CPC_WAKEUP_MODE_E. Default CPC_WAKEUP_MODE_E::FAST_WAKE_SLOW_SLEEP. */
+        uint64_t force_secondary_boot  : 1;  /**< [205:205] Force the next reboot to use the secondary boot device. */
+        uint64_t mcp_disable           : 1;  /**< [204:204] Instructs SCP firmware to not start the MCP. */
+        uint64_t scp_uart_num          : 4;  /**< [203:200] Selects which UART SCP will use for the SCP CLI and logging.  0xF selects no logging. */
+        uint64_t failsafe_timeout      : 8;  /**< [199:192] This timeout detects boot failures in when booting from the
+                                                                 primary boot device, and causes a reboot from secondary.  In seconds. */
+#else /* Word 3 - Little Endian */
+        uint64_t failsafe_timeout      : 8;  /**< [199:192] This timeout detects boot failures in when booting from the
+                                                                 primary boot device, and causes a reboot from secondary.  In seconds. */
+        uint64_t scp_uart_num          : 4;  /**< [203:200] Selects which UART SCP will use for the SCP CLI and logging.  0xF selects no logging. */
+        uint64_t mcp_disable           : 1;  /**< [204:204] Instructs SCP firmware to not start the MCP. */
+        uint64_t force_secondary_boot  : 1;  /**< [205:205] Force the next reboot to use the secondary boot device. */
+        uint64_t wakeup_mode           : 2;  /**< [207:206] Enumerated by CPC_WAKEUP_MODE_E. Default CPC_WAKEUP_MODE_E::FAST_WAKE_SLOW_SLEEP. */
+        uint64_t twsi_slave_bus        : 3;  /**< [210:208] The TWSI controller number that processes TWSI slave transactions from chip side. */
+        uint64_t twsi_slave_addr       : 7;  /**< [217:211] The I2C address of the TWSI slave controller. */
+        uint64_t scp_uart_redirect_num : 4;  /**< [221:218] Selects which AP UART to connect to the SCP UART. 0x0 selects no
+                                                                 redirection. When redirection is in use, a terminal program running on the AP
+                                                                 (talking to UART [SCP_UART_REDIRECT_NUM]) can connect to the SCP CLI running on
+                                                                 UART [SCP_UART_NUM]. */
+        uint64_t reserved_222          : 1;
+        uint64_t avs_safemode_enable   : 1;  /**< [223:223] When avs_safemode is enabled, RCLK and CPTCLK go to min speed when AVS failures are detected. */
+        uint64_t dvfs_thermal_hot_backoff : 16;/**< [239:224] The percentage that the DVFS control should attempt to reduce the chip
+                                                                 power when the board asserts THERMAL_HOT_L.  A value of 30 means reduce
+                                                                 power 30%, etc.  Default is 50.  Only used in THERMAL_BUDGET and
+                                                                 POWER_CAPPED modes. */
+        uint64_t active_threshold      : 16; /**< [255:240] The percentage of maximum IPC at which a core is considered active.
+                                                                 Encoded as percent * 1000.  Range 0.001% to 32.7%.  Default 1%.
+                                                                 Only used in THERMAL_BUDGET and POWER_CAPPED modes. */
+#endif /* Word 3 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
+        uint64_t dspclk_freq_min       : 16; /**< [319:304] Minimum DSP clock (DSPCLK) frequency in MHz.  SCP firmware will vary
+                                                                 the actual DSPCLK frequency between min and max based on SCMI messages
+                                                                 from the AP. CNF9XXX chips only. */
+        uint64_t dspclk_freq_max       : 16; /**< [303:288] Maximum DSP clock (DSPCLK) frequency in MHz.  SCP firmware will vary
+                                                                 the actual DSPCLK frequency between min and max based on SCMI messages
+                                                                 from the AP. CNF9XXX chips only. */
+        uint64_t bclk_freq_min         : 16; /**< [287:272] Minimum BPHY clock (BCLK) frequency in MHz.  SCP firmware will vary
+                                                                 the actual BCLK frequency between min and max based on SCMI messages
+                                                                 from the AP. CNF9XXX chips only. */
+        uint64_t bclk_freq_max         : 16; /**< [271:256] Maximum BPHY clock (BCLK) frequency in MHz.  SCP firmware will vary
+                                                                 the actual BCLK frequency between min and max based on SCMI messages
+                                                                 from the AP. CNF9XXX chips only. */
+#else /* Word 4 - Little Endian */
+        uint64_t bclk_freq_max         : 16; /**< [271:256] Maximum BPHY clock (BCLK) frequency in MHz.  SCP firmware will vary
+                                                                 the actual BCLK frequency between min and max based on SCMI messages
+                                                                 from the AP. CNF9XXX chips only. */
+        uint64_t bclk_freq_min         : 16; /**< [287:272] Minimum BPHY clock (BCLK) frequency in MHz.  SCP firmware will vary
+                                                                 the actual BCLK frequency between min and max based on SCMI messages
+                                                                 from the AP. CNF9XXX chips only. */
+        uint64_t dspclk_freq_max       : 16; /**< [303:288] Maximum DSP clock (DSPCLK) frequency in MHz.  SCP firmware will vary
+                                                                 the actual DSPCLK frequency between min and max based on SCMI messages
+                                                                 from the AP. CNF9XXX chips only. */
+        uint64_t dspclk_freq_min       : 16; /**< [319:304] Minimum DSP clock (DSPCLK) frequency in MHz.  SCP firmware will vary
+                                                                 the actual DSPCLK frequency between min and max based on SCMI messages
+                                                                 from the AP. CNF9XXX chips only. */
+#endif /* Word 4 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
+        uint64_t vdd_sys_compensation  : 16; /**< [383:368] A multiplication factor that is applied to the requested VDD_SYS voltage.  Default 1.000.
+                                                                 Encoded as factor * 1000. */
+        uint64_t vdd_core_compensation : 16; /**< [367:352] A multiplication factor that is applied to the requested VDDC voltage.  Default 1.000.
+                                                                 Encoded as factor * 1000. */
+        uint64_t reserved_320_351      : 32;
+#else /* Word 5 - Little Endian */
+        uint64_t reserved_320_351      : 32;
+        uint64_t vdd_core_compensation : 16; /**< [367:352] A multiplication factor that is applied to the requested VDDC voltage.  Default 1.000.
+                                                                 Encoded as factor * 1000. */
+        uint64_t vdd_sys_compensation  : 16; /**< [383:368] A multiplication factor that is applied to the requested VDD_SYS voltage.  Default 1.000.
+                                                                 Encoded as factor * 1000. */
+#endif /* Word 5 - End */
+    } s;
+    /* struct cavm_cpc_dvfs_config_s_s cn9; */
+    struct cavm_cpc_dvfs_config_s_cn96xxp1
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t dvfs_config_version   : 16; /**< [ 63: 48] Version field for this data structure.  Default value 0x9300. */
+        uint64_t coreclk_freq_min      : 16; /**< [ 47: 32] Frequency in MHz.  In THERMAL_BUDGET and POWER_CAPPED modes, this is
+                                                                 the RCLK frequency used when all APs are idle.  Ignored in DVFS
+                                                                 and MANUAL_CONTROL modes.  Range 500 MHz to [CORECLK_FREQ_MAX]. */
+        uint64_t coreclk_freq_max      : 16; /**< [ 31: 16] Frequency in MHz. In DVFS mode, this is the
+                                                                 RCLK frequency.  In THERMAL_BUDGET mode, this is the RCLK frequency
+                                                                 when APs are active; RCLK frequency may be reduced if die temp exceeds
+                                                                 THROTTLE_TEMP.  In POWER_CAPPED mode, this is the RCLK frequency when
+                                                                 APs are active; RCLK frequency may be reduced if die temp exceeds THROTTLE_TEMP
+                                                                 or total chip power exceeds DVFS_POWER_BUDGET.  In all cases, if fuses
+                                                                 indicate the part supports a lower frequency, the fuse value is used. */
+        uint64_t throttle_temp         : 16; /**< [ 15:  0] The die temperature at which the reported THERMAL_MARGIN is 0.
+                                                                 In THERMAL_BUDGET and POWER_CAPPED modes, it is also the die
+                                                                 temperature above which performance throttling begins.
+                                                                 Value must be between 0 and 140 degrees Celsius.  Default value 105 Celsius. */
+#else /* Word 0 - Little Endian */
+        uint64_t throttle_temp         : 16; /**< [ 15:  0] The die temperature at which the reported THERMAL_MARGIN is 0.
+                                                                 In THERMAL_BUDGET and POWER_CAPPED modes, it is also the die
+                                                                 temperature above which performance throttling begins.
+                                                                 Value must be between 0 and 140 degrees Celsius.  Default value 105 Celsius. */
+        uint64_t coreclk_freq_max      : 16; /**< [ 31: 16] Frequency in MHz. In DVFS mode, this is the
+                                                                 RCLK frequency.  In THERMAL_BUDGET mode, this is the RCLK frequency
+                                                                 when APs are active; RCLK frequency may be reduced if die temp exceeds
+                                                                 THROTTLE_TEMP.  In POWER_CAPPED mode, this is the RCLK frequency when
+                                                                 APs are active; RCLK frequency may be reduced if die temp exceeds THROTTLE_TEMP
+                                                                 or total chip power exceeds DVFS_POWER_BUDGET.  In all cases, if fuses
+                                                                 indicate the part supports a lower frequency, the fuse value is used. */
+        uint64_t coreclk_freq_min      : 16; /**< [ 47: 32] Frequency in MHz.  In THERMAL_BUDGET and POWER_CAPPED modes, this is
+                                                                 the RCLK frequency used when all APs are idle.  Ignored in DVFS
+                                                                 and MANUAL_CONTROL modes.  Range 500 MHz to [CORECLK_FREQ_MAX]. */
+        uint64_t dvfs_config_version   : 16; /**< [ 63: 48] Version field for this data structure.  Default value 0x9300. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t thermal_trip_temp     : 16; /**< [127:112] Temperature in degrees C where THERMAL_TRIP_N is asserted. Hardware
+                                                                 will assert the THERMAL_TRIP_N pin when this die temp is exceeded,
+                                                                 signaling the board to emergency power off. Default is 110
+                                                                 Celsius. */
+        uint64_t vdd_sys_tolerance     : 16; /**< [111: 96] The +/- control tolerance of the VDD_SYS supply as measured at the
+                                                                 chip in mV.   Default is +/-29 mV. Doesn't apply to CN8XXX chips. */
+        uint64_t vdd_core_tolerance    : 16; /**< [ 95: 80] The +/- control tolerance of the VDDC supply as measured at the
+                                                                 chip in mV.   Default is +/-29 mV. Doesn't apply to CN8XXX chips. */
+        uint64_t cptclk_freq           : 16; /**< [ 79: 64] Cryptographic accelerator clock (CPTCLK) frequency in MHz.
+                                                                 In DVFS mode, this is the frequency.  In THERMAL_BUDGET and POWER_CAPPED
+                                                                 modes, this is the frequency when the accerator is active; otherwise
+                                                                 crypto clock frequency is 200 MHz. If fuses indicate the part supports a lower
+                                                                 frequency, the fuse value is used. */
+#else /* Word 1 - Little Endian */
+        uint64_t cptclk_freq           : 16; /**< [ 79: 64] Cryptographic accelerator clock (CPTCLK) frequency in MHz.
+                                                                 In DVFS mode, this is the frequency.  In THERMAL_BUDGET and POWER_CAPPED
+                                                                 modes, this is the frequency when the accerator is active; otherwise
+                                                                 crypto clock frequency is 200 MHz. If fuses indicate the part supports a lower
+                                                                 frequency, the fuse value is used. */
+        uint64_t vdd_core_tolerance    : 16; /**< [ 95: 80] The +/- control tolerance of the VDDC supply as measured at the
+                                                                 chip in mV.   Default is +/-29 mV. Doesn't apply to CN8XXX chips. */
+        uint64_t vdd_sys_tolerance     : 16; /**< [111: 96] The +/- control tolerance of the VDD_SYS supply as measured at the
+                                                                 chip in mV.   Default is +/-29 mV. Doesn't apply to CN8XXX chips. */
+        uint64_t thermal_trip_temp     : 16; /**< [127:112] Temperature in degrees C where THERMAL_TRIP_N is asserted. Hardware
+                                                                 will assert the THERMAL_TRIP_N pin when this die temp is exceeded,
+                                                                 signaling the board to emergency power off. Default is 110
+                                                                 Celsius. */
+#endif /* Word 1 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
+        uint64_t sclk_freq             : 16; /**< [191:176] Coprocessor clock (SCLK) frequency in MHz. */
+        uint64_t thermal_hot_temp      : 16; /**< [175:160] SCP firmware will assert the THERMAL_HOT_L pin when the highest
+                                                                 observed temperature on the chip is at or above this value. Used for
+                                                                 simple on-off Fan control.  Recommended value is 20 degrees Celsius
+                                                                 below [THROTTLE_TEMP].
+                                                                 The default value is 80 Celsius. */
+        uint64_t dvfs_power_control_mode : 16;/**< [159:144] The operating mode of the DVFS (Dynamic Frequency Voltage Scaling)
+                                                                 power control code.  Enumerated by CPC_DVFS_MODE_E. */
+        uint64_t dvfs_power_budget     : 16; /**< [143:128] The total chip power budget in Watts.  In POWER_CAPPED mode,
+                                                                 DVFS control modulates RCLK frequency to keep power at or
+                                                                 below this level.  Default is 100 Watts. */
+#else /* Word 2 - Little Endian */
+        uint64_t dvfs_power_budget     : 16; /**< [143:128] The total chip power budget in Watts.  In POWER_CAPPED mode,
+                                                                 DVFS control modulates RCLK frequency to keep power at or
+                                                                 below this level.  Default is 100 Watts. */
+        uint64_t dvfs_power_control_mode : 16;/**< [159:144] The operating mode of the DVFS (Dynamic Frequency Voltage Scaling)
+                                                                 power control code.  Enumerated by CPC_DVFS_MODE_E. */
+        uint64_t thermal_hot_temp      : 16; /**< [175:160] SCP firmware will assert the THERMAL_HOT_L pin when the highest
+                                                                 observed temperature on the chip is at or above this value. Used for
+                                                                 simple on-off Fan control.  Recommended value is 20 degrees Celsius
+                                                                 below [THROTTLE_TEMP].
+                                                                 The default value is 80 Celsius. */
+        uint64_t sclk_freq             : 16; /**< [191:176] Coprocessor clock (SCLK) frequency in MHz. */
+#endif /* Word 2 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
+        uint64_t active_threshold      : 16; /**< [255:240] The percentage of maximum IPC at which a core is considered active.
+                                                                 Encoded as percent * 1000.  Range 0.001% to 32.7%.  Default 1%.
+                                                                 Only used in THERMAL_BUDGET and POWER_CAPPED modes. */
+        uint64_t dvfs_thermal_hot_backoff : 16;/**< [239:224] The percentage that the DVFS control should attempt to reduce the chip
+                                                                 power when the board asserts THERMAL_HOT_L.  A value of 30 means reduce
+                                                                 power 30%, etc.  Default is 50.  Only used in THERMAL_BUDGET and
+                                                                 POWER_CAPPED modes. */
+        uint64_t avs_safemode_enable   : 1;  /**< [223:223] When avs_safemode is enabled, RCLK and CPTCLK go to min speed when AVS failures are detected. */
         uint64_t reserved_218_222      : 5;
         uint64_t twsi_slave_addr       : 7;  /**< [217:211] The I2C address of the TWSI slave controller. */
         uint64_t twsi_slave_bus        : 3;  /**< [210:208] The TWSI controller number that processes TWSI slave transactions from chip side. */
@@ -342,8 +518,13 @@ union cavm_cpc_dvfs_config_s
         uint64_t vdd_sys_compensation  : 16; /**< [383:368] A multiplication factor that is applied to the requested VDD_SYS voltage.  Default 1.000.
                                                                  Encoded as factor * 1000. */
 #endif /* Word 5 - End */
-    } s;
-    /* struct cavm_cpc_dvfs_config_s_s cn; */
+    } cn96xxp1;
+    /* struct cavm_cpc_dvfs_config_s_s cn96xxp3; */
+    /* struct cavm_cpc_dvfs_config_s_s cn98xx; */
+    /* struct cavm_cpc_dvfs_config_s_cn96xxp1 cnf95xxp1; */
+    /* struct cavm_cpc_dvfs_config_s_s cnf95xxp2; */
+    /* struct cavm_cpc_dvfs_config_s_s f95mm; */
+    /* struct cavm_cpc_dvfs_config_s_s loki; */
 };
 
 /**

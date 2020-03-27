@@ -3141,14 +3141,11 @@ union cavm_nix_rq_ctx_s
         uint64_t flow_tagw             : 6;  /**< [365:360] Flow tag width. Number of lower bits of WQE/CQE tag taken from packet's
                                                                  flow_tag (see NIX_LF_RX_SECRET()). When greater than or equal to 32, the
                                                                  WQE/CQE tag equals flow_tag.
-                                                                 Not used if packet is sent to IPSEC hardware fast-path.
                                                                  See pseudocode in [LTAG]. */
         uint64_t bad_utag              : 8;  /**< [359:352] Upper WQE/CQE tag bits for a packet received with error, conditionally
                                                                  selected by [FLOW_TAGW].
-                                                                 Not used if packet is sent to IPSEC hardware fast-path.
                                                                  See pseudocode in [LTAG]. */
         uint64_t good_utag             : 8;  /**< [351:344] Upper WQE/CQE tag bits for a packet received without error, conditionally
-                                                                 selected by [FLOW_TAGW].
                                                                  Not used if packet is sent to IPSEC hardware fast-path.
                                                                  See pseudocode in [LTAG]. */
         uint64_t ltag                  : 24; /**< [343:320] Lower WQE/CQE tag bits, conditionally selected by [FLOW_TAGW].
@@ -3197,17 +3194,14 @@ union cavm_nix_rq_ctx_s
                                                                  }
                                                                  \</pre\> */
         uint64_t good_utag             : 8;  /**< [351:344] Upper WQE/CQE tag bits for a packet received without error, conditionally
-                                                                 selected by [FLOW_TAGW].
                                                                  Not used if packet is sent to IPSEC hardware fast-path.
                                                                  See pseudocode in [LTAG]. */
         uint64_t bad_utag              : 8;  /**< [359:352] Upper WQE/CQE tag bits for a packet received with error, conditionally
                                                                  selected by [FLOW_TAGW].
-                                                                 Not used if packet is sent to IPSEC hardware fast-path.
                                                                  See pseudocode in [LTAG]. */
         uint64_t flow_tagw             : 6;  /**< [365:360] Flow tag width. Number of lower bits of WQE/CQE tag taken from packet's
                                                                  flow_tag (see NIX_LF_RX_SECRET()). When greater than or equal to 32, the
                                                                  WQE/CQE tag equals flow_tag.
-                                                                 Not used if packet is sent to IPSEC hardware fast-path.
                                                                  See pseudocode in [LTAG]. */
         uint64_t reserved_366_383      : 18;
 #endif /* Word 5 - End */
@@ -4660,18 +4654,14 @@ union cavm_nix_rq_ctx_s
         uint64_t flow_tagw             : 6;  /**< [365:360] Flow tag width. Number of lower bits of WQE/CQE tag taken from packet's
                                                                  flow_tag (see NIX_LF_RX_SECRET()). When greater than or equal to 32, the
                                                                  WQE/CQE tag equals flow_tag.
-                                                                 Not used if packet is sent to IPSEC hardware fast-path.
                                                                  See pseudocode in [LTAG]. */
         uint64_t bad_utag              : 8;  /**< [359:352] Upper WQE/CQE tag bits for a packet received with error, conditionally
                                                                  selected by [FLOW_TAGW].
-                                                                 Not used if packet is sent to IPSEC hardware fast-path.
                                                                  See pseudocode in [LTAG]. */
         uint64_t good_utag             : 8;  /**< [351:344] Upper WQE/CQE tag bits for a packet received without error, conditionally
-                                                                 selected by [FLOW_TAGW].
                                                                  Not used if packet is sent to IPSEC hardware fast-path.
                                                                  See pseudocode in [LTAG]. */
         uint64_t ltag                  : 24; /**< [343:320] Lower WQE/CQE tag bits, conditionally selected by [FLOW_TAGW].
-                                                                 Not used if packet is sent to IPSEC hardware fast-path.
 
                                                                  Pseudocode:
                                                                  \<pre\>
@@ -4681,20 +4671,13 @@ union cavm_nix_rq_ctx_s
                                                                  flow_tag_mask\<31:0\> = (1 \<\< [FLOW_TAGW]) - 1;
                                                                  xqe_type = [SSO_ENA] ? NIX_WQE_HDR_S[WQE_TYPE] ? NIX_CQE_HDR_S[CQE_TYPE];
 
-                                                                 if (xqe_type != NIX_XQE_TYPE_E::RX_IPSECH) {
-                                                                    // flow_tag\<31:0\> computation is defined in NIX_LF_RX_SECRET()
-                                                                    tag\<31:0\> = (~flow_tag_mask & rq_tag) | (flow_tag_mask & flow_tag);
-                                                                    if ([SSO_ENA]) NIX_WQE_HDR_S[TAG] = tag;
-                                                                    else           NIX_CQE_HDR_S[TAG] = tag;
-                                                                 }
-                                                                 else { // IPSEC hardware fast-path; only valid when [SSO_ENA]==1
-                                                                    // SA_index computation is defined in NIX_AF_LF()_RX_IPSEC_CFG1[SA_IDX_W]
-                                                                    NIX_WQE_HDR_S[TAG] = SA_index | (NIX_AF_LF()_RX_IPSEC_CFG0[TAG_CONST] \<\< 8);
-                                                                 }
+                                                                 // flow_tag\<31:0\> computation is defined in NIX_LF_RX_SECRET()
+                                                                 tag\<31:0\> = (~flow_tag_mask & rq_tag) | (flow_tag_mask & flow_tag);
+                                                                 if ([SSO_ENA]) NIX_WQE_HDR_S[TAG] = tag;
+                                                                 else           NIX_CQE_HDR_S[TAG] = tag;
                                                                  \</pre\> */
 #else /* Word 5 - Little Endian */
         uint64_t ltag                  : 24; /**< [343:320] Lower WQE/CQE tag bits, conditionally selected by [FLOW_TAGW].
-                                                                 Not used if packet is sent to IPSEC hardware fast-path.
 
                                                                  Pseudocode:
                                                                  \<pre\>
@@ -4704,29 +4687,20 @@ union cavm_nix_rq_ctx_s
                                                                  flow_tag_mask\<31:0\> = (1 \<\< [FLOW_TAGW]) - 1;
                                                                  xqe_type = [SSO_ENA] ? NIX_WQE_HDR_S[WQE_TYPE] ? NIX_CQE_HDR_S[CQE_TYPE];
 
-                                                                 if (xqe_type != NIX_XQE_TYPE_E::RX_IPSECH) {
-                                                                    // flow_tag\<31:0\> computation is defined in NIX_LF_RX_SECRET()
-                                                                    tag\<31:0\> = (~flow_tag_mask & rq_tag) | (flow_tag_mask & flow_tag);
-                                                                    if ([SSO_ENA]) NIX_WQE_HDR_S[TAG] = tag;
-                                                                    else           NIX_CQE_HDR_S[TAG] = tag;
-                                                                 }
-                                                                 else { // IPSEC hardware fast-path; only valid when [SSO_ENA]==1
-                                                                    // SA_index computation is defined in NIX_AF_LF()_RX_IPSEC_CFG1[SA_IDX_W]
-                                                                    NIX_WQE_HDR_S[TAG] = SA_index | (NIX_AF_LF()_RX_IPSEC_CFG0[TAG_CONST] \<\< 8);
-                                                                 }
+                                                                 // flow_tag\<31:0\> computation is defined in NIX_LF_RX_SECRET()
+                                                                 tag\<31:0\> = (~flow_tag_mask & rq_tag) | (flow_tag_mask & flow_tag);
+                                                                 if ([SSO_ENA]) NIX_WQE_HDR_S[TAG] = tag;
+                                                                 else           NIX_CQE_HDR_S[TAG] = tag;
                                                                  \</pre\> */
         uint64_t good_utag             : 8;  /**< [351:344] Upper WQE/CQE tag bits for a packet received without error, conditionally
-                                                                 selected by [FLOW_TAGW].
                                                                  Not used if packet is sent to IPSEC hardware fast-path.
                                                                  See pseudocode in [LTAG]. */
         uint64_t bad_utag              : 8;  /**< [359:352] Upper WQE/CQE tag bits for a packet received with error, conditionally
                                                                  selected by [FLOW_TAGW].
-                                                                 Not used if packet is sent to IPSEC hardware fast-path.
                                                                  See pseudocode in [LTAG]. */
         uint64_t flow_tagw             : 6;  /**< [365:360] Flow tag width. Number of lower bits of WQE/CQE tag taken from packet's
                                                                  flow_tag (see NIX_LF_RX_SECRET()). When greater than or equal to 32, the
                                                                  WQE/CQE tag equals flow_tag.
-                                                                 Not used if packet is sent to IPSEC hardware fast-path.
                                                                  See pseudocode in [LTAG]. */
         uint64_t reserved_366_383      : 18;
 #endif /* Word 5 - End */
@@ -5947,7 +5921,67 @@ union cavm_nix_rx_vtag_action_s
         uint64_t reserved_48_63        : 16;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nix_rx_vtag_action_s_s cn; */
+    /* struct cavm_nix_rx_vtag_action_s_s cn9; */
+    /* struct cavm_nix_rx_vtag_action_s_s cn96xxp1; */
+    struct cavm_nix_rx_vtag_action_s_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_48_63        : 16;
+        uint64_t vtag1_valid           : 1;  /**< [ 47: 47] Vtag 1 valid. Remaining [VTAG1_*] fields are valid when set. */
+        uint64_t vtag1_type            : 3;  /**< [ 46: 44] Vtag 1 type. See [VTAG0_TYPE]. */
+        uint64_t reserved_43           : 1;
+        uint64_t vtag1_lid             : 3;  /**< [ 42: 40] Vtag 1 layer ID enumerated by NPC_LID_E. */
+        uint64_t vtag1_relptr          : 8;  /**< [ 39: 32] Vtag 1 relative pointer. See [VTAG0_RELPTR]. */
+        uint64_t reserved_16_31        : 16;
+        uint64_t vtag0_valid           : 1;  /**< [ 15: 15] Vtag 0 valid. Remaining [VTAG0_*] fields are valid when set. */
+        uint64_t vtag0_type            : 3;  /**< [ 14: 12] Vtag 0 type. Index to NIX_AF_LF()_RX_VTAG_TYPE() entry for the receive
+                                                                 packet's VF/PF. The selected entry specifies the tag size and optional tag
+                                                                 strip/capture actions.
+
+                                                                 The VF/PF is specified by NIX_RX_ACTION_S[PF_FUNC] when
+                                                                 NIX_RX_ACTION_S[OP] != NIX_RX_ACTIONOP_E::MCAST or
+                                                                 NIX_RX_ACTIONOP_E::MIRROR, and by the NIX RX multicast/mirror replication
+                                                                 list entries otherwise. */
+        uint64_t reserved_11           : 1;
+        uint64_t vtag0_lid             : 3;  /**< [ 10:  8] Vtag 0 layer ID enumerated by NPC_LID_E. */
+        uint64_t vtag0_relptr          : 8;  /**< [  7:  0] Vtag 0 relative pointer. Byte offset from start of selected layer to first
+                                                                 tag 0 byte, i.e. first byte of tag's protocol identifier (Ethertype).
+                                                                 Must be even.
+                                                                 For example, if [VTAG0_LID] = NPC_LID_E::LB, then
+                                                                 the byte offset from packet start to the first tag 0 byte is
+                                                                 NPC_RESULT_S[LB[LPTR]] + [VTAG0_RELPTR]. */
+#else /* Word 0 - Little Endian */
+        uint64_t vtag0_relptr          : 8;  /**< [  7:  0] Vtag 0 relative pointer. Byte offset from start of selected layer to first
+                                                                 tag 0 byte, i.e. first byte of tag's protocol identifier (Ethertype).
+                                                                 Must be even.
+                                                                 For example, if [VTAG0_LID] = NPC_LID_E::LB, then
+                                                                 the byte offset from packet start to the first tag 0 byte is
+                                                                 NPC_RESULT_S[LB[LPTR]] + [VTAG0_RELPTR]. */
+        uint64_t vtag0_lid             : 3;  /**< [ 10:  8] Vtag 0 layer ID enumerated by NPC_LID_E. */
+        uint64_t reserved_11           : 1;
+        uint64_t vtag0_type            : 3;  /**< [ 14: 12] Vtag 0 type. Index to NIX_AF_LF()_RX_VTAG_TYPE() entry for the receive
+                                                                 packet's VF/PF. The selected entry specifies the tag size and optional tag
+                                                                 strip/capture actions.
+
+                                                                 The VF/PF is specified by NIX_RX_ACTION_S[PF_FUNC] when
+                                                                 NIX_RX_ACTION_S[OP] != NIX_RX_ACTIONOP_E::MCAST or
+                                                                 NIX_RX_ACTIONOP_E::MIRROR, and by the NIX RX multicast/mirror replication
+                                                                 list entries otherwise. */
+        uint64_t vtag0_valid           : 1;  /**< [ 15: 15] Vtag 0 valid. Remaining [VTAG0_*] fields are valid when set. */
+        uint64_t reserved_16_31        : 16;
+        uint64_t vtag1_relptr          : 8;  /**< [ 39: 32] Vtag 1 relative pointer. See [VTAG0_RELPTR]. */
+        uint64_t vtag1_lid             : 3;  /**< [ 42: 40] Vtag 1 layer ID enumerated by NPC_LID_E. */
+        uint64_t reserved_43           : 1;
+        uint64_t vtag1_type            : 3;  /**< [ 46: 44] Vtag 1 type. See [VTAG0_TYPE]. */
+        uint64_t vtag1_valid           : 1;  /**< [ 47: 47] Vtag 1 valid. Remaining [VTAG1_*] fields are valid when set. */
+        uint64_t reserved_48_63        : 16;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_nix_rx_vtag_action_s_cn96xxp3 cn98xx; */
+    /* struct cavm_nix_rx_vtag_action_s_s cnf95xxp1; */
+    /* struct cavm_nix_rx_vtag_action_s_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_nix_rx_vtag_action_s_cn96xxp3 f95mm; */
+    /* struct cavm_nix_rx_vtag_action_s_cn96xxp3 loki; */
 };
 
 /**
@@ -7897,7 +7931,69 @@ union cavm_nix_tx_vtag_action_s
         uint64_t reserved_58_63        : 6;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nix_tx_vtag_action_s_s cn; */
+    /* struct cavm_nix_tx_vtag_action_s_s cn9; */
+    /* struct cavm_nix_tx_vtag_action_s_s cn96xxp1; */
+    struct cavm_nix_tx_vtag_action_s_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_58_63        : 6;
+        uint64_t vtag1_def             : 10; /**< [ 57: 48] Vtag 1 definition. Index to NIX_AF_TX_VTAG_DEF()_CTL/DATA entry that
+                                                                 defines the tag size and data to insert or replace. */
+        uint64_t reserved_46_47        : 2;
+        uint64_t vtag1_op              : 2;  /**< [ 45: 44] Vtag 1 operation enumerated by NIX_TX_VTAGOP_E. */
+        uint64_t reserved_43           : 1;
+        uint64_t vtag1_lid             : 3;  /**< [ 42: 40] Vtag 1 layer ID enumerated by NPC_LID_E. */
+        uint64_t vtag1_relptr          : 8;  /**< [ 39: 32] Vtag 1 relative pointer. See [VTAG0_RELPTR]. */
+        uint64_t reserved_26_31        : 6;
+        uint64_t vtag0_def             : 10; /**< [ 25: 16] Vtag 0 definition. Index to NIX_AF_TX_VTAG_DEF()_CTL/DATA entry that
+                                                                 defines the tag size and data to insert or replace. */
+        uint64_t reserved_14_15        : 2;
+        uint64_t vtag0_op              : 2;  /**< [ 13: 12] Vtag 0 operation enumerated by NIX_TX_VTAGOP_E. */
+        uint64_t reserved_11           : 1;
+        uint64_t vtag0_lid             : 3;  /**< [ 10:  8] Vtag 0 layer ID enumerated by NPC_LID_E. */
+        uint64_t vtag0_relptr          : 8;  /**< [  7:  0] Vtag 0 relative pointer. Byte offset from start of selected layer to first
+                                                                 tag 0 byte, i.e. first byte of tag's protocol identifier (Ethertype).
+                                                                 Must be even.
+
+                                                                 Note the layer pointers in NPC_RESULT_S are offset by 8 bytes to
+                                                                 account for NIX_INST_HDR_S, which precedes the packet header supplied to
+                                                                 NPC but is not included in the transmitted packet.
+                                                                 For example, if [VTAG0_LID] = NPC_LID_E::LB, then the byte offset from
+                                                                 packet start (excluding NIX_INST_HDR_S) to the first tag 0 byte is
+                                                                 NPC_RESULT_S[LB[LPTR]] - 8 + [VTAG0_RELPTR]. */
+#else /* Word 0 - Little Endian */
+        uint64_t vtag0_relptr          : 8;  /**< [  7:  0] Vtag 0 relative pointer. Byte offset from start of selected layer to first
+                                                                 tag 0 byte, i.e. first byte of tag's protocol identifier (Ethertype).
+                                                                 Must be even.
+
+                                                                 Note the layer pointers in NPC_RESULT_S are offset by 8 bytes to
+                                                                 account for NIX_INST_HDR_S, which precedes the packet header supplied to
+                                                                 NPC but is not included in the transmitted packet.
+                                                                 For example, if [VTAG0_LID] = NPC_LID_E::LB, then the byte offset from
+                                                                 packet start (excluding NIX_INST_HDR_S) to the first tag 0 byte is
+                                                                 NPC_RESULT_S[LB[LPTR]] - 8 + [VTAG0_RELPTR]. */
+        uint64_t vtag0_lid             : 3;  /**< [ 10:  8] Vtag 0 layer ID enumerated by NPC_LID_E. */
+        uint64_t reserved_11           : 1;
+        uint64_t vtag0_op              : 2;  /**< [ 13: 12] Vtag 0 operation enumerated by NIX_TX_VTAGOP_E. */
+        uint64_t reserved_14_15        : 2;
+        uint64_t vtag0_def             : 10; /**< [ 25: 16] Vtag 0 definition. Index to NIX_AF_TX_VTAG_DEF()_CTL/DATA entry that
+                                                                 defines the tag size and data to insert or replace. */
+        uint64_t reserved_26_31        : 6;
+        uint64_t vtag1_relptr          : 8;  /**< [ 39: 32] Vtag 1 relative pointer. See [VTAG0_RELPTR]. */
+        uint64_t vtag1_lid             : 3;  /**< [ 42: 40] Vtag 1 layer ID enumerated by NPC_LID_E. */
+        uint64_t reserved_43           : 1;
+        uint64_t vtag1_op              : 2;  /**< [ 45: 44] Vtag 1 operation enumerated by NIX_TX_VTAGOP_E. */
+        uint64_t reserved_46_47        : 2;
+        uint64_t vtag1_def             : 10; /**< [ 57: 48] Vtag 1 definition. Index to NIX_AF_TX_VTAG_DEF()_CTL/DATA entry that
+                                                                 defines the tag size and data to insert or replace. */
+        uint64_t reserved_58_63        : 6;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_nix_tx_vtag_action_s_cn96xxp3 cn98xx; */
+    /* struct cavm_nix_tx_vtag_action_s_s cnf95xxp1; */
+    /* struct cavm_nix_tx_vtag_action_s_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_nix_tx_vtag_action_s_cn96xxp3 f95mm; */
+    /* struct cavm_nix_tx_vtag_action_s_cn96xxp3 loki; */
 };
 
 /**
@@ -8150,7 +8246,85 @@ union cavm_nixx_af_aq_done
         uint64_t reserved_20_63        : 44;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_aq_done_s cn; */
+    /* struct cavm_nixx_af_aq_done_s cn9; */
+    /* struct cavm_nixx_af_aq_done_s cn96xxp1; */
+    struct cavm_nixx_af_aq_done_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_20_63        : 44;
+        uint64_t done                  : 20; /**< [ 19:  0](R/W/H) Done count. When NIX_AQ_INST_S[DONEINT] is set and that instruction completes,
+                                                                 NIX_AF_AQ_DONE[DONE] is incremented. Writes to this field are for diagnostic
+                                                                 use only; instead software writes NIX_AF_AQ_DONE_ACK with the number of
+                                                                 decrements for this field.
+
+                                                                 Interrupts are sent as follows:
+
+                                                                 * When NIX_AF_AQ_DONE[DONE] = 0, then no results are pending, the interrupt
+                                                                 coalescing timer (NIX_AF_AQ_DONE_TIMER[COUNT]) is held to zero, and an
+                                                                 interrupt is not sent.
+
+                                                                 * When NIX_AF_AQ_DONE[DONE] != 0, then NIX_AF_AQ_DONE_TIMER[COUNT]
+                                                                 counts every microsecond. If the counter is \>= NIX_AF_AQ_DONE_WAIT[TIME_WAIT],
+                                                                 or NIX_AF_AQ_DONE[DONE] \>= NIX_AF_AQ_DONE_WAIT[NUM_WAIT], i.e. enough time
+                                                                 has passed or enough results have arrived, then the interrupt is sent.
+                                                                 Otherwise, it is not sent due to coalescing.
+
+                                                                 * When NIX_AF_AQ_DONE_ACK is written (or NIX_AF_AQ_DONE is written but this
+                                                                 is not typical), NIX_AF_AQ_DONE_TIMER[COUNT] restarts. Note after
+                                                                 decrementing this interrupt equation is recomputed, for example if
+                                                                 NIX_AF_AQ_DONE[DONE] \>= NIX_AF_AQ_DONE_WAIT[NUM_WAIT] and because the timer
+                                                                 is zero, the interrupt will be resent immediately. (This covers the race
+                                                                 case between software acknowledging an interrupt and a result returning).
+
+                                                                 * When NIX_AF_AQ_DONE_ENA_W1S[DONE] = 0, interrupts are not sent, but the
+                                                                 counting described above still occurs.
+
+                                                                 AQ instructions complete in order.
+
+                                                                 Software is responsible for making sure [DONE] does not overflow; for example by
+                                                                 ensuring there are not more than 2^20-1 instructions in flight that may request
+                                                                 interrupts. */
+#else /* Word 0 - Little Endian */
+        uint64_t done                  : 20; /**< [ 19:  0](R/W/H) Done count. When NIX_AQ_INST_S[DONEINT] is set and that instruction completes,
+                                                                 NIX_AF_AQ_DONE[DONE] is incremented. Writes to this field are for diagnostic
+                                                                 use only; instead software writes NIX_AF_AQ_DONE_ACK with the number of
+                                                                 decrements for this field.
+
+                                                                 Interrupts are sent as follows:
+
+                                                                 * When NIX_AF_AQ_DONE[DONE] = 0, then no results are pending, the interrupt
+                                                                 coalescing timer (NIX_AF_AQ_DONE_TIMER[COUNT]) is held to zero, and an
+                                                                 interrupt is not sent.
+
+                                                                 * When NIX_AF_AQ_DONE[DONE] != 0, then NIX_AF_AQ_DONE_TIMER[COUNT]
+                                                                 counts every microsecond. If the counter is \>= NIX_AF_AQ_DONE_WAIT[TIME_WAIT],
+                                                                 or NIX_AF_AQ_DONE[DONE] \>= NIX_AF_AQ_DONE_WAIT[NUM_WAIT], i.e. enough time
+                                                                 has passed or enough results have arrived, then the interrupt is sent.
+                                                                 Otherwise, it is not sent due to coalescing.
+
+                                                                 * When NIX_AF_AQ_DONE_ACK is written (or NIX_AF_AQ_DONE is written but this
+                                                                 is not typical), NIX_AF_AQ_DONE_TIMER[COUNT] restarts. Note after
+                                                                 decrementing this interrupt equation is recomputed, for example if
+                                                                 NIX_AF_AQ_DONE[DONE] \>= NIX_AF_AQ_DONE_WAIT[NUM_WAIT] and because the timer
+                                                                 is zero, the interrupt will be resent immediately. (This covers the race
+                                                                 case between software acknowledging an interrupt and a result returning).
+
+                                                                 * When NIX_AF_AQ_DONE_ENA_W1S[DONE] = 0, interrupts are not sent, but the
+                                                                 counting described above still occurs.
+
+                                                                 AQ instructions complete in order.
+
+                                                                 Software is responsible for making sure [DONE] does not overflow; for example by
+                                                                 ensuring there are not more than 2^20-1 instructions in flight that may request
+                                                                 interrupts. */
+        uint64_t reserved_20_63        : 44;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_nixx_af_aq_done_cn96xxp3 cn98xx; */
+    /* struct cavm_nixx_af_aq_done_s cnf95xxp1; */
+    /* struct cavm_nixx_af_aq_done_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_nixx_af_aq_done_cn96xxp3 f95mm; */
+    /* struct cavm_nixx_af_aq_done_cn96xxp3 loki; */
 };
 typedef union cavm_nixx_af_aq_done cavm_nixx_af_aq_done_t;
 
@@ -10566,6 +10740,9 @@ static inline uint64_t CAVM_NIXX_AF_LFX_CFG(uint64_t a, uint64_t b)
  * This register specifies the base AF IOVA of LF's completion interrupt
  * context table in NDC/LLC/DRAM. The table consists of NIX_AF_CONST2[CINTS]
  * contiguous NIX_CINT_HW_S structures.
+ *
+ * After writing to this register, software should read it back to ensure that the
+ * write has completed before accessing any NIX_LF_CINT()_* registers.
  */
 union cavm_nixx_af_lfx_cints_base
 {
@@ -10620,6 +10797,9 @@ static inline uint64_t CAVM_NIXX_AF_LFX_CINTS_BASE(uint64_t a, uint64_t b)
  * This register controls access to the LF's completion interrupt context table in
  * NDC/LLC/DRAM. The table consists of NIX_AF_CONST2[CINTS] contiguous NIX_CINT_HW_S
  * structures. The size of each structure is 1 \<\< NIX_AF_CONST3[CINT_LOG2BYTES].
+ *
+ * After writing to this register, software should read it back to ensure that the
+ * write has completed before accessing any NIX_LF_CINT()_* registers.
  */
 union cavm_nixx_af_lfx_cints_cfg
 {
@@ -10875,9 +11055,10 @@ union cavm_nixx_af_lfx_lockx
         uint64_t bit_ena               : 32; /**< [ 63: 32](R/W) Lockdown bit enable. Each set bit indicates that the transmitted packet's corresponding
                                                                  bit number will be compared against [DATA]. */
         uint64_t data                  : 32; /**< [ 31:  0](R/W) Lockdown data. If corresponding [BIT_ENA] is set and
-                                                                 NIX_AF_LF()_TX_CFG[LOCK_ENA] is set, outbound packet data must match the
-                                                                 [DATA] bit or the packet will be dropped. Bytes are numbered in little
-                                                                 endian form, with byte 0 the first byte onto the wire:
+                                                                 NIX_AF_LF()_TX_CFG[LOCK_ENA] is set, outbound packet data must be present
+                                                                 in the packet and match the [DATA] bit, else the packet will be dropped.
+                                                                 Bytes are numbered in little endian form, with byte 0 the first byte onto
+                                                                 the wire:
                                                                  _ If LOCK(0)[BIT_ENA]\<7:0\> set, LOCK(0)[DATA]\<7:0\> = packet byte 0.
                                                                  _ If LOCK(0)[BIT_ENA]\<15:8\> set, LOCK(0)[DATA]\<15:8\> = packet byte 1.
                                                                  _ If LOCK(0)[BIT_ENA]\<23:16\> set, LOCK(0)[DATA]\<23:16\> = packet byte 2.
@@ -10896,9 +11077,10 @@ union cavm_nixx_af_lfx_lockx
                                                                  locked down, a lockdown violation is detected and the packet is dropped. */
 #else /* Word 0 - Little Endian */
         uint64_t data                  : 32; /**< [ 31:  0](R/W) Lockdown data. If corresponding [BIT_ENA] is set and
-                                                                 NIX_AF_LF()_TX_CFG[LOCK_ENA] is set, outbound packet data must match the
-                                                                 [DATA] bit or the packet will be dropped. Bytes are numbered in little
-                                                                 endian form, with byte 0 the first byte onto the wire:
+                                                                 NIX_AF_LF()_TX_CFG[LOCK_ENA] is set, outbound packet data must be present
+                                                                 in the packet and match the [DATA] bit, else the packet will be dropped.
+                                                                 Bytes are numbered in little endian form, with byte 0 the first byte onto
+                                                                 the wire:
                                                                  _ If LOCK(0)[BIT_ENA]\<7:0\> set, LOCK(0)[DATA]\<7:0\> = packet byte 0.
                                                                  _ If LOCK(0)[BIT_ENA]\<15:8\> set, LOCK(0)[DATA]\<15:8\> = packet byte 1.
                                                                  _ If LOCK(0)[BIT_ENA]\<23:16\> set, LOCK(0)[DATA]\<23:16\> = packet byte 2.
@@ -10959,6 +11141,9 @@ static inline uint64_t CAVM_NIXX_AF_LFX_LOCKX(uint64_t a, uint64_t b, uint64_t c
  * This register specifies the base AF IOVA of LF's queue interrupt context
  * table in NDC/LLC/DRAM. The table consists of NIX_AF_CONST2[QINTS] contiguous
  * NIX_QINT_HW_S structures.
+ *
+ * After writing to this register, software should read it back to ensure that the
+ * write has completed before accessing any NIX_LF_QINT()_* registers.
  */
 union cavm_nixx_af_lfx_qints_base
 {
@@ -11013,6 +11198,9 @@ static inline uint64_t CAVM_NIXX_AF_LFX_QINTS_BASE(uint64_t a, uint64_t b)
  * This register controls access to the LF's queue interrupt context table in
  * NDC/LLC/DRAM. The table consists of NIX_AF_CONST2[QINTS] contiguous NIX_QINT_HW_S
  * structures. The size of each structure is 1 \<\< NIX_AF_CONST3[QINT_LOG2BYTES].
+ *
+ * After writing to this register, software should read it back to ensure that the
+ * write has completed before accessing any NIX_LF_QINT()_* registers.
  */
 union cavm_nixx_af_lfx_qints_cfg
 {
@@ -11484,14 +11672,76 @@ union cavm_nixx_af_lfx_rss_grpx
 
                                                                  where:
 
-                                                                 _ rss_adder\<7:0\> = flow_tag\<7:0\> ^ flow_tag\<15:8\> ^ flow_tag\<23:16\> ^ flow_tag\<31:24\>
-
-                                                                 The AF IOVA of the packet's final NIX_RSSE_S structure is computed as follows:
                                                                  \<pre\>
                                                                  if (NIX_AF_LF()_RSS_CFG[ADDER_IS_TAG_LSB])
                                                                     rss_adder\<7:0\> = flow_tag\<7:0\>;
                                                                  else
                                                                     rss_adder\<7:0\> = flow_tag\<7:0\> ^ flow_tag\<15:8\> ^ flow_tag\<23:16\> ^ flow_tag\<31:24\>;
+                                                                 \</pre\>
+
+                                                                 The AF IOVA of the packet's final NIX_RSSE_S structure is computed as follows:
+                                                                 \<pre\>
+                                                                 rsse_offset = ([OFFSET] + rss_adder\<[SIZEM1]:0\>) % (1 \<\< (NIX_AF_LF()_RSS_CFG[SIZE] + 8));
+                                                                 rsse_iova = NIX_AF_LF()_RSS_BASE + 4*rsse_offset;
+                                                                 \</pre\> */
+        uint64_t reserved_11_15        : 5;
+        uint64_t offset                : 11; /**< [ 10:  0](R/W) Offset (number of four-byte NIX_RSSE_S structures) into RSS table from
+                                                                 NIX_AF_LF()_RSS_BASE. See [SIZEM1]. */
+#else /* Word 0 - Little Endian */
+        uint64_t offset                : 11; /**< [ 10:  0](R/W) Offset (number of four-byte NIX_RSSE_S structures) into RSS table from
+                                                                 NIX_AF_LF()_RSS_BASE. See [SIZEM1]. */
+        uint64_t reserved_11_15        : 5;
+        uint64_t sizem1                : 3;  /**< [ 18: 16](R/W) Number of RSS adder bits minus one to add in RSS calculation.
+                                                                 0x0 = rss_adder\<0\> included in RSS.
+                                                                 0x1 = rss_adder\<1:0\> included in RSS.
+                                                                 0x2 = rss_adder\<2:0\> included in RSS.
+                                                                 0x3 = rss_adder\<3:0\> included in RSS.
+                                                                 0x4 = rss_adder\<4:0\> included in RSS.
+                                                                 0x5 = rss_adder\<5:0\> included in RSS.
+                                                                 0x6 = rss_adder\<6:0\> included in RSS.
+                                                                 0x7 = rss_adder\<7:0\> included in RSS.
+
+                                                                 where:
+
+                                                                 \<pre\>
+                                                                 if (NIX_AF_LF()_RSS_CFG[ADDER_IS_TAG_LSB])
+                                                                    rss_adder\<7:0\> = flow_tag\<7:0\>;
+                                                                 else
+                                                                    rss_adder\<7:0\> = flow_tag\<7:0\> ^ flow_tag\<15:8\> ^ flow_tag\<23:16\> ^ flow_tag\<31:24\>;
+                                                                 \</pre\>
+
+                                                                 The AF IOVA of the packet's final NIX_RSSE_S structure is computed as follows:
+                                                                 \<pre\>
+                                                                 rsse_offset = ([OFFSET] + rss_adder\<[SIZEM1]:0\>) % (1 \<\< (NIX_AF_LF()_RSS_CFG[SIZE] + 8));
+                                                                 rsse_iova = NIX_AF_LF()_RSS_BASE + 4*rsse_offset;
+                                                                 \</pre\> */
+        uint64_t reserved_19_63        : 45;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_nixx_af_lfx_rss_grpx_cn96xxp3 cn98xx; */
+    /* struct cavm_nixx_af_lfx_rss_grpx_s cnf95xxp1; */
+    struct cavm_nixx_af_lfx_rss_grpx_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_19_63        : 45;
+        uint64_t sizem1                : 3;  /**< [ 18: 16](R/W) Number of RSS adder bits minus one to add in RSS calculation.
+                                                                 0x0 = rss_adder\<0\> included in RSS.
+                                                                 0x1 = rss_adder\<1:0\> included in RSS.
+                                                                 0x2 = rss_adder\<2:0\> included in RSS.
+                                                                 0x3 = rss_adder\<3:0\> included in RSS.
+                                                                 0x4 = rss_adder\<4:0\> included in RSS.
+                                                                 0x5 = rss_adder\<5:0\> included in RSS.
+                                                                 0x6 = rss_adder\<6:0\> included in RSS.
+                                                                 0x7 = rss_adder\<7:0\> included in RSS.
+
+                                                                 where:
+
+                                                                 _ rss_adder\<7:0\> = flow_tag\<7:0\> ^ flow_tag\<15:8\> ^ flow_tag\<23:16\> ^ flow_tag\<31:24\>
+
+                                                                 The AF IOVA of the packet's final NIX_RSSE_S structure is computed as follows:
+                                                                 \<pre\>
+                                                                 rsse_offset = ([OFFSET] + rss_adder\<[SIZEM1]:0\>) % (1 \<\< (NIX_AF_LF()_RSS_CFG[SIZE] + 8));
+                                                                 rsse_iova = NIX_AF_LF()_RSS_BASE + 4*rsse_offset;
                                                                  \</pre\> */
         uint64_t reserved_11_15        : 5;
         uint64_t offset                : 11; /**< [ 10:  0](R/W) Offset (number of four-byte NIX_RSSE_S structures) into RSS table from
@@ -11516,18 +11766,14 @@ union cavm_nixx_af_lfx_rss_grpx
 
                                                                  The AF IOVA of the packet's final NIX_RSSE_S structure is computed as follows:
                                                                  \<pre\>
-                                                                 if (NIX_AF_LF()_RSS_CFG[ADDER_IS_TAG_LSB])
-                                                                    rss_adder\<7:0\> = flow_tag\<7:0\>;
-                                                                 else
-                                                                    rss_adder\<7:0\> = flow_tag\<7:0\> ^ flow_tag\<15:8\> ^ flow_tag\<23:16\> ^ flow_tag\<31:24\>;
+                                                                 rsse_offset = ([OFFSET] + rss_adder\<[SIZEM1]:0\>) % (1 \<\< (NIX_AF_LF()_RSS_CFG[SIZE] + 8));
+                                                                 rsse_iova = NIX_AF_LF()_RSS_BASE + 4*rsse_offset;
                                                                  \</pre\> */
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
-    } cn96xxp3;
-    /* struct cavm_nixx_af_lfx_rss_grpx_cn96xxp3 cn98xx; */
-    /* struct cavm_nixx_af_lfx_rss_grpx_s cnf95xx; */
-    /* struct cavm_nixx_af_lfx_rss_grpx_s f95mm; */
-    /* struct cavm_nixx_af_lfx_rss_grpx_s loki; */
+    } cnf95xxp2;
+    /* struct cavm_nixx_af_lfx_rss_grpx_cnf95xxp2 f95mm; */
+    /* struct cavm_nixx_af_lfx_rss_grpx_cn96xxp3 loki; */
 };
 typedef union cavm_nixx_af_lfx_rss_grpx cavm_nixx_af_lfx_rss_grpx_t;
 
@@ -11910,7 +12156,7 @@ union cavm_nixx_af_lfx_rx_cfg
 #endif /* Word 0 - End */
     } cnf95xxp1;
     /* struct cavm_nixx_af_lfx_rx_cfg_s cnf95xxp2; */
-    /* struct cavm_nixx_af_lfx_rx_cfg_cnf95xxp1 f95mm; */
+    /* struct cavm_nixx_af_lfx_rx_cfg_s f95mm; */
     /* struct cavm_nixx_af_lfx_rx_cfg_s loki; */
 };
 typedef union cavm_nixx_af_lfx_rx_cfg cavm_nixx_af_lfx_rx_cfg_t;
@@ -17774,7 +18020,10 @@ static inline uint64_t CAVM_NIXX_AF_RX_CHANX_CFG(uint64_t a, uint64_t b)
 /**
  * Register (RVU_PF_BAR0) nix#_af_rx_cpt#_credit
  *
- * NIX AF Receive CPT Credit Register
+ * INTERNAL: NIX AF Receive CPT Credit Register
+ *
+ * Internal:
+ * Not used; no IPSEC fast-path.
  */
 union cavm_nixx_af_rx_cptx_credit
 {
@@ -17819,7 +18068,22 @@ union cavm_nixx_af_rx_cptx_credit
         uint64_t reserved_22_63        : 42;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_af_rx_cptx_credit_s cn; */
+    /* struct cavm_nixx_af_rx_cptx_credit_s cn9; */
+    /* struct cavm_nixx_af_rx_cptx_credit_s cn96xx; */
+    /* struct cavm_nixx_af_rx_cptx_credit_s cn98xx; */
+    /* struct cavm_nixx_af_rx_cptx_credit_s cnf95xxp1; */
+    struct cavm_nixx_af_rx_cptx_credit_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_22_63        : 42;
+        uint64_t inst_cred_cnt         : 22; /**< [ 21:  0](R/W/H) Reserved. */
+#else /* Word 0 - Little Endian */
+        uint64_t inst_cred_cnt         : 22; /**< [ 21:  0](R/W/H) Reserved. */
+        uint64_t reserved_22_63        : 42;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_nixx_af_rx_cptx_credit_cnf95xxp2 f95mm; */
+    /* struct cavm_nixx_af_rx_cptx_credit_cnf95xxp2 loki; */
 };
 typedef union cavm_nixx_af_rx_cptx_credit cavm_nixx_af_rx_cptx_credit_t;
 
@@ -17851,22 +18115,10 @@ static inline uint64_t CAVM_NIXX_AF_RX_CPTX_CREDIT(uint64_t a, uint64_t b)
 /**
  * Register (RVU_PF_BAR0) nix#_af_rx_cpt#_inst_qsel
  *
- * NIX AF Receive CPT Instruction Queue Select Register
- * Selects the CPT queue to which instructions (CPT_INST_S) are sent.
- * Internal:
- * NIX sends CPT_INST_S to the CPT_LF_NQ() physical address for [PF_FUNC] and [SLOT]:
- * \<pre\>
- * // CPT_LF_NQ() physical address:
- * chip_pa_defs::io_rvu2a_t cpt_addr;
- * cpt_addr = RVU_BAR_E::RVU_PF()_FUNC()_BAR2(pf, func);
- * cpt_addr.block = RVU_BLOCK_ADDR_E::CPT()({a}); // {a} = CPT index
- * cpt_addr.slot = [SLOT];
- * cpt_addr.offset = `CPT_LF_NQX__BASE;
+ * INTERNAL: NIX AF Receive CPT Instruction Queue Select Register
  *
- * // NDC/NCBI command:
- * ncbi_cmd.paddr = 1; // Physical address
- * ncbi_cmd.addr = cpt_addr;
- * \</pre\>
+ * Internal:
+ * Not used; no IPSEC fast-path.
  */
 union cavm_nixx_af_rx_cptx_inst_qsel
 {
@@ -17905,9 +18157,20 @@ union cavm_nixx_af_rx_cptx_inst_qsel
     } cn96xxp3;
     /* struct cavm_nixx_af_rx_cptx_inst_qsel_cn96xxp3 cn98xx; */
     /* struct cavm_nixx_af_rx_cptx_inst_qsel_s cnf95xxp1; */
-    /* struct cavm_nixx_af_rx_cptx_inst_qsel_cn96xxp3 cnf95xxp2; */
-    /* struct cavm_nixx_af_rx_cptx_inst_qsel_cn96xxp3 f95mm; */
-    /* struct cavm_nixx_af_rx_cptx_inst_qsel_cn96xxp3 loki; */
+    struct cavm_nixx_af_rx_cptx_inst_qsel_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_24_63        : 40;
+        uint64_t pf_func               : 16; /**< [ 23:  8](R/W) Reserved. */
+        uint64_t slot                  : 8;  /**< [  7:  0](R/W) Reserved. */
+#else /* Word 0 - Little Endian */
+        uint64_t slot                  : 8;  /**< [  7:  0](R/W) Reserved. */
+        uint64_t pf_func               : 16; /**< [ 23:  8](R/W) Reserved. */
+        uint64_t reserved_24_63        : 40;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_nixx_af_rx_cptx_inst_qsel_cnf95xxp2 f95mm; */
+    /* struct cavm_nixx_af_rx_cptx_inst_qsel_cnf95xxp2 loki; */
 };
 typedef union cavm_nixx_af_rx_cptx_inst_qsel cavm_nixx_af_rx_cptx_inst_qsel_t;
 
@@ -17941,7 +18204,7 @@ static inline uint64_t CAVM_NIXX_AF_RX_CPTX_INST_QSEL(uint64_t a, uint64_t b)
  *
  * NIX AF Receive Inner IPv4 Header Definition Register
  * Defines layer information in NPC_RESULT_S to identify an inner IPv4 header.
- * Typically the same as NPC_PCK_DEF_IIP4.
+ * Typically the same as NPC_AF_PCK_DEF_IIP4.
  */
 union cavm_nixx_af_rx_def_iip4
 {
@@ -18350,7 +18613,7 @@ static inline uint64_t CAVM_NIXX_AF_RX_DEF_IUDP(uint64_t a)
  *
  * NIX AF Receive Outer IPv4 Header Definition Register
  * Defines layer information in NPC_RESULT_S to identify an outer IPv4 L3 header.
- * Typically the same as NPC_PCK_DEF_OIP4.
+ * Typically the same as NPC_AF_PCK_DEF_OIP4.
  */
 union cavm_nixx_af_rx_def_oip4
 {
@@ -18413,7 +18676,7 @@ static inline uint64_t CAVM_NIXX_AF_RX_DEF_OIP4(uint64_t a)
  *
  * NIX AF Receive Outer IPv6 Header Definition Register
  * Defines layer information in NPC_RESULT_S to identify an outer IPv6 header.
- * Typically the same as NPC_PCK_DEF_OIP6.
+ * Typically the same as NPC_AF_PCK_DEF_OIP6.
  */
 union cavm_nixx_af_rx_def_oip6
 {
@@ -18476,7 +18739,7 @@ static inline uint64_t CAVM_NIXX_AF_RX_DEF_OIP6(uint64_t a)
  *
  * NIX AF Receive Outer L2 Header Definition Register
  * Defines layer information in NPC_RESULT_S to identify an outer L2/Ethernet
- * header. Typically the same as NPC_PCK_DEF_OL2.
+ * header. Typically the same as NPC_AF_PCK_DEF_OL2.
  */
 union cavm_nixx_af_rx_def_ol2
 {
@@ -18726,7 +18989,8 @@ static inline uint64_t CAVM_NIXX_AF_RX_DEF_OUDP(uint64_t a)
  * NIX AF Receive Flow Key Algorithm Field Registers
  * A flow key algorithm defines how the 40-byte FLOW_KEY is formed from the received
  * packet header. FLOW_KEY is formed using up to five header fields (this register's
- * last index) with up to 16 bytes per field.
+ * last index) with up to 16 bytes per field. Header fields must not overlap in
+ * FLOW_KEY.
  *
  * The algorithm (index {a} (ALG) of these registers) is selected by
  * NIX_RX_ACTION_S[FLOW_KEY_ALG] from the packet's NPC_RESULT_S[ACTION].
@@ -22129,8 +22393,7 @@ static inline uint64_t CAVM_NIXX_AF_SQM_BP_TESTX(uint64_t a, uint64_t b)
 /**
  * Register (RVU_PF_BAR0) nix#_af_sqm_dbg_ctl_status
  *
- * INTERNAL: NIX AF SQM Debug Register
- *
+ * NIX AF SQM Debug Register
  * This register is for SQM diagnostic use only.
  */
 union cavm_nixx_af_sqm_dbg_ctl_status
@@ -22257,7 +22520,7 @@ union cavm_nixx_af_sqm_dbg_ctl_status
         uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
         uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
         uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset. */
         uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
         uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
         uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
@@ -22267,7 +22530,7 @@ union cavm_nixx_af_sqm_dbg_ctl_status
         uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
         uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
         uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset. */
         uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
         uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
         uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
@@ -22291,7 +22554,76 @@ union cavm_nixx_af_sqm_dbg_ctl_status
         uint64_t reserved_26_63        : 38;
 #endif /* Word 0 - End */
     } cn96xxp3;
-    /* struct cavm_nixx_af_sqm_dbg_ctl_status_s cn98xx; */
+    struct cavm_nixx_af_sqm_dbg_ctl_status_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_28_63        : 36;
+        uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Conservatively limits SQE prefetches.
+                                                                 Internal:
+                                                                 Bug fix for 37300. */
+        uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enables Sticky Engine use.
+                                                                 Internal:
+                                                                 Performance optimization for one SMQ configurations. */
+        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on SQE reads by engine.
+                                                                 Internal:
+                                                                 Performance optimization that reduced DSE's SQE read miss rate. */
+        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable multi Q to Single Q transition in the engine while in sticky mode.
+                                                                 Internal:
+                                                                 This handles for the corner case where the SMQ linked-list transitions from 2Q
+                                                                 to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
+                                                                 details. */
+        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
+                                                                 specified by the engine. This sacrifices DWRR fairness in certain cases, but
+                                                                 guarantees linked-list correctness for certain dynamic sticky to non-sticky
+                                                                 transitions.
+
+                                                                 Internal:
+                                                                 See bug 36650 for more details. */
+        uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
+        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
+        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
+        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
+#else /* Word 0 - Little Endian */
+        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset. */
+        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
+        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
+        uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
+        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
+                                                                 specified by the engine. This sacrifices DWRR fairness in certain cases, but
+                                                                 guarantees linked-list correctness for certain dynamic sticky to non-sticky
+                                                                 transitions.
+
+                                                                 Internal:
+                                                                 See bug 36650 for more details. */
+        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable multi Q to Single Q transition in the engine while in sticky mode.
+                                                                 Internal:
+                                                                 This handles for the corner case where the SMQ linked-list transitions from 2Q
+                                                                 to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
+                                                                 details. */
+        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on SQE reads by engine.
+                                                                 Internal:
+                                                                 Performance optimization that reduced DSE's SQE read miss rate. */
+        uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enables Sticky Engine use.
+                                                                 Internal:
+                                                                 Performance optimization for one SMQ configurations. */
+        uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Conservatively limits SQE prefetches.
+                                                                 Internal:
+                                                                 Bug fix for 37300. */
+        uint64_t reserved_28_63        : 36;
+#endif /* Word 0 - End */
+    } cn98xx;
     /* struct cavm_nixx_af_sqm_dbg_ctl_status_cn96xxp1 cnf95xxp1; */
     struct cavm_nixx_af_sqm_dbg_ctl_status_cnf95xxp2
     {
@@ -22305,7 +22637,7 @@ union cavm_nixx_af_sqm_dbg_ctl_status
         uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
         uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
         uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset. */
         uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
         uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
         uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
@@ -22315,7 +22647,7 @@ union cavm_nixx_af_sqm_dbg_ctl_status
         uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
         uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
         uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset. */
         uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
         uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
         uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
@@ -31959,7 +32291,7 @@ union cavm_nixx_lf_err_int
     /* struct cavm_nixx_lf_err_int_s cn9; */
     /* struct cavm_nixx_lf_err_int_s cn96xx; */
     /* struct cavm_nixx_lf_err_int_s cn98xx; */
-    struct cavm_nixx_lf_err_int_cnf95xx
+    struct cavm_nixx_lf_err_int_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_30_63        : 34;
@@ -32048,9 +32380,99 @@ union cavm_nixx_lf_err_int
         uint64_t cint_fault            : 1;  /**< [ 29: 29](R/W1C/H) Memory fault on NIX_CINT_HW_S read or write. */
         uint64_t reserved_30_63        : 34;
 #endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_nixx_lf_err_int_cnf95xx f95mm; */
-    /* struct cavm_nixx_lf_err_int_cnf95xx loki; */
+    } cnf95xxp1;
+    struct cavm_nixx_lf_err_int_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_30_63        : 34;
+        uint64_t cint_fault            : 1;  /**< [ 29: 29](R/W1C/H) Memory fault on NIX_CINT_HW_S read or write. */
+        uint64_t qint_fault            : 1;  /**< [ 28: 28](R/W1C/H) Memory fault on NIX_QINT_HW_S read or write. */
+        uint64_t reserved_26_27        : 2;
+        uint64_t cq_oor                : 1;  /**< [ 25: 25](R/W1C/H) CQ out of range. The CQ index of a send/receive CQE write or
+                                                                 NIX_LF_CQ_OP_* access was greater than
+                                                                 NIX_AF_LF()_CQS_CFG[MAX_QUEUESM1]. */
+        uint64_t cq_disabled           : 1;  /**< [ 24: 24](R/W1C/H) CQ disabled. NIX_CQ_CTX_S[ENA] was clear for the CQ of a send/receive CQE
+                                                                 write or NIX_LF_CQ_OP_* access. */
+        uint64_t reserved_21_23        : 3;
+        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1C/H) Reserved in CNXXXX.
+                                                                 Internal:
+                                                                 Not used; no IPSEC fast-path. */
+        uint64_t reserved_15_19        : 5;
+        uint64_t rss_err               : 1;  /**< [ 14: 14](R/W1C/H) RSSE Table entry was disabled or the rsse_offset was larger than the programmed size. */
+        uint64_t rx_wqe_fault          : 1;  /**< [ 13: 13](R/W1C/H) Memory fault on receive packet WQE write to LLC/DRAM. */
+        uint64_t rq_oor                : 1;  /**< [ 12: 12](R/W1C/H) Packet receive or NIX_LF_RQ_OP_* access to out-of-range RQ. The
+                                                                 packet's RQ index was greater than NIX_AF_LF()_RQS_CFG[MAX_QUEUESM1]. The RQ
+                                                                 index for a received packet is obtained as follows:
+                                                                 * When NIX_RX_ACTION_S[OP] = NIX_RX_ACTIONOP_E::UCAST or
+                                                                 NIX_RX_ACTIONOP_E::UCAST_IPSEC, RQ = NIX_RX_ACTION_S[INDEX].
+                                                                 * For RSS, NIX_RSSE_S[RQ].
+                                                                 * For multicast or mirror packet with NIX_RX_MCE_S[OP] = NIX_RX_MCOP_E::RQ,
+                                                                 RQ = NIX_RX_MCE_S[INDEX]. */
+        uint64_t rq_disabled           : 1;  /**< [ 11: 11](R/W1C/H) Packet receive or NIX_LF_RQ_OP_* access to a disabled RQ;
+                                                                 NIX_RQ_CTX_S[ENA] was clear for selected RQ. See [RQ_OOR] for RQ
+                                                                 selection. */
+        uint64_t send_sg_fault         : 1;  /**< [ 10: 10](R/W1C/H) Memory fault on packet data read for NIX_SEND_SG_S. */
+        uint64_t send_jump_fault       : 1;  /**< [  9:  9](R/W1C/H) Memory fault on send descriptor read at or beyond NIX_SEND_JUMP_S[ADDR]. */
+        uint64_t sq_oor                : 1;  /**< [  8:  8](R/W1C/H) LMT store or NIX_LF_SQ_OP_* access to out-of-range SQ. The SQ index was
+                                                                 greater than NIX_AF_LF()_SQS_CFG[MAX_QUEUESM1]. */
+        uint64_t sq_disabled           : 1;  /**< [  7:  7](R/W1C/H) LMT store or NIX_LF_SQ_OP_* access to a disabled SQ. NIX_SQ_CTX_S[ENA]
+                                                                 was clear for the selected SQ. */
+        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1C/H) Reserved in CNXXXX.
+                                                                 Internal:
+                                                                 Not used; no IPSEC fast-path. */
+        uint64_t rsse_fault            : 1;  /**< [  5:  5](R/W1C/H) Memory fault on NIX_RSSE_S read. */
+        uint64_t reserved_4            : 1;
+        uint64_t cq_ctx_fault          : 1;  /**< [  3:  3](R/W1C/H) Memory fault on NIX_CQ_CTX_S read or write. */
+        uint64_t rq_ctx_fault          : 1;  /**< [  2:  2](R/W1C/H) Memory fault on NIX_RQ_CTX_HW_S read or write. */
+        uint64_t sq_ctx_fault          : 1;  /**< [  1:  1](R/W1C/H) Memory fault on NIX_SQ_CTX_HW_S read or write. */
+        uint64_t sqb_fault             : 1;  /**< [  0:  0](R/W1C/H) Memory fault on SQB read or write. */
+#else /* Word 0 - Little Endian */
+        uint64_t sqb_fault             : 1;  /**< [  0:  0](R/W1C/H) Memory fault on SQB read or write. */
+        uint64_t sq_ctx_fault          : 1;  /**< [  1:  1](R/W1C/H) Memory fault on NIX_SQ_CTX_HW_S read or write. */
+        uint64_t rq_ctx_fault          : 1;  /**< [  2:  2](R/W1C/H) Memory fault on NIX_RQ_CTX_HW_S read or write. */
+        uint64_t cq_ctx_fault          : 1;  /**< [  3:  3](R/W1C/H) Memory fault on NIX_CQ_CTX_S read or write. */
+        uint64_t reserved_4            : 1;
+        uint64_t rsse_fault            : 1;  /**< [  5:  5](R/W1C/H) Memory fault on NIX_RSSE_S read. */
+        uint64_t ipsec_dyno_fault      : 1;  /**< [  6:  6](R/W1C/H) Reserved in CNXXXX.
+                                                                 Internal:
+                                                                 Not used; no IPSEC fast-path. */
+        uint64_t sq_disabled           : 1;  /**< [  7:  7](R/W1C/H) LMT store or NIX_LF_SQ_OP_* access to a disabled SQ. NIX_SQ_CTX_S[ENA]
+                                                                 was clear for the selected SQ. */
+        uint64_t sq_oor                : 1;  /**< [  8:  8](R/W1C/H) LMT store or NIX_LF_SQ_OP_* access to out-of-range SQ. The SQ index was
+                                                                 greater than NIX_AF_LF()_SQS_CFG[MAX_QUEUESM1]. */
+        uint64_t send_jump_fault       : 1;  /**< [  9:  9](R/W1C/H) Memory fault on send descriptor read at or beyond NIX_SEND_JUMP_S[ADDR]. */
+        uint64_t send_sg_fault         : 1;  /**< [ 10: 10](R/W1C/H) Memory fault on packet data read for NIX_SEND_SG_S. */
+        uint64_t rq_disabled           : 1;  /**< [ 11: 11](R/W1C/H) Packet receive or NIX_LF_RQ_OP_* access to a disabled RQ;
+                                                                 NIX_RQ_CTX_S[ENA] was clear for selected RQ. See [RQ_OOR] for RQ
+                                                                 selection. */
+        uint64_t rq_oor                : 1;  /**< [ 12: 12](R/W1C/H) Packet receive or NIX_LF_RQ_OP_* access to out-of-range RQ. The
+                                                                 packet's RQ index was greater than NIX_AF_LF()_RQS_CFG[MAX_QUEUESM1]. The RQ
+                                                                 index for a received packet is obtained as follows:
+                                                                 * When NIX_RX_ACTION_S[OP] = NIX_RX_ACTIONOP_E::UCAST or
+                                                                 NIX_RX_ACTIONOP_E::UCAST_IPSEC, RQ = NIX_RX_ACTION_S[INDEX].
+                                                                 * For RSS, NIX_RSSE_S[RQ].
+                                                                 * For multicast or mirror packet with NIX_RX_MCE_S[OP] = NIX_RX_MCOP_E::RQ,
+                                                                 RQ = NIX_RX_MCE_S[INDEX]. */
+        uint64_t rx_wqe_fault          : 1;  /**< [ 13: 13](R/W1C/H) Memory fault on receive packet WQE write to LLC/DRAM. */
+        uint64_t rss_err               : 1;  /**< [ 14: 14](R/W1C/H) RSSE Table entry was disabled or the rsse_offset was larger than the programmed size. */
+        uint64_t reserved_15_19        : 5;
+        uint64_t dyno_err              : 1;  /**< [ 20: 20](R/W1C/H) Reserved in CNXXXX.
+                                                                 Internal:
+                                                                 Not used; no IPSEC fast-path. */
+        uint64_t reserved_21_23        : 3;
+        uint64_t cq_disabled           : 1;  /**< [ 24: 24](R/W1C/H) CQ disabled. NIX_CQ_CTX_S[ENA] was clear for the CQ of a send/receive CQE
+                                                                 write or NIX_LF_CQ_OP_* access. */
+        uint64_t cq_oor                : 1;  /**< [ 25: 25](R/W1C/H) CQ out of range. The CQ index of a send/receive CQE write or
+                                                                 NIX_LF_CQ_OP_* access was greater than
+                                                                 NIX_AF_LF()_CQS_CFG[MAX_QUEUESM1]. */
+        uint64_t reserved_26_27        : 2;
+        uint64_t qint_fault            : 1;  /**< [ 28: 28](R/W1C/H) Memory fault on NIX_QINT_HW_S read or write. */
+        uint64_t cint_fault            : 1;  /**< [ 29: 29](R/W1C/H) Memory fault on NIX_CINT_HW_S read or write. */
+        uint64_t reserved_30_63        : 34;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_nixx_lf_err_int_cnf95xxp2 f95mm; */
+    /* struct cavm_nixx_lf_err_int_cnf95xxp2 loki; */
 };
 typedef union cavm_nixx_lf_err_int cavm_nixx_lf_err_int_t;
 
@@ -32581,7 +33003,33 @@ union cavm_nixx_lf_gint
         uint64_t reserved_2_63         : 62;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_nixx_lf_gint_s cn; */
+    /* struct cavm_nixx_lf_gint_s cn9; */
+    /* struct cavm_nixx_lf_gint_s cn96xxp1; */
+    struct cavm_nixx_lf_gint_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_2_63         : 62;
+        uint64_t tcp_timer             : 1;  /**< [  1:  1](R/W1C/H) TCP timer interrupt. Enabled when NIX_AF_TCP_TIMER[ENA] and
+                                                                 NIX_LF_CFG[TCP_TIMER_INT_ENA] are both set. Set every
+                                                                 NIX_AF_TCP_TIMER[DURATION]*NIX_AF_CONST2[LFS]*100 coprocessor cycles when enabled. */
+        uint64_t drop                  : 1;  /**< [  0:  0](R/W1C/H) Receive packet dropped interrupt. Set when any receive packet has been
+                                                                 dropped. This is intended for diagnostic use; typical production software
+                                                                 will want this interrupt disabled. */
+#else /* Word 0 - Little Endian */
+        uint64_t drop                  : 1;  /**< [  0:  0](R/W1C/H) Receive packet dropped interrupt. Set when any receive packet has been
+                                                                 dropped. This is intended for diagnostic use; typical production software
+                                                                 will want this interrupt disabled. */
+        uint64_t tcp_timer             : 1;  /**< [  1:  1](R/W1C/H) TCP timer interrupt. Enabled when NIX_AF_TCP_TIMER[ENA] and
+                                                                 NIX_LF_CFG[TCP_TIMER_INT_ENA] are both set. Set every
+                                                                 NIX_AF_TCP_TIMER[DURATION]*NIX_AF_CONST2[LFS]*100 coprocessor cycles when enabled. */
+        uint64_t reserved_2_63         : 62;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_nixx_lf_gint_cn96xxp3 cn98xx; */
+    /* struct cavm_nixx_lf_gint_s cnf95xxp1; */
+    /* struct cavm_nixx_lf_gint_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_nixx_lf_gint_cn96xxp3 f95mm; */
+    /* struct cavm_nixx_lf_gint_cn96xxp3 loki; */
 };
 typedef union cavm_nixx_lf_gint cavm_nixx_lf_gint_t;
 
@@ -33313,7 +33761,7 @@ union cavm_nixx_lf_ras
     /* struct cavm_nixx_lf_ras_s cn9; */
     /* struct cavm_nixx_lf_ras_s cn96xx; */
     /* struct cavm_nixx_lf_ras_s cn98xx; */
-    struct cavm_nixx_lf_ras_cnf95xx
+    struct cavm_nixx_lf_ras_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_11_63        : 53;
@@ -33348,9 +33796,45 @@ union cavm_nixx_lf_ras
         uint64_t cint_poison           : 1;  /**< [ 10: 10](R/W1C/H) Poisoned data returned on NIX_CINT_HW_S read. */
         uint64_t reserved_11_63        : 53;
 #endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_nixx_lf_ras_cnf95xx f95mm; */
-    /* struct cavm_nixx_lf_ras_cnf95xx loki; */
+    } cnf95xxp1;
+    struct cavm_nixx_lf_ras_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_11_63        : 53;
+        uint64_t cint_poison           : 1;  /**< [ 10: 10](R/W1C/H) Poisoned data returned on NIX_CINT_HW_S read. */
+        uint64_t qint_poison           : 1;  /**< [  9:  9](R/W1C/H) Poisoned data returned on NIX_QINT_HW_S read. */
+        uint64_t send_sg_poison        : 1;  /**< [  8:  8](R/W1C/H) Poisoned data returned on packet data read for NIX_SEND_SG_S. */
+        uint64_t send_jump_poison      : 1;  /**< [  7:  7](R/W1C/H) Poisoned data returned on send descriptor read at or beyond
+                                                                 NIX_SEND_JUMP_S[ADDR]. */
+        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1C/H) Reserved in CNXXXX.
+                                                                 Internal:
+                                                                 Not used; no IPSEC fast-path. */
+        uint64_t rsse_poison           : 1;  /**< [  5:  5](R/W1C/H) Poisoned data returned on NIX_RSSE_S read. */
+        uint64_t reserved_4            : 1;
+        uint64_t cq_ctx_poison         : 1;  /**< [  3:  3](R/W1C/H) Poisoned data returned on NIX_CQ_CTX_S read. */
+        uint64_t rq_ctx_poison         : 1;  /**< [  2:  2](R/W1C/H) Poisoned data returned on NIX_RQ_CTX_S read. */
+        uint64_t sq_ctx_poison         : 1;  /**< [  1:  1](R/W1C/H) Poisoned data returned on NIX_SQ_CTX_HW_S read. */
+        uint64_t sqb_poison            : 1;  /**< [  0:  0](R/W1C/H) Poisoned data returned on SQB read. */
+#else /* Word 0 - Little Endian */
+        uint64_t sqb_poison            : 1;  /**< [  0:  0](R/W1C/H) Poisoned data returned on SQB read. */
+        uint64_t sq_ctx_poison         : 1;  /**< [  1:  1](R/W1C/H) Poisoned data returned on NIX_SQ_CTX_HW_S read. */
+        uint64_t rq_ctx_poison         : 1;  /**< [  2:  2](R/W1C/H) Poisoned data returned on NIX_RQ_CTX_S read. */
+        uint64_t cq_ctx_poison         : 1;  /**< [  3:  3](R/W1C/H) Poisoned data returned on NIX_CQ_CTX_S read. */
+        uint64_t reserved_4            : 1;
+        uint64_t rsse_poison           : 1;  /**< [  5:  5](R/W1C/H) Poisoned data returned on NIX_RSSE_S read. */
+        uint64_t ipsec_dyno_poison     : 1;  /**< [  6:  6](R/W1C/H) Reserved in CNXXXX.
+                                                                 Internal:
+                                                                 Not used; no IPSEC fast-path. */
+        uint64_t send_jump_poison      : 1;  /**< [  7:  7](R/W1C/H) Poisoned data returned on send descriptor read at or beyond
+                                                                 NIX_SEND_JUMP_S[ADDR]. */
+        uint64_t send_sg_poison        : 1;  /**< [  8:  8](R/W1C/H) Poisoned data returned on packet data read for NIX_SEND_SG_S. */
+        uint64_t qint_poison           : 1;  /**< [  9:  9](R/W1C/H) Poisoned data returned on NIX_QINT_HW_S read. */
+        uint64_t cint_poison           : 1;  /**< [ 10: 10](R/W1C/H) Poisoned data returned on NIX_CINT_HW_S read. */
+        uint64_t reserved_11_63        : 53;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_nixx_lf_ras_cnf95xxp2 f95mm; */
+    /* struct cavm_nixx_lf_ras_cnf95xxp2 loki; */
 };
 typedef union cavm_nixx_lf_ras cavm_nixx_lf_ras_t;
 

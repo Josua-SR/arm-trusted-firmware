@@ -131,25 +131,25 @@ union cavm_ree_af_aq_inst_s
     struct cavm_ree_af_aq_inst_s_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t rof_ptr_addr          : 64; /**< [ 63:  0] ROF data IOVA byte pointer into LLC/DRAM attached memory.
+        uint64_t rof_ptr_addr          : 64; /**< [ 63:  0] ROF data IOVA byte-pointer into LLC/DRAM attached memory.
                                                                  Behavior is unpredictable if the address is 0x0.
-                                                                 Address must be 128 byte aligned.
+                                                                 Address must be 128-byte-aligned.
                                                                  Address should point to a REE_ROF_S. */
 #else /* Word 0 - Little Endian */
-        uint64_t rof_ptr_addr          : 64; /**< [ 63:  0] ROF data IOVA byte pointer into LLC/DRAM attached memory.
+        uint64_t rof_ptr_addr          : 64; /**< [ 63:  0] ROF data IOVA byte-pointer into LLC/DRAM attached memory.
                                                                  Behavior is unpredictable if the address is 0x0.
-                                                                 Address must be 128 byte aligned.
+                                                                 Address must be 128-byte-aligned.
                                                                  Address should point to a REE_ROF_S. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
         uint64_t reserved_111_127      : 17;
-        uint64_t length                : 15; /**< [110: 96] Is the number of bytes pointed at by [ROF_PTR_ADDR].  [LENGTH] must be nonzero,
+        uint64_t length                : 15; /**< [110: 96] The number of bytes pointed at by [ROF_PTR_ADDR].  [LENGTH] must be nonzero,
                                                                  and multiple of 16 bytes. Maximum length field is 16384 bytes. */
         uint64_t reserved_68_95        : 28;
         uint64_t doneint               : 1;  /**< [ 67: 67] Done interrupt.
                                                                  When [DONEINT] is set and the instruction completes,
-                                                                 REE_AF_AQ_DONE[DONE] will be incremented.
-                                                                 Typically, this will be set only on instructions that require handoff
+                                                                 REE_AF_AQ_DONE[DONE] is incremented.
+                                                                 Typically, this is set only on instructions that require handoff
                                                                  between hardware and software (for example, on the last programming instruction in a
                                                                  sequence). */
         uint64_t reserved_66           : 1;
@@ -163,12 +163,12 @@ union cavm_ree_af_aq_inst_s
         uint64_t reserved_66           : 1;
         uint64_t doneint               : 1;  /**< [ 67: 67] Done interrupt.
                                                                  When [DONEINT] is set and the instruction completes,
-                                                                 REE_AF_AQ_DONE[DONE] will be incremented.
-                                                                 Typically, this will be set only on instructions that require handoff
+                                                                 REE_AF_AQ_DONE[DONE] is incremented.
+                                                                 Typically, this is set only on instructions that require handoff
                                                                  between hardware and software (for example, on the last programming instruction in a
                                                                  sequence). */
         uint64_t reserved_68_95        : 28;
-        uint64_t length                : 15; /**< [110: 96] Is the number of bytes pointed at by [ROF_PTR_ADDR].  [LENGTH] must be nonzero,
+        uint64_t length                : 15; /**< [110: 96] The number of bytes pointed at by [ROF_PTR_ADDR].  [LENGTH] must be nonzero,
                                                                  and multiple of 16 bytes. Maximum length field is 16384 bytes. */
         uint64_t reserved_111_127      : 17;
 #endif /* Word 1 - End */
@@ -180,7 +180,7 @@ union cavm_ree_af_aq_inst_s
  * Structure ree_gptr_s
  *
  * REE Generic Pointer Structure
- * This structure is the generic format of pointers in REE_INST_S and in data gather lists.
+ * This structure is the generic format of pointers in REE_INST_S and in data-gather lists.
  */
 union cavm_ree_gptr_s
 {
@@ -189,44 +189,44 @@ union cavm_ree_gptr_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t addr                  : 64; /**< [ 63:  0] When a REE_GPTR_S is in an instruction word, [ADDR] is either:
-                                                                 * (a) A direct IOVA byte pointer into LLC/DRAM attached memory.
-                                                                 * Or, (b) an IOVA pointer to a data gather list in memory.
+                                                                 * (a) A direct IOVA byte-pointer into LLC/DRAM attached memory.
+                                                                 * Or, (b) an IOVA pointer to a data-gather list in memory.
 
-                                                                 When a REE_GPTR_S is in a data gather list, [ADDR] is:
-                                                                 * (c) An IOVA direct byte pointer into the attached memory.
+                                                                 When a REE_GPTR_S is in a data-gather list, [ADDR] is:
+                                                                 * (c) An IOVA-direct byte-pointer into the attached memory.
 
-                                                                 In case (b) above, [ADDR]\<3:0\> must be zero. (Gather list pointers must be 16 byte aligned).
+                                                                 In the case (b) above, [ADDR]\<3:0\> must be zero. (Gather list pointers must be 16-byte-aligned).
 
                                                                  In cases (a) or (c) above, for input data pointers, [ADDR] may have any byte alignment.
 
-                                                                 In all cases, bits \<63:53\> are ignored by hardware; software should use a
+                                                                 In all cases, hardware ignores bits \<63:53\>; software should use a
                                                                  sign-extended bit \<52\> for forward compatibility. */
 #else /* Word 0 - Little Endian */
         uint64_t addr                  : 64; /**< [ 63:  0] When a REE_GPTR_S is in an instruction word, [ADDR] is either:
-                                                                 * (a) A direct IOVA byte pointer into LLC/DRAM attached memory.
-                                                                 * Or, (b) an IOVA pointer to a data gather list in memory.
+                                                                 * (a) A direct IOVA byte-pointer into LLC/DRAM attached memory.
+                                                                 * Or, (b) an IOVA pointer to a data-gather list in memory.
 
-                                                                 When a REE_GPTR_S is in a data gather list, [ADDR] is:
-                                                                 * (c) An IOVA direct byte pointer into the attached memory.
+                                                                 When a REE_GPTR_S is in a data-gather list, [ADDR] is:
+                                                                 * (c) An IOVA-direct byte-pointer into the attached memory.
 
-                                                                 In case (b) above, [ADDR]\<3:0\> must be zero. (Gather list pointers must be 16 byte aligned).
+                                                                 In the case (b) above, [ADDR]\<3:0\> must be zero. (Gather list pointers must be 16-byte-aligned).
 
                                                                  In cases (a) or (c) above, for input data pointers, [ADDR] may have any byte alignment.
 
-                                                                 In all cases, bits \<63:53\> are ignored by hardware; software should use a
+                                                                 In all cases, hardware ignores bits \<63:53\>; software should use a
                                                                  sign-extended bit \<52\> for forward compatibility. */
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
         uint64_t reserved_111_127      : 17;
         uint64_t length                : 15; /**< [110: 96] In case (a) and (c) in the [ADDR] description, [LENGTH] is the number of bytes pointed
-                                                                 at by [ADDR].  [LENGTH] must be nonzero in this case and maximum length field is 16384 bytes.
+                                                                 at by [ADDR].  [LENGTH] must be nonzero in this case and the maximum length field is 16384 bytes.
                                                                  In case (b) in the [ADDR] description, [LENGTH] is the number of gather list
                                                                  pointer entries pointed at by [ADDR]. ([LENGTH]*16 is the number of bytes.) [LENGTH]
                                                                  must be at least 1 in this case and maximum of 8. */
         uint64_t reserved_66_95        : 30;
         uint64_t nc                    : 1;  /**< [ 65: 65] No cache allocation. [NC] may be set in any case to indicate that the read
                                                                  operations generated should preferably not load cache blocks into the LLC.
-                                                                 Note in case (b) above, [NC] indicates that the gather list should not be
+                                                                 Note in the case (b) above, [NC] indicates that the gather list should not be
                                                                  loaded into the cache.
                                                                  Note in cases (a) and (c) above, [NC] indicates that the data or results
                                                                  should not be loaded into the LLC. */
@@ -235,13 +235,13 @@ union cavm_ree_gptr_s
         uint64_t reserved_64           : 1;
         uint64_t nc                    : 1;  /**< [ 65: 65] No cache allocation. [NC] may be set in any case to indicate that the read
                                                                  operations generated should preferably not load cache blocks into the LLC.
-                                                                 Note in case (b) above, [NC] indicates that the gather list should not be
+                                                                 Note in the case (b) above, [NC] indicates that the gather list should not be
                                                                  loaded into the cache.
                                                                  Note in cases (a) and (c) above, [NC] indicates that the data or results
                                                                  should not be loaded into the LLC. */
         uint64_t reserved_66_95        : 30;
         uint64_t length                : 15; /**< [110: 96] In case (a) and (c) in the [ADDR] description, [LENGTH] is the number of bytes pointed
-                                                                 at by [ADDR].  [LENGTH] must be nonzero in this case and maximum length field is 16384 bytes.
+                                                                 at by [ADDR].  [LENGTH] must be nonzero in this case and the maximum length field is 16384 bytes.
                                                                  In case (b) in the [ADDR] description, [LENGTH] is the number of gather list
                                                                  pointer entries pointed at by [ADDR]. ([LENGTH]*16 is the number of bytes.) [LENGTH]
                                                                  must be at least 1 in this case and maximum of 8. */
@@ -255,7 +255,7 @@ union cavm_ree_gptr_s
  * Structure ree_inst_s
  *
  * REE Instruction Structure
- * Each REE instruction has 8 words (called w0 to w7 within the structure).
+ * Each REE instruction has eight words (called w0 to w7 within the structure).
  */
 union cavm_ree_inst_s
 {
@@ -268,43 +268,43 @@ union cavm_ree_inst_s
                                                                    All jobs that submit work to SSO MUST set this field to zero.
                                                                  0 = This job must retire after previously issued in-order jobs to this queue.
                                                                      Ordering is maintained within queues only.
-                                                                 1 = This job can be retired as soon as REE engine returns job completion. */
+                                                                 1 = This job can be retired as soon as the REE engine returns job completion. */
         uint64_t reserved_5_7          : 3;
         uint64_t dg                    : 1;  /**< [  4:  4] Data gather:
                                                                  0 = [INP_PTR_ADDR] points directly to the actual job input data and can be at any byte offset.
-                                                                 1 = [INP_PTR_ADDR] points to a gather list of pointers that are read
-                                                                 by the REE coprocessor to locate the actual job input data.
+                                                                 1 = [INP_PTR_ADDR] points to a gather list of pointers that the REE coprocessor reads
+                                                                 to locate the actual job input data.
                                                                  The [INP_PTR_ADDR] must be 128-byte aligned, and the [INP_PTR_CTL]'s LENGTH field,
                                                                  indicating the number of pointers in the gather list, must be between 1-8. */
         uint64_t reserved_1_3          : 3;
         uint64_t doneint               : 1;  /**< [  0:  0] Done interrupt.
                                                                  0 = No interrupts related to this instruction.
-                                                                 1 = When the instruction completes, REE_LF_DONE[DONE] will be incremented,
+                                                                 1 = After the instruction completes, REE_LF_DONE[DONE] is incremented,
                                                                  and may cause an interrupt.
 
                                                                  REE increments REE_LF_DONE[DONE] after it writes the REE_RES_S and receives STDN (see
                                                                  [RES_PTR_ADDR]), but the increment is unordered relative any SSO submit (see
                                                                  [WQ_PTR]). [OOJ] has no direct affect on when any REE_LF_DONE[DONE] increment occurs.
 
-                                                                 When [DONEINT] is set and the instruction completes,
-                                                                 REE_LF_DONE[DONE] will be incremented. */
+                                                                 After [DONEINT] is set and the instruction completes,
+                                                                 REE_LF_DONE[DONE] is incremented. */
 #else /* Word 0 - Little Endian */
         uint64_t doneint               : 1;  /**< [  0:  0] Done interrupt.
                                                                  0 = No interrupts related to this instruction.
-                                                                 1 = When the instruction completes, REE_LF_DONE[DONE] will be incremented,
+                                                                 1 = After the instruction completes, REE_LF_DONE[DONE] is incremented,
                                                                  and may cause an interrupt.
 
                                                                  REE increments REE_LF_DONE[DONE] after it writes the REE_RES_S and receives STDN (see
                                                                  [RES_PTR_ADDR]), but the increment is unordered relative any SSO submit (see
                                                                  [WQ_PTR]). [OOJ] has no direct affect on when any REE_LF_DONE[DONE] increment occurs.
 
-                                                                 When [DONEINT] is set and the instruction completes,
-                                                                 REE_LF_DONE[DONE] will be incremented. */
+                                                                 After [DONEINT] is set and the instruction completes,
+                                                                 REE_LF_DONE[DONE] is incremented. */
         uint64_t reserved_1_3          : 3;
         uint64_t dg                    : 1;  /**< [  4:  4] Data gather:
                                                                  0 = [INP_PTR_ADDR] points directly to the actual job input data and can be at any byte offset.
-                                                                 1 = [INP_PTR_ADDR] points to a gather list of pointers that are read
-                                                                 by the REE coprocessor to locate the actual job input data.
+                                                                 1 = [INP_PTR_ADDR] points to a gather list of pointers that the REE coprocessor reads
+                                                                 to locate the actual job input data.
                                                                  The [INP_PTR_ADDR] must be 128-byte aligned, and the [INP_PTR_CTL]'s LENGTH field,
                                                                  indicating the number of pointers in the gather list, must be between 1-8. */
         uint64_t reserved_5_7          : 3;
@@ -312,44 +312,44 @@ union cavm_ree_inst_s
                                                                    All jobs that submit work to SSO MUST set this field to zero.
                                                                  0 = This job must retire after previously issued in-order jobs to this queue.
                                                                      Ordering is maintained within queues only.
-                                                                 1 = This job can be retired as soon as REE engine returns job completion. */
+                                                                 1 = This job can be retired as soon as the REE engine returns job completion. */
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
-        uint64_t inp_ptr_addr          : 64; /**< [127: 64] Input data pointer address (REE_GPTR_S format address word definition).
+        uint64_t inp_ptr_addr          : 64; /**< [127: 64] Input data-pointer address (REE_GPTR_S format address word definition).
                                                                  Must be nonzero. */
 #else /* Word 1 - Little Endian */
-        uint64_t inp_ptr_addr          : 64; /**< [127: 64] Input data pointer address (REE_GPTR_S format address word definition).
+        uint64_t inp_ptr_addr          : 64; /**< [127: 64] Input data-pointer address (REE_GPTR_S format address word definition).
                                                                  Must be nonzero. */
 #endif /* Word 1 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
-        uint64_t inp_ptr_ctl           : 64; /**< [191:128] Input data pointer control (REE_GPTR_S format control word definition).
+        uint64_t inp_ptr_ctl           : 64; /**< [191:128] Input data-pointer control (REE_GPTR_S format control word definition).
                                                                  For input gather mode, REE_INST_S[DG] must also be set. */
 #else /* Word 2 - Little Endian */
-        uint64_t inp_ptr_ctl           : 64; /**< [191:128] Input data pointer control (REE_GPTR_S format control word definition).
+        uint64_t inp_ptr_ctl           : 64; /**< [191:128] Input data-pointer control (REE_GPTR_S format control word definition).
                                                                  For input gather mode, REE_INST_S[DG] must also be set. */
 #endif /* Word 2 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
-        uint64_t res_ptr_addr          : 64; /**< [255:192] Job result start pointer 128-byte aligned IOVA.
-                                                                 Pointer to start of the location where the job result data (REE_RES_S) and
-                                                                 job match data output (REE_MATCH_S) will be written by the REE coprocessor.
+        uint64_t res_ptr_addr          : 64; /**< [255:192] Job result start-pointer 128-byte aligned IOVA.
+                                                                 Pointer to start of the location where the job result data (REE_RES_S) and the REE coprocessor
+                                                                 writes the job match data output (REE_MATCH_S).
 
-                                                                 The REE coprocessor will write exactly 1 job result structure (REE_RES_S)
+                                                                 The REE coprocessor writes exactly one job result structure (REE_RES_S)
                                                                  to address [RES_PTR_ADDR]
 
-                                                                 The REE coprocessor will write up to 254 job match structures (REE_MATCH_S)
+                                                                 The REE coprocessor writes up to 254 job-match structures (REE_MATCH_S)
                                                                  starting at address [RES_PTR_ADDR] + 0x80.
 
                                                                  REE cannot write the REE_RES_S until after it guarantees that all LLC/DRAM writes have completed
                                                                  related to REE_MATCH_S.
 
-                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=1 and [OOJ]=0 then REE will not write the
+                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=1 and [OOJ]=0 then REE does not write the
                                                                  next REE_RES_S from a
-                                                                 given LF queue until it can guarantee that the previous REE_RES_S was written to
-                                                                 LLC/DRAM. This mode guarantees
-                                                                 that REE_RES_S are written in order to LLC/DRAM.
+                                                                 given LF queue until it can guarantee that LLC/DRAM wrote the previous
+                                                                 REE_RES_S. This mode guarantees
+                                                                 that REE_RES_S are written in the correct order to LLC/DRAM.
 
-                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=0 and [OOJ]=0 then REE will perform writes of
+                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=0 and [OOJ]=0 then REE performs writes of
                                                                  REE_RES_S in order from a given LF queue
                                                                  but does not guarantee that they are written to LLC/DRAM in order.
 
@@ -360,28 +360,28 @@ union cavm_ree_inst_s
                                                                  and before any REE_LF_DONE[DONE] increment ((see [DONEINT]).
 
                                                                  [OOJ] must be zero for REE to submit work to SSO in LF queue order and
-                                                                 guarantees that all descriptors have been written to LLC/DRAM. */
+                                                                 guarantees that all descriptors were written to LLC/DRAM. */
 #else /* Word 3 - Little Endian */
-        uint64_t res_ptr_addr          : 64; /**< [255:192] Job result start pointer 128-byte aligned IOVA.
-                                                                 Pointer to start of the location where the job result data (REE_RES_S) and
-                                                                 job match data output (REE_MATCH_S) will be written by the REE coprocessor.
+        uint64_t res_ptr_addr          : 64; /**< [255:192] Job result start-pointer 128-byte aligned IOVA.
+                                                                 Pointer to start of the location where the job result data (REE_RES_S) and the REE coprocessor
+                                                                 writes the job match data output (REE_MATCH_S).
 
-                                                                 The REE coprocessor will write exactly 1 job result structure (REE_RES_S)
+                                                                 The REE coprocessor writes exactly one job result structure (REE_RES_S)
                                                                  to address [RES_PTR_ADDR]
 
-                                                                 The REE coprocessor will write up to 254 job match structures (REE_MATCH_S)
+                                                                 The REE coprocessor writes up to 254 job-match structures (REE_MATCH_S)
                                                                  starting at address [RES_PTR_ADDR] + 0x80.
 
                                                                  REE cannot write the REE_RES_S until after it guarantees that all LLC/DRAM writes have completed
                                                                  related to REE_MATCH_S.
 
-                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=1 and [OOJ]=0 then REE will not write the
+                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=1 and [OOJ]=0 then REE does not write the
                                                                  next REE_RES_S from a
-                                                                 given LF queue until it can guarantee that the previous REE_RES_S was written to
-                                                                 LLC/DRAM. This mode guarantees
-                                                                 that REE_RES_S are written in order to LLC/DRAM.
+                                                                 given LF queue until it can guarantee that LLC/DRAM wrote the previous
+                                                                 REE_RES_S. This mode guarantees
+                                                                 that REE_RES_S are written in the correct order to LLC/DRAM.
 
-                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=0 and [OOJ]=0 then REE will perform writes of
+                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=0 and [OOJ]=0 then REE performs writes of
                                                                  REE_RES_S in order from a given LF queue
                                                                  but does not guarantee that they are written to LLC/DRAM in order.
 
@@ -392,14 +392,14 @@ union cavm_ree_inst_s
                                                                  and before any REE_LF_DONE[DONE] increment ((see [DONEINT]).
 
                                                                  [OOJ] must be zero for REE to submit work to SSO in LF queue order and
-                                                                 guarantees that all descriptors have been written to LLC/DRAM. */
+                                                                 guarantees that all descriptors were written to LLC/DRAM. */
 #endif /* Word 3 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
         uint64_t wq_ptr                : 64; /**< [319:256] If [WQ_PTR] is nonzero, it is a pointer to a work-queue entry that the REE coprocessor
                                                                  uses to submit work to the SSO after all match data, and result write operations are
                                                                  visible to other CNXXXX units and the cores.
 
-                                                                 Bits \<2:0\> must be zero.  Bits \<63:53\> are ignored by hardware; software should
+                                                                 Bits \<2:0\> must be zero.  Hardware ignores bits \<63:53\>; software should
                                                                  use a sign-extended bit \<52\> for forward compatibility.
 
                                                                  REE adds the work to SSO after writing the REE_RES_S (see [RES_ADDR]), but
@@ -416,7 +416,7 @@ union cavm_ree_inst_s
                                                                  uses to submit work to the SSO after all match data, and result write operations are
                                                                  visible to other CNXXXX units and the cores.
 
-                                                                 Bits \<2:0\> must be zero.  Bits \<63:53\> are ignored by hardware; software should
+                                                                 Bits \<2:0\> must be zero.  Hardware ignores bits \<63:53\>; software should
                                                                  use a sign-extended bit \<52\> for forward compatibility.
 
                                                                  REE adds the work to SSO after writing the REE_RES_S (see [RES_ADDR]), but
@@ -488,43 +488,43 @@ union cavm_ree_inst_s
                                                                    All jobs that submit work to SSO MUST set this field to zero.
                                                                  0 = This job must retire after previously issued in-order jobs to this queue.
                                                                      Ordering is maintained within queues only.
-                                                                 1 = This job can be retired as soon as REE engine returns job completion. */
+                                                                 1 = This job can be retired as soon as the REE engine returns job completion. */
         uint64_t reserved_5_7          : 3;
         uint64_t dg                    : 1;  /**< [  4:  4] Data gather:
                                                                  0 = [INP_PTR_ADDR] points directly to the actual job input data and can be at any byte offset.
-                                                                 1 = [INP_PTR_ADDR] points to a gather list of pointers that are read
-                                                                 by the REE coprocessor to locate the actual job input data.
+                                                                 1 = [INP_PTR_ADDR] points to a gather list of pointers that the REE coprocessor reads
+                                                                 to locate the actual job input data.
                                                                  The [INP_PTR_ADDR] must be 128-byte aligned, and the [INP_PTR_CTL]'s LENGTH field,
                                                                  indicating the number of pointers in the gather list, must be between 1-8. */
         uint64_t reserved_1_3          : 3;
         uint64_t doneint               : 1;  /**< [  0:  0] Done interrupt.
                                                                  0 = No interrupts related to this instruction.
-                                                                 1 = When the instruction completes, REE_LF_DONE[DONE] will be incremented,
+                                                                 1 = After the instruction completes, REE_LF_DONE[DONE] is incremented,
                                                                  and may cause an interrupt.
 
                                                                  REE increments REE_LF_DONE[DONE] after it writes the REE_RES_S and receives STDN (see
                                                                  [RES_PTR_ADDR]), but the increment is unordered relative any SSO submit (see
                                                                  [WQ_PTR]). [OOJ] has no direct affect on when any REE_LF_DONE[DONE] increment occurs.
 
-                                                                 When [DONEINT] is set and the instruction completes,
-                                                                 REE_LF_DONE[DONE] will be incremented. */
+                                                                 After [DONEINT] is set and the instruction completes,
+                                                                 REE_LF_DONE[DONE] is incremented. */
 #else /* Word 0 - Little Endian */
         uint64_t doneint               : 1;  /**< [  0:  0] Done interrupt.
                                                                  0 = No interrupts related to this instruction.
-                                                                 1 = When the instruction completes, REE_LF_DONE[DONE] will be incremented,
+                                                                 1 = After the instruction completes, REE_LF_DONE[DONE] is incremented,
                                                                  and may cause an interrupt.
 
                                                                  REE increments REE_LF_DONE[DONE] after it writes the REE_RES_S and receives STDN (see
                                                                  [RES_PTR_ADDR]), but the increment is unordered relative any SSO submit (see
                                                                  [WQ_PTR]). [OOJ] has no direct affect on when any REE_LF_DONE[DONE] increment occurs.
 
-                                                                 When [DONEINT] is set and the instruction completes,
-                                                                 REE_LF_DONE[DONE] will be incremented. */
+                                                                 After [DONEINT] is set and the instruction completes,
+                                                                 REE_LF_DONE[DONE] is incremented. */
         uint64_t reserved_1_3          : 3;
         uint64_t dg                    : 1;  /**< [  4:  4] Data gather:
                                                                  0 = [INP_PTR_ADDR] points directly to the actual job input data and can be at any byte offset.
-                                                                 1 = [INP_PTR_ADDR] points to a gather list of pointers that are read
-                                                                 by the REE coprocessor to locate the actual job input data.
+                                                                 1 = [INP_PTR_ADDR] points to a gather list of pointers that the REE coprocessor reads
+                                                                 to locate the actual job input data.
                                                                  The [INP_PTR_ADDR] must be 128-byte aligned, and the [INP_PTR_CTL]'s LENGTH field,
                                                                  indicating the number of pointers in the gather list, must be between 1-8. */
         uint64_t reserved_5_7          : 3;
@@ -532,45 +532,45 @@ union cavm_ree_inst_s
                                                                    All jobs that submit work to SSO MUST set this field to zero.
                                                                  0 = This job must retire after previously issued in-order jobs to this queue.
                                                                      Ordering is maintained within queues only.
-                                                                 1 = This job can be retired as soon as REE engine returns job completion. */
+                                                                 1 = This job can be retired as soon as the REE engine returns job completion. */
         uint64_t reserved_9_15         : 7;
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
-        uint64_t inp_ptr_addr          : 64; /**< [127: 64] Input data pointer address (REE_GPTR_S format address word definition).
+        uint64_t inp_ptr_addr          : 64; /**< [127: 64] Input data-pointer address (REE_GPTR_S format address word definition).
                                                                  Must be nonzero. */
 #else /* Word 1 - Little Endian */
-        uint64_t inp_ptr_addr          : 64; /**< [127: 64] Input data pointer address (REE_GPTR_S format address word definition).
+        uint64_t inp_ptr_addr          : 64; /**< [127: 64] Input data-pointer address (REE_GPTR_S format address word definition).
                                                                  Must be nonzero. */
 #endif /* Word 1 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
-        uint64_t inp_ptr_ctl           : 64; /**< [191:128] Input data pointer control (REE_GPTR_S format control word definition).
+        uint64_t inp_ptr_ctl           : 64; /**< [191:128] Input data-pointer control (REE_GPTR_S format control word definition).
                                                                  For input gather mode, REE_INST_S[DG] must also be set. */
 #else /* Word 2 - Little Endian */
-        uint64_t inp_ptr_ctl           : 64; /**< [191:128] Input data pointer control (REE_GPTR_S format control word definition).
+        uint64_t inp_ptr_ctl           : 64; /**< [191:128] Input data-pointer control (REE_GPTR_S format control word definition).
                                                                  For input gather mode, REE_INST_S[DG] must also be set. */
 #endif /* Word 2 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
-        uint64_t res_ptr_addr          : 64; /**< [255:192] Job result start pointer 128-byte aligned IOVA.
-                                                                 Pointer to start of the location where the job result data (REE_RES_S) and
-                                                                 job match data output (REE_MATCH_S) will be written by the REE coprocessor.
+        uint64_t res_ptr_addr          : 64; /**< [255:192] Job result start-pointer 128-byte aligned IOVA.
+                                                                 Pointer to start of the location where the job result data (REE_RES_S) and the REE coprocessor
+                                                                 writes the job match data output (REE_MATCH_S).
 
-                                                                 The REE coprocessor will write exactly 1 job result structure (REE_RES_S)
+                                                                 The REE coprocessor writes exactly one job result structure (REE_RES_S)
                                                                  to address [RES_PTR_ADDR]
 
-                                                                 The REE coprocessor will write up to 254 job match structures (REE_MATCH_S)
+                                                                 The REE coprocessor writes up to 254 job-match structures (REE_MATCH_S)
                                                                  starting at address [RES_PTR_ADDR] + 0x80.
 
                                                                  REE cannot write the REE_RES_S until after it guarantees that all LLC/DRAM writes have completed
                                                                  related to REE_MATCH_S.
 
-                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=1 and [OOJ]=0 then REE will not write the
+                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=1 and [OOJ]=0 then REE does not write the
                                                                  next REE_RES_S from a
-                                                                 given LF queue until it can guarantee that the previous REE_RES_S was written to
-                                                                 LLC/DRAM. This mode guarantees
-                                                                 that REE_RES_S are written in order to LLC/DRAM.
+                                                                 given LF queue until it can guarantee that LLC/DRAM wrote the previous
+                                                                 REE_RES_S. This mode guarantees
+                                                                 that REE_RES_S are written in the correct order to LLC/DRAM.
 
-                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=0 and [OOJ]=0 then REE will perform writes of
+                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=0 and [OOJ]=0 then REE performs writes of
                                                                  REE_RES_S in order from a given LF queue
                                                                  but does not guarantee that they are written to LLC/DRAM in order.
 
@@ -581,28 +581,28 @@ union cavm_ree_inst_s
                                                                  and before any REE_LF_DONE[DONE] increment ((see [DONEINT]).
 
                                                                  [OOJ] must be zero for REE to submit work to SSO in LF queue order and
-                                                                 guarantees that all descriptors have been written to LLC/DRAM. */
+                                                                 guarantees that all descriptors were written to LLC/DRAM. */
 #else /* Word 3 - Little Endian */
-        uint64_t res_ptr_addr          : 64; /**< [255:192] Job result start pointer 128-byte aligned IOVA.
-                                                                 Pointer to start of the location where the job result data (REE_RES_S) and
-                                                                 job match data output (REE_MATCH_S) will be written by the REE coprocessor.
+        uint64_t res_ptr_addr          : 64; /**< [255:192] Job result start-pointer 128-byte aligned IOVA.
+                                                                 Pointer to start of the location where the job result data (REE_RES_S) and the REE coprocessor
+                                                                 writes the job match data output (REE_MATCH_S).
 
-                                                                 The REE coprocessor will write exactly 1 job result structure (REE_RES_S)
+                                                                 The REE coprocessor writes exactly one job result structure (REE_RES_S)
                                                                  to address [RES_PTR_ADDR]
 
-                                                                 The REE coprocessor will write up to 254 job match structures (REE_MATCH_S)
+                                                                 The REE coprocessor writes up to 254 job-match structures (REE_MATCH_S)
                                                                  starting at address [RES_PTR_ADDR] + 0x80.
 
                                                                  REE cannot write the REE_RES_S until after it guarantees that all LLC/DRAM writes have completed
                                                                  related to REE_MATCH_S.
 
-                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=1 and [OOJ]=0 then REE will not write the
+                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=1 and [OOJ]=0 then REE does not write the
                                                                  next REE_RES_S from a
-                                                                 given LF queue until it can guarantee that the previous REE_RES_S was written to
-                                                                 LLC/DRAM. This mode guarantees
-                                                                 that REE_RES_S are written in order to LLC/DRAM.
+                                                                 given LF queue until it can guarantee that LLC/DRAM wrote the previous
+                                                                 REE_RES_S. This mode guarantees
+                                                                 that REE_RES_S are written in the correct order to LLC/DRAM.
 
-                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=0 and [OOJ]=0 then REE will perform writes of
+                                                                 If REE_AF_QUE()_GCFG[STRICT_DESCR_WR]=0 and [OOJ]=0 then REE performs writes of
                                                                  REE_RES_S in order from a given LF queue
                                                                  but does not guarantee that they are written to LLC/DRAM in order.
 
@@ -613,14 +613,14 @@ union cavm_ree_inst_s
                                                                  and before any REE_LF_DONE[DONE] increment ((see [DONEINT]).
 
                                                                  [OOJ] must be zero for REE to submit work to SSO in LF queue order and
-                                                                 guarantees that all descriptors have been written to LLC/DRAM. */
+                                                                 guarantees that all descriptors were written to LLC/DRAM. */
 #endif /* Word 3 - End */
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
         uint64_t wq_ptr                : 64; /**< [319:256] If [WQ_PTR] is nonzero, it is a pointer to a work-queue entry that the REE coprocessor
                                                                  uses to submit work to the SSO after all match data, and result write operations are
                                                                  visible to other CNXXXX units and the cores.
 
-                                                                 Bits \<2:0\> must be zero.  Bits \<63:53\> are ignored by hardware; software should
+                                                                 Bits \<2:0\> must be zero.  Hardware ignores bits \<63:53\>; software should
                                                                  use a sign-extended bit \<52\> for forward compatibility.
 
                                                                  REE adds the work to SSO after writing the REE_RES_S (see [RES_ADDR]), but
@@ -637,7 +637,7 @@ union cavm_ree_inst_s
                                                                  uses to submit work to the SSO after all match data, and result write operations are
                                                                  visible to other CNXXXX units and the cores.
 
-                                                                 Bits \<2:0\> must be zero.  Bits \<63:53\> are ignored by hardware; software should
+                                                                 Bits \<2:0\> must be zero.  Hardware ignores bits \<63:53\>; software should
                                                                  use a sign-extended bit \<52\> for forward compatibility.
 
                                                                  REE adds the work to SSO after writing the REE_RES_S (see [RES_ADDR]), but

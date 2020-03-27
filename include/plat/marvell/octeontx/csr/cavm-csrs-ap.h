@@ -269,7 +269,7 @@ static inline uint64_t CAVM_AP_AMAIR_EL12_FUNC(void)
  * Register (SYSREG) ap_ccsidr_el1
  *
  * AP Current Cache Size ID Register
- * This register provides information about the architecture of the currently selected
+ * This register provides information about the architecture of the currently-selected
  * cache. AP_CSSELR_EL1 selects which Cache Size ID Register is accessible.
  */
 union cavm_ap_ccsidr_el1
@@ -282,22 +282,22 @@ union cavm_ap_ccsidr_el1
                                                                  0 = Write-through not supported.
                                                                  1 = Write-through supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t wb                    : 1;  /**< [ 30: 30](RO) Indicates whether the selected cache level supports write-back.
                                                                  0 = Write-back not supported.
                                                                  1 = Write-back supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t ra                    : 1;  /**< [ 29: 29](RO) Indicates whether the selected cache level supports read-allocation.
                                                                  0 = Read-allocation not supported.
                                                                  1 = Read-allocation supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t wa                    : 1;  /**< [ 28: 28](RO) Indicates whether the selected cache level supports write-allocation.
                                                                  0 = Write-allocation not supported.
                                                                  1 = Write-allocation supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t numsets               : 15; /**< [ 27: 13](RO) Number of sets in cache minus 1, therefore a value of 0
                                                                  indicates 1 set in the cache. The number of sets does not have
                                                                  to be a power of 2.
@@ -353,22 +353,22 @@ union cavm_ap_ccsidr_el1
                                                                  0 = Write-allocation not supported.
                                                                  1 = Write-allocation supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t ra                    : 1;  /**< [ 29: 29](RO) Indicates whether the selected cache level supports read-allocation.
                                                                  0 = Read-allocation not supported.
                                                                  1 = Read-allocation supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t wb                    : 1;  /**< [ 30: 30](RO) Indicates whether the selected cache level supports write-back.
                                                                  0 = Write-back not supported.
                                                                  1 = Write-back supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t wt                    : 1;  /**< [ 31: 31](RO) Indicates whether the selected cache level supports write-through.
                                                                  0 = Write-through not supported.
                                                                  1 = Write-through supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_ap_ccsidr_el1_s cn8; */
@@ -380,22 +380,22 @@ union cavm_ap_ccsidr_el1
                                                                  0 = Write-through not supported.
                                                                  1 = Write-through supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t wb                    : 1;  /**< [ 30: 30](RO) Indicates whether the selected cache level supports write-back.
                                                                  0 = Write-back not supported.
                                                                  1 = Write-back supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t ra                    : 1;  /**< [ 29: 29](RO) Indicates whether the selected cache level supports read-allocation.
                                                                  0 = Read-allocation not supported.
                                                                  1 = Read-allocation supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t wa                    : 1;  /**< [ 28: 28](RO) Indicates whether the selected cache level supports write-allocation.
                                                                  0 = Write-allocation not supported.
                                                                  1 = Write-allocation supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t numsets               : 15; /**< [ 27: 13](RO) Number of sets in cache minus 1, therefore a value of 0
                                                                  indicates 1 set in the cache. The number of sets does not have
                                                                  to be a power of 2.
@@ -443,22 +443,22 @@ union cavm_ap_ccsidr_el1
                                                                  0 = Write-allocation not supported.
                                                                  1 = Write-allocation supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t ra                    : 1;  /**< [ 29: 29](RO) Indicates whether the selected cache level supports read-allocation.
                                                                  0 = Read-allocation not supported.
                                                                  1 = Read-allocation supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t wb                    : 1;  /**< [ 30: 30](RO) Indicates whether the selected cache level supports write-back.
                                                                  0 = Write-back not supported.
                                                                  1 = Write-back supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t wt                    : 1;  /**< [ 31: 31](RO) Indicates whether the selected cache level supports write-through.
                                                                  0 = Write-through not supported.
                                                                  1 = Write-through supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
 #endif /* Word 0 - End */
     } cn83xx;
     struct cavm_ap_ccsidr_el1_cn9
@@ -565,22 +565,22 @@ union cavm_ap_ccsidr_el1
                                                                  0 = Write-through not supported.
                                                                  1 = Write-through supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t wb                    : 1;  /**< [ 30: 30](RO) Indicates whether the selected cache level supports write-back.
                                                                  0 = Write-back not supported.
                                                                  1 = Write-back supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t ra                    : 1;  /**< [ 29: 29](RO) Indicates whether the selected cache level supports read-allocation.
                                                                  0 = Read-allocation not supported.
                                                                  1 = Read-allocation supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t wa                    : 1;  /**< [ 28: 28](RO) Indicates whether the selected cache level supports write-allocation.
                                                                  0 = Write-allocation not supported.
                                                                  1 = Write-allocation supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t numsets               : 15; /**< [ 27: 13](RO) Number of sets in cache minus 1, therefore a value of 0
                                                                  indicates 1 set in the cache. The number of sets does not have
                                                                  to be a power of 2. */
@@ -604,22 +604,22 @@ union cavm_ap_ccsidr_el1
                                                                  0 = Write-allocation not supported.
                                                                  1 = Write-allocation supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t ra                    : 1;  /**< [ 29: 29](RO) Indicates whether the selected cache level supports read-allocation.
                                                                  0 = Read-allocation not supported.
                                                                  1 = Read-allocation supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t wb                    : 1;  /**< [ 30: 30](RO) Indicates whether the selected cache level supports write-back.
                                                                  0 = Write-back not supported.
                                                                  1 = Write-back supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
         uint32_t wt                    : 1;  /**< [ 31: 31](RO) Indicates whether the selected cache level supports write-through.
                                                                  0 = Write-through not supported.
                                                                  1 = Write-through supported.
 
-                                                                 For CNXXXX does not apply as hardware managed coherence. */
+                                                                 For CNXXXX does not apply as hardware-managed coherence. */
 #endif /* Word 0 - End */
     } cn96xxp3;
     /* struct cavm_ap_ccsidr_el1_cn96xxp3 cn98xx; */
@@ -4988,6 +4988,44 @@ union cavm_ap_cvm_debug7_el3
 #endif /* Word 0 - End */
     } cn8;
     /* struct cavm_ap_cvm_debug7_el3_s cn9; */
+    /* struct cavm_ap_cvm_debug7_el3_s cn96xxp1; */
+    struct cavm_ap_cvm_debug7_el3_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t last_restart_reason   : 3;  /**< [ 63: 61](RO) last restart reason. */
+        uint64_t last_restart_address  : 29; /**< [ 60: 32](RO) last restart address [30:2]. */
+        uint64_t rsvd_31               : 1;  /**< [ 31: 31](RO) Reserved. */
+        uint64_t free_has_caught_up    : 1;  /**< [ 30: 30](RO) free has caught up. */
+        uint64_t livelock_detected     : 1;  /**< [ 29: 29](RO) Livelock detected. */
+        uint64_t out_of_iregs          : 1;  /**< [ 28: 28](RO) out of iregs. */
+        uint64_t out_of_fregs          : 1;  /**< [ 27: 27](RO) out of fregs. */
+        uint64_t out_of_rob            : 1;  /**< [ 26: 26](RO) out of rob. */
+        uint64_t out_of_mem            : 1;  /**< [ 25: 25](RO) out of mem. */
+        uint64_t free_mapper_id        : 9;  /**< [ 24: 16](RO) free_mapper_id. */
+        uint64_t fis0_valid            : 1;  /**< [ 15: 15](RO) fis0.valid. */
+        uint64_t mapper_credit         : 6;  /**< [ 14:  9](RO) mapper credit. */
+        uint64_t mapper_id             : 9;  /**< [  8:  0](RO) mapper_id. */
+#else /* Word 0 - Little Endian */
+        uint64_t mapper_id             : 9;  /**< [  8:  0](RO) mapper_id. */
+        uint64_t mapper_credit         : 6;  /**< [ 14:  9](RO) mapper credit. */
+        uint64_t fis0_valid            : 1;  /**< [ 15: 15](RO) fis0.valid. */
+        uint64_t free_mapper_id        : 9;  /**< [ 24: 16](RO) free_mapper_id. */
+        uint64_t out_of_mem            : 1;  /**< [ 25: 25](RO) out of mem. */
+        uint64_t out_of_rob            : 1;  /**< [ 26: 26](RO) out of rob. */
+        uint64_t out_of_fregs          : 1;  /**< [ 27: 27](RO) out of fregs. */
+        uint64_t out_of_iregs          : 1;  /**< [ 28: 28](RO) out of iregs. */
+        uint64_t livelock_detected     : 1;  /**< [ 29: 29](RO) Livelock detected. */
+        uint64_t free_has_caught_up    : 1;  /**< [ 30: 30](RO) free has caught up. */
+        uint64_t rsvd_31               : 1;  /**< [ 31: 31](RO) Reserved. */
+        uint64_t last_restart_address  : 29; /**< [ 60: 32](RO) last restart address [30:2]. */
+        uint64_t last_restart_reason   : 3;  /**< [ 63: 61](RO) last restart reason. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_ap_cvm_debug7_el3_cn96xxp3 cn98xx; */
+    /* struct cavm_ap_cvm_debug7_el3_s cnf95xxp1; */
+    /* struct cavm_ap_cvm_debug7_el3_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_cvm_debug7_el3_cn96xxp3 f95mm; */
+    /* struct cavm_ap_cvm_debug7_el3_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvm_debug7_el3 cavm_ap_cvm_debug7_el3_t;
 
@@ -5253,6 +5291,44 @@ union cavm_ap_cvm_erricache_el1
         uint64_t reserved_44_63        : 20;
 #endif /* Word 0 - End */
     } cn9;
+    /* struct cavm_ap_cvm_erricache_el1_cn9 cn96xxp1; */
+    struct cavm_ap_cvm_erricache_el1_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_44_63        : 20;
+        uint64_t fis_edone_mismatch    : 1;  /**< [ 43: 43](RO) Fis edone mismatch. */
+        uint64_t fis_edone_mismatch_no_pop : 1;/**< [ 42: 42](RO) Fis edone mismatch, no pop. */
+        uint64_t fis_skid_buffer_overflow : 1;/**< [ 41: 41](RO) Fis skid buffer overflow. */
+        uint64_t fis_fifo_overflow     : 1;  /**< [ 40: 40](RO) Fis fifo overflow. */
+        uint64_t reserved_38_39        : 2;
+        uint64_t restart_mid_128       : 1;  /**< [ 37: 37](RO) Restart caused mapper id to change more than 128. */
+        uint64_t restart_mid_forward   : 1;  /**< [ 36: 36](RO) Restart resulted in mapper id going forward. */
+        uint64_t free_mid_ahread       : 1;  /**< [ 35: 35](RO) Free mapper ID went ahead of mapper ID. */
+        uint64_t mapper_rob_restart_walk_error : 1;/**< [ 34: 34](RO) Mapper rob restart walk error. */
+        uint64_t mapper_mem_seq_overflow : 1;/**< [ 33: 33](RO) Mapper memory sequence overflow. */
+        uint64_t livelock_detected     : 1;  /**< [ 32: 32](RO) Livelock detected. */
+        uint64_t reserved_0_31         : 32;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0_31         : 32;
+        uint64_t livelock_detected     : 1;  /**< [ 32: 32](RO) Livelock detected. */
+        uint64_t mapper_mem_seq_overflow : 1;/**< [ 33: 33](RO) Mapper memory sequence overflow. */
+        uint64_t mapper_rob_restart_walk_error : 1;/**< [ 34: 34](RO) Mapper rob restart walk error. */
+        uint64_t free_mid_ahread       : 1;  /**< [ 35: 35](RO) Free mapper ID went ahead of mapper ID. */
+        uint64_t restart_mid_forward   : 1;  /**< [ 36: 36](RO) Restart resulted in mapper id going forward. */
+        uint64_t restart_mid_128       : 1;  /**< [ 37: 37](RO) Restart caused mapper id to change more than 128. */
+        uint64_t reserved_38_39        : 2;
+        uint64_t fis_fifo_overflow     : 1;  /**< [ 40: 40](RO) Fis fifo overflow. */
+        uint64_t fis_skid_buffer_overflow : 1;/**< [ 41: 41](RO) Fis skid buffer overflow. */
+        uint64_t fis_edone_mismatch_no_pop : 1;/**< [ 42: 42](RO) Fis edone mismatch, no pop. */
+        uint64_t fis_edone_mismatch    : 1;  /**< [ 43: 43](RO) Fis edone mismatch. */
+        uint64_t reserved_44_63        : 20;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_ap_cvm_erricache_el1_cn96xxp3 cn98xx; */
+    /* struct cavm_ap_cvm_erricache_el1_cn9 cnf95xxp1; */
+    /* struct cavm_ap_cvm_erricache_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_cvm_erricache_el1_cn96xxp3 f95mm; */
+    /* struct cavm_ap_cvm_erricache_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvm_erricache_el1 cavm_ap_cvm_erricache_el1_t;
 
@@ -6356,7 +6432,25 @@ union cavm_ap_cvm_statprofcmp_el1
                                                                  The compare mode is indicated by AP_CVM_STATPROFCTL_EL1[OC_PC]. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_ap_cvm_statprofcmp_el1_s cn; */
+    /* struct cavm_ap_cvm_statprofcmp_el1_s cn9; */
+    /* struct cavm_ap_cvm_statprofcmp_el1_s cn96xxp1; */
+    struct cavm_ap_cvm_statprofcmp_el1_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t cmp_val               : 64; /**< [ 63:  0](R/W) When enabled (AP_CVM_STATPROFCTL_EL1[DIR_SAMPLE]=1), this register provides
+                                                                 the value of the address or op-code and mask to be used in directed-sample mode.
+                                                                 The compare mode is indicated by AP_CVM_STATPROFCTL_EL1[OC_PC]. */
+#else /* Word 0 - Little Endian */
+        uint64_t cmp_val               : 64; /**< [ 63:  0](R/W) When enabled (AP_CVM_STATPROFCTL_EL1[DIR_SAMPLE]=1), this register provides
+                                                                 the value of the address or op-code and mask to be used in directed-sample mode.
+                                                                 The compare mode is indicated by AP_CVM_STATPROFCTL_EL1[OC_PC]. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_ap_cvm_statprofcmp_el1_cn96xxp3 cn98xx; */
+    /* struct cavm_ap_cvm_statprofcmp_el1_s cnf95xxp1; */
+    /* struct cavm_ap_cvm_statprofcmp_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_cvm_statprofcmp_el1_cn96xxp3 f95mm; */
+    /* struct cavm_ap_cvm_statprofcmp_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvm_statprofcmp_el1 cavm_ap_cvm_statprofcmp_el1_t;
 
@@ -6433,15 +6527,15 @@ union cavm_ap_cvm_statprofctl_el1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_6_63         : 58;
-        uint64_t el                    : 3;  /**< [  5:  3](R/W) When in directed sample mode, indicates whether the instruction matching
+        uint64_t el                    : 3;  /**< [  5:  3](R/W) When in directed-sample mode, indicates whether the instruction matching
                                                                  logic includes a comparison of the EL of the target instruction.
                                                                  0x0 = Do not include an EL compare.
                                                                  0x4 = Instruction match if value match and instruction EL=0.
                                                                  0x5 = Instruction match if value match and instruction EL=1.
                                                                  0x6 = Instruction match if value match and instruction EL=2.
                                                                  0x7 = Instruction match if value match and instruction EL=3. */
-        uint64_t oc_pc                 : 1;  /**< [  2:  2](R/W) When in directed sample mode, indicates whether the instruction to be
-                                                                 sample is found by matching the PC or the OpCode.
+        uint64_t oc_pc                 : 1;  /**< [  2:  2](R/W) When in directed-sample mode, indicates whether the instruction to be
+                                                                 sampled is found by matching the PC or the OpCode.
                                                                  0 = Comparator matches AP_CVM_STATPROFCMP_EL1[52:2] against instruction PC.
                                                                  1 = Comparator matches AP_CVM_STATPROFCMP_EL1[31:0] against instruction opcode
                                                                     with bits enabled for comparison with a corresponding 1 in AP_CVM_STATPROFCMP_EL1[63:32]. */
@@ -6458,12 +6552,12 @@ union cavm_ap_cvm_statprofctl_el1
                                                                  output of the instruction/address comparator described in AP_CVM_STATPROFCMP_EL1[CMP_VAL]
                                                                  and AP_CVM_STATPROFCTL_EL1[OC_PC]. This provides the ability to profile a specific
                                                                  instruction. */
-        uint64_t oc_pc                 : 1;  /**< [  2:  2](R/W) When in directed sample mode, indicates whether the instruction to be
-                                                                 sample is found by matching the PC or the OpCode.
+        uint64_t oc_pc                 : 1;  /**< [  2:  2](R/W) When in directed-sample mode, indicates whether the instruction to be
+                                                                 sampled is found by matching the PC or the OpCode.
                                                                  0 = Comparator matches AP_CVM_STATPROFCMP_EL1[52:2] against instruction PC.
                                                                  1 = Comparator matches AP_CVM_STATPROFCMP_EL1[31:0] against instruction opcode
                                                                     with bits enabled for comparison with a corresponding 1 in AP_CVM_STATPROFCMP_EL1[63:32]. */
-        uint64_t el                    : 3;  /**< [  5:  3](R/W) When in directed sample mode, indicates whether the instruction matching
+        uint64_t el                    : 3;  /**< [  5:  3](R/W) When in directed-sample mode, indicates whether the instruction matching
                                                                  logic includes a comparison of the EL of the target instruction.
                                                                  0x0 = Do not include an EL compare.
                                                                  0x4 = Instruction match if value match and instruction EL=0.
@@ -6506,7 +6600,7 @@ static inline uint64_t CAVM_AP_CVM_STATPROFCTL_EL1_FUNC(void)
  *   This register is R/W at EL3.
  *
  * Traps and Enables:
- *   There are no traps nor enables affecting this register.
+ *   There are neither traps nor enables affecting this register.
  *
  * Configurations:
  *   R/W fields in this register reset to IMPLEMENTATION DEFINED values that might be UNKNOWN.
@@ -6563,7 +6657,7 @@ static inline uint64_t CAVM_AP_CVM_TRAPADDRX_EL3(uint64_t a)
  *   This register is R/W at EL3.
  *
  * Traps and Enables:
- *   There are no traps nor enables affecting this register.
+ *   There are neither traps nor enables affecting this register.
  *
  * Configurations:
  *   R/W fields in this register reset to IMPLEMENTATION DEFINED values that might be UNKNOWN.
@@ -6615,7 +6709,7 @@ static inline uint64_t CAVM_AP_CVM_TRAPADDRENAX_EL3(uint64_t a)
  *   This register is R/W at EL3.
  *
  * Traps and Enables:
- *   There are no traps nor enables affecting this register.
+ *   There are neither traps nor enables affecting this register.
  *
  * Configurations:
  *   R/W fields in this register reset to IMPLEMENTATION DEFINED values that might be UNKNOWN.
@@ -6664,7 +6758,53 @@ union cavm_ap_cvm_trapctlx_el3
         uint64_t reserved_37_63        : 27;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_ap_cvm_trapctlx_el3_s cn; */
+    /* struct cavm_ap_cvm_trapctlx_el3_s cn9; */
+    /* struct cavm_ap_cvm_trapctlx_el3_s cn96xxp1; */
+    struct cavm_ap_cvm_trapctlx_el3_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_37_63        : 27;
+        uint64_t el2                   : 1;  /**< [ 36: 36](R/W) Trap accesses from EL2. */
+        uint64_t el1ns                 : 1;  /**< [ 35: 35](R/W) Trap accesses from EL1NS. */
+        uint64_t el1s                  : 1;  /**< [ 34: 34](R/W) Trap accesses from EL1S. */
+        uint64_t el0ns                 : 1;  /**< [ 33: 33](R/W) Trap accesses from EL0NS. */
+        uint64_t el0s                  : 1;  /**< [ 32: 32](R/W) Trap accesses from EL0S. */
+        uint64_t reserved_8_31         : 24;
+        uint64_t action                : 4;  /**< [  7:  4](R/W) Trap action:
+                                                                   0x0 = Trap to EL3 on a match.
+                                                                   0x1 = Flush the instruction pipeline and reissue instruction. For instruction matches
+                                                                 only, otherwise UNPREDICTABLE.
+                                                                   0x2-0xF = Reserved. */
+        uint64_t mtype                 : 3;  /**< [  3:  1](R/W) Read-only. Types of matchers for software capability discovery:
+                                                                   0x0 = Not present.
+                                                                   0x1 = Physical address matcher. This value is advertised in indices 4..7.
+                                                                   0x2 = Instruction matcher. This value is advertised in indices 0..3. */
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable. */
+#else /* Word 0 - Little Endian */
+        uint64_t ena                   : 1;  /**< [  0:  0](R/W) Enable. */
+        uint64_t mtype                 : 3;  /**< [  3:  1](R/W) Read-only. Types of matchers for software capability discovery:
+                                                                   0x0 = Not present.
+                                                                   0x1 = Physical address matcher. This value is advertised in indices 4..7.
+                                                                   0x2 = Instruction matcher. This value is advertised in indices 0..3. */
+        uint64_t action                : 4;  /**< [  7:  4](R/W) Trap action:
+                                                                   0x0 = Trap to EL3 on a match.
+                                                                   0x1 = Flush the instruction pipeline and reissue instruction. For instruction matches
+                                                                 only, otherwise UNPREDICTABLE.
+                                                                   0x2-0xF = Reserved. */
+        uint64_t reserved_8_31         : 24;
+        uint64_t el0s                  : 1;  /**< [ 32: 32](R/W) Trap accesses from EL0S. */
+        uint64_t el0ns                 : 1;  /**< [ 33: 33](R/W) Trap accesses from EL0NS. */
+        uint64_t el1s                  : 1;  /**< [ 34: 34](R/W) Trap accesses from EL1S. */
+        uint64_t el1ns                 : 1;  /**< [ 35: 35](R/W) Trap accesses from EL1NS. */
+        uint64_t el2                   : 1;  /**< [ 36: 36](R/W) Trap accesses from EL2. */
+        uint64_t reserved_37_63        : 27;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_ap_cvm_trapctlx_el3_cn96xxp3 cn98xx; */
+    /* struct cavm_ap_cvm_trapctlx_el3_s cnf95xxp1; */
+    /* struct cavm_ap_cvm_trapctlx_el3_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_cvm_trapctlx_el3_cn96xxp3 f95mm; */
+    /* struct cavm_ap_cvm_trapctlx_el3_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvm_trapctlx_el3 cavm_ap_cvm_trapctlx_el3_t;
 
@@ -6692,7 +6832,7 @@ static inline uint64_t CAVM_AP_CVM_TRAPCTLX_EL3(uint64_t a)
  *   This register is R/W at EL3.
  *
  * Traps and Enables:
- *   There are no traps nor enables affecting this register.
+ *   There are neither traps nor enables affecting this register.
  *
  * Configurations:
  *   R/W fields in this register reset to IMPLEMENTATION DEFINED values that might be UNKNOWN.
@@ -6738,7 +6878,7 @@ static inline uint64_t CAVM_AP_CVM_TRAPINSNX_EL3(uint64_t a)
  * Usage Constraints:
  *   This register is R/W at EL3.
  * Traps and Enables:
- *   There are no traps nor enables affecting this register.
+ *   There are neither traps nor enables affecting this register.
  * Configurations:
  *   RW fields in this register reset to IMPLEMENTATION DEFINED values that might be UNKNOWN.
  *   Marvell implementations will reset to 0x0.
@@ -7275,12 +7415,75 @@ union cavm_ap_cvmctl2_el1
         uint64_t reserved_52_63        : 12;
 #endif /* Word 0 - End */
     } cn96xxp1;
-    /* struct cavm_ap_cvmctl2_el1_s cn96xxp3; */
-    /* struct cavm_ap_cvmctl2_el1_s cn98xx; */
+    struct cavm_ap_cvmctl2_el1_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_53_63        : 11;
+        uint64_t disable_ldi_interrupt : 1;  /**< [ 52: 52](R/W) Disable interrupts attaching to LDI. For diagnostic use only. */
+        uint64_t jsr_dis               : 1;  /**< [ 51: 51](R/W) Disable the return stack. For diagnostic use only. */
+        uint64_t btc_hysteresis_dis    : 1;  /**< [ 50: 50](R/W) Disable hysteresis in the branch-target cache. For diagnostic use only. */
+        uint64_t btc_dis               : 1;  /**< [ 49: 49](R/W) Disable the branch-target cache. For diagnostic use only. */
+        uint64_t tage_dis              : 1;  /**< [ 48: 48](R/W) Disable the TAGE branch-prediction algorithm; use bimodal prediction
+                                                                 instead. For diagnostic use only. */
+        uint64_t force_bp_not_taken    : 1;  /**< [ 47: 47](R/W) Force the branch predictor to always predict not-taken. Also disables updates to
+                                                                 predictors. For diagnostic use only. */
+        uint64_t fetch_latency_c       : 5;  /**< [ 46: 42](R/W) Highest-level latency threshold for fetcher SPX indication. For diagnostic use
+                                                                 only. */
+        uint64_t fetch_latency_b       : 5;  /**< [ 41: 37](R/W) Mid-level latency threshold for fetcher SPX indication. For diagnostic use only. */
+        uint64_t fetch_latency_a       : 5;  /**< [ 36: 32](R/W) Lowest-level latency threshold for fetcher SPX indication. For diagnostic use
+                                                                 only. */
+        uint64_t force_fe_bubbles      : 1;  /**< [ 31: 31](R/W) Force bubbles in fetch unit pseudo-randomly. For diagnostic use only. */
+        uint64_t ifill_stream_dis      : 1;  /**< [ 30: 30](R/W) When 0, allow "nearby" IFill requests above what [IFILL_FETCH_LIMIT] would
+                                                                 permit. When 1, strictly use [IFILL_FETCH_LIMIT]. For diagnostic use only. */
+        uint64_t icache_max_ways       : 6;  /**< [ 29: 24](R/W) Maximum ways to allocate in ICache. When 0x0, maximum way number is all ways
+                                                                 (i.e., use 32 ways). For diagnostic use only. */
+        uint64_t ifill_fetch_limit     : 3;  /**< [ 23: 21](R/W) Number of outstanding IFill requests allowed. When 0x0, allow 4 outstanding
+                                                                 requests. See [IFILL_STREAM_DIS]. For diagnostic use only. */
+        uint64_t ifill_wait            : 5;  /**< [ 20: 16](R/W) Cycles to delay before forcing IFill to issue. For diagnostic use only. */
+        uint64_t reserved_12_15        : 4;
+        uint64_t livelock_stall_detect : 4;  /**< [ 11:  8](R/W) Livelock stall detector. 0x0 = Disabled, else number of cycles = 16 *
+                                                                 1\<\<[LIVELOCK_STALL_DETECT]. */
+        uint64_t reserved_4_7          : 4;
+        uint64_t reduce_map_bandwidth  : 2;  /**< [  3:  2](R/W) Reduce map bandwidth to 1-3 instr/cycle (also reduces max inflight instructions to 32,64,96) */
+        uint64_t allow_one_ifi         : 1;  /**< [  1:  1](R/W) Allow only one inflight instruction. */
+        uint64_t allow_one_ifmr        : 1;  /**< [  0:  0](R/W) Allow only one inflight memory reference. */
+#else /* Word 0 - Little Endian */
+        uint64_t allow_one_ifmr        : 1;  /**< [  0:  0](R/W) Allow only one inflight memory reference. */
+        uint64_t allow_one_ifi         : 1;  /**< [  1:  1](R/W) Allow only one inflight instruction. */
+        uint64_t reduce_map_bandwidth  : 2;  /**< [  3:  2](R/W) Reduce map bandwidth to 1-3 instr/cycle (also reduces max inflight instructions to 32,64,96) */
+        uint64_t reserved_4_7          : 4;
+        uint64_t livelock_stall_detect : 4;  /**< [ 11:  8](R/W) Livelock stall detector. 0x0 = Disabled, else number of cycles = 16 *
+                                                                 1\<\<[LIVELOCK_STALL_DETECT]. */
+        uint64_t reserved_12_15        : 4;
+        uint64_t ifill_wait            : 5;  /**< [ 20: 16](R/W) Cycles to delay before forcing IFill to issue. For diagnostic use only. */
+        uint64_t ifill_fetch_limit     : 3;  /**< [ 23: 21](R/W) Number of outstanding IFill requests allowed. When 0x0, allow 4 outstanding
+                                                                 requests. See [IFILL_STREAM_DIS]. For diagnostic use only. */
+        uint64_t icache_max_ways       : 6;  /**< [ 29: 24](R/W) Maximum ways to allocate in ICache. When 0x0, maximum way number is all ways
+                                                                 (i.e., use 32 ways). For diagnostic use only. */
+        uint64_t ifill_stream_dis      : 1;  /**< [ 30: 30](R/W) When 0, allow "nearby" IFill requests above what [IFILL_FETCH_LIMIT] would
+                                                                 permit. When 1, strictly use [IFILL_FETCH_LIMIT]. For diagnostic use only. */
+        uint64_t force_fe_bubbles      : 1;  /**< [ 31: 31](R/W) Force bubbles in fetch unit pseudo-randomly. For diagnostic use only. */
+        uint64_t fetch_latency_a       : 5;  /**< [ 36: 32](R/W) Lowest-level latency threshold for fetcher SPX indication. For diagnostic use
+                                                                 only. */
+        uint64_t fetch_latency_b       : 5;  /**< [ 41: 37](R/W) Mid-level latency threshold for fetcher SPX indication. For diagnostic use only. */
+        uint64_t fetch_latency_c       : 5;  /**< [ 46: 42](R/W) Highest-level latency threshold for fetcher SPX indication. For diagnostic use
+                                                                 only. */
+        uint64_t force_bp_not_taken    : 1;  /**< [ 47: 47](R/W) Force the branch predictor to always predict not-taken. Also disables updates to
+                                                                 predictors. For diagnostic use only. */
+        uint64_t tage_dis              : 1;  /**< [ 48: 48](R/W) Disable the TAGE branch-prediction algorithm; use bimodal prediction
+                                                                 instead. For diagnostic use only. */
+        uint64_t btc_dis               : 1;  /**< [ 49: 49](R/W) Disable the branch-target cache. For diagnostic use only. */
+        uint64_t btc_hysteresis_dis    : 1;  /**< [ 50: 50](R/W) Disable hysteresis in the branch-target cache. For diagnostic use only. */
+        uint64_t jsr_dis               : 1;  /**< [ 51: 51](R/W) Disable the return stack. For diagnostic use only. */
+        uint64_t disable_ldi_interrupt : 1;  /**< [ 52: 52](R/W) Disable interrupts attaching to LDI. For diagnostic use only. */
+        uint64_t reserved_53_63        : 11;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_ap_cvmctl2_el1_cn96xxp3 cn98xx; */
     /* struct cavm_ap_cvmctl2_el1_cn96xxp1 cnf95xxp1; */
-    /* struct cavm_ap_cvmctl2_el1_s cnf95xxp2; */
-    /* struct cavm_ap_cvmctl2_el1_s f95mm; */
-    /* struct cavm_ap_cvmctl2_el1_s loki; */
+    /* struct cavm_ap_cvmctl2_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_cvmctl2_el1_cn96xxp3 f95mm; */
+    /* struct cavm_ap_cvmctl2_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvmctl2_el1 cavm_ap_cvmctl2_el1_t;
 
@@ -7890,7 +8093,7 @@ union cavm_ap_cvmctl_el1
         uint64_t serialize_io_loads    : 1;  /**< [ 62: 62](R/W) If set, serialize IO loads. */
         uint64_t disable_store_barrier_func : 1;/**< [ 61: 61](R/W) Disable store barrier functionality (v8.5 disable). */
         uint64_t disable_large_offset_dpref : 1;/**< [ 60: 60](R/W) Disable large offset predictor. */
-        uint64_t disable_forward_progress : 1;/**< [ 59: 59](R/W) Disable forward progress requirement for remote TLBI flow. For diagnostic use only. */
+        uint64_t disable_forward_progress : 1;/**< [ 59: 59](R/W) Disable forward-progress requirement for remote TLBI flow. For diagnostic use only. */
         uint64_t force_st_r            : 1;  /**< [ 58: 58](R/W) Force release attributes to all stores. For diagnostic use only. */
         uint64_t force_ld_a            : 1;  /**< [ 57: 57](R/W) Force acquire attributes to all loads. For diagnostic use only. */
         uint64_t disable_const         : 1;  /**< [ 56: 56](R/W) Disable constant optimization. */
@@ -8022,7 +8225,7 @@ union cavm_ap_cvmctl_el1
         uint64_t disable_const         : 1;  /**< [ 56: 56](R/W) Disable constant optimization. */
         uint64_t force_ld_a            : 1;  /**< [ 57: 57](R/W) Force acquire attributes to all loads. For diagnostic use only. */
         uint64_t force_st_r            : 1;  /**< [ 58: 58](R/W) Force release attributes to all stores. For diagnostic use only. */
-        uint64_t disable_forward_progress : 1;/**< [ 59: 59](R/W) Disable forward progress requirement for remote TLBI flow. For diagnostic use only. */
+        uint64_t disable_forward_progress : 1;/**< [ 59: 59](R/W) Disable forward-progress requirement for remote TLBI flow. For diagnostic use only. */
         uint64_t disable_large_offset_dpref : 1;/**< [ 60: 60](R/W) Disable large offset predictor. */
         uint64_t disable_store_barrier_func : 1;/**< [ 61: 61](R/W) Disable store barrier functionality (v8.5 disable). */
         uint64_t serialize_io_loads    : 1;  /**< [ 62: 62](R/W) If set, serialize IO loads. */
@@ -9276,7 +9479,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
         uint64_t switchtagena          : 1;  /**< [  6:  6](R/W) Enable SSO switch-tag cache. */
-        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Trap any access to nonzero node id. This should be clear on multi-socket
+        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Trap any access to nonzero node ID. This should be clear on multi-socket
                                                                  systems, and set on single-socket systems. */
         uint64_t ioatomicena           : 1;  /**< [  4:  4](R/W) Enable SSO and PKO address region.
                                                                  0 = Accesses described below will trap.
@@ -9301,7 +9504,7 @@ union cavm_ap_cvmmemctl1_el1
                                                                  or PKO are to be used.
 
                                                                  Other address regions (e.g. PEM) are not affected by this setting. */
-        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Trap any access to nonzero node id. This should be clear on multi-socket
+        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Trap any access to nonzero node ID. This should be clear on multi-socket
                                                                  systems, and set on single-socket systems. */
         uint64_t switchtagena          : 1;  /**< [  6:  6](R/W) Enable SSO switch-tag cache. */
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
@@ -9551,7 +9754,7 @@ union cavm_ap_cvmmemctl1_el1
         uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
         uint64_t switchtagena          : 1;  /**< [  6:  6](R/W) Enable SSO switch-tag cache. */
-        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Trap any access to nonzero node id. This should be clear on multi-socket
+        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Trap any access to nonzero node ID. This should be clear on multi-socket
                                                                  systems, and set on single-socket systems. */
         uint64_t ioatomicena           : 1;  /**< [  4:  4](R/W) Enable SSO and PKO address region.
                                                                  0 = Accesses described below will trap.
@@ -9576,7 +9779,7 @@ union cavm_ap_cvmmemctl1_el1
                                                                  or PKO are to be used.
 
                                                                  Other address regions (e.g. PEM) are not affected by this setting. */
-        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Trap any access to nonzero node id. This should be clear on multi-socket
+        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Trap any access to nonzero node ID. This should be clear on multi-socket
                                                                  systems, and set on single-socket systems. */
         uint64_t switchtagena          : 1;  /**< [  6:  6](R/W) Enable SSO switch-tag cache. */
         uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
@@ -9784,7 +9987,135 @@ union cavm_ap_cvmmemctl2_el1
                                                                  cycles. For diagnostic use only. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_ap_cvmmemctl2_el1_s cn; */
+    /* struct cavm_ap_cvmmemctl2_el1_s cn9; */
+    /* struct cavm_ap_cvmmemctl2_el1_s cn96xxp1; */
+    struct cavm_ap_cvmmemctl2_el1_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t broadcastdelay        : 4;  /**< [ 63: 60](R/W) Delay TLBI/IC/SEV successive broadcasts by at least 2^[BROADCASTDELAY]
+                                                                 cycles. For diagnostic use only. */
+        uint64_t tlbiremotegsyncall    : 1;  /**< [ 59: 59](R/W) Remote TLBI apply GSYNC semantics.  For diagnostic use only. */
+        uint64_t tlbiremotemultidis    : 1;  /**< [ 58: 58](R/W) Remote TLBI multiple processing disable.  For diagnostic use only. */
+        uint64_t tlbiremotebatchdis    : 1;  /**< [ 57: 57](R/W) Remote TLBI batch processing disable.  For diagnostic use only. */
+        uint64_t l1dwaysm1             : 6;  /**< [ 56: 51](R/W) Number of L1D WAYS minus one. */
+        uint64_t wbfentriesm1          : 5;  /**< [ 50: 46](R/W) Number of MAF WBUF entries minus one. */
+        uint64_t rbfentriesm1          : 4;  /**< [ 45: 42](R/W) Number of MAF RBUF entries minus one. */
+        uint64_t ptwspecdis            : 1;  /**< [ 41: 41](R/W) Disable page table walker access on speculative instructions. */
+        uint64_t ptwprefudis           : 1;  /**< [ 40: 40](R/W) Disable page table walker access on PREFU instructions. */
+        uint64_t ptwdhwprefdis         : 1;  /**< [ 39: 39](R/W) Disable page table walker access on dstream hardware prefetches. */
+        uint64_t ptwdswprefdis         : 1;  /**< [ 38: 38](R/W) Disable page table walker access on dstream software prefetches. */
+        uint64_t ptwihwprefdis         : 1;  /**< [ 37: 37](R/W) Disable page table walker access on istream hardware prefetches. */
+        uint64_t ptwiswprefdis         : 1;  /**< [ 36: 36](R/W) Disable page table walker access on istream software prefetches. */
+        uint64_t mtlbdhwprefdis        : 1;  /**< [ 35: 35](R/W) Disable MTLB access on dstream hardware prefetches. */
+        uint64_t mtlbdswprefdis        : 1;  /**< [ 34: 34](R/W) Disable MTLB access on dstream software prefetches. */
+        uint64_t mtlbihwprefdis        : 1;  /**< [ 33: 33](R/W) Disable MTLB access on istream hardware prefetches. */
+        uint64_t mtlbiswprefdis        : 1;  /**< [ 32: 32](R/W) Disable MTLB access on istream software prefetches. */
+        uint64_t rsvd_25_31            : 7;  /**< [ 31: 25](R/W) Reserved. */
+        uint64_t tlbi_block_msk        : 9;  /**< [ 24: 16](R/W) Mask of block sizes that are precisely invalidated by TLBI instructions.
+
+                                                                 [MTLB0_BLOCK_MSK] must always be a subset of [TLBI_BLOCK_MSK]. For example, if
+                                                                 [TLBI_BLOCK_MSK] indicates the following block sizes: 4KB, 64KB, 2MB, then
+                                                                 [MTLB0_BLOCK_MSK] cannot have any other block size in it.
+
+                                                                 For each bit {a} in this field:
+                                                                 _ Mask\<{a}\>=0 = blocksize {a} is not precisely invalidated.
+                                                                 _ Mask\<{a}\>=1 = blocksize {a} is     precisely invalidated.
+
+                                                                 _ Mask\<0\> represents block size 2^12.
+                                                                 _ Mask\<1\> represents block size 2^14.
+                                                                 _ Mask\<2\> represents block size 2^16.
+                                                                 _ Mask\<3\> represents block size 2^21.
+                                                                 _ Mask\<4\> represents block size 2^25.
+                                                                 _ Mask\<5\> represents block size 2^29.
+                                                                 _ Mask\<6\> represents block size 2^30.
+                                                                 _ Mask\<7\> represents block size 2^34.
+                                                                 _ Mask\<8\> represents block size 2^42. */
+        uint64_t rsvd_9_15             : 7;  /**< [ 15:  9](R/W) Reserved. */
+        uint64_t mtlb0_block_msk       : 9;  /**< [  8:  0](R/W) Mask of block sizes that are allocated in MTLB0.
+
+                                                                 [MTLB0_BLOCK_MSK] must always be a subset of [TLBI_BLOCK_MSK]. For example, if
+                                                                 [TLBI_BLOCK_MSK] indicates the following block sizes: 4KB, 64KB, 2MB, then
+                                                                 [MTLB0_BLOCK_MSK] cannot have any other block size in it.
+
+                                                                 For each bit {a} in this field:
+                                                                 _ Mask\<{a}\>=0 = blocksize {a} allocated in MTLB1.
+                                                                 _ Mask\<{a}\>=1 = blocksize {a} allocated in MTLB0.
+
+                                                                 _ Mask\<0\> represents block size 2^12.
+                                                                 _ Mask\<1\> represents block size 2^14.
+                                                                 _ Mask\<2\> represents block size 2^16.
+                                                                 _ Mask\<3\> represents block size 2^21.
+                                                                 _ Mask\<4\> represents block size 2^25.
+                                                                 _ Mask\<5\> represents block size 2^29.
+                                                                 _ Mask\<6\> represents block size 2^30.
+                                                                 _ Mask\<7\> represents block size 2^34.
+                                                                 _ Mask\<8\> represents block size 2^42. */
+#else /* Word 0 - Little Endian */
+        uint64_t mtlb0_block_msk       : 9;  /**< [  8:  0](R/W) Mask of block sizes that are allocated in MTLB0.
+
+                                                                 [MTLB0_BLOCK_MSK] must always be a subset of [TLBI_BLOCK_MSK]. For example, if
+                                                                 [TLBI_BLOCK_MSK] indicates the following block sizes: 4KB, 64KB, 2MB, then
+                                                                 [MTLB0_BLOCK_MSK] cannot have any other block size in it.
+
+                                                                 For each bit {a} in this field:
+                                                                 _ Mask\<{a}\>=0 = blocksize {a} allocated in MTLB1.
+                                                                 _ Mask\<{a}\>=1 = blocksize {a} allocated in MTLB0.
+
+                                                                 _ Mask\<0\> represents block size 2^12.
+                                                                 _ Mask\<1\> represents block size 2^14.
+                                                                 _ Mask\<2\> represents block size 2^16.
+                                                                 _ Mask\<3\> represents block size 2^21.
+                                                                 _ Mask\<4\> represents block size 2^25.
+                                                                 _ Mask\<5\> represents block size 2^29.
+                                                                 _ Mask\<6\> represents block size 2^30.
+                                                                 _ Mask\<7\> represents block size 2^34.
+                                                                 _ Mask\<8\> represents block size 2^42. */
+        uint64_t rsvd_9_15             : 7;  /**< [ 15:  9](R/W) Reserved. */
+        uint64_t tlbi_block_msk        : 9;  /**< [ 24: 16](R/W) Mask of block sizes that are precisely invalidated by TLBI instructions.
+
+                                                                 [MTLB0_BLOCK_MSK] must always be a subset of [TLBI_BLOCK_MSK]. For example, if
+                                                                 [TLBI_BLOCK_MSK] indicates the following block sizes: 4KB, 64KB, 2MB, then
+                                                                 [MTLB0_BLOCK_MSK] cannot have any other block size in it.
+
+                                                                 For each bit {a} in this field:
+                                                                 _ Mask\<{a}\>=0 = blocksize {a} is not precisely invalidated.
+                                                                 _ Mask\<{a}\>=1 = blocksize {a} is     precisely invalidated.
+
+                                                                 _ Mask\<0\> represents block size 2^12.
+                                                                 _ Mask\<1\> represents block size 2^14.
+                                                                 _ Mask\<2\> represents block size 2^16.
+                                                                 _ Mask\<3\> represents block size 2^21.
+                                                                 _ Mask\<4\> represents block size 2^25.
+                                                                 _ Mask\<5\> represents block size 2^29.
+                                                                 _ Mask\<6\> represents block size 2^30.
+                                                                 _ Mask\<7\> represents block size 2^34.
+                                                                 _ Mask\<8\> represents block size 2^42. */
+        uint64_t rsvd_25_31            : 7;  /**< [ 31: 25](R/W) Reserved. */
+        uint64_t mtlbiswprefdis        : 1;  /**< [ 32: 32](R/W) Disable MTLB access on istream software prefetches. */
+        uint64_t mtlbihwprefdis        : 1;  /**< [ 33: 33](R/W) Disable MTLB access on istream hardware prefetches. */
+        uint64_t mtlbdswprefdis        : 1;  /**< [ 34: 34](R/W) Disable MTLB access on dstream software prefetches. */
+        uint64_t mtlbdhwprefdis        : 1;  /**< [ 35: 35](R/W) Disable MTLB access on dstream hardware prefetches. */
+        uint64_t ptwiswprefdis         : 1;  /**< [ 36: 36](R/W) Disable page table walker access on istream software prefetches. */
+        uint64_t ptwihwprefdis         : 1;  /**< [ 37: 37](R/W) Disable page table walker access on istream hardware prefetches. */
+        uint64_t ptwdswprefdis         : 1;  /**< [ 38: 38](R/W) Disable page table walker access on dstream software prefetches. */
+        uint64_t ptwdhwprefdis         : 1;  /**< [ 39: 39](R/W) Disable page table walker access on dstream hardware prefetches. */
+        uint64_t ptwprefudis           : 1;  /**< [ 40: 40](R/W) Disable page table walker access on PREFU instructions. */
+        uint64_t ptwspecdis            : 1;  /**< [ 41: 41](R/W) Disable page table walker access on speculative instructions. */
+        uint64_t rbfentriesm1          : 4;  /**< [ 45: 42](R/W) Number of MAF RBUF entries minus one. */
+        uint64_t wbfentriesm1          : 5;  /**< [ 50: 46](R/W) Number of MAF WBUF entries minus one. */
+        uint64_t l1dwaysm1             : 6;  /**< [ 56: 51](R/W) Number of L1D WAYS minus one. */
+        uint64_t tlbiremotebatchdis    : 1;  /**< [ 57: 57](R/W) Remote TLBI batch processing disable.  For diagnostic use only. */
+        uint64_t tlbiremotemultidis    : 1;  /**< [ 58: 58](R/W) Remote TLBI multiple processing disable.  For diagnostic use only. */
+        uint64_t tlbiremotegsyncall    : 1;  /**< [ 59: 59](R/W) Remote TLBI apply GSYNC semantics.  For diagnostic use only. */
+        uint64_t broadcastdelay        : 4;  /**< [ 63: 60](R/W) Delay TLBI/IC/SEV successive broadcasts by at least 2^[BROADCASTDELAY]
+                                                                 cycles. For diagnostic use only. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_ap_cvmmemctl2_el1_cn96xxp3 cn98xx; */
+    /* struct cavm_ap_cvmmemctl2_el1_s cnf95xxp1; */
+    /* struct cavm_ap_cvmmemctl2_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_cvmmemctl2_el1_cn96xxp3 f95mm; */
+    /* struct cavm_ap_cvmmemctl2_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvmmemctl2_el1 cavm_ap_cvmmemctl2_el1_t;
 
@@ -19457,8 +19788,8 @@ static inline uint64_t CAVM_AP_ID_AA64MMFRX_EL1_RES0(uint64_t a)
  * Register (SYSREG) ap_id_aa64mmfr0_el1
  *
  * AP AArch64 Memory Model Feature Register 0
- * This register provides information about the implemented memory model and memory
- * management support in AArch64.
+ * This register provides information about the implemented memory model and memory-management
+ * support in AArch64.
  */
 union cavm_ap_id_aa64mmfr0_el1
 {
@@ -23765,7 +24096,7 @@ union cavm_ap_midr_el1
     struct cavm_ap_midr_el1_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint32_t implementer           : 8;  /**< [ 31: 24](RO) Implementer code that has been assigned by Arm. Assigned codes include the
+        uint32_t implementer           : 8;  /**< [ 31: 24](RO) Implementer code assigned by Arm. Assigned codes include the
                                                                  following:
                                                                  0x41 = 'A' = Arm Limited.
                                                                  0x42 = 'B' = Broadcom Corporation.
@@ -23780,7 +24111,7 @@ union cavm_ap_midr_el1
                                                                  0x69 = 'i' = Intel Corporation.
 
                                                                  For CNXXXX, 'C'. */
-        uint32_t variant               : 4;  /**< [ 23: 20](RO) An implementation defined variant number. Typically, this
+        uint32_t variant               : 4;  /**< [ 23: 20](RO) An implementation-defined variant number. Typically, this
                                                                      field is used to distinguish between different product
                                                                      variants, or major revisions of a product.
 
@@ -23796,22 +24127,22 @@ union cavm_ap_midr_el1
                                                                  0xF = Defined by CPUID scheme.
 
                                                                  For CNXXXX, CPUID scheme. */
-        uint32_t partnum               : 12; /**< [ 15:  4](RO) An implementation defined primary part number for the device.
+        uint32_t partnum               : 12; /**< [ 15:  4](RO) An implementation-defined primary part number for the device.
                                                                  On processors implemented by Arm, if the top four bits of the
                                                                      primary part number are 0x00x7.
                                                                  Processors implemented by Arm have an Implementer code of 0x41.
 
                                                                  For CNXXXX, the chip ID. Enumerated by PCC_PROD_E. */
-        uint32_t revision              : 4;  /**< [  3:  0](RO) An implementation defined revision number for the device.
+        uint32_t revision              : 4;  /**< [  3:  0](RO) An implementation-defined revision number for the device.
 
                                                                  For CNXXXX this is the minor revision field.
                                                                  See MIO_FUS_DAT2[CHIP_ID] bits 18..16 for more information. */
 #else /* Word 0 - Little Endian */
-        uint32_t revision              : 4;  /**< [  3:  0](RO) An implementation defined revision number for the device.
+        uint32_t revision              : 4;  /**< [  3:  0](RO) An implementation-defined revision number for the device.
 
                                                                  For CNXXXX this is the minor revision field.
                                                                  See MIO_FUS_DAT2[CHIP_ID] bits 18..16 for more information. */
-        uint32_t partnum               : 12; /**< [ 15:  4](RO) An implementation defined primary part number for the device.
+        uint32_t partnum               : 12; /**< [ 15:  4](RO) An implementation-defined primary part number for the device.
                                                                  On processors implemented by Arm, if the top four bits of the
                                                                      primary part number are 0x00x7.
                                                                  Processors implemented by Arm have an Implementer code of 0x41.
@@ -23827,13 +24158,13 @@ union cavm_ap_midr_el1
                                                                  0xF = Defined by CPUID scheme.
 
                                                                  For CNXXXX, CPUID scheme. */
-        uint32_t variant               : 4;  /**< [ 23: 20](RO) An implementation defined variant number. Typically, this
+        uint32_t variant               : 4;  /**< [ 23: 20](RO) An implementation-defined variant number. Typically, this
                                                                      field is used to distinguish between different product
                                                                      variants, or major revisions of a product.
 
                                                                  For CNXXXX this is the major revision field.
                                                                  See MIO_FUS_DAT2[CHIP_ID] bits 21..19 for more information. */
-        uint32_t implementer           : 8;  /**< [ 31: 24](RO) Implementer code that has been assigned by Arm. Assigned codes include the
+        uint32_t implementer           : 8;  /**< [ 31: 24](RO) Implementer code assigned by Arm. Assigned codes include the
                                                                  following:
                                                                  0x41 = 'A' = Arm Limited.
                                                                  0x42 = 'B' = Broadcom Corporation.
@@ -23939,6 +24270,100 @@ union cavm_ap_midr_el1
                                                                  For CNXXXX, 'C'. */
 #endif /* Word 0 - End */
     } cn9;
+    /* struct cavm_ap_midr_el1_cn9 cn96xxp1; */
+    struct cavm_ap_midr_el1_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t implementer           : 8;  /**< [ 31: 24](RO) Implementer code assigned by Arm. Assigned codes include the
+                                                                 following:
+                                                                 0x41 = 'A' = Arm Limited.
+                                                                 0x42 = 'B' = Broadcom Corporation.
+                                                                 0x43 = 'C' = Marvell (Cavium) Inc.
+                                                                 0x44 = 'D' = Digital Equipment Corporation.
+                                                                 0x49 = 'I' = Infineon Technologies AG.
+                                                                 0x4D = 'M' = Motorola or Freescale Semiconductor Inc.
+                                                                 0x4E = 'N' = NVIDIA Corporation.
+                                                                 0x50 = 'P' = Applied Micro Circuits Corporation.
+                                                                 0x51 = 'Q' = Qualcomm Inc.
+                                                                 0x56 = 'V' = Marvell International Ltd.
+                                                                 0x69 = 'i' = Intel Corporation.
+
+                                                                 For CNXXXX, 'C'. */
+        uint32_t variant               : 4;  /**< [ 23: 20](RO) An implementation-defined variant number. Typically, this
+                                                                     field is used to distinguish between different product
+                                                                     variants, or major revisions of a product.
+
+                                                                 For CNXXXX this is the major revision field.
+                                                                 See FUS_FUSE_NUM_E::CHIP_ID() for more information. */
+        uint32_t architecture          : 4;  /**< [ 19: 16](RO) 0x1 = ARMv4.
+                                                                 0x2 = ARMv4T.
+                                                                 0x3 = ARMv5 (obsolete).
+                                                                 0x4 = ARMv5T.
+                                                                 0x5 = ARMv5TE.
+                                                                 0x6 = ARMv5TEJ.
+                                                                 0x7 = ARMv6.
+                                                                 0xF = Defined by CPUID scheme.
+
+                                                                 For CNXXXX, CPUID scheme. */
+        uint32_t partnum               : 12; /**< [ 15:  4](RO) An implementation-defined primary part number for the device.
+                                                                 On processors implemented by Arm, if the top four bits of the
+                                                                     primary part number are 0x00x7.
+                                                                 Processors implemented by Arm have an Implementer code of 0x41.
+
+                                                                 For CNXXXX, the chip ID. Enumerated by PCC_PROD_E. */
+        uint32_t revision              : 4;  /**< [  3:  0](RO) An implementation-defined revision number for the device.
+
+                                                                 For CNXXXX this is the minor revision field.
+                                                                 See FUS_FUSE_NUM_E::CHIP_ID() for more information. */
+#else /* Word 0 - Little Endian */
+        uint32_t revision              : 4;  /**< [  3:  0](RO) An implementation-defined revision number for the device.
+
+                                                                 For CNXXXX this is the minor revision field.
+                                                                 See FUS_FUSE_NUM_E::CHIP_ID() for more information. */
+        uint32_t partnum               : 12; /**< [ 15:  4](RO) An implementation-defined primary part number for the device.
+                                                                 On processors implemented by Arm, if the top four bits of the
+                                                                     primary part number are 0x00x7.
+                                                                 Processors implemented by Arm have an Implementer code of 0x41.
+
+                                                                 For CNXXXX, the chip ID. Enumerated by PCC_PROD_E. */
+        uint32_t architecture          : 4;  /**< [ 19: 16](RO) 0x1 = ARMv4.
+                                                                 0x2 = ARMv4T.
+                                                                 0x3 = ARMv5 (obsolete).
+                                                                 0x4 = ARMv5T.
+                                                                 0x5 = ARMv5TE.
+                                                                 0x6 = ARMv5TEJ.
+                                                                 0x7 = ARMv6.
+                                                                 0xF = Defined by CPUID scheme.
+
+                                                                 For CNXXXX, CPUID scheme. */
+        uint32_t variant               : 4;  /**< [ 23: 20](RO) An implementation-defined variant number. Typically, this
+                                                                     field is used to distinguish between different product
+                                                                     variants, or major revisions of a product.
+
+                                                                 For CNXXXX this is the major revision field.
+                                                                 See FUS_FUSE_NUM_E::CHIP_ID() for more information. */
+        uint32_t implementer           : 8;  /**< [ 31: 24](RO) Implementer code assigned by Arm. Assigned codes include the
+                                                                 following:
+                                                                 0x41 = 'A' = Arm Limited.
+                                                                 0x42 = 'B' = Broadcom Corporation.
+                                                                 0x43 = 'C' = Marvell (Cavium) Inc.
+                                                                 0x44 = 'D' = Digital Equipment Corporation.
+                                                                 0x49 = 'I' = Infineon Technologies AG.
+                                                                 0x4D = 'M' = Motorola or Freescale Semiconductor Inc.
+                                                                 0x4E = 'N' = NVIDIA Corporation.
+                                                                 0x50 = 'P' = Applied Micro Circuits Corporation.
+                                                                 0x51 = 'Q' = Qualcomm Inc.
+                                                                 0x56 = 'V' = Marvell International Ltd.
+                                                                 0x69 = 'i' = Intel Corporation.
+
+                                                                 For CNXXXX, 'C'. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_ap_midr_el1_cn96xxp3 cn98xx; */
+    /* struct cavm_ap_midr_el1_cn9 cnf95xxp1; */
+    /* struct cavm_ap_midr_el1_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_midr_el1_cn96xxp3 f95mm; */
+    /* struct cavm_ap_midr_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_midr_el1 cavm_ap_midr_el1_t;
 
@@ -38940,7 +39365,7 @@ union cavm_ap_vpidr_el2
                                                                  Arm can assign codes that are not published in this manual.
                                                                      All values not assigned by Arm are reserved and must not be
                                                                      used. */
-        uint32_t variant               : 4;  /**< [ 23: 20](R/W) An implementation defined variant number. Typically, this
+        uint32_t variant               : 4;  /**< [ 23: 20](R/W) An implementation-defined variant number. Typically, this
                                                                      field is used to distinguish between different product
                                                                      variants, or major revisions of a product. */
         uint32_t architecture          : 4;  /**< [ 19: 16](R/W) Architecture:
@@ -38953,13 +39378,13 @@ union cavm_ap_vpidr_el2
                                                                  0x7 = ARMv6.
                                                                  0xF = Defined by CPUID scheme.
                                                                  _ All other values are reserved. */
-        uint32_t partnum               : 12; /**< [ 15:  4](R/W) An implementation defined primary part number for the device.
+        uint32_t partnum               : 12; /**< [ 15:  4](R/W) An implementation-defined primary part number for the device.
                                                                  On processors implemented by Arm, if the top four bits of the
                                                                      primary part number are 0x00x7. */
         uint32_t revision              : 4;  /**< [  3:  0](R/W) An implementation defined revision number for the device. */
 #else /* Word 0 - Little Endian */
         uint32_t revision              : 4;  /**< [  3:  0](R/W) An implementation defined revision number for the device. */
-        uint32_t partnum               : 12; /**< [ 15:  4](R/W) An implementation defined primary part number for the device.
+        uint32_t partnum               : 12; /**< [ 15:  4](R/W) An implementation-defined primary part number for the device.
                                                                  On processors implemented by Arm, if the top four bits of the
                                                                      primary part number are 0x00x7. */
         uint32_t architecture          : 4;  /**< [ 19: 16](R/W) Architecture:
@@ -38972,7 +39397,7 @@ union cavm_ap_vpidr_el2
                                                                  0x7 = ARMv6.
                                                                  0xF = Defined by CPUID scheme.
                                                                  _ All other values are reserved. */
-        uint32_t variant               : 4;  /**< [ 23: 20](R/W) An implementation defined variant number. Typically, this
+        uint32_t variant               : 4;  /**< [ 23: 20](R/W) An implementation-defined variant number. Typically, this
                                                                      field is used to distinguish between different product
                                                                      variants, or major revisions of a product. */
         uint32_t implementer           : 8;  /**< [ 31: 24](R/W) The implementer code. This field must hold an implementer code
@@ -39072,6 +39497,88 @@ union cavm_ap_vpidr_el2
                                                                      used. */
 #endif /* Word 0 - End */
     } cn9;
+    /* struct cavm_ap_vpidr_el2_cn9 cn96xxp1; */
+    struct cavm_ap_vpidr_el2_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t implementer           : 8;  /**< [ 31: 24](R/W) The implementer code. This field must hold an implementer code
+                                                                     that has been assigned by Arm.
+                                                                 Hex representation  ASCII representation.
+                                                                 0x41 = 'A' = Arm Limited.
+                                                                 0x42 = 'B' = Broadcom Corporation.
+                                                                 0x43 = 'C' = Marvell (Cavium) Inc.
+                                                                 0x44 = 'D' = Digital Equipment Corporation.
+                                                                 0x49 = 'I' = Infineon Technologies AG.
+                                                                 0x4D = 'M' = Motorola or Freescale Semiconductor Inc.
+                                                                 0x4E = 'N' = NVIDIA Corporation.
+                                                                 0x50 = 'P' = Applied Micro Circuits Corporation.
+                                                                 0x51 = 'Q' = Qualcomm Inc.
+                                                                 0x56 = 'V' = Marvell International Ltd.
+                                                                 0x69 = 'i' = Intel Corporation.
+
+                                                                 Arm can assign codes that are not published in this manual.
+                                                                     All values not assigned by Arm are reserved and must not be
+                                                                     used. */
+        uint32_t variant               : 4;  /**< [ 23: 20](R/W) An implementation-defined variant number. Typically, this
+                                                                     field is used to distinguish between different product
+                                                                     variants, or major revisions of a product. */
+        uint32_t architecture          : 4;  /**< [ 19: 16](R/W) Architecture:
+                                                                 0x1 = ARMv4.
+                                                                 0x2 = ARMv4T.
+                                                                 0x3 = ARMv5 (obsolete).
+                                                                 0x4 = ARMv5T.
+                                                                 0x5 = ARMv5TE.
+                                                                 0x6 = ARMv5TEJ.
+                                                                 0x7 = ARMv6.
+                                                                 0xF = Defined by CPUID scheme.
+                                                                 _ All other values are reserved. */
+        uint32_t partnum               : 12; /**< [ 15:  4](R/W) An implementation-defined primary part number for the device.
+                                                                 On processors implemented by Arm, if the top four bits of the
+                                                                     primary part number are 0x00x7. */
+        uint32_t revision              : 4;  /**< [  3:  0](R/W) An implementation defined revision number for the device. */
+#else /* Word 0 - Little Endian */
+        uint32_t revision              : 4;  /**< [  3:  0](R/W) An implementation defined revision number for the device. */
+        uint32_t partnum               : 12; /**< [ 15:  4](R/W) An implementation-defined primary part number for the device.
+                                                                 On processors implemented by Arm, if the top four bits of the
+                                                                     primary part number are 0x00x7. */
+        uint32_t architecture          : 4;  /**< [ 19: 16](R/W) Architecture:
+                                                                 0x1 = ARMv4.
+                                                                 0x2 = ARMv4T.
+                                                                 0x3 = ARMv5 (obsolete).
+                                                                 0x4 = ARMv5T.
+                                                                 0x5 = ARMv5TE.
+                                                                 0x6 = ARMv5TEJ.
+                                                                 0x7 = ARMv6.
+                                                                 0xF = Defined by CPUID scheme.
+                                                                 _ All other values are reserved. */
+        uint32_t variant               : 4;  /**< [ 23: 20](R/W) An implementation-defined variant number. Typically, this
+                                                                     field is used to distinguish between different product
+                                                                     variants, or major revisions of a product. */
+        uint32_t implementer           : 8;  /**< [ 31: 24](R/W) The implementer code. This field must hold an implementer code
+                                                                     that has been assigned by Arm.
+                                                                 Hex representation  ASCII representation.
+                                                                 0x41 = 'A' = Arm Limited.
+                                                                 0x42 = 'B' = Broadcom Corporation.
+                                                                 0x43 = 'C' = Marvell (Cavium) Inc.
+                                                                 0x44 = 'D' = Digital Equipment Corporation.
+                                                                 0x49 = 'I' = Infineon Technologies AG.
+                                                                 0x4D = 'M' = Motorola or Freescale Semiconductor Inc.
+                                                                 0x4E = 'N' = NVIDIA Corporation.
+                                                                 0x50 = 'P' = Applied Micro Circuits Corporation.
+                                                                 0x51 = 'Q' = Qualcomm Inc.
+                                                                 0x56 = 'V' = Marvell International Ltd.
+                                                                 0x69 = 'i' = Intel Corporation.
+
+                                                                 Arm can assign codes that are not published in this manual.
+                                                                     All values not assigned by Arm are reserved and must not be
+                                                                     used. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_ap_vpidr_el2_cn96xxp3 cn98xx; */
+    /* struct cavm_ap_vpidr_el2_cn9 cnf95xxp1; */
+    /* struct cavm_ap_vpidr_el2_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_ap_vpidr_el2_cn96xxp3 f95mm; */
+    /* struct cavm_ap_vpidr_el2_cn96xxp3 loki; */
 };
 typedef union cavm_ap_vpidr_el2 cavm_ap_vpidr_el2_t;
 
