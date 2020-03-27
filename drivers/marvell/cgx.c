@@ -2986,6 +2986,7 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 	uint64_t debounce_usec = 100000; /* 100ms */
 	uint64_t debounce_time;
 	int link_up = 1;
+	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
 	cavm_cgxx_spux_status1_t spux_status1;
 	cavm_cgxx_spux_status2_t spux_status2;
@@ -2999,11 +3000,24 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
 		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
 		is_gsern = true;
-	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
 
 	debug_cgx("%s: %d:%d mode %d AN enable %d training %d\n",
 			__func__, cgx_id, lmac_id, lmac->mode,
 			!lmac->autoneg_dis, lmac->use_training);
+
+	/* Don't try to bring link UP
+	 * if PRBS is enabled on any LMAC lanes
+	 */
+	if (!is_gsern) {
+		gserx = lmac->gserx + lmac->shift_from_first;
+		lane_mask = lmac->lane_mask;
+
+		if (cgx->qlm_ops->qlm_prbs_chk(gserx, lane_mask))
+			return 0;
+	}
 
 	if (!lmac->autoneg_dis) {
 		/* Configure an_nonce_match_dis bit accordingly based
@@ -3045,10 +3059,6 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 
 	/* If link training is disabled, manually bring up Link */
 	if (!lmac->use_training) {
-		cgx_config_t *cgx;
-
-		cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
-
 		/* Perform RX EQU for non-KR interfaces and for the link
 		 * speed >= 10Gbaud - XAUI/XLAUI/XFI
 		 */

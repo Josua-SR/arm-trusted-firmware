@@ -282,6 +282,37 @@ static int qlm_gserc_link_training_complete(int qlm, int lane)
 		return 1;
 }
 
+/**
+ * Check if PRBS Rx or Tx is enabled
+ *
+ * @param  qlm        Index into GSER* group
+ * @param  lane_mask  Which lanes to check
+ * @return 1 if PRBS enabled on any lane, 0 if no PRBS
+ */
+static int qlm_gserc_prbs_chk(int qlm, uint64_t lane_mask)
+{
+	int num_lanes;
+
+	while (lane_mask) {
+		/* Get the number of lanes on this QLM/DLM */
+		num_lanes = qlm_get_lanes(qlm);
+		for (int lane = 0; lane < num_lanes; lane++) {
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			/* Check if any lane has Rx or Tx PRBS enabled */
+			GSER_CSR_INIT(rx_ctrl, CAVM_GSERCX_LNX_BIST_RX_CTRL(qlm, lane));
+			GSER_CSR_INIT(tx_ctrl, CAVM_GSERCX_LNX_BIST_TX_CTRL(qlm, lane));
+			if (rx_ctrl.s.en ||
+				tx_ctrl.s.en)
+				return 1;
+		}
+		lane_mask >>= num_lanes;
+		qlm++;
+	}
+
+	return 0;
+}
+
 const qlm_ops_t qlm_gserc_ops = {
 	.type = QLM_GSERC_TYPE,
 	.qlm_get_state = qlm_gserc_get_state,
@@ -307,4 +338,5 @@ const qlm_ops_t qlm_gserc_ops = {
 	.qlm_link_training_config = qlm_gserc_link_training_config,
 	.qlm_link_training_fail = qlm_gserc_link_training_fail,
 	.qlm_link_training_complete = qlm_gserc_link_training_complete,
+	.qlm_prbs_chk = qlm_gserc_prbs_chk,
 };
