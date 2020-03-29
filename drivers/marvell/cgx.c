@@ -320,7 +320,7 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 		/* Verify if we are passed the link stabilization time */
 		if (gser_clock_get_count(GSER_CLOCK_TIME) >= stabilization_timeout) {
 			if (lmac->autoneg_dis)
-				printf("%s %d:%d QLM%d Lane%d Rx signal detect timeout\n",
+				debug_cgx("%s %d:%d QLM%d Lane%d Rx signal detect timeout\n",
 						__func__, cgx_id, lmac_id, qlm, lane);
 			return -1;
 		}
@@ -3143,7 +3143,8 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 		(strncmp(plat_octeontx_bcfg->bcfg.board_model, "asim-", 5))) {
 
 		/* Allow link to stabilize before declaring the link down */
-		stabilization_timeout = gser_clock_get_count(GSER_CLOCK_TIME) +
+		uint64_t initial_time = gser_clock_get_count(GSER_CLOCK_TIME);
+		stabilization_timeout = initial_time +
 			stabilization_timeout_usec *
 			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
 
@@ -3184,13 +3185,10 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 
 			/* Verify if we are passed the link stabilization time */
 			if (gser_clock_get_count(GSER_CLOCK_TIME) >= stabilization_timeout) {
-				debug_cgx("%s: %d:%d Link error timeout\n",
-					__func__, cgx_id, lmac_id);
-				spux_status1.u = CSR_READ(
-							CAVM_CGXX_SPUX_STATUS1(
-							cgx_id, lmac_id));
-				debug_cgx("%s: %d:%d Link error timeout %lld\n",
-					__func__, cgx_id, lmac_id, timeout);
+				debug_cgx("%s: %d:%d Link error timeout %lld us\n",
+					__func__, cgx_id, lmac_id,
+				    ((gser_clock_get_count(GSER_CLOCK_TIME) - initial_time) *
+					1000000 / gser_clock_get_rate(GSER_CLOCK_TIME)));
 				spux_status1.u = CSR_READ(
 						CAVM_CGXX_SPUX_STATUS1(
 							cgx_id, lmac_id));
