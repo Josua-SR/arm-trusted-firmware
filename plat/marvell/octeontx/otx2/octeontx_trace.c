@@ -22,8 +22,29 @@
 #include "cavm-csrs-dab_etr.h"
 #include "cavm-csrs-dab_trc.h"
 
+/* Platform specific configurations to override defaults
+ * 1. PLAT_ARMTRACEBUF_SIZE: Total trace buffer size available(all cores)
+ *    Default: Total trace buffer is same as the size of secure
+ *             preserve memory region
+ *
+ * 2. PLAT_ARMTRACEBUF_SIZE_MIN: Per core trace buffer size minimum
+ *    Default: ARM_CPU_TRACEBUFSIZE_MIN
+ *
+ * 3. PLAT_ARMTRACEBUF_CACHE_LOCK: Enables LLC cache locking of trace buffer
+ *    Default: Disabled
+ */
+
+#if !defined PLAT_ARMTRACEBUF_SIZE_MIN
 #define ARM_CPU_TRACEBUFSIZE_MIN 0x100000 /* 1M */
-#define PAGE_SIZE_MAX PAGE_SIZE_64KB
+#else
+#define ARM_CPU_TRACEBUFSIZE_MIN PLAT_ARMTRACEBUF_SIZE_MIN
+#endif
+
+/* Verify platform configuration */
+#if defined PLAT_ARMTRACEBUF_CACHE_LOCK && \
+!defined PLAT_ARMTRACEBUF_NO_WT
+#error "Invalid ARMTRACEBUF platform configuration"
+#endif
 
 /* Check if addr <--> (addr + size) lies within
  * start <--------------------------> end
@@ -128,15 +149,32 @@ void plat_armtrace_init(void)
 		INFO("ARM trace buffer not configured\n");
 		goto err;
 	} else {
+#if defined PLAT_ARMTRACEBUF_SIZE /* Override with platform configuration */
+		arm_tracebuf_size = PLAT_ARMTRACEBUF_SIZE;
+#endif
 		/* Ensure per cpu buffer size is sufficient */
 		cpu_tracebufsize = arm_tracebuf_size / PLATFORM_CORE_COUNT;
 		cpu_tracebufsize = ROUND_DOWN(cpu_tracebufsize,
-					      PAGE_SIZE_MAX);
+					      PAGE_SIZE);
 		if (cpu_tracebufsize < ARM_CPU_TRACEBUFSIZE_MIN) {
 			ERROR("ARM trace buffer size not sufficient\n");
 			goto err;
 		}
 
+#if defined PLAT_ARMTRACEBUF_CACHE_LOCK
+		/* LLC lock API needs the buffer to be writable */
+		if (octeontx_mmap_add_dynamic_region_with_sync(arm_tracebuf,
+			arm_tracebuf, arm_tracebuf_size, MT_MEMORY | MT_RW)) {
+			ERROR("ARM trace buffer map failure in secure world\n");
+			goto err;
+		}
+		if (octeontx_llc_lock(arm_tracebuf, arm_tracebuf_size)) {
+			ERROR("ARM trace buffer cache lock failure\n");
+			goto err;
+		}
+		octeontx_mmap_remove_dynamic_region_with_sync(arm_tracebuf,
+							     arm_tracebuf_size);
+#endif
 		/* Keep the whole tracebuffer mapped as RO */
 		if (!IS_PAGE_ALIGNED(arm_tracebuf)) {
 			ERROR("ARM trace buffer not page aligned\n");
@@ -189,7 +227,7 @@ uint64_t arm_trace_alloc_sbuf(uint64_t size, uint64_t cpu, int llc_lock_req,
 	*addr = arm_tracebuf + cpu * size;
 
 	if (llc_lock_req)
-		err = octeontx_llc_lock(*addr, size);
+		WARN("LLC locking is now a firmware configuration\n");
 
 	if (err)
 		return SMC_UNK;
