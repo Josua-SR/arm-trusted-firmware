@@ -28,9 +28,6 @@
 #include <bphy.h>
 #include <arm_sysreg.h>
 
-/* */
-#define MAX_BPHY_PSM_INTS	27
-
 struct bphy_psm_irq {
 	volatile uint64_t sp;
 	volatile uint64_t cpu;
@@ -68,7 +65,7 @@ void el3_start_el0_isr(uint64_t irq_num, uint64_t sp,
 		       uint64_t tcr_el1, uint64_t el_mode);
 
 static volatile int irq_cpu_lock_counter;
-volatile struct bphy_psm_irq bphy_ints[MAX_BPHY_PSM_INTS] = {0};
+volatile struct bphy_psm_irq bphy_ints[BPHY_PSM_IRQS_NUMBER] = {0};
 
 static volatile struct irq_cpu el3_bphy_irqs[] =
 	{[0 ... (BPHY_PSM_IRQS_NUMBER - 1)] = { -1, 0 }};
@@ -266,6 +263,9 @@ int bphy_psm_install_irq(uint64_t irq_num, uint64_t sp, uint64_t  cpu,
 		return -1;
 	}
 
+	if (irq_num >= BPHY_PSM_IRQS_NUMBER)
+		return -1;
+
 	/* Lock */
 	while (__atomic_fetch_add(&bphy_ints[irq_num].lock, 1,
 				 __ATOMIC_SEQ_CST) != 0)
@@ -360,6 +360,9 @@ void bphy_psm_clear_irq(uint64_t irq_num)
 		return;
 	}
 
+	if (irq_num >= BPHY_PSM_IRQS_NUMBER)
+		return;
+
 	/* Lock */
 	while (__atomic_fetch_add(&bphy_ints[irq_num].lock, 1,
 				 __ATOMIC_SEQ_CST) != 0)
@@ -400,7 +403,7 @@ int cavm_register_bphy_intr_handlers(void)
 {
 	int i, rc = 0;
 
-	for (i = 0; i < MAX_BPHY_PSM_INTS; i++) {
+	for (i = 0; i < BPHY_PSM_IRQS_NUMBER; i++) {
 		/* vector0 is reserved in loki */
 		if (!i && IS_OCTEONTX_PN(read_midr(), LOKIPARTNUM)) {
 			continue;
