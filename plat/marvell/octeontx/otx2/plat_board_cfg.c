@@ -1578,7 +1578,8 @@ static void octeontx2_cgx_lmacs_check_linux(const void *fdt,
 		/* In case of MODE that is using 2 lanes, lane index
 		 * should be aligned to obtain the correct DT entry
 		 */
-		if ((!plat_octeontx_bcfg->qlm_auto_config)
+		if (((!plat_octeontx_bcfg->qlm_auto_config)
+			|| (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504n", 7)))
 			&& (lmac->max_lane_count != 4)) {
 			lane = lmac->first_phy_lane;
 			if ((lmac->max_lane_count == 2) &&
@@ -1634,8 +1635,9 @@ static void octeontx2_cgx_lmacs_check_linux(const void *fdt,
 			}
 		}
 
-		/* Enable SFP management only LIO3 board */
-		if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "cn33", 4)) {
+		/* Enable SFP management only for LIO3 & LOKI EBB board */
+		if ((!strncmp(plat_octeontx_bcfg->bcfg.board_model, "cn33", 4))
+			|| (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504n", 7))) {
 			/* Check for sfp-slot info */
 			sfp_offset = octeontx2_fdt_lookup_phandle(fdt,
 						lmac_offset, sfpname);
