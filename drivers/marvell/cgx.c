@@ -505,6 +505,41 @@ static int cgx_link_training_wait(int cgx_id, int lmac_id)
 	return 0;
 }
 
+#ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
+static int cgx_qlm_prbs_chk(int cgx_id, int lmac_id)
+{
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+	int qlm, gserx, num_lanes;
+	uint64_t lane_mask;
+
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+
+	qlm = lmac->qlm + lmac->shift_from_first;
+	gserx = lmac->gserx + lmac->shift_from_first;
+	lane_mask = lmac->lane_mask;
+
+	while (lane_mask) {
+		/* Get the number of lanes on this QLM/DLM */
+		num_lanes = qlm_get_lanes(qlm);
+		for (int lane = 0; lane < num_lanes; lane++) {
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			/* Check if any lane has Rx or Tx PRBS enabled */
+			if (cgx->qlm_ops->qlm_prbs_chk(gserx, lane))
+				return 1;
+		}
+		lane_mask >>= num_lanes;
+		qlm++;
+	}
+
+	return 0;
+}
+#endif
+
 /* This function initializes CGX in the SGMII/QSGMII modes
  * called one time either during boot or mode change
  */
@@ -3011,14 +3046,12 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 	/* Don't try to bring link UP
 	 * if PRBS is enabled on any LMAC lanes
 	 */
+#ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
 	if (!is_gsern) {
-		gserx = lmac->gserx + lmac->shift_from_first;
-		lane_mask = lmac->lane_mask;
-
-		if (cgx->qlm_ops->qlm_prbs_chk(gserx, lane_mask))
+		if (cgx_qlm_prbs_chk(cgx_id, lmac_id))
 			return 0;
 	}
-
+#endif
 	if (!lmac->autoneg_dis) {
 		/* Configure an_nonce_match_dis bit accordingly based
 		 * on loopback mode set by user

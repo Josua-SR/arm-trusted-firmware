@@ -390,29 +390,16 @@ static int qlm_gserr_tx_control(int qlm, int lane, int enable_tx)
  * Check if PRBS Rx or Tx is enabled
  *
  * @param  qlm        Index into GSER* group
- * @param  lane_mask  Which lanes to check
- * @return 1 if PRBS enabled on any lane, 0 if no PRBS
+ * @param lane	  Which lane
+ * @return 1 if PRBS enabled on lane, 0 if no PRBS
  */
-static int qlm_gserr_prbs_chk(int qlm, uint64_t lane_mask)
+static int qlm_gserr_prbs_chk(int qlm, int lane)
 {
-	int num_lanes;
-
-	while (lane_mask) {
-		/* Get the number of lanes on this QLM/DLM */
-		num_lanes = qlm_get_lanes(qlm);
-		for (int lane = 0; lane < num_lanes; lane++) {
-			if (!(lane_mask & (1 << lane)))
-				continue;
-			/* Check if any lane has Rx or Tx PRBS enabled */
-			GSER_CSR_INIT(rx_ctrl, CAVM_GSERRX_LNX_BIST_RX_CTRL(qlm, lane));
-			GSER_CSR_INIT(tx_ctrl, CAVM_GSERRX_LNX_BIST_TX_CTRL(qlm, lane));
-			if (rx_ctrl.s.en ||
-				tx_ctrl.s.en)
-				return 1;
-		}
-		lane_mask >>= num_lanes;
-		qlm++;
-	}
+	/* Check if any lane has Rx or Tx PRBS enabled */
+	GSER_CSR_INIT(rx_ctrl, CAVM_GSERRX_LNX_BIST_RX_CTRL(qlm, lane));
+	GSER_CSR_INIT(tx_ctrl, CAVM_GSERRX_LNX_BIST_TX_CTRL(qlm, lane));
+	if (rx_ctrl.s.en || tx_ctrl.s.en)
+		return 1;
 
 	return 0;
 }
