@@ -20,7 +20,6 @@
 #include <bl31/interrupt_mgmt.h>
 #include <octeontx_irqs_def.h>
 
-#include <octeontx_utils.h>
 #include <octeontx_ecam.h>
 #include <octeontx_ehf.h>
 #include <octeontx_svc.h>
@@ -258,11 +257,6 @@ int bphy_psm_install_irq(uint64_t irq_num, uint64_t sp, uint64_t  cpu,
 
 	INFO("Entering %s\n", __func__);
 
-	/* vector0 is reserved in loki */
-	if (!irq_num && IS_OCTEONTX_PN(read_midr(), LOKIPARTNUM)) {
-		return -1;
-	}
-
 	if (irq_num >= BPHY_PSM_IRQS_NUMBER)
 		return -1;
 
@@ -355,11 +349,6 @@ void bphy_psm_clear_irq(uint64_t irq_num)
 {
 	INFO("%s\n", __func__);
 
-	/* vector0 is reserved in loki */
-	if (!irq_num && IS_OCTEONTX_PN(read_midr(), LOKIPARTNUM)) {
-		return;
-	}
-
 	if (irq_num >= BPHY_PSM_IRQS_NUMBER)
 		return;
 
@@ -404,11 +393,6 @@ int cavm_register_bphy_intr_handlers(void)
 	int i, rc = 0;
 
 	for (i = 0; i < BPHY_PSM_IRQS_NUMBER; i++) {
-		/* vector0 is reserved in loki */
-		if (!i && IS_OCTEONTX_PN(read_midr(), LOKIPARTNUM)) {
-			continue;
-		}
-
 		rc = octeontx_ehf_register_irq_handler(BPHY_PSM_IRQ(i),
 							bphy_psm_irq_handler);
 		if (rc) {

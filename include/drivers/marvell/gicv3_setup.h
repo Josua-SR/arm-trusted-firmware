@@ -14,18 +14,6 @@
  * It is number of all interrupts configured in GIC.
  * Every GIC interrupt has to be defined in interrupt_array.
  */
-#if defined(PLAT_loki)
-#define NUMBER_OF_GIC_INTERRUPTS (1 \
-								+ GPIO_SPI_IRQS \
-								+ BPHY_PSM_IRQS_NUMBER - 1 \
-								+ GTI_CWD_SPI_IRQS \
-								+ RAS_PPI_IRQS \
-								+ MDC_SPI_IRQS \
-								+ MCC_SPI_IRQS \
-								+ LMC_SPI_IRQS \
-								+ SDEI_SGI_IRQS \
-								)
-#else
 #define NUMBER_OF_GIC_INTERRUPTS (1 \
 				+ GPIO_SPI_IRQS \
 				+ BPHY_PSM_IRQS_NUMBER \
@@ -36,7 +24,7 @@
 				+ LMC_SPI_IRQS \
 				+ SDEI_SGI_IRQS \
 				)
-#endif
+
 
 void octeontx_gic_driver_init(void);
 void octeontx_gic_init(void);
