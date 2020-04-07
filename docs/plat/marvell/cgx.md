@@ -216,9 +216,10 @@ Device Settings  | (Required for GSERN tuning)     | ?
 
 #### 4.1.1. DT PARSER
 
-Based on the QLM LANE mode configuration by BDK (via `GSERNX_LANEX_SCRATCHX CSR`)
-mode is obtained for each lane of QLM. It gets mapped against CGX instance and
-checked against the OS DT to map the info with each LMAC of CGX.
+Based on the QLM LANE mode configuration by BDK (via `GSERXX_LANEX_SCRATCHX CSR`)
+mode is obtained for each lane of QLM. It can be GSERN/GSERR/GSERC.
+It gets mapped against CGX instance and checked against the OS DT to
+map the info with each LMAC of CGX.
 
 ```c
 typedef union
@@ -242,9 +243,18 @@ global board config structure per LMAC.
 
 ---
 
-#### 4.1.2. GSERN
+#### 4.1.2. GSER
+Different passes of SoCs use various GSERX SerDes. BDK initializes/configures the SerDes for the ethernet mode that is configured for the corresponding QLM, lane.
 
-**TODO**
+##### 4.1.2.1 GSERN
+ T9X pass A.0, B.0 and F95 pass A.x uses GSERN. ATF includes GSERN driver to configure the SerDes to support ethernet mode change at run time and also if mode saved in flash (persistent settings) is different from BDK DT/MCU configuration.
+
+##### 4.1.2.2 GSERR (RAMBUS)
+All other passes (except t96 pass A.x and B.x and f95 pass A.x), uses GSERR for ethernet mode. 
+ATF includes GSERR driver to configure the SerDes to support ethernet mode change at run time. Also for ethernet modes with KR, RAMBUS AN is used instead of CGX AN. Hand shaking with RAMBUS firmware APIs are included in ATF to support AN/LT and integrated with CGX driver.
+
+##### 4.1.2.3 GSERC (RAMBUS)
+ For Ethernet/CPRI mode, GSERC is used (for RFOE use cases). ATF includes GSERC driver to configure SerDes for CPRI mode.  
 
 ---
 
@@ -277,8 +287,7 @@ MSIX vector provided for SW purpose (37th vector in CGX) is dummy and
 interrupt cannot be triggered. 
 
 For firmware to notify kernel, `CGXX_CMRX_INT(0..2)(0..3)` – Overflow bit (bit 1)
-is chosen as communication method for T9X PASS 1.0 
-(until [http://mcbuggin.caveonetworks.com/bug/33218] is resolved)
+is chosen as communication method for all OTX2 platform. 
 
 ---
 
@@ -512,6 +521,48 @@ status also in the response structure
 
 NOTE: Based on current QLM configuration, ATF decides whether to allow the change.
 
+##### 4.2.1.11. PTP MODE
+
+This command CGX_CMD_SET_PTP_MODE provides option to enable/disable
+PTP mode for CGX.
+
+Following are the parameters expected:
+
+struct cgx_ctl_args {                   /* start from bit 8 */
+        uint64_t reserved1:8;
+        uint64_t enable:1;
+        uint64_t reserved2:55;
+};
+
+##### 4.2.1.12. CPRI MODE CHANGE
+
+This command CGX_CMD_CPRI_MODE_CHANGE adds support to switch
+from ethernet(eCPRI) to CPRI and also to different baud rates in CPRI mode.
+
+/* command argument to be passed for cmd ID - CGX_CMD_CPRI_MODE_CHANGE */
+struct cpri_mode_change_args {
+        uint64_t reserved1:8;
+        uint64_t gserc_idx:4;
+        uint64_t lane_idx:4;
+        uint64_t rate:16; /* 9830/4915/2458/6144/3072 */
+        uint64_t reserved2:28;
+};
+
+Since the command uses CGX framework, any CGX IDx and LMAC IDx can be passed. For all the GSERC that corresponds to CPRI, initial boot time configuration should be ethernet. Later, user can send this command to switch to CPRI.
+
+* The command expects GSERC and lane as index with the requested RATE(baudrate).
+This command handles the change from ethernet to CPRI and different
+baud rates in CPRI and not from CPRI to CGX. For CPRI to CGX,
+CGX_CMD_MODE_CHANGE command should be used.
+
+* If change request to baud rate for the lane that is not in the same set of
+baud rate group, it will return error.
+Allowed baud rates are mentioned in above command arguments. In this,
+set0 baud rate: 6144/3072
+set1 baud rate: 9830/4915/2458
+
+* If change request to baud rate for the lane is changed from ethernet to CPRI,
+other lane in DLM is also changed due to GSERC limitation.
 ---
 
 #### 4.2.2. INTERFACE FROM ATF to U-BOOT/UEFI/KERNEL
