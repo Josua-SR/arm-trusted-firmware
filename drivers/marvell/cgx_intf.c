@@ -727,6 +727,19 @@ static int cgx_get_training_for_mode(uint64_t req_mode)
 	return use_training;
 }
 
+static int cgx_is_req_mode_valid(uint64_t req_mode)
+{
+	int valid = 0;
+
+	for (int i = 0; i < ARRAY_SIZE(speed_mode_map); i++) {
+		if (req_mode == speed_mode_map[i].mode_bitmask)	{
+			valid = 1;
+			break;
+		}
+	}
+	return valid;
+}
+
 static int cgx_get_qlm_mode_for_req_mode(uint64_t req_mode)
 {
 	int qlm_mode = 0;
@@ -828,6 +841,185 @@ static int cgx_set_phy_mod_type(int cgx_id, int lmac_id, int phy_mod_type)
 	return 0;
 }
 
+#if defined(PLAT_loki)
+static void cgx_obtain_lmac_index(int gserc_idx, int lane_idx, int *cgx_idx, int *lmac_idx)
+{
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+	int lane = 0;
+
+	/* Find the CGX, LMAC index for GSER/LANE index */
+	for (int i = 0; i < MAX_CGX; i++) {
+		cgx = &plat_octeontx_bcfg->cgx_cfg[i];
+		*cgx_idx = -1;
+		*lmac_idx = -1;
+		/* Skip CGX0 as it is connected to GSERR */
+		if (i == 0)
+			continue;
+		for (int j = 0; j < MAX_LMAC_PER_CGX; j++) {
+			lmac = &cgx->lmac_cfg[j];
+			if (lmac->gserx == gserc_idx) {
+				lane = lmac->lane;
+				/* For higher DLM, subtract the lane
+				 * index by 2 to get the correct
+				 * lane index
+				 */
+				if (lmac->lane >= 2)
+					lane -= 2;
+				if (lane == lane_idx) {
+					*cgx_idx = i;
+					*lmac_idx = j;
+					debug_cgx_intf("%s: gserx %d lane %d cgx %d lmac %d\n",
+						__func__, gserc_idx, lane_idx, *cgx_idx,
+						*lmac_idx);
+					break;
+				}
+			}
+		}
+		if ((*cgx_idx != -1) && (*lmac_idx != -1))
+			break;
+	}
+}
+
+static int cpri_is_rate_change_allowed(int current_rate, int req_rate)
+{
+	int rate0[] = {6144, 3072};
+	int rate1[] = {9830, 4915, 2458};
+	int set0 = 0, set1 = 0, allowed = 0;
+
+	if (current_rate == -1) {
+		/* If current rate is set to -1, it is to check
+		 * if the requested baud rate is in the valid
+		 * list (either in set0 or set1)
+		 */
+		set0 = set1 = 1;
+	} else {
+		if ((current_rate == rate0[0]) ||
+				(current_rate == rate0[1]))
+			set0 = 1;
+		else if ((current_rate == rate1[0]) ||
+			(current_rate == rate1[1])
+			|| (current_rate == rate1[2]))
+			set1 = 1;
+	}
+
+	if (set0 == 1) {
+		for (int i = 0; i < ARRAY_SIZE(rate0); i++) {
+			if (req_rate == rate0[i]) {
+				allowed = 1;
+				break;
+			}
+		}
+	}
+	if (set1 == 1) {
+		for (int i = 0; i < ARRAY_SIZE(rate1); i++) {
+			if (req_rate == rate1[i]) {
+				allowed = 1;
+				break;
+			}
+		}
+	}
+	debug_cgx_intf("%s: current_rate %d req_rate %d, set0 %d set1 %d allowed %d\n",
+			__func__, current_rate, req_rate,
+			set0, set1,
+			allowed);
+	return allowed;
+}
+
+int cpri_handle_mode_change(struct cpri_mode_change_args *args)
+{
+	int req_rate;
+	cgx_config_t *cgx;
+	int cgx_idx = 0, lmac_idx = 0;
+	int gserc_idx = 0, lane_idx = 0;
+	int current_rate, is_allowed;
+	int max_lane_count = 2; /* GSERC has only 2 lanes per DLM */
+
+	req_rate = args->rate;
+	gserc_idx = args->gserc_idx;
+	lane_idx = args->lane_idx;
+
+	debug_cgx_intf("%s: gser %d lane %d rate req %d\n",
+			__func__, gserc_idx, lane_idx, req_rate);
+
+	cgx_obtain_lmac_index(gserc_idx, lane_idx, &cgx_idx, &lmac_idx);
+
+	if ((cgx_idx == -1) && (lmac_idx == -1)) {
+		ERROR("%s: invalid CGX, LMAC index obtained\n", __func__);
+		return -1;
+	}
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_idx];
+
+	debug_cgx_intf("%s: cgx %d lmac %d gserc_idx %d, is_cpri %d\n", __func__,
+			cgx_idx, lmac_idx,
+			gserc_idx,
+			plat_octeontx_bcfg->qlm_cfg[gserc_idx].is_cpri);
+
+	if (!cpri_is_rate_change_allowed(-1, req_rate)) {
+		ERROR("%s: requested rate %d is not valid\n", __func__,
+				req_rate);
+		return -1;
+	}
+	if (!plat_octeontx_bcfg->qlm_cfg[gserc_idx].is_cpri) {
+		/* If the DLM is configured as CGX, change both the lanes
+		 * of DLM to CPRI
+		 */
+		for (int j = 0; j < max_lane_count; j++) {
+			if (j == lane_idx) {
+				/* Bring down the CGX link */
+				cgx_link_bringdown(cgx_idx, lmac_idx);
+				cgx->qlm_ops->qlm_set_mode(gserc_idx, j, QLM_MODE_CPRI,
+						req_rate, 0);
+				plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[j]
+							= req_rate;
+			} else {
+				/* Bring down the link for other lane
+				 * and set to CPRI mode
+				 */
+				cgx_obtain_lmac_index(gserc_idx, j, &cgx_idx, &lmac_idx);
+				if ((cgx_idx == -1) && (lmac_idx == -1)) {
+					ERROR("%s: invalid CGX, LMAC index obtained\n", __func__);
+					return -1;
+				}
+				cgx_link_bringdown(cgx_idx, lmac_idx);
+				cgx->qlm_ops->qlm_set_mode(gserc_idx, j, QLM_MODE_CPRI,
+							req_rate, 0);
+				plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[j]
+								= req_rate;
+			}
+		}
+		plat_octeontx_bcfg->qlm_cfg[gserc_idx].is_cpri = 1;
+	} else {
+		/* If the DLM is configured as CPRI, change to requested
+		 * baud rate.
+		 */
+		if (req_rate == plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[lane_idx]) {
+			debug_cgx_intf("%s: gser %d lane %d rate already the same as current\n",
+					__func__, gserc_idx, lane_idx);
+			return -1;
+		}
+
+		/* Check if the other lane is in the same set of PHY rate */
+		for (int j = 0; j < max_lane_count; j++) {
+			if (j != lane_idx)
+				current_rate = plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[j];
+		}
+		is_allowed = cpri_is_rate_change_allowed(current_rate, req_rate);
+		if (!is_allowed) {
+			ERROR("%s: CPRI rate change not allowed as other lane baud rate is not in the rate set\n",
+					__func__);
+			return -1;
+		}
+		/* Change the SERDES speed */
+		cgx->qlm_ops->qlm_set_mode(gserc_idx, lane_idx, QLM_MODE_CPRI,
+					req_rate, 0);
+		plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[lane_idx]
+							= req_rate;
+	}
+	return 0;
+}
+#endif
+
 int cgx_handle_mode_change(int cgx_id, int lmac_id,
 				struct cgx_mode_change_args *args)
 {
@@ -878,6 +1070,18 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 					CGX_ERR_SPEED_CHANGE_INVALID);
 			goto mode_err;
 		}
+	}
+	/* If req_mode is non-zero, validate if it is one of
+	 * the valid mode bit masks.
+	 * If the request is to change to CPRI, CPRI_MODE_CHANGE
+	 * command needs to be used
+	 */
+	if (!cgx_is_req_mode_valid(req_mode)) {
+		debug_cgx_intf("%s: %d: %d Invalid speed/AN/mode request\n",
+				 __func__, cgx_id, lmac_id);
+		cgx_set_error_type(cgx_id, lmac_id,
+				CGX_ERR_SPEED_CHANGE_INVALID);
+		goto mode_err;
 	}
 
 	/* User is requesting for a different speed. Check if
@@ -1704,6 +1908,7 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 
 	/* Read the command arguments from SCRATCHX(1) */
 	scratchx1.u = CSR_READ(CAVM_CGXX_CMRX_SCRATCHX(cgx_id, lmac_id, 1));
+
 	request_id = scratchx1.s.cmd.id;
 	enable = scratchx1.s.cmd_args.enable;
 	debug_cgx_intf("%s: %d:%d request_id %d\n", __func__, cgx_id,
@@ -1957,6 +2162,21 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 			case CGX_CMD_SET_PTP_MODE:
 				ret = cgx_set_ptp_mode(cgx_id, lmac_id, enable);
 			break;
+#if defined(PLAT_loki)
+			case CGX_CMD_CPRI_MODE_CHANGE:
+				/* CGX and LMAC index can be passed as any
+				 * valid CGX and LMAC index for LOKI platform
+				 * Ex: from CGX : 0 - 3, LMAC : 0 - 3
+				 */
+				scratchx1.u = CSR_READ(CAVM_CGXX_CMRX_SCRATCHX(
+							cgx_id, lmac_id, 1));
+				ret = cpri_handle_mode_change(
+						&scratchx1.s.cpri_change_args);
+				if (ret == -1)
+					cgx_set_error_type(cgx_id, lmac_id,
+						CGX_ERR_SPEED_CHANGE_INVALID);
+#endif
+			break;
 			/* FIXME: add support for other commands */
 			default:
 				debug_cgx_intf("%s: %d:%d Invalid request %d\n",
@@ -2060,12 +2280,13 @@ static int cgx_check_sfp_mod_stat(int cgx_id, int lmac_id)
 	int ret = 0, mod_status = 0;
 	cgx_lmac_context_t *lmac_ctx;
 
-	debug_cgx_intf("%s: %d:%d\n", __func__, cgx_id, lmac_id);
-
 	lmac_ctx = &lmac_context[cgx_id][lmac_id];
 
 	/* Obtain the module status */
 	mod_status = sfp_get_mod_status(cgx_id, lmac_id);
+
+	debug_cgx_intf("%s: %d:%d mod_status %d\n",
+			__func__, cgx_id, lmac_id, mod_status);
 
 	if (mod_status == -1)
 		return -1;

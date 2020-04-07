@@ -13,7 +13,7 @@
 #include <phy_mgmt.h>
 
 #define CGX_FIRMWARE_MAJOR_VER		1
-#define CGX_FIRMWARE_MINOR_VER		0
+#define CGX_FIRMWARE_MINOR_VER		1
 
 /* CGX error types. set for cmd response status as CGX_STAT_FAIL */
 enum cgx_error_type {
@@ -105,6 +105,7 @@ enum cgx_cmd_id {
 	CGX_CMD_SET_PERSIST_IGNORE,
 	CGX_CMD_SET_MAC_ADDR,
 	CGX_CMD_SET_PTP_MODE,
+	CGX_CMD_CPRI_MODE_CHANGE,	/* = 35 */
 };
 
 /* async event ids */
@@ -387,6 +388,15 @@ struct cgx_link_change_args {		/* start from bit 8 */
 	uint64_t reserved2:50;
 };
 
+/* command argument to be passed for cmd ID - CGX_CMD_CPRI_MODE_CHANGE */
+struct cpri_mode_change_args {
+	uint64_t reserved1:8;
+	uint64_t gserc_idx:4;
+	uint64_t lane_idx:4;
+	uint64_t rate:16; /* 9830/4915/2458/6144/3072 */
+	uint64_t reserved2:28;
+};
+
 /* command argument to be passed for cmd ID - CGX_CMD_SET_LINK_MODE */
 struct cgx_set_mode_args {
 	uint64_t reserved1:8;
@@ -453,6 +463,7 @@ union cgx_cmd_s {
 	struct cgx_set_phy_mod_args phy_mod_args;
 	struct cgx_set_flash_ignore_args persist_args;
 	struct cgx_mac_addr_args mac_args;
+	struct cpri_mode_change_args cpri_change_args;
 	/* any other arg for command id * like : mtu, dmac filtering control */
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
 	struct cgx_prbs_args prbs_args;
