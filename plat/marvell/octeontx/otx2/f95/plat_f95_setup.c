@@ -581,6 +581,16 @@ void plat_gti_irq_setup(int core)
 	octeontx_write64(vector_ptr, GTI_CWD_SPI_IRQ(core));
 }
 
+int plat_is_irq_ns(uint32_t irq)
+{
+	return 0;
+}
+
+void plat_disable_secure_irq(uint32_t irq)
+{
+
+}
+
 /*
  * This API should be provided by each [otx2] platform that requires
  * individual IOBN security settings.

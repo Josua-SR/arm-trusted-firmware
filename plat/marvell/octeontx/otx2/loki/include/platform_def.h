@@ -212,4 +212,9 @@
 /* OcteonTX platforms use 3 upper bits of secure interrupt priority */
 #define OCTEONTX_PRI_BITS		3
 
+#ifndef __ASSEMBLER__
+int plat_is_irq_ns(uint32_t irq);
+void plat_disable_secure_irq(uint32_t irq);
+#endif
+
 #endif

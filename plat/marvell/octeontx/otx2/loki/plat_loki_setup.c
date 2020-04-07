@@ -6,6 +6,7 @@
  */
 
 #include <debug.h>
+#include <bl31/interrupt_mgmt.h>
 #include <plat/common/platform.h>
 #include <platform_def.h>
 #include <platform_dt.h>
@@ -30,12 +31,7 @@
 #define CAVM_BPHY_BAR_E_BPHY_PF_BAR2 (0x87e040000000ll)
 #define CAVM_BPHY_BAR_E_BPHY_PF_BAR2_SIZE 0x8000000ull
 #define CAVM_PSM_INT_VEC_E_GPINTX(a) (0 + (a))
-uint64_t CAVM_PSM_MSIX_VECX_ADDR(unsigned long a)
-{
-	if (a <= 26)
-		return 0x860000000000ll + 0x10ll * ((a) & 0x1f);
-	return 0;
-}
+#define CAVM_PSM_MSIX_VECX_ADDR(a) (0x860000000000ll + 0x10ll * ((a) & 0x1f))
 
 static uint64_t msix_addr_save;
 
@@ -575,6 +571,75 @@ void plat_set_bphy_psm_msix_vectors(int msix_num, int irq_num, int enable)
 		vector_ptr += 8;
 		octeontx_write64(vector_ptr, irq_num);
 	}
+}
+
+/*
+ * List of SPI IRQs to convert to Non-Secure
+ */
+struct plat_ns_irq {
+	uint64_t vector;
+	uint32_t irq;
+};
+
+static struct plat_ns_irq plat_ns_irq_list[] = {
+	{CAVM_PSM_MSIX_VECX_ADDR(CAVM_PSM_INT_VEC_E_GPINTX(0)), BPHY_PSM_GPINT_IRQ(0)}
+};
+
+/*
+ * Check if an IRQ is marked Non-secure
+ *
+ * This is for SPI IRQs that are listed in platform_def.h which are originally
+ * for EL3 but some might be want to use in Non-Secure software.
+ *
+ * Useful where there are more vectors in a device and in that some need to be
+ * handled in Non-Secure software.
+ *
+ */
+int plat_is_irq_ns(uint32_t irq)
+{
+	int i, count;
+
+	count = ARRAY_SIZE(plat_ns_irq_list);
+
+	for (i = 0; i < count; i++) {
+		if (irq == plat_ns_irq_list[i].irq)
+			return 1;
+	}
+
+	return 0;
+}
+
+static void update_msix_vector(uint32_t irq)
+{
+	uint64_t vector_ptr;
+	uint32_t i, count;
+
+	count = ARRAY_SIZE(plat_ns_irq_list);
+	for (i = 0; i < count; i++) {
+		if (irq == plat_ns_irq_list[i].irq) {
+			vector_ptr = plat_ns_irq_list[i].vector;
+			break;
+		}
+	}
+
+	if (!vector_ptr)
+		return;
+
+	octeontx_write64(vector_ptr, CAVM_GICD_SETSPI_NSR);
+	vector_ptr += 8;
+	octeontx_write64(vector_ptr, irq);
+}
+
+/*
+ * Disable the secure SPI IRQ in EL3
+ */
+void plat_disable_secure_irq(uint32_t irq)
+{
+	plat_ic_disable_interrupt(irq);
+	plat_ic_set_interrupt_type(irq, INTR_TYPE_NS);
+
+	/* update the msix vector corresponding to this irq */
+	update_msix_vector(irq);
 }
 
 /*

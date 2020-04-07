@@ -519,6 +519,16 @@ void plat_set_bphy_psm_msix_vectors(int msix_num, int irq_num, int enable)
 	}
 }
 
+int plat_is_irq_ns(uint32_t irq)
+{
+	return 0;
+}
+
+void plat_disable_secure_irq(uint32_t irq)
+{
+
+}
+
 /*
  * This API should be provided by each [otx2] platform that requires
  * individual IOBN security settings.

@@ -257,6 +257,9 @@ int bphy_psm_install_irq(uint64_t irq_num, uint64_t sp, uint64_t  cpu,
 
 	INFO("Entering %s\n", __func__);
 
+	if (plat_is_irq_ns(irq_num))
+		return -1;
+
 	if (irq_num >= BPHY_PSM_IRQS_NUMBER)
 		return -1;
 
@@ -349,6 +352,9 @@ void bphy_psm_clear_irq(uint64_t irq_num)
 {
 	INFO("%s\n", __func__);
 
+	if (plat_is_irq_ns(irq_num))
+		return;
+
 	if (irq_num >= BPHY_PSM_IRQS_NUMBER)
 		return;
 
@@ -393,6 +399,11 @@ int cavm_register_bphy_intr_handlers(void)
 	int i, rc = 0;
 
 	for (i = 0; i < BPHY_PSM_IRQS_NUMBER; i++) {
+		if (plat_is_irq_ns(BPHY_PSM_IRQ(i))) {
+			plat_disable_secure_irq(BPHY_PSM_IRQ(i));
+			continue;
+		}
+
 		rc = octeontx_ehf_register_irq_handler(BPHY_PSM_IRQ(i),
 							bphy_psm_irq_handler);
 		if (rc) {
