@@ -9,6 +9,12 @@ VERSION_STRING		+=(Marvell-${SUBVERSION})
 
 BL2_AT_EL3		:=	1
 
+ifeq (${RAS_EXTENSION},1)
+# Software Delegated Exception support required by RAS
+SDEI_SUPPORT            :=       1
+$(eval $(call add_define,SDEI_SUPPORT))
+endif
+
 ifeq (${BUILD_TYPE}, release)
 	# Use LOG_LEVEL_WARN in release builds
         LOG_LEVEL	:=	30

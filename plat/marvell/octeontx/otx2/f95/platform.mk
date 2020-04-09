@@ -5,9 +5,6 @@
 
 RAS_EXTENSION		:=       1
 HANDLE_EA_EL3_FIRST	:=       1
-# Software Delegated Exception support
-SDEI_SUPPORT            :=       1
-$(eval $(call add_define,SDEI_SUPPORT))
 
 # Include common Marvell platform's makefile helper
 include plat/marvell/octeontx/platform.mk
