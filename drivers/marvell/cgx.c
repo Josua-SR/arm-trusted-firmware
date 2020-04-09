@@ -3024,11 +3024,11 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
 	cavm_cgxx_spux_status1_t spux_status1;
-	cavm_cgxx_spux_status2_t spux_status2;
 	cavm_cgxx_cmrx_config_t cmr_config;
 	cavm_cgxx_spux_br_status2_t br_status2;
 	cavm_cgxx_spux_control1_t spux_control1;
 	cavm_cgxx_smux_rx_ctl_t	smux_rx_ctl;
+	cavm_cgxx_spux_int_t spux_int;
 	bool is_gsern = 0;
 
 	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
@@ -3152,17 +3152,13 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 	}
 
 	/* Clear latching bits */
-	spux_status1.u = CSR_READ(CAVM_CGXX_SPUX_STATUS1(
-					cgx_id, lmac_id));
-	spux_status1.s.rcv_lnk = 1;
-	CSR_WRITE(CAVM_CGXX_SPUX_STATUS1(cgx_id, lmac_id),
-			spux_status1.u);
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_status1_t,
+			CAVM_CGXX_SPUX_STATUS1(cgx_id, lmac_id),
+			rcv_lnk, 1);
 
-	spux_status2.u = CSR_READ(CAVM_CGXX_SPUX_STATUS2(
-					cgx_id, lmac_id));
-	spux_status2.s.rcvflt = 1;
-	CSR_WRITE(CAVM_CGXX_SPUX_STATUS2(cgx_id, lmac_id),
-			spux_status2.u);
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_status2_t,
+			CAVM_CGXX_SPUX_STATUS2(cgx_id, lmac_id),
+			rcvflt, 1);
 
 	/* For BASE-R modes, for stable link to be established
 	 * check if the link is error free upto 50ms
@@ -3261,11 +3257,9 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 						cgx_id, lmac_id), 0);
 
 			/* RCV_LNK is latching bit, so set it again */
-			spux_status1.u = CSR_READ(CAVM_CGXX_SPUX_STATUS1(
-						cgx_id, lmac_id));
-			spux_status1.s.rcv_lnk = 1;
-			CSR_WRITE(CAVM_CGXX_SPUX_STATUS1(cgx_id, lmac_id),
-						spux_status1.u);
+			CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_status1_t,
+					CAVM_CGXX_SPUX_STATUS1(cgx_id, lmac_id),
+					rcv_lnk, 1);
 		}
 		/* Write 1 to latched BER */
 		br_status2.u = CSR_READ(CAVM_CGXX_SPUX_BR_STATUS2(
@@ -3274,6 +3268,16 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 		CSR_WRITE(CAVM_CGXX_SPUX_BR_STATUS2(cgx_id, lmac_id),
 					br_status2.u);
 	}
+
+	/* Clear error bits if any set in SPUX_INT before enabling
+	 * packet transfer. Also clear the FLT status register
+	 */
+	spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
+	CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id), (spux_int.u &
+				CGX_SPUX_CLEAR_ERR_INT_MASK));
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_status2_t,
+			CAVM_CGXX_SPUX_STATUS2(cgx_id, lmac_id),
+			rcvflt, 1);
 
 	/* enable Data Tx/Rx */
 	cmr_config.u = CSR_READ(CAVM_CGXX_CMRX_CONFIG(

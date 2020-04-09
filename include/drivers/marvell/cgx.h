@@ -61,6 +61,24 @@
 #define REMOTE_FAULT_TIMEOUT_MS		10000
 #define TX_IDLE_TOGGLE_US		1000
 
+/* Bit mask to clear error interrupt bits set in
+ * SPUX_INT CSR
+ * spux_int.s.rx_link_down
+ * spux_int.s.err_blk
+ * spux_int.s.bitlckls
+ * spux_int.s.synlos
+ * spux_int.s.algnlos
+ * spux_int.s.dbg_sync
+ * spux_int.s.bip_err
+ * spux_int.s.fec_corr
+ * spux_int.s.fec_uncorr
+ * spux_int.s.training_failure
+ * spux_int.s.rsfec_corr
+ * spux_int.s.rsfec_uncorr
+ * spux_int.s.hi_ser
+ */
+#define CGX_SPUX_CLEAR_ERR_INT_MASK 0x743FE
+
 /* Max retries for different failures */
 #define SIG_FAIL_RETRIES 10
 #define AN_LT_FAIL_RETRIES 3
