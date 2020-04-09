@@ -204,7 +204,7 @@ struct secure_devices secure_devs[] = {
 	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_VRM, ECAM_ALL_INSTANCES},
 	{CAVM_PCC_PROD_E_CN83XX, CAVM_PCC_DEV_IDL_E_PCIERC, ECAM_ALL_INSTANCES},
 	{CAVM_PCC_PROD_E_CN83XX, CAVM_PCC_DEV_IDL_E_CHIP, ECAM_ALL_INSTANCES},
-	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_NDF, ECAM_ALL_INSTANCES},
+/*	{CAVM_PCC_PROD_E_GEN, CAVM_PCC_DEV_IDL_E_NDF, ECAM_ALL_INSTANCES}, */
 	{ECAM_INVALID_PROD_ID, ECAM_INVALID_PCC_IDL_ID, ECAM_ALL_INSTANCES}
 };
 
@@ -287,8 +287,7 @@ static inline int disable_pccbr(struct ecam_device *dev)
 {
 	/* disable PCC Bridge of BCH and RAD */
 	if ((dev->ecam == 0) && (dev->bus == 0) &&
-	    ((dev->dev == 0xA || dev->dev == 0xE)) &&
-	    dev->func == 0)
+	    (dev->dev == 0xE) && dev->func == 0)
 		return 1;
 
 	return 0;
