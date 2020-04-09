@@ -772,6 +772,7 @@ int sfp_get_speed_capability(int cgx_id, int lmac_id)
 	case SFP_TRANS_TYPE_1G_ACC:
 	case SFP_TRANS_TYPE_1G_LX:
 	case SFP_TRANS_TYPE_1G_SX:
+	case SFP_TRANS_TYPE_1000_BASET:
 		max_speed = 1000;
 		break;
 	case SFP_TRANS_TYPE_10G_SR:
