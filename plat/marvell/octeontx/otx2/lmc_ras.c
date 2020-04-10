@@ -1742,10 +1742,7 @@ static inline int cache_ecc_inject(int level, int icache, void *pa, int bits)
 static int cache_inject_error(int level, int icache, struct elx_map *m,
 			      int bit, int flags)
 {
-	uint64_t data = 0;
 	int ret;
-
-	data = *(uint64_t *)m->mapped; // FIXME: rework, drop this
 
 	/* drain caches, so nothing spills while poisoning */
 	flush_dcache_all(DCCSW);
@@ -1765,7 +1762,7 @@ static int cache_inject_error(int level, int icache, struct elx_map *m,
 	}
 
 	/* Perform a write and flush it to cache */
-	*(uint64_t *)m->mapped = data;
+	*(volatile uint64_t *)m->mapped = *(volatile uint64_t *)m->mapped;
 	dmbsy();
 
 	/* Disable error injection */
@@ -1850,7 +1847,7 @@ int64_t plat_ras_lmc_inject(u_register_t x2, u_register_t x3,
 		target();
 	} else if (reread) {
 		debug_ras("re-reading poisoned EL3 data...\n");
-		data = *(uint64_t *)aligned_address;
+		data = *(volatile uint64_t *)aligned_address;
 	}
 
 
