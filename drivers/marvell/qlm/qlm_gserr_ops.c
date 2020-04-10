@@ -335,30 +335,32 @@ static int qlm_gserr_an_complete(int qlm, int lane)
  */
 static void qlm_gserr_get_link_training_status(int qlm, int lane)
 {
+#ifdef DEBUG_ATF_GSER
 	GSER_CSR_INIT(fsm_ctrl5, CAVM_GSERRX_LNX_LT_TX_FSM_CTRL5(qlm, lane));
-	printf("GSERR%d_LN%d_LT_TX_FSM_CTRL5\n", qlm, lane);
-	printf("remote_rx_ready: %d\trx_trained: %d\n",
-		fsm_ctrl5.s.remote_rx_ready,
-		fsm_ctrl5.s.rx_trained);
+	GSER_TRACE(QLM, "GSERR%d_LN%d_LT_TX_FSM_CTRL5\n", qlm, lane);
+			GSER_TRACE(QLM, "remote_rx_ready: %d\trx_trained: %d\n",
+			fsm_ctrl5.s.remote_rx_ready,
+			fsm_ctrl5.s.rx_trained);
 
 	GSER_CSR_INIT(fsm_status, CAVM_GSERRX_LNX_LT_TX_FSM_STATUS(qlm, lane));
-	printf("GSERR%d_LN%d_LT_TX_FSM_STATUS\n", qlm, lane);
-	printf("fsm_local_rx_ready: %d\tsignal_detect: %d\ttraining_fail: %d\n",
+	GSER_TRACE(QLM, "GSERR%d_LN%d_LT_TX_FSM_STATUS\n", qlm, lane);
+	GSER_TRACE(QLM, "fsm_local_rx_ready: %d\tsignal_detect: %d\ttraining_fail: %d\n",
 			fsm_status.s.fsm_local_rx_ready,
 			fsm_status.s.signal_detect,
 			fsm_status.s.training_fail);
 
 	GSER_CSR_INIT(fsm_state_status0, CAVM_GSERRX_LNX_LT_TX_FSM_STATE_STATUS0(qlm, lane));
-	printf("GSERR%d_LN%d_LT_TX_FSM_STATE_STATUS0\n", qlm, lane);
-	printf("prev1: %d\tcurrent: %d\n",
+	GSER_TRACE(QLM, "GSERR%d_LN%d_LT_TX_FSM_STATE_STATUS0\n", qlm, lane);
+	GSER_TRACE(QLM, "prev1: %d\tcurrent: %d\n",
 			fsm_state_status0.s.prev1,
 			fsm_state_status0.s.current);
 
 	GSER_CSR_INIT(fsm_state_status1, CAVM_GSERRX_LNX_LT_TX_FSM_STATE_STATUS1(qlm, lane));
-		printf("GSERR%d_LN%d_LT_TX_FSM_STATE_STATUS1\n", qlm, lane);
-		printf("prev2: %d\tprev3: %d\n",
-				fsm_state_status1.s.prev2,
-				fsm_state_status1.s.prev3);
+	GSER_TRACE(QLM, "GSERR%d_LN%d_LT_TX_FSM_STATE_STATUS1\n", qlm, lane);
+	GSER_TRACE(QLM, "prev2: %d\tprev3: %d\n",
+			fsm_state_status1.s.prev2,
+			fsm_state_status1.s.prev3);
+#endif
 }
 
 static void qlm_gserr_clear_link_stat(int qlm, int lane)
