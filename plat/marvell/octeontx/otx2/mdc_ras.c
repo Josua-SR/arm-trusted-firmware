@@ -26,6 +26,7 @@
 #include <tools_share/uuid.h>
 #include <plat/common/platform.h>
 #include <plat_ras.h>
+#include <plat_ghes.h>
 #include <drivers/delay_timer.h>
 #include <cavm-csrs-ccu.h>
 #include <octeontx_ehf.h>
@@ -67,6 +68,7 @@ const char *ras_serr_str[256] = {
 	[CAVM_RAS_SERR_E_DEF_MAS]		= "DEF_MAS",
 };
 
+/* MDC_RAS_ENTRY_S in HRM */
 union mdc_ras_entry_s {
 	uint64_t u;
 	struct mdc_ras_entry_s_s {
@@ -176,11 +178,13 @@ union mdc_win_dat {
 	} s;
 };
 
-#define MDC_RAS_UET_E_NOUC	4
+/* MDC_RAS_UET_E in HRM */
 #define MDC_RAS_UET_E_UC	0
+#define MDC_RAS_UET_E_UEU	1
 #define MDC_RAS_UET_E_UEO	2
 #define MDC_RAS_UET_E_UER	3
-#define MDC_RAS_UET_E_UEU	1
+#define MDC_RAS_UET_E_NOUC	4
+
 #define MDC_ACTIVE_PC		0x87e0100000e8ull
 #define MDC_BIST_CONFIG		0x87e010000008ull
 #define MDC_BIST_CONTROL	0x87e010000028ull
@@ -343,27 +347,6 @@ void handle_fatal(void)
 	}
 }
 
-/*
- * To suppress repeated errors, as MDC clears slowly, skip dups.
- * Cause here is possibly automatic retries on error.
- * Special case, zero never matches, so can be used to periodically
- * purge old entries, so their real recurrence is eventually noted.
- * So at 1Hz poll, a single dup err remains hidden for RING seconds.
- */
-#define MDC_DUP_RING 32
-static int mdc_errs;
-static int mdc_dup(uint64_t val)
-{
-	static uint64_t ring[MDC_DUP_RING];
-	int slot;
-
-	for (slot = 0; val && slot < MDC_DUP_RING; slot++)
-		if (val == ring[slot])
-			return 1;
-	ring[++mdc_errs % MDC_DUP_RING] = val;
-	return 0;
-}
-
 static void ccu_read_err(int ccu, int b, union cavm_mdc_ecc_status mes,
 			 int quiet)
 {
@@ -473,39 +456,47 @@ static void check_lmc_ras(void)
 	}
 }
 
-static int check_cn9xxx_mdc(union cavm_mdc_ecc_status st, int quiet)
+static int check_cn9xxx_mdc(union cavm_mdc_ecc_status st, int dont_report)
 {
 	const char *unit = "";
 	const char *type = NULL;
+	const char *type_tok = NULL;
 	const char *repeat = "";
 	union mdc_win_cmd cmd = { .u = 0 };
 	union mdc_win_dat dat;
+	struct otx2_ghes_err_record *err_rec;
+	struct otx2_ghes_err_ring *err_ring;
+	int fatal, quiet;
+
+	quiet = dont_report;
 
 	if (!quiet)
 		INFO("%s: ecc_status:%llx chn %d.%d.%d row %d"
-#if RAS_DEBUG
-			" #%d"
-#endif
 			" db:%d%s sb%d%s\n",
 			__func__, st.u,
 			st.s.chain_id, st.s.hub_id, st.s.node_id, st.s.row,
-#if RAS_DEBUG
-			mdc_errs,
-#endif
 			st.s.dbe, "+" + !st.s.dbe_plus,
 			st.s.sbe, "+" + !st.s.sbe_plus);
 
 	if (st.s.dbe) {
 		type = "double";
-		if (st.s.dbe_plus)
+		type_tok = "D";
+		if (st.s.dbe_plus) {
 			repeat = "multiple ";
+			type_tok = "D+";
+		}
 		// invalidate whole dcache (overkill)
 		__asm__ volatile("sys #0,c11,c0,#2, xzr");
 	} else if (st.s.sbe) {
 		type = "single";
-		if (st.s.sbe_plus)
+		type_tok = "S";
+		if (st.s.sbe_plus) {
 			repeat = "multiple ";
+			type_tok = "S+";
+		}
 		sys_wbillci(-1, st.s.row);
+	} else {
+		type_tok = "?";
 	}
 
 	cmd.s.chain_id = st.s.chain_id;
@@ -540,6 +531,8 @@ static int check_cn9xxx_mdc(union cavm_mdc_ecc_status st, int quiet)
 			mdn_wr(cmd, dat);
 			bist_once++;
 		}
+	} else if (!quiet) {
+		NOTICE("MDN_ECC_IRQ is missing data...\n");
 	}
 
 	if (!quiet) {
@@ -554,6 +547,33 @@ static int check_cn9xxx_mdc(union cavm_mdc_ecc_status st, int quiet)
 			re.s.ras_uet, "UHRSN---"[re.s.ras_uet],
 			"pt"[re.s.ras_transient],
 			"-dc?"[re.s.ras_poison]);
+
+		fatal = st.s.dbe_plus ||
+			(st.s.dbe &&
+			 (re.s.ras_uet != MDC_RAS_UET_E_UEO) &&
+			 (re.s.ras_uet != MDC_RAS_UET_E_NOUC));
+
+		err_rec = otx2_begin_ghes("mdc", &err_ring);
+		if (err_rec) {
+			err_rec->u.mdc.row = st.s.row;
+
+			err_rec->u.mcc.validation_bits |= CPER_MEM_VALID_ROW;
+
+			err_rec->severity = fatal ? CPER_SEV_FATAL :
+						    CPER_SEV_CORRECTED;
+
+			snprintf(err_rec->fru_text, sizeof(err_rec->fru_text),
+				 "%s %s %d.%d.%d %c%c%c",
+				 type_tok,
+				 blk_type ? blk_type : "-",
+				 cmd.s.chain_id, cmd.s.hub_id, cmd.s.node_id,
+				 "UHRSN---"[re.s.ras_uet],
+				 "pt"[re.s.ras_transient],
+				 "-dc?"[re.s.ras_poison]
+				);
+			otx2_send_ghes(err_rec, err_ring,
+				       OCTEONTX_SDEI_RAS_MDC_EVENT);
+		}
 	}
 
 	/* if ECC-injection was enabled, disable it */
@@ -621,11 +641,11 @@ uint64_t otx2_mdc_isr(uint32_t id, uint32_t flags, void *cookie)
 	check_lmc_ras();
 
 	do {
-		CSR_WRITE(CAVM_MDC_INT_W1C, 1);
+		/* read status first; writing MDC_INT_W1C will clear it */
 		st.u = CSR_READ(CAVM_MDC_ECC_STATUS);
+		CSR_WRITE(CAVM_MDC_INT_W1C, 1);
 		if (!st.u)
 			break;
-		quiet |= mdc_dup(st.u);
 	} while (check_cn9xxx_mdc(st, quiet) && --burst > 0);
 
 	return 0;
