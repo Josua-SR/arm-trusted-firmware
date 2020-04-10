@@ -149,6 +149,28 @@ struct fdt_ghes *otx2_find_ghes(const char *name)
 	return NULL;
 }
 
+/*
+ * Used to retrieve an error record pointer for a GHES source.
+ * The error record can subsequently be sent to the consumer
+ * via 'otx2_send_ghes()'.
+ *
+ * On entry,
+ *   name:  specifies GHES source (i.e. 'mdc', 'mcc')
+ *   ringp: pointer by which error ring value is returned
+ *          (see error conditions below)
+ *
+ * Returns,
+ *   Pointer to next available error record for GHES source OR
+ *   NULL if:
+ *     1. GHES source is full
+ *     2. GHES source not found
+ *
+ *   Note: if NULL is returned, the error condition can be discerned by
+ *   examining the value returned in 'ringp'.  If the GHES source is present,
+ *   'ringp' will contain a valid pointer, thus describing error #1 (full).
+ *   If the specified GHES source was not located, 'ringp' will also
+ *   contain NULL, thus describing error #2 (not found).
+ */
 struct otx2_ghes_err_record *otx2_begin_ghes(const char *name,
 			    struct otx2_ghes_err_ring **ringp)
 {
@@ -157,9 +179,12 @@ struct otx2_ghes_err_record *otx2_begin_ghes(const char *name,
 	uint32_t total_ring_len, tail, head;
 	struct fdt_ghes *gh;
 
-	gh = otx2_find_ghes("mcc");
-	if (!gh)
+	gh = otx2_find_ghes(name);
+	if (!gh) {
+		if (ringp)
+			*ringp = NULL;
 		return NULL;
+	}
 
 	err_ring = gh->base[GHES_PTR_RING];
 	total_ring_len = gh->size[GHES_PTR_RING];
@@ -170,11 +195,14 @@ struct otx2_ghes_err_record *otx2_begin_ghes(const char *name,
 		sizeof(err_ring->records[0]);
 
 	tail = err_ring->tail;
-	/* TODO: fix me - need to check for 'full' condition */
-	(void)tail;
 	head = err_ring->head;
-	err_rec = &err_ring->records[head];
-	memset(err_rec, 0, sizeof(*err_rec));
+	if (((head + 1) % err_ring->size) != tail) {
+		err_rec = &err_ring->records[head];
+		memset(err_rec, 0, sizeof(*err_rec));
+	} else {
+		err_rec = NULL;
+		ERROR("GHES error ring '%s' is full\n", name);
+	}
 
 	if (ringp)
 		*ringp = err_ring;
