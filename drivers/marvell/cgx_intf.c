@@ -307,12 +307,64 @@ static int cgx_link_change_req(int cgx_id, int lmac_id)
 	return ret;
 }
 
+static int cgx_check_sfp_mod_stat(int cgx_id, int lmac_id)
+{
+	int ret = 0, mod_status = 0;
+	cgx_lmac_context_t *lmac_ctx;
+
+	lmac_ctx = &lmac_context[cgx_id][lmac_id];
+
+	/* Obtain the module status */
+	mod_status = sfp_get_mod_status(cgx_id, lmac_id);
+
+	debug_cgx_intf("%s: %d:%d mod_status %d\n",
+			__func__, cgx_id, lmac_id, mod_status);
+
+	if (mod_status == -1)
+		return -1;
+
+	if (mod_status != lmac_ctx->s.mod_stats) {
+		/* Update the new status */
+		lmac_ctx->s.mod_stats = mod_status;
+		if ((mod_status == SFP_MOD_STATE_PRESENT) ||
+			(mod_status == SFP_MOD_STATE_EEPROM_UPDATED)) {
+			/* User has unplug and plug the module.
+			 * In this case, read the EEPROM capabilities
+			 * and configure CGX accordingly if there is
+			 * a change in capabilities.
+			 */
+			debug_cgx_intf("%s: %d:%d User has plugged module\n",
+				 __func__, cgx_id, lmac_id);
+
+			ret = cgx_sfp_obtain_capabilities(cgx_id, lmac_id);
+			if (ret != 1)
+				return -1;
+			return 1; /* Valid */
+		} else if (mod_status == SFP_MOD_STATE_ABSENT) {
+			debug_cgx_intf("%s: %d:%d user has un-plugged cable\n",
+					__func__, cgx_id, lmac_id);
+			/* If Module is absent, clear the EEPROM data */
+			sh_fwdata_clear_eeprom_data(cgx_id, lmac_id, 0);
+			return 0;
+		}
+	}
+	/* MCP updates EEPROM buffer every 5s if the user
+	 * hasn't un-plugged/plugged the transceiver. In this
+	 * case, where there is no change in module status, just
+	 * update the SH memory with the
+	 * data and do not handle any link change
+	 */
+	if (mod_status == SFP_MOD_STATE_EEPROM_UPDATED) {
+		lmac_ctx->s.mod_stats = mod_status;
+		sfp_parse_eeprom_data(cgx_id, lmac_id);
+		return 0;
+	}
+	return 0;
+}
 static int cgx_link_bringup(int cgx_id, int lmac_id)
 {
 	int mod_status = 0;
 	int sfp_count = 0;
-	int trans_type = 0;
-	int valid;
 	cgx_lmac_config_t *lmac_cfg;
 	cgx_lmac_context_t *lmac_ctx;
 	cgx_lmac_timers_t *lmac_tmr;
@@ -378,6 +430,33 @@ static int cgx_link_bringup(int cgx_id, int lmac_id)
 		 *	- assign default link status,
 		 *	- init link and set speed
 		 */
+		if (lmac_cfg->sfp_slot == 1) {
+retry_mod_stat1:
+			mod_status = cgx_check_sfp_mod_stat(cgx_id, lmac_id);
+			if (mod_status != 1) {
+				if (sfp_count++ < 5) {
+					mdelay(1);
+					goto retry_mod_stat1;
+				} else {
+					if (!mod_status) {
+						debug_cgx_intf("%s: %d:%d Module not present\n",
+							__func__, cgx_id, lmac_id);
+						cgx_set_error_type(cgx_id, lmac_id,
+							CGX_ERR_MODULE_NOT_PRESENT);
+					}
+					goto sfp_err1;
+				}
+			} else
+				goto retry_link1;
+sfp_err1:
+			/* set link_req to 1 to indicate poll timer */
+			lmac_ctx->s.link_req = 1;
+			cgx_set_link_state(cgx_id, lmac_id, &link,
+					cgx_get_error_type(cgx_id, lmac_id));
+			return -1;
+		}
+
+retry_link1:
 		if ((lmac_ctx->s.lbk1_enable) || (!lmac_cfg->phy_present) ||
 				(lmac_cfg->phy_mode)) {
 			link.s.link_up = 1;
@@ -443,49 +522,22 @@ static int cgx_link_bringup(int cgx_id, int lmac_id)
 
 		if (lmac_cfg->sfp_slot == 1) {
 retry_mod_stat:
-			/* Obtain SFP module status */
-			mod_status = sfp_get_mod_status(cgx_id, lmac_id);
-			if ((mod_status == SFP_MOD_STATE_PRESENT) ||
-				(mod_status == SFP_MOD_STATE_EEPROM_UPDATED)) {
-				/* Read EEPROM to determine module capability */
-				trans_type = sfp_parse_eeprom_data(cgx_id,
-								lmac_id);
-				if (trans_type == SFP_TRANS_TYPE_NONE) {
-					cgx_set_error_type(cgx_id, lmac_id,
-						CGX_ERR_MODULE_INVALID);
-					goto sfp_err;
-				}
-				/* Save the new mod status */
-				lmac_ctx->s.mod_stats = mod_status;
-
-				valid = sfp_validate_user_options(cgx_id,
-								lmac_id);
-				if (valid == 1) {
-					debug_cgx_intf("%s: %d:%d\t"
-					"trans_type %d\n",
-					__func__, cgx_id, lmac_id,
-					trans_type);
-					goto retry_link;
-				} else {
-					ERROR("%s: %d:%d User config\t"
-						"doesn't match EEPROM\n",
-						__func__, cgx_id, lmac_id);
-					cgx_set_error_type(cgx_id, lmac_id,
-						CGX_ERR_MODULE_INVALID);
-					goto sfp_err;
-				}
-			} else {
+			mod_status = cgx_check_sfp_mod_stat(cgx_id, lmac_id);
+			if (mod_status != 1) {
 				if (sfp_count++ < 5) {
 					mdelay(1);
 					goto retry_mod_stat;
+				} else {
+					if (!mod_status) {
+						debug_cgx_intf("%s: %d:%d Module not present\n",
+							__func__, cgx_id, lmac_id);
+						cgx_set_error_type(cgx_id, lmac_id,
+							CGX_ERR_MODULE_NOT_PRESENT);
+					}
+					goto sfp_err;
 				}
-
-				debug_cgx_intf("%s: %d:%d Module not present\n",
-					__func__, cgx_id, lmac_id);
-				cgx_set_error_type(cgx_id, lmac_id,
-						CGX_ERR_MODULE_NOT_PRESENT);
-				goto sfp_err;
-			}
+			} else
+				goto retry_link;
 sfp_err:
 			/* set link_req to 1 to indicate poll timer */
 			lmac_ctx->s.link_req = 1;
@@ -2331,57 +2383,6 @@ static int cgx_handle_link_reqs(int cgx_id, int lmac_id,
 	return 0;
 }
 
-static int cgx_check_sfp_mod_stat(int cgx_id, int lmac_id)
-{
-	int ret = 0, mod_status = 0;
-	cgx_lmac_context_t *lmac_ctx;
-
-	lmac_ctx = &lmac_context[cgx_id][lmac_id];
-
-	/* Obtain the module status */
-	mod_status = sfp_get_mod_status(cgx_id, lmac_id);
-
-	debug_cgx_intf("%s: %d:%d mod_status %d\n",
-			__func__, cgx_id, lmac_id, mod_status);
-
-	if (mod_status == -1)
-		return -1;
-
-	/* MCP updates EEPROM buffer every 5s if the user
-	 * hasn't un-plugged/plugged the transceiver. In this
-	 * case, just update the SH memory with the
-	 * data and do not handle any link change
-	 */
-	if (mod_status == SFP_MOD_STATE_EEPROM_UPDATED) {
-		lmac_ctx->s.mod_stats = mod_status;
-		sfp_parse_eeprom_data(cgx_id, lmac_id);
-		return 0;
-	}
-
-	if (mod_status != lmac_ctx->s.mod_stats) {
-		/* Update the new status */
-		lmac_ctx->s.mod_stats = mod_status;
-		if (mod_status == SFP_MOD_STATE_PRESENT) {
-			/* User has unplug and plug the module.
-			 * In this case, read the EEPROM capabilities
-			 * and configure CGX accordingly if there is
-			 * a change in capabilities.
-			 */
-			debug_cgx_intf("%s: %d:%d User has plugged module\n",
-				 __func__, cgx_id, lmac_id);
-
-			ret = cgx_sfp_obtain_capabilities(cgx_id, lmac_id);
-			if (ret != 1)
-				return -1;
-			return 1; /* Valid */
-		}
-		debug_cgx_intf("%s: %d:%d user has un-plugged cable\n",
-				__func__, cgx_id, lmac_id);
-		/* If Module is absent, clear the EEPROM data */
-		sh_fwdata_clear_eeprom_data(cgx_id, lmac_id, 0);
-	}
-	return 0;
-}
 
 static int cgx_get_link_status(int cgx_id, int lmac_id,
 				link_state_t *link)
