@@ -344,7 +344,7 @@ Parameters to be sent:
 Initiated when ethernet interfaces are brought up
 Parameters to be sent:
 
-- REQUEST ID – `CGX_CMD_LINK_UP`
+- REQUEST ID – `CGX_CMD_LINK_BRING_UP`
 - As part of request processing, ATF will bring up the link
   as per the sequence documented in HRM
 
@@ -563,6 +563,78 @@ set1 baud rate: 9830/4915/2458
 
 * If change request to baud rate for the lane is changed from ethernet to CPRI,
 other lane in DLM is also changed due to GSERC limitation.
+
+##### 4.2.1.13. GET LINK STATUS
+
+This command can be called any time when CGX LMAC status needs to be obtained
+
+- REQUEST ID – `CGX_CMD_GET_LINK_STS`
+- Response - CGX SCRATCHX(0) is updated with below struct type cgx_lnk_sts_s
+
+/* LINK speed types */
+enum cgx_link_speed {
+        CGX_LINK_NONE,
+        CGX_LINK_10M,
+        CGX_LINK_100M,
+        CGX_LINK_1G,
+        CGX_LINK_2HG,   /* 2.5 Gbps */
+        CGX_LINK_5G,
+        CGX_LINK_10G,
+        CGX_LINK_20G,
+        CGX_LINK_25G,
+        CGX_LINK_40G,
+        CGX_LINK_50G,
+        CGX_LINK_80G,
+        CGX_LINK_100G,
+        CGX_LINK_MAX,
+};
+
+typedef enum {
+	CGX_MODE_SGMII_BIT = 0,
+	CGX_MODE_1000_BASEX_BIT,
+	CGX_MODE_QSGMII_BIT,
+	CGX_MODE_10G_C2C_BIT,
+	CGX_MODE_10G_C2M_BIT,
+	CGX_MODE_10G_KR_BIT,		/* = 5 */
+	CGX_MODE_20G_C2C_BIT,
+	CGX_MODE_25G_C2C_BIT,
+	CGX_MODE_25G_C2M_BIT,
+	CGX_MODE_25G_2_C2C_BIT,
+	CGX_MODE_25G_CR_BIT,		/* = 10 */
+	CGX_MODE_25G_KR_BIT,
+	CGX_MODE_40G_C2C_BIT,
+	CGX_MODE_40G_C2M_BIT,
+	CGX_MODE_40G_CR4_BIT,
+	CGX_MODE_40G_KR4_BIT,		/* = 15 */
+	CGX_MODE_40GAUI_C2C_BIT,
+	CGX_MODE_50G_C2C_BIT,
+	CGX_MODE_50G_C2M_BIT,
+	CGX_MODE_50G_4_C2C_BIT,
+	CGX_MODE_50G_CR_BIT,		/* = 20 */
+	CGX_MODE_50G_KR_BIT,
+	CGX_MODE_80GAUI_C2C_BIT,
+	CGX_MODE_100G_C2C_BIT,
+	CGX_MODE_100G_C2M_BIT,
+	CGX_MODE_100G_CR4_BIT,		/* = 25 */
+	CGX_MODE_100G_KR4_BIT,
+	CGX_MODE_MAX_BIT		/* = 27 */
+} cgx_mode_t;
+
+struct cgx_lnk_sts_s {
+        uint64_t reserved1:9;
+        uint64_t link_up:1;
+        uint64_t full_duplex:1;
+        uint64_t speed:4;       /* cgx_link_speed */
+        uint64_t err_type:10;
+        uint64_t an:1;          /* Current AN state : enabled/disabled */
+        uint64_t fec:2;         /* Current FEC type if enabled, if not 0 */
+        uint64_t port:8;        /* Share the current port info if required */
+        uint64_t mode:8;        /* cgx_mode_t enum integer value */
+        uint64_t reserved2:20;
+};
+
+mode is the current QLM-MODE (cgx_mode_t) for which the CGX LMAC is configured to.
+
 ---
 
 #### 4.2.2. INTERFACE FROM ATF to U-BOOT/UEFI/KERNEL
