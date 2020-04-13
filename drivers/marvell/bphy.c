@@ -257,7 +257,7 @@ int bphy_psm_install_irq(uint64_t irq_num, uint64_t sp, uint64_t  cpu,
 
 	INFO("Entering %s\n", __func__);
 
-	if (plat_is_irq_ns(irq_num))
+	if (plat_is_irq_ns(BPHY_PSM_IRQ(irq_num)))
 		return -1;
 
 	if (irq_num >= BPHY_PSM_IRQS_NUMBER)
@@ -352,7 +352,7 @@ void bphy_psm_clear_irq(uint64_t irq_num)
 {
 	INFO("%s\n", __func__);
 
-	if (plat_is_irq_ns(irq_num))
+	if (plat_is_irq_ns(BPHY_PSM_IRQ(irq_num)))
 		return;
 
 	if (irq_num >= BPHY_PSM_IRQS_NUMBER)
