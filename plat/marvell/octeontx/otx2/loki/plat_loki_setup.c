@@ -582,7 +582,8 @@ struct plat_ns_irq {
 };
 
 static struct plat_ns_irq plat_ns_irq_list[] = {
-	{CAVM_PSM_MSIX_VECX_ADDR(CAVM_PSM_INT_VEC_E_GPINTX(0)), BPHY_PSM_GPINT_IRQ(0)}
+	{CAVM_PSM_MSIX_VECX_ADDR(CAVM_PSM_INT_VEC_E_GPINTX(0)), BPHY_PSM_GPINT_IRQ(0)},
+	{CAVM_PSM_MSIX_VECX_ADDR(CAVM_PSM_INT_VEC_E_GPINTX(1)), BPHY_PSM_GPINT_IRQ(1)}
 };
 
 /*
@@ -611,7 +612,7 @@ int plat_is_irq_ns(uint32_t irq)
 
 static void update_msix_vector(uint32_t irq)
 {
-	uint64_t vector_ptr;
+	uint64_t vector_ptr = 0;
 	uint32_t i, count;
 
 	count = ARRAY_SIZE(plat_ns_irq_list);
