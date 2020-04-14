@@ -2787,8 +2787,8 @@ static void cgx_check_for_presence_of_phy(int cgx_id, int lmac_id)
 			 * will not run; otherwise it will report errors.
 			 * For most Ethernet QLM modes, a PHY is not required.
 			 */
-			printf("%s: %d:%d PHY type %d not detected in I/O module, disabling PHY present in config\n",
-				       __func__, cgx_id, lmac_id, phy->type);
+			printf("CGX%d:LMAC%d PHY type %d not detected in I/O module, ignoring PHY information\n",
+				       cgx_id, lmac_id, phy->type);
 			/* In case of 1000 BASE-X without PHY, AN needs
 			 * to be disabled
 			 */
