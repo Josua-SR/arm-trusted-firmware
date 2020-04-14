@@ -525,7 +525,7 @@ retry_link:
 				if (cgx_get_error_type(cgx_id, lmac_id) ==
 					CGX_ERR_SERDES_RX_NO_SIGNAL) {
 					if (sig_fail_count++ < SIG_FAIL_RETRIES) {
-						printf("%s: %d:%d Signal Detect failed,\t"
+						debug_cgx_intf("%s: %d:%d Signal Detect failed,\t"
 							"retrying link\n", __func__,
 							cgx_id, lmac_id);
 				/* if init link fails, retry */
@@ -535,7 +535,7 @@ retry_link:
 				} else if (cgx_get_error_type(cgx_id, lmac_id) ==
 					CGX_ERR_AN_CPT_FAIL) {
 					if (an_lt_fail_count++ < AN_LT_FAIL_RETRIES) {
-						printf("%s: %d:%d AN Init failed,\t"
+						debug_cgx_intf("%s: %d:%d AN Init failed,\t"
 						"retrying link\n", __func__,
 						cgx_id, lmac_id);
 					/* clear the error when retrying */
@@ -545,7 +545,7 @@ retry_link:
 				} else if (cgx_get_error_type(cgx_id, lmac_id) ==
 					CGX_ERR_TRAINING_FAIL) {
 					if (an_lt_fail_count++ < AN_LT_FAIL_RETRIES) {
-						printf("%s: %d:%d Link Training failed,\t"
+						debug_cgx_intf("%s: %d:%d Link Training failed,\t"
 							"retrying link\n", __func__,
 							cgx_id, lmac_id);
 						cgx_set_error_type(cgx_id, lmac_id, 0);
@@ -553,7 +553,7 @@ retry_link:
 					}
 				} else {
 					if (fail_count++ < ETH_FAIL_RETRIES) {
-						printf("%s: %d:%d Ethernet Init failed,\t"
+						debug_cgx_intf("%s: %d:%d Ethernet Init failed,\t"
 							"retrying link\n", __func__,
 							cgx_id, lmac_id);
 						cgx_set_error_type(cgx_id, lmac_id, 0);
