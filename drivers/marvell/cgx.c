@@ -2512,6 +2512,7 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 				goto restart_an;
 			}
 		}
+		return 0;
 	} else {
 		/* For all non-GSERN serdes, AN config is already
 		 * setup, set the hand-shaking bit and wait for
