@@ -168,6 +168,9 @@ void plat_octeontx_cpu_setup(void)
 		write_cvm_access_el3(read_cvm_access_el3() & ~(1 << 0));
 	}
 
+	/* Errata AP-38511 : Disable WFE */
+	set_bit(cvmctl_el1, 34);
+
 	/*
 	 * Fix up defaults from the BDK which is broken and
 	 * violates the ARM ARM.
