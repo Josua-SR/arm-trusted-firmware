@@ -8,6 +8,7 @@
 #include <drivers/delay_timer.h>
 #include <errno.h>
 #include <lib/mmio.h>
+#include <mvebu_def.h>
 #include <mvebu.h>
 #include <stdbool.h>
 #include "dfx.h"
@@ -56,8 +57,13 @@
 #define THERMAL_SEN_OUTPUT_MSB		512
 #define THERMAL_SEN_OUTPUT_COMP		1024
 
+#ifdef MVEBU_SOC_AP807
+#define COEF_M 394
+#define COEF_B -128900LL
+#else
 #define COEF_M 423
 #define COEF_B -150000LL
+#endif
 
 static void armada_ap806_thermal_read(u_register_t *temp)
 {
