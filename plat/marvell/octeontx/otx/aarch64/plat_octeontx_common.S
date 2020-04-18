@@ -26,6 +26,32 @@ func octeontx_cluster_pwr_dwn
 	ret
 endfunc octeontx_cluster_pwr_dwn
 
+	/* ----------------------------------------------
+	 * void octeontx2_exception_handler(int)
+	 * Function for handling sync exceptions specific
+	 * for this platform. x1 argument contains EC
+	 * from el3_esr.
+	 * ----------------------------------------------
+	 */
+func octeontx_exception_handler
+/* These errors are handled only in runtime (in BL31) */
+#if defined(IMAGE_BL31)
+	/* ------------------------------------------------------
+	 * The following handles WFI trapped in EL0.
+	 * Right now this only happens when EL0 ISR is returning.
+	 * ------------------------------------------------------
+	 */
+	cmp	x1, #EC_WFE_WFI
+	b.eq	el3_exit_wfi
+#endif /* BL31 */
+
+	/* ---------------------------------------------------
+	 * Other errors are unhandled, return to generic code.
+	 * ---------------------------------------------------
+	 */
+	ret
+endfunc octeontx_exception_handler
+
 func octeontx_cpu_reg_dump
 	ret
 endfunc octeontx_cpu_reg_dump
@@ -39,12 +65,14 @@ func octeontx_errata_report
 endfunc octeontx_errata_report
 #endif
 
-declare_cpu_ops octeontx, OCTEONTX_CN81XX_MIDR, \
+declare_cpu_ops_eh octeontx, OCTEONTX_CN81XX_MIDR, \
 	octeontx_reset_func, \
+	octeontx_exception_handler, \
 	octeontx_core_pwr_dwn, \
 	octeontx_cluster_pwr_dwn
 
-declare_cpu_ops octeontx, OCTEONTX_CN83XX_MIDR, \
+declare_cpu_ops_eh octeontx, OCTEONTX_CN83XX_MIDR, \
 	octeontx_reset_func, \
+	octeontx_exception_handler, \
 	octeontx_core_pwr_dwn, \
 	octeontx_cluster_pwr_dwn

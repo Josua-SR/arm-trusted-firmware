@@ -287,6 +287,8 @@ DEFINE_RENAME_SYSREG_RW_FUNCS(cvmtrapaddrena7_el3, AP_CVM_TRAPADDRENA_EL3(7))
 #define OPCODE_LD_ST_ATOMIC(x)		(((x) >> OPCODE_LD_ST_ATOMIC_SHIFT) \
 						& OPCODE_LD_ST_ATOMIC_MASK)
 
+#define EC_CAVIUM_IO_TRAP		U(0x1f)
+
 enum rvu_block_addr_e {
 	BLKADDR_RVUM    = 0x0ULL,
 	BLKADDR_LMT     = 0x1ULL,

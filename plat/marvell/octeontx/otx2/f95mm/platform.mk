@@ -33,22 +33,20 @@ PLAT_BL_COMMON_SOURCES	+=	plat/marvell/octeontx/otx2/f95mm/plat_f95mm_setup.c	\
 				drivers/marvell/qlm/qlm_gserr.c			\
 				drivers/marvell/qlm/qlm_gserr_ops.c		\
 				plat/marvell/octeontx/otx2/plat_setup.c		\
+				plat/marvell/octeontx/otx2/aarch64/plat_octeontx_common.S	\
+				plat/marvell/octeontx/otx2/aarch64/plat_helpers.S		\
 
 BL2_SOURCES		+=	plat/marvell/octeontx/otx2/f95mm/plat_f95mm_ecam.c	\
 				drivers/marvell/sh_fwdata.c				\
 				drivers/marvell/rvu.c					\
 				plat/marvell/octeontx/otx2/plat_npc_mcam_profile.c 	\
-				plat/marvell/octeontx/otx2/aarch64/plat_octeontx_common.S	\
-				plat/marvell/octeontx/otx2/aarch64/plat_helpers.S		\
 				plat/marvell/octeontx/otx2/plat_board_cfg.c			\
 				plat/marvell/octeontx/otx2/plat_scfg.c				\
 				plat/marvell/octeontx/otx2/plat_otx2_iobn.c			\
 
 BL31_LIBS               +=      lib/libphy/libphy_88x5113.a     \
 
-BL31_SOURCES		+=	plat/marvell/octeontx/otx2/aarch64/plat_octeontx_common.S	\
-				plat/marvell/octeontx/otx2/aarch64/plat_helpers.S	\
-				plat/marvell/octeontx/otx2/plat_topology.c		\
+BL31_SOURCES		+=	plat/marvell/octeontx/otx2/plat_topology.c		\
 				plat/marvell/octeontx/otx2/octeontx_trace.c		\
 				drivers/marvell/phy/phy_gen.c		\
 				drivers/marvell/phy/phy_vitesse.c	\
