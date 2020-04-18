@@ -46,7 +46,8 @@ enum cgx_error_type {
 	CGX_ERR_MODULE_INVALID,
 	CGX_ERR_MODULE_NOT_PRESENT,
 	CGX_ERR_SPEED_CHANGE_INVALID,
-	CGX_ERR_SERDES_RX_NO_SIGNAL,	/* = 29 */
+	CGX_ERR_SERDES_RX_NO_SIGNAL,
+	CGX_ERR_SERDES_CPRI_PARAM_INVALID	/* = 30 */
 	/* FIXME : add more error types when adding support for new modes */
 };
 
@@ -106,6 +107,7 @@ enum cgx_cmd_id {
 	CGX_CMD_SET_MAC_ADDR,
 	CGX_CMD_SET_PTP_MODE,
 	CGX_CMD_CPRI_MODE_CHANGE,	/* = 35 */
+	CGX_CMD_CPRI_TX_CONTROL,
 };
 
 /* async event ids */
@@ -391,10 +393,19 @@ struct cgx_link_change_args {		/* start from bit 8 */
 /* command argument to be passed for cmd ID - CGX_CMD_CPRI_MODE_CHANGE */
 struct cpri_mode_change_args {
 	uint64_t reserved1:8;
-	uint64_t gserc_idx:4;
-	uint64_t lane_idx:4;
+	uint64_t gserc_idx:4; /* GSERC index 0 - 4 */
+	uint64_t lane_idx:4;  /* lane index 0 - 1 */
 	uint64_t rate:16; /* 9830/4915/2458/6144/3072 */
-	uint64_t reserved2:28;
+	uint64_t reserved2:32;
+};
+
+/* command argument to be passed for cmd ID - CGX_CMD_CPRI_TX_CONTROL */
+struct cpri_mode_tx_ctrl_args {
+	uint64_t reserved1:8;
+	uint64_t gserc_idx:4;	/* GSERC index 0 - 4 */
+	uint64_t lane_idx:4;	/* lane index 0 - 1 */
+	uint64_t enable:1; /* 0 - disable, 1 - enable */
+	uint64_t reserved2:47;
 };
 
 /* command argument to be passed for cmd ID - CGX_CMD_SET_LINK_MODE */
@@ -464,6 +475,7 @@ union cgx_cmd_s {
 	struct cgx_set_flash_ignore_args persist_args;
 	struct cgx_mac_addr_args mac_args;
 	struct cpri_mode_change_args cpri_change_args;
+	struct cpri_mode_tx_ctrl_args cpri_tx_ctrl_args;
 	/* any other arg for command id * like : mtu, dmac filtering control */
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
 	struct cgx_prbs_args prbs_args;

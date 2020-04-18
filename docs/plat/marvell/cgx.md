@@ -548,7 +548,10 @@ struct cpri_mode_change_args {
         uint64_t reserved2:28;
 };
 
-Since the command uses CGX framework, any CGX IDx and LMAC IDx can be passed. For all the GSERC that corresponds to CPRI, initial boot time configuration should be ethernet. Later, user can send this command to switch to CPRI.
+Since the command uses CGX framework, any CGX IDx and LMAC IDx other than CGX index as 0
+can be passed (CGX0 is mapped to NIX and used by kernel). For all the GSERC that
+corresponds to CPRI, initial boot time configuration should be ethernet. Later, user
+can send this command to switch to CPRI.
 
 * The command expects GSERC and lane as index with the requested RATE(baudrate).
 This command handles the change from ethernet to CPRI and different
@@ -564,7 +567,27 @@ set1 baud rate: 9830/4915/2458
 * If change request to baud rate for the lane is changed from ethernet to CPRI,
 other lane in DLM is also changed due to GSERC limitation.
 
-##### 4.2.1.13. GET LINK STATUS
+##### 4.2.1.13. CPRI TX CONTROL
+
+This command CGX_CMD_CPRI_TX_CONTROL adds support to enable Tx for
+GSERC configured in CPRI mode. This command should be sent after the
+CGX_CMD_CPRI_MODE_CHANGE command & CPRI MAC is configured
+
+/* command argument to be passed for cmd ID - CGX_CMD_CPRI_TX_CONTROL */
+struct cpri_mode_tx_ctrl_args {
+	uint64_t reserved1:8;
+	uint64_t gserc_idx:4;	/* GSERC index 0 - 4 */
+	uint64_t lane_idx:4;	/* lane index 0 - 1 */
+	uint64_t enable:1; /* 0 - disable, 1 - enable */
+	uint64_t reserved2:47;
+};
+
+Since the command uses CGX framework, any CGX IDx and LMAC IDx other than CGX index as 0
+can be passed (CGX0 is mapped to NIX and used by kernel). 
+
+* The command expects GSERC and lane as index with enable/disable parameter.
+
+##### 4.2.1.14. GET LINK STATUS
 
 This command can be called any time when CGX LMAC status needs to be obtained
 

@@ -942,6 +942,13 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 	debug_cgx_intf("%s: gser %d lane %d rate req %d\n",
 			__func__, gserc_idx, lane_idx, req_rate);
 
+	if (((gserc_idx < 0) && (gserc_idx > 4)) ||
+			((lane_idx < 0) && (lane_idx > 1))) {
+		ERROR("%s: Invalid GSERX lane index %d:%d\n", __func__,
+				gserc_idx, lane_idx);
+		return -1;
+	}
+
 	cgx_obtain_lmac_index(gserc_idx, lane_idx, &cgx_idx, &lmac_idx);
 
 	if ((cgx_idx == -1) && (lmac_idx == -1)) {
@@ -1016,6 +1023,39 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 		plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[lane_idx]
 							= req_rate;
 	}
+	return 0;
+}
+
+static int cpri_set_tx_control(struct cpri_mode_tx_ctrl_args *args)
+{
+	cgx_config_t *cgx;
+	int gserc_idx, lane_idx;
+	int cgx_idx, lmac_idx;
+
+	gserc_idx = args->gserc_idx;
+	lane_idx = args->lane_idx;
+
+	debug_cgx_intf("%s: gser %d lane %d enable %d\n",
+			__func__, gserc_idx, lane_idx, args->enable);
+
+	if (((gserc_idx < 0) && (gserc_idx > 4)) ||
+			((lane_idx < 0) && (lane_idx > 1))) {
+		ERROR("%s: Invalid GSERX lane index %d:%d\n", __func__,
+				gserc_idx, lane_idx);
+		return -1;
+	}
+
+	cgx_obtain_lmac_index(gserc_idx, lane_idx, &cgx_idx, &lmac_idx);
+
+	if ((cgx_idx == -1) && (lmac_idx == -1)) {
+		ERROR("%s: invalid CGX, LMAC index obtained\n", __func__);
+		return -1;
+	}
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_idx];
+
+	cgx->qlm_ops->qlm_tx_control(gserc_idx, lane_idx, args->enable);
+
 	return 0;
 }
 #endif
@@ -2165,8 +2205,9 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 #if defined(PLAT_loki)
 			case CGX_CMD_CPRI_MODE_CHANGE:
 				/* CGX and LMAC index can be passed as any
-				 * valid CGX and LMAC index for LOKI platform
-				 * Ex: from CGX : 0 - 3, LMAC : 0 - 3
+				 * valid CGX (other than CGX0 mapped to NIX
+				 * and LMAC index for LOKI platform
+				 * Ex: from CGX : 1 - 3, LMAC : 0 - 3
 				 */
 				scratchx1.u = CSR_READ(CAVM_CGXX_CMRX_SCRATCHX(
 							cgx_id, lmac_id, 1));
@@ -2175,8 +2216,20 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 				if (ret == -1)
 					cgx_set_error_type(cgx_id, lmac_id,
 						CGX_ERR_SPEED_CHANGE_INVALID);
-#endif
 			break;
+			case CGX_CMD_CPRI_TX_CONTROL:
+				scratchx1.u = CSR_READ(CAVM_CGXX_CMRX_SCRATCHX(
+							cgx_id, lmac_id, 1));
+				ret = cpri_set_tx_control(
+						&scratchx1.s.cpri_tx_ctrl_args);
+				if (ret == -1) {
+					ERROR("%s: %d:%d invalid request\n",
+						__func__, cgx_id, lmac_id);
+					cgx_set_error_type(cgx_id, lmac_id,
+						CGX_ERR_SERDES_CPRI_PARAM_INVALID);
+				}
+			break;
+#endif
 			/* FIXME: add support for other commands */
 			default:
 				debug_cgx_intf("%s: %d:%d Invalid request %d\n",
