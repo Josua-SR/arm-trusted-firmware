@@ -1164,20 +1164,17 @@ static int octeontx2_fill_cgx_struct(int cgx_idx, int qlm, int gserx,
 		return 0;
 	}
 
-	/* For DLMs (2 DLMs mapped to CGX), physical lane
-	 * can be >= 2. In this case, subtract lane index by
-	 * 2 for DLMs so correct lane index can be passed
+	/* For 2 DLMs mapped to CGX, use shift_from_first to
+	 * identify the correct lane index to be passed
 	 * when obtaining the MODE from SCRATCHX register.
 	 */
-	if (plat_octeontx_scfg->qlm_max_lane_num[qlm] == 2) {
-		if (phy_lane >= 2)
-			phy_lane -= 2;
-	}
+	if (gserx != gserx + shift_from_first)
+		qlm_state = cgx->qlm_ops->qlm_get_state(gserx, lane);
+	else
+		qlm_state = cgx->qlm_ops->qlm_get_state(gserx, phy_lane);
 
-	qlm_state = cgx->qlm_ops->qlm_get_state(gserx, phy_lane);
-
-	debug_dts("QLM%d.LANE%d:%d: mode=%d:%s\n",
-			qlm, lane, phy_lane,
+	debug_dts("QLM%d.LANE%d: mode=%d:%s\n",
+			qlm, phy_lane,
 			qlm_state.s.mode,
 			qlm_get_mode_strmap(qlm_state.s.mode).bdk_str);
 
@@ -1216,6 +1213,30 @@ static int octeontx2_fill_cgx_struct(int cgx_idx, int qlm, int gserx,
 		 */
 		WARN("CGX%d: cannot configure USXGMII for this CGX\n",
 				cgx_idx);
+		return 0;
+	}
+
+	/* Obtain lane order from NETWORK-LANE-ORDER property parsed
+	 * from BDK DT
+	 * Examples:
+	 * 0x3210: Default connection, lanes in order
+	 * 0x0123: All lanes are swizzled. 0->3, 1->2, 2->1, 3->0
+	 */
+	lane_order = cgx->network_lane_order;
+
+	/* lane_to_sds(8 bits) is an array of 2-bit values that map each
+	 * logical PCS lane in the LMAC to a physical SerDes lane.
+	 * Extract the lane info from lane order and build lane_to_sds.
+	 */
+	lane_to_sds = ((((lane_order >> 12) & 3) << 6) |
+			(((lane_order >> 8) & 3) << 4) |
+			(((lane_order >> 4) & 3) << 2) |
+			(((lane_order >> 0) & 3)));
+
+	phy_lane = cgx->qlm_ops->qlm_get_lmac_phy_lane(gserx, lane, lane_to_sds);
+	if ((cgx->lanes_used_mask >> phy_lane) & 1) {
+		debug_dts("CGX%d: QLM%d.LANE%d:%d: already configured for CGX, skip.\n",
+				  cgx_idx, qlm, lane, phy_lane);
 		return 0;
 	}
 
@@ -1551,7 +1572,7 @@ static void octeontx2_cgx_lmacs_check_linux(const void *fdt,
 		 * qlm_auto_config and assign the lane index
 		 * to parse the DT.
 		 */
-		debug_dts("%s: cgx_idx %d plat_octeontx_bcfg->qlm_auto_config %d lmac_idx %d lane %d lmac->first_phy_lane %d num_lanes %d\n", __func__, cgx_idx, plat_octeontx_bcfg->qlm_auto_config,
+		debug_dts("%s: plat_octeontx_bcfg->qlm_auto_config %d lmac_idx %d lane %d lmac->first_phy_lane %d num_lanes %d\n", __func__, plat_octeontx_bcfg->qlm_auto_config,
 			lmac_idx, lmac->lane, lmac->first_phy_lane, lmac->max_lane_count);
 
 		/* In case of MODE that is using 2 lanes, lane index
@@ -1560,15 +1581,10 @@ static void octeontx2_cgx_lmacs_check_linux(const void *fdt,
 		if (((!plat_octeontx_bcfg->qlm_auto_config)
 			|| (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504n", 7)))
 			&& (lmac->max_lane_count != 4)) {
-			if ((cavm_is_model(OCTEONTX_CN96XX_PASS1_X)) &&
-					(lmac->qlm == 5)) {
-				lane = lmac->lane + 2;
-			} else {
-				lane = lmac->first_phy_lane;
-				if ((lmac->max_lane_count == 2) &&
-					(lmac->lane != lmac->first_phy_lane))
-					lane -= 1;
-			}
+			lane = lmac->first_phy_lane;
+			if ((lmac->max_lane_count == 2) &&
+				(lmac->lane != lmac->first_phy_lane))
+				lane -= 1;
 		} else {
 			/* If AUTO-CONFIG is 1 or AUTO-CONFIG is 0
 			 * and if the number of lanes is not 1 or 2,
