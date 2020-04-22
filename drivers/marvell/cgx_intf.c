@@ -846,7 +846,13 @@ static void cgx_obtain_lmac_index(int gserc_idx, int lane_idx, int *cgx_idx, int
 {
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
-	int lane = 0;
+
+	/* For higher DLM, increment the lane
+	 * index by 2 to get the correct
+	 * lane index.
+	 */
+	if (gserc_idx % 2)
+		lane_idx += 2;
 
 	/* Find the CGX, LMAC index for GSER/LANE index */
 	for (int i = 0; i < MAX_CGX; i++) {
@@ -859,14 +865,7 @@ static void cgx_obtain_lmac_index(int gserc_idx, int lane_idx, int *cgx_idx, int
 		for (int j = 0; j < MAX_LMAC_PER_CGX; j++) {
 			lmac = &cgx->lmac_cfg[j];
 			if (lmac->gserx == gserc_idx) {
-				lane = lmac->lane;
-				/* For higher DLM, subtract the lane
-				 * index by 2 to get the correct
-				 * lane index
-				 */
-				if (lmac->lane >= 2)
-					lane -= 2;
-				if (lane == lane_idx) {
+				if ((lmac->lane_mask >> lane_idx) & 1) {
 					*cgx_idx = i;
 					*lmac_idx = j;
 					debug_cgx_intf("%s: gserx %d lane %d cgx %d lmac %d\n",
@@ -934,6 +933,7 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 	int gserc_idx = 0, lane_idx = 0;
 	int current_rate, is_allowed;
 	int max_lane_count = 2; /* GSERC has only 2 lanes per DLM */
+	cgx_lmac_config_t *lmac;
 
 	req_rate = args->rate;
 	gserc_idx = args->gserc_idx;
@@ -942,8 +942,8 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 	debug_cgx_intf("%s: gser %d lane %d rate req %d\n",
 			__func__, gserc_idx, lane_idx, req_rate);
 
-	if (((gserc_idx < 0) && (gserc_idx > 4)) ||
-			((lane_idx < 0) && (lane_idx > 1))) {
+	if (!((gserc_idx >= 0) && (gserc_idx <= 4)) ||
+			!((lane_idx >= 0) && (lane_idx <= 1))) {
 		ERROR("%s: Invalid GSERX lane index %d:%d\n", __func__,
 				gserc_idx, lane_idx);
 		return -1;
@@ -971,30 +971,33 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 		/* If the DLM is configured as CGX, change both the lanes
 		 * of DLM to CPRI
 		 */
-		for (int j = 0; j < max_lane_count; j++) {
-			if (j == lane_idx) {
-				/* Bring down the CGX link */
-				cgx_link_bringdown(cgx_idx, lmac_idx);
-				cgx->qlm_ops->qlm_set_mode(gserc_idx, j, QLM_MODE_CPRI,
-						req_rate, 0);
-				plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[j]
-							= req_rate;
-			} else {
-				/* Bring down the link for other lane
-				 * and set to CPRI mode
-				 */
-				cgx_obtain_lmac_index(gserc_idx, j, &cgx_idx, &lmac_idx);
-				if ((cgx_idx == -1) && (lmac_idx == -1)) {
-					ERROR("%s: invalid CGX, LMAC index obtained\n", __func__);
-					return -1;
-				}
-				cgx_link_bringdown(cgx_idx, lmac_idx);
-				cgx->qlm_ops->qlm_set_mode(gserc_idx, j, QLM_MODE_CPRI,
-							req_rate, 0);
-				plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[j]
-								= req_rate;
+		/* Bring down the CGX links for both lanes */
+		cgx_link_bringdown(cgx_idx, lmac_idx);
+
+		/* If LMAC configuration uses only single lane, bring down
+		 * the link for other lane as well
+		 */
+		lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_idx].lmac_cfg[lmac_idx];
+		if (lmac->max_lane_count == 1) {
+			/* Obtain LMAC index for other lane */
+			cgx_obtain_lmac_index(gserc_idx, !lane_idx, &cgx_idx, &lmac_idx);
+			if ((cgx_idx == -1) && (lmac_idx == -1)) {
+				ERROR("%s: invalid CGX, LMAC index obtained\n", __func__);
+				return -1;
 			}
+			cgx_link_bringdown(cgx_idx, lmac_idx);
 		}
+
+		/* Lane index to be passed as -1 when changing
+		 * from ecpri to cpri as both the lanes can be
+		 * updated to CPRI. If one of the lanes is in
+		 * ecpri mode, set_mode API doesn't work
+		 * correctly
+		 */
+		cgx->qlm_ops->qlm_set_mode(gserc_idx, -1, QLM_MODE_CPRI, req_rate, 0);
+		for (int j = 0; j < max_lane_count; j++)
+			plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[j]
+							= req_rate;
 		plat_octeontx_bcfg->qlm_cfg[gserc_idx].is_cpri = 1;
 	} else {
 		/* If the DLM is configured as CPRI, change to requested
