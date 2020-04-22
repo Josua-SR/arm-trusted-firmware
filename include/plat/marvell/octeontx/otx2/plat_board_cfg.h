@@ -113,6 +113,7 @@ typedef struct qlm_config {
 	int lane_idle_refset[MAX_LANES_PER_QLM];
 	int is_cpri;
 	int cpri_baud_rate[MAX_LANES_PER_QLM];
+	int clk_term;
 } qlm_config_t;
 
 typedef struct mcc_ras_config {

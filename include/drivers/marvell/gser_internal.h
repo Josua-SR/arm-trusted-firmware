@@ -53,6 +53,7 @@
 /* Argument for gser_is_platform */
 #define GSER_PLATFORM_ASIM		0
 #define GSER_PLATFORM_EMULATOR		1
+#define GSER_PLATFORM_HW		2
 
 /* Argument for gsern_config_get_int */
 #define GSER_CONFIG_QLM_LANE_RX_POLARITY		0
@@ -65,6 +66,7 @@
 #define GSER_CONFIG_QLM_TUNING_RX_PREVGA_GN_OVRD	7
 #define GSER_CONFIG_QLM_TUNING_RX_PREVGA_GN_ADAPT	8
 #define GSER_CONFIG_QLM_LANE_IDLE_REFSET_VALUE		9
+#define GSER_CONFIG_QLM_CLK_TERM		       10
 
 #define GSER_CONFIG_QLM_TUNING_TX_MAIN_NAME	"MAIN"
 #define GSER_CONFIG_QLM_TUNING_TX_PRE_NAME	"PRE"
@@ -86,6 +88,7 @@
 #define GSER_CSR_DEFINE			CSR_DEFINE
 #define false				0
 #define true				1
+#define gser_fatal			ERROR
 #define gser_error			WARN
 #define gser_warn			WARN
 #define gser_wait_usec			udelay
@@ -98,6 +101,9 @@
 #define qlm_eye_t			gser_qlm_eye_t
 #define gser_build_mask			octeontx_build_mask
 #define gser_be16_to_cpu		cavm_be16_to_cpu
+#define gser_be32_to_cpu		cavm_be32_to_cpu
+#define gser_be64_to_cpu		cavm_be64_to_cpu
+#define gser_node_t			int
 
 static inline int64_t gser_extract_smag(uint64_t v, int lsb, int msb)
 {
@@ -136,6 +142,8 @@ int gser_config_get_int(int prop, ...);
 int gser_poll_for_csr(uint64_t addr, uint64_t mask, int poll_val, int timeout);
 const char *qlm_mode_to_cfg_str(qlm_modes_t mode);
 uint8_t gser_rng_get_random8(void);
+void qlm_gserx_default_tuning(qlm_modes_t mode, int baud_mhz, int *tx_swing,
+				int *tx_cpre, int *tx_cpost);
 
 /* Implemented in drivers/marvell/gsern/gsern_init_common.c */
 int gsern_init_wait_for_sm_complete(int qlm);

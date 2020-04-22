@@ -37,6 +37,8 @@ static cavm_gserrx_common_phy_ctrl_bcfg_t qlm_gserr_get_clock_mode(int module);
 static cavm_gserrx_lanex_control_bcfg_t qlm_gserr_get_lane_mode(int module, int lane);
 static int qlm_gserr_change_lane_rate(int module, int lane);
 static int qlm_gserr_change_phy_rate(int module);
+static int mailbox_command(int qlm, uint8_t cmd, uint64_t args);
+static int mailbox_response(int qlm, uint64_t *arg0, uint64_t *arg1);
 
 typedef enum
 {
@@ -67,6 +69,33 @@ static int get_num_lanes(int module)
 }
 
 /**
+ * Map a GSERR module number to the QLM global number tied to it
+ *
+ * @param module Module to map
+ *
+ * @return Global QLM number
+ */
+static int map_module_to_qlm(int module)
+{
+	int qlm_offset = 0;
+
+	if (gser_is_model(OCTEONTX_CN96XX))
+		qlm_offset = 5; /* From GSERR_MIN in bdk-qlm-cn96xx-gserr.c */
+	else if (gser_is_model(OCTEONTX_CNF95XX))
+		qlm_offset = 0; /* From GSERR_MIN in bdk-qlm-cnf95xx-gserr.c */
+	else if (gser_is_model(OCTEONTX_LOKI))
+		qlm_offset = 1; /* From GSERR_MIN in bdk-qlm-loki.c */
+	else if (gser_is_model(OCTEONTX_F95MM))
+		qlm_offset = 0; /* From GSERR_MIN in bdk-qlm-f95mm.c */
+	else if (gser_is_model(OCTEONTX_CN98XX))
+		qlm_offset = 9; /* From GSERR_MIN in bdk-qlm-cn98xx.c */
+	else
+		gser_fatal("GSERR: map_module_to_qlm(): Unrecognized chip\n");
+
+	return module + qlm_offset;
+}
+
+/**
  * Get the SERDES state
  *
  * @param node   Node to query
@@ -79,6 +108,70 @@ qlm_state_lane_t qlm_gserr_get_state(int qlm, int lane)
 {
 	qlm_state_lane_t state = {.u = GSER_CSR_READ(CAVM_GSERRX_SCRATCHX(qlm, lane))};
 	return state;
+}
+
+/**
+ * Apply any custom tuning from the device tree
+ *
+ * @param node
+ * @param module
+ */
+static void apply_tuning(int module)
+{
+	if (!gser_is_platform(GSER_PLATFORM_HW))
+		return;
+
+	int qlm = map_module_to_qlm(module);
+	int num_lanes = get_num_lanes(module);
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		/* Get settings from the device tree */
+		qlm_state_lane_t qlm_state = qlm_gserr_get_state(module, lane);
+		const char *smode = qlm_mode_to_cfg_str(qlm_state.s.mode);
+		int tx_swing = gser_config_get_int(GSER_CONFIG_QLM_TUNING_TX_MAIN, smode, qlm_state.s.baud_mhz, qlm, lane);
+		int tx_cpre = gser_config_get_int(GSER_CONFIG_QLM_TUNING_TX_PRE, smode, qlm_state.s.baud_mhz, qlm, lane);
+		int tx_cpost = gser_config_get_int(GSER_CONFIG_QLM_TUNING_TX_POST, smode, qlm_state.s.baud_mhz, qlm, lane);
+
+		/* Get the defaults from the lookup table */
+		int default_swing = -1;
+		int default_cpre = -1;
+		int default_cpost = -1;
+		qlm_gserx_default_tuning(qlm_state.s.mode, qlm_state.s.baud_mhz, &default_swing, &default_cpre, &default_cpost);
+
+		/* If the device tree didn't supply a setting, use the default. Note that
+		   there may not be a default in the table, so the parameter will continue
+		   to be -1 */
+		if (tx_swing == -1)
+			tx_swing = default_swing;
+		if (tx_cpre == -1)
+			tx_cpre = default_cpre;
+		if (tx_cpost == -1)
+			tx_cpost = default_cpost;
+
+		/* If no parameters were changed skip to next lane */
+		if ((tx_swing == -1) && (tx_cpre == -1) && (tx_cpost == -1))
+			continue;
+
+		/* At least one parameter changed, but maybe not all. Get the original
+		   values to use as a default for any parameter not filled in yet */
+		int orig_swing;
+		int orig_cpre;
+		int orig_cpost;
+		int orig_unused1;
+		int orig_unused2;
+		qlm_gserr_get_tune_lane_tx(module, lane, &orig_swing, &orig_cpre, &orig_cpost, &orig_unused1, &orig_unused2);
+
+		/* Fill in any parameter not specified yet */
+		if (tx_swing == -1)
+			tx_swing = orig_swing;
+		if (tx_cpre == -1)
+			tx_cpre = orig_cpre;
+		if (tx_cpost == -1)
+			tx_cpost = orig_cpost;
+
+		GSER_TRACE(QLM, "GSERR%d.%d: SWING=%d, PRE=%d, POST=%d\n", module, lane, tx_swing, tx_cpre, tx_cpost);
+		qlm_gserr_tune_lane_tx(module, lane, tx_swing, tx_cpre, tx_cpost, -1, -1);
+	}
 }
 
 /**
@@ -154,6 +247,7 @@ int qlm_gserr_set_mode(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
 		else
 			GSER_TRACE(QLM, "GSERR%d.%d: Lane mode already correct\n", qlm, l);
 	}
+	apply_tuning(qlm);
 
 	return 0;
 }
@@ -196,18 +290,11 @@ int qlm_gserr_measure_refclock(int qlm)
  */
 int qlm_gserr_reset(int qlm)
 {
-	int num_lanes = get_num_lanes(qlm);
-	for (int lane = 0; lane < num_lanes; lane++)
-	{
-		GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(qlm, lane),
-			c.s.ln_rst = 1);
-	}
-	gser_wait_usec(1000); /* Stay in reset of 1ms */
-	for (int lane = 0; lane < num_lanes; lane++)
-	{
-		GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(qlm, lane),
-			c.s.ln_rst = 0);
-	}
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(qlm),
+		c.s.cm0_rst = 1;
+		c.s.por = 1;
+		c.s.cpu_reset = 1;
+		c.s.apb_reset = 1);
 	return 0;
 }
 
@@ -270,6 +357,12 @@ int qlm_gserr_enable_prbs(int qlm, int prbs, qlm_direction_t dir)
 		}
 		if (dir & QLM_DIRECTION_RX)
 		{
+			/* Require 63 cycles to match before getting lock */
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_BIST_RX_LOCK_CTRL0(qlm, lane),
+				c.s.num_cycles_7_0 = 0x3f);
+			/* Require 63 cycles to not match before losing lock */
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_BIST_RX_LOSS_LOCK_CTRL0(qlm, lane),
+				c.s.num_cycles_7_0 = 0x3f);
 			/* Clear error counter */
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_BIST_RX_CTRL(qlm, lane),
 				c.s.stop_error_count = 1;
@@ -431,18 +524,26 @@ void qlm_gserr_inject_prbs_error(int qlm, int lane)
  * @param node
  * @param module
  * @param lane
+ * @param enable
  *
  * @return Zero on success, negative on failure
  */
-static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
+static int qlm_gserr_ned_loopback(int module, int lane, bool enable)
 {
+	/* Skip running if we aren't changing anything */
+	GSER_CSR_INIT(dpl_rxdp_ctrl1, CAVM_GSERRX_LNX_TOP_DPL_RXDP_CTRL1(module, lane));
+	if (enable && dpl_rxdp_ctrl1.s.rx_dmux_sel)
+		return 0;
+	if (!enable && !dpl_rxdp_ctrl1.s.rx_dmux_sel)
+		return 0;
+
 	/* The steps to enable GSERR NED loopback with the PHY internal BIST PRBS
 		geneator and checker are described below. */
 	/* 1. Disable the firmware receive control state machine.
 		Write GSERR(0..2)_LN(0..3)_FEATURE_TEST_CFG0
 			RX_CTRL_DIS=1 */
 	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_TEST_CFG0(module, lane),
-		c.s.rx_ctrl_dis = 1);
+		c.s.rx_ctrl_dis = enable);
 
 	/* 2. Bring-up the lane to the active power state, refer to the steps in
 		Section 1.4 GSERR Software Initialization. */
@@ -478,39 +579,39 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 	{
 		case 0:
 		case 4:
-			ctrl_src_ovr_val = 3;
+			ctrl_src_ovr_val = enable ? 3 : 0;
 			break;
 		case 1:
 		case 5:
-			ctrl_src_ovr_val = 2;
+			ctrl_src_ovr_val = enable ? 2 : 0;
 			break;
 		case 2:
 		case 6:
 		default:
-			ctrl_src_ovr_val = 1;
+			ctrl_src_ovr_val = enable ? 1 : 0;
 			break;
 	}
 	switch (lane)
 	{
 		case 0:
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN0_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
-				c.s.ctrl_src_ovr_en = 1;
+				c.s.ctrl_src_ovr_en = enable;
 				c.s.ctrl_src_ovr_val = ctrl_src_ovr_val);
 			break;
 		case 1:
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
-				c.s.ctrl_src_ovr_en = 1;
+				c.s.ctrl_src_ovr_en = enable;
 				c.s.ctrl_src_ovr_val = ctrl_src_ovr_val);
 			break;
 #if QUAD_LANE
 		case 2:
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
-				c.s.ctrl_src_ovr_en = 1;
+				c.s.ctrl_src_ovr_en = enable;
 				c.s.ctrl_src_ovr_val = ctrl_src_ovr_val);
 			break;
 		case 3:
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
-				c.s.ctrl_src_ovr_en = 1;
+				c.s.ctrl_src_ovr_en = enable;
 				c.s.ctrl_src_ovr_val = ctrl_src_ovr_val);
 			break;
 #endif
@@ -529,10 +630,10 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 	cavm_gserrx_phy0_top_clock_ln0_clk_txf_t clk_txf = {.u = 0};
 	cavm_gserrx_phy0_top_clock_ln0_clk_rxb_t clk_rxb = {.u = 0};
 	cavm_gserrx_phy0_top_clock_ln0_clk_rxf_t clk_rxf = {.u = 0};
-	clk_txb.s.ctrl_src_ovr_val = (is_prbs) ? 2 : 3;
-	clk_txf.s.ctrl_src_ovr_val = (is_prbs) ? 2 : 3;
-	clk_rxb.s.ctrl_src_ovr_val = 2;
-	clk_rxf.s.ctrl_src_sel = (is_prbs) ? 2 : 0;
+	clk_txb.s.ctrl_src_ovr_val = enable ? 3 : 0;
+	clk_txf.s.ctrl_src_ovr_val = enable ? 3 : 0;
+	clk_rxb.s.ctrl_src_ovr_val = enable ? 2 : 0;
+	clk_rxf.s.ctrl_src_sel = enable ? 0 : 3;
 	switch (lane)
 	{
 		case 0:
@@ -573,9 +674,9 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 		Note there is no CTRL_SRC_OVR_EN bit for the CLK_RXF gearbox clock, it
 		is controlled only by the GSERR(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_RXF[CTRL_SRC_SEL]
 		field in Step 5 above. */
-	clk_txb.s.ctrl_src_ovr_en = 1;
-	clk_txf.s.ctrl_src_ovr_en = 1;
-	clk_rxb.s.ctrl_src_ovr_en = 1;
+	clk_txb.s.ctrl_src_ovr_en = enable;
+	clk_txf.s.ctrl_src_ovr_en = enable;
+	clk_rxb.s.ctrl_src_ovr_en = enable;
 	switch (lane)
 	{
 		case 0:
@@ -609,7 +710,7 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 		Write GSERR(0..2)_LN(0..3)_TOP_DPL_RXDP_CTRL1
 			RX_DMUX_SEL=1 */
 	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_DPL_RXDP_CTRL1(module, lane),
-		c.s.rx_dmux_sel = 1);
+		c.s.rx_dmux_sel = enable);
 
 	/* 9. Enable the clock gaters for NED loopback. One per lane.
 		Write GSERR(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CG_CTRL
@@ -618,20 +719,20 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 	{
 		case 0:
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN0_CG_CTRL(module),
-				c.s.clk_rx = 1);
+				c.s.clk_rx = enable);
 			break;
 		case 1:
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CG_CTRL(module),
-				c.s.clk_rx = 1);
+				c.s.clk_rx = enable);
 			break;
 #if QUAD_LANE
 		case 2:
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CG_CTRL(module),
-				c.s.clk_rx = 1);
+				c.s.clk_rx = enable);
 			break;
 		case 3:
 			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CG_CTRL(module),
-				c.s.clk_rx = 1);
+				c.s.clk_rx = enable);
 			break;
 #endif
 	}
@@ -640,17 +741,7 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 	gser_wait_usec(1);
 
 	/* 11. Start the CGX or PHY BIST PRBS Generator */
-	if (is_prbs)
-	{
-		if (qlm_gserr_enable_prbs(module, 32, QLM_DIRECTION_TX))
-			return -1;
-		GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
-			c.s.ln_ctrl_tx_en = 1);
-	}
-	else
-	{
-		// FIXME
-	}
+	/* Not needed */
 
 	/* 12. Drive the LN_STAT_RXVALID signal output on the selected lane.
 		Write GSERR(0..2)_LN(0..3)_TOP_LN_STAT_CTRL0
@@ -662,19 +753,11 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 		GSERR(0..2)_LANE(0..3)_STATUS_BSTS
 			LN_STAT_RXVALID=1 Rx CDR is locked
 			LN_STAT_LOS Ignore the LN_STAT_LOS flag in NED loopback. */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STAT_RXVALID, ==, 1, 10000))
-		gser_error("GSERR%d.%d: Wait for GSERRX_LANEX_STATUS_BSTS[LN_STAT_RXVALID]=1 timeout\n", module, lane);
+	if (enable && GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STAT_RXVALID, ==, 1, 10000))
+		gser_warn("GSERR%d.%d: Wait for GSERRX_LANEX_STATUS_BSTS[LN_STAT_RXVALID]=1 timeout\n", module, lane);
 
 	/* 14. Complete the bring-up of the Lane in NED loopback mode. */
-	if (is_prbs)
-	{
-		if (qlm_gserr_enable_prbs(module, 32, QLM_DIRECTION_RX))
-			return -1;
-	}
-	else
-	{
-		/* Nothing needed for CGX */
-	}
+	/* Not needed */
 
 	/* 15. Reset the Receiver Gearbox FIFO in each lane configured for NED
 		loopback. This ensures the Rx Gearbox FIFO read and write pointers are
@@ -766,24 +849,94 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
 	}
 	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_DPL_RXDP_CTRL1(module, lane),
 		c.s.rx_fifo_en = 1);
+	return 0;
+}
 
-	/* 16. Start the BIST PRBS checker, refer to Section 1.8.2 PRBS Checker.
-		The BIST checker should now be receiving the BIST PRBS generator
-		transmit data in NED loopback. Clear the PRBS Pattern Checker after
-		resetting the Rx gearbox FIFO in step 15, as the Rx gearbox FIFO reset
-		has probably caused bit errors while the FIFO was reset and the BIST
-		test pattern was interrupted.
-		Write GSERR(0..2)_LN(0..3)_BIST_RX_CTRL
-			CLEAR_BER=1
-		Write GSERR(0..2)_LN(0..3)_BIST_RX_CTRL
-			CLEAR_BER=0 */
-	if (is_prbs)
-	{
-		GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_BIST_RX_CTRL(module, lane),
-			c.s.clear_ber = 1);
-		GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_BIST_RX_CTRL(module, lane),
-			c.s.clear_ber = 0);
-	}
+/**
+ * Implementation of Far-End Analog (FEA) Loopback
+ *
+ * @param node
+ * @param module
+ * @param lane
+ *
+ * @return Zero on success, negative on failure
+ */
+static int qlm_gserr_fea_loopback(int module, int lane, bool enable)
+{
+	/* Skip running if we aren't changing anything */
+	GSER_CSR_INIT(afe_loopback_ctrl, CAVM_GSERRX_LNX_TOP_AFE_LOOPBACK_CTRL(module, lane));
+	if (enable && afe_loopback_ctrl.s.loopback_fea_en)
+		return 0;
+	if (!enable && !afe_loopback_ctrl.s.loopback_fea_en)
+		return 0;
+
+	/* These steps are from the Salina platform programming guide */
+	/* 1. Bring up the lane to the ACTIVE power state as in the normal operating
+	   mode (i.e. lnX_tx_rdy_o and lnX_rx_rdy_o asserted). Valid data must be
+	   transmitted into RX pins (lnX_rxp/m_i). */
+	/* Already been done when the SERDES was configured */
+
+	/* 2. Set the lane top register field AFE_LOOPBACK_CTRL.LOOPBACK_RXCLK_EN.
+	   (Note: This is a required step for simulation testing, but is generally
+	   not used in silicon testing. This step will use the recovered clock to
+	   drive the transmit driver, therefore it will result in much higher jitter
+	   content on the TX signal in silicon). */
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_AFE_LOOPBACK_CTRL(module, lane),
+		c.s.loopback_rxclk_en = enable);
+
+	/* 3. Wait until lnX_stat_rxvalid_o PHY top-level interface signal to be set
+	   to 1. If desired, a lane top register field LN_STAT_CTRL0.RXVALID can be
+	   polled. By this time, CDR is locked and received data are valid. */
+	if (enable && GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LNX_TOP_LN_STAT_CTRL0(module, lane), GSERRX_LNX_TOP_LN_STAT_CTRL0_RXVALID, ==, 1, 10000))
+		gser_warn("GSERR%d.%d: No receive signal detected\n", module, lane);
+
+	/* 4. Enable FEA loopback by setting a lane top register field
+	   AFE_LOOPBACK_CTRL.LOOPBACK_FEA_EN to 0x1. */
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_AFE_LOOPBACK_CTRL(module, lane),
+		c.s.loopback_fea_en = enable);
+
+	/* 5. Set interface data width to 32 bit as this is required for AFE
+	   interface by programming lane top registers:
+			a. Program register field AFE_TXDP_CTRL0.TXDP_DATA_WIDTH to 0x1
+			b. Program register field AFE_RXDP_CTRL1.RXDP_DATA_WIDTH to 0x1 */
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_AFE_TXDP_CTRL0(module, lane),
+		c.s.txdp_data_width = 1);
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_AFE_RXDP_CTRL1(module, lane),
+		c.s.rxdp_data_width = 1);
+
+	/* 6. Recalibrate TXDP clock using the corresponding mailbox command.
+			a. Read top mailbox register CMD_FLAG. It should be 0.
+			b. Read top mailbox register RSP_FLAG. If it is 1, write a 1 to
+				clear it.
+			c. Write the lane number (0 to NUM_LANES) to top mailbox register
+				CMD_DATA0.
+			d. Write 0x81 to top mailbox register CMD.
+			e. Wait for top mailbox register RSP_FLAG to read 1.
+			f. Read top mailbox register RSP to get the calibration’s error
+				code (0 == no error). Read top mailbox register RSP_DATA0 to
+				get the calibration’s result.
+			g. Write 1 to RSP_FLAG to clear it. */
+	if (mailbox_command(module, 0x81, lane) != 0)
+		return -1;
+	uint64_t resp0 = 0;
+	uint64_t resp1 = 0;
+	if (mailbox_response(module, &resp0, &resp1) != 0)
+		gser_warn("GSERR%d.%d: TXDP recalibrate failed\n", module, lane);
+	/* 7. Override tx_en indicator by programming a lane top register
+	   LN_CTRL_OVR0. Note that all of its fields must be programmed
+	   appropriately.
+			a. TX_EN = 0x1
+			b. DATA_RXPOLARITY = 0x0
+			c.  EDGE_RXPOLARITY = 0x0
+			d. EYE_RXPOLARITY = 0x0
+			e. OVR_EN = 0x1 (should be programmed last or at the same time as
+				all other fields) */
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_LN_CTRL_OVR0(module, lane),
+		c.s.tx_en = 1;
+		c.s.eye_rxpolarity = 0;
+		c.s.edge_rxpolarity = 0;
+		c.s.data_rxpolarity = 0;
+		c.s.ovr_en = enable);
 	return 0;
 }
 
@@ -798,33 +951,17 @@ static int qlm_gserr_ned_loopback(int module, int lane, bool is_prbs)
  */
 int qlm_gserr_enable_loop(int qlm, qlm_loop_t loop)
 {
-	int near_end_analog = 0;
-	int far_end_analog = 0;
-	int near_end_digital = 0;
-
-	switch (loop)
-	{
-		case QLM_LOOP_DISABLED:  /* No loopback */
-			break;
-		case QLM_LOOP_SHALLOW: /* Loop external data RX->TX (Not supported on CN8XXX) */
-			far_end_analog = 1;
-			break;
-		case QLM_LOOP_NEAR_END: /* Loop internal data TX->RX in analog domain (Not supported on CN8XXX) */
-			near_end_analog = 1;
-			break;
-		case QLM_LOOP_CORE: /* Loop internal data TX->RX in digital domain */
-			near_end_digital = 1;
-			break;
-	}
+	int use_fea = (loop == QLM_LOOP_SHALLOW);
+	int use_ned = (loop == QLM_LOOP_CORE);
+	/* We haven't implemented near-end analog loopback, so use the digital one
+	   instead. I doubt anyone will notice */
+	use_ned |= (loop == QLM_LOOP_NEAR_END);
 
 	int num_lanes = get_num_lanes(qlm);
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
-		GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_AFE_LOOPBACK_CTRL(qlm, lane),
-			c.s.loopback_nea_en = near_end_analog;
-			c.s.loopback_fea_en = far_end_analog);
-		if (near_end_digital)
-			qlm_gserr_ned_loopback(qlm, lane, false);
+		qlm_gserr_fea_loopback(qlm, lane, use_fea);
+		qlm_gserr_ned_loopback(qlm, lane, use_ned);
 	}
 	return 0;
 }
@@ -832,35 +969,44 @@ int qlm_gserr_enable_loop(int qlm, qlm_loop_t loop)
 /**
  * Configure the TX tuning parameters for a QLM lane
  *
- * @param node	  Node to configure
- * @param qlm	   QLM to configure
- * @param lane	  Lane to configure
- * @param tx_cmain  Transmitter Main (C0) equalizer tap coefficient value.
- *				  Programs the SerDes transmitter Main tap. Valid range is
- *				  0x30 to 0x18.
- * @param tx_cpre   Transmitter Pre (C-1) equalizer tap coefficient value.
- *				  Programs the transmitter Pre tap. Valid range is 0 to 0x10.
- * @param tx_cpost  Transmitter Post (C+1) equalizer tap coefficient value.
- *				  Programs the transmitter Post tap. Valid range is 0 to
- *				  0x10.
- * @param tx_bs	 TX bias/swing selection. This setting only takes effect if
- *				  [TX_CSPD] is deasserted; with [TX_CSPD] asserted the
- *				  bias/swing control setting seen in the analog bias generator
- *				  is zero.
- *				  Typical override values would be:
- *				  42 = Nominal 1.0V p-p transmit amplitude.
- *				  52 = Nominal 1.2V p-p transmit amplitude.
- *				  The maximum usable value without transmitted waveform
- *				  distortion depends primarily on voltage, secondarily on
- *				  process corner and temperature, but is at least 52. There is
- *				  no minimum setting based on transmitter distortion, only
- *				  that set by the receiver.
- * @param tx_unused Currently unused
+ * @param node	   Node to configure
+ * @param qlm		QLM to configure
+ * @param lane	   Lane to configure
+ * @param tx_swing   Transmitter Main (C0) equalizer tap coefficient value.
+ *				   Programs the SerDes transmitter Main tap. Valid range is
+ *				   0(0% swing) to 7(100% swing).
+ * @param tx_cpre	Transmitter Pre (C-1) equalizer tap coefficient value.
+ *				   Programs the transmitter Pre tap. Valid range is 0(min)
+ *				   to 15(max).
+ * @param tx_cpost   Transmitter Post (C+1) equalizer tap coefficient value.
+ *				   Programs the transmitter Post tap. Valid range is 0(min)
+ *				   to 31(max).
+ * @param tx_unused1
+ * @param tx_unused2
  *
  * @return Zero on success, negative on failure
  */
-int qlm_gserr_tune_lane_tx(int qlm, int lane, int tx_cmain, int tx_cpre, int tx_cpost, int tx_unused1, int tx_unused2)
+int qlm_gserr_tune_lane_tx(int qlm, int lane, int tx_swing, int tx_cpre, int tx_cpost, int tx_unused1, int tx_unused2)
 {
+	if ((tx_swing < 0) || (tx_swing > 7))
+	{
+		gser_error("GSERR%d.%d: Invalid tuning, TX Swing(%d) must be 0 to 7\n",
+			qlm, lane, tx_swing);
+		return -1;
+	}
+	if ((tx_cpre < 0) || (tx_cpre > 15))
+	{
+		gser_error("GSERR%d.%d: Invalid tuning, TX PRE(%d) must be 0 to 15\n",
+			qlm, lane, tx_cpre);
+		return -1;
+	}
+	if ((tx_cpost < 0) || (tx_cpost > 31))
+	{
+		gser_error("GSERR%d.%d: Invalid tuning, TX POST(%d) must be 0 to 31\n",
+			qlm, lane, tx_cpost);
+		return -1;
+	}
+
 	GSER_CSR_INIT(ctrl0, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL0(qlm, lane));
 	GSER_CSR_INIT(status0, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_STATUS0(qlm, lane));
 	if (ctrl0.s.req || status0.s.ack)
@@ -868,21 +1014,6 @@ int qlm_gserr_tune_lane_tx(int qlm, int lane, int tx_cmain, int tx_cpre, int tx_
 		gser_error("GSERR%d.%d: TXEQ coefficient request in progress\n", qlm, lane);
 		return -1;
 	}
-	int orig_tx_cmain = -1;
-	int orig_tx_cpre = -1;
-	int orig_tx_cpost = -1;
-	if (qlm_gserr_get_tune_lane_tx(qlm, lane, &orig_tx_cmain, &orig_tx_cpre, &orig_tx_cpost, &tx_unused1, &tx_unused2))
-	{
-		gser_error("GSERR%d.%d: Failed to read previous settings\n", qlm, lane);
-		return -1;
-	}
-
-	if (tx_cmain == -1)
-		tx_cmain = orig_tx_cmain;
-	if (tx_cpre == -1)
-		tx_cpre = orig_tx_cpre;
-	if (tx_cpost == -1)
-		tx_cpost = orig_tx_cpost;
 
 	/* Load the new value */
 	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL1(qlm, lane),
@@ -890,19 +1021,25 @@ int qlm_gserr_tune_lane_tx(int qlm, int lane, int tx_cmain, int tx_cpre, int tx_
 	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL3(qlm, lane),
 		c.s.txeq_cm1 = tx_cpre);
 	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL5(qlm, lane),
-		c.s.drv_swing = tx_cmain);
-	/* Request an update */
-	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL0(qlm, lane),
-		c.s.req = 1);
-	/* Wait for ACK */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_STATUS0(qlm, lane), GSERRX_LNX_DRV_REFCLK_TXEQ_STATUS0_ACK, ==, 1, 10000))
+		c.s.drv_swing = tx_swing);
+
+	/* Only request Tx coefficient update if CPU is out of reset */
+	GSER_CSR_INIT(gserrx_init_ctl, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(qlm));
+	if (!gserrx_init_ctl.s.cpu_reset)
 	{
-		gser_error("GSERR%d.%d: TXEQ coefficient request timeout\n", qlm, lane);
-		return -1;
+		/* Request an update */
+		GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL0(qlm, lane),
+			c.s.req = 1);
+		/* Wait for ACK */
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_STATUS0(qlm, lane), GSERRX_LNX_DRV_REFCLK_TXEQ_STATUS0_ACK, ==, 1, 10000))
+		{
+			gser_error("GSERR%d.%d: TXEQ coefficient request timeout\n", qlm, lane);
+			return -1;
+		}
+		/* Clear update request */
+		GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL0(qlm, lane),
+			c.s.req = 0);
 	}
-	/* Clear update request */
-	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL0(qlm, lane),
-		c.s.req = 0);
 
 	return 0;
 }
@@ -910,43 +1047,33 @@ int qlm_gserr_tune_lane_tx(int qlm, int lane, int tx_cmain, int tx_cpre, int tx_
 /**
  * Get the TX tuning parameters for a QLM lane
  *
- * @param node	  Node to configure
- * @param qlm	   QLM to configure
- * @param lane	  Lane to configure
- * @param tx_cmain  Transmitter Main (C0) equalizer tap coefficient value.
- *				  Programs the SerDes transmitter Main tap. Valid range is
- *				  0x30 to 0x18.
- * @param tx_cpre   Transmitter Pre (C-1) equalizer tap coefficient value.
- *				  Programs the transmitter Pre tap. Valid range is 0 to 0x10.
- * @param tx_cpost  Transmitter Post (C+1) equalizer tap coefficient value.
- *				  Programs the transmitter Post tap. Valid range is 0 to
- *				  0x10.
- * @param tx_bs	 TX bias/swing selection. This setting only takes effect if
- *				  [TX_CSPD] is deasserted; with [TX_CSPD] asserted the
- *				  bias/swing control setting seen in the analog bias generator
- *				  is zero.
- *				  Typical override values would be:
- *				  42 = Nominal 1.0V p-p transmit amplitude.
- *				  52 = Nominal 1.2V p-p transmit amplitude.
- *				  The maximum usable value without transmitted waveform
- *				  distortion depends primarily on voltage, secondarily on
- *				  process corner and temperature, but is at least 52. There is
- *				  no minimum setting based on transmitter distortion, only
- *				  that set by the receiver.
- * @param tx_unused Currently unused
+ * @param node	   Node to configure
+ * @param qlm		QLM to configure
+ * @param lane	   Lane to configure
+ * @param tx_swing   Transmitter Main (C0) equalizer tap coefficient value.
+ *				   Programs the SerDes transmitter Main tap. Valid range is
+ *				   0(0% swing) to 7(100% swing).
+ * @param tx_cpre	Transmitter Pre (C-1) equalizer tap coefficient value.
+ *				   Programs the transmitter Pre tap. Valid range is 0(min)
+ *				   to 15(max).
+ * @param tx_cpost   Transmitter Post (C+1) equalizer tap coefficient value.
+ *				   Programs the transmitter Post tap. Valid range is 0(min)
+ *				   to 31(max).
+ * @param tx_unused1
+ * @param tx_unused2
  *
  * @return Zero on success, negative on failure
  */
-int qlm_gserr_get_tune_lane_tx(int qlm, int lane, int *tx_cmain, int *tx_cpre, int *tx_cpost, int *tx_bs, int *tx_unused)
+int qlm_gserr_get_tune_lane_tx(int qlm, int lane, int *tx_swing, int *tx_cpre, int *tx_cpost, int *tx_unused1, int *tx_unused2)
 {
 	GSER_CSR_INIT(ctrl1, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL1(qlm, lane));
 	GSER_CSR_INIT(ctrl3, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL3(qlm, lane));
 	GSER_CSR_INIT(ctrl5, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL5(qlm, lane));
-	*tx_cmain = ctrl5.s.drv_swing;
+	*tx_swing = ctrl5.s.drv_swing;
 	*tx_cpre = ctrl3.s.txeq_cm1;
 	*tx_cpost = ctrl1.s.txeq_c1;
-	*tx_bs = -1;
-	*tx_unused = -1;
+	*tx_unused1 = -1;
+	*tx_unused2 = -1;
 	return 0;
 }
 
@@ -1006,11 +1133,13 @@ void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 		GSER_CSR_INIT(bcfg, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(qlm));
 		printf("	CMU OK=%d, PHY Rate1=0x%x, Rate2=0x%x\n",
 			cm0_top_phy_if_status.s.cmu_ok, bcfg.s.phy_ctrl_rate1, bcfg.s.phy_ctrl_rate2);
-		GSER_CSR_INIT(ctrl1, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL1(qlm, qlm_lane));
-		GSER_CSR_INIT(ctrl3, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL3(qlm, qlm_lane));
+		GSER_CSR_INIT(status1, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_STATUS1(qlm, qlm_lane));
+		GSER_CSR_INIT(status2, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_STATUS2(qlm, qlm_lane));
 		GSER_CSR_INIT(ctrl5, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL5(qlm, qlm_lane));
+		GSER_CSR_INIT(status3, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_STATUS3(qlm, qlm_lane));
 		printf("  Transmitter Status:\n");
-		printf("	PRE=%d, MAIN=%d, POST=%d\n", ctrl3.s.txeq_cm1, ctrl5.s.drv_swing, ctrl1.s.txeq_c1);
+		printf("	SWING=%d, PRE=%d, MAIN=%d, POST=%d\n", ctrl5.s.drv_swing,
+			status2.s.txeq_cm1, status3.s.txeq_c0, status1.s.txeq_c1);
 	}
 	if (show_rx)
 	{
@@ -1131,7 +1260,7 @@ static int mailbox_command(int qlm, uint8_t cmd, uint64_t args)
 	GSER_CSR_WRITE(CAVM_GSERRX_PHY0_MB_CMD_DATA7(qlm), gser_extract(args, 56, 8));
 	GSER_CSR_WRITE(CAVM_GSERRX_PHY0_MB_CMD(qlm), cmd);
 
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_PHY0_MB_CMD_FLAG(qlm), GSERRX_PHY0_MB_CMD_FLAG_DATA, ==, 0, 10000))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_PHY0_MB_CMD_FLAG(qlm), GSERRX_PHY0_MB_CMD_FLAG_DATA, ==, 0, 1000000))
 	{
 		gser_error("GSERR%d: Mailbox stuck on command\n", qlm);
 		return -1;
@@ -1152,7 +1281,7 @@ static int mailbox_command(int qlm, uint8_t cmd, uint64_t args)
 static int mailbox_response(int qlm, uint64_t *arg0, uint64_t *arg1)
 {
 	/* Wait for a response */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_PHY0_MB_RSP_FLAG(qlm), GSERRX_PHY0_MB_RSP_FLAG_DATA, ==, 1, 10000))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_PHY0_MB_RSP_FLAG(qlm), GSERRX_PHY0_MB_RSP_FLAG_DATA, ==, 1, 500000))
 	{
 		gser_error("GSERR%d: Mailbox has no response\n", qlm);
 		return -1;
@@ -1262,6 +1391,49 @@ int qlm__gserr_rx_equalization(int qlm, int qlm_lane)
 	return result;
 }
 
+typedef struct
+{
+	gser_node_t node;
+	int qlm;
+	int lane;
+	int ber;
+	int buffered_bits;
+	int last_resp;
+	uint64_t buffer[3]; /* 2 is latest MSB data, 0 is future samples */
+} eye_temp_state_t;
+
+static uint64_t get_eye_sample(eye_temp_state_t *s)
+{
+	if ((s->buffered_bits < s->ber) && (s->last_resp == 0))
+	{
+		s->last_resp = mailbox_response(s->qlm, &s->buffer[1], &s->buffer[0]);
+		s->buffer[1] = gser_be64_to_cpu(s->buffer[1]);
+		s->buffer[0] = gser_be64_to_cpu(s->buffer[0]);
+		if (s->buffered_bits)
+		{
+			int bits = 64 - s->buffered_bits;
+			s->buffer[2] |= s->buffer[1] >> s->buffered_bits;
+			s->buffer[1] = (s->buffer[1] << bits) | (s->buffer[0] >> s->buffered_bits);
+			s->buffer[0] <<= bits;
+		}
+		else
+		{
+			s->buffer[2] = s->buffer[1];
+			s->buffer[1] = s->buffer[0];
+			s->buffer[0] = 0;
+		}
+		s->buffered_bits += 128;
+	}
+
+	int bits = 64 - s->ber;
+	uint64_t result = s->buffer[2] >> bits;
+	s->buffer[2] = (s->buffer[2] << s->ber) | (s->buffer[1] >> bits);
+	s->buffer[1] = (s->buffer[1] << s->ber) | (s->buffer[0] >> bits);
+	s->buffer[0] <<= s->ber;
+	s->buffered_bits -= s->ber;
+	return result;
+}
+
 /**
  * Capture an eye diagram for the given QLM lane. The output data is written
  * to "eye".
@@ -1280,30 +1452,74 @@ int qlm_gserr_eye_capture(int qlm, int lane, int show_data, qlm_eye_t *eye_data)
 	int x_min = 0;
 	int x_max = 127;
 	int x_step = 1;
-	int y_min = -255;
-	int y_max = 255;
+	int y_min = -248;
+	int y_max = 248;
 	int y_step = 8;
-	int ber = 16; /* Base 2, not base 10. Must be 8, 16, or 32 */
+	int ber = show_data ? 20 : 16;
 	uint64_t resp0;
 	uint64_t resp1;
+
+	eye_temp_state_t eye_state;
+	memset(&eye_state, 0, sizeof(eye_state));
+//	eye_state.node = node;
+	eye_state.qlm = qlm;
+	eye_state.lane = lane;
+	eye_state.ber = ber;
 
 	eye_data->width = 0;
 	eye_data->height = 0;
 
-	int y_points = (y_max - y_min + 1) / y_step;
-	int x_points = (x_max - x_min + 1) / x_step;
+	int y_points = (y_max - y_min) / y_step + 1;
+	int x_points = (x_max - x_min) / x_step + 1;
 	if (y_points > 64) /* Limit from static struct */
 	{
-		gser_error("GSERR%d: Eye too high\n", qlm);
+		gser_error("GSERR%d: Eye too high (%d>%d)\n", qlm, y_points, 64);
 		return -1;
 	}
 	if (x_points > 128) /* Limit from static struct */
 	{
-		gser_error("GSERR%d: Eye too high\n", qlm);
+		gser_error("GSERR%d: Eye too long (%d>%d)\n", qlm, x_points, 64);
 		return -1;
 	}
-	x_max = x_min + x_step * (x_points - 1) - 1;
+	x_max = x_min + x_step * (x_points - 1);
 	y_max = y_min + y_step * (y_points - 1);
+
+	uint64_t start = gser_clock_get_count(GSER_CLOCK_TIME);
+	uint64_t count1 = GSER_CSR_READ(CAVM_GSERRX_LANEX_TXCLK_CTR(qlm, lane));
+	gser_wait_usec(500000);
+	uint64_t count2 = GSER_CSR_READ(CAVM_GSERRX_LANEX_TXCLK_CTR(qlm, lane));
+	uint64_t stop = gser_clock_get_count(GSER_CLOCK_TIME);
+	uint64_t hz = (count2 - count1) * gser_clock_get_rate(GSER_CLOCK_TIME) / (stop - start);
+
+	GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(qlm, lane));
+	switch (bcfg.s.ln_ctrl_tx_width)
+	{
+		case 0x1: /* 10-bit Reserved */
+			hz *= 10;
+			break;
+		case 0x2: /* 16-bit 40G,10G,DXAUI,RXAUI,XAUI,QSGMII,SGMII */
+			hz *= 16;
+			break;
+		case 0x3: /* 20-bit Reserved */
+			hz *= 20;
+			break;
+		case 0x4: /* 32-bit 25G,50G,100G data rate (default) */
+			hz *= 32;
+			break;
+		case 0x5: /* 40-bit Reserved */
+			hz *= 40;
+			break;
+	}
+
+	printf("GSERR%d.%d: Measured TX clock %llu.%llu MHz\n", qlm, lane,
+		hz / 1000000, ((hz + 500) / 1000) % 1000);
+
+	GSER_CSR_INIT(bsts, CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane));
+	if (bsts.s.ln_stat_los)
+	{
+		gser_error("GSERR%d.%d: No signal detected, skipping eye\n", qlm, lane);
+		return -1;
+	}
 
 	if (show_data)
 	{
@@ -1356,270 +1572,73 @@ int qlm_gserr_eye_capture(int qlm, int lane, int show_data, qlm_eye_t *eye_data)
 	if (mailbox_command(qlm, 0x82, cmd_arg))
 		return -1;
 
-	int x = 0;
-	int y = 0;
-	int rsp = 0;
-	while (rsp != 1)
+	for (int x = 0; x < x_points; x++)
 	{
-		/* read 128 bits of response */
-		rsp = mailbox_response(qlm, &resp0, &resp1);
-		/* 0 = more data, 1 = done, others are errors */
-		if ((rsp != 0) && (rsp != 1))
+		for (int y = 0; y < y_points; y++)
 		{
-			gser_error("GSERR%d: Eye failed (%d)\n", qlm, rsp);
-			return -1;
-		}
-		/* Make a 128 bit number from response for easy processing */
-		__uint128_t r = resp0;
-		r |= (__uint128_t)resp1 << 64;
-		/* Loop through all response bits. This assumes 128 divides evenly by BER */
-		for (int bits = 0; bits < 128; bits += ber)
-		{
-			/* Extract this sample. It is encoded BE */
-			uint64_t sample = r & gser_build_mask(ber);
-			/* Move to the next BER bits */
-			r >>= ber;
-			/* Convert and store the sample */
-			sample = gser_be16_to_cpu(sample);
+			uint64_t sample = get_eye_sample(&eye_state);
 			eye_data->data[y][x] = sample;
 			if (show_data)
 				printf("%5d %5d %llu\n", y * y_step + y_min, x * x_step + x_min, sample);
-			/* Move to next */
-			y++;
-			if (y >= y_points)
-			{
-				y = 0;
-				x++;
-				if (x >= x_points)
-				{
-					if (rsp != 1)
-					{
-						gser_error("GSERR%d: Too many response\n", qlm);
-						return -1;
-					}
-					break; /* Bit loop */
-				}
-			}
 		}
 	}
+	/* Need one more data fetch */
+	if (eye_state.last_resp == 0)
+		eye_state.last_resp = mailbox_response(qlm, &eye_state.buffer[1], &eye_state.buffer[2]);
 	eye_data->width = x_points;
 	eye_data->height = y_points;
 	return 0;
 }
 
 /**
- * Called to turn on or off the special clock settings need for AN
- *
- * @param node   Which node to use
- * @param module Which serdes module to use
- * @param lane   Which lane to use
- * @param use_an True if AN clocks should be active
- */
-static void qlm_gserr_use_an_clocks(int module, int lane, bool use_an)
-{
-	GSER_TRACE(QLM, "GSERR%d.%d: AN clocks are %s\n", module, lane, use_an ? "on" : "off");
-	/* Override clocks for lanes that need AN */
-	switch (lane)
-	{
-		case 0:
-			/* Set clock mux overrides and divider values appropriately for 20bit
-			   clock @1.25Gbps (see below) */
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN0_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
-				c.s.ctrl_src_ovr_val = 1;
-				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0;
-				c.s.ctrl_div_ovr_val = 1;
-				c.s.ctrl_div_ovr_en = (use_an) ? 1 : 0);
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN0_CLK_TXB(module),
-				c.s.ctrl_src_ovr_val = 2;
-				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0);
-			break;
-		case 1:
-			/* Set clock mux overrides and divider values appropriately for 20bit
-			   clock @1.25Gbps (see below) */
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
-				c.s.ctrl_src_ovr_val = 1;
-				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0;
-				c.s.ctrl_div_ovr_val = 1;
-				c.s.ctrl_div_ovr_en = (use_an) ? 1 : 0);
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CLK_TXB(module),
-				c.s.ctrl_src_ovr_val = 2;
-				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0);
-			break;
-		case 2:
-			/* Set clock mux overrides and divider values appropriately for 20bit
-			   clock @1.25Gbps (see below) */
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
-				c.s.ctrl_src_ovr_val = 1;
-				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0;
-				c.s.ctrl_div_ovr_val = 1;
-				c.s.ctrl_div_ovr_en = (use_an) ? 1 : 0);
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CLK_TXB(module),
-				c.s.ctrl_src_ovr_val = 2;
-				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0);
-			break;
-		case 3:
-			/* Set clock mux overrides and divider values appropriately for 20bit
-			   clock @1.25Gbps (see below) */
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CM0_CLK_GS_MODE_CTRL0_RSVD(module),
-				c.s.ctrl_src_ovr_val = 1;
-				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0;
-				c.s.ctrl_div_ovr_val = 1;
-				c.s.ctrl_div_ovr_en = (use_an) ? 1 : 0);
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CLK_TXB(module),
-				c.s.ctrl_src_ovr_val = 2;
-				c.s.ctrl_src_ovr_en = (use_an) ? 1 : 0);
-			break;
-	}
-	gser_wait_usec(1000); /* Needed for some unknown reason */
-}
-
-/**
  * Send the AN/training handshake to the serdes firmware
  *
- * @param node   Which node to use
- * @param module Which serdes module to use
- * @param lane   Which lane to use
+ * @param node	  Which node to use
+ * @param module	Which serdes module to use
+ * @param lane	  Which lane to use
+ * @param enable_an True if the lane should be allowed to progress through AN. False if the
+ *				  lane should be held in reset
  *
  * @return Zero on success, negative on failure
  */
-static int firmware_handshake(int module, int lane)
+static int firmware_handshake(int module, int lane, bool enable_an)
 {
-	/* Check that the AN handshake is supported */
+	/* AN Handshaking bit assignments:
+		GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD[data]
+			data[3] = Handshake enable
+			data[4] = Handshake ready
+		AN master lanes will wait in RESET state while (handshake_en && !handshake_ready),
+		and proceed with AN otherwise. */
+
+	/* We never use the handshake, so READY should always be zero */
 	GSER_CSR_INIT(cfg6, CAVM_GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane));
-	if ((cfg6.s.data & (1 << 3)) == 0)
-	{
-		gser_error("GSERR%d.%d: Firmware doesn't report AN feature\n", module, lane);
-		return -1;
-	}
 	if (cfg6.s.data & (1 << 4))
 	{
-		gser_error("GSERR%d.%d: Firmware has AN start pending\n", module, lane);
+		gser_error("GSERR%d.%d: Firmware has AN ready set\n", module, lane);
 		return -1;
 	}
 
-	GSER_TRACE(QLM, "GSERR%d.%d: Handshake\n", module, lane);
-	/* Needed for some unknown reason.
-	   The 10ms below was found by trial and error. Test:
-		1ms: Hot plug fails to bring link up
-		2ms: Hot plug fails to bring link up
-		5ms: Hot plug fails to bring link up
-		6ms: Hot plug success 25G-KR, fail 10G-KR
-		8ms: Hot plug success 25G-KR, fail 10G-KR
-		10ms: Hot plug success */
-	gser_wait_usec(10000);
-	/* Set handshake bit lane_feature.spare_cfg6[4] = 1 (make sure to
-	   read/modify/write register to avoid overwriting the enable bit). This
-	   will start AN running. FW will read bit and set it back to 0, when
-	   it's started AN */
-	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane),
-		c.s.data |= 1 << 4);
-	/* Make sure the firmware ACKed the AN start */
-	do
+	/* If AN is enabled, allow lane by setting ENABLE=0. If AN is not enabled,
+	   force the lane in reset with ENABLE=1 */
+	if (enable_an)
 	{
-		gser_wait_usec(100);
-		cfg6.u = GSER_CSR_READ(CAVM_GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane));
-	} while (cfg6.s.data & (1 << 4));
-	gser_wait_usec(1000); /* Needed for some unknown reason */
+		if (cfg6.s.data & 8)
+		{
+			cfg6.s.data &= 0xf7;
+			GSER_CSR_WRITE(CAVM_GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane), cfg6.u);
+			GSER_TRACE(QLM, "GSERR%d.%d: Handshake to allow AN\n", module, lane);
+		}
+	}
+	else
+	{
+		if ((cfg6.s.data & 8) == 0)
+		{
+			cfg6.s.data |= 0x8;
+			GSER_CSR_WRITE(CAVM_GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane), cfg6.u);
+			GSER_TRACE(QLM, "GSERR%d.%d: Handshake to reset AN\n", module, lane);
+		}
+	}
 	return 0;
-}
-
-/**
- * After training completes, it is necessary to reset and change the mode of the
- * RX fifo. This function does this.
- *
- * @param node   Which node to use
- * @param module Which serdes module to use
- * @param lane   Which lane to use
- */
-static void qlm_gserr_training_fifo(int module, int lane)
-{
-	cavm_gserrx_phy0_top_clock_ln0_clk_rxb_t clk_rxb = {.u = 0};
-	clk_rxb.s.ctrl_src_ovr_val = 1;
-	switch (lane)
-	{
-		case 0:
-			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN0_CLK_RXB(module), clk_rxb.u);
-			clk_rxb.s.ctrl_src_ovr_en = 1;
-			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN0_CLK_RXB(module), clk_rxb.u);
-			break;
-		case 1:
-			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CLK_RXB(module), clk_rxb.u);
-			clk_rxb.s.ctrl_src_ovr_en = 1;
-			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN1_CLK_RXB(module), clk_rxb.u);
-			break;
-#if QUAD_LANE
-		case 2:
-			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CLK_RXB(module), clk_rxb.u);
-			clk_rxb.s.ctrl_src_ovr_en = 1;
-			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN2_CLK_RXB(module), clk_rxb.u);
-			break;
-		case 3:
-			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CLK_RXB(module), clk_rxb.u);
-			clk_rxb.s.ctrl_src_ovr_en = 1;
-			GSER_CSR_WRITE(CAVM_GSERRX_PHY0_TOP_CLOCK_LN3_CLK_RXB(module), clk_rxb.u);
-			break;
-#endif
-	}
-	gser_wait_usec(1);
-	switch (lane)
-	{
-		case 0:
-			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN0_RSVD(module), GSERRX_PHY0_TOP_RESET_CTRL_LN0_RSVD_RXDP_SW_RESET, ==, 0, 10000))
-				gser_error("GSERR%d.%d: Wait for GSERRX_PHY0_TOP_RESET_CTRL_LN0_RSVD[rxdp_sw_reset]=0 timeout\n", module, lane);
-			break;
-		case 1:
-			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD(module), GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD_RXDP_SW_RESET, ==, 0, 10000))
-				gser_error("GSERR%d.%d: Wait for GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD[rxdp_sw_reset]=0 timeout\n", module, lane);
-			break;
-#if QUAD_LANE
-		case 2:
-			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD(module), GSERRX_PHY0_TOP_RESET_CTRL_LN2_RSVD_RXDP_SW_RESET, ==, 0, 10000))
-				gser_error("GSERR%d.%d: Wait for GSERRX_PHY0_TOP_RESET_CTRL_LN2_RSVD[rxdp_sw_reset]=0 timeout\n", module, lane);
-			break;
-		case 3:
-			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD(module), GSERRX_PHY0_TOP_RESET_CTRL_LN3_RSVD_RXDP_SW_RESET, ==, 0, 10000))
-				gser_error("GSERR%d.%d: Wait for GSERRX_PHY0_TOP_RESET_CTRL_LN3_RSVD[rxdp_sw_reset]=0 timeout\n", module, lane);
-			break;
-#endif
-	}
-
-	qlm_state_lane_t state = qlm_gserr_get_state(module, lane);
-	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_RX_GEARBOX_CTRL0_RSVD(module, lane),
-		c.s.mode = (state.s.baud_mhz == 10312) ? 7 : 1; /* 7=10G, 1=25G */
-		c.s.select = 1);
-	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_DPL_RXDP_CTRL1(module, lane),
-		c.s.rx_fifo_en = 0);
-	switch (lane)
-	{
-		case 0:
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN0_RSVD(module),
-				c.s.rxdp_sw_reset = 1);
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN0_RSVD(module),
-				c.s.rxdp_sw_reset = 0);
-			break;
-		case 1:
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD(module),
-				c.s.rxdp_sw_reset = 1);
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN1_RSVD(module),
-				c.s.rxdp_sw_reset = 0);
-			break;
-#if QUAD_LANE
-		case 2:
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN2_RSVD(module),
-				c.s.rxdp_sw_reset = 1);
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN2_RSVD(module),
-				c.s.rxdp_sw_reset = 0);
-			break;
-		case 3:
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN3_RSVD(module),
-				c.s.rxdp_sw_reset = 1);
-			GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_RESET_CTRL_LN3_RSVD(module),
-				c.s.rxdp_sw_reset = 0);
-			break;
-#endif
-	}
-	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_DPL_RXDP_CTRL1(module, lane),
-		c.s.rx_fifo_en = 1);
 }
 
 /**
@@ -1681,6 +1700,7 @@ static void update_lane_state(int module, int lane)
 	{
 		case LANE_STATE_TX_OFF:
 			/* SERDES are off, nothing to do */
+			firmware_handshake(module, lane, false);
 			return;
 		case LANE_STATE_TX_ON:
 			/* See if we need to start AN */
@@ -1691,14 +1711,12 @@ static void update_lane_state(int module, int lane)
 					/* Start AN */
 					GSER_TRACE(QLM, "GSERR%d.%d: Starting AN\n", module, lane);
 					lane_state[module][lane] = LANE_STATE_AN;
-					qlm_gserr_use_an_clocks(module, lane, true);
-					firmware_handshake(module, lane);
+					firmware_handshake(module, lane, true);
 				}
 				else
 				{
 					GSER_TRACE(QLM, "GSERR%d.%d: Lane is slave during AN\n", module, lane);
 					lane_state[module][lane] = LANE_STATE_TRAINING;
-					qlm_gserr_use_an_clocks(module, lane, false);
 				}
 			}
 			else
@@ -1716,8 +1734,6 @@ static void update_lane_state(int module, int lane)
 			{
 				GSER_TRACE(QLM, "GSERR%d.%d: AN resolved %d, start training\n", module, lane, bsts.s.ln_an_link_sel);
 				lane_state[module][lane] = LANE_STATE_TRAINING;
-				qlm_gserr_use_an_clocks(module, lane, false);
-				firmware_handshake(module, lane);
 			}
 			return;
 		}
@@ -1727,10 +1743,8 @@ static void update_lane_state(int module, int lane)
 			if (bsts.s.ln_lt_sigdet)
 			{
 				lane_state[module][lane] = LANE_STATE_CGX;
-				qlm_gserr_training_fifo(module, lane);
 				GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
 					c.s.ln_link_stat = bsts.s.ln_an_link_sel);
-				gser_wait_usec(1000); /* Needed for some unknown reason */
 				GSER_TRACE(QLM, "GSERR%d.%d: Training finished\n", module, lane);
 			}
 			else if (status.s.training_fail || !status.s.training)
@@ -1807,7 +1821,7 @@ static void update_all_lane_state()
  * @param lane	  Which lane
  * @param enable_tx True to enable transmitter, false to disable
  */
-int qlm_gserr_tx_control_bdk(int qlm, int lane, int enable_tx)
+int qlm_gserr_tx_control(int qlm, int lane, int enable_tx)
 {
 	int en = (enable_tx) ? 1 : 0;
 	GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(qlm, lane),
@@ -1831,7 +1845,7 @@ int qlm_gserr_tx_control_bdk(int qlm, int lane, int enable_tx)
  * @return Zero on success, negative on failure. Network driver shouldn't continue with
  *		 AN until this returns 0
  */
-int qlm_gserr_start_an_bdk(int module, int lane, int unused)
+int qlm_gserr_start_an(int module, int lane, int unused)
 {
 	update_all_lane_state();
 	show_lane_state(module, lane);
@@ -2074,7 +2088,8 @@ static cavm_gserrx_common_phy_ctrl_bcfg_t qlm_gserr_get_clock_mode(int module)
 static cavm_gserrx_lanex_control_bcfg_t qlm_gserr_get_lane_mode(int module, int lane)
 {
 	qlm_state_lane_t state = qlm_gserr_get_state(module, lane);
-	int ln_ctrl_rate = 0;
+	int ln_ctrl_tx_rate = 0;
+	int ln_ctrl_rx_rate = 0;
 	int tx_clk_mux_sel = 0;
 	int ln_ctrl_tx_width = 0x4;
 	int ln_ctrl_rx_width = 0x5;
@@ -2082,21 +2097,24 @@ static cavm_gserrx_lanex_control_bcfg_t qlm_gserr_get_lane_mode(int module, int 
 	switch (state.s.baud_mhz)
 	{
 		case 1250:
-			ln_ctrl_rate = 2; /* PHY rate 3 */
+			ln_ctrl_tx_rate = 2; /* PHY rate 3 */
+			ln_ctrl_rx_rate = 2; /* PHY rate 3 */
 			tx_clk_mux_sel = 0x6; /* PHY rate 3 */
 			ln_ctrl_tx_width = 0x2; /* 16 bit */
 			ln_ctrl_rx_width = 0x3; /* 20 bit */
 			break;
 		case 2500:
 		case 3125:
-			ln_ctrl_rate = 0x5; /* PHY rate 2 divide by 2 */
+			ln_ctrl_tx_rate = 0x5; /* PHY rate 2 divide by 2 */
+			ln_ctrl_rx_rate = 0x5; /* PHY rate 2 divide by 2 */
 			tx_clk_mux_sel = 0x4; /* PHY rate 2 divide by 2 */
 			ln_ctrl_tx_width = 0x2; /* 16 bit */
 			ln_ctrl_rx_width = 0x3; /* 20 bit */
 			break;
 		case 5000:
 		case 6250:
-			ln_ctrl_rate = 0x1; /* PHY rate 2 */
+			ln_ctrl_tx_rate = 0x1; /* PHY rate 2 */
+			ln_ctrl_rx_rate = 0x1; /* PHY rate 2 */
 			tx_clk_mux_sel = 0x1; /* PHY rate 2 */
 			ln_ctrl_tx_width = 0x2; /* 16 bit */
 			ln_ctrl_rx_width = 0x3; /* 20 bit */
@@ -2106,12 +2124,14 @@ static cavm_gserrx_lanex_control_bcfg_t qlm_gserr_get_lane_mode(int module, int 
 			GSER_CSR_INIT(phy_bcfg, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(module));
 			if (phy_bcfg.s.phy_ctrl_rate1 == 0x23) /* 10G */
 			{
-				ln_ctrl_rate = 0x0; /* PHY rate 1 */
+				ln_ctrl_tx_rate = 0x0; /* PHY rate 1 */
+				ln_ctrl_rx_rate = 0x0; /* PHY rate 1 */
 				tx_clk_mux_sel = 0x0; /* PHY rate 1 */
 			}
 			else
 			{
-				ln_ctrl_rate = 0x1; /* PHY rate 2 */
+				ln_ctrl_tx_rate = 0x1; /* PHY rate 2 */
+				ln_ctrl_rx_rate = 0x1; /* PHY rate 2 */
 				tx_clk_mux_sel = 0x1; /* PHY rate 2 */
 			}
 			ln_ctrl_tx_width = 0x2; /* 16 bit */
@@ -2121,7 +2141,8 @@ static cavm_gserrx_lanex_control_bcfg_t qlm_gserr_get_lane_mode(int module, int 
 		case 20625:
 		case 25781:
 		default:
-			ln_ctrl_rate = 0x0; /* PHY rate 1 */
+			ln_ctrl_tx_rate = 0x0; /* PHY rate 1 */
+			ln_ctrl_rx_rate = 0x0; /* PHY rate 1 */
 			tx_clk_mux_sel = 0x0; /* PHY rate 1 */
 			ln_ctrl_tx_width = 0x4; /* 32 bit */
 			ln_ctrl_rx_width = 0x5; /* 40 bit */
@@ -2162,14 +2183,14 @@ static cavm_gserrx_lanex_control_bcfg_t qlm_gserr_get_lane_mode(int module, int 
 			break;
 	}
 
-	GSER_TRACE(QLM, "GSERR%d.%d: %s %dMHz, rate=%d, tx_width=%d, rx_width=%d, clk_mux=%d, quad=%d, dual=%d\n",
+	GSER_TRACE(QLM, "GSERR%d.%d: %s %dMHz, tx rate=%d, rx rate=%d, tx_width=%d, rx_width=%d, clk_mux=%d, quad=%d, dual=%d\n",
 		module, lane, qlm_mode_to_cfg_str(state.s.mode), state.s.baud_mhz,
-		ln_ctrl_rate, ln_ctrl_tx_width, ln_ctrl_rx_width, tx_clk_mux_sel,
-		is_quad, is_dual);
+		ln_ctrl_tx_rate, ln_ctrl_rx_rate, ln_ctrl_tx_width, ln_ctrl_rx_width,
+		tx_clk_mux_sel, is_quad, is_dual);
 
 	GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
-	bcfg.s.ln_ctrl_tx_rate = ln_ctrl_rate;
-	bcfg.s.ln_ctrl_rx_rate = ln_ctrl_rate;
+	bcfg.s.ln_ctrl_tx_rate = ln_ctrl_tx_rate;
+	bcfg.s.ln_ctrl_rx_rate = ln_ctrl_rx_rate;
 	bcfg.s.ln_ctrl_tx_width = ln_ctrl_tx_width;
 	bcfg.s.ln_ctrl_rx_width = ln_ctrl_rx_width;
 	bcfg.s.tx_clk_mux_sel = tx_clk_mux_sel;
@@ -2230,7 +2251,7 @@ static int qlm_gserr_change_lane_rate(int module, int lane)
 		gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_tx_rdy]=0 (lane is reset)\n", module, lane);
 	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_RX_RDY, ==, 0, 500))
 		gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_rx_rdy]=0 (lane is reset)\n", module, lane);
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 500))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
 	{
 		/* This happens fast, so sometimes we miss it */
 		//gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0\n (lane is reset)", module, lane);
@@ -2240,7 +2261,7 @@ static int qlm_gserr_change_lane_rate(int module, int lane)
 		transitioned to the “Reset” state.
 		Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
 			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 5000))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
 		gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (lane is reset)\n", module, lane);
 
 	/* 5. Program the new Lane rate, data width, and transmitter clock parameters
@@ -2281,7 +2302,7 @@ static int qlm_gserr_change_lane_rate(int module, int lane)
 		indicating the lane is transitioning to the “Rate Change” state.
 		Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
 			LN_STATE_CHNG_RDY = 0 Lane is transitioning power states */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 500))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
 		gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (rate change)\n", module, lane);
 
 	/* 8. Program the lane x2/x4 bonding (used with RXAUI,XAUI,DXAUI) fields if
@@ -2296,7 +2317,7 @@ static int qlm_gserr_change_lane_rate(int module, int lane)
 		transitioned to the “Rate Change” state.
 		Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
 			LN_STATE_CHNG_RDY = 1 Lane is in the “Rate Change” power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 500))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
 		gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (rate change)\n", module, lane);
 
 	/* 10. Deassert the LN_STATE_CHNG signal to complete the lane
@@ -2313,14 +2334,14 @@ static int qlm_gserr_change_lane_rate(int module, int lane)
 		indicating the lane is transitioning states.
 		Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
 			LN_STATE_CHNG_RDY = 0 Lane is transitioning states */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 500))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
 		gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (change done)\n", module, lane);
 
 	/* 12. Wait for the PHY “Lane State Change Ready” to signal that the lane
 		has transitioned back to the “Reset” state.
 		Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
 			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 500))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
 		gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (change done)\n", module, lane);
 
 	/* 13. Release the lane from reset.
@@ -2340,7 +2361,7 @@ static int qlm_gserr_change_lane_rate(int module, int lane)
 		gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_tx_rdy]=1 (reset done)\n", module, lane);
 	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_RX_RDY, ==, 1, 5000))
 		gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_rx_rdy]=1 (reset done)\n", module, lane);
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 5000))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
 		gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (reset done)\n", module, lane);
 
 	/* 15. Enable the Tx/Rx FIFOs between CGX and GSERR
@@ -2453,7 +2474,7 @@ static int qlm_gserr_change_phy_rate(int module)
 			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_tx_rdy]=0 (change rate)\n", module, lane);
 		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_RX_RDY, ==, 0, 500))
 			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_rx_rdy]=0 (change rate)\n", module, lane);
-		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 500))
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
 			GSER_TRACE(QLM, "GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (change rate)\n", module, lane);
 	}
 
@@ -2463,7 +2484,7 @@ static int qlm_gserr_change_phy_rate(int module)
 			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
-		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 5000))
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
 			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (change rate)\n", module, lane);
 	}
 
@@ -2515,7 +2536,7 @@ static int qlm_gserr_change_phy_rate(int module)
 	/* 12. Read/Poll for the CM0 OK flag set
 		Read/Poll GSERR(0..2)_COMMON_PHY_STATUS_BSTS
 			CM0_OK=1 //CM0 status is Active power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_OK, ==, 1, 500))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_OK, ==, 1, 50000))
 		gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_ok]=1 (change rate)\n", module);
 
 	/* Program the new Lane Rates to the new PHY rates, refer to the steps in
@@ -2540,31 +2561,14 @@ static int qlm_gserr_change_phy_rate(int module)
 //static void qlm_gserr_config_an(int module, int lane)
 //{
 //	qlm_state_lane_t qlm_state = qlm_gserr_get_state(module, lane);
-//	bool use_an;
 //	bool use_training;
 //	int an_lane_mode;
-//	int qlm_offset = 0;
-//
-//	if (gser_is_model(OCTEONTX_CN96XX))
-//		qlm_offset = 5; /* From GSERR_MIN in bdk-qlm-cn96xx-gserr.c */
-//	else if (gser_is_model(OCTEONTX_CNF95XX))
-//		qlm_offset = 0; /* From GSERR_MIN in bdk-qlm-cnf95xx-gserr.c */
-//	else if (gser_is_model(OCTEONTX_LOKI))
-//		qlm_offset = 1; /* From GSERR_MIN in bdk-qlm-loki.c */
-//	else if (gser_is_model(OCTEONTX_F95MM))
-//		qlm_offset = 0; /* From GSERR_MIN in bdk-qlm-f95mm.c */
-//	else if (gser_is_model(OCTEONTX_CN98XX))
-//		qlm_offset = 9; /* From GSERR_MIN in bdk-qlm-cn98xx.c */
-//	else
-//	{
-//		gser_error("GSERR: Unrecognized chip\n");
-//		return;
-//	}
+//	int qlm = map_module_to_qlm(module);
 //
 //	/* Determine which CGX maps to this GSERR module and lane */
 //	bool is_split = false;
 //	bool is_upper = false;
-//	int cgx = qlm_to_network(qlm_offset + module, &is_split, &is_upper);
+//	int cgx = qlm_to_network(qlm, &is_split, &is_upper);
 //	/* Lane order can change mapping for CGX lmac to lane */
 //	int lane_order = gser_config_get_int(GSER_CONFIG_NETWORK_LANE_ORDER, cgx);
 //	/* Find which lmac coresponds to this lane */
@@ -2583,13 +2587,11 @@ static int qlm_gserr_change_phy_rate(int module)
 //		case QLM_MODE_10G_KR:
 //		case QLM_MODE_25G_CR:
 //		case QLM_MODE_25G_KR:
-//			use_an = true;
 //			use_training = true;
 //			an_lane_mode = 2; /* AN master on all lanes */
 //			break;
 //		case QLM_MODE_50G_CR2:
 //		case QLM_MODE_50G_KR2:
-//			use_an = true;
 //			use_training = true;
 //			/* AN master on all even lanes, slave on odd */
 //			an_lane_mode = 1;
@@ -2602,7 +2604,6 @@ static int qlm_gserr_change_phy_rate(int module)
 //		case QLM_MODE_40G_KR4:
 //		case QLM_MODE_100G_CR4:
 //		case QLM_MODE_100G_KR4:
-//			use_an = true;
 //			use_training = true;
 //			/* AN master on first lane, slave on all others */
 //			an_lane_mode = 1;
@@ -2611,10 +2612,20 @@ static int qlm_gserr_change_phy_rate(int module)
 //			break;
 //		default:
 //			lmac = 0;
-//			use_an = false;
 //			use_training = false;
 //			an_lane_mode = 0; /* Skipping AN as default */
 //			break;
+//	}
+//
+//	/* Configure the link training to request PRESET or INITIALIZE */
+//	if (use_training && (an_lane_mode == 2))
+//	{
+//		if (gser_config_get_int(GSER_CONFIG_QLM_LINK_TRAINING_INITIAL_STATE, qlm, lane))
+//		{
+//			/* Configure LT to request Preset */
+//			GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_SPARE_CFG0_RSVD(module, lane),
+//				c.s.data |= 0x4);
+//		}
 //	}
 //
 //	/* Program the AN config structure for this lane */
@@ -2681,6 +2692,7 @@ static int qlm_gserr_change_phy_rate(int module)
 //		tech_abilities_15_8 |= 1 << 0;
 //	if ((qlm_state.s.mode == QLM_MODE_25G_CR) || (qlm_state.s.mode == QLM_MODE_25G_KR))
 //	{
+//		tech_abilities_15_8 |= 1 << 1;
 //		tech_abilities_15_8 |= 1 << 2;
 //		tech_abilities_15_8 |= 1 << 3;
 //	}
@@ -2921,51 +2933,354 @@ static int qlm_gserr_change_phy_rate(int module)
 //	/* 0x5D width_10g_kx4 7:0 Parallel width to use for 10GBASE-KX
 //	   Not supported by the PHY */
 //	write_dmem(module, lane_offset++, 0x02);
-//	/* 0x5E width_10g_kr 7:0 Parallel interface width to use for 10GBASE-KR */
-//	write_dmem(module, lane_offset++, 0x02);
-//	/* 0x5F width_40g_kr4 7:0 Parallel interface width to use for 40GBASE-KR4 */
-//	write_dmem(module, lane_offset++, 0x02);
-//	/* 0x60 width_40g_cr4 7:0 Parallel interface width to use for 40GBASE-CR4 */
-//	write_dmem(module, lane_offset++, 0x02);
+//	/* 0x5E width_10g_kr
+//		7:4 Rx Parallel interface width to use for 10GBASE-KR
+//		3:0 Tx Parallel interface width to use for 10GBASE-KR */
+//	write_dmem(module, lane_offset++, 0x32);
+//	/* 0x5F width_40g_kr4
+//		7:4 Rx Parallel interface width to use for 40GBASE-KR4
+//		* 3:0 Tx Parallel interface width to use for 40GBASE-KR4 */
+//	write_dmem(module, lane_offset++, 0x32);
+//	/* 0x60 width_40g_cr4
+//		7:4 Rx Parallel interface width to use for 40GBASE-CR4
+//		3:0 Tx Parallel interface width to use for 40GBASE-CR4 */
+//	write_dmem(module, lane_offset++, 0x32);
 //	/* 0x61 width_100g_cr10 7:0 Parallel interface width to use for 100GBASE-CR10
 //	   Not supported by the PHY */
 //	write_dmem(module, lane_offset++, 0x04);
 //	/* 0x62 width_100g_kp4 7:0 Parallel interface width to use for 100GBASE-KP4
 //	   Not supported by the PHY */
 //	write_dmem(module, lane_offset++, 0x04);
-//	/* 0x63 width_100g_kr4 7:0 Parallel interface width to use for 100GBASE-KR4 */
-//	write_dmem(module, lane_offset++, 0x04);
-//	/* 0x64 width_100g_cr4 7:0 Parallel interface width to use for 100GBASE-CR4 */
-//	write_dmem(module, lane_offset++, 0x04);
-//	/* 0x65 width_25g_gr_s 7:0 Parallel interface width to use for 802.3by 25GBASE-CR-S / 25GBASE-KR-S */
-//	write_dmem(module, lane_offset++, 0x04);
-//	/* 0x66 width_25g_gr 7:0 Parallel interface width to use for 802.3by 25GBASE-CR / 25GBASE-KR */
-//	write_dmem(module, lane_offset++, 0x04);
-//	/* 0x67 width_25g_kr 7:0 Parallel interface width to use for 25G/50G Consortium 25GBASE-KR */
-//	write_dmem(module, lane_offset++, 0x04);
-//	/* 0x68 width_25g_cr 7:0 Parallel interface width to use for 25G/50G Consortium 25GBASE-CR */
-//	write_dmem(module, lane_offset++, 0x04);
-//	/* 0x69 width_50g_kr2 7:0 Parallel interface width to use for 25G/50G Consortium 50GBASE-KR2 */
-//	write_dmem(module, lane_offset++, 0x04);
-//	/* 0x6A width_50g_cr2 7:0 Parallel interface width to use for 25G/50G Consortium 50GBASE-CR2 */
-//	write_dmem(module, lane_offset++, 0x04);
+//	/* 0x63 width_100g_kr4
+//		7:4 Rx Parallel interface width to use for 100GBASE-KR4
+//		3:0 Tx Parallel interface width to use for 100GBASE-KR4 */
+//	write_dmem(module, lane_offset++, 0x54);
+//	/* 0x64 width_100g_cr4
+//		7:4 Rx Parallel interface width to use for 100GBASE-CR4
+//		3:0 Tx Parallel interface width to use for 100GBASE-CR4 */
+//	write_dmem(module, lane_offset++, 0x54);
+//	/* 0x65 width_25g_gr_s
+//		7:4 Rx Parallel interface width to use for 802.3by 25GBASE-CR-S / 25GBASE-KR-S
+//		3:0 Tx Parallel interface width to use for 802.3by 25GBASE-CR-S / 25GBASE-KR-S */
+//	write_dmem(module, lane_offset++, 0x54);
+//	/* 0x66 width_25g_gr
+//		7:4 Rx Parallel interface width to use for 802.3by 25GBASE-CR / 25GBASE-KR
+//		3:0 Tx Parallel interface width to use for 802.3by 25GBASE-CR / 25GBASE-KR */
+//	write_dmem(module, lane_offset++, 0x54);
+//	/* 0x67 width_25g_kr
+//		7:4 Rx Parallel interface width to use for 25G/50G Consortium 25GBASE-KR
+//		3:0 Tx Parallel interface width to use for 25G/50G Consortium 25GBASE-KR */
+//	write_dmem(module, lane_offset++, 0x54);
+//	/* 0x68 width_25g_cr
+//		7:4 Rx Parallel interface width to use for 25G/50G Consortium 25GBASE-CR
+//		3:0 Tx Parallel interface width to use for 25G/50G Consortium 25GBASE-CR */
+//	write_dmem(module, lane_offset++, 0x54);
+//	/* 0x69 width_50g_kr2
+//		7:4 Rx Parallel interface width to use for 25G/50G Consortium 50GBASE-KR2
+//		3:0 Tx Parallel interface width to use for 25G/50G Consortium 50GBASE-KR2 */
+//	write_dmem(module, lane_offset++, 0x54);
+//	/* 0x6A width_50g_cr2
+//		7:4 Rx Parallel interface width to use for 25G/50G Consortium 50GBASE-CR2
+//		3:0 Tx Parallel interface width to use for 25G/50G Consortium 50GBASE-CR2 */
+//	write_dmem(module, lane_offset++, 0x54);
 //	if (lane_offset != AN_CFG_DATA_ADDR + 4 + AN_CFG_DATA_STRUCT_SIZE * (lane + 1))
 //		gser_fatal("GSERR%d.%d: Incorrect offset into DMEM %d\n", module, lane, lane_offset);
 //
 //	/* Enable or disable training after AN */
 //	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_LT_TX_FSM_CTRL0(module, lane),
 //		c.s.mr_training_enable = (use_training) ? 1 : 0);
-//	/* Disable auto rate change in the PHY. Rate change handshaking is enabled
-//	   by default (to disable feature, set lane_feature.spare_cfg6[3] = 0 */
-//	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane),
-//		c.s.data &= 0xf7);
 //	/* Configure how the lane handles AN */
 //	/* 0 = No AN, 1 = AN Slave, 2 = AN Master */
 //	GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
 //		c.s.ln_an_cfg = an_lane_mode);
-//	/* Override clocks for lanes that need AN */
-//	qlm_gserr_use_an_clocks(module, lane, use_an);
 //}
+
+/**
+ * Read trace data from the serdes
+ *
+ * @param node	   Node to read from
+ * @param module	 SERDES module to read from
+ * @param lane	   Lane to read from
+ * @param trace_type Type of data to read:
+ *				   1 for AN trace
+ *				   2 for LT training state machine trace
+ *				   3 for LT coefficient update state machine trace
+ * @param data	   Array to contain data
+ * @param data_size  Size of the data in 64 bit words
+ *
+ * @return Length of data read in 64 bit words, or negative on failure
+ */
+static int qlm_gserr_get_trace(int module, int lane, int trace_type, uint64_t *data, int data_size)
+{
+	uint64_t args = (trace_type << 8) | lane;
+	if (mailbox_command(module, 0x8a, args))
+		return -1;
+	int status = -1;
+	int loc = 0;
+	do
+	{
+		if (loc + 1 >= data_size)
+		{
+			uint64_t dummy;
+			while (status == 0)
+			{
+				status = mailbox_response(module, &dummy, &dummy);
+				loc += 2;
+			}
+			gser_error("GSERR%d.%d: Not enough room for trace data, need %d\n", module, lane, loc);
+			return -1;
+		}
+		status = mailbox_response(module, &data[loc], &data[loc + 1]);
+		loc += 2;
+	} while (status == 0);
+	return loc;
+}
+
+static void decode_header(uint64_t data, int buf_size)
+{
+	int trace_bytes = gser_be32_to_cpu(gser_extract(data, 0, 32));
+	int total_entries = gser_be16_to_cpu(gser_extract(data, 32, 16));
+	int actual_entries = (total_entries > buf_size) ? buf_size : total_entries;
+	int trace_idx = gser_be16_to_cpu(gser_extract(data, 48, 16));
+	printf("	Trace Size: %d\n", trace_bytes);
+	printf("	Total Entries: %d\n", total_entries);
+	printf("	Actual Entries: %d\n", actual_entries);
+	printf("	Idx: %d\n", trace_idx);
+}
+
+static void decode_an(uint32_t *data, int length)
+{
+	const char *EVENTS[] = {
+		"AN_CFG_DROPPED_IN_RESET",
+		"AN_CFG_SET_TO_MASTER",
+		"ALL_SLAVES_REACHED_RESET",
+		"LANE_RCHNG_RST",
+		"LANE_RCHNG_COMPLETE",
+		"LANE_RESET_MISSION",
+		"SLAVE_MASTER_RESOLVED",
+		"DISABLED",
+		"AN_CFG_DROPPED_IN_ACTIVE",
+		"STARTING_NEGOTIATION",
+		"NEGOTIATION_COMPLETE",
+		"RESOLVED_1G",
+		"NEW_INIT_REQUEST",
+		"SLAVE_COMMANDED_TO_RESET",
+		"STARTING_DISABLE",
+		"DISABLING_RCHNG_RST",
+		"DISABLING_RESETTING",
+		"DISABLING_REACHED_RESET",
+		"DISABLING_START_DISABLING_AN",
+		"DISABLING_RCHNG_RST_FIXED",
+		"DISABLING_REACHED_RESET_FIXED",
+		"DISABLING_SLAVES_SYNCHED",
+		"DISABLING_COMPLETE",
+		"DISABLING_ALREADY_DONE",
+		"HANDSHAKE_COMPLETE",
+		"HANDSHAKE_DISABLED",
+		"HANDSHAKE_SLAVE_COMPLETE"
+	};
+
+	const char *STATES[] = {
+		"OFF",
+		"RESET",
+		"RESET_MISSION",
+		"SLAVE_WAIT",
+		"RATE_CHANGE_DONE",
+		"WAIT_RATE_CHANGE_HANDSHAKE",
+		"WAIT_RATE_CHANGE",
+		"START_AUTO_NEG",
+		"AUTO_NEG",
+		"MASTER_ACTIVE",
+		"SLAVE_ACTIVE"
+	};
+
+	/* First two are generic header data */
+	for (int i = 2; i < length; i++)
+	{
+		uint8_t event = gser_extract(data[i], 0, 8);
+		uint8_t state = gser_extract(data[i], 8, 8);
+		uint8_t flags = gser_extract(data[i], 16, 8);
+		printf("	%2d) 0x%08x: (%2d)%-29s (%2d)%-26s flags:(0x%02x)%s%s%s%s%s%s\n",
+			i - 2, data[i], event, EVENTS[event], state, STATES[state], flags,
+			(flags & 0x01) ? " FLAG_ENABLED" : "",
+			(flags & 0x02) ? " FLAG_MASTER" : "",
+			(flags & 0x04) ? " FLAG_RESOLVED" : "",
+			(flags & 0x08) ? " FLAG_BASE_PAGE_DONE" : "",
+			(flags & 0x10) ? " FLAG_DISABLING" : "",
+			(flags & 0x20) ? " HANDSHAKE_DONE" : "");
+	}
+}
+
+static void decode_training_coef(uint32_t *data, int length)
+{
+	const char *EVENTS[] = {
+		"STOPPING",
+		"STARTING",
+		"INITIALIZING",
+		"FRAME_LOCKED",
+		"NEW_REQUEST",
+		"HOLD",
+		"PRESET_APPLIED",
+		"INIT_APPLIED",
+		"UPDATED",
+		"ABORTED"
+	};
+
+	const char *STATES[] = {
+		"IDLE",
+		"WAIT_FRAME_LOCK",
+		"LOCKED"
+	};
+
+	/* First two are generic header data */
+	for (int i = 2; i < length; i++)
+	{
+		uint8_t event = gser_extract(data[i], 0, 8);
+		uint8_t state = gser_extract(data[i], 8, 8);
+		uint8_t mask = gser_extract(data[i], 16, 8);
+		uint8_t flags = gser_extract(data[i], 24, 8);
+		const char *cm1;
+		const char *c0;
+		const char *c1;
+		const char *init = (mask & 0x40) ? "INIT" : "----";
+		const char *prst = (mask & 0x80) ? "PRST" : "----";
+		switch ((mask >> 4) & 3)
+		{
+			case 0:
+				cm1 = "---";
+				break;
+			case 3:
+				cm1 = "Cm1";
+				break;
+			default:
+				cm1 = "???";
+				break;
+		}
+		switch ((mask >> 2) & 3)
+		{
+			case 0:
+				c0 = "---";
+				break;
+			case 3:
+				c0 = "C0 ";
+				break;
+			default:
+				c0 = "???";
+				break;
+		}
+		switch (mask & 3)
+		{
+			case 0:
+				c1 = "---";
+				break;
+			case 3:
+				c1 = "C1 ";
+				break;
+			default:
+				c1 = "???";
+				break;
+		}
+		printf("	%2d) 0x%08x: (%2d)%-14s (%2d)%-15s mask:(0x%02x)%s|%s|%s|%s|%s flags:(0x%02x)%s%s\n",
+			i - 2, data[i], event, EVENTS[event], state, STATES[state],
+			mask, cm1, c0, c1, init, prst, flags,
+			(flags & 0x01) ? " FLAG_RESTART" : "",
+			(flags & 0x02) ? " FLAG_STOP" : "");
+	}
+}
+
+static void decode_training_state(uint64_t *data, int length)
+{
+	const char *EVENTS[] = {
+		"INITIALIZING",
+		"RX_FRAME_LOCKED",
+		"NEW_TX_REQ",
+		"COEFFS_NOT_UPDATED",
+		"COEFFS_APPLIED",
+		"RX_TRAINED",
+		"RX_TRAINED_DEASSERTED",
+		"REMOTE_RX_READY",
+		"REMOTE_RX_READY_DEASSERTED",
+		"SEND_DATA",
+		"RESTART_TRAINING_ASSERTED",
+		"TRAINING_FAIL_ASSERTED",
+		"RX_FRAME_LOCK_LOST",
+		"ABORTED"
+	};
+
+	const char *STATES[] = {
+		"INIT",
+		"WAIT_FRAME_LOCK",
+		"FRAME_LOCKED",
+		"WAIT_COEFF_NOT_UPDATED",
+		"WAIT_COEFF_UPDATED",
+		"WAIT_COEFF_REQ",
+		"RX_ADAPT",
+		"TX_EVAL",
+		"TRAIN_REMOTE",
+		"LINK_READY",
+		"SEND_DATA",
+		"TRAINING_FAILURE"
+	};
+
+	/* First one is generic header data */
+	for (int i = 1; i < length; i++)
+	{
+		uint8_t event = gser_extract(data[i], 0, 8);
+		uint8_t state = gser_extract(data[i], 8, 8);
+		uint8_t req = gser_extract(data[i], 16, 8);
+		uint8_t coeff = gser_extract(data[i], 24, 8);
+		uint8_t flags = gser_extract(data[i], 32, 8);
+		const char *REQ_NAMES[4] = { "H", "+", "-", "?" };
+		const char *req_cm1 = REQ_NAMES[(req >> 4) & 3];
+		const char *req_c0 = REQ_NAMES[(req >> 2) & 3];
+		const char *req_c1 = REQ_NAMES[req & 3];
+		const char *req_init = (req & 0x40) ? "INIT" : "----";
+		const char *req_prst = (req & 0x80) ? "PRST" : "----";
+		const char *COEFF_NAMES[4] = { "---", "Upd", "Min", "Max" };
+		const char *coeff_cm1 = COEFF_NAMES[(coeff >> 4) & 3];
+		const char *coeff_c0 = COEFF_NAMES[(coeff >> 2) & 3];
+		const char *coeff_c1 = COEFF_NAMES[coeff & 3];
+		printf("	%2d) 0x%016llx: (%2d)%-26s (%2d)%-22s req:(0x%02x)%s|%s|%s|%s|%s coef:(0x%02x)%s|%s|%s flags:(0x%02x)%s%s%s\n",
+			i - 1, data[i], event, EVENTS[event], state, STATES[state],
+			req, req_cm1, req_c0, req_c1, req_init, req_prst,
+			coeff, coeff_cm1, coeff_c0, coeff_c1, flags,
+			(flags & 0x01) ? " FLAG_RX_TRAINED" : "",
+			(flags & 0x02) ? " FLAG_RESTARTED" : "",
+			(flags & 0x04) ? " FLAG_TX_REQ" : "");
+	}
+}
+
+/**
+ * Some SERDES can display extra tracing about AN, training, etc. This function
+ * displays those traces if available. If the SERDES doesn't support tracing, a
+ * informational message tells the user.
+ *
+ * @param node   Node to trace
+ * @param module GSERR to trace
+ * @param lane   Lane to trace
+ * @param unused Unused argument. Present so a number of QLM functions have the same signature
+ *			   for easy calling in the network driver
+ *
+ * @return Zero on success, negative on failure
+ */
+int qlm_gserr_display_trace(int module, int lane, int unused)
+{
+#define DATA_SIZE 48
+	uint64_t data[DATA_SIZE];
+	printf("GSERR%d.%d: AN trace\n", module, lane);
+	int len = qlm_gserr_get_trace(module, lane, 1, data, DATA_SIZE);
+	decode_header(data[0], DATA_SIZE);
+	decode_an((uint32_t *)data, len * 2);
+	printf("GSERR%d.%d: Training state machine trace\n", module, lane);
+	len = qlm_gserr_get_trace(module, lane, 2, data, DATA_SIZE);
+	decode_header(data[0], DATA_SIZE);
+	decode_training_state(data, len);
+	printf("GSERR%d.%d: Training coefficient trace\n", module, lane);
+	len = qlm_gserr_get_trace(module, lane, 3, data, DATA_SIZE);
+	decode_header(data[0], DATA_SIZE);
+	decode_training_coef((uint32_t *)data, len * 2);
+	return 0;
+}
 
 /**
  * Reset the QLM layer
@@ -2984,6 +3299,29 @@ void qlm_gserr_init_reset()
 				c.s.cpu_reset = 1;
 				c.s.apb_reset = 1);
 		gser_wait_usec(1000);
+	}
+
+	/* Program the GSERR reference clock termination */
+	for (int module = 0; module < num_gserr; module++)
+	{
+		int qlm = map_module_to_qlm(module);
+		int clk_term = gser_config_get_int(GSER_CONFIG_QLM_CLK_TERM, qlm);
+		switch (clk_term)
+		{
+			case 1: /* 100 ohm termination */
+				GSER_TRACE(QLM, "GSERR%d: Using 100 Ohm termination\n", module);
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(module),
+					c.s.refclk_hiz_ena = 0);
+				break;
+			case 0: /* Unterminated */
+				GSER_TRACE(QLM, "GSERR%d: Using no termination\n", module);
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(module),
+					c.s.refclk_hiz_ena = 1);
+				break;
+			default:
+				gser_error("GSERR%d: Invalid termination %d\n", module, clk_term);
+				break;
+		}
 	}
 }
 
@@ -3187,6 +3525,9 @@ void qlm_gserr_init_reset()
 //		int num_lanes = get_num_lanes(module);
 //		for (int lane = 0; lane < num_lanes; lane++)
 //			qlm_gserr_config_an(module, lane);
+//
+//		GSER_TRACE(QLM, "GSERR: Checking for custom tuning\n");
+//		apply_tuning(module);
 //
 //		/* 5) Take the CPU out of reset so it will boot and run the PHY firmware
 //			Write GSERR()_COMMON_PHY_CTRL_BCFG
@@ -3403,5 +3744,6 @@ void qlm_gserr_init_reset()
 //	}
 //	/* 14) The CGX MAC transmitter can be started at this point */
 //	/* Done later */
+//
 //	GSER_TRACE(QLM, "GSERR: End of init\n");
 //}

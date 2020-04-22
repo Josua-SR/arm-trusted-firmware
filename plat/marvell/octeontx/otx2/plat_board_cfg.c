@@ -1936,8 +1936,18 @@ static void octeontx2_fill_qlm_details(const void *fdt)
 {
 	int qlm, lane, polarity, max_lanes, voltage, rx_ad, refset;
 	char prop[64];
+	int generic_clk_term, clk_term;
+
+	snprintf(prop, sizeof(prop), "QLM-CLK-TERM");
+	generic_clk_term = octeontx2_fdtbdk_get_num(fdt, prop, 10);
 
 	for (qlm = 0; qlm < plat_octeontx_scfg->gser_count; qlm++) {
+		snprintf(prop, sizeof(prop), "QLM-CLK-TERM.N0.QLM%d", qlm);
+		clk_term = octeontx2_fdtbdk_get_num(fdt, prop, 10);
+		if (clk_term == -1)
+			clk_term = generic_clk_term;
+		plat_octeontx_bcfg->qlm_cfg[qlm].clk_term = clk_term;
+
 		max_lanes = plat_octeontx_scfg->qlm_max_lane_num[qlm];
 		for (lane = 0; lane < max_lanes; lane++) {
 			snprintf(prop, sizeof(prop),

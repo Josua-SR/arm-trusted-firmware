@@ -20,8 +20,19 @@
 
 int gser_is_platform(int plat)
 {
-	return !strncmp(plat_octeontx_bcfg->bcfg.board_model,
-		plat == GSER_PLATFORM_ASIM ? "asim-" : "emul-", 5);
+	const char *board_model;
+	int actual_plat;
+
+	board_model = plat_octeontx_bcfg->bcfg.board_model;
+
+	if (!strncmp(board_model, "asim-", 5))
+		actual_plat = GSER_PLATFORM_ASIM;
+	else if (!strncmp(board_model, "emul-", 5))
+		actual_plat = GSER_PLATFORM_EMULATOR;
+	else
+		actual_plat = GSER_PLATFORM_HW;
+
+	return (plat == actual_plat);
 }
 
 int gser_poll_for_csr(uint64_t addr, uint64_t mask, int poll_val, int timeout)
@@ -207,6 +218,10 @@ int gser_config_get_int(int prop, ...)
 		break;
 	case GSER_CONFIG_QLM_VOLTAGE:
 		ret = plat_octeontx_bcfg->qlm_voltage;
+		break;
+	case GSER_CONFIG_QLM_CLK_TERM:
+		qlm = va_arg(vl, int);
+		ret = plat_octeontx_bcfg->qlm_cfg[qlm].clk_term;
 		break;
 	default:
 		WARN("Unknown property to read from BDK DT\n");
