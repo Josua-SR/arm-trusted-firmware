@@ -159,6 +159,20 @@ func el3_start_el0_isr
 	/*EL0 specific settings
 	 * This will allow wfi in EL0 to cause async exception to EL3
 	 */
+
+	/* Set SCTLR_ELx.nTWI = 1
+	 * Kernel uses SCTLR_EL1 for VHE as well.
+	 * SCTLR_EL2.nTWI is reserved as of today but has been referred to in
+	 * ARM ARM documents so setting there as well
+	 */
+	mrs	x10, sctlr_el1
+	orr	x10, x10, #(1ULL << 16)
+	msr	sctlr_el1, x10
+	mrs	x10, sctlr_el2
+	orr	x10, x10, #(1ULL << 16)
+	msr	sctlr_el2, x10
+	msr	sp_el0, x1
+
 	msr sp_el0, x1
 	nop
 	cmp	x6, xzr
