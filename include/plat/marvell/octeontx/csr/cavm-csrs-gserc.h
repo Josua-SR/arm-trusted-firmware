@@ -276,7 +276,7 @@ static inline uint64_t CAVM_GSERCX_CM0_FEATURE_PLL_CAL_EN_CFG0_RSVD(uint64_t a)
 /**
  * Register (RSL32b) gserc#_cm0_feature_pll_cal_en_cfg1_rsvd
  *
- * INTERNAL: GSERC Cm0 Feature Pll Cal En Cfg1 Register
+ * GSERC Cm0 Feature Pll Cal En Cfg1 Register
  */
 union cavm_gsercx_cm0_feature_pll_cal_en_cfg1_rsvd
 {
@@ -285,13 +285,15 @@ union cavm_gsercx_cm0_feature_pll_cal_en_cfg1_rsvd
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_3_31         : 29;
-        uint32_t vco_dosc_temp_skew    : 1;  /**< [  2:  2](R/W/H) Reserved. */
+        uint32_t vco_dosc_temp_skew    : 1;  /**< [  2:  2](R/W/H) VCO DOSC temperature skew control.
+                                                                 Set to 1 to enable. */
         uint32_t vco_freq3_en          : 1;  /**< [  1:  1](R/W/H) Reserved. */
         uint32_t vco_freq2_en          : 1;  /**< [  0:  0](R/W/H) Reserved. */
 #else /* Word 0 - Little Endian */
         uint32_t vco_freq2_en          : 1;  /**< [  0:  0](R/W/H) Reserved. */
         uint32_t vco_freq3_en          : 1;  /**< [  1:  1](R/W/H) Reserved. */
-        uint32_t vco_dosc_temp_skew    : 1;  /**< [  2:  2](R/W/H) Reserved. */
+        uint32_t vco_dosc_temp_skew    : 1;  /**< [  2:  2](R/W/H) VCO DOSC temperature skew control.
+                                                                 Set to 1 to enable. */
         uint32_t reserved_3_31         : 29;
 #endif /* Word 0 - End */
     } s;
@@ -56805,7 +56807,7 @@ static inline uint64_t CAVM_GSERCX_REFCLK_CTR(uint64_t a)
 /**
  * Register (RSL) gserc#_rx_term_ctl
  *
- * Receiver Termination Under perst (by lane) Control Register
+ * INTERNAL: Receiver Termination Control Register
  */
 union cavm_gsercx_rx_term_ctl
 {
@@ -56813,9 +56815,13 @@ union cavm_gsercx_rx_term_ctl
     struct cavm_gsercx_rx_term_ctl_s
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
-        uint64_t term_ctl              : 64; /**< [ 63:  0](R/W) Placeholder until RTL is written. */
+        uint64_t term_ctl              : 64; /**< [ 63:  0](R/W) Reserved.
+                                                                 Internal:
+                                                                 Not used. */
 #else /* Word 0 - Little Endian */
-        uint64_t term_ctl              : 64; /**< [ 63:  0](R/W) Placeholder until RTL is written. */
+        uint64_t term_ctl              : 64; /**< [ 63:  0](R/W) Reserved.
+                                                                 Internal:
+                                                                 Not used. */
 #endif /* Word 0 - End */
     } s;
     /* struct cavm_gsercx_rx_term_ctl_s cn; */

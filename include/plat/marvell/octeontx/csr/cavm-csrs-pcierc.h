@@ -21162,6 +21162,45 @@ static inline uint64_t CAVM_PCIERCX_PL16G_CTL(uint64_t a)
  * Register (PCICONFIGRC) pcierc#_pl16g_eq_ctl0123
  *
  * PCIe RC 16.0 GT/s Lane Equalization Control for Lane 0-3 Register
+ * The Equalization Control register consists of control fields required for per-Lane
+ * 16.0 GT/s equalization.
+ *
+ * Equalization as an RC:
+ *   \<pre\>
+ *   - On speed change from GEN1-\>GEN3, advertise the transmitter preset hint per lane
+ *     to the EP device in the TS2s exchanged. This value comes from the per lane
+ *     upstream port transmitter preset (L*UTP).
+ *   - Upon exit from Recovery Speed, the RC will enter EQ PHASE1 and the RC's
+ *     transmitter will use the per lane downstream port transmitter preset field (L*DTP).
+ *   - While in EQ PHASE 1, the EP & RC device exchange NO presets. They do advertise
+ *     their LF & FS which are needed for the fine tuning stages to follow.
+ *   - For the RC, while in EQ PHASE 2, the EP device makes tuning requests of the RC.
+ *     The RC adjusts its transmitter settings as directed by the EP. The requests are
+ *     communicated via TS1s.
+ *   - Once the EP is satisfied with the tuning, equalization moves to PHASE 3 where
+ *     the RC tunes the EP's remote transmitter.
+ *     Again, the settings are communicated via TS1s but the feedback is provided by
+ *     the RC phy's FOM or direction change indications.
+ *     \</pre\>
+ *
+ * Equalization as an EP:
+ *   \<pre\>
+ *   - The EP latches the transmitter preset hint received during the speed change from
+ *     GEN1-\>GEN3 (L*UTP).
+ *   - Upon exiting speed, the EP transitions to EQ PHASE 0 (Note the RC does not use
+ *     EQ PHASE 0) and sets its transmitter setting to use (L*UTP) which it received
+ *     during the speed change.  If any lane received a reserved or unsupported preset,
+ *     the EP will use an implementation specific value determined by the EP.
+ *   - EP will transition to EQ PHASE 1 after seeing two consecutive TS1s with phase 1 bits set.
+ *   - During EQ PHASE 1, the EP communicates it's FS & LF to the upstream port. Again, NO
+ *     presets are exchanged.
+ *   - EP transitions to EQ PHASE 2 and begins making requests of the RC to adjust it's transmitter.
+ *     These requests are communicated via TS1s and the EP's PHY determines which
+ *     settings are best for its receiver.
+ *     This is an implementation specific algorithm and not covered by the PCIe spec
+ *     other than the mechanism which is used to make a request.
+ *   - During EQ PHASE 3, the EPs transmitter settings are adjusted by the RC.
+ *   \</pre\>
  */
 union cavm_pciercx_pl16g_eq_ctl0123
 {
@@ -21188,7 +21227,41 @@ union cavm_pciercx_pl16g_eq_ctl0123
         uint32_t l3utp                 : 4;  /**< [ 31: 28](RO/WRSL) Upstream port 16.0 GT/s transmitter preset 3. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pciercx_pl16g_eq_ctl0123_s cn; */
+    /* struct cavm_pciercx_pl16g_eq_ctl0123_s cn9; */
+    /* struct cavm_pciercx_pl16g_eq_ctl0123_s cn96xxp1; */
+    struct cavm_pciercx_pl16g_eq_ctl0123_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t l3utp                 : 4;  /**< [ 31: 28](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l3dtp                 : 4;  /**< [ 27: 24](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l2utp                 : 4;  /**< [ 23: 20](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l2dtp                 : 4;  /**< [ 19: 16](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l1utp                 : 4;  /**< [ 15: 12](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l1dtp                 : 4;  /**< [ 11:  8](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l0utp                 : 4;  /**< [  7:  4](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l0dtp                 : 4;  /**< [  3:  0](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+#else /* Word 0 - Little Endian */
+        uint32_t l0dtp                 : 4;  /**< [  3:  0](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l0utp                 : 4;  /**< [  7:  4](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l1dtp                 : 4;  /**< [ 11:  8](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l1utp                 : 4;  /**< [ 15: 12](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l2dtp                 : 4;  /**< [ 19: 16](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l2utp                 : 4;  /**< [ 23: 20](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l3dtp                 : 4;  /**< [ 27: 24](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l3utp                 : 4;  /**< [ 31: 28](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pciercx_pl16g_eq_ctl0123_cn96xxp3 cn98xx; */
+    /* struct cavm_pciercx_pl16g_eq_ctl0123_s cnf95xx; */
+    /* struct cavm_pciercx_pl16g_eq_ctl0123_cn96xxp3 loki; */
 };
 typedef union cavm_pciercx_pl16g_eq_ctl0123 cavm_pciercx_pl16g_eq_ctl0123_t;
 
@@ -21216,6 +21289,45 @@ static inline uint64_t CAVM_PCIERCX_PL16G_EQ_CTL0123(uint64_t a)
  * Register (PCICONFIGRC) pcierc#_pl16g_eq_ctl12131415
  *
  * PCIe RC 16.0 GT/s Lane Equalization Control for Lane 12-15 Register
+ * The Equalization Control register consists of control fields required for per-Lane
+ * 16.0 GT/s equalization.
+ *
+ * Equalization as an RC:
+ *   \<pre\>
+ *   - On speed change from GEN1-\>GEN3, advertise the transmitter preset hint per lane
+ *     to the EP device in the TS2s exchanged. This value comes from the per lane
+ *     upstream port transmitter preset (L*UTP).
+ *   - Upon exit from Recovery Speed, the RC will enter EQ PHASE1 and the RC's
+ *     transmitter will use the per lane downstream port transmitter preset field (L*DTP).
+ *   - While in EQ PHASE 1, the EP & RC device exchange NO presets. They do advertise
+ *     their LF & FS which are needed for the fine tuning stages to follow.
+ *   - For the RC, while in EQ PHASE 2, the EP device makes tuning requests of the RC.
+ *     The RC adjusts its transmitter settings as directed by the EP. The requests are
+ *     communicated via TS1s.
+ *   - Once the EP is satisfied with the tuning, equalization moves to PHASE 3 where
+ *     the RC tunes the EP's remote transmitter.
+ *     Again, the settings are communicated via TS1s but the feedback is provided by
+ *     the RC phy's FOM or direction change indications.
+ *     \</pre\>
+ *
+ * Equalization as an EP:
+ *   \<pre\>
+ *   - The EP latches the transmitter preset hint received during the speed change from
+ *     GEN1-\>GEN3 (L*UTP).
+ *   - Upon exiting speed, the EP transitions to EQ PHASE 0 (Note the RC does not use
+ *     EQ PHASE 0) and sets its transmitter setting to use (L*UTP) which it received
+ *     during the speed change.  If any lane received a reserved or unsupported preset,
+ *     the EP will use an implementation specific value determined by the EP.
+ *   - EP will transition to EQ PHASE 1 after seeing two consecutive TS1s with phase 1 bits set.
+ *   - During EQ PHASE 1, the EP communicates it's FS & LF to the upstream port. Again, NO
+ *     presets are exchanged.
+ *   - EP transitions to EQ PHASE 2 and begins making requests of the RC to adjust it's transmitter.
+ *     These requests are communicated via TS1s and the EP's PHY determines which
+ *     settings are best for its receiver.
+ *     This is an implementation specific algorithm and not covered by the PCIe spec
+ *     other than the mechanism which is used to make a request.
+ *   - During EQ PHASE 3, the EPs transmitter settings are adjusted by the RC.
+ *   \</pre\>
  */
 union cavm_pciercx_pl16g_eq_ctl12131415
 {
@@ -21242,7 +21354,70 @@ union cavm_pciercx_pl16g_eq_ctl12131415
         uint32_t l15utp                : 4;  /**< [ 31: 28](RO/WRSL) Upstream port 16.0 GT/s transmitter preset 15. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pciercx_pl16g_eq_ctl12131415_s cn; */
+    /* struct cavm_pciercx_pl16g_eq_ctl12131415_s cn9; */
+    /* struct cavm_pciercx_pl16g_eq_ctl12131415_s cn96xxp1; */
+    struct cavm_pciercx_pl16g_eq_ctl12131415_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t l15utp                : 4;  /**< [ 31: 28](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l15dtp                : 4;  /**< [ 27: 24](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l14utp                : 4;  /**< [ 23: 20](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l14dtp                : 4;  /**< [ 19: 16](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l13utp                : 4;  /**< [ 15: 12](RO/WRSL) U| Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when
+                                                                 transmitting during EQ PHASE 0/1. */
+        uint32_t l13dtp                : 4;  /**< [ 11:  8](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l12utp                : 4;  /**< [  7:  4](RO/WRSL) U| Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when
+                                                                 transmitting during EQ PHASE 0/1. */
+        uint32_t l12dtp                : 4;  /**< [  3:  0](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+#else /* Word 0 - Little Endian */
+        uint32_t l12dtp                : 4;  /**< [  3:  0](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l12utp                : 4;  /**< [  7:  4](RO/WRSL) U| Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when
+                                                                 transmitting during EQ PHASE 0/1. */
+        uint32_t l13dtp                : 4;  /**< [ 11:  8](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l13utp                : 4;  /**< [ 15: 12](RO/WRSL) U| Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when
+                                                                 transmitting during EQ PHASE 0/1. */
+        uint32_t l14dtp                : 4;  /**< [ 19: 16](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l14utp                : 4;  /**< [ 23: 20](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l15dtp                : 4;  /**< [ 27: 24](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l15utp                : 4;  /**< [ 31: 28](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    struct cavm_pciercx_pl16g_eq_ctl12131415_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t l15utp                : 4;  /**< [ 31: 28](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l15dtp                : 4;  /**< [ 27: 24](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 15. */
+        uint32_t l14utp                : 4;  /**< [ 23: 20](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l14dtp                : 4;  /**< [ 19: 16](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 14. */
+        uint32_t l13utp                : 4;  /**< [ 15: 12](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l13dtp                : 4;  /**< [ 11:  8](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 13. */
+        uint32_t l12utp                : 4;  /**< [  7:  4](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l12dtp                : 4;  /**< [  3:  0](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 12. */
+#else /* Word 0 - Little Endian */
+        uint32_t l12dtp                : 4;  /**< [  3:  0](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 12. */
+        uint32_t l12utp                : 4;  /**< [  7:  4](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l13dtp                : 4;  /**< [ 11:  8](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 13. */
+        uint32_t l13utp                : 4;  /**< [ 15: 12](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l14dtp                : 4;  /**< [ 19: 16](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 14. */
+        uint32_t l14utp                : 4;  /**< [ 23: 20](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l15dtp                : 4;  /**< [ 27: 24](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 15. */
+        uint32_t l15utp                : 4;  /**< [ 31: 28](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_pciercx_pl16g_eq_ctl12131415_s cnf95xx; */
+    /* struct cavm_pciercx_pl16g_eq_ctl12131415_cn98xx loki; */
 };
 typedef union cavm_pciercx_pl16g_eq_ctl12131415 cavm_pciercx_pl16g_eq_ctl12131415_t;
 
@@ -21270,6 +21445,45 @@ static inline uint64_t CAVM_PCIERCX_PL16G_EQ_CTL12131415(uint64_t a)
  * Register (PCICONFIGRC) pcierc#_pl16g_eq_ctl4567
  *
  * PCIe RC 16.0 GT/s Lane Equalization Control for Lane 4-7 Register
+ * The Equalization Control register consists of control fields required for per-Lane
+ * 16.0 GT/s equalization.
+ *
+ * Equalization as an RC:
+ *   \<pre\>
+ *   - On speed change from GEN1-\>GEN3, advertise the transmitter preset hint per lane
+ *     to the EP device in the TS2s exchanged. This value comes from the per lane
+ *     upstream port transmitter preset (L*UTP).
+ *   - Upon exit from Recovery Speed, the RC will enter EQ PHASE1 and the RC's
+ *     transmitter will use the per lane downstream port transmitter preset field (L*DTP).
+ *   - While in EQ PHASE 1, the EP & RC device exchange NO presets. They do advertise
+ *     their LF & FS which are needed for the fine tuning stages to follow.
+ *   - For the RC, while in EQ PHASE 2, the EP device makes tuning requests of the RC.
+ *     The RC adjusts its transmitter settings as directed by the EP. The requests are
+ *     communicated via TS1s.
+ *   - Once the EP is satisfied with the tuning, equalization moves to PHASE 3 where
+ *     the RC tunes the EP's remote transmitter.
+ *     Again, the settings are communicated via TS1s but the feedback is provided by
+ *     the RC phy's FOM or direction change indications.
+ *     \</pre\>
+ *
+ * Equalization as an EP:
+ *   \<pre\>
+ *   - The EP latches the transmitter preset hint received during the speed change from
+ *     GEN1-\>GEN3 (L*UTP).
+ *   - Upon exiting speed, the EP transitions to EQ PHASE 0 (Note the RC does not use
+ *     EQ PHASE 0) and sets its transmitter setting to use (L*UTP) which it received
+ *     during the speed change.  If any lane received a reserved or unsupported preset,
+ *     the EP will use an implementation specific value determined by the EP.
+ *   - EP will transition to EQ PHASE 1 after seeing two consecutive TS1s with phase 1 bits set.
+ *   - During EQ PHASE 1, the EP communicates it's FS & LF to the upstream port. Again, NO
+ *     presets are exchanged.
+ *   - EP transitions to EQ PHASE 2 and begins making requests of the RC to adjust it's transmitter.
+ *     These requests are communicated via TS1s and the EP's PHY determines which
+ *     settings are best for its receiver.
+ *     This is an implementation specific algorithm and not covered by the PCIe spec
+ *     other than the mechanism which is used to make a request.
+ *   - During EQ PHASE 3, the EPs transmitter settings are adjusted by the RC.
+ *   \</pre\>
  */
 union cavm_pciercx_pl16g_eq_ctl4567
 {
@@ -21296,7 +21510,70 @@ union cavm_pciercx_pl16g_eq_ctl4567
         uint32_t l7utp                 : 4;  /**< [ 31: 28](RO/WRSL) Upstream port 16.0 GT/s transmitter preset 7. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pciercx_pl16g_eq_ctl4567_s cn; */
+    /* struct cavm_pciercx_pl16g_eq_ctl4567_s cn9; */
+    /* struct cavm_pciercx_pl16g_eq_ctl4567_s cn96xxp1; */
+    struct cavm_pciercx_pl16g_eq_ctl4567_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t l7utp                 : 4;  /**< [ 31: 28](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l7dtp                 : 4;  /**< [ 27: 24](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l6utp                 : 4;  /**< [ 23: 20](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l6dtp                 : 4;  /**< [ 19: 16](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l5utp                 : 4;  /**< [ 15: 12](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l5dtp                 : 4;  /**< [ 11:  8](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l4utp                 : 4;  /**< [  7:  4](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l4dtp                 : 4;  /**< [  3:  0](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+#else /* Word 0 - Little Endian */
+        uint32_t l4dtp                 : 4;  /**< [  3:  0](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l4utp                 : 4;  /**< [  7:  4](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l5dtp                 : 4;  /**< [ 11:  8](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l5utp                 : 4;  /**< [ 15: 12](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l6dtp                 : 4;  /**< [ 19: 16](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l6utp                 : 4;  /**< [ 23: 20](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l7dtp                 : 4;  /**< [ 27: 24](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l7utp                 : 4;  /**< [ 31: 28](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    struct cavm_pciercx_pl16g_eq_ctl4567_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t l7utp                 : 4;  /**< [ 31: 28](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l7dtp                 : 4;  /**< [ 27: 24](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 7. */
+        uint32_t l6utp                 : 4;  /**< [ 23: 20](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l6dtp                 : 4;  /**< [ 19: 16](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 6. */
+        uint32_t l5utp                 : 4;  /**< [ 15: 12](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l5dtp                 : 4;  /**< [ 11:  8](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 5. */
+        uint32_t l4utp                 : 4;  /**< [  7:  4](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l4dtp                 : 4;  /**< [  3:  0](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 4. */
+#else /* Word 0 - Little Endian */
+        uint32_t l4dtp                 : 4;  /**< [  3:  0](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 4. */
+        uint32_t l4utp                 : 4;  /**< [  7:  4](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l5dtp                 : 4;  /**< [ 11:  8](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 5. */
+        uint32_t l5utp                 : 4;  /**< [ 15: 12](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l6dtp                 : 4;  /**< [ 19: 16](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 6. */
+        uint32_t l6utp                 : 4;  /**< [ 23: 20](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l7dtp                 : 4;  /**< [ 27: 24](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 7. */
+        uint32_t l7utp                 : 4;  /**< [ 31: 28](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_pciercx_pl16g_eq_ctl4567_s cnf95xx; */
+    /* struct cavm_pciercx_pl16g_eq_ctl4567_cn98xx loki; */
 };
 typedef union cavm_pciercx_pl16g_eq_ctl4567 cavm_pciercx_pl16g_eq_ctl4567_t;
 
@@ -21324,6 +21601,45 @@ static inline uint64_t CAVM_PCIERCX_PL16G_EQ_CTL4567(uint64_t a)
  * Register (PCICONFIGRC) pcierc#_pl16g_eq_ctl891011
  *
  * PCIe RC 16.0 GT/s Lane Equalization Control for Lane 8-11 Register
+ * The Equalization Control register consists of control fields required for per-Lane
+ * 16.0 GT/s equalization.
+ *
+ * Equalization as an RC:
+ *   \<pre\>
+ *   - On speed change from GEN1-\>GEN3, advertise the transmitter preset hint per lane
+ *     to the EP device in the TS2s exchanged. This value comes from the per lane
+ *     upstream port transmitter preset (L*UTP).
+ *   - Upon exit from Recovery Speed, the RC will enter EQ PHASE1 and the RC's
+ *     transmitter will use the per lane downstream port transmitter preset field (L*DTP).
+ *   - While in EQ PHASE 1, the EP & RC device exchange NO presets. They do advertise
+ *     their LF & FS which are needed for the fine tuning stages to follow.
+ *   - For the RC, while in EQ PHASE 2, the EP device makes tuning requests of the RC.
+ *     The RC adjusts its transmitter settings as directed by the EP. The requests are
+ *     communicated via TS1s.
+ *   - Once the EP is satisfied with the tuning, equalization moves to PHASE 3 where
+ *     the RC tunes the EP's remote transmitter.
+ *     Again, the settings are communicated via TS1s but the feedback is provided by
+ *     the RC phy's FOM or direction change indications.
+ *     \</pre\>
+ *
+ * Equalization as an EP:
+ *   \<pre\>
+ *   - The EP latches the transmitter preset hint received during the speed change from
+ *     GEN1-\>GEN3 (L*UTP).
+ *   - Upon exiting speed, the EP transitions to EQ PHASE 0 (Note the RC does not use
+ *     EQ PHASE 0) and sets its transmitter setting to use (L*UTP) which it received
+ *     during the speed change.  If any lane received a reserved or unsupported preset,
+ *     the EP will use an implementation specific value determined by the EP.
+ *   - EP will transition to EQ PHASE 1 after seeing two consecutive TS1s with phase 1 bits set.
+ *   - During EQ PHASE 1, the EP communicates it's FS & LF to the upstream port. Again, NO
+ *     presets are exchanged.
+ *   - EP transitions to EQ PHASE 2 and begins making requests of the RC to adjust it's transmitter.
+ *     These requests are communicated via TS1s and the EP's PHY determines which
+ *     settings are best for its receiver.
+ *     This is an implementation specific algorithm and not covered by the PCIe spec
+ *     other than the mechanism which is used to make a request.
+ *   - During EQ PHASE 3, the EPs transmitter settings are adjusted by the RC.
+ *   \</pre\>
  */
 union cavm_pciercx_pl16g_eq_ctl891011
 {
@@ -21350,7 +21666,70 @@ union cavm_pciercx_pl16g_eq_ctl891011
         uint32_t l11utp                : 4;  /**< [ 31: 28](RO/WRSL) Upstream port 16.0 GT/s transmitter preset 11. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pciercx_pl16g_eq_ctl891011_s cn; */
+    /* struct cavm_pciercx_pl16g_eq_ctl891011_s cn9; */
+    /* struct cavm_pciercx_pl16g_eq_ctl891011_s cn96xxp1; */
+    struct cavm_pciercx_pl16g_eq_ctl891011_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t l11utp                : 4;  /**< [ 31: 28](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l11dtp                : 4;  /**< [ 27: 24](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l10utp                : 4;  /**< [ 23: 20](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l10dtp                : 4;  /**< [ 19: 16](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l9utp                 : 4;  /**< [ 15: 12](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l9dtp                 : 4;  /**< [ 11:  8](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l8utp                 : 4;  /**< [  7:  4](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l8dtp                 : 4;  /**< [  3:  0](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+#else /* Word 0 - Little Endian */
+        uint32_t l8dtp                 : 4;  /**< [  3:  0](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l8utp                 : 4;  /**< [  7:  4](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l9dtp                 : 4;  /**< [ 11:  8](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l9utp                 : 4;  /**< [ 15: 12](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l10dtp                : 4;  /**< [ 19: 16](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l10utp                : 4;  /**< [ 23: 20](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l11dtp                : 4;  /**< [ 27: 24](RO/WRSL) Transmitter Preset used for 16.0 GT/s equalization by this port. */
+        uint32_t l11utp                : 4;  /**< [ 31: 28](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    struct cavm_pciercx_pl16g_eq_ctl891011_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t l11utp                : 4;  /**< [ 31: 28](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l11dtp                : 4;  /**< [ 27: 24](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 11. */
+        uint32_t l10utp                : 4;  /**< [ 23: 20](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l10dtp                : 4;  /**< [ 19: 16](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 10. */
+        uint32_t l9utp                 : 4;  /**< [ 15: 12](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l9dtp                 : 4;  /**< [ 11:  8](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 9. */
+        uint32_t l8utp                 : 4;  /**< [  7:  4](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l8dtp                 : 4;  /**< [  3:  0](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 8. */
+#else /* Word 0 - Little Endian */
+        uint32_t l8dtp                 : 4;  /**< [  3:  0](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 8. */
+        uint32_t l8utp                 : 4;  /**< [  7:  4](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l9dtp                 : 4;  /**< [ 11:  8](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 9. */
+        uint32_t l9utp                 : 4;  /**< [ 15: 12](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l10dtp                : 4;  /**< [ 19: 16](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 10. */
+        uint32_t l10utp                : 4;  /**< [ 23: 20](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+        uint32_t l11dtp                : 4;  /**< [ 27: 24](RO/WRSL) Downstream port 16.0 GT/s transmitter preset 11. */
+        uint32_t l11utp                : 4;  /**< [ 31: 28](RO/WRSL) Transmit Preset hint on speed change to 16.0 GT/s to be used by EP when transmitting
+                                                                 during EQ PHASE 0/1. */
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_pciercx_pl16g_eq_ctl891011_s cnf95xx; */
+    /* struct cavm_pciercx_pl16g_eq_ctl891011_cn98xx loki; */
 };
 typedef union cavm_pciercx_pl16g_eq_ctl891011 cavm_pciercx_pl16g_eq_ctl891011_t;
 

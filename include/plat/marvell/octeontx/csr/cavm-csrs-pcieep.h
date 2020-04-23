@@ -15684,6 +15684,7 @@ static inline uint64_t CAVM_PCIEEPX_L1_SUBSTATES(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_l1sub_cap
  *
  * PCIe EP PF L1 Substates Capability Register
+ * This register is for debug and diagnostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_l1sub_cap
@@ -15765,6 +15766,7 @@ static inline uint64_t CAVM_PCIEEPX_L1SUB_CAP(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_l1sub_cap_hdr
  *
  * PCIe EP PF L1 Substates Extended Capability Header Register
+ * This register is for debug and diagnostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_l1sub_cap_hdr
@@ -15816,6 +15818,7 @@ static inline uint64_t CAVM_PCIEEPX_L1SUB_CAP_HDR(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_l1sub_ctl1
  *
  * PCIe EP L1 Substates Control 1 Register
+ * This register is for debug and diagnostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_l1sub_ctl1
@@ -15873,6 +15876,7 @@ static inline uint64_t CAVM_PCIEEPX_L1SUB_CTL1(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_l1sub_ctl2
  *
  * PCIe EP L1 Substates Control 2 Register
+ * This register is for debug and diagostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_l1sub_ctl2
@@ -16852,6 +16856,7 @@ static inline uint64_t CAVM_PCIEEPX_LTR_LAT(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_margin_ext_cap_hdr
  *
  * PCIe RC Margining Extended Capability Header Register
+ * This register is for debug and diagostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_margin_ext_cap_hdr
@@ -16987,6 +16992,7 @@ static inline uint64_t CAVM_PCIEEPX_MISC_CTL1(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_mrg_lane_ctl_stat0
  *
  * PCIe RC Margining Lane Control and Status Register 0
+ * This register is for debug and diagostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_mrg_lane_ctl_stat0
@@ -17916,6 +17922,7 @@ static inline uint64_t CAVM_PCIEEPX_MRG_LANE_CTL_STAT9(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_mrg_port_cap_stat
  *
  * PCIe RC Margining Port Capabilities and Status Register
+ * This register is for debug and diagostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_mrg_port_cap_stat
@@ -19359,6 +19366,7 @@ static inline uint64_t CAVM_PCIEEPX_PL16G_CTL(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_pl16g_eq_ctl0123
  *
  * PCIe RC 16.0 GT/s Lane Equalization Control for Lane 0-3 Register
+ * This register is for debug and diagnostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_pl16g_eq_ctl0123
@@ -19386,7 +19394,54 @@ union cavm_pcieepx_pl16g_eq_ctl0123
         uint32_t l3utp                 : 4;  /**< [ 31: 28](RO/H) Upstream port 16.0 GT/s transmitter preset 3. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pcieepx_pl16g_eq_ctl0123_s cn; */
+    /* struct cavm_pcieepx_pl16g_eq_ctl0123_s cn9; */
+    /* struct cavm_pcieepx_pl16g_eq_ctl0123_s cn96xxp1; */
+    struct cavm_pcieepx_pl16g_eq_ctl0123_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t l3utp                 : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l3dtp                 : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l2utp                 : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l2dtp                 : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l1utp                 : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l1dtp                 : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l0utp                 : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l0dtp                 : 4;  /**< [  3:  0](RO) Reserved. */
+#else /* Word 0 - Little Endian */
+        uint32_t l0dtp                 : 4;  /**< [  3:  0](RO) Reserved. */
+        uint32_t l0utp                 : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l1dtp                 : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l1utp                 : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l2dtp                 : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l2utp                 : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l3dtp                 : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l3utp                 : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    struct cavm_pcieepx_pl16g_eq_ctl0123_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t l3utp                 : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l3dtp                 : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l2utp                 : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l2dtp                 : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l1utp                 : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l1dtp                 : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l0utp                 : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l0dtp                 : 4;  /**< [  3:  0](RO) Reserved. */
+#else /* Word 0 - Little Endian */
+        uint32_t l0dtp                 : 4;  /**< [  3:  0](RO) Reserved. */
+        uint32_t l0utp                 : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l1dtp                 : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l1utp                 : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l2dtp                 : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l2utp                 : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l3dtp                 : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l3utp                 : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_pcieepx_pl16g_eq_ctl0123_s cnf95xx; */
+    /* struct cavm_pcieepx_pl16g_eq_ctl0123_cn98xx loki; */
 };
 typedef union cavm_pcieepx_pl16g_eq_ctl0123 cavm_pcieepx_pl16g_eq_ctl0123_t;
 
@@ -19414,6 +19469,7 @@ static inline uint64_t CAVM_PCIEEPX_PL16G_EQ_CTL0123(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_pl16g_eq_ctl12131415
  *
  * PCIe RC 16.0 GT/s Lane Equalization Control for Lane 12-15 Register
+ * This register is for debug and diagostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_pl16g_eq_ctl12131415
@@ -19441,7 +19497,54 @@ union cavm_pcieepx_pl16g_eq_ctl12131415
         uint32_t l15utp                : 4;  /**< [ 31: 28](RO/H) Upstream port 16.0 GT/s transmitter preset 15. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pcieepx_pl16g_eq_ctl12131415_s cn; */
+    /* struct cavm_pcieepx_pl16g_eq_ctl12131415_s cn9; */
+    /* struct cavm_pcieepx_pl16g_eq_ctl12131415_s cn96xxp1; */
+    struct cavm_pcieepx_pl16g_eq_ctl12131415_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t l15utp                : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l15dtp                : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l14utp                : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l14dtp                : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l13utp                : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l13dtp                : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l12utp                : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l12dtp                : 4;  /**< [  3:  0](RO) Reserved. */
+#else /* Word 0 - Little Endian */
+        uint32_t l12dtp                : 4;  /**< [  3:  0](RO) Reserved. */
+        uint32_t l12utp                : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l13dtp                : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l13utp                : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l14dtp                : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l14utp                : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l15dtp                : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l15utp                : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    struct cavm_pcieepx_pl16g_eq_ctl12131415_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t l15utp                : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l15dtp                : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l14utp                : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l14dtp                : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l13utp                : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l13dtp                : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l12utp                : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l12dtp                : 4;  /**< [  3:  0](RO) Reserved. */
+#else /* Word 0 - Little Endian */
+        uint32_t l12dtp                : 4;  /**< [  3:  0](RO) Reserved. */
+        uint32_t l12utp                : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l13dtp                : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l13utp                : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l14dtp                : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l14utp                : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l15dtp                : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l15utp                : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_pcieepx_pl16g_eq_ctl12131415_s cnf95xx; */
+    /* struct cavm_pcieepx_pl16g_eq_ctl12131415_cn98xx loki; */
 };
 typedef union cavm_pcieepx_pl16g_eq_ctl12131415 cavm_pcieepx_pl16g_eq_ctl12131415_t;
 
@@ -19469,6 +19572,7 @@ static inline uint64_t CAVM_PCIEEPX_PL16G_EQ_CTL12131415(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_pl16g_eq_ctl4567
  *
  * PCIe RC 16.0 GT/s Lane Equalization Control for Lane 4-7 Register
+ * This register is for debug and diagostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_pl16g_eq_ctl4567
@@ -19496,7 +19600,54 @@ union cavm_pcieepx_pl16g_eq_ctl4567
         uint32_t l7utp                 : 4;  /**< [ 31: 28](RO/H) Upstream port 16.0 GT/s transmitter preset 7. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pcieepx_pl16g_eq_ctl4567_s cn; */
+    /* struct cavm_pcieepx_pl16g_eq_ctl4567_s cn9; */
+    /* struct cavm_pcieepx_pl16g_eq_ctl4567_s cn96xxp1; */
+    struct cavm_pcieepx_pl16g_eq_ctl4567_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t l7utp                 : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l7dtp                 : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l6utp                 : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l6dtp                 : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l5utp                 : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l5dtp                 : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l4utp                 : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l4dtp                 : 4;  /**< [  3:  0](RO) Reserved. */
+#else /* Word 0 - Little Endian */
+        uint32_t l4dtp                 : 4;  /**< [  3:  0](RO) Reserved. */
+        uint32_t l4utp                 : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l5dtp                 : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l5utp                 : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l6dtp                 : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l6utp                 : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l7dtp                 : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l7utp                 : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    struct cavm_pcieepx_pl16g_eq_ctl4567_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t l7utp                 : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l7dtp                 : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l6utp                 : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l6dtp                 : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l5utp                 : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l5dtp                 : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l4utp                 : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l4dtp                 : 4;  /**< [  3:  0](RO) Reserved. */
+#else /* Word 0 - Little Endian */
+        uint32_t l4dtp                 : 4;  /**< [  3:  0](RO) Reserved. */
+        uint32_t l4utp                 : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l5dtp                 : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l5utp                 : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l6dtp                 : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l6utp                 : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l7dtp                 : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l7utp                 : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_pcieepx_pl16g_eq_ctl4567_s cnf95xx; */
+    /* struct cavm_pcieepx_pl16g_eq_ctl4567_cn98xx loki; */
 };
 typedef union cavm_pcieepx_pl16g_eq_ctl4567 cavm_pcieepx_pl16g_eq_ctl4567_t;
 
@@ -19524,6 +19675,7 @@ static inline uint64_t CAVM_PCIEEPX_PL16G_EQ_CTL4567(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_pl16g_eq_ctl891011
  *
  * PCIe RC 16.0 GT/s Lane Equalization Control for Lane 8-11 Register
+ * This register is for debug and diagostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_pl16g_eq_ctl891011
@@ -19551,7 +19703,54 @@ union cavm_pcieepx_pl16g_eq_ctl891011
         uint32_t l11utp                : 4;  /**< [ 31: 28](RO/H) Upstream port 16.0 GT/s transmitter preset 11. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pcieepx_pl16g_eq_ctl891011_s cn; */
+    /* struct cavm_pcieepx_pl16g_eq_ctl891011_s cn9; */
+    /* struct cavm_pcieepx_pl16g_eq_ctl891011_s cn96xxp1; */
+    struct cavm_pcieepx_pl16g_eq_ctl891011_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t l11utp                : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l11dtp                : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l10utp                : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l10dtp                : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l9utp                 : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l9dtp                 : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l8utp                 : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l8dtp                 : 4;  /**< [  3:  0](RO) Reserved. */
+#else /* Word 0 - Little Endian */
+        uint32_t l8dtp                 : 4;  /**< [  3:  0](RO) Reserved. */
+        uint32_t l8utp                 : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l9dtp                 : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l9utp                 : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l10dtp                : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l10utp                : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+        uint32_t l11dtp                : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l11utp                : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    struct cavm_pcieepx_pl16g_eq_ctl891011_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t l11utp                : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l11dtp                : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l10utp                : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l10dtp                : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l9utp                 : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l9dtp                 : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l8utp                 : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l8dtp                 : 4;  /**< [  3:  0](RO) Reserved. */
+#else /* Word 0 - Little Endian */
+        uint32_t l8dtp                 : 4;  /**< [  3:  0](RO) Reserved. */
+        uint32_t l8utp                 : 4;  /**< [  7:  4](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l9dtp                 : 4;  /**< [ 11:  8](RO) Reserved. */
+        uint32_t l9utp                 : 4;  /**< [ 15: 12](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l10dtp                : 4;  /**< [ 19: 16](RO) Reserved. */
+        uint32_t l10utp                : 4;  /**< [ 23: 20](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+        uint32_t l11dtp                : 4;  /**< [ 27: 24](RO) Reserved. */
+        uint32_t l11utp                : 4;  /**< [ 31: 28](RO/H) Captured transmit hint which will be used during GEN3 Phase 0/1 Equalization. */
+#endif /* Word 0 - End */
+    } cn98xx;
+    /* struct cavm_pcieepx_pl16g_eq_ctl891011_s cnf95xx; */
+    /* struct cavm_pcieepx_pl16g_eq_ctl891011_cn98xx loki; */
 };
 typedef union cavm_pcieepx_pl16g_eq_ctl891011 cavm_pcieepx_pl16g_eq_ctl891011_t;
 
@@ -19630,6 +19829,7 @@ static inline uint64_t CAVM_PCIEEPX_PL16G_EXT_CAP_HDR(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_pl16g_fret_dpar_stat
  *
  * PCIe RC 16.0 GT/s First Retimer Data Parity Mismatch Status Register
+ * This register is for debug and diagnostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_pl16g_fret_dpar_stat
@@ -19673,6 +19873,7 @@ static inline uint64_t CAVM_PCIEEPX_PL16G_FRET_DPAR_STAT(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_pl16g_lc_dpar_stat
  *
  * PCIe RC 16.0 GT/s Local Data Parity Mismatch Status Register
+ * This register is for debug and diagnostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_pl16g_lc_dpar_stat
@@ -19716,6 +19917,7 @@ static inline uint64_t CAVM_PCIEEPX_PL16G_LC_DPAR_STAT(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_pl16g_sret_dpar_stat
  *
  * PCIe RC 16.0 GT/s Second Retimer Data Parity Mismatch Status Register
+ * This register is for debug and diagnostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_pl16g_sret_dpar_stat
@@ -29134,6 +29336,7 @@ static inline uint64_t CAVM_PCIEEPX_VPD_DATA(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_vsecst_cap_hdr
  *
  * PCIe EP Vendor Specific Status Capability Header Register
+ * This register is for debug and diagostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_vsecst_cap_hdr
@@ -29185,6 +29388,7 @@ static inline uint64_t CAVM_PCIEEPX_VSECST_CAP_HDR(uint64_t a)
  * Register (PCICONFIGEP) pcieep#_vsecst_ctl
  *
  * PCIe EP Vendor Specific Status Control Register
+ * This register is for debug and diagostics.
  * This register exists for PF0 only.
  */
 union cavm_pcieepx_vsecst_ctl

@@ -45,7 +45,23 @@ union cavm_pnbx_ap_push_arb_wt
         uint64_t reserved_22_63        : 42;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pnbx_ap_push_arb_wt_s cn; */
+    /* struct cavm_pnbx_ap_push_arb_wt_s cn9; */
+    /* struct cavm_pnbx_ap_push_arb_wt_s cnf95xx; */
+    /* struct cavm_pnbx_ap_push_arb_wt_s f95mm; */
+    struct cavm_pnbx_ap_push_arb_wt_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_22_63        : 42;
+        uint64_t hp_wgt                : 6;  /**< [ 21: 16](R/W) Arbitration weight when AP core requests have high priority. */
+        uint64_t reserved_6_15         : 10;
+        uint64_t lp_wgt                : 6;  /**< [  5:  0](R/W) Arbitration weight when AP core requests have low priority. */
+#else /* Word 0 - Little Endian */
+        uint64_t lp_wgt                : 6;  /**< [  5:  0](R/W) Arbitration weight when AP core requests have low priority. */
+        uint64_t reserved_6_15         : 10;
+        uint64_t hp_wgt                : 6;  /**< [ 21: 16](R/W) Arbitration weight when AP core requests have high priority. */
+        uint64_t reserved_22_63        : 42;
+#endif /* Word 0 - End */
+    } loki;
 };
 typedef union cavm_pnbx_ap_push_arb_wt cavm_pnbx_ap_push_arb_wt_t;
 
@@ -238,7 +254,7 @@ static inline uint64_t CAVM_PNBX_ECO_SCRATCH(uint64_t a)
 /**
  * Register (RSL) pnb#_ghab#_pull_arb_wt
  *
- * PNB GHAB Read Pull Arbitration Weight Register
+ * PNB GHAB Pull Arbitration Weight Register
  * This register specifies the arbitration weights used when accepting GHAB
  * requests to system memory. Each GHAB specifies one weight for high
  * priority reads and writes, and one weight for low-priority reads and
@@ -700,8 +716,8 @@ static inline uint64_t CAVM_PNBX_PSM_INB_ARB_WT(uint64_t a)
  *
  * PNB PSM Push Arbitration Weight Register
  * This register specifies the arbitration weight for PSM writes to SMEM
- * (from WRSTS commands). Note that PSM writes always have low priority.
- * All PSM requests are sered by PNB0, and the value in
+ * (from WRMSG and WRSTS commands). Note that PSM writes always have low priority.
+ * All PSM requests are served by PNB0, and the value in
  * PNB(1)_PSM_PUSH_ARB_WT has no significance.
  */
 union cavm_pnbx_psm_push_arb_wt

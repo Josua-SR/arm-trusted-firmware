@@ -22403,21 +22403,36 @@ union cavm_nixx_af_sqm_dbg_ctl_status
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_28_63        : 36;
-        uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Conservatively limits SQE prefetches.
+        uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Sets conservative limits to number of SQEs prefetched by the FE in sticky mode. This feature has no
+                                                                 effect on non-sticky mode behavior.
+
                                                                  Internal:
-                                                                 Bug fix for 37300. */
-        uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enables Sticky Engine use.
+                                                                 This configuration bit defines the number of SQEs read in sticky mode.
+                                                                 0 = Initializes the allowable number of SQE reads to be equal to the SQE data
+                                                                 latency regardless of the MDQ FIFO level allowing theoretically up to 128 + current
+                                                                 MDQ level (when credits are returned) SQEs to be outstanding.
+                                                                 1 = Initializes the allowable number of SQE reads to be equal to the SQE data
+                                                                 latency minus the MDQ Level allowing up to 128 outstanding SQE reads.
+                                                                 This has no effect on non-sticky mode behavior. */
+        uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enable sticky engine to improve NIXTX performance in one-SMQ configurations. */
+        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on first SQE read by the SQE engine.
+                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate.
+
                                                                  Internal:
-                                                                 Performance optimization for one SMQ configurations. */
-        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on SQE reads by engine.
-                                                                 Internal:
-                                                                 Performance optimization that reduced DSE's SQE read miss rate. */
-        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable multi Q to Single Q transition in the engine while in sticky mode.
+                                                                 Setting this feature has the FE issue a locking read to NDC when it prefetches
+                                                                 SQEs for MD generation to PSE. See [TM10] for information about invalidates. */
+        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable a multiple SQ to single SQ configuration transition in the FE while in
+                                                                 sticky mode. This should be disabled.
+
                                                                  Internal:
                                                                  This handles for the corner case where the SMQ linked-list transitions from 2Q
                                                                  to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
-                                                                 details. */
-        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
+                                                                 details.
+                                                                 This CSR should not be set and could in certain cases livelock a FE. */
+        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable re-enqueue.
+                                                                 0 = Allows for the SQs to remain at the head of a SMQ if it had not used up all its
+                                                                 RR Count prior to BP from MDQs.
+                                                                 1 = Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
                                                                  specified by the engine. This sacrifices DWRR fairness in certain cases, but
                                                                  guarantees linked-list correctness for certain dynamic sticky to non-sticky
                                                                  transitions.
@@ -22445,27 +22460,42 @@ union cavm_nixx_af_sqm_dbg_ctl_status
         uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
         uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
         uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
-        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
+        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable re-enqueue.
+                                                                 0 = Allows for the SQs to remain at the head of a SMQ if it had not used up all its
+                                                                 RR Count prior to BP from MDQs.
+                                                                 1 = Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
                                                                  specified by the engine. This sacrifices DWRR fairness in certain cases, but
                                                                  guarantees linked-list correctness for certain dynamic sticky to non-sticky
                                                                  transitions.
 
                                                                  Internal:
                                                                  See bug 36650 for more details. */
-        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable multi Q to Single Q transition in the engine while in sticky mode.
+        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable a multiple SQ to single SQ configuration transition in the FE while in
+                                                                 sticky mode. This should be disabled.
+
                                                                  Internal:
                                                                  This handles for the corner case where the SMQ linked-list transitions from 2Q
                                                                  to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
-                                                                 details. */
-        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on SQE reads by engine.
+                                                                 details.
+                                                                 This CSR should not be set and could in certain cases livelock a FE. */
+        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on first SQE read by the SQE engine.
+                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate.
+
                                                                  Internal:
-                                                                 Performance optimization that reduced DSE's SQE read miss rate. */
-        uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enables Sticky Engine use.
+                                                                 Setting this feature has the FE issue a locking read to NDC when it prefetches
+                                                                 SQEs for MD generation to PSE. See [TM10] for information about invalidates. */
+        uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enable sticky engine to improve NIXTX performance in one-SMQ configurations. */
+        uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Sets conservative limits to number of SQEs prefetched by the FE in sticky mode. This feature has no
+                                                                 effect on non-sticky mode behavior.
+
                                                                  Internal:
-                                                                 Performance optimization for one SMQ configurations. */
-        uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Conservatively limits SQE prefetches.
-                                                                 Internal:
-                                                                 Bug fix for 37300. */
+                                                                 This configuration bit defines the number of SQEs read in sticky mode.
+                                                                 0 = Initializes the allowable number of SQE reads to be equal to the SQE data
+                                                                 latency regardless of the MDQ FIFO level allowing theoretically up to 128 + current
+                                                                 MDQ level (when credits are returned) SQEs to be outstanding.
+                                                                 1 = Initializes the allowable number of SQE reads to be equal to the SQE data
+                                                                 latency minus the MDQ Level allowing up to 128 outstanding SQE reads.
+                                                                 This has no effect on non-sticky mode behavior. */
         uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } s;
@@ -22500,15 +22530,24 @@ union cavm_nixx_af_sqm_dbg_ctl_status
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_26_63        : 38;
-        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on SQE reads by engine.
+        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on first SQE read by the SQE engine.
+                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate.
+
                                                                  Internal:
-                                                                 Performance optimization that reduced DSE's SQE read miss rate. */
-        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable multi Q to Single Q transition in the engine while in sticky mode.
+                                                                 Setting this feature has the FE issue a locking read to NDC when it prefetches
+                                                                 SQEs for MD generation to PSE. See [TM10] for information about invalidates. */
+        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable a multiple SQ to single SQ configuration transition in the FE while in
+                                                                 sticky mode. This should be disabled.
+
                                                                  Internal:
                                                                  This handles for the corner case where the SMQ linked-list transitions from 2Q
                                                                  to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
-                                                                 details. */
-        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
+                                                                 details.
+                                                                 This CSR should not be set and could in certain cases livelock a FE. */
+        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable re-enqueue.
+                                                                 0 = Allows for the SQs to remain at the head of a SMQ if it had not used up all its
+                                                                 RR Count prior to BP from MDQs.
+                                                                 1 = Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
                                                                  specified by the engine. This sacrifices DWRR fairness in certain cases, but
                                                                  guarantees linked-list correctness for certain dynamic sticky to non-sticky
                                                                  transitions.
@@ -22516,41 +22555,120 @@ union cavm_nixx_af_sqm_dbg_ctl_status
                                                                  Internal:
                                                                  See bug 36650 for more details. */
         uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
-        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
-        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset. */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
-        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
+        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Force NIXTX clocks on.
+                                                                 0 = NIXTX uses conditional clocking.
+                                                                 1 = NIXTX keeps clocks on always.
+
+                                                                 Internal:
+                                                                 Statically drives the keep on event for conditional clocking in NIXTX.
+                                                                 As of now, should be set to [1] to avoid bug 38423. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior.
+                                                                 Internal:
+                                                                 0 = FEs update the SQ Context for each meta-descriptor. Writeback is
+                                                                 issued after writing the last meta-descriptor for the SQ.
+                                                                 1 = FEs update and writeback the SQ Context for each meta-descriptor. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior.
+                                                                 Internal:
+                                                                 Defines the number of cycles to wait before issuing a SQ Context refetch in the FE.
+                                                                 This is used to control the time it takes for the FE to identify a SQ cannot make forward progress
+                                                                 specifically in the multiple SQ Sticky Mode configuration. */
+        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable engine 1-7 sticky mode.
+                                                                 0 = Disables flow engines 1-7 from using the sticky mode configuration.
+                                                                 1 = Enable flow engines 1-7 to be set into sticky mode.
+
+                                                                 For CNXXXX, this should be set to 0 as defaulted. If the use of a sticky mode
+                                                                 configuration is desired for one SMQ performance, refer to TM14.  TM14 is
+                                                                 independent of [TM6]. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature.
+                                                                 Internal:
+                                                                 Currently there are no configurations for which this feature should be enabled. Behavior with
+                                                                 this enabled is undefined. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled.
+                                                                 Internal:
+                                                                 This feature seems to primarily have value for diagnostic use. The expected
+                                                                 resulting behavior would be to have FEs operating on a SMQ with multiple SQs
+                                                                 to only operate on a single SQ per arbitration cycle. Sending pattern of the
+                                                                 single SQ would be limited to the lesser of its RR Count and available number
+                                                                 of SQEs. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior.
+                                                                 Internal:
+                                                                 This value defines the maximum number of SQEs fetched by a Flow Engine in a single SQ sticky mode
+                                                                 configuration prior to a SQ context refetch being triggered. The value is calculated as 2^(TM3) * 8
+                                                                 which by default is 64 SQE fetches by the FE. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved.
+                                                                 Internal:
+                                                                 Bit does not exist in design. */
+        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Flow engine enable bits. Each bit enables one of the eight flow engines in SQM. */
 #else /* Word 0 - Little Endian */
-        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset. */
-        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
-        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
+        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Flow engine enable bits. Each bit enables one of the eight flow engines in SQM. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved.
+                                                                 Internal:
+                                                                 Bit does not exist in design. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior.
+                                                                 Internal:
+                                                                 This value defines the maximum number of SQEs fetched by a Flow Engine in a single SQ sticky mode
+                                                                 configuration prior to a SQ context refetch being triggered. The value is calculated as 2^(TM3) * 8
+                                                                 which by default is 64 SQE fetches by the FE. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled.
+                                                                 Internal:
+                                                                 This feature seems to primarily have value for diagnostic use. The expected
+                                                                 resulting behavior would be to have FEs operating on a SMQ with multiple SQs
+                                                                 to only operate on a single SQ per arbitration cycle. Sending pattern of the
+                                                                 single SQ would be limited to the lesser of its RR Count and available number
+                                                                 of SQEs. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature.
+                                                                 Internal:
+                                                                 Currently there are no configurations for which this feature should be enabled. Behavior with
+                                                                 this enabled is undefined. */
+        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable engine 1-7 sticky mode.
+                                                                 0 = Disables flow engines 1-7 from using the sticky mode configuration.
+                                                                 1 = Enable flow engines 1-7 to be set into sticky mode.
+
+                                                                 For CNXXXX, this should be set to 0 as defaulted. If the use of a sticky mode
+                                                                 configuration is desired for one SMQ performance, refer to TM14.  TM14 is
+                                                                 independent of [TM6]. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior.
+                                                                 Internal:
+                                                                 Defines the number of cycles to wait before issuing a SQ Context refetch in the FE.
+                                                                 This is used to control the time it takes for the FE to identify a SQ cannot make forward progress
+                                                                 specifically in the multiple SQ Sticky Mode configuration. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior.
+                                                                 Internal:
+                                                                 0 = FEs update the SQ Context for each meta-descriptor. Writeback is
+                                                                 issued after writing the last meta-descriptor for the SQ.
+                                                                 1 = FEs update and writeback the SQ Context for each meta-descriptor. */
+        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Force NIXTX clocks on.
+                                                                 0 = NIXTX uses conditional clocking.
+                                                                 1 = NIXTX keeps clocks on always.
+
+                                                                 Internal:
+                                                                 Statically drives the keep on event for conditional clocking in NIXTX.
+                                                                 As of now, should be set to [1] to avoid bug 38423. */
         uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
-        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
+        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable re-enqueue.
+                                                                 0 = Allows for the SQs to remain at the head of a SMQ if it had not used up all its
+                                                                 RR Count prior to BP from MDQs.
+                                                                 1 = Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
                                                                  specified by the engine. This sacrifices DWRR fairness in certain cases, but
                                                                  guarantees linked-list correctness for certain dynamic sticky to non-sticky
                                                                  transitions.
 
                                                                  Internal:
                                                                  See bug 36650 for more details. */
-        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable multi Q to Single Q transition in the engine while in sticky mode.
+        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable a multiple SQ to single SQ configuration transition in the FE while in
+                                                                 sticky mode. This should be disabled.
+
                                                                  Internal:
                                                                  This handles for the corner case where the SMQ linked-list transitions from 2Q
                                                                  to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
-                                                                 details. */
-        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on SQE reads by engine.
+                                                                 details.
+                                                                 This CSR should not be set and could in certain cases livelock a FE. */
+        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on first SQE read by the SQE engine.
+                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate.
+
                                                                  Internal:
-                                                                 Performance optimization that reduced DSE's SQE read miss rate. */
+                                                                 Setting this feature has the FE issue a locking read to NDC when it prefetches
+                                                                 SQEs for MD generation to PSE. See [TM10] for information about invalidates. */
         uint64_t reserved_26_63        : 38;
 #endif /* Word 0 - End */
     } cn96xxp3;
@@ -22558,21 +22676,36 @@ union cavm_nixx_af_sqm_dbg_ctl_status
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_28_63        : 36;
-        uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Conservatively limits SQE prefetches.
+        uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Sets conservative limits to number of SQEs prefetched by the FE in sticky mode. This feature has no
+                                                                 effect on non-sticky mode behavior.
+
                                                                  Internal:
-                                                                 Bug fix for 37300. */
-        uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enables Sticky Engine use.
+                                                                 This configuration bit defines the number of SQEs read in sticky mode.
+                                                                 0 = Initializes the allowable number of SQE reads to be equal to the SQE data
+                                                                 latency regardless of the MDQ FIFO level allowing theoretically up to 128 + current
+                                                                 MDQ level (when credits are returned) SQEs to be outstanding.
+                                                                 1 = Initializes the allowable number of SQE reads to be equal to the SQE data
+                                                                 latency minus the MDQ Level allowing up to 128 outstanding SQE reads.
+                                                                 This has no effect on non-sticky mode behavior. */
+        uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enable sticky engine to improve NIXTX performance in one-SMQ configurations. */
+        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on first SQE read by the SQE engine.
+                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate.
+
                                                                  Internal:
-                                                                 Performance optimization for one SMQ configurations. */
-        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on SQE reads by engine.
-                                                                 Internal:
-                                                                 Performance optimization that reduced DSE's SQE read miss rate. */
-        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable multi Q to Single Q transition in the engine while in sticky mode.
+                                                                 Setting this feature has the FE issue a locking read to NDC when it prefetches
+                                                                 SQEs for MD generation to PSE. See [TM10] for information about invalidates. */
+        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable a multiple SQ to single SQ configuration transition in the FE while in
+                                                                 sticky mode. This should be disabled.
+
                                                                  Internal:
                                                                  This handles for the corner case where the SMQ linked-list transitions from 2Q
                                                                  to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
-                                                                 details. */
-        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
+                                                                 details.
+                                                                 This CSR should not be set and could in certain cases livelock a FE. */
+        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable re-enqueue.
+                                                                 0 = Allows for the SQs to remain at the head of a SMQ if it had not used up all its
+                                                                 RR Count prior to BP from MDQs.
+                                                                 1 = Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
                                                                  specified by the engine. This sacrifices DWRR fairness in certain cases, but
                                                                  guarantees linked-list correctness for certain dynamic sticky to non-sticky
                                                                  transitions.
@@ -22580,47 +22713,132 @@ union cavm_nixx_af_sqm_dbg_ctl_status
                                                                  Internal:
                                                                  See bug 36650 for more details. */
         uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
-        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
-        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset. */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
-        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
+        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Force NIXTX clocks on.
+                                                                 0 = NIXTX uses conditional clocking.
+                                                                 1 = NIXTX keeps clocks on always.
+
+                                                                 Internal:
+                                                                 Statically drives the keep on event for conditional clocking in NIXTX.
+                                                                 As of now, should be set to [1] to avoid bug 38423. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior.
+                                                                 Internal:
+                                                                 0 = FEs update the SQ Context for each meta-descriptor. Writeback is
+                                                                 issued after writing the last meta-descriptor for the SQ.
+                                                                 1 = FEs update and writeback the SQ Context for each meta-descriptor. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior.
+                                                                 Internal:
+                                                                 Defines the number of cycles to wait before issuing a SQ Context refetch in the FE.
+                                                                 This is used to control the time it takes for the FE to identify a SQ cannot make forward progress
+                                                                 specifically in the multiple SQ Sticky Mode configuration. */
+        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable engine 1-7 sticky mode.
+                                                                 0 = Disables flow engines 1-7 from using the sticky mode configuration.
+                                                                 1 = Enable flow engines 1-7 to be set into sticky mode.
+
+                                                                 For CNXXXX, this should be set to 0 as defaulted. If the use of a sticky
+                                                                 mode configuration is desired for one SMQ performance, refer to TM14.
+                                                                 TM14 is independent of [TM6]. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature.
+                                                                 Internal:
+                                                                 Currently there are no configurations for which this feature should be enabled. Behavior with
+                                                                 this enabled is undefined. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled.
+                                                                 Internal:
+                                                                 This feature seems to primarily have value for diagnostic use. The expected
+                                                                 resulting behavior would be to have FEs operating on a SMQ with multiple SQs
+                                                                 to only operate on a single SQ per arbitration cycle. Sending pattern of the
+                                                                 single SQ would be limited to the lesser of its RR Count and available number
+                                                                 of SQEs. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior.
+                                                                 Internal:
+                                                                 This value defines the maximum number of SQEs fetched by a Flow Engine in a single SQ sticky mode
+                                                                 configuration prior to a SQ context refetch being triggered. The value is calculated as 2^(TM3) * 8
+                                                                 which by default is 64 SQE fetches by the FE. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved.
+                                                                 Internal:
+                                                                 Bit does not exist in design. */
+        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Flow engine enable bits. Each bit enables one of the eight flow engines in SQM. */
 #else /* Word 0 - Little Endian */
-        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset. */
-        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
-        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
+        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Flow engine enable bits. Each bit enables one of the eight flow engines in SQM. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved.
+                                                                 Internal:
+                                                                 Bit does not exist in design. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior.
+                                                                 Internal:
+                                                                 This value defines the maximum number of SQEs fetched by a Flow Engine in a single SQ sticky mode
+                                                                 configuration prior to a SQ context refetch being triggered. The value is calculated as 2^(TM3) * 8
+                                                                 which by default is 64 SQE fetches by the FE. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled.
+                                                                 Internal:
+                                                                 This feature seems to primarily have value for diagnostic use. The expected
+                                                                 resulting behavior would be to have FEs operating on a SMQ with multiple SQs
+                                                                 to only operate on a single SQ per arbitration cycle. Sending pattern of the
+                                                                 single SQ would be limited to the lesser of its RR Count and available number
+                                                                 of SQEs. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature.
+                                                                 Internal:
+                                                                 Currently there are no configurations for which this feature should be enabled. Behavior with
+                                                                 this enabled is undefined. */
+        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable engine 1-7 sticky mode.
+                                                                 0 = Disables flow engines 1-7 from using the sticky mode configuration.
+                                                                 1 = Enable flow engines 1-7 to be set into sticky mode.
+
+                                                                 For CNXXXX, this should be set to 0 as defaulted. If the use of a sticky
+                                                                 mode configuration is desired for one SMQ performance, refer to TM14.
+                                                                 TM14 is independent of [TM6]. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior.
+                                                                 Internal:
+                                                                 Defines the number of cycles to wait before issuing a SQ Context refetch in the FE.
+                                                                 This is used to control the time it takes for the FE to identify a SQ cannot make forward progress
+                                                                 specifically in the multiple SQ Sticky Mode configuration. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior.
+                                                                 Internal:
+                                                                 0 = FEs update the SQ Context for each meta-descriptor. Writeback is
+                                                                 issued after writing the last meta-descriptor for the SQ.
+                                                                 1 = FEs update and writeback the SQ Context for each meta-descriptor. */
+        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Force NIXTX clocks on.
+                                                                 0 = NIXTX uses conditional clocking.
+                                                                 1 = NIXTX keeps clocks on always.
+
+                                                                 Internal:
+                                                                 Statically drives the keep on event for conditional clocking in NIXTX.
+                                                                 As of now, should be set to [1] to avoid bug 38423. */
         uint64_t tm10                  : 1;  /**< [ 22: 22](R/W) Enable DSE SQE RD invalidates to NDC. */
-        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
+        uint64_t tm11                  : 1;  /**< [ 23: 23](R/W) Disable re-enqueue.
+                                                                 0 = Allows for the SQs to remain at the head of a SMQ if it had not used up all its
+                                                                 RR Count prior to BP from MDQs.
+                                                                 1 = Disable the parser from issuing a NO_ERR_POS_DWRR_E re-enqueue command unless
                                                                  specified by the engine. This sacrifices DWRR fairness in certain cases, but
                                                                  guarantees linked-list correctness for certain dynamic sticky to non-sticky
                                                                  transitions.
 
                                                                  Internal:
                                                                  See bug 36650 for more details. */
-        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable multi Q to Single Q transition in the engine while in sticky mode.
+        uint64_t tm12                  : 1;  /**< [ 24: 24](R/W) Enable a multiple SQ to single SQ configuration transition in the FE while in
+                                                                 sticky mode. This should be disabled.
+
                                                                  Internal:
                                                                  This handles for the corner case where the SMQ linked-list transitions from 2Q
                                                                  to 1Q, while the engine is in sticky mode. See bug 36601 message 24 for more
-                                                                 details. */
-        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on SQE reads by engine.
+                                                                 details.
+                                                                 This CSR should not be set and could in certain cases livelock a FE. */
+        uint64_t tm13                  : 1;  /**< [ 25: 25](R/W) Enable locking on first SQE read by the SQE engine.
+                                                                 This is a performance optimization that may reduce DSE's SQE read miss rate.
+
                                                                  Internal:
-                                                                 Performance optimization that reduced DSE's SQE read miss rate. */
-        uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enables Sticky Engine use.
+                                                                 Setting this feature has the FE issue a locking read to NDC when it prefetches
+                                                                 SQEs for MD generation to PSE. See [TM10] for information about invalidates. */
+        uint64_t tm14                  : 1;  /**< [ 26: 26](R/W) Enable sticky engine to improve NIXTX performance in one-SMQ configurations. */
+        uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Sets conservative limits to number of SQEs prefetched by the FE in sticky mode. This feature has no
+                                                                 effect on non-sticky mode behavior.
+
                                                                  Internal:
-                                                                 Performance optimization for one SMQ configurations. */
-        uint64_t tm15                  : 1;  /**< [ 27: 27](R/W) Conservatively limits SQE prefetches.
-                                                                 Internal:
-                                                                 Bug fix for 37300. */
+                                                                 This configuration bit defines the number of SQEs read in sticky mode.
+                                                                 0 = Initializes the allowable number of SQE reads to be equal to the SQE data
+                                                                 latency regardless of the MDQ FIFO level allowing theoretically up to 128 + current
+                                                                 MDQ level (when credits are returned) SQEs to be outstanding.
+                                                                 1 = Initializes the allowable number of SQE reads to be equal to the SQE data
+                                                                 latency minus the MDQ Level allowing up to 128 outstanding SQE reads.
+                                                                 This has no effect on non-sticky mode behavior. */
         uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } cn98xx;
@@ -22633,25 +22851,95 @@ union cavm_nixx_af_sqm_dbg_ctl_status
         uint64_t reserved_24           : 1;
         uint64_t reserved_23           : 1;
         uint64_t reserved_22           : 1;
-        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
-        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset. */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
-        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
+        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Force NIXTX clocks on.
+                                                                 0 = NIXTX uses conditional clocking.
+                                                                 1 = NIXTX keeps clocks on always.
+
+                                                                 Internal:
+                                                                 Statically drives the keep on event for conditional clocking in NIXTX.
+                                                                 As of now, should be set to [1] to avoid bug 38423. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior.
+                                                                 Internal:
+                                                                 0 = FEs update the SQ Context for each meta-descriptor. Writeback is
+                                                                 issued after writing the last meta-descriptor for the SQ.
+                                                                 1 = FEs update and writeback the SQ Context for each meta-descriptor. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior.
+                                                                 Internal:
+                                                                 Defines the number of cycles to wait before issuing a SQ Context refetch in the FE.
+                                                                 This is used to control the time it takes for the FE to identify a SQ cannot make forward progress
+                                                                 specifically in the multiple SQ Sticky Mode configuration. */
+        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable engine 1-7 sticky mode.
+                                                                 0 = Disables flow engines 1-7 from using the sticky mode configuration.
+                                                                 1 = Enable flow engines 1-7 to be set into sticky mode.
+
+                                                                 For CNXXXX, this should be set to 0 as defaulted. If the use of a sticky mode
+                                                                 configuration is desired for one SMQ performance, refer to TM14.  TM14 is
+                                                                 independent of [TM6]. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature.
+                                                                 Internal:
+                                                                 Currently there are no configurations for which this feature should be enabled. Behavior with
+                                                                 this enabled is undefined. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled.
+                                                                 Internal:
+                                                                 This feature seems to primarily have value for diagnostic use. The expected
+                                                                 resulting behavior would be to have FEs operating on a SMQ with multiple SQs
+                                                                 to only operate on a single SQ per arbitration cycle. Sending pattern of the
+                                                                 single SQ would be limited to the lesser of its RR Count and available number
+                                                                 of SQEs. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior.
+                                                                 Internal:
+                                                                 This value defines the maximum number of SQEs fetched by a Flow Engine in a single SQ sticky mode
+                                                                 configuration prior to a SQ context refetch being triggered. The value is calculated as 2^(TM3) * 8
+                                                                 which by default is 64 SQE fetches by the FE. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved.
+                                                                 Internal:
+                                                                 Bit does not exist in design. */
+        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Flow engine enable bits. Each bit enables one of the eight flow engines in SQM. */
 #else /* Word 0 - Little Endian */
-        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Control flow engines. */
-        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Control arb. */
-        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Control single-q refetch delay. */
-        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Control multi-q op. */
-        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enable sticky mode unset. */
-        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable sticky mode across all flows. */
-        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Control multi-q refetch delay. */
-        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Control DQ context writes. */
-        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Control flow clk. */
+        uint64_t tm1                   : 8;  /**< [  7:  0](R/W) Flow engine enable bits. Each bit enables one of the eight flow engines in SQM. */
+        uint64_t tm2                   : 1;  /**< [  8:  8](R/W) Reserved.
+                                                                 Internal:
+                                                                 Bit does not exist in design. */
+        uint64_t tm3                   : 4;  /**< [ 12:  9](R/W) Controls FE single-Q Sticky Mode SQC refetch behavior.
+                                                                 Internal:
+                                                                 This value defines the maximum number of SQEs fetched by a Flow Engine in a single SQ sticky mode
+                                                                 configuration prior to a SQ context refetch being triggered. The value is calculated as 2^(TM3) * 8
+                                                                 which by default is 64 SQE fetches by the FE. */
+        uint64_t tm4                   : 1;  /**< [ 13: 13](R/W) Limits FE to operating on a single SQ per cycle. By default, this should be disabled.
+                                                                 Internal:
+                                                                 This feature seems to primarily have value for diagnostic use. The expected
+                                                                 resulting behavior would be to have FEs operating on a SMQ with multiple SQs
+                                                                 to only operate on a single SQ per arbitration cycle. Sending pattern of the
+                                                                 single SQ would be limited to the lesser of its RR Count and available number
+                                                                 of SQEs. */
+        uint64_t tm5                   : 1;  /**< [ 14: 14](R/W) Enables the sticky mode unset feature.
+                                                                 Internal:
+                                                                 Currently there are no configurations for which this feature should be enabled. Behavior with
+                                                                 this enabled is undefined. */
+        uint64_t tm6                   : 1;  /**< [ 15: 15](R/W) Enable engine 1-7 sticky mode.
+                                                                 0 = Disables flow engines 1-7 from using the sticky mode configuration.
+                                                                 1 = Enable flow engines 1-7 to be set into sticky mode.
+
+                                                                 For CNXXXX, this should be set to 0 as defaulted. If the use of a sticky mode
+                                                                 configuration is desired for one SMQ performance, refer to TM14.  TM14 is
+                                                                 independent of [TM6]. */
+        uint64_t tm7                   : 4;  /**< [ 19: 16](R/W) Controls FE SQ Context Refetch Behavior.
+                                                                 Internal:
+                                                                 Defines the number of cycles to wait before issuing a SQ Context refetch in the FE.
+                                                                 This is used to control the time it takes for the FE to identify a SQ cannot make forward progress
+                                                                 specifically in the multiple SQ Sticky Mode configuration. */
+        uint64_t tm8                   : 1;  /**< [ 20: 20](R/W) Controls FE context writeback behavior.
+                                                                 Internal:
+                                                                 0 = FEs update the SQ Context for each meta-descriptor. Writeback is
+                                                                 issued after writing the last meta-descriptor for the SQ.
+                                                                 1 = FEs update and writeback the SQ Context for each meta-descriptor. */
+        uint64_t tm9                   : 1;  /**< [ 21: 21](R/W) Force NIXTX clocks on.
+                                                                 0 = NIXTX uses conditional clocking.
+                                                                 1 = NIXTX keeps clocks on always.
+
+                                                                 Internal:
+                                                                 Statically drives the keep on event for conditional clocking in NIXTX.
+                                                                 As of now, should be set to [1] to avoid bug 38423. */
         uint64_t reserved_22           : 1;
         uint64_t reserved_23           : 1;
         uint64_t reserved_24           : 1;

@@ -773,7 +773,7 @@ static inline uint64_t CAVM_ECAMX_DOMX_DEVX_PERMIT(uint64_t a, uint64_t b, uint6
  * ECAM_CFG_ADDR_S[DOMAIN]).  Only index zero should be used (the domain the RSL bus is
  * on).
  *
- * Index {c} corresponds to the RSL device number (address's ECAM_CFG_ADDR_S[FUNC]).
+ * Index {c} corresponds to the RSL device's PCC_DEV_CON_E\<7:0\> value.
  */
 union cavm_ecamx_domx_rslx_permit
 {
