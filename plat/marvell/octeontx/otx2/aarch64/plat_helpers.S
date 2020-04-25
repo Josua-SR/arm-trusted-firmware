@@ -31,6 +31,11 @@ endfunc plat_my_core_pos
 
 /* Main entry point for Cavium-specific trapping mechanism */
 func octeontx_io_trap_handler
+	/* Reload parameters */
+	ldp     x0, x1, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X0]
+	ldp     x2, x3, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X2]
+	ldp     x4, x5, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X4]
+
 	/*
 	 * Save general purpose and ARMv8.3-PAuth registers (if enabled).
 	 * If Secure Cycle Counter is not disabled in MDCR_EL3 when
