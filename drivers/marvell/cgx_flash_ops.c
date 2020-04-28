@@ -55,22 +55,24 @@ static void cgx_fdt_get_spi_bus_cs(int *bus, int *cs)
 	node = fdt_node_offset_by_compatible(fdt, -1, "spi-flash");
 	while (node > 0) {
 		if (fdt_getprop(fdt, node, "u-boot,env", NULL)) {
-			reg = fdt_getprop(fdt, node, "reg", NULL);
-			if (reg)
-				*cs = fdt32_to_cpu(*reg);
-			preg = fdt_getprop(fdt, fdt_parent_offset(fdt, node),
-					  "reg", NULL);
-			if (preg) {
-				addr = fdt32_to_cpu(*preg);
-				/* SPI node will have PCI addr, so map it */
-				if (addr == 0x3000)
-					*bus = 0;
-				if (addr == 0x3800)
-					*bus = 1;
+			if (!fdt_getprop(fdt, node, "atf,ignore_persistent", NULL)) {
+				reg = fdt_getprop(fdt, node, "reg", NULL);
+				if (reg)
+					*cs = fdt32_to_cpu(*reg);
+				preg = fdt_getprop(fdt, fdt_parent_offset(fdt, node),
+						"reg", NULL);
+				if (preg) {
+					addr = fdt32_to_cpu(*preg);
+					/* SPI node will have PCI addr, so map it */
+					if (addr == 0x3000)
+						*bus = 0;
+					if (addr == 0x3800)
+						*bus = 1;
+				}
+				debug_cgx_flash("\n Env SPI [bus:cs] [%d:%d]\n",
+						*bus, *cs);
+				break;
 			}
-			debug_cgx_flash("\n Env SPI [bus:cs] [%d:%d]\n",
-					*bus, *cs);
-			break;
 		}
 		node = fdt_node_offset_by_compatible(fdt, node, "spi-flash");
 	}
