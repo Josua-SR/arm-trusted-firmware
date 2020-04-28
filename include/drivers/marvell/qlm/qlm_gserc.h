@@ -79,7 +79,7 @@ int qlm_gserc_reset(int qlm);
  *
  * @return Zero on success, negative on failure
  */
-int qlm_gserc_enable_prbs(int qlm, int prbs, qlm_direction_t dir);
+int qlm_gserc_enable_prbs(int qlm, int prbs, qlm_direction_t dir, int qlm_lane);
 
 /**
  * Disable PRBS on a QLM
@@ -88,7 +88,7 @@ int qlm_gserc_enable_prbs(int qlm, int prbs, qlm_direction_t dir);
  *
  * @return Zero on success, negative on failure
  */
-int qlm_gserc_disable_prbs(int qlm);
+int qlm_gserc_disable_prbs(int qlm, int qlm_lane);
 
 /**
  * Return the number of PRBS errors since PRBS started running

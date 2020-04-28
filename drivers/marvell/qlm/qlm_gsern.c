@@ -247,7 +247,7 @@ static void extract_tx_tuning(cavm_gsernx_lanex_tx_drv_bsts_t tx_drv_bsts, int *
  *
  * @return Zero on success, negative on failure
  */
-int qlm_enable_prbs_gsern(int qlm, int prbs, qlm_direction_t dir)
+int qlm_enable_prbs_gsern(int qlm, int prbs, qlm_direction_t dir, int qlm_lane)
 {
 	bool enable_tx = ((dir & QLM_DIRECTION_TX) != 0);
 	bool enable_rx = ((dir & QLM_DIRECTION_RX) != 0);
@@ -287,6 +287,8 @@ int qlm_enable_prbs_gsern(int qlm, int prbs, qlm_direction_t dir)
 	int is_pattern = (prbs_type == -1);
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
+		if ((qlm_lane != -1) && (qlm_lane != lane))
+			continue;
 		/* PRBS polarity is inverted internally. Need to invert the current polarity */
 		GSER_CSR_INIT(lt_bcfg, CAVM_GSERNX_LANEX_LT_BCFG(qlm, lane));
 		if (enable_rx)
@@ -395,11 +397,13 @@ int qlm_enable_prbs_gsern(int qlm, int prbs, qlm_direction_t dir)
  *
  * @return Zero on success, negative on failure
  */
-int qlm_disable_prbs_gsern(int qlm)
+int qlm_disable_prbs_gsern(int qlm, int qlm_lane)
 {
 	int num_lanes = qlm_get_lanes(qlm);
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
+		if ((qlm_lane != -1) && (qlm_lane != lane))
+			continue;
 		GSER_CSR_MODIFY(c, CAVM_GSERNX_LANEX_PAT_CTRL(qlm, lane),
 			c.s.tx_rst_n = 0;
 			c.s.rx_rst_n = 0;

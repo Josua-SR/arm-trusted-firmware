@@ -339,7 +339,7 @@ int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data);
  * Meaning of x3 argument depends on cmd. Look for
  * PLAT_OCTEONTX_SERDES_DBG_PRBS smc description.
  */
-int cgx_smc_do_prbs(int cmd, int qlm, int x3);
+int cgx_smc_do_prbs(int cmd, int qlm, int x3, int x4);
 
 /* plat APIs specific to Octeon TX2 family */
 int plat_get_cgx_idx(int qlm);

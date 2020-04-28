@@ -317,7 +317,7 @@ int qlm_gserc_reset(int qlm)
  *
  * @return Zero on success, negative on failure
  */
-int qlm_gserc_enable_prbs(int qlm, int prbs, qlm_direction_t dir)
+int qlm_gserc_enable_prbs(int qlm, int prbs, qlm_direction_t dir, int qlm_lane)
 {
 	int pattern = 1;
 	switch (prbs)
@@ -345,6 +345,8 @@ int qlm_gserc_enable_prbs(int qlm, int prbs, qlm_direction_t dir)
 	int num_lanes = get_num_lanes(qlm);
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
+		if ((qlm_lane != -1) && (qlm_lane != lane))
+			continue;
 		if (dir & QLM_DIRECTION_TX)
 		{
 			/* No error injection */
@@ -398,11 +400,13 @@ int qlm_gserc_enable_prbs(int qlm, int prbs, qlm_direction_t dir)
  *
  * @return Zero on success, negative on failure
  */
-int qlm_gserc_disable_prbs(int qlm)
+int qlm_gserc_disable_prbs(int qlm, int qlm_lane)
 {
 	int num_lanes = get_num_lanes(qlm);
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
+		if ((qlm_lane != -1) && (qlm_lane != lane))
+			continue;
 		/* Stop receive */
 		GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_BIST_RX_CTRL(qlm, lane),
 			c.s.stop_error_count = 1;

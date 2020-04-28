@@ -217,8 +217,8 @@ typedef struct {
 			qlm_mode_flags_t flags);
 	int (*qlm_measure_refclock)(int qlm);
 	int (*qlm_reset)(int qlm);
-	int (*qlm_enable_prbs)(int qlm, int prbs, qlm_direction_t dir);
-	int (*qlm_disable_prbs)(int qlm);
+	int (*qlm_enable_prbs)(int qlm, int prbs, qlm_direction_t dir, int lane);
+	int (*qlm_disable_prbs)(int qlm, int lane);
 	uint64_t (*qlm_get_prbs_errors)(int qlm, int lane, int clear);
 	void (*qlm_inject_prbs_error)(int qlm, int lane);
 	int (*qlm_enable_loop)(int qlm, qlm_loop_t loop);

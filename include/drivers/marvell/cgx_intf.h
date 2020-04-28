@@ -446,10 +446,11 @@ struct cgx_mac_addr_args {
 /* command argument to be passed for cmd ID - CGX_CMD_PRBS */
 struct cgx_prbs_args {
 	uint64_t reserved1:8; /* start from bit 8 */
+	uint64_t lane:8;
 	uint64_t qlm:8;
 	uint64_t stop_on_error:1;
 	uint64_t mode:8;
-	uint64_t time:39;
+	uint64_t time:31;
 };
 
 /* command argument to be passed for cmd ID - CGX_CMD_DISPLAY_EYE or
