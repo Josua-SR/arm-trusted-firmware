@@ -108,6 +108,7 @@ enum cgx_cmd_id {
 	CGX_CMD_SET_PTP_MODE,
 	CGX_CMD_CPRI_MODE_CHANGE,	/* = 35 */
 	CGX_CMD_CPRI_TX_CONTROL,
+	CGX_CMD_LOOP_SERDES,
 };
 
 /* async event ids */
@@ -463,6 +464,24 @@ struct cgx_display_args {
 };
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 
+/* Resp to cmd ID - CGX_CMD_SERDES_LOOP
+ * flags : 2 bits
+ * typedef enum {
+ *     QLM_LOOP_DISABLED,
+ *     // Loop external data RX->TX
+ *     QLM_LOOP_SHALLOW,
+ *     // Loop internal data TX->RX in analog domain
+ *     QLM_LOOP_NEAR_END,
+ *     //Loop internal data TX->RX in digital domain
+ *     QLM_LOOP_CORE,
+ * } qlm_loop_t;
+ */
+struct cgx_gser_loop {
+	uint64_t reserved1:8;
+	uint64_t flags:2;
+	uint64_t reserved2:53;
+};
+
 union cgx_cmd_s {
 	uint64_t own_status:2;			/* cgx_cmd_own */
 	struct cgx_cmd cmd;
@@ -483,6 +502,7 @@ union cgx_cmd_s {
 	struct cgx_display_args dsp_eye_args;
 	struct cgx_display_args dsp_serdes_args;
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
+	struct cgx_gser_loop gser_loop;
 };
 
 union cgx_scratchx1 {

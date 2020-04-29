@@ -2040,6 +2040,7 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 		(request_id == CGX_CMD_DISPLAY_EYE) ||
 		(request_id == CGX_CMD_DISPLAY_SERDES) ||
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
+		(request_id == CGX_CMD_LOOP_SERDES) ||
 		(request_id == CGX_CMD_GET_FW_VER)) {
 		switch (request_id) {
 		case CGX_CMD_INTF_SHUTDOWN:
@@ -2115,6 +2116,10 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 				1 /* = show_data */);
 			break;
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
+		case CGX_CMD_LOOP_SERDES:
+			cgx_set_serdes_loop(cgx_id, lmac_id,
+				 scratchx1.s.gser_loop.flags);
+			break;
 		}
 	} else {
 		/* all the below commands should be processed only

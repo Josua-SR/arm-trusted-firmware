@@ -3788,3 +3788,36 @@ int cgx_get_lane_count(int lmac_type)
 
 	return table[lmac_type];
 }
+
+/* Configure Rambus serdes in NED (Near End Digital) loopback mode */
+void cgx_set_serdes_loop(int cgx_id, int lmac_id, int type)
+{
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		return;
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+
+	/* serdes loopback is not allowed for KR interfaces */
+	if (!lmac->autoneg_dis) {
+		WARN("%d:%d serdes loopback not allowed on KR interfaces\n",
+			cgx_id, lmac_id);
+		return;
+	}
+
+	/* For now allowing only near end digital loopback */
+	if (type == QLM_LOOP_DISABLED) {
+		WARN("%d:%d: Invalid parameter\n", cgx_id, lmac_id);
+		return;
+	}
+
+	/* Assuming NED is requested for GSERR configured to 10G/25G speed
+	   GSERC is configured at higher speeds */
+	cgx->qlm_ops->qlm_enable_loop(lmac->gserx + lmac->shift_from_first, type);
+}

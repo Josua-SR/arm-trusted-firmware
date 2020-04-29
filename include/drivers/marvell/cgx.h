@@ -345,5 +345,6 @@ int cgx_smc_do_prbs(int cmd, int qlm, int x3, int x4);
 int plat_get_cgx_idx(int qlm);
 
 int cgx_set_ptp_mode(int cgx_id, int lmac_id, int enable);
+void cgx_set_serdes_loop(int cgx_id, int lmac_id, int type);
 
 #endif
