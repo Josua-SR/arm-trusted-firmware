@@ -10,6 +10,7 @@
 #include <bl_common.h>
 #include <cpu_macros.S>
 #include <plat_macros.S>
+#include <context.h>
 
 #define OCTEONTX2_CN98XX_MIDR		0x430F0B10
 #define OCTEONTX2_CN96XX_MIDR		0x430F0B20
@@ -70,6 +71,48 @@ func octeontx2_exception_handler
 	ret
 endfunc octeontx2_exception_handler
 
+func octeontx2_exception_handler_cpu_ops
+/* These errors are handled only in runtime (in BL31) */
+#if defined(IMAGE_BL31)
+	/* -----------------------------------------------------
+	 * Handle Cavium-specific trap - synchronous data abort
+	 * with (as per ARM's ARM DDI0487B) EC = 0x1f, which
+	 * is IMPLEMENTATION_DEFINED
+	 * -----------------------------------------------------
+	 */
+	cmp	x1, #EC_CAVIUM_IO_TRAP
+	b.eq	1f
+
+	/* ------------------------------------------------------
+	 * The following handles WFI trapped in EL0.
+	 * Right now this only happens when EL0 ISR is returning.
+	 * ------------------------------------------------------
+	 */
+	cmp	x1, #EC_WFE_WFI
+	b.eq	2f
+#endif /* BL31 */
+
+	/* ---------------------------------------------------
+	 * Other errors are unhandled, return to generic code.
+	 * ---------------------------------------------------
+	 */
+	ret
+#if defined(IMAGE_BL31)
+1:
+	/* Restore x0-x5 which was clobbered before entering here */
+	ldp     x0, x1, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X0]
+	ldp     x2, x3, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X2]
+	ldp     x4, x5, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X4]
+	b octeontx_io_trap_handler
+2:
+	/* Restore x0-x5 which was clobbered before entering here */
+	ldp     x0, x1, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X0]
+	ldp     x2, x3, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X2]
+	ldp     x4, x5, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X4]
+	b el3_exit_wfi
+#endif /* BL31 */
+endfunc octeontx2_exception_handler_cpu_ops
+
 #if REPORT_ERRATA
 /*
  * Errata printing function for octeontx2. Must follow AAPCS.
@@ -81,30 +124,30 @@ endfunc octeontx2_errata_report
 
 declare_cpu_ops_eh octeontx2, OCTEONTX2_CN96XX_MIDR, \
 	octeontx2_reset_func, \
-	octeontx2_exception_handler, \
+	octeontx2_exception_handler_cpu_ops, \
 	octeontx2_core_pwr_dwn, \
 	octeontx2_cluster_pwr_dwn
 
 declare_cpu_ops_eh octeontx2, OCTEONTX2_CNF95XX_MIDR, \
 	octeontx2_reset_func, \
-	octeontx2_exception_handler, \
+	octeontx2_exception_handler_cpu_ops, \
 	octeontx2_core_pwr_dwn, \
 	octeontx2_cluster_pwr_dwn
 
 declare_cpu_ops_eh octeontx2, OCTEONTX2_LOKI_MIDR, \
 	octeontx2_reset_func, \
-	octeontx2_exception_handler, \
+	octeontx2_exception_handler_cpu_ops, \
 	octeontx2_core_pwr_dwn, \
 	octeontx2_cluster_pwr_dwn
 
 declare_cpu_ops_eh octeontx2, OCTEONTX2_CN98XX_MIDR, \
 	octeontx2_reset_func, \
-	octeontx2_exception_handler, \
+	octeontx2_exception_handler_cpu_ops, \
 	octeontx2_core_pwr_dwn, \
 	octeontx2_cluster_pwr_dwn
 
 declare_cpu_ops_eh octeontx2, OCTEONTX2_F95MM_MIDR, \
 	octeontx2_reset_func, \
-	octeontx2_exception_handler, \
+	octeontx2_exception_handler_cpu_ops, \
 	octeontx2_core_pwr_dwn, \
 	octeontx2_cluster_pwr_dwn
