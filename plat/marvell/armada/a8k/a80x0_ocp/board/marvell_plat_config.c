@@ -143,8 +143,28 @@ int marvell_get_ccu_memory_map(int ap_index, struct addr_map_win **win,
  * PCIe Configuration
  *****************************************************************************
  */
+struct addr_map_win atu_memory_map[] = {
+	{0x0000000000000000,	0x000100000,	PCI_BAR0},	/* ATU inbound */
+	{0x000000003f000000,	0x001000000,	PCI_BAR2},	/* ATU inbound */
+	{0x00000000f0000000,	0x001000000,	PCI_BAR4},	/* ATU inbound */
+	{0x0000008000000000,	0x400000000,	PCI_HOST},	/* ATU outbound */
+};
+
+struct pci_ep_header pci_hdr = {
+	.vendorid		= PCI_VENDOR_ID_MARVELL,
+	.deviceid		= 0x7080,
+	.vf_deviceid		= 0x7081,
+	.revid			= 0,
+	.progif_code		= 0,
+	.subclass_code		= 0,
+	.baseclass_code		= 0x2,
+	.cache_line_size	= 0,
+	.subsys_vendor_id	= 0,
+	.subsys_id		= 0,
+};
+
 struct pci_hw_cfg ocp_pci_hw_cfg = {
-	.delay_cfg	= 1,
+	.delay_cfg	= 0,
 	.master_en	= 1,
 	.lane_width	= 4,
 	.lane_ids	= {0, 1, 2, 3},
@@ -155,7 +175,12 @@ struct pci_hw_cfg ocp_pci_hw_cfg = {
 	.comphy_base	= MVEBU_COMPHY_BASE(0),
 	.hpipe_base	= MVEBU_HPIPE_BASE(0),
 	.dfx_base	= MVEBU_CP_REGS_BASE(0) + MVEBU_CP_DFX_OFFSET,
+	.shadow_base	= MVEBU_PCIE_X4_SHADOW_MAC_BASE(0),
+	.atu_map	= atu_memory_map,
+	.atu_map_size	= ARRAY_SIZE(atu_memory_map),
+	.hdr		= &pci_hdr,
 };
+
 struct pci_hw_cfg *plat_get_pcie_hw_data(void)
 {
 	return &ocp_pci_hw_cfg;

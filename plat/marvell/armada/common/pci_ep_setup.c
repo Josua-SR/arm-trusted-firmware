@@ -41,5 +41,5 @@ void ble_plat_pcie_ep_setup(void)
 	}
 
 	/* Now setup the MAC */
-	dw_pcie_ep_init(hw_cfg->mac_base, hw_cfg->delay_cfg, hw_cfg->master_en);
+	dw_pcie_ep_init(hw_cfg);
 }

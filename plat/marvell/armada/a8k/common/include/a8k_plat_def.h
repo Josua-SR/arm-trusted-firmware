@@ -81,10 +81,11 @@
 #define MVEBU_MCI_REG_BASE_REMAP(index)		(0xFD000000 + \
 						((index) * 0x1000000))
 
-#define MVEBU_PCIE_X4_MAC_BASE(x)	(MVEBU_CP_REGS_BASE(x) + 0x600000)
-#define MVEBU_COMPHY_BASE(x)		(MVEBU_CP_REGS_BASE(x) + 0x441000)
-#define MVEBU_HPIPE_BASE(x)		(MVEBU_CP_REGS_BASE(x) + 0x120000)
-#define MVEBU_CP_DFX_OFFSET		(0x400200)
+#define MVEBU_PCIE_X4_MAC_BASE(x)		(MVEBU_CP_REGS_BASE(x) + 0x600000)
+#define MVEBU_PCIE_X4_SHADOW_MAC_BASE(x)	(MVEBU_PCIE_X4_MAC_BASE(x) + 0x4000)
+#define MVEBU_COMPHY_BASE(x)			(MVEBU_CP_REGS_BASE(x) + 0x441000)
+#define MVEBU_HPIPE_BASE(x)			(MVEBU_CP_REGS_BASE(x) + 0x120000)
+#define MVEBU_CP_DFX_OFFSET			(0x400200)
 
 /*****************************************************************************
  * MVEBU memory map related constants
