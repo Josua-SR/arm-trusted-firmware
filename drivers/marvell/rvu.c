@@ -77,53 +77,56 @@ static void octeontx_init_rvu_af(int *hwvf)
 static void octeontx_init_rvu_fixed(int *hwvf, int rvu, int bfdt_index, int has_vfs)
 {
 	rvu_sw_rvu_pf_t *sw_pf;
-//TODO: bfdt_index
-	assert(bfdt_index < SW_RVU_MAX_PF);
+	struct sw_dev_info {
+		int               type; /* SW_RVU_xxx_PF */
+		int               num;  /* SW_RVU_xxx_NUM_PF */
+		struct pci_config pci;
+	} sw_dev_list[] = {
+		{ SW_RVU_SSO_TIM_PF(0), SW_RVU_SSO_TIM_NUM_PF,
+		  { .pf_devid = CAVM_PCC_DEV_IDL_E_SW_RVU_SSO_TIM_PF,
+		    .vf_devid = CAVM_PCC_DEV_IDL_E_SW_RVU_SSO_TIM_VF,
+		    .class_code = GSP_CLASS_CODE
+		  } },
+		{ SW_RVU_NPA_PF(0), SW_RVU_NPA_NUM_PF,
+		  { .pf_devid = CAVM_PCC_DEV_IDL_E_SW_RVU_NPA_PF,
+		    .vf_devid = CAVM_PCC_DEV_IDL_E_SW_RVU_NPA_VF,
+		    .class_code = GSP_CLASS_CODE
+		  } },
+		{ SW_RVU_SDP_PF(0), SW_RVU_SDP_NUM_PF,
+		  { .pf_devid = CAVM_PCC_DEV_IDL_E_SW_RVU_SDP_PF,
+		    .vf_devid = CAVM_PCC_DEV_IDL_E_SW_RVU_SDP_VF,
+		    .class_code = GSP_CLASS_CODE
+		  } },
+		{ SW_RVU_CPT_PF(0), SW_RVU_CPT_NUM_PF,
+		  { .pf_devid = CAVM_PCC_DEV_IDL_E_SW_RVU_CPT_PF,
+		    .vf_devid = CAVM_PCC_DEV_IDL_E_SW_RVU_CPT_VF,
+		    .class_code = CPT_CLASS_CODE
+		  } },
+	}, *sw_dev;
+	int i;
+
+	assert(bfdt_index < SW_RVU_NUM_PF);
 	sw_pf = &(plat_octeontx_bcfg->rvu_config.sw_pf[bfdt_index]);
+
+	sw_dev = NULL;
+	for (i = 0; !sw_dev && (i < ARRAY_SIZE(sw_dev_list)); i++)
+		if ((bfdt_index >= sw_dev_list[i].type) &&
+		    (bfdt_index < (sw_dev_list[i].type + sw_dev_list[i].num)))
+			sw_dev = &sw_dev_list[i];
+
+	assert(sw_dev != NULL);
 
 	rvu_dev[rvu].enable = TRUE;
 	rvu_dev[rvu].num_vfs = has_vfs ? sw_pf->num_rvu_vfs : 0;
 	rvu_dev[rvu].first_hwvf = has_vfs ? *hwvf : 0;
 	rvu_dev[rvu].pf_num_msix_vec = sw_pf->num_msix_vec;
 	rvu_dev[rvu].pf_res_ena = FALSE;
-	switch (bfdt_index) {
-	case SW_RVU_SSO_TIM_PF:
-		rvu_dev[rvu].pci.pf_devid =
-			CAVM_PCC_DEV_IDL_E_SW_RVU_SSO_TIM_PF & DEVID_MASK;
-		rvu_dev[rvu].pci.vf_devid =
-			CAVM_PCC_DEV_IDL_E_SW_RVU_SSO_TIM_VF & DEVID_MASK;
-		rvu_dev[rvu].pci.class_code = GSP_CLASS_CODE & CLASS_CODE_MASK;
-		rvu_dev[rvu].vf_num_msix_vec = has_vfs ?
-						sw_pf->num_msix_vec : 0;
-		break;
-	case SW_RVU_NPA_PF:
-		rvu_dev[rvu].pci.pf_devid =
-			CAVM_PCC_DEV_IDL_E_SW_RVU_NPA_PF & DEVID_MASK;
-		rvu_dev[rvu].pci.vf_devid =
-			CAVM_PCC_DEV_IDL_E_SW_RVU_NPA_VF & DEVID_MASK;
-		rvu_dev[rvu].pci.class_code = GSP_CLASS_CODE & CLASS_CODE_MASK;
-		rvu_dev[rvu].vf_num_msix_vec = has_vfs ?
-						sw_pf->num_msix_vec : 0;
-		break;
-	case SW_RVU_SDP_PF:
-		rvu_dev[rvu].pci.pf_devid =
-			CAVM_PCC_DEV_IDL_E_SW_RVU_SDP_PF & DEVID_MASK;
-		rvu_dev[rvu].pci.vf_devid =
-			CAVM_PCC_DEV_IDL_E_SW_RVU_SDP_VF & DEVID_MASK;
-		rvu_dev[rvu].pci.class_code = GSP_CLASS_CODE & CLASS_CODE_MASK;
-		rvu_dev[rvu].vf_num_msix_vec = has_vfs ?
-						sw_pf->num_msix_vec : 0;
-		break;
-	case SW_RVU_CPT_PF:
-		rvu_dev[rvu].pci.pf_devid =
-			CAVM_PCC_DEV_IDL_E_SW_RVU_CPT_PF & DEVID_MASK;
-		rvu_dev[rvu].pci.vf_devid =
-			CAVM_PCC_DEV_IDL_E_SW_RVU_CPT_VF & DEVID_MASK;
-		rvu_dev[rvu].pci.class_code = CPT_CLASS_CODE & CLASS_CODE_MASK;
-		rvu_dev[rvu].vf_num_msix_vec = has_vfs ?
-						sw_pf->num_msix_vec : 0;
-		break;
-	}
+
+	rvu_dev[rvu].pci.pf_devid = sw_dev->pci.pf_devid & DEVID_MASK;
+	rvu_dev[rvu].pci.vf_devid = sw_dev->pci.vf_devid & DEVID_MASK;
+	rvu_dev[rvu].pci.class_code = sw_dev->pci.class_code & CLASS_CODE_MASK;
+	rvu_dev[rvu].vf_num_msix_vec = has_vfs ? sw_pf->num_msix_vec : 0;
+
 	/* Increment already allocated HWVFs */
 	*hwvf += rvu_dev[rvu].num_vfs;
 }
@@ -186,7 +189,7 @@ static int octeontx_init_rvu_from_fdt(void)
 
 	/* Init RVU(last-2) - SSO_TIM (PF(last-2)) */
 	octeontx_init_rvu_fixed(&current_hwvf, RVU_SSO_TIM,
-				SW_RVU_SSO_TIM_PF, TRUE);
+				SW_RVU_SSO_TIM_PF(0), TRUE);
 
 	/*
 	 * Init RVU(last-1) - NPA (PF(last-1))
@@ -195,17 +198,17 @@ static int octeontx_init_rvu_from_fdt(void)
 	 */
 	if (!plat_octeontx_bcfg->rvu_config.sdp_dis && octeontx_is_in_ep_mode())
 		octeontx_init_rvu_fixed(&current_hwvf, RVU_NPA,
-					SW_RVU_SDP_PF, TRUE);
+					SW_RVU_SDP_PF(0), TRUE);
 	else
 		octeontx_init_rvu_fixed(&current_hwvf, RVU_NPA,
-					SW_RVU_NPA_PF, TRUE);
+					SW_RVU_NPA_PF(0), TRUE);
 
 	if (plat_octeontx_bcfg->rvu_config.cpt_dis)
 		uninit_pfs = 1;
 	else {
 		/* Init last RVU - as CPT if present */
 		octeontx_init_rvu_fixed(&current_hwvf, RVU_LAST,
-				SW_RVU_CPT_PF, TRUE);
+				SW_RVU_CPT_PF(0), TRUE);
 	}
 
 	/* Initialize CGX PF */
@@ -247,7 +250,7 @@ static int octeontx_init_rvu_from_fdt(void)
 		if (pf > RVU_CGX_LAST)
 			pf = RVU_LAST;
 		octeontx_init_rvu_fixed(&current_hwvf, pf++,
-					SW_RVU_SSO_TIM_PF, FALSE);
+					SW_RVU_SSO_TIM_PF(0), FALSE);
 		sso_tim_pfs--;
 	}
 
@@ -255,7 +258,7 @@ static int octeontx_init_rvu_from_fdt(void)
 		if (pf > RVU_CGX_LAST)
 			pf = RVU_LAST;
 		octeontx_init_rvu_fixed(&current_hwvf, pf++,
-					SW_RVU_NPA_PF, FALSE);
+					SW_RVU_NPA_PF(0), FALSE);
 		npa_pfs--;
 	}
 

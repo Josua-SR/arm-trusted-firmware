@@ -386,7 +386,7 @@ static int octeontx2_parse_sw_rvu(const void *fdt, int parentoffset,
 	const int *val;
 	rvu_sw_rvu_pf_t *sw_pf;
 
-	assert(sw_rvu_pf >= 0 && sw_rvu_pf < SW_RVU_MAX_PF);
+	assert(sw_rvu_pf >= 0 && sw_rvu_pf < SW_RVU_NUM_PF);
 
 	sw_pf = &(plat_octeontx_bcfg->rvu_config.sw_pf[sw_rvu_pf]);
 	/* Find offset of *name node */
@@ -459,7 +459,7 @@ static void octeontx2_parse_rvu_config(const void *fdt, int *fdt_vfs)
 
 	/* Fill rvu_sw_rvu_pf_t structure, start with SSO_TIM (PF13) */
 	rc = octeontx2_parse_sw_rvu(fdt, offset, RVU_SSO_TIM_FDT_NODE,
-				    SW_RVU_SSO_TIM_PF, fdt_vfs);
+				    SW_RVU_SSO_TIM_PF(0), fdt_vfs);
 	if (rc < 0) {
 		WARN("RVU: Unable to fill PF%d-SSO_TIM structure\n",
 			RVU_SSO_TIM);
@@ -468,7 +468,7 @@ static void octeontx2_parse_rvu_config(const void *fdt, int *fdt_vfs)
 
 	/* Now parse NPA (PF14) */
 	rc = octeontx2_parse_sw_rvu(fdt, offset, RVU_NPA_FDT_NODE,
-				    SW_RVU_NPA_PF, fdt_vfs);
+				    SW_RVU_NPA_PF(0), fdt_vfs);
 	if (rc < 0) {
 		WARN("RVU: Unable to fill PF%d-NPA structure\n", RVU_NPA);
 		return;
@@ -476,7 +476,7 @@ static void octeontx2_parse_rvu_config(const void *fdt, int *fdt_vfs)
 
 #ifdef RVU_SDP_FDT_NODE
 	rc = octeontx2_parse_sw_rvu(fdt, offset, RVU_SDP_FDT_NODE,
-				    SW_RVU_SDP_PF, fdt_vfs);
+				    SW_RVU_SDP_PF(0), fdt_vfs);
 	if (rc < 0)
 		plat_octeontx_bcfg->rvu_config.sdp_dis = 1;
 #else /* RVU_SDP_FDT_NODE */
@@ -495,7 +495,7 @@ static void octeontx2_parse_rvu_config(const void *fdt, int *fdt_vfs)
 			return;
 		}
 		rc = octeontx2_parse_sw_rvu(fdt, offset, RVU_CPT_FDT_NODE,
-					    SW_RVU_CPT_PF, fdt_vfs);
+					    SW_RVU_CPT_PF(0), fdt_vfs);
 		if (rc < 0) {
 			WARN("RVU: Unable to fill PF%d structure\n", RVU_LAST);
 			return;

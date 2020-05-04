@@ -29,20 +29,61 @@ typedef struct rvu_sw_rvu_pf {
 	int num_msix_vec;
 } rvu_sw_rvu_pf_t;
 
+/* default, if not defined by platform */
+#ifndef SW_RVU_SSO_TIM_NUM_PF
+#define SW_RVU_SSO_TIM_NUM_PF 1
+#endif
+
+/* default, if not defined by platform */
+#ifndef SW_RVU_NPA_NUM_PF
+#define SW_RVU_NPA_NUM_PF     1
+#endif
+
+/* default, if not defined by platform */
+#ifndef SW_RVU_SDP_NUM_PF
+#define SW_RVU_SDP_NUM_PF     1
+#endif
+
+/* default, if not defined by platform */
+#ifndef SW_RVU_CPT_NUM_PF
+#define SW_RVU_CPT_NUM_PF     1
+#endif
+
 typedef enum {
-	SW_RVU_SSO_TIM_PF,
-	SW_RVU_NPA_PF,
-	SW_RVU_SDP_PF,
-	SW_RVU_CPT_PF,
-	SW_RVU_MAX_PF
+	SW_RVU_NODEV = 0, /* 0 is reserved */
+	SW_RVU_SSO_TIM_BASE,
+	SW_RVU_NPA_BASE = SW_RVU_SSO_TIM_BASE + SW_RVU_SSO_TIM_NUM_PF,
+	SW_RVU_SDP_BASE = SW_RVU_NPA_BASE + SW_RVU_NPA_NUM_PF,
+	SW_RVU_CPT_BASE = SW_RVU_SDP_BASE + SW_RVU_SDP_NUM_PF,
 } sw_rvu_pfs;
+
+/*
+ * Implementation note: the 'SW_RVU_xxx_PF' values do not correspond directly
+ * to RVU PF IDs; rather, they are simply an identifier (ID).
+ * If a platform defines 0 instances of a device, the ID == 0.
+ * See 'find_sw_rvu_dev()'.
+ */
+#define SW_RVU_SSO_TIM_PF(n) (!SW_RVU_SSO_TIM_NUM_PF ? SW_RVU_NODEV : \
+			      SW_RVU_SSO_TIM_BASE + (n))
+#define SW_RVU_NPA_PF(n)     (!SW_RVU_NPA_NUM_PF ? SW_RVU_NODEV : \
+			      SW_RVU_NPA_BASE + (n))
+#define SW_RVU_SDP_PF(n)     (!SW_RVU_SDP_NUM_PF ? SW_RVU_NODEV : \
+			      SW_RVU_SDP_BASE + (n))
+#define SW_RVU_CPT_PF(n)     (!SW_RVU_CPT_NUM_PF ? SW_RVU_NODEV : \
+			      SW_RVU_CPT_BASE + (n))
+
+#define SW_RVU_NUM_PF        (SW_RVU_SSO_TIM_NUM_PF \
+			      + SW_RVU_NPA_NUM_PF \
+			      + SW_RVU_SDP_NUM_PF \
+			      + SW_RVU_CPT_NUM_PF \
+			      + 1 /* for SW_RVU_NODEV */)
 
 typedef struct rvu_config {
 	int valid;
 	int cpt_dis;	/* to indicate if CPT block is not present */
 	int sdp_dis;	/* to indicate if SDP is not in FDT */
 	rvu_sw_rvu_pf_t admin_pf;
-	rvu_sw_rvu_pf_t sw_pf[SW_RVU_MAX_PF];
+	rvu_sw_rvu_pf_t sw_pf[SW_RVU_NUM_PF];
 } rvu_config_t;
 
 /* Define LMAC structure. */
