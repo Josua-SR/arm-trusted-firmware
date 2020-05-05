@@ -494,6 +494,9 @@ static void octeontx2_parse_rvu_config(const void *fdt, int *fdt_vfs)
 		WARN("RVU: Unable to fill PF%d-SSO_TIM structure\n",
 			RVU_SSO_TIM);
 		return;
+	} else if (!SW_RVU_SSO_TIM_NUM_PF) {
+		/* Platform DTS should not contain entry for non-existent dev */
+		ERROR("RVU: SSO FDT entry found but SW_RVU_SSO_TIM_NUM_PF=0\n");
 	}
 
 	/* Now parse NPA (PF14) */
@@ -502,13 +505,21 @@ static void octeontx2_parse_rvu_config(const void *fdt, int *fdt_vfs)
 	if (rc < 0) {
 		WARN("RVU: Unable to fill PF%d-NPA structure\n", RVU_NPA);
 		return;
+	} else if (!SW_RVU_NPA_NUM_PF) {
+		/* Platform DTS should not contain entry for non-existent dev */
+		ERROR("RVU: NPA FDT entry found but SW_RVU_NPA_NUM_PF=0\n");
 	}
 
 #ifdef RVU_SDP_FDT_NODE
 	rc = octeontx2_parse_sw_rvu(fdt, offset, RVU_SDP_FDT_NODE,
 				    SW_RVU_SDP_PF(0), fdt_vfs);
-	/* Ignore return code, not an error if SDP is absent from FDT */
-	(void)rc;
+	if (rc < 0) {
+		/* Ignore return code, not an error if SDP is absent from FDT */
+		(void)rc;
+	} else if (!SW_RVU_SDP_NUM_PF) {
+		/* Platform DTS should not contain entry for non-existent dev */
+		ERROR("RVU: SDP FDT entry found but SW_RVU_SDP_NUM_PF=0\n");
+	}
 #endif /* RVU_SDP_FDT_NODE */
 
 	/* Find if CPT node is available */
