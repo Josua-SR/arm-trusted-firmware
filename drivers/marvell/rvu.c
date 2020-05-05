@@ -36,6 +36,12 @@
 #define debug_rvu(...) ((void) (0))
 #endif
 
+struct sw_rvu_dev_info {
+	int               type; /* SW_RVU_xxx_PF */
+	int               num;  /* SW_RVU_xxx_NUM_PF */
+	struct pci_config pci;
+};
+
 static struct rvu_device rvu_dev[MAX_RVU_PFS];
 
 static inline int octeontx_get_msix_for_npa(void)
@@ -74,14 +80,18 @@ static void octeontx_init_rvu_af(int *hwvf)
 	*hwvf += rvu_dev[RVU_AF].num_vfs;
 }
 
-static void octeontx_init_rvu_fixed(int *hwvf, int rvu, int bfdt_index, int has_vfs)
+static rvu_sw_rvu_pf_t *find_sw_rvu_pf_info(int bfdt_index)
 {
-	rvu_sw_rvu_pf_t *sw_pf;
-	struct sw_dev_info {
-		int               type; /* SW_RVU_xxx_PF */
-		int               num;  /* SW_RVU_xxx_NUM_PF */
-		struct pci_config pci;
-	} sw_dev_list[] = {
+	if (bfdt_index < SW_RVU_NUM_PF)
+		return &(plat_octeontx_bcfg->rvu_config.sw_pf[bfdt_index]);
+
+	assert(bfdt_index < SW_RVU_NUM_PF);
+	return NULL;
+}
+
+static struct sw_rvu_dev_info *find_sw_rvu_dev(int bfdt_index)
+{
+	static struct sw_rvu_dev_info sw_dev_list[] = {
 		{ SW_RVU_SSO_TIM_PF(0), SW_RVU_SSO_TIM_NUM_PF,
 		  { .pf_devid = CAVM_PCC_DEV_IDL_E_SW_RVU_SSO_TIM_PF,
 		    .vf_devid = CAVM_PCC_DEV_IDL_E_SW_RVU_SSO_TIM_VF,
@@ -105,16 +115,34 @@ static void octeontx_init_rvu_fixed(int *hwvf, int rvu, int bfdt_index, int has_
 	}, *sw_dev;
 	int i;
 
-	assert(bfdt_index < SW_RVU_NUM_PF);
-	sw_pf = &(plat_octeontx_bcfg->rvu_config.sw_pf[bfdt_index]);
-
 	sw_dev = NULL;
 	for (i = 0; !sw_dev && (i < ARRAY_SIZE(sw_dev_list)); i++)
 		if ((bfdt_index >= sw_dev_list[i].type) &&
 		    (bfdt_index < (sw_dev_list[i].type + sw_dev_list[i].num)))
 			sw_dev = &sw_dev_list[i];
 
-	assert(sw_dev != NULL);
+	return sw_dev;
+}
+
+static void octeontx_init_rvu_fixed(int *hwvf, int rvu, int bfdt_index,
+				    int has_vfs)
+{
+	struct sw_rvu_dev_info *sw_dev;
+	rvu_sw_rvu_pf_t *sw_pf;
+
+	sw_pf = find_sw_rvu_pf_info(bfdt_index);
+	if (!sw_pf) {
+		ERROR("Internal: cannot locate SW_RVU_xxx %d PF info!\n",
+		      bfdt_index);
+		return;
+	}
+
+	sw_dev = find_sw_rvu_dev(bfdt_index);
+	if (!sw_dev) {
+		ERROR("Internal: cannot locate SW_RVU_xxx %d device!\n",
+		      bfdt_index);
+		return;
+	}
 
 	rvu_dev[rvu].enable = TRUE;
 	rvu_dev[rvu].num_vfs = has_vfs ? sw_pf->num_rvu_vfs : 0;
@@ -172,6 +200,7 @@ static int octeontx_init_rvu_from_fdt(void)
 {
 	int cgx_id, lmac_id, pf, current_hwvf = 0;
 	int uninit_pfs = 0, sso_tim_pfs, npa_pfs;
+	rvu_sw_rvu_pf_t *sw_pf;
 	cgx_config_t *cgx;
 
 	/* Check if FDT config is valid */
@@ -193,10 +222,16 @@ static int octeontx_init_rvu_from_fdt(void)
 
 	/*
 	 * Init RVU(last-1) - NPA (PF(last-1))
-	 * If there is SDP node in FDT and device is in EP mode,
-	 * use PF(last-1) as SDP instead of NPA
+	 *
+	 * Check for 'legacy' SDP provisioning, which is dependent upon ALL of:
+	 *   FDT entry indicates 'LEGACY'
+	 *   at least one PEM is in Endpoint mode
+	 *
+	 * For 'legacy' SDP, provision PF(last-1) as SDP instead of NPA.
 	 */
-	if (!plat_octeontx_bcfg->rvu_config.sdp_dis && octeontx_is_in_ep_mode())
+	sw_pf = find_sw_rvu_pf_info(SW_RVU_SDP_PF(0));
+	if (sw_pf && (sw_pf->mapping == SW_RVU_MAP_LEGACY) &&
+	    octeontx_is_in_ep_mode())
 		octeontx_init_rvu_fixed(&current_hwvf, RVU_NPA,
 					SW_RVU_SDP_PF(0), TRUE);
 	else

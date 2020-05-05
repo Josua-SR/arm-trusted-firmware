@@ -24,9 +24,15 @@ typedef enum ccs_region_index {
 	CCS_REGION_IDX_MAX,
 } ccs_region_index_t;
 
+typedef enum {
+	SW_RVU_MAP_NONE,
+	SW_RVU_MAP_LEGACY,
+} sw_rvu_mapping;
+
 typedef struct rvu_sw_rvu_pf {
 	int num_rvu_vfs;
 	int num_msix_vec;
+	sw_rvu_mapping mapping;
 } rvu_sw_rvu_pf_t;
 
 /* default, if not defined by platform */
@@ -41,7 +47,7 @@ typedef struct rvu_sw_rvu_pf {
 
 /* default, if not defined by platform */
 #ifndef SW_RVU_SDP_NUM_PF
-#define SW_RVU_SDP_NUM_PF     1
+#define SW_RVU_SDP_NUM_PF     0
 #endif
 
 /* default, if not defined by platform */
@@ -81,7 +87,6 @@ typedef enum {
 typedef struct rvu_config {
 	int valid;
 	int cpt_dis;	/* to indicate if CPT block is not present */
-	int sdp_dis;	/* to indicate if SDP is not in FDT */
 	rvu_sw_rvu_pf_t admin_pf;
 	rvu_sw_rvu_pf_t sw_pf[SW_RVU_NUM_PF];
 } rvu_config_t;

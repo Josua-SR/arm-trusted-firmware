@@ -383,12 +383,14 @@ static int octeontx2_parse_sw_rvu(const void *fdt, int parentoffset,
 				 const char *name, int sw_rvu_pf, int *sum_vfs)
 {
 	int offset, len, req_vfs;
+	const char *str;
 	const int *val;
 	rvu_sw_rvu_pf_t *sw_pf;
 
 	assert(sw_rvu_pf >= 0 && sw_rvu_pf < SW_RVU_NUM_PF);
 
 	sw_pf = &(plat_octeontx_bcfg->rvu_config.sw_pf[sw_rvu_pf]);
+
 	/* Find offset of *name node */
 	offset = fdt_subnode_offset(fdt, parentoffset, name);
 	if (offset < 0) {
@@ -421,6 +423,29 @@ static int octeontx2_parse_sw_rvu(const void *fdt, int parentoffset,
 					DEFAULT_VFS, sum_vfs, name);
 	}
 
+	/* Get [mandatory for SDP] provisioning mode from FDT */
+	str = fdt_getprop(fdt, offset, "provision-mode", &len);
+	if (!str) {
+		/*
+		 * The provision-mode property is required for SDP.
+		 * If missing, issue warning message, then default to legacy.
+		 * All others simply default to legacy (no warning).
+		 */
+		if ((sw_rvu_pf >= SW_RVU_SDP_PF(0)) &&
+		    (sw_rvu_pf - SW_RVU_SDP_PF(0) < SW_RVU_SDP_NUM_PF))
+			WARN("RVU: node %s, no provision-mode, using LEGACY\n",
+			     name);
+		sw_pf->mapping = SW_RVU_MAP_LEGACY;
+	} else if (!strncmp(str, "LEGACY", 6))
+		sw_pf->mapping = SW_RVU_MAP_LEGACY;
+	else if (!strncmp(str, "NONE", 4))
+		sw_pf->mapping = SW_RVU_MAP_NONE;
+	else {
+		ERROR("RVU: node %s, invalid provision-mode, using NONE.\n",
+		      name);
+		sw_pf->mapping = SW_RVU_MAP_NONE;
+	}
+
 	/* Increment number of allocated HWVFs */
 	*sum_vfs += sw_pf->num_rvu_vfs;
 
@@ -429,8 +454,13 @@ static int octeontx2_parse_sw_rvu(const void *fdt, int parentoffset,
 
 static void octeontx2_parse_rvu_config(const void *fdt, int *fdt_vfs)
 {
-	int offset, rc, soc_offset, cpt;
+	int offset, rc, soc_offset, cpt, i;
 	char node_name[32];
+
+	/* Initialize all SW_RVU_PF mappings to NONE */
+	for (i = 0; i < SW_RVU_NUM_PF; i++)
+		plat_octeontx_bcfg->rvu_config.sw_pf[i].mapping =
+			SW_RVU_MAP_NONE;
 
 	/* CGX configuration is already done on this step,
 	 * perform initial setup for other RVU-related nodes */
@@ -477,10 +507,8 @@ static void octeontx2_parse_rvu_config(const void *fdt, int *fdt_vfs)
 #ifdef RVU_SDP_FDT_NODE
 	rc = octeontx2_parse_sw_rvu(fdt, offset, RVU_SDP_FDT_NODE,
 				    SW_RVU_SDP_PF(0), fdt_vfs);
-	if (rc < 0)
-		plat_octeontx_bcfg->rvu_config.sdp_dis = 1;
-#else /* RVU_SDP_FDT_NODE */
-	plat_octeontx_bcfg->rvu_config.sdp_dis = 1;
+	/* Ignore return code, not an error if SDP is absent from FDT */
+	(void)rc;
 #endif /* RVU_SDP_FDT_NODE */
 
 	/* Find if CPT node is available */
