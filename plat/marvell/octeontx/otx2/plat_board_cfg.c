@@ -438,11 +438,15 @@ static int octeontx2_parse_sw_rvu(const void *fdt, int parentoffset,
 		sw_pf->mapping = SW_RVU_MAP_LEGACY;
 	} else if (!strncmp(str, "LEGACY", 6))
 		sw_pf->mapping = SW_RVU_MAP_LEGACY;
+	else if (!strncmp(str, "AVAILABLE", 9))
+		sw_pf->mapping = SW_RVU_MAP_AVAILABLE;
+	else if (!strncmp(str, "FORCE", 5))
+		sw_pf->mapping = SW_RVU_MAP_FORCE;
 	else if (!strncmp(str, "NONE", 4))
 		sw_pf->mapping = SW_RVU_MAP_NONE;
 	else {
-		ERROR("RVU: node %s, invalid provision-mode, using NONE.\n",
-		      name);
+		ERROR("RVU: node %s, invalid provision-mode %s, using NONE.\n",
+		      name, str);
 		sw_pf->mapping = SW_RVU_MAP_NONE;
 	}
 
@@ -511,14 +515,16 @@ static void octeontx2_parse_rvu_config(const void *fdt, int *fdt_vfs)
 	}
 
 #ifdef RVU_SDP_FDT_NODE
-	rc = octeontx2_parse_sw_rvu(fdt, offset, RVU_SDP_FDT_NODE,
-				    SW_RVU_SDP_PF(0), fdt_vfs);
-	if (rc < 0) {
-		/* Ignore return code, not an error if SDP is absent from FDT */
+	/*
+	 * Implementation note: we parse all the SDP devices using the same
+	 * node name as they are all identical.  If they need to be different,
+	 * this loop needs to change to specify the instance-specific node name.
+	 */
+	for (i = 0; i < SW_RVU_SDP_NUM_PF; i++) {
+		rc = octeontx2_parse_sw_rvu(fdt, offset, RVU_SDP_FDT_NODE,
+					    SW_RVU_SDP_PF(i), fdt_vfs);
+		/* Not an error if SDP is absent from FDT. */
 		(void)rc;
-	} else if (!SW_RVU_SDP_NUM_PF) {
-		/* Platform DTS should not contain entry for non-existent dev */
-		ERROR("RVU: SDP FDT entry found but SW_RVU_SDP_NUM_PF=0\n");
 	}
 #endif /* RVU_SDP_FDT_NODE */
 

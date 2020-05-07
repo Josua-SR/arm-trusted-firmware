@@ -42,6 +42,13 @@ struct sw_rvu_dev_info {
 	struct pci_config pci;
 };
 
+/* Stores CGX/LMAC data for RVU PF dynamic provisioning */
+struct rvu_pf_cgx_lmac {
+	struct cgx_lmac_config *lmac;
+	uint8_t                cgx_id;
+	uint8_t                lmac_id;
+};
+
 static struct rvu_device rvu_dev[MAX_RVU_PFS];
 
 static inline int octeontx_get_msix_for_npa(void)
@@ -196,12 +203,113 @@ static int octeontx_is_in_ep_mode(void)
 	return 0;
 }
 
+/*
+ * rvu_provision_pfs_for_sw_devs()
+ *
+ * Performs provisioning of RVU PFs to SW_RVU_xxx devices.
+ *
+ * RVU PFs for these devices are provisioned dynamically from the 'top'
+ * of the RVU PFs allocated for CGX LMACs (i.e. RVU PF <last-3>).
+ * Depending upon the "provision-mode", RVU PFs MAY be allocated to
+ * the SW_RVU_xxx devices which 'override' an RVU PF reserved for a CGX LMAC.
+ *
+ * Refer to the RVU PF provisioning document for more information.
+ *
+ * on entry,
+ *   rvu_pf:        starting RVU PF number to provision
+ *   top_cgx_pf:    [numerically] highest RVU PF # reserved for CGX LMACs
+ *   cur_hwvf:      [pointer to] starting RVU SR-IOV VF number to provision
+ *                  (i.e. 0 ... RVU_PRIV_CONST[HWVFS]-1)
+ *   uninit_pf_cnt: [pointer to] count of uninitialized RVU PFs
+ *                  (i.e. available RVU PFs)
+ *   cgx_lmac_list: [pointer to] list of CGX LMAC data
+ *                  (used to 'override' an RVU PF allocated to CGX)
+ *
+ * returns,
+ *   [numerically] highest RVU PF remaining to be provisioned from
+ *   range reserved for CGX LMACs
+ *
+ */
+static int rvu_provision_pfs_for_sw_devs(int rvu_pf_start, int top_cgx_pf,
+					 int *cur_hwvf, int *uninit_pf_cnt,
+					 struct rvu_pf_cgx_lmac *cgx_lmac_list)
+{
+	rvu_sw_rvu_pf_t *sw_pf;
+	int i, rvu_pf;
+
+	rvu_pf = rvu_pf_start;
+
+	/* IF a PCI PEM is in Endpoint mode, provision RVU PFs for SDP */
+	for (i = SW_RVU_SDP_NUM_PF - 1; (int)i >= 0; i--) {
+		/* Enforce constraint */
+		if (rvu_pf < RVU_CGX_FIRST) {
+			ERROR("RVU: too many SW_RVU_xxx devices.\n");
+			break;
+		}
+
+		if (!octeontx_is_in_ep_mode())
+			break;
+
+		sw_pf = find_sw_rvu_pf_info(SW_RVU_SDP_PF(i));
+		assert(sw_pf != NULL);
+
+		/* [single SDP] already LEGACY-mapped */
+		if (sw_pf->mapping == SW_RVU_MAP_LEGACY)
+			continue;
+
+		if (sw_pf->mapping == SW_RVU_MAP_NONE) {
+			debug_rvu(
+			  "RVU: NOT provisioning PF for SW_RVU_SDP #%d\n", i);
+			continue;
+		}
+
+		if ((sw_pf->mapping == SW_RVU_MAP_AVAILABLE) &&
+			 (rvu_pf <= top_cgx_pf)) {
+			debug_rvu(
+			  "RVU: cannot provision PF for SW_RVU_SDP #%d\n",
+			  i);
+			continue;
+		}
+
+		assert((sw_pf->mapping == SW_RVU_MAP_FORCE) ||
+		       (sw_pf->mapping == SW_RVU_MAP_AVAILABLE));
+
+		debug_rvu("RVU: provision PF%d -> SW_RVU_SDP #%d\n",
+			  rvu_pf, i);
+
+		octeontx_init_rvu_fixed(cur_hwvf, rvu_pf, SW_RVU_SDP_PF(i),
+					TRUE);
+		/*
+		 * If this PF was already provisioned to CGX,
+		 * disable the lmac so CGX driver will not use it.
+		 *
+		 * Otherwise, adjust uninitialized count.
+		 */
+		if (rvu_pf <= top_cgx_pf) {
+			cgx_lmac_list[rvu_pf].lmac->lmac_enable = 0;
+			debug_rvu("RVU: replacing CGX%d/LMAC%d with SDP\n",
+				  cgx_lmac_list[rvu_pf].cgx_id,
+				  cgx_lmac_list[rvu_pf].lmac_id);
+		} else /* i.e. rvu_pf > top_cgx_pf */ {
+			*uninit_pf_cnt -= 1;
+			debug_rvu("RVU: Decrement uninit_pfs -> %d\n",
+				  *uninit_pf_cnt);
+		}
+
+		rvu_pf--;
+	}
+
+	return rvu_pf;
+}
+
 static int octeontx_init_rvu_from_fdt(void)
 {
 	int cgx_id, lmac_id, pf, current_hwvf = 0;
 	int uninit_pfs = 0, sso_tim_pfs, npa_pfs;
+	int top_cgx_pf, top_uninit_pf;
 	rvu_sw_rvu_pf_t *sw_pf;
 	cgx_config_t *cgx;
+	struct rvu_pf_cgx_lmac cgx_lmac_list[MAX_CGX * MAX_LMAC_PER_CGX];
 
 	/* Check if FDT config is valid */
 	if (!(plat_octeontx_bcfg->rvu_config.valid)) {
@@ -230,11 +338,14 @@ static int octeontx_init_rvu_from_fdt(void)
 	 * For 'legacy' SDP, provision PF(last-1) as SDP instead of NPA.
 	 */
 	sw_pf = find_sw_rvu_pf_info(SW_RVU_SDP_PF(0));
+	assert(sw_pf != NULL);
 	if (sw_pf && (sw_pf->mapping == SW_RVU_MAP_LEGACY) &&
-	    octeontx_is_in_ep_mode())
+	    octeontx_is_in_ep_mode()) {
+		debug_rvu("RVU: provision PF%d -> SW_RVU_SDP (override NPA)\n",
+			  RVU_NPA);
 		octeontx_init_rvu_fixed(&current_hwvf, RVU_NPA,
 					SW_RVU_SDP_PF(0), TRUE);
-	else
+	} else
 		octeontx_init_rvu_fixed(&current_hwvf, RVU_NPA,
 					SW_RVU_NPA_PF(0), TRUE);
 
@@ -246,29 +357,98 @@ static int octeontx_init_rvu_from_fdt(void)
 				SW_RVU_CPT_PF(0), TRUE);
 	}
 
-	/* Initialize CGX PF */
+	/*
+	 * The CGX PFs need to be provisioned.
+	 * However, some of the RVU PFs reserved for CGX can be
+	 * provisioned for SW_RVU_xxx devices instead, depending upon
+	 * the "provision-mode" property of the SW_RVU_xxx device.
+	 *
+	 * These 'overridden' CGX devices may not consume the same number
+	 * of LFs that the SW_RVU_xxx devices consume.
+	 * Since the allocation of LFs to RVU PFs is done contiguously,
+	 * the CGX devices cannot yet be allocated (since they might
+	 * subsequently be overridden, this could produce gaps in the LF space).
+	 *
+	 * So, the count of RVU PFs is calculated first, without actually
+	 * allocating LFs to the CGX devices.
+	 *
+	 * Then, the provisioning of RVU PFs to SW_RVU_xxx devices is
+	 * performed, 'overriding' CGX allocations as necessary.
+	 *
+	 * Finally, after provisioning for all the SW_RVU_xxx devices has
+	 * completed, the provisioning for CGX devices can be done.
+	 * This ensures that the LFs are allocated in a contiguous manner,
+	 * with no gaps.
+	 */
+
 	pf = RVU_CGX_FIRST;
+	/* This represents the [numerically] highest RVU PF required by CGX */
+	top_cgx_pf = RVU_CGX_FIRST;
+
+	/* Determine the required number of CGX LMAC PFs */
 	for (cgx_id = 0; cgx_id < MAX_CGX; cgx_id++) {
 		cgx = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
 		if (cgx->enable && !cgx->is_rfoe) {
-			for (lmac_id = 0; lmac_id < MAX_LMAC_PER_CGX; lmac_id++) {
+			for (lmac_id = 0; lmac_id < MAX_LMAC_PER_CGX;
+			     lmac_id++) {
 				if (cgx->lmac_cfg[lmac_id].lmac_enable) {
-					octeontx_init_rvu_lmac(&current_hwvf,
-							       pf, cgx,
-							       lmac_id);
-					assert(current_hwvf <= MAX_RVU_HWVFS);
-					pf++;
-				} else {
-					/* Increment number of not
-					 * configured PFs yet */
+					/* Save for possible re-allocation */
+					cgx_lmac_list[pf].lmac =
+						&cgx->lmac_cfg[lmac_id];
+					cgx_lmac_list[pf].cgx_id = cgx_id;
+					cgx_lmac_list[pf].lmac_id = lmac_id;
+
+					top_cgx_pf = pf++;
+				} else
 					uninit_pfs++;
-				}
 			}
 		} else {
 			/* all four LMACs are not initialized */
 			uninit_pfs += MAX_LMAC_PER_CGX;
 		}
 	}
+
+	debug_rvu("RVU: PF%d is last PF required for CGX\n", top_cgx_pf);
+
+	/*
+	 * Now, provision RVU PFs for SW_RVU_xxx devices DOWNWARD starting from
+	 * END of [required] CGX PFs.
+	 */
+	top_uninit_pf = rvu_provision_pfs_for_sw_devs(RVU_CGX_LAST, top_cgx_pf,
+						      &current_hwvf,
+						      &uninit_pfs,
+						      cgx_lmac_list);
+
+	/*
+	 * Finally, after any possible 'overrides' by SW_RVU_xxx devices,
+	 * perform actual provisioning of RVU PFs to CGX devices.
+	 */
+	pf = RVU_CGX_FIRST;
+	for (cgx_id = 0; cgx_id < MAX_CGX; cgx_id++) {
+		cgx = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+		if (cgx->enable && !cgx->is_rfoe) {
+			for (lmac_id = 0; lmac_id < MAX_LMAC_PER_CGX; lmac_id++) {
+				if (cgx->lmac_cfg[lmac_id].lmac_enable) {
+					/* Sanity check */
+					assert(cgx_lmac_list[pf].lmac ==
+					       &cgx->lmac_cfg[lmac_id]);
+					assert(cgx_lmac_list[pf].cgx_id ==
+					       cgx_id);
+					assert(cgx_lmac_list[pf].lmac_id ==
+					       lmac_id);
+					octeontx_init_rvu_lmac(&current_hwvf,
+							       pf, cgx,
+							       lmac_id);
+					assert(current_hwvf <= MAX_RVU_HWVFS);
+					pf++;
+				}
+			}
+		}
+	}
+
+	debug_rvu("RVU: PF%d was last PF provisioned for CGX\n", pf-1);
+	debug_rvu("RVU: PF%d is top uninitialized PF, count %d\n",
+		  top_uninit_pf, uninit_pfs);
 
 	/*
 	 * For all unitialized PFs, divide them by factor and configure:
@@ -282,7 +462,8 @@ static int octeontx_init_rvu_from_fdt(void)
 	sso_tim_pfs = uninit_pfs * SSO_TIM_TO_NPA_PFS_FACTOR;
 	npa_pfs = uninit_pfs - sso_tim_pfs;
 	while (sso_tim_pfs > 0) {
-		if (pf > RVU_CGX_LAST)
+		/* If CPT was disabled, its reserved PF is uninitialized. */
+		if (pf > top_uninit_pf)
 			pf = RVU_LAST;
 		octeontx_init_rvu_fixed(&current_hwvf, pf++,
 					SW_RVU_SSO_TIM_PF(0), FALSE);
@@ -290,7 +471,8 @@ static int octeontx_init_rvu_from_fdt(void)
 	}
 
 	while (npa_pfs > 0) {
-		if (pf > RVU_CGX_LAST)
+		/* If CPT was disabled, its reserved PF is uninitialized. */
+		if (pf > top_uninit_pf)
 			pf = RVU_LAST;
 		octeontx_init_rvu_fixed(&current_hwvf, pf++,
 					SW_RVU_NPA_PF(0), FALSE);
@@ -775,6 +957,11 @@ void octeontx_rvu_init(void)
 	    IS_OCTEONTX_PN(read_midr(), F95PARTNUM) ||
 	    IS_OCTEONTX_PN(read_midr(), F95MMPARTNUM))
 		rvu_errata_35948();
+
+	/* sanity check - validate platform definition */
+	if (octeontx_get_max_rvu_pfs() != MAX_RVU_PFS)
+		ERROR("MAX_RVU_PFS %d does not match platform const %d\n",
+		      MAX_RVU_PFS, octeontx_get_max_rvu_pfs());
 
 	rc = octeontx_init_rvu_from_fdt();
 	if (rc < 0)

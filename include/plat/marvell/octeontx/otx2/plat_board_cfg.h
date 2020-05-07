@@ -27,6 +27,8 @@ typedef enum ccs_region_index {
 typedef enum {
 	SW_RVU_MAP_NONE,
 	SW_RVU_MAP_LEGACY,
+	SW_RVU_MAP_AVAILABLE,
+	SW_RVU_MAP_FORCE,
 } sw_rvu_mapping;
 
 typedef struct rvu_sw_rvu_pf {
