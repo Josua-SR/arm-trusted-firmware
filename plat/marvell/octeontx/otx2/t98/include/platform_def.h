@@ -179,6 +179,8 @@
 
 #define SW_RVU_SDP_NUM_PF       2
 
+#define SW_RVU_REE_NUM_PF       2
+
 /* Priority levels for OcteonTX platforms */
 #define PLAT_IRQ_PRI			0x30
 
