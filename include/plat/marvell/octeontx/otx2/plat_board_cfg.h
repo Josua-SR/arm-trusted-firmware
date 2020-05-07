@@ -53,6 +53,11 @@ typedef struct rvu_sw_rvu_pf {
 #endif
 
 /* default, if not defined by platform */
+#ifndef SW_RVU_REE_NUM_PF
+#define SW_RVU_REE_NUM_PF     0
+#endif
+
+/* default, if not defined in platform */
 #ifndef SW_RVU_CPT_NUM_PF
 #define SW_RVU_CPT_NUM_PF     1
 #endif
@@ -63,6 +68,7 @@ typedef enum {
 	SW_RVU_NPA_BASE = SW_RVU_SSO_TIM_BASE + SW_RVU_SSO_TIM_NUM_PF,
 	SW_RVU_SDP_BASE = SW_RVU_NPA_BASE + SW_RVU_NPA_NUM_PF,
 	SW_RVU_CPT_BASE = SW_RVU_SDP_BASE + SW_RVU_SDP_NUM_PF,
+	SW_RVU_REE_BASE = SW_RVU_CPT_BASE + SW_RVU_CPT_NUM_PF,
 } sw_rvu_pfs;
 
 /*
@@ -79,11 +85,14 @@ typedef enum {
 			      SW_RVU_SDP_BASE + (n))
 #define SW_RVU_CPT_PF(n)     (!SW_RVU_CPT_NUM_PF ? SW_RVU_NODEV : \
 			      SW_RVU_CPT_BASE + (n))
+#define SW_RVU_REE_PF(n)     (!SW_RVU_REE_NUM_PF ? SW_RVU_NODEV : \
+			      SW_RVU_REE_BASE + (n))
 
 #define SW_RVU_NUM_PF        (SW_RVU_SSO_TIM_NUM_PF \
 			      + SW_RVU_NPA_NUM_PF \
 			      + SW_RVU_SDP_NUM_PF \
 			      + SW_RVU_CPT_NUM_PF \
+			      + SW_RVU_REE_NUM_PF \
 			      + 1 /* for SW_RVU_NODEV */)
 
 typedef struct rvu_config {
