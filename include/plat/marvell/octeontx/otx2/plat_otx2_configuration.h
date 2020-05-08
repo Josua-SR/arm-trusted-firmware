@@ -8,8 +8,9 @@
 #ifndef __PLAT_OTX2_CONFIGURATION_H__
 #define __PLAT_OTX2_CONFIGURATION_H__
 
-#define CN93XX_PKG   1
+#define CN93XXC_PKG  1
 #define CN95XXE_PKG  3
+#define CN93XXN_PKG  5
 
 /* Used to initialize individual device IOBN security settings */
 struct otx2_stream_security_setting {

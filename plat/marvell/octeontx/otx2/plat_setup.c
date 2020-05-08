@@ -236,8 +236,9 @@ unsigned int plat_get_rom_t_cnt()
  *
  * @return non-zero if an alternative package
  *     0 = Normal package
- *     1 = Alternative package 1 (CN93XX)
+ *     1 = Alternative package 1 (CN93XXC)
  *     3 = Alternative package 3 (CN95XXE)
+ *     5 = Alternative package 5 (CN93XXN)
  */
 int plat_get_altpkg(void)
 {

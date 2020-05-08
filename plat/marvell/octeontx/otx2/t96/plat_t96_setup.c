@@ -38,11 +38,11 @@ int plat_octeontx_get_iobn_count(void)
 int plat_octeontx_is_lmc_enabled(unsigned lmc)
 {
 	union cavm_lmcx_dll_ctl2 lmcx_dll_ctl2;
+	int pkg = plat_get_altpkg();
 
-	if ((plat_get_altpkg() == CN95XXE_PKG)
-	    && (lmc == 1)) {
+	if ((pkg == CN95XXE_PKG) && (lmc == 1)) {
 		return 0;
-	} else if ((plat_get_altpkg() == CN93XX_PKG)
+	} else if (((pkg == CN93XXN_PKG) || (pkg == CN93XXC_PKG))
 	    && (lmc == 2)) {
 		return 0;
 	}
@@ -107,7 +107,7 @@ int plat_octeontx_get_pem_count(void)
 
 int plat_octeontx_get_gser_count(void)
 {
-	if (plat_get_altpkg() == CN93XX_PKG)
+	if (plat_get_altpkg() == CN93XXC_PKG)
 		return 6;
 
 	return 8;

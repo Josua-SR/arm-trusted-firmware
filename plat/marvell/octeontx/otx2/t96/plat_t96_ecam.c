@@ -41,7 +41,7 @@ static int ecam_probe_cgx_p1(unsigned long long arg)
 
 	debug_plat_ecam("%s arg %lld\n", __func__, arg);
 
-	if (plat_get_altpkg() == CN93XX_PKG) {
+	if (plat_get_altpkg() == CN93XXC_PKG) {
 		/*
 		 * CGX to qlm mapping.
 		 * CGX0 - QLM3
