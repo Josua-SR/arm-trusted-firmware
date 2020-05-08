@@ -23,7 +23,9 @@ func el3_exit_wfi
 	str	x0, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_LR]
 
 	/* Restores EL0ISR sysregs */
-	/* OS-ELmode was saved at CTX_GPREG_X6 of EL0ISR_CTX_GPREGS_OFFSET */
+	/*  - OS-ELmode was saved at CTX_GPREG_X6 of EL0ISR_CTX_GPREGS_OFFSET
+	 *  - x0-x5 were saved at backup space of EL0ISR_CTX_GPREGS_OFFSET
+	 */
 	mov	x0, xzr
 	add	x0, sp, #EL0ISR_CTX_GPREGS_OFFSET
 	ldr	x6, [x0, #CTX_GPREG_X6]
@@ -58,7 +60,7 @@ func el3_exit_wfi
 	/*restore GP registers*/
 	mov x0, xzr
 	add x0, sp, #EL0ISR_CTX_GPREGS_OFFSET
-	ldp	x4, x5, [x0, #CTX_GPREG_X4]
+	ldp	x4, x5, [x0, #CTX_GPREG_X4_BCK]
 	ldp	x6, x7, [x0, #CTX_GPREG_X6]
 	ldp	x8, x9, [x0, #CTX_GPREG_X8]
 	ldp	x10, x11, [x0, #CTX_GPREG_X10]
@@ -75,8 +77,18 @@ func el3_exit_wfi
 	msr	sp_el0, x17
 	nop
 	ldp	x16, x17, [x0, #CTX_GPREG_X16]
-	ldp	x2, x3, [x0, #CTX_GPREG_X2]
-	ldp	x0, x1, [x0, #CTX_GPREG_X0]
+	ldp	x2, x3, [x0, #CTX_GPREG_X2_BCK]
+	ldp	x0, x1, [x0, #CTX_GPREG_X0_BCK]
+
+	/*
+	 * This function returns to the EL3 interrupt handler which later
+	 * restores the GPREGS context from CTX_GPREGES_OFFSET from el3_exit.
+	 * So save the x0-x5 registers to that context.
+	 */
+	stp	x0, x1, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X0]
+	stp	x2, x3, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X2]
+	stp	x4, x5, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X4]
+
 	dsb sy
 	msr spsel, #0
 	dsb sy
@@ -191,6 +203,26 @@ func el3_start_el0_isr
 	msr scr_el3, x2
 	msr spsr_el3, x3
 	msr elr_el3, x4
+
+	/* Store x0-x5 register to backup space so that after getting back
+	 * from EL0 ISR they can be restored to what they were before interrupt
+	 * arrived to EL3.
+	 */
+
+	 /* x0 still has to be saved temporarily for EL0 ISR use */
+	str x0, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_TMP_HANDLE]
+	ldp x0, x1, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X0]
+	ldp x2, x3, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X2]
+	ldp x4, x5, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_X4]
+
+	mov x12, xzr
+	add x12, sp, #EL0ISR_CTX_GPREGS_OFFSET
+	stp x0, x1, [x12, #CTX_GPREG_X0_BCK]
+	stp x2, x3, [x12, #CTX_GPREG_X2_BCK]
+	stp x4, x5, [x12, #CTX_GPREG_X4_BCK]
+
+	ldr	x0, [sp, #CTX_GPREGS_OFFSET + CTX_GPREG_TMP_HANDLE]
+
 	/*clear all registers except x0(gpio_num)*/
 	mov x1, xzr; mov x2, xzr; mov x3, xzr; mov x4, xzr;
 	mov x5, xzr; mov x6, xzr; mov x7, xzr; mov x8, xzr;
