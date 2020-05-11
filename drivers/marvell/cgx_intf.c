@@ -2041,6 +2041,7 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 		(request_id == CGX_CMD_DISPLAY_SERDES) ||
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 		(request_id == CGX_CMD_LOOP_SERDES) ||
+		(request_id == CGX_CMD_TUNE_SERDES) ||
 		(request_id == CGX_CMD_GET_FW_VER)) {
 		switch (request_id) {
 		case CGX_CMD_INTF_SHUTDOWN:
@@ -2119,6 +2120,13 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 		case CGX_CMD_LOOP_SERDES:
 			cgx_set_serdes_loop(cgx_id, lmac_id,
 				 scratchx1.s.gser_loop.flags);
+			break;
+		case CGX_CMD_TUNE_SERDES:
+			cgx_set_serdes_tune(cgx_id,
+				 scratchx1.s.gser_tune.lane_mask,
+				 scratchx1.s.gser_tune.tx_swing,
+				 scratchx1.s.gser_tune.tx_pre,
+				 scratchx1.s.gser_tune.tx_post);
 			break;
 		}
 	} else {

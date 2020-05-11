@@ -346,5 +346,6 @@ int plat_get_cgx_idx(int qlm);
 
 int cgx_set_ptp_mode(int cgx_id, int lmac_id, int enable);
 void cgx_set_serdes_loop(int cgx_id, int lmac_id, int type);
+void cgx_set_serdes_tune(int cgx_id, int tx_swing, int tx_pre, int tx_post, int lane_mask);
 
 #endif

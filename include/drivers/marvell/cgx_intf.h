@@ -109,6 +109,7 @@ enum cgx_cmd_id {
 	CGX_CMD_CPRI_MODE_CHANGE,	/* = 35 */
 	CGX_CMD_CPRI_TX_CONTROL,
 	CGX_CMD_LOOP_SERDES,
+	CGX_CMD_TUNE_SERDES,
 };
 
 /* async event ids */
@@ -482,6 +483,16 @@ struct cgx_gser_loop {
 	uint64_t reserved2:53;
 };
 
+/* Configure TX tuning parameters */
+struct cgx_gser_tune {
+	uint64_t reserved1:8;
+	uint64_t lane_mask:8;
+	uint64_t tx_swing:8;
+	uint64_t tx_pre:8;
+	uint64_t tx_post:8;
+	uint64_t reserved2:24;
+};
+
 union cgx_cmd_s {
 	uint64_t own_status:2;			/* cgx_cmd_own */
 	struct cgx_cmd cmd;
@@ -503,6 +514,7 @@ union cgx_cmd_s {
 	struct cgx_display_args dsp_serdes_args;
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 	struct cgx_gser_loop gser_loop;
+	struct cgx_gser_tune gser_tune;
 };
 
 union cgx_scratchx1 {

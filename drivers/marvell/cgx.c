@@ -3821,3 +3821,31 @@ void cgx_set_serdes_loop(int cgx_id, int lmac_id, int type)
 	   GSERC is configured at higher speeds */
 	cgx->qlm_ops->qlm_enable_loop(lmac->gserx + lmac->shift_from_first, type);
 }
+
+/* Configure tx tuning parameters for configuring serdes */
+void cgx_set_serdes_tune(int cgx_id, int lane_mask, int tx_swing, int tx_pre, int tx_post)
+{
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+	int lmac_id;
+
+	debug_cgx("%s: cgx%d, lane_mask = %x\n", __func__, cgx_id, lane_mask);
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		return;
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+
+	for (lmac_id = 0; lmac_id < MAX_LMAC_PER_CGX; lmac_id++) {
+		if (lane_mask & (1 << lmac_id)) {
+			int gserx;
+
+			lmac = &cgx->lmac_cfg[lmac_id];
+			gserx = lmac->gserx + lmac->shift_from_first;
+			debug_cgx("%d:%d: TX_SWING = %d, TX_PRE = %d, TX_POST = %d\n",
+				gserx, lmac_id, tx_swing, tx_pre, tx_post);
+			cgx->qlm_ops->qlm_tune_lane_tx(gserx, lmac_id, tx_swing, tx_pre, tx_post, -1, -1);
+		}
+	}
+}

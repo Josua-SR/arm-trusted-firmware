@@ -1002,19 +1002,19 @@ int qlm_gserc_tune_lane_tx(int qlm, int lane, int tx_swing, int tx_cpre, int tx_
 {
 	if ((tx_swing < 0) || (tx_swing > 7))
 	{
-		gser_error("GSERC%d.%d: Invalid tuning, TX Swing(%d) must be 0 to 7\n",
+		WARN("GSERC%d.%d: Invalid tuning, TX Swing(%d) must be 0 to 7\n",
 			qlm, lane, tx_swing);
 		return -1;
 	}
 	if ((tx_cpre < 0) || (tx_cpre > 15))
 	{
-		gser_error("GSERC%d.%d: Invalid tuning, TX PRE(%d) must be 0 to 15\n",
+		WARN("GSERC%d.%d: Invalid tuning, TX PRE(%d) must be 0 to 15\n",
 			qlm, lane, tx_cpre);
 		return -1;
 	}
 	if ((tx_cpost < 0) || (tx_cpost > 31))
 	{
-		gser_error("GSERC%d.%d: Invalid tuning, TX POST(%d) must be 0 to 31\n",
+		WARN("GSERC%d.%d: Invalid tuning, TX POST(%d) must be 0 to 31\n",
 			qlm, lane, tx_cpost);
 		return -1;
 	}
