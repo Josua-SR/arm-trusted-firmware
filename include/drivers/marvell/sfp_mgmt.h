@@ -336,4 +336,9 @@ int sfp_is_transceiver_active(int cgx_id, int lmac_id);
 int sfp_is_transceiver_optical(int cgx_id, int lmac_id);
 int sfp_validate_user_options(int cgx_id, int lmac_id);
 sfp_shared_data_t *sfp_get_sh_mem_ptr(int cgx_id, int lmac_id);
+int mcp_send_async_req(int cgx_id, int lmac_id, int req_id);
+unsigned int mcp_get_an_lt_state(int cgx_id, int lmac_id);
+unsigned int mcp_get_an_rx_sig_state(int cgx_id, int lmac_id);
+unsigned int mcp_set_an_lt_state(int cgx_id, int lmac_id, int state);
+unsigned int mcp_get_intf_rev(int cgx_id, int lmac_id);
 #endif /* __SFP_MGMT_H__ */

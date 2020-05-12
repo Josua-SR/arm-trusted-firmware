@@ -141,6 +141,45 @@ static int cgx_serdes_reset(int cgx_id, int lmac_id, bool reset)
 	return 0;
 }
 
+#ifdef DEBUG_ATF_CGX
+/* Prints out the link training tracing data */
+static int cgx_link_training_tracing(int cgx_id, int lmac_id)
+{
+	uint64_t lane_mask;
+	int qlm, gserx, num_lanes;
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		return 0;
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	gserx = lmac->gserx + lmac->shift_from_first;
+	qlm = lmac->qlm + lmac->shift_from_first;
+	lane_mask = lmac->lane_mask;
+
+	while (lane_mask) {
+		/* Get the number of lanes on this QLM/DLM */
+		num_lanes = qlm_get_lanes(qlm);
+		for (int lane = 0; lane < num_lanes; lane++) {
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			/* Change the SERDES reset state */
+			cgx->qlm_ops->qlm_display_trace(gserx, lane, 0);
+		}
+		lane_mask >>= num_lanes;
+		gserx++;
+		qlm++;
+	}
+
+	return 0;
+}
+#endif
+
 /* Configure SERDES for autoneg.  If SERDES config fails
  * return -1
  */
@@ -2415,10 +2454,180 @@ int cgx_fec_change(int cgx_id, int lmac_id, int new_fec)
 	return 0;
 }
 
+static int cgx_complete_sw_an_with_mcp(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ctx)
+{
+	int ret = -1, status;
+	bool signal_detect = 0;
+	uint64_t init_time, autoneg_timeout, an_signal_timeout;
+
+	status = mcp_get_an_lt_state(cgx_id, lmac_id);
+
+	debug_cgx("%s:%d:%d: starting AN state %d\n",
+		__func__, cgx_id, lmac_id, status);
+
+	/* With NO_STATE/LT_COMPLETE, send request to MCP to start
+	 * AN & LT.
+	 * if AN/LT completed successfully, and if complete_sw_an()
+	 * is called, it indicates link errors. In this case,
+	 * restart AN/LT again by sending request to MCP
+	 */
+	if (status == AN_LT_NO_STATE) {
+		ret = mcp_send_async_req(cgx_id, lmac_id,
+					REQ_AN_LT_START);
+		if (ret == -1) {
+			/* Request not sent */
+			debug_cgx("%s: %d:%d request not sent to MCP\n",
+				__func__, cgx_id, lmac_id);
+			goto restart_an;
+		} else {
+			debug_cgx("%s: %d:%d request sent to MCP\n",
+				__func__, cgx_id, lmac_id);
+			/* If it is for the first time that AN/LT is started
+			 * for the respective LMAC, wait for 500 ms after
+			 * sending the request to check if MCP has completed
+			 * AN/LT. For subsequent request, just check the status
+			 * and return without wait.
+			 */
+			if (!lmac_ctx->s.link_enable) {
+				init_time = gser_clock_get_count(GSER_CLOCK_TIME);
+				autoneg_timeout = init_time + CGX_POLL_AN_COMPLETE_STATUS2 *
+						gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+				an_signal_timeout = init_time + CGX_POLL_AN_RX_SIGNAL2 *
+						gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+
+				while (gser_clock_get_count(GSERN_CLOCK_TIME)
+						< autoneg_timeout) {
+					status = mcp_get_an_lt_state(cgx_id, lmac_id);
+					if (status == AN_LT_STATE_LT_COMPLETE)
+						return 0;
+					else if ((status == AN_LT_STATE_AN_RESTART)
+						 || (status == AN_LT_STATE_AN_FAIL)) {
+						cgx_set_error_type(cgx_id, lmac_id,
+							   CGX_ERR_AN_CPT_FAIL);
+						/* Reset signal detect timeout after AN failure */
+						an_signal_timeout = gser_clock_get_count(GSER_CLOCK_TIME) +
+							CGX_POLL_AN_RX_SIGNAL2 * gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+						break;
+					} else if (status == AN_LT_STATE_LT_FAIL) {
+						cgx_set_error_type(cgx_id, lmac_id,
+							   CGX_ERR_TRAINING_FAIL);
+						/* Reset signal detect timeout after LT failure */
+						an_signal_timeout = gser_clock_get_count(GSER_CLOCK_TIME) +
+							CGX_POLL_AN_RX_SIGNAL2 * gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+						break;
+					}
+
+					/* Check if we have detected a signal during AN */
+					if (mcp_get_an_rx_sig_state(cgx_id, lmac_id))
+						signal_detect = true;
+					/* Check if we have not detected an AN signal for a
+					 * long time
+					 */
+					if (!signal_detect &&
+						(gser_clock_get_count(GSERN_CLOCK_TIME)
+						 > an_signal_timeout)) {
+						cgx_set_error_type(cgx_id, lmac_id, CGX_ERR_SERDES_RX_NO_SIGNAL);
+						break;
+					}
+					mdelay(1);
+				}
+				goto restart_an;
+			} else
+				goto an_check_state;
+			}
+		}
+an_check_state:
+		if (status == AN_LT_STATE_LT_COMPLETE) {
+			debug_cgx("%s: %d:%d AN/LT completed. Reset the state\n",
+				__func__, cgx_id, lmac_id);
+			mcp_set_an_lt_state(cgx_id, lmac_id, AN_LT_NO_STATE);
+			return 0;
+		} else if (status == AN_LT_STATE_STOPPED) {
+			debug_cgx("%s: %d:%d LT failed several times.\n",
+				__func__, cgx_id, lmac_id);
+#ifdef DEBUG_ATF_CGX
+			/* Print link training trace data */
+			cgx_link_training_tracing(cgx_id, lmac_id);
+#endif
+			ret = mcp_send_async_req(cgx_id, lmac_id,
+						REQ_AN_LT_START);
+			if (ret == -1) {
+				/* Request not sent */
+				debug_cgx("%s: %d:%d request not sent to MCP\n",
+					__func__, cgx_id, lmac_id);
+				goto restart_an;
+			} else {
+				debug_cgx("%s: %d:%d request sent to MCP, restart AN/LT\n",
+					__func__, cgx_id, lmac_id);
+			}
+		} else {
+			debug_cgx("%s: %d:%d AN/LT in progress/Fail status %d\n",
+					__func__, cgx_id, lmac_id, status);
+			goto restart_an;
+		}
+restart_an:
+	return -1;
+}
+
+static int cgx_complete_sw_an_wo_mcp(int cgx_id, int lmac_id)
+{
+	int gserx, lane, qlm, num_lanes;
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+
+	gserx = lmac->gserx;
+	qlm = lmac->qlm;
+	num_lanes = qlm_get_lanes(qlm);
+
+	/* Set lane # to support any
+	 * lane module type (SLM, DLM, QLM)
+	 * 9XXX does not support AN on 1 LMAC
+	 * across multiple lane modules
+	 */
+	if (num_lanes == 1)
+		lane = 0;
+	else if (num_lanes == 2)
+		lane = lmac->lane_an_master % 2;
+	else
+		lane = lmac->lane_an_master;
+	debug_cgx("%s:%d:%d: starting AN gserx %d lane %d\n",
+		__func__, cgx_id, lmac_id, gserx, lane);
+	/*  PCS link is down, so clear ln_link_stat when restarting AN */
+	cgx->qlm_ops->qlm_clear_link_stat(gserx, lane);
+
+	/* Start AN */
+	cgx->qlm_ops->qlm_start_an(gserx, lane);
+
+	/* Enable the SERDES Tx */
+	cgx_serdes_tx_control(cgx_id, lmac_id, true);
+
+	if (cgx_autoneg_wait(cgx_id, lmac_id)) {
+		debug_cgx("%s:%d:%d: AN failed, Restarting AN.\n",
+			__func__, cgx_id, lmac_id);
+		goto restart_an;
+	}
+
+	if (cgx_link_training_wait(cgx_id, lmac_id)) {
+		debug_cgx("%s:%d:%d: Link training failed, Restarting AN.\n",
+			__func__, cgx_id, lmac_id);
+		cgx->qlm_ops->qlm_get_link_training_status(gserx, lane);
+		cgx_set_error_type(cgx_id, lmac_id,
+				CGX_ERR_TRAINING_FAIL);
+		goto restart_an;
+	}
+	return 0;
+
+restart_an:
+	return -1;
+}
+
 /* Complete SPU autonegotiation and link training
  * Return 0 on success, -1 on fail
  */
-static int cgx_complete_sw_an(int cgx_id, int lmac_id)
+static int cgx_complete_sw_an(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ctx)
 {
 	int training_fail = 0, ret;
 	cgx_config_t *cgx;
@@ -2426,7 +2635,6 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 	cavm_cgxx_spux_an_control_t spux_an_ctl;
 	cavm_cgxx_spux_int_t spux_int;
 	bool is_gsern = 0;
-	int gserx, lane, qlm, num_lanes;
 
 	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
 	lmac = &cgx->lmac_cfg[lmac_id];
@@ -2518,51 +2726,21 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id)
 		 * setup, set the hand-shaking bit and wait for
 		 * AN to complete
 		 */
-		gserx = lmac->gserx;
-		qlm = lmac->qlm;
-		num_lanes = qlm_get_lanes(qlm);
-
-		/* Set lane # to support any
-		 * lane module type (SLM, DLM, QLM)
-		 * 9XXX does not support AN on 1 LMAC
-		 * across multiple lane modules
-		 */
-		if (num_lanes == 1)
-			lane = 0;
-		else if (num_lanes == 2)
-			lane = lmac->lane_an_master % 2;
+		if (mcp_get_intf_rev(cgx_id, lmac_id) == MCP_ANLT_INTF_VER) {
+			debug_cgx("%s: %d:%d AN/LT handshaking handled by MCP\n",
+					__func__, cgx_id, lmac_id);
+			ret = cgx_complete_sw_an_with_mcp(cgx_id, lmac_id,
+						lmac_ctx);
+		} else {
+			debug_cgx("%s: %d:%d AN/LT handshaking not handled by MCP\n",
+					__func__, cgx_id, lmac_id);
+			ret = cgx_complete_sw_an_wo_mcp(cgx_id, lmac_id);
+		}
+		if (ret == -1)
+			goto restart_an;
 		else
-			lane = lmac->lane_an_master;
-
-		debug_cgx("%s:%d:%d: starting AN gserx %d lane %d\n",
-			__func__, cgx_id, lmac_id, gserx, lane);
-
-		/*  PCS link is down, so clear ln_link_stat when restarting AN */
-		cgx->qlm_ops->qlm_clear_link_stat(gserx, lane);
-
-		/* Start AN */
-		cgx->qlm_ops->qlm_start_an(gserx, lane);
-
-		/* Enable the SERDES Tx */
-		cgx_serdes_tx_control(cgx_id, lmac_id, true);
-
-		if (cgx_autoneg_wait(cgx_id, lmac_id)) {
-			debug_cgx("%s:%d:%d: AN failed, Restarting AN.\n",
-				__func__, cgx_id, lmac_id);
-			goto restart_an;
-		}
-
-		if (cgx_link_training_wait(cgx_id, lmac_id)) {
-			debug_cgx("%s:%d:%d: Link training failed, Restarting AN.\n",
-				__func__, cgx_id, lmac_id);
-			cgx->qlm_ops->qlm_get_link_training_status(gserx, lane);
-			cgx_set_error_type(cgx_id, lmac_id,
-				CGX_ERR_TRAINING_FAIL);
-			goto restart_an;
-		}
-		return 0;
+			return 0;
 	}
-
 restart_an:
 	if (is_gsern) {
 		/* Disable SERDES Tx. S/W needs to be ready to respond to
@@ -2571,8 +2749,6 @@ restart_an:
 		cgx_serdes_tx_control(cgx_id, lmac_id, false);
 		/* Restart AN */
 		cgx_restart_an(cgx_id, lmac_id);
-	} else {
-		cgx_serdes_tx_control(cgx_id, lmac_id, false);
 	}
 	return -1;
 }
@@ -3013,7 +3189,7 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id)
 	return 0;
 }
 
-int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
+int cgx_xaui_set_link_up(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ctx)
 {
 	int qlm, gserx, lane, num_lanes;
 	uint64_t lane_mask;
@@ -3061,7 +3237,7 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id)
 			cgx_set_an_loopback(cgx_id, lmac_id, lmac->an_loopback);
 
 		/* Complete AN and link training */
-		if (cgx_complete_sw_an(cgx_id, lmac_id) != 0) {
+		if (cgx_complete_sw_an(cgx_id, lmac_id, lmac_ctx) != 0) {
 			return -1;
 		} else {
 			if (lmac->use_training)
@@ -3818,7 +3994,8 @@ void cgx_set_serdes_loop(int cgx_id, int lmac_id, int type)
 	}
 
 	/* Assuming NED is requested for GSERR configured to 10G/25G speed
-	   GSERC is configured at higher speeds */
+	 * GSERC is configured at higher speeds
+	 */
 	cgx->qlm_ops->qlm_enable_loop(lmac->gserx + lmac->shift_from_first, type);
 }
 

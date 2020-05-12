@@ -20,6 +20,8 @@
 #include <cgx_intf.h>
 #include <cgx.h>
 #include <sh_fwdata.h>
+#include <qlm/qlm.h>
+#include <gser_internal.h>
 
 /* define DEBUG_ATF_SFP_MGMT to enable debug logs */
 #undef DEBUG_ATF_SFP_MGMT	/* SFP/QSFP management */
@@ -42,8 +44,6 @@ sfp_shared_data_t *sfp_get_sh_mem_ptr(int cgx_id, int lmac_id)
 	sfp_shared_data_t *sh_data;
 
 	sh_data = (sh_data_global + (cgx_id * MAX_LMAC_PER_CGX) + lmac_id);
-	debug_sfp_mgmt("%s: %d:%d sh_data %p\n", __func__, cgx_id,
-						lmac_id, sh_data);
 	return sh_data;
 }
 
@@ -51,14 +51,18 @@ void sfp_init_shmem(void)
 {
 	int cgx_idx, lmac_idx;
 	cgx_lmac_config_t *lmac;
+	cgx_config_t *cgx;
 	sfp_shared_data_t *sh_data;
+	const qlm_ops_t *qlm_ops;
+	int num_lanes, lane_an;
 
 	debug_sfp_mgmt("%s\n", __func__);
 	debug_sfp_mgmt("sizeof = %d\n", (int)sizeof(sfp_shared_data_t));
 
 	for (cgx_idx = 0; cgx_idx < MAX_CGX; cgx_idx++) {
+		cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_idx];
 		for (lmac_idx = 0; lmac_idx < MAX_LMAC_PER_CGX; lmac_idx++) {
-			lmac = &(plat_octeontx_bcfg->cgx_cfg[cgx_idx].lmac_cfg[lmac_idx]);
+			lmac = &cgx->lmac_cfg[lmac_idx];
 			sh_data = sfp_get_sh_mem_ptr(cgx_idx, lmac_idx);
 			if (sh_data == NULL) {
 				ERROR("%s: SM pointer is NULL\n", __func__);
@@ -81,6 +85,35 @@ void sfp_init_shmem(void)
 			strlcpy(sh_data->board_model,
 				plat_octeontx_bcfg->bcfg.board_model,
 				sizeof(sh_data->board_model));
+
+			/* Update SHMEM with AN/LT processing */
+			if ((!lmac->autoneg_dis) && (lmac->use_training)) {
+				debug_sfp_mgmt("%s:%d:%d updating AN/LT data\n",
+					__func__, cgx_idx, lmac_idx);
+
+				num_lanes = qlm_get_lanes(lmac->qlm +
+					lmac->shift_from_first);
+				if (num_lanes == 1)
+					lane_an = 0;
+				else if (num_lanes == 2)
+					lane_an = lmac->lane_an_master % 2;
+				else
+					lane_an = lmac->lane_an_master;
+
+				qlm_ops = plat_otx2_get_qlm_ops(cgx_idx);
+				if (qlm_ops != NULL)
+					sh_data->an_lt_args.gser_type =
+						(uint32_t)qlm_ops->type;
+				sh_data->an_lt_args.gser_index = lmac->gserx;
+				sh_data->an_lt_args.shift_from_first =
+						lmac->shift_from_first;
+				sh_data->an_lt_args.lane_mask = lmac->lane_mask;
+				sh_data->an_lt_args.an_master = lane_an;
+				sh_data->an_lt_args.qlm =
+						(lmac->qlm + lmac->shift_from_first);
+				sh_data->an_lt_args.max_num_lanes = num_lanes;
+				sh_data->intf_rev = 0xABCD0000;
+			}
 		}
 	}
 }
@@ -1118,4 +1151,187 @@ int sfp_validate_user_options(int cgx_id, int lmac_id)
 		     __func__, cgx_id, lmac_id);
 
 	return 1;
+}
+
+int mcp_send_async_req(int cgx_id, int lmac_id, int req_id)
+{
+	int retry_lock = 0;
+	sfp_shared_data_t *sh_data = sfp_get_sh_mem_ptr(cgx_id, lmac_id);
+
+	debug_sfp_mgmt("%s: %d:%d\n", __func__, cgx_id, lmac_id);
+
+	if (sh_data == NULL) {
+		ERROR("%s: SM pointer is NULL\n", __func__);
+		return -1;
+	}
+
+retry_acquire_lock:
+	if (sh_data->async_ctx.lock == AN_LT_OWN_NONE) {
+		sh_data->async_ctx.lock = AN_LT_OWN_AP;
+
+		/* If ack bit is clear, post the request
+		 * MCP will clear the ack bit when the
+		 * request is processed
+		 */
+		debug_sfp_mgmt("%s: %d:%d ack %d\n",
+			__func__, cgx_id, lmac_id, sh_data->async_ctx.ack);
+		if (!sh_data->async_ctx.ack) {
+			debug_sfp_mgmt("%s: %d:%d updating req_id %d to SM\n",
+				__func__, cgx_id, lmac_id, req_id);
+			/* Reset the state always to NO_STATE so
+			 * MCP can start AN
+			 */
+			if (req_id == REQ_AN_LT_START)
+				sh_data->async_ctx.data = AN_LT_NO_STATE;
+			sh_data->async_req.req_id = req_id;
+			sh_data->async_ctx.ack = 1;
+			l2c_flush();
+		} else {
+			debug_sfp_mgmt("%s: %d:%d request in progress\n",
+				__func__, cgx_id, lmac_id);
+			sh_data->async_ctx.lock = AN_LT_OWN_NONE;
+			return -1;
+		}
+	} else {
+		if (retry_lock++ < 5) {
+			mdelay(1);
+			goto retry_acquire_lock;
+		}
+		debug_sfp_mgmt("%s %d:%d lock %d not available for AP\n",
+					 __func__,
+					cgx_id, lmac_id,
+					sh_data->async_ctx.lock);
+		return -1;
+	}
+	sh_data->async_ctx.lock = AN_LT_OWN_NONE;
+
+	return 0;
+}
+
+unsigned int mcp_get_an_lt_state(int cgx_id, int lmac_id)
+{
+	int retry_lock = 0;
+	int state = 0;
+
+	sfp_shared_data_t *sh_data = sfp_get_sh_mem_ptr(cgx_id, lmac_id);
+
+	if (sh_data == NULL) {
+		ERROR("%s: SM pointer is NULL\n", __func__);
+		return -1;
+	}
+	debug_sfp_mgmt("%s: %d:%d\n", __func__, cgx_id, lmac_id);
+
+retry_acquire_lock:
+	if (sh_data->async_ctx.lock == AN_LT_OWN_NONE) {
+		sh_data->async_ctx.lock = AN_LT_OWN_AP;
+		if (retry_lock++ < 5) {
+			mdelay(1);
+			goto retry_acquire_lock;
+		}
+		debug_sfp_mgmt("%s %d:%d lock %d not available for AP\n",
+					 __func__,
+					cgx_id, lmac_id,
+					sh_data->async_ctx.lock);
+		return -1;
+	}
+
+	state = sh_data->async_ctx.data;
+	sh_data->async_ctx.lock = AN_LT_OWN_NONE;
+	return state;
+}
+
+unsigned int mcp_get_an_rx_sig_state(int cgx_id, int lmac_id)
+{
+	int retry_lock = 0;
+	int sig_detect = 0;
+	sfp_shared_data_t *sh_data = sfp_get_sh_mem_ptr(cgx_id, lmac_id);
+
+	if (sh_data == NULL) {
+		ERROR("%s: SM pointer is NULL\n", __func__);
+		return -1;
+	}
+
+	debug_sfp_mgmt("%s: %d:%d\n", __func__, cgx_id, lmac_id);
+
+retry_acquire_lock:
+	if (sh_data->async_ctx.lock == AN_LT_OWN_NONE) {
+		sh_data->async_ctx.lock = AN_LT_OWN_AP;
+		if (retry_lock++ < 5) {
+			mdelay(1);
+			goto retry_acquire_lock;
+		}
+		debug_sfp_mgmt("%s %d:%d lock %d not available for AP\n",
+					 __func__,
+					cgx_id, lmac_id,
+					sh_data->async_ctx.lock);
+		return -1;
+	}
+
+	sig_detect = sh_data->async_ctx.sig_detect;
+	sh_data->async_ctx.lock = AN_LT_OWN_NONE;
+	return sig_detect;
+}
+
+unsigned int mcp_set_an_lt_state(int cgx_id, int lmac_id, int state)
+{
+	int retry_lock = 0;
+	sfp_shared_data_t *sh_data = sfp_get_sh_mem_ptr(cgx_id, lmac_id);
+
+	if (sh_data == NULL) {
+		ERROR("%s: SM pointer is NULL\n", __func__);
+		return -1;
+	}
+
+	debug_sfp_mgmt("%s: %d:%d state %d\n", __func__, cgx_id, lmac_id,
+					state);
+
+retry_acquire_lock:
+	if (sh_data->async_ctx.lock == AN_LT_OWN_NONE) {
+		sh_data->async_ctx.lock = AN_LT_OWN_AP;
+		if (retry_lock++ < 5) {
+			mdelay(1);
+			goto retry_acquire_lock;
+		}
+		debug_sfp_mgmt("%s %d:%d lock %d not available for AP\n",
+					 __func__,
+					cgx_id, lmac_id,
+					sh_data->async_ctx.lock);
+		return -1;
+	}
+
+	sh_data->async_ctx.data = state;
+	sh_data->async_ctx.lock = AN_LT_OWN_NONE;
+	return 0;
+}
+
+unsigned int mcp_get_intf_rev(int cgx_id, int lmac_id)
+{
+	int retry_lock = 0;
+	unsigned int mcp_rev = 0;
+	sfp_shared_data_t *sh_data = sfp_get_sh_mem_ptr(cgx_id, lmac_id);
+
+	if (sh_data == NULL) {
+		ERROR("%s: SM pointer is NULL\n", __func__);
+		return -1;
+	}
+
+	debug_sfp_mgmt("%s: %d:%d\n", __func__, cgx_id, lmac_id);
+
+retry_acquire_lock:
+	if (sh_data->async_ctx.lock == AN_LT_OWN_NONE) {
+		sh_data->async_ctx.lock = AN_LT_OWN_AP;
+		if (retry_lock++ < 5) {
+			mdelay(1);
+			goto retry_acquire_lock;
+		}
+		debug_sfp_mgmt("%s %d:%d lock %d not available for AP\n",
+					 __func__,
+					cgx_id, lmac_id,
+					sh_data->async_ctx.lock);
+		return -1;
+	}
+
+	mcp_rev = sh_data->intf_rev;
+	sh_data->async_ctx.lock = AN_LT_OWN_NONE;
+	return mcp_rev;
 }

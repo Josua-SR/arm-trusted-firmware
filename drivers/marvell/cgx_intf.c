@@ -569,7 +569,7 @@ retry_link:
 		}
 		/* Check if Rx link is down */
 		if (!lmac_ctx->s.rx_link_up) {
-			if (cgx_xaui_set_link_up(cgx_id, lmac_id) == -1) {
+			if (cgx_xaui_set_link_up(cgx_id, lmac_id, lmac_ctx) == -1) {
 				/* Need to retry on a Rx Signal detect
 				 * failure a min of 80ms to account
 				 * for an AN restart
@@ -2488,7 +2488,7 @@ static int cgx_get_link_status(int cgx_id, int lmac_id,
 		} else {
 			debug_cgx_intf("%s: %d:%d link down, re-initialize Rx link\n",
 						   __func__, cgx_id, lmac_id);
-			if (cgx_xaui_set_link_up(cgx_id, lmac_id))
+			if (cgx_xaui_set_link_up(cgx_id, lmac_id, lmac_ctx))
 				lmac_ctx->s.rx_link_up = 0;
 			else
 				lmac_ctx->s.rx_link_up = 1;

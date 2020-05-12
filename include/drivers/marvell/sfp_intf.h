@@ -8,6 +8,7 @@
 #ifndef __SFP_INTF_H__
 #define __SFP_INTF_H__
 
+#define MCP_ANLT_INTF_VER 0xABCD1234
 #define SFP_MAX_EEPROM_SIZE    0x100
 
 /* Type of GPIO pin */
@@ -211,7 +212,7 @@ typedef struct sfp_context {
 } sfp_context_t;
 
 /* FIXME: this is not complete list */
-typedef enum sfp_async_req_id {
+typedef enum async_req_id {
 	SFP_REQ_NONE = 0,
 	SFP_REQ_TX_ENABLE,    /* Turn ON transmitter */
 	SFP_REQ_TX_DISABLE,    /* Turn OFF transmitter */
@@ -220,28 +221,68 @@ typedef enum sfp_async_req_id {
 	SFP_REQ_WRITE_GPIO,    /* To toggle on one of SFP/QSFP GPIO pins */
 	SFP_REQ_READ_GPIO,    /* To know the status of SFP/QSFP GPIO pins */
 	SFP_REQ_READ_BYTE,    /* To read one of the bytes in EEPROM */
-} sfp_req_id_t;
+	REQ_AN_LT_START,
+	REQ_AN_LT_STOP,
+} async_req_id_t;
 
-typedef struct sfp_async_req {
+typedef struct req_an_lt_args {
+	uint32_t gser_type; /* GSERR, GSERC... */
+	uint32_t gser_index;
+	uint32_t shift_from_first;
+	uint32_t lane_mask;
+	uint32_t an_master; /* Logical lane */
+	uint32_t qlm;
+	uint32_t max_num_lanes;
+	uint32_t lt_fail_count;
+} async_req_an_lt_args_t;
+
+typedef struct async_req {
 	uint32_t req_id;
 	/* For ex: which GPIO pin to toggle, which page/byte of EEPROM to read */
 	uint32_t req_args;
-} sfp_async_req_t;
+} async_req_t;
 
-typedef struct sfp_async_resp {
-	/* ack to be set by MCP and clear by AP */
+typedef enum an_lt_state {
+	AN_LT_NO_STATE = 0,
+	AN_LT_STATE_NO_RX_SIGNAL,
+	AN_LT_STATE_AN_FIRST_LOOP,
+	AN_LT_STATE_AN_IN_PROGRESS,
+	AN_LT_STATE_AN_FAIL,
+	AN_LT_STATE_AN_RESTART, /* If AN/LT training fails, re-start AN */
+	AN_LT_STATE_HCD_MISMATCH, /* If HCD tech mismatch happens and re-configuring CGX to match HCD */
+	AN_LT_STATE_AN_COMPLETE,
+	AN_LT_STATE_LT_FIRST_LOOP,
+	AN_LT_STATE_LT_IN_PROGRESS,
+	AN_LT_STATE_LT_FAIL,
+	AN_LT_STATE_STOPPED, /* Enters on several LT failures */
+	AN_LT_STATE_LT_COMPLETE,
+} an_lt_state_t;
+
+/* Ownership of shared memory for AN/LT processing */
+typedef enum an_lt_own {
+	AN_LT_OWN_NONE = 0,
+	AN_LT_OWN_AP,
+	AN_LT_OWN_MCP
+} an_lt_own_info_t;
+
+typedef struct async_context {
+	/* lock to avoid conflict with AP/MCP SM - an_lt_own_info_t */
+	uint32_t lock;
+	/* ack to be set by AP and clear by MCP as a acknowledgment
+	 * that the command is received
+	 */
 	uint32_t ack;
 	/* 0 indicates fail and 1 indicates success */
 	uint32_t req_stat;
-	/* to be set by MCP on error conditions */
-	uint32_t err_type;
-	/* FIXME */
 	/* to return any data if required as a response */
-	uint32_t data;
-} sfp_async_resp_t;
+	uint32_t data; /* state to be updated for REQ_AN_LT_GET_STATE */
+	uint32_t sig_detect; /* set to 1 when Rx Signal detected once during AN */
+} async_context_t;
 
 typedef struct sfp_shared_data {
 	uint32_t size;
+	/* INTF version info to indicate AN/LT support */
+	uint32_t intf_rev;
 	/* SFP/QSFP EEPROM data */
 	uint8_t buf[SFP_MAX_EEPROM_SIZE];
 	char board_model[64];
@@ -251,12 +292,11 @@ typedef struct sfp_shared_data {
 	sfp_context_t sfp_ctx;
 	uint32_t cgx_id;
 	uint32_t lmac_id;
-#if 0    /* FIXME */
-	/* Post Req to MCP sfp_req_id_t */
-	sfp_async_req sfp_req;
-	/* Receive Response from MCP for request sent */
-	sfp_async_rsp sfp_rsp;
-#endif
+	async_req_an_lt_args_t an_lt_args;  /* Required parameters to process for Rambus AN/LT */
+	/* Post Req to MCP async_req_id_t */
+	async_req_t async_req;
+	/* Context maintained for Async requests btw AP and MCP */
+	async_context_t async_ctx;
 } sfp_shared_data_t;
 
 #endif /* __SFP_INTF_H__ */

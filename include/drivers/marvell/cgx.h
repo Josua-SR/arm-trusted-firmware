@@ -53,9 +53,11 @@
 /* TIMEOUT for different usecases */
 #define CGX_POLL_AN_STATUS		10000 /* 10 ms */
 #define CGX_POLL_AN_COMPLETE_STATUS	500000 /* 500 ms */
+#define CGX_POLL_AN_COMPLETE_STATUS2	1000000 /* 1 s - MCP AN */
 #define CGX_POLL_AN_PAGE_STATUS		300000	/* 300 ms */
 #define CGX_POLL_AN_RESTART_STATUS	80000	/* 80 ms */
 #define CGX_POLL_AN_RX_SIGNAL		10000	/* 10 ms */
+#define CGX_POLL_AN_RX_SIGNAL2		100000	/* 100 ms - MCP AN*/
 #define CGX_POLL_TRAINING_STATUS	600000	/* 500 ms */
 #define GSERN_LANEX_TX_RST_SM_TIMEOUT   10000 /* 10 ms */
 #define REMOTE_FAULT_TIMEOUT_MS		10000
@@ -301,7 +303,7 @@ int cgx_sgmii_set_link_up(int cgx_id, int lmac_id);
 int cgx_sgmii_set_link_down(int cgx_id, int lmac_id);
 
 int cgx_xaui_init_link(int cgx_id, int lmac_id);
-int cgx_xaui_set_link_up(int cgx_id, int lmac_id);
+int cgx_xaui_set_link_up(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ctx);
 int cgx_xaui_set_link_down(int cgx_id, int lmac_id);
 int cgx_xaui_get_link(int cgx_id, int lmac_id,
 		link_state_t *result, cgx_lmac_context_t *lmac_ctx,
