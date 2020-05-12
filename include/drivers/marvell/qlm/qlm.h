@@ -247,6 +247,7 @@ typedef struct {
 	void (*qlm_get_link_training_status)(int qlm, int lane);
 	void (*qlm_clear_link_stat)(int qlm, int lane);
 	int (*qlm_prbs_chk)(int qlm, int lane);
+	int (*qlm_display_trace)(int qlm, int lane, int unused);
 } qlm_ops_t;
 
 /* QLM platform specific API */

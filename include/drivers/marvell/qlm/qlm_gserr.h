@@ -230,4 +230,19 @@ int qlm_gserr_eye_capture(int qlm, int lane, int show_data, gser_qlm_eye_t *eye_
  */
 int qlm_gserr_tx_control_bdk(int qlm, int lane, int enable_tx);
 
+/**
+ * Some SERDES can display extra tracing about AN, training, etc. This function
+ * displays those traces if available. If the SERDES doesn't support tracing, a
+ * informational message tells the user.
+ *
+ * @param node   Node to trace
+ * @param module GSERR to trace
+ * @param lane   Lane to trace
+ * @param unused Unused argument. Present so a number of QLM functions have the same signature
+ *			   for easy calling in the network driver
+ *
+ * @return Zero on success, negative on failure
+ */
+int qlm_gserr_display_trace(int module, int lane, int unused);
+
 #endif /* _QLM_GSERR_H_ */

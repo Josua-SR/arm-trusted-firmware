@@ -437,4 +437,5 @@ const qlm_ops_t qlm_gserr_ops = {
 	.qlm_get_link_training_status = qlm_gserr_get_link_training_status,
 	.qlm_clear_link_stat = qlm_gserr_clear_link_stat,
 	.qlm_prbs_chk = qlm_gserr_prbs_chk,
+	.qlm_display_trace = qlm_gserr_display_trace,
 };

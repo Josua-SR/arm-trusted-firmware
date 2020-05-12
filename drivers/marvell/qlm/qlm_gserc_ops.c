@@ -424,4 +424,5 @@ const qlm_ops_t qlm_gserc_ops = {
 	.qlm_get_link_training_status = qlm_gserc_get_link_training_status,
 	.qlm_clear_link_stat = qlm_gserc_clear_link_stat,
 	.qlm_prbs_chk = qlm_gserc_prbs_chk,
+	.qlm_display_trace = qlm_gserc_display_trace,
 };
