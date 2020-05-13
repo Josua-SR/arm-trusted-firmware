@@ -234,6 +234,7 @@ typedef struct req_an_lt_args {
 	uint32_t qlm;
 	uint32_t max_num_lanes;
 	uint32_t lt_fail_count;
+	uint32_t lnk_fail_count;
 } async_req_an_lt_args_t;
 
 typedef struct async_req {
@@ -247,15 +248,16 @@ typedef enum an_lt_state {
 	AN_LT_STATE_NO_RX_SIGNAL,
 	AN_LT_STATE_AN_FIRST_LOOP,
 	AN_LT_STATE_AN_IN_PROGRESS,
-	AN_LT_STATE_AN_FAIL,
-	AN_LT_STATE_AN_RESTART, /* If AN/LT training fails, re-start AN */
-	AN_LT_STATE_HCD_MISMATCH, /* If HCD tech mismatch happens and re-configuring CGX to match HCD */
+	AN_LT_STATE_AN_FAIL, /* If AN fails (e.g. HCD tech mismatch) */
 	AN_LT_STATE_AN_COMPLETE,
 	AN_LT_STATE_LT_FIRST_LOOP,
 	AN_LT_STATE_LT_IN_PROGRESS,
 	AN_LT_STATE_LT_FAIL,
-	AN_LT_STATE_STOPPED, /* Enters on several LT failures */
-	AN_LT_STATE_LT_COMPLETE,
+	AN_LT_STATE_LINK_FIRST_LOOP,
+	AN_LT_STATE_LINK_IN_PROGRESS,
+	AN_LT_STATE_LINK_FAIL,
+	AN_LT_STATE_LINK_UP,
+	AN_LT_STATE_STOPPED, /* Enters on several LT or LINK UP failures */
 } an_lt_state_t;
 
 /* Ownership of shared memory for AN/LT processing */

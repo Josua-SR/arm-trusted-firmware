@@ -2498,22 +2498,32 @@ static int cgx_complete_sw_an_with_mcp(int cgx_id, int lmac_id, cgx_lmac_context
 				while (gser_clock_get_count(GSERN_CLOCK_TIME)
 						< autoneg_timeout) {
 					status = mcp_get_an_lt_state(cgx_id, lmac_id);
-					if (status == AN_LT_STATE_LT_COMPLETE)
-						return 0;
-					else if ((status == AN_LT_STATE_AN_RESTART)
-						 || (status == AN_LT_STATE_AN_FAIL)) {
+					if (status == AN_LT_STATE_LINK_UP)
+							return 0;
+					else if (status == AN_LT_STATE_AN_FAIL) {
 						cgx_set_error_type(cgx_id, lmac_id,
 							   CGX_ERR_AN_CPT_FAIL);
 						/* Reset signal detect timeout after AN failure */
 						an_signal_timeout = gser_clock_get_count(GSER_CLOCK_TIME) +
 							CGX_POLL_AN_RX_SIGNAL2 * gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
 						break;
-					} else if (status == AN_LT_STATE_LT_FAIL) {
+					} else if (status == AN_LT_STATE_STOPPED) {
+						debug_cgx("%s: %d:%d LT failed several times.\n",
+								__func__, cgx_id, lmac_id);
 						cgx_set_error_type(cgx_id, lmac_id,
 							   CGX_ERR_TRAINING_FAIL);
-						/* Reset signal detect timeout after LT failure */
-						an_signal_timeout = gser_clock_get_count(GSER_CLOCK_TIME) +
-							CGX_POLL_AN_RX_SIGNAL2 * gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+						/* Print link training trace data */
+#ifdef DEBUG_ATF_CGX
+						cgx_link_training_tracing(cgx_id, lmac_id);
+#endif
+						ret = mcp_send_async_req(cgx_id, lmac_id,
+									REQ_AN_LT_START);
+						if (ret == -1) {
+							/* Request not sent */
+							debug_cgx("%s: %d:%d request not sent to MCP\n",
+								__func__, cgx_id, lmac_id);
+							goto restart_an;
+						}
 						break;
 					}
 
@@ -2537,14 +2547,16 @@ static int cgx_complete_sw_an_with_mcp(int cgx_id, int lmac_id, cgx_lmac_context
 			}
 		}
 an_check_state:
-		if (status == AN_LT_STATE_LT_COMPLETE) {
-			debug_cgx("%s: %d:%d AN/LT completed. Reset the state\n",
+		if (status == AN_LT_STATE_LINK_UP) {
+			debug_cgx("%s: %d:%d AN/LT and Link UP completed. Reset the state\n",
 				__func__, cgx_id, lmac_id);
 			mcp_set_an_lt_state(cgx_id, lmac_id, AN_LT_NO_STATE);
 			return 0;
 		} else if (status == AN_LT_STATE_STOPPED) {
 			debug_cgx("%s: %d:%d LT failed several times.\n",
 				__func__, cgx_id, lmac_id);
+			cgx_set_error_type(cgx_id, lmac_id,
+				   CGX_ERR_TRAINING_FAIL);
 #ifdef DEBUG_ATF_CGX
 			/* Print link training trace data */
 			cgx_link_training_tracing(cgx_id, lmac_id);
@@ -3240,12 +3252,19 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ctx)
 		if (cgx_complete_sw_an(cgx_id, lmac_id, lmac_ctx) != 0) {
 			return -1;
 		} else {
-			if (lmac->use_training)
-				debug_cgx("%s: %d:%d AN and Link training completed successfully\n",
-						__func__, cgx_id, lmac_id);
-			else
-				debug_cgx("%s: %d:%d AN completed successfully\n",
-						__func__, cgx_id, lmac_id);
+			if (!is_gsern &&
+				(mcp_get_intf_rev(cgx_id, lmac_id) == MCP_ANLT_INTF_VER)) {
+					debug_cgx("%s: %d:%d Link UP and error-free \n",
+							__func__, cgx_id, lmac_id);
+					goto enable_data;
+			} else {
+				if (lmac->use_training)
+					debug_cgx("%s: %d:%d AN and Link training completed successfully\n",
+							__func__, cgx_id, lmac_id);
+				else
+					debug_cgx("%s: %d:%d AN completed successfully\n",
+							__func__, cgx_id, lmac_id);
+			}
 
 			/* Clear interrupts used for auto-neg/link training in case of
 			 * GSERN serdes
@@ -3446,6 +3465,7 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ctx)
 					br_status2.u);
 	}
 
+enable_data:
 	/* Clear error bits if any set in SPUX_INT before enabling
 	 * packet transfer. Also clear the FLT status register
 	 */
