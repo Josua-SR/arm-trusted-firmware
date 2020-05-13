@@ -230,11 +230,14 @@ typedef struct req_an_lt_args {
 	uint32_t gser_index;
 	uint32_t shift_from_first;
 	uint32_t lane_mask;
-	uint32_t an_master; /* Logical lane */
+	uint32_t an_master; /* Logical lane 0 */
 	uint32_t qlm;
 	uint32_t max_num_lanes;
 	uint32_t lt_fail_count;
 	uint32_t lnk_fail_count;
+	uint32_t qlm_mode; /*current/negotiated qlm_mode */
+	uint32_t lmac_type; /*current/negotiated lmac_type */
+	uint32_t fec_type; /*current/negotiated fec_type */
 } async_req_an_lt_args_t;
 
 typedef struct async_req {
