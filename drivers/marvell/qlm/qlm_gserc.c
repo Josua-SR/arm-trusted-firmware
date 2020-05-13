@@ -37,7 +37,6 @@ static cavm_gsercx_common_phy_ctrl_bcfg_t qlm_gserc_get_clock_mode(int module);
 static cavm_gsercx_lanex_control_bcfg_t qlm_gserc_get_lane_mode(int module, int lane);
 static int qlm_gserc_change_lane_rate(int module, int lane);
 static int qlm_gserc_change_phy_rate(int module);
-static void qlm_gserc_init_reset(void);
 static int mailbox_command(int qlm, uint8_t cmd, uint64_t args);
 static int mailbox_response(int qlm, uint64_t *arg0, uint64_t *arg1);
 
@@ -204,19 +203,31 @@ int qlm_gserc_set_mode(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
 	int end_lane = (lane == -1) ? num_lanes - 1 : lane;
 
 	/* Loop through all lanes */
+	bool need_full_reset = false;
 	for (int l = start_lane; l <= end_lane; l++)
+	{
+		need_full_reset |= gserc_is_cpri(qlm, l);
 		GSER_CSR_WRITE(CAVM_GSERCX_SCRATCHX(qlm, l), state.u);
+	}
 
 	/* Return without changing the SERDES is the microcontroller isn't
 	   running. Setup will be completed when it is brought up.*/
 	GSER_CSR_INIT(gsercx_init_ctl, CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(0));
-	if (gsercx_init_ctl.s.cpu_reset)
+	if (gsercx_init_ctl.s.cpu_reset || (mode == QLM_MODE_DISABLED))
 		return 0;
+
+	for (int l = start_lane; l <= end_lane; l++)
+	{
+		GSER_CSR_INIT(lane_old, CAVM_GSERCX_LANEX_CONTROL_BCFG(qlm, l));
+		need_full_reset |= lane_old.s.ln_an_cfg;
+	}
 
 	/* Check if clocking needs to change */
 	GSER_CSR_INIT(bcfg_old, CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(qlm));
 	cavm_gsercx_common_phy_ctrl_bcfg_t bcfg_new = qlm_gserc_get_clock_mode(qlm);
-	if (bcfg_old.u != bcfg_new.u)
+	if (need_full_reset)
+		GSER_TRACE(QLM, "GSERC%d: PHY rates require a full reset\n", qlm);
+	else if (bcfg_old.u != bcfg_new.u)
 		qlm_gserc_change_phy_rate(qlm);
 	else
 		GSER_TRACE(QLM, "GSERC%d: PHY rates already correct\n", qlm);
@@ -226,24 +237,20 @@ int qlm_gserc_set_mode(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
 	/* Check if lane speed needs to change */
 	for (int l = start_lane; l <= end_lane; l++)
 	{
-		bool need_change = (bcfg_old.u != bcfg_new.u);
-		bool need_full_reset = false;
-		if (!need_change)
-		{
-			GSER_CSR_INIT(lane_old, CAVM_GSERCX_LANEX_CONTROL_BCFG(qlm, l));
-			cavm_gsercx_lanex_control_bcfg_t lane_new = qlm_gserc_get_lane_mode(qlm, l);
-			need_change = (lane_old.u != lane_new.u);
-			need_full_reset = (lane_new.s.ln_an_cfg == 3) || lane_old.s.ln_an_cfg;
-		}
+		GSER_CSR_INIT(lane_old, CAVM_GSERCX_LANEX_CONTROL_BCFG(qlm, l));
+		cavm_gsercx_lanex_control_bcfg_t lane_new = qlm_gserc_get_lane_mode(qlm, l);
+		bool need_change = (bcfg_old.u != bcfg_new.u) || (lane_old.u != lane_new.u);
 		if (need_change)
 		{
+			need_full_reset |= lane_new.s.ln_an_cfg;
 			gser_wait_usec(1000);
-			if (need_full_reset)
-			{
-				qlm_gserc_init_reset();
-//				qlm_gserc_init();
-			}
-			else
+			//if (need_full_reset)
+			//{
+				//qlm_gserc_init_reset();
+				//qlm_gserc_init();
+				//break; /* Full reset finishes reconfig, so exit loop */
+			//}
+			//else
 				qlm_gserc_change_lane_rate(qlm, l);
 			gser_wait_usec(1000);
 		}
@@ -320,6 +327,8 @@ int qlm_gserc_reset(int qlm)
 int qlm_gserc_enable_prbs(int qlm, int prbs, qlm_direction_t dir, int qlm_lane)
 {
 	int pattern = 1;
+	uint64_t user_defined[4] = { 0, 0, 0, 0 };
+	int user_defined_length = 0;
 	switch (prbs)
 	{
 		case 7:
@@ -340,13 +349,20 @@ int qlm_gserc_enable_prbs(int qlm, int prbs, qlm_direction_t dir, int qlm_lane)
 		case 31:
 			pattern = 6;
 			break;
+		case 100: /* an 8 + 8 clock like generator test defined by SFF8418 */
+			pattern = 7; /* User defined pattern */
+			user_defined[0] = 0xff00ff00ff00ff00ul; /* Bits 63:0 */
+			user_defined[1] = 0xff00ff00ff00ff00ul; /* Bits 127:64 */
+			user_defined[2] = 0xff00ff00ff00ff00ul; /* Bits 191:128 */
+			user_defined[3] = 0x00000000000000fful; /* Bits 199:192 */
+			/* Determines the length of the UDP. Must be set to d160 modulus udp_length. */
+			user_defined_length = 160 % 16;
+			break;
 	}
 
 	int num_lanes = get_num_lanes(qlm);
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
-		if ((qlm_lane != -1) && (qlm_lane != lane))
-			continue;
 		if (dir & QLM_DIRECTION_TX)
 		{
 			/* No error injection */
@@ -356,6 +372,33 @@ int qlm_gserc_enable_prbs(int qlm, int prbs, qlm_direction_t dir, int qlm_lane)
 			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_PRBS_CTRL1(qlm, lane), gser_rng_get_random8());
 			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_PRBS_CTRL2(qlm, lane), gser_rng_get_random8());
 			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_PRBS_CTRL3(qlm, lane), gser_rng_get_random8());
+			/* Write the user defined pattern */
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_7_0(qlm, lane), user_defined[0]);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_15_8(qlm, lane), user_defined[0] >> 8);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_23_16(qlm, lane), user_defined[0] >> 16);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_31_24(qlm, lane), user_defined[0] >> 24);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_39_32(qlm, lane), user_defined[0] >> 32);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_47_40(qlm, lane), user_defined[0] >> 40);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_55_48(qlm, lane), user_defined[0] >> 48);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_63_56(qlm, lane), user_defined[0] >> 56);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_71_64(qlm, lane), user_defined[1]);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_79_72(qlm, lane), user_defined[1] >> 8);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_87_80(qlm, lane), user_defined[1] >> 16);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_95_88(qlm, lane), user_defined[1] >> 24);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_103_96(qlm, lane), user_defined[1] >> 32);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_111_104(qlm, lane), user_defined[1] >> 40);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_119_112(qlm, lane), user_defined[1] >> 48);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_127_120(qlm, lane), user_defined[1] >> 56);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_135_128(qlm, lane), user_defined[2]);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_143_136(qlm, lane), user_defined[2] >> 8);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_151_144(qlm, lane), user_defined[2] >> 16);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_159_152(qlm, lane), user_defined[2] >> 24);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_167_160(qlm, lane), user_defined[2] >> 32);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_175_168(qlm, lane), user_defined[2] >> 40);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_183_176(qlm, lane), user_defined[2] >> 48);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_191_184(qlm, lane), user_defined[2] >> 56);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_199_192(qlm, lane), user_defined[3]);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_TX_UDP_SHIFT_AMOUNT(qlm, lane), user_defined_length);
 			/* Start transmit */
 			GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_BIST_TX_CTRL(qlm, lane),
 				c.s.pattern_sel = pattern;
@@ -367,6 +410,33 @@ int qlm_gserc_enable_prbs(int qlm, int prbs, qlm_direction_t dir, int qlm_lane)
 		}
 		if (dir & QLM_DIRECTION_RX)
 		{
+			/* Write the user defined pattern */
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_7_0(qlm, lane), user_defined[0]);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_15_8(qlm, lane), user_defined[0] >> 8);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_23_16(qlm, lane), user_defined[0] >> 16);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_31_24(qlm, lane), user_defined[0] >> 24);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_39_32(qlm, lane), user_defined[0] >> 32);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_47_40(qlm, lane), user_defined[0] >> 40);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_55_48(qlm, lane), user_defined[0] >> 48);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_63_56(qlm, lane), user_defined[0] >> 56);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_71_64(qlm, lane), user_defined[1]);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_79_72(qlm, lane), user_defined[1] >> 8);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_87_80(qlm, lane), user_defined[1] >> 16);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_95_88(qlm, lane), user_defined[1] >> 24);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_103_96(qlm, lane), user_defined[1] >> 32);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_111_104(qlm, lane), user_defined[1] >> 40);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_119_112(qlm, lane), user_defined[1] >> 48);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_127_120(qlm, lane), user_defined[1] >> 56);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_135_128(qlm, lane), user_defined[2]);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_143_136(qlm, lane), user_defined[2] >> 8);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_151_144(qlm, lane), user_defined[2] >> 16);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_159_152(qlm, lane), user_defined[2] >> 24);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_167_160(qlm, lane), user_defined[2] >> 32);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_175_168(qlm, lane), user_defined[2] >> 40);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_183_176(qlm, lane), user_defined[2] >> 48);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_191_184(qlm, lane), user_defined[2] >> 56);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_199_192(qlm, lane), user_defined[3]);
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_BIST_RX_UDP_SHIFT_AMOUNT(qlm, lane), user_defined_length);
 			/* Require 63 cycles to match before getting lock */
 			GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_BIST_RX_LOCK_CTRL0(qlm, lane),
 				c.s.num_cycles_7_0 = 0x3f);
@@ -405,8 +475,6 @@ int qlm_gserc_disable_prbs(int qlm, int qlm_lane)
 	int num_lanes = get_num_lanes(qlm);
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
-		if ((qlm_lane != -1) && (qlm_lane != lane))
-			continue;
 		/* Stop receive */
 		GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_BIST_RX_CTRL(qlm, lane),
 			c.s.stop_error_count = 1;
@@ -1002,19 +1070,19 @@ int qlm_gserc_tune_lane_tx(int qlm, int lane, int tx_swing, int tx_cpre, int tx_
 {
 	if ((tx_swing < 0) || (tx_swing > 7))
 	{
-		WARN("GSERC%d.%d: Invalid tuning, TX Swing(%d) must be 0 to 7\n",
+		gser_error("GSERC%d.%d: Invalid tuning, TX Swing(%d) must be 0 to 7\n",
 			qlm, lane, tx_swing);
 		return -1;
 	}
 	if ((tx_cpre < 0) || (tx_cpre > 15))
 	{
-		WARN("GSERC%d.%d: Invalid tuning, TX PRE(%d) must be 0 to 15\n",
+		gser_error("GSERC%d.%d: Invalid tuning, TX PRE(%d) must be 0 to 15\n",
 			qlm, lane, tx_cpre);
 		return -1;
 	}
 	if ((tx_cpost < 0) || (tx_cpost > 31))
 	{
-		WARN("GSERC%d.%d: Invalid tuning, TX POST(%d) must be 0 to 31\n",
+		gser_error("GSERC%d.%d: Invalid tuning, TX POST(%d) must be 0 to 31\n",
 			qlm, lane, tx_cpost);
 		return -1;
 	}
@@ -1342,6 +1410,39 @@ static int mailbox_response(int qlm, uint64_t *arg0, uint64_t *arg1)
 }
 
 /**
+ * Clean the mailbox to the serdes firmware
+ *
+ * @param node   Node to access
+ * @param qlm	QLM to access
+ *
+ * @return Zero on success, negative on failure
+ */
+static int mailbox_cleanup(int qlm)
+{
+	/* The following sequence cleans the mailbox:
+	   1) Read responses until we don't get one for 500ms
+	   2) Issue a clear command
+	   3) Read responses until we don't get one for 500ms */
+	for (int count = 0; count < 2; count++)
+	{
+		/* Read responses until we don't get one for 500ms */
+		while (1)
+		{
+			/* Wait for a response */
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_PHY0_MB_RSP_FLAG(qlm), GSERCX_PHY0_MB_RSP_FLAG_DATA, ==, 1, 500000))
+				break;
+			/* Tell firmware we read the response */
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_MB_RSP_FLAG(qlm), 1);
+			gser_wait_usec(1000);
+		}
+		/* Issue a clear command on first loop */
+		if (count == 0)
+			mailbox_command(qlm, 0x00, 0);
+	}
+	return 0;
+}
+
+/**
  * Perform RX equalization on a QLM
  *
  * @param node	 Node the QLM is on
@@ -1523,7 +1624,7 @@ int qlm_gserc_eye_capture(int qlm, int lane, int show_data, qlm_eye_t *eye_data)
 			break;
 	}
 
-	printf("GSERC%d.%d: Measured TX clock %llu.%llu MHz\n", qlm, lane,
+	printf("GSERC%d.%d: Measured TX bit rate %llu.%llu MHz\n", qlm, lane,
 		hz / 1000000, ((hz + 500) / 1000) % 1000);
 
 	GSER_CSR_INIT(bsts, CAVM_GSERCX_LANEX_STATUS_BSTS(qlm, lane));
@@ -1555,10 +1656,16 @@ int qlm_gserc_eye_capture(int qlm, int lane, int show_data, qlm_eye_t *eye_data)
 	cmd_arg |= (uint64_t)y_step << 56; /* data 7 */
 
 	if (mailbox_command(qlm, 0x83, cmd_arg) != 0)
+	{
+		/* Clean any stale data out of the mailbox */
+		mailbox_cleanup(qlm);
 		return -1;
+	}
 	if (mailbox_response(qlm, &resp0, &resp1) != 0)
 	{
 		gser_error("GSERC%d: Eye setup 1 failed\n", qlm);
+		/* Clean any stale data out of the mailbox */
+		mailbox_cleanup(qlm);
 		return -1;
 	}
 
@@ -1571,10 +1678,16 @@ int qlm_gserc_eye_capture(int qlm, int lane, int show_data, qlm_eye_t *eye_data)
 	cmd_arg |= gser_extract(ber_limit, 0, 8) << 40; /* data 5 */
 
 	if (mailbox_command(qlm, 0x84, cmd_arg))
+	{
+		/* Clean any stale data out of the mailbox */
+		mailbox_cleanup(qlm);
 		return -1;
+	}
 	if (mailbox_response(qlm, &resp0, &resp1) != 0)
 	{
 		gser_error("GSERC%d: Eye setup 2 failed\n", qlm);
+		/* Clean any stale data out of the mailbox */
+		mailbox_cleanup(qlm);
 		return -1;
 	}
 
@@ -1582,7 +1695,11 @@ int qlm_gserc_eye_capture(int qlm, int lane, int show_data, qlm_eye_t *eye_data)
 	cmd_arg = 0 << 16; /* data 2, sweep mode */
 
 	if (mailbox_command(qlm, 0x82, cmd_arg))
+	{
+		/* Clean any stale data out of the mailbox */
+		mailbox_cleanup(qlm);
 		return -1;
+	}
 
 	for (int x = 0; x < x_points; x++)
 	{
@@ -2290,7 +2407,7 @@ static int qlm_gserc_change_lane_rate(int module, int lane)
 		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_tx_rdy]=0 (lane is reset)\n", module, lane);
 	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_RX_RDY, ==, 0, 500))
 		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_rx_rdy]=0 (lane is reset)\n", module, lane);
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 500))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
 	{
 		/* This happens fast, so sometimes we miss it */
 		//gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0\n (lane is reset)", module, lane);
@@ -2300,7 +2417,7 @@ static int qlm_gserc_change_lane_rate(int module, int lane)
 		transitioned to the “Reset” state.
 		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
 			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 5000))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
 		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (lane is reset)\n", module, lane);
 
 	/* 5. Program the new Lane rate, data width, and transmitter clock parameters
@@ -2341,7 +2458,7 @@ static int qlm_gserc_change_lane_rate(int module, int lane)
 		indicating the lane is transitioning to the “Rate Change” state.
 		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
 			LN_STATE_CHNG_RDY = 0 Lane is transitioning power states */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 500))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
 		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (rate change)\n", module, lane);
 
 	/* 8. Program the lane x2/x4 bonding (used with RXAUI,XAUI,DXAUI) fields if
@@ -2356,7 +2473,7 @@ static int qlm_gserc_change_lane_rate(int module, int lane)
 		transitioned to the “Rate Change” state.
 		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
 			LN_STATE_CHNG_RDY = 1 Lane is in the “Rate Change” power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 500))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
 		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (rate change)\n", module, lane);
 
 	/* 10. Deassert the LN_STATE_CHNG signal to complete the lane
@@ -2373,14 +2490,14 @@ static int qlm_gserc_change_lane_rate(int module, int lane)
 		indicating the lane is transitioning states.
 		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
 			LN_STATE_CHNG_RDY = 0 Lane is transitioning states */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 500))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
 		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (change done)\n", module, lane);
 
 	/* 12. Wait for the PHY “Lane State Change Ready” to signal that the lane
 		has transitioned back to the “Reset” state.
 		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
 			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 500))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
 		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (change done)\n", module, lane);
 
 	/* 13. Release the lane from reset.
@@ -2400,7 +2517,7 @@ static int qlm_gserc_change_lane_rate(int module, int lane)
 		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_tx_rdy]=1 (reset done)\n", module, lane);
 	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_RX_RDY, ==, 1, 5000))
 		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_rx_rdy]=1 (reset done)\n", module, lane);
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 5000))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
 		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (reset done)\n", module, lane);
 
 	/* 15. Enable the Tx/Rx FIFOs between CGX and GSERC
@@ -2515,7 +2632,7 @@ static int qlm_gserc_change_phy_rate(int module)
 			gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_tx_rdy]=0 (change rate)\n", module, lane);
 		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_RX_RDY, ==, 0, 500))
 			gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_rx_rdy]=0 (change rate)\n", module, lane);
-		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 500))
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
 			GSER_TRACE(QLM, "GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (change rate)\n", module, lane);
 	}
 
@@ -2525,7 +2642,7 @@ static int qlm_gserc_change_phy_rate(int module)
 			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
-		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 5000))
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
 			gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (change rate)\n", module, lane);
 	}
 
@@ -2577,7 +2694,7 @@ static int qlm_gserc_change_phy_rate(int module)
 	/* 12. Read/Poll for the CM0 OK flag set
 		Read/Poll GSERC(0..2)_COMMON_PHY_STATUS_BSTS
 			CM0_OK=1 //CM0 status is Active power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_COMMON_PHY_STATUS_BSTS(module), GSERCX_COMMON_PHY_STATUS_BSTS_CM0_OK, ==, 1, 500))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_COMMON_PHY_STATUS_BSTS(module), GSERCX_COMMON_PHY_STATUS_BSTS_CM0_OK, ==, 1, 50000))
 		gser_error("GSERC%d: Timeout waiting for GSERCX_COMMON_PHY_STATUS_BSTS[cm0_ok]=1 (change rate)\n", module);
 
 	/* Program the new Lane Rates to the new PHY rates, refer to the steps in
@@ -3045,11 +3162,11 @@ static int qlm_gserc_change_phy_rate(int module)
  *				   2 for LT training state machine trace
  *				   3 for LT coefficient update state machine trace
  * @param data	   Array to contain data
- * @param data_size  Size of the data in 64 bit words
+ * @param data_size  Size of the data in bytes
  *
- * @return Length of data read in 64 bit words, or negative on failure
+ * @return Length of data read in bytes, or negative on failure
  */
-static int qlm_gserc_get_trace(int module, int lane, int trace_type, uint64_t *data, int data_size)
+static int qlm_gserc_get_trace(int module, int lane, int trace_type, uint8_t *data, int data_size)
 {
 	uint64_t args = (trace_type << 8) | lane;
 	if (mailbox_command(module, 0x8a, args))
@@ -3058,36 +3175,38 @@ static int qlm_gserc_get_trace(int module, int lane, int trace_type, uint64_t *d
 	int loc = 0;
 	do
 	{
-		if (loc + 1 >= data_size)
+		if (loc + 16 >= data_size)
 		{
 			uint64_t dummy;
 			while (status == 0)
 			{
 				status = mailbox_response(module, &dummy, &dummy);
-				loc += 2;
+				loc += 16;
 			}
 			gser_error("GSERC%d.%d: Not enough room for trace data, need %d\n", module, lane, loc);
 			return -1;
 		}
-		status = mailbox_response(module, &data[loc], &data[loc + 1]);
-		loc += 2;
+		status = mailbox_response(module, (uint64_t*)&data[loc], (uint64_t*)&data[loc + 8]);
+		loc += 16;
 	} while (status == 0);
 	return loc;
 }
 
-static void decode_header(uint64_t data, int buf_size)
+static int decode_header(uint64_t data, int length, int max_entries)
 {
 	int trace_bytes = gser_be32_to_cpu(gser_extract(data, 0, 32));
 	int total_entries = gser_be16_to_cpu(gser_extract(data, 32, 16));
-	int actual_entries = (total_entries > buf_size) ? buf_size : total_entries;
+	int actual_entries = (total_entries > max_entries) ? max_entries : total_entries;
 	int trace_idx = gser_be16_to_cpu(gser_extract(data, 48, 16));
-	printf("	Trace Size: %d\n", trace_bytes);
-	printf("	Total Entries: %d\n", total_entries);
+	printf("	Dumped Bytes:   %d\n", length);
+	printf("	Trace Size:	 %d\n", trace_bytes);
+	printf("	Total Entries:  %d\n", total_entries);
 	printf("	Actual Entries: %d\n", actual_entries);
-	printf("	Idx: %d\n", trace_idx);
+	printf("	Idx:			%d\n", trace_idx);
+	return actual_entries;
 }
 
-static void decode_an(uint32_t *data, int length)
+static void decode_an(uint8_t *data, int length)
 {
 	const char *EVENTS[] = {
 		"AN_CFG_DROPPED_IN_RESET",
@@ -3133,14 +3252,17 @@ static void decode_an(uint32_t *data, int length)
 		"SLAVE_ACTIVE"
 	};
 
-	/* First two are generic header data */
-	for (int i = 2; i < length; i++)
+	const int RECORD_SIZE = 3;
+	int entries = decode_header(*(uint64_t *)data, length, 48);
+	printf("		Event							  State						   Flags\n");
+	for (int e = 0; e < entries; e++)
 	{
-		uint8_t event = gser_extract(data[i], 0, 8);
-		uint8_t state = gser_extract(data[i], 8, 8);
-		uint8_t flags = gser_extract(data[i], 16, 8);
-		printf("	%2d) 0x%08x: (%2d)%-29s (%2d)%-26s flags:(0x%02x)%s%s%s%s%s%s\n",
-			i - 2, data[i], event, EVENTS[event], state, STATES[state], flags,
+		int i = e * RECORD_SIZE + 8;
+		uint8_t event = data[i];
+		uint8_t state = data[i + 1];
+		uint8_t flags = data[i + 2];
+		printf("	%2d: (%2d) %-29s (%2d) %-26s (0x%02x)%s%s%s%s%s%s\n",
+			e, event, EVENTS[event], state, STATES[state], flags,
 			(flags & 0x01) ? " FLAG_ENABLED" : "",
 			(flags & 0x02) ? " FLAG_MASTER" : "",
 			(flags & 0x04) ? " FLAG_RESOLVED" : "",
@@ -3150,7 +3272,7 @@ static void decode_an(uint32_t *data, int length)
 	}
 }
 
-static void decode_training_coef(uint32_t *data, int length)
+static void decode_training_coef(uint8_t *data, int length)
 {
 	const char *EVENTS[] = {
 		"STOPPING",
@@ -3171,13 +3293,23 @@ static void decode_training_coef(uint32_t *data, int length)
 		"LOCKED"
 	};
 
-	/* First two are generic header data */
-	for (int i = 2; i < length; i++)
+	const int RECORD_SIZE = 5;
+	int entries = decode_header(*(uint64_t *)data, length, 64);
+	printf("		Event			   State				Request						  Mask						  Flags\n");
+	for (int e = 0; e < entries; e++)
 	{
-		uint8_t event = gser_extract(data[i], 0, 8);
-		uint8_t state = gser_extract(data[i], 8, 8);
-		uint8_t mask = gser_extract(data[i], 16, 8);
-		uint8_t flags = gser_extract(data[i], 24, 8);
+		int i = e * RECORD_SIZE + 8;
+		uint8_t event = data[i];
+		uint8_t state = data[i + 1];
+		uint8_t req = data[i + 2];
+		uint8_t mask = data[i + 3];
+		uint8_t flags = data[i + 4];
+		const char *REQ_NAMES[4] = { "Hold", "Inc ", "Dec ", "????" };
+		const char *req_cm1 = REQ_NAMES[(req >> 4) & 3];
+		const char *req_c0 = REQ_NAMES[(req >> 2) & 3];
+		const char *req_c1 = REQ_NAMES[req & 3];
+		const char *req_init = (req & 0x40) ? "INIT" : "----";
+		const char *req_prst = (req & 0x80) ? "PRST" : "----";
 		const char *cm1;
 		const char *c0;
 		const char *c1;
@@ -3219,15 +3351,16 @@ static void decode_training_coef(uint32_t *data, int length)
 				c1 = "???";
 				break;
 		}
-		printf("	%2d) 0x%08x: (%2d)%-14s (%2d)%-15s mask:(0x%02x)%s|%s|%s|%s|%s flags:(0x%02x)%s%s\n",
-			i - 2, data[i], event, EVENTS[event], state, STATES[state],
+		printf("	%2d: (%2d) %-14s (%2d) %-15s (0x%02x) %s|%s|%s|%s|%s  (0x%02x) %s|%s|%s|%s|%s  (0x%02x)%s%s\n",
+			e, event, EVENTS[event], state, STATES[state],
+			req, req_cm1, req_c0, req_c1, req_init, req_prst,
 			mask, cm1, c0, c1, init, prst, flags,
 			(flags & 0x01) ? " FLAG_RESTART" : "",
 			(flags & 0x02) ? " FLAG_STOP" : "");
 	}
 }
 
-static void decode_training_state(uint64_t *data, int length)
+static void decode_training_state(uint8_t *data, int length)
 {
 	const char *EVENTS[] = {
 		"INITIALIZING",
@@ -3261,15 +3394,18 @@ static void decode_training_state(uint64_t *data, int length)
 		"TRAINING_FAILURE"
 	};
 
-	/* First one is generic header data */
-	for (int i = 1; i < length; i++)
+	const int RECORD_SIZE = 5;
+	int entries = decode_header(*(uint64_t *)data, length, 64);
+	printf("		Event						   State					   Update Request				   Coeff Status		Flags\n");
+	for (int e = 0; e < entries; e++)
 	{
-		uint8_t event = gser_extract(data[i], 0, 8);
-		uint8_t state = gser_extract(data[i], 8, 8);
-		uint8_t req = gser_extract(data[i], 16, 8);
-		uint8_t coeff = gser_extract(data[i], 24, 8);
-		uint8_t flags = gser_extract(data[i], 32, 8);
-		const char *REQ_NAMES[4] = { "H", "+", "-", "?" };
+		int i = e * RECORD_SIZE + 8;
+		uint8_t event = data[i];
+		uint8_t state = data[i + 1];
+		uint8_t req = data[i + 2];
+		uint8_t coeff = data[i + 3];
+		uint8_t flags = data[i + 4];
+		const char *REQ_NAMES[4] = { "Hold", "Inc ", "Dec ", "????" };
 		const char *req_cm1 = REQ_NAMES[(req >> 4) & 3];
 		const char *req_c0 = REQ_NAMES[(req >> 2) & 3];
 		const char *req_c1 = REQ_NAMES[req & 3];
@@ -3279,8 +3415,8 @@ static void decode_training_state(uint64_t *data, int length)
 		const char *coeff_cm1 = COEFF_NAMES[(coeff >> 4) & 3];
 		const char *coeff_c0 = COEFF_NAMES[(coeff >> 2) & 3];
 		const char *coeff_c1 = COEFF_NAMES[coeff & 3];
-		printf("	%2d) 0x%016llx: (%2d)%-26s (%2d)%-22s req:(0x%02x)%s|%s|%s|%s|%s coef:(0x%02x)%s|%s|%s flags:(0x%02x)%s%s%s\n",
-			i - 1, data[i], event, EVENTS[event], state, STATES[state],
+		printf("	%2d: (%2d) %-26s (%2d) %-22s (0x%02x) %s|%s|%s|%s|%s  (0x%02x) %s|%s|%s  (0x%02x)%s%s%s\n",
+			e, event, EVENTS[event], state, STATES[state],
 			req, req_cm1, req_c0, req_c1, req_init, req_prst,
 			coeff, coeff_cm1, coeff_c0, coeff_c1, flags,
 			(flags & 0x01) ? " FLAG_RX_TRAINED" : "",
@@ -3304,20 +3440,16 @@ static void decode_training_state(uint64_t *data, int length)
  */
 int qlm_gserc_display_trace(int module, int lane, int unused)
 {
-#define DATA_SIZE 48
-	uint64_t data[DATA_SIZE];
+	uint8_t data[64 * 8];
 	printf("GSERC%d.%d: AN trace\n", module, lane);
-	int len = qlm_gserc_get_trace(module, lane, 1, data, DATA_SIZE);
-	decode_header(data[0], DATA_SIZE);
-	decode_an((uint32_t *)data, len * 2);
+	int len = qlm_gserc_get_trace(module, lane, 1, data, sizeof(data));
+	decode_an(data, len);
 	printf("GSERC%d.%d: Training state machine trace\n", module, lane);
-	len = qlm_gserc_get_trace(module, lane, 2, data, DATA_SIZE);
-	decode_header(data[0], DATA_SIZE);
+	len = qlm_gserc_get_trace(module, lane, 2, data, sizeof(data));
 	decode_training_state(data, len);
 	printf("GSERC%d.%d: Training coefficient trace\n", module, lane);
-	len = qlm_gserc_get_trace(module, lane, 3, data, DATA_SIZE);
-	decode_header(data[0], DATA_SIZE);
-	decode_training_coef((uint32_t *)data, len * 2);
+	len = qlm_gserc_get_trace(module, lane, 3, data, sizeof(data));
+	decode_training_coef(data, len);
 	return 0;
 }
 
