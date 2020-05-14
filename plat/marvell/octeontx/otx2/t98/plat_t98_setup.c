@@ -143,6 +143,11 @@ int plat_octeontx_get_rvu_count(void)
 	return 24;
 }
 
+int plat_octeontx_get_nix_count(void)
+{
+	return 2;
+}
+
 int plat_octeontx_get_mcc_count(void)
 {
 	return MAX_MCC;

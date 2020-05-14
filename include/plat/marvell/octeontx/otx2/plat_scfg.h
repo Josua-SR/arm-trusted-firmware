@@ -19,6 +19,7 @@ typedef struct plat_octeontx_scfg {
 	uint8_t cgx_count;
 	uint8_t gser_count;
 	uint8_t mcc_count;
+	uint8_t nix_count;
 } plat_octeontx_scfg_t;
 
 extern plat_octeontx_scfg_t * const plat_octeontx_scfg;
