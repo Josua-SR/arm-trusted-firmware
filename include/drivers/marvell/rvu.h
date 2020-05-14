@@ -76,6 +76,9 @@ CASSERT(MSIX_TABLE_BASE + MSIX_TABLE_SIZE <= SH_FWDATA_BASE,
 #define FALSE	0
 #define TRUE	1
 
+#define NIX_DISABLED	U(-1)
+#define MAX_NIX		2
+
 typedef struct pci_config {
 	int pf_devid;
 	int vf_devid;
@@ -88,7 +91,7 @@ struct rvu_device {
 	int first_hwvf;
 	int pf_num_msix_vec;
 	int vf_num_msix_vec;
-	int pf_res_ena; /* Enable npa/nix to PF */
+	int pf_res_nix_id; /* Enable npa/nix to PF */
 	pci_config_t pci; /* PCI configuration */
 };
 
