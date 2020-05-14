@@ -1847,6 +1847,7 @@ static int cgx_get_usxgmii_speed_mbps_from_rate(int rate)
  */
 void cgx_lmac_init(int cgx_id, int lmac_id)
 {
+	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
 	cavm_cgxx_cmrx_config_t cmr_config;
 	cavm_cgxx_spu_usxgmii_control_t usxgmii_ctrl;
@@ -1854,7 +1855,8 @@ void cgx_lmac_init(int cgx_id, int lmac_id)
 
 	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
 
-	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
 
 	/* FDT parser should have updated the lmac mode by now.
 	 * check if mode is programmed, if not, return
@@ -1889,6 +1891,8 @@ void cgx_lmac_init(int cgx_id, int lmac_id)
 				cgx_id, lmac_id));
 	cmr_config.s.lmac_type = lmac->mode;
 	cmr_config.s.lane_to_sds = lmac->lane_to_sds;
+	cmr_config.s.p2x_select = cgx->nix_block;
+	cmr_config.s.x2p_select = cgx->nix_block;
 	CSR_WRITE(CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id),
 			cmr_config.u);
 

@@ -148,6 +148,11 @@ typedef struct cgx_lmac_config {
 	int lane_an_master;
 } cgx_lmac_config_t;
 
+typedef enum {
+	NIX0 = 1,
+	NIX1 = 2
+} nix_block_t;
+
 typedef struct cgx_config {
 	uint32_t lmac_count:4;
 	uint32_t lmacs_used:4;
@@ -159,6 +164,8 @@ typedef struct cgx_config {
 	uint16_t network_lane_order;
 	cgx_lmac_config_t lmac_cfg[MAX_LMAC_PER_CGX];
 	const qlm_ops_t *qlm_ops;
+	int load;
+	nix_block_t nix_block;
 } cgx_config_t;
 
 typedef struct qlm_config {

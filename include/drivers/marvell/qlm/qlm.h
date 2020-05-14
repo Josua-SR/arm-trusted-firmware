@@ -180,6 +180,7 @@ struct qlm_mode_strmap_s {
 	int baud_rate;
 	char *bdk_str;
 	char *linux_str;
+	int eth_link_speed; /* in units of Gbps */
 };
 
 /* QLM APIs */

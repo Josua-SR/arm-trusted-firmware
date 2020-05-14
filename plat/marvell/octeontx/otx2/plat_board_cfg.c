@@ -1458,6 +1458,7 @@ static int octeontx2_fill_cgx_struct(int cgx_idx, int qlm, int gserx,
 
 		cgx->lmac_count++;
 		cgx->lmacs_used += lused;
+		cgx->load += qlm_get_mode_strmap(mode_idx).eth_link_speed;
 
 		/* In case of 1000 BASE-X, update the property of LMAC */
 		if (mode_idx == QLM_MODE_1G_X) {
@@ -1941,6 +1942,87 @@ static void octeontx2_fill_cgx_network_lane_order(const void *fdt)
 	}
 }
 
+static void octeontx2_map_cgx_to_nix(void)
+{
+	struct {
+		nix_block_t block;
+		int load;
+	} *nix, na[2] = { /* "na" means NIX array */
+		[0] = { .block = NIX0, .load = 0 },
+		[1] = { .block = NIX1, .load = 0 }
+	};
+	cgx_config_t *ca[MAX_CGX]; /* "ca" means CGX array */
+	cgx_config_t *cgx, *temp;
+	int i, j, ca_size;
+
+	/* Put all enabled CGXs in a temporary CGX array */
+	ca_size = 0;
+	for (i = 0; i < MAX_CGX; i++) {
+		cgx = &plat_octeontx_bcfg->cgx_cfg[i];
+		if (cgx->enable) {
+			ca[ca_size] = cgx;
+			ca_size++;
+		}
+	}
+
+	if (plat_octeontx_get_nix_count() > 2)
+		WARN("Unsupported platform NIX block count %d\n",
+		     plat_octeontx_get_nix_count());
+
+	if (plat_octeontx_get_nix_count() != 2) {
+		/* If only one NIX block, handle it. */
+		for (i = 0; i < ca_size; i++) {
+			debug_dts("cgx%d using NIX%d\n", i, 0);
+			ca[i]->nix_block = NIX0;
+		}
+		return;
+	}
+
+	/* If we reach this point, then we're dealing with two NIX blocks.
+	 * Map LMACs to NIX blocks in a way that balances the load.
+	 *
+	 * Use Selection Sort algorithm to put the CGX array in descending order
+	 * by load; if there's a tie, then put the CGX with fewer LMACs at a
+	 * lower array index.
+	 */
+	for (i = 0; i < ca_size; i++) {
+		for (j = i + 1; j < ca_size; j++) {
+			if (ca[j]->load > ca[i]->load) {
+				temp = ca[i];
+				ca[i] = ca[j];
+				ca[j] = temp;
+			} else if (ca[j]->load == ca[i]->load) {
+				if (ca[j]->lmac_count < ca[i]->lmac_count) {
+					temp = ca[i];
+					ca[i] = ca[j];
+					ca[j] = temp;
+				}
+			}
+		}
+	}
+
+	for (i = 0; i < ca_size; i++) {
+		cgx = ca[i];
+
+		/* Point to the NIX that has the lighter load; if there's a tie,
+		 * then pick NIX0.
+		 */
+		if (na[1].load < na[0].load)
+			nix = &na[1];
+		else
+			nix = &na[0];
+
+		debug_dts("CGX%d: NIX load(%d,%d), balancing to use NIX%d\n", i,
+			  na[0].load, na[1].load, nix->block - NIX0);
+
+		/* Map all LMACs of this CGX to the NIX */
+		cgx->nix_block = nix->block;
+
+		/* Update the load on the NIX */
+		nix->load += cgx->load;
+	}
+}
+
 /* BDK fills the CAVM_GSERNX_LANEX_SCRATCH0 register with mode used by LANE.
  * The routine goes through all the QLM/LANE sets and initializes
  * CGX/LMAC, if any.
@@ -1991,6 +2073,7 @@ static void octeontx2_fill_cgx_details(const void *fdt)
 	}
 	octeontx2_cgx_check_linux(fdt);
 	octeontx2_cgx_assign_mac(fdt);
+	octeontx2_map_cgx_to_nix();
 }
 
 static void octeontx2_fill_qlm_details(const void *fdt)
