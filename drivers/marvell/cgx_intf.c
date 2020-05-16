@@ -1030,7 +1030,7 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 		 * the link for other lane as well
 		 */
 		lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_idx].lmac_cfg[lmac_idx];
-		if (lmac->max_lane_count == 1) {
+		if (lmac->max_lane_count != 1) {
 			/* Obtain LMAC index for other lane */
 			cgx_obtain_lmac_index(gserc_idx, !lane_idx, &cgx_idx, &lmac_idx);
 			if ((cgx_idx == -1) && (lmac_idx == -1)) {
