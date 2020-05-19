@@ -3007,6 +3007,12 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id)
 	cavm_cgxx_smux_tx_ctl_t smux_tx_ctl;
 	cavm_cgxx_spu_usxgmii_control_t usxgmii_ctrl;
 	link_state_t link;
+	bool is_gsern = 0;
+
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		is_gsern = true;
 
 	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
 	lmac = &cgx->lmac_cfg[lmac_id];
@@ -3189,7 +3195,7 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id)
 	/* At this point CGX is driving the serdes. Enable serdes transmitter.
 	 * Only enable serdes transmitter if autoneg is disabled
 	 */
-	if (lmac->autoneg_dis)
+	if (lmac->autoneg_dis || !is_gsern)
 		cgx_serdes_tx_control(cgx_id, lmac_id, true);
 
 	/* keep the reset values for lane polarity. select deficit
