@@ -2345,6 +2345,7 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 	if ((request_id != CGX_CMD_LINK_BRING_UP) &&
 		(request_id != CGX_CMD_LINK_BRING_DOWN) &&
 		(request_id != CGX_CMD_SET_FEC) &&
+		(request_id != CGX_CMD_GET_LINK_STS) &&
 		(request_id != CGX_CMD_MODE_CHANGE)) {
 		/* in case of LINK_UP/DOWN, error type is updated
 		 * as part of link status struct
