@@ -1685,50 +1685,50 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 	/* Put the CGX LMAC SERDES lanes in Reset
 	 * if link training is enabled
 	 */
-	if (lmac->use_training) {
-		cgx_serdes_tx_control(cgx_id, lmac_id, false);
-		cgx_serdes_reset(cgx_id, lmac_id, true);
-	}
+		if (lmac->use_training) {
+			cgx_serdes_tx_control(cgx_id, lmac_id, false);
+			cgx_serdes_reset(cgx_id, lmac_id, true);
+		}
 
-	/* Check auto-neg HCD to see if their is a CGX mismatch.
-	 * Function will restart auto-neg if training failed
-	 */
-	ret = cgx_an_hcd_check(cgx_id, lmac_id, 0);
+		/* Check auto-neg HCD to see if their is a CGX mismatch.
+		 * Function will restart auto-neg if training failed
+		 */
+		ret = cgx_an_hcd_check(cgx_id, lmac_id, 0);
 
-	if (ret == -1) {
-		return -1;
-	} else if (ret == 1) {
-		debug_cgx("%s:%d:%d: Auto-neg HCD mismatch detected.\n",
-			__func__, cgx_id, lmac_id);
+		if (ret == -1) {
+			return -1;
+		} else if (ret == 1) {
+			debug_cgx("%s:%d:%d: Auto-neg HCD mismatch detected.\n",
+				__func__, cgx_id, lmac_id);
 
-		/* Always need to start Link training for non-GSERN chips */
+			/* Always need to start Link training for non-GSERN chips */
 			cgx_link_training_start(cgx_id, lmac_id, true);
 			/* Enable the SERDES Tx */
 			cgx_serdes_tx_control(cgx_id, lmac_id, true);
-	} else {
-		/* If there was no mismatch S/W needs to
-		 * manually kick off training
-		 * when arb_link_chk_en is not enabled
-		 */
-		if (lmac->use_training) {
-			spux_an_ctl.u = CSR_READ(CAVM_CGXX_SPUX_AN_CONTROL(
-							cgx_id, lmac_id));
-			if (!spux_an_ctl.s.an_arb_link_chk_en) {
-				cgx_link_training_start(cgx_id, lmac_id, true);
-				/* Clear the CGX LMAC SERDES reset */
-				cgx_serdes_reset(cgx_id, lmac_id, false);
+		} else {
+			/* If there was no mismatch S/W needs to
+			 * manually kick off training
+			 * when arb_link_chk_en is not enabled
+			 */
+			if (lmac->use_training) {
+				spux_an_ctl.u = CSR_READ(CAVM_CGXX_SPUX_AN_CONTROL(
+								cgx_id, lmac_id));
+				if (!spux_an_ctl.s.an_arb_link_chk_en) {
+					cgx_link_training_start(cgx_id, lmac_id, true);
+					/* Clear the CGX LMAC SERDES reset */
+					cgx_serdes_reset(cgx_id, lmac_id, false);
+				}
+				/* Enable the SERDES Tx */
+				cgx_serdes_tx_control(cgx_id, lmac_id, true);
 			}
-			/* Enable the SERDES Tx */
-			cgx_serdes_tx_control(cgx_id, lmac_id, true);
+			debug_cgx("%s:%d:%d: Auto-neg HCD matches CGX config.\n",
+				__func__, cgx_id, lmac_id);
 		}
-		debug_cgx("%s:%d:%d: Auto-neg HCD matches CGX config.\n",
-			__func__, cgx_id, lmac_id);
-	}
 
-	debug_cgx("%s: %d:%d AN successfully completed, AN Completion time: %lld ms\n",
-	    __func__, cgx_id, lmac_id,
-	    ((gser_clock_get_count(GSER_CLOCK_TIME) - init_time) *
-		 1000 / gser_clock_get_rate(GSER_CLOCK_TIME)));
+		debug_cgx("%s: %d:%d AN successfully completed, AN Completion time: %lld ms\n",
+			__func__, cgx_id, lmac_id,
+			((gser_clock_get_count(GSER_CLOCK_TIME) - init_time) *
+			 1000 / gser_clock_get_rate(GSER_CLOCK_TIME)));
 	}
 
 	return 0;
@@ -3300,46 +3300,46 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ctx)
 			return -1;
 		}
 
-	/* If link training is disabled, manually bring up Link */
-	if (!lmac->use_training) {
-		/* Perform RX EQU for non-KR interfaces and for the link
-		 * speed >= 10Gbaud - XAUI/XLAUI/XFI
-		 */
-		gserx = lmac->gserx + lmac->shift_from_first;
-		qlm = lmac->qlm + lmac->shift_from_first;
-		/* For some boards, lanes are swizzled and the lane
-		 * info in LMAC config structure might not have the
-		 * swapped lane info and hence read it from lane_to_sds
-		 */
+		/* If link training is disabled, manually bring up Link */
+		if (!lmac->use_training) {
+			/* Perform RX EQU for non-KR interfaces and for the link
+			 * speed >= 10Gbaud - XAUI/XLAUI/XFI
+			 */
+			gserx = lmac->gserx + lmac->shift_from_first;
+			qlm = lmac->qlm + lmac->shift_from_first;
+			/* For some boards, lanes are swizzled and the lane
+			 * info in LMAC config structure might not have the
+			 * swapped lane info and hence read it from lane_to_sds
+			 */
 
-		lane_mask = lmac->lane_mask;
+			lane_mask = lmac->lane_mask;
 
-		/* Skip RX adaptation in internal loopback mode */
-		spux_control1.u = CSR_READ(CAVM_CGXX_SPUX_CONTROL1(
-					cgx_id, lmac_id));
-		if (spux_control1.s.loopbck)
-			lane_mask = 0;
+			/* Skip RX adaptation in internal loopback mode */
+			spux_control1.u = CSR_READ(CAVM_CGXX_SPUX_CONTROL1(
+															   cgx_id, lmac_id));
+			if (spux_control1.s.loopbck)
+				lane_mask = 0;
 
-		while (lane_mask) {
-			num_lanes = qlm_get_lanes(qlm);
-			for (lane = 0; lane < num_lanes; lane++) {
-				if (!(lane_mask & (1 << lane)))
-					continue;
-				if (!plat_octeontx_bcfg->qlm_cfg[qlm].
-							rx_adaptation[lane])
-					continue;
-				if (cgx->qlm_ops->qlm_rx_equalization(
-							gserx, lane) == -1) {
-					debug_cgx("%s:RX EQU failed %d:%d\n",
-						__func__, qlm, lane);
-					cgx_set_error_type(cgx_id, lmac_id,
-						CGX_ERR_RX_EQU_FAIL);
-					return -1;
+			while (lane_mask) {
+				num_lanes = qlm_get_lanes(qlm);
+				for (lane = 0; lane < num_lanes; lane++) {
+					if (!(lane_mask & (1 << lane)))
+						continue;
+					if (!plat_octeontx_bcfg->qlm_cfg[qlm].
+								rx_adaptation[lane])
+						continue;
+					if (cgx->qlm_ops->qlm_rx_equalization(
+								gserx, lane) == -1) {
+						debug_cgx("%s:RX EQU failed %d:%d\n",
+							__func__, qlm, lane);
+						cgx_set_error_type(cgx_id, lmac_id,
+							CGX_ERR_RX_EQU_FAIL);
+						return -1;
+					}
 				}
-			}
-			lane_mask >>= num_lanes;
-			gserx++;
-			qlm++;
+				lane_mask >>= num_lanes;
+				gserx++;
+				qlm++;
 			}
 		}
 	}
