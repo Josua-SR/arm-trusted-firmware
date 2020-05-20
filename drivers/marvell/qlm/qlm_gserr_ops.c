@@ -406,6 +406,26 @@ static int qlm_gserr_prbs_chk(int qlm, int lane)
 	return 0;
 }
 
+/**
+ * Check if farend digital or analog loopbacks are enabled
+ *
+ * @param qlm    Index into GSER* group
+ * @param lane	 Which lane
+ * @return 1 if farend loopback enabled on lane, 0 if not enabled
+ */
+static int qlm_gserr_farend_lpbk_chk(int qlm, int lane)
+{
+	/* Farend Analog */
+	GSER_CSR_INIT(loopback_ctrl, CAVM_GSERRX_LNX_TOP_AFE_LOOPBACK_CTRL(qlm, lane));
+	/* Farend Digital */
+	GSER_CSR_INIT(txdp_ctrl1, CAVM_GSERRX_LNX_TOP_DPL_TXDP_CTRL1(qlm, lane));
+
+	if (loopback_ctrl.s.loopback_fea_en || txdp_ctrl1.s.lb_fed_tx_en)
+		return 1;
+
+	return 0;
+}
+
 const qlm_ops_t qlm_gserr_ops = {
 	.type = QLM_GSERR_TYPE,
 	.qlm_get_state = qlm_gserr_get_state,
@@ -437,5 +457,6 @@ const qlm_ops_t qlm_gserr_ops = {
 	.qlm_get_link_training_status = qlm_gserr_get_link_training_status,
 	.qlm_clear_link_stat = qlm_gserr_clear_link_stat,
 	.qlm_prbs_chk = qlm_gserr_prbs_chk,
+	.qlm_farend_lpbk_chk = qlm_gserr_farend_lpbk_chk,
 	.qlm_display_trace = qlm_gserr_display_trace,
 };

@@ -544,8 +544,7 @@ static int cgx_link_training_wait(int cgx_id, int lmac_id)
 	return 0;
 }
 
-#ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
-static int cgx_qlm_prbs_chk(int cgx_id, int lmac_id)
+static int cgx_qlm_prbs_lpbk_chk(int cgx_id, int lmac_id)
 {
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
@@ -570,6 +569,9 @@ static int cgx_qlm_prbs_chk(int cgx_id, int lmac_id)
 			/* Check if any lane has Rx or Tx PRBS enabled */
 			if (cgx->qlm_ops->qlm_prbs_chk(gserx, lane))
 				return 1;
+			/* Check if any lane has a farend loopback enabled */
+			if (cgx->qlm_ops->qlm_farend_lpbk_chk(gserx, lane))
+				return 1;
 		}
 		lane_mask >>= num_lanes;
 		qlm++;
@@ -577,7 +579,6 @@ static int cgx_qlm_prbs_chk(int cgx_id, int lmac_id)
 
 	return 0;
 }
-#endif
 
 /* This function initializes CGX in the SGMII/QSGMII modes
  * called one time either during boot or mode change
@@ -3245,12 +3246,15 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ctx)
 	/* Don't try to bring link UP
 	 * if PRBS is enabled on any LMAC lanes
 	 */
-#ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
+
 	if (!is_gsern) {
-		if (cgx_qlm_prbs_chk(cgx_id, lmac_id))
+		if (cgx_qlm_prbs_lpbk_chk(cgx_id, lmac_id)) {
+			debug_cgx("%s: %d:%d Not bringing link up. PRBS or Farend loopback enabled.\n",
+					__func__, cgx_id, lmac_id);
 			return 0;
+		}
 	}
-#endif
+
 	if (!lmac->autoneg_dis) {
 		/* Configure an_nonce_match_dis bit accordingly based
 		 * on loopback mode set by user
