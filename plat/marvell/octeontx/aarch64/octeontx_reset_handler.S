@@ -14,6 +14,7 @@
 	 * octeontx_relocation function set this variable to 1 when
 	 * it relocate code.
 	 */
+.balign 8
 is_reloc_done:
 	.quad 0
 
