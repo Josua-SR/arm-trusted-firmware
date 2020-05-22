@@ -528,6 +528,20 @@ static void octeontx2_parse_rvu_config(const void *fdt, int *fdt_vfs)
 	}
 #endif /* RVU_SDP_FDT_NODE */
 
+#ifdef RVU_REE_FDT_NODE
+	/*
+	 * Implementation note: we parse all the REE devices using the same
+	 * node name as they are all identical.  If they need to be different,
+	 * this loop needs to change to specify the instance-specific node name.
+	 */
+	for (i = 0; i < SW_RVU_REE_NUM_PF; i++) {
+		rc = octeontx2_parse_sw_rvu(fdt, offset, RVU_REE_FDT_NODE,
+					    SW_RVU_REE_PF(i), fdt_vfs);
+		/* Not an error if REE is absent from FDT. */
+		(void)rc;
+	}
+#endif /* RVU_REE_FDT_NODE */
+
 	/* Find if CPT node is available */
 	if (plat_octeontx_get_cpt_count()) {
 		/* if CPT block is available, check if node is
