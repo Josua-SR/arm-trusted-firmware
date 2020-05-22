@@ -119,11 +119,6 @@ static struct sw_rvu_dev_info *find_sw_rvu_dev(int bfdt_index)
 		    .vf_devid = CAVM_PCC_DEV_IDL_E_SW_RVU_CPT_VF,
 		    .class_code = CPT_CLASS_CODE
 		  } },
-		{ SW_RVU_REE_PF(0), SW_RVU_REE_NUM_PF,
-		  { .pf_devid = CAVM_PCC_DEV_IDL_E_SW_RVU_REE_PF,
-		    .vf_devid = CAVM_PCC_DEV_IDL_E_SW_RVU_REE_VF,
-		    .class_code = GSP_CLASS_CODE
-		  } },
 	}, *sw_dev;
 	int i;
 
@@ -255,66 +250,11 @@ static int rvu_provision_pfs_for_sw_devs(int rvu_pf_start, int top_cgx_pf,
 
 	rvu_pf = rvu_pf_start;
 
-	/* Provision RVU PFs for REE. */
-	for (i = SW_RVU_REE_NUM_PF - 1; (int)i >= 0; i--) {
-		/* Enforce constraint */
-		if (rvu_pf < RVU_CGX_FIRST) {
-			ERROR("RVU: too many SW_RVU_xxx devices (REE%d).\n", i);
-			break;
-		}
-
-		sw_pf = find_sw_rvu_pf_info(SW_RVU_REE_PF(i));
-		assert(sw_pf != NULL);
-
-		/* Legacy not valid for REE */
-		if ((sw_pf->mapping == SW_RVU_MAP_LEGACY) ||
-		    (sw_pf->mapping == SW_RVU_MAP_NONE)) {
-			debug_rvu(
-			  "RVU: NOT provisioning PF for SW_RVU_REE #%d\n", i);
-			continue;
-		}
-
-		if ((sw_pf->mapping == SW_RVU_MAP_AVAILABLE) &&
-			 (rvu_pf <= top_cgx_pf)) {
-			debug_rvu(
-			  "RVU: cannot provision PF for SW_RVU_REE #%d\n",
-			  i);
-			continue;
-		}
-
-		assert((sw_pf->mapping == SW_RVU_MAP_FORCE) ||
-		       (sw_pf->mapping == SW_RVU_MAP_AVAILABLE));
-
-		debug_rvu("RVU: provision PF%d -> SW_RVU_REE #%d\n",
-			  rvu_pf, i);
-
-		octeontx_init_rvu_fixed(cur_hwvf, rvu_pf, SW_RVU_REE_PF(i),
-					TRUE);
-		/*
-		 * If this PF was already provisioned to CGX,
-		 * disable the lmac so CGX driver will not use it.
-		 *
-		 * Otherwise, adjust uninitialized count.
-		 */
-		if (rvu_pf <= top_cgx_pf) {
-			cgx_lmac_list[rvu_pf].lmac->lmac_enable = 0;
-			debug_rvu("RVU: replacing CGX%d/LMAC%d with REE\n",
-				  cgx_lmac_list[rvu_pf].cgx_id,
-				  cgx_lmac_list[rvu_pf].lmac_id);
-		} else /* i.e. rvu_pf > top_cgx_pf */ {
-			*uninit_pf_cnt -= 1;
-			debug_rvu("RVU: Decrement uninit_pfs -> %d\n",
-				  *uninit_pf_cnt);
-		}
-
-		rvu_pf--;
-	}
-
-	/* Provision RVU PFs for SDP. */
+	/* IF a PCI PEM is in Endpoint mode, provision RVU PFs for SDP */
 	for (i = SW_RVU_SDP_NUM_PF - 1; (int)i >= 0; i--) {
 		/* Enforce constraint */
 		if (rvu_pf < RVU_CGX_FIRST) {
-			ERROR("RVU: too many SW_RVU_xxx devices (SDP%d).\n", i);
+			ERROR("RVU: too many SW_RVU_xxx devices.\n");
 			break;
 		}
 
