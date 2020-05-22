@@ -223,7 +223,7 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 		break;
 
 	case QLM_MODE_25GAUI_C2C:
-		host_mode = MYD_P25LR; /* 25GBASE-R, RS-FEC, no AN */
+		host_mode = MYD_P25LN; /* 25GBASE-R, no-FEC, no AN */
 
 		switch (lmac_cfg->fec) {
 		case CGX_FEC_RS:
@@ -276,7 +276,7 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 		}
 
 		if (lmac_cfg->mode_idx == QLM_MODE_50GAUI_2_C2C)
-			host_mode = MYD_P50MR; /* 50GBASE-R2, RS-FEC, no AN */
+			host_mode = MYD_P50MN; /* 50GBASE-R2, no-FEC, no AN */
 		else
 			host_mode = MYD_P50LN; /* 50GBASE-R4, no FEC, no AN */
 		break;
