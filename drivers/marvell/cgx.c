@@ -575,6 +575,7 @@ static int cgx_qlm_prbs_lpbk_chk(int cgx_id, int lmac_id)
 		}
 		lane_mask >>= num_lanes;
 		qlm++;
+		gserx++;
 	}
 
 	return 0;
