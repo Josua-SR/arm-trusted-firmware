@@ -250,6 +250,10 @@ typedef struct {
 	int (*qlm_prbs_chk)(int qlm, int lane);
 	int (*qlm_farend_lpbk_chk)(int qlm, int lane);
 	int (*qlm_display_trace)(int qlm, int lane, int unused);
+	void (*qlm_rx_leq_adapt)(int qlm, int lane, int leq_lfg_start,
+		int leq_hfg_sql_start, int leq_mbf_start, int leq_mbg_start,
+		int gn_apg_start);
+	void (*qlm_rx_dfe_adapt)(int qlm, int lane);
 } qlm_ops_t;
 
 /* QLM platform specific API */

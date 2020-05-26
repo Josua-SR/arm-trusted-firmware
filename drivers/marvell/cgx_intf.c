@@ -1959,6 +1959,7 @@ int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data)
 	int gserx;
 	int cgx_id;
 	cgx_config_t *cgx_cfg;
+	cgx_lmac_config_t *lmac;
 
 	if (qlm >= MAX_QLM || qlm < 0) {
 		WARN("%d not in range, available QLM0-%d\n", qlm, MAX_QLM - 1);
@@ -1983,7 +1984,8 @@ int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data)
 		return -1;
 	}
 
-	gserx = cgx_cfg->lmac_cfg[qlm_lane].gserx;
+	lmac = &cgx_cfg->lmac_cfg[qlm_lane];
+	gserx = lmac->gserx;
 
 	if (show_data) {
 		cgx_cfg->qlm_ops->qlm_display_settings(gserx, qlm_lane, 1, 1,
@@ -2046,6 +2048,8 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 		(request_id == CGX_CMD_LOOP_SERDES) ||
 		(request_id == CGX_CMD_TUNE_SERDES) ||
+		(request_id == CGX_CMD_LEQ_ADAPT_SERDES) ||
+		(request_id == CGX_CMD_DFE_ADAPT_SERDES) ||
 		(request_id == CGX_CMD_GET_FW_VER)) {
 		switch (request_id) {
 		case CGX_CMD_INTF_SHUTDOWN:
@@ -2132,6 +2136,18 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 				 scratchx1.s.gser_tune.tx_pre,
 				 scratchx1.s.gser_tune.tx_post);
 			break;
+		case CGX_CMD_LEQ_ADAPT_SERDES:
+			cgx_set_serdes_rx_leq_adaptation(cgx_id, lmac_id,
+				scratchx1.s.leq_adt.ifg_start,
+				scratchx1.s.leq_adt.hfg_sqi_start,
+				scratchx1.s.leq_adt.mbf_start,
+				scratchx1.s.leq_adt.mbg_start,
+				scratchx1.s.leq_adt.apg_start);
+			break;
+		case CGX_CMD_DFE_ADAPT_SERDES:
+			cgx_set_serdes_rx_dfe_adaptation(cgx_id, lmac_id);
+			break;
+
 		}
 	} else {
 		/* all the below commands should be processed only

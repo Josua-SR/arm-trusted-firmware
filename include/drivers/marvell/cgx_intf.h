@@ -110,6 +110,8 @@ enum cgx_cmd_id {
 	CGX_CMD_CPRI_TX_CONTROL,
 	CGX_CMD_LOOP_SERDES,
 	CGX_CMD_TUNE_SERDES,
+	CGX_CMD_LEQ_ADAPT_SERDES,
+	CGX_CMD_DFE_ADAPT_SERDES,		/* = 40 */
 };
 
 /* async event ids */
@@ -410,6 +412,17 @@ struct cpri_mode_tx_ctrl_args {
 	uint64_t reserved2:47;
 };
 
+/* command argument to be passed for cmd ID - CGX_CMD_LEQ_ADAPT_SERDES */
+struct gser_leq_adapt {
+	uint64_t reserved1:8;
+	uint64_t ifg_start:5;
+	uint64_t hfg_sqi_start:5;
+	uint64_t mbf_start:4;
+	uint64_t mbg_start:4;
+	uint64_t apg_start:3;
+	uint64_t reserved2:35;
+};
+
 /* command argument to be passed for cmd ID - CGX_CMD_SET_LINK_MODE */
 struct cgx_set_mode_args {
 	uint64_t reserved1:8;
@@ -507,6 +520,7 @@ union cgx_cmd_s {
 	struct cgx_mac_addr_args mac_args;
 	struct cpri_mode_change_args cpri_change_args;
 	struct cpri_mode_tx_ctrl_args cpri_tx_ctrl_args;
+	struct gser_leq_adapt leq_adt;
 	/* any other arg for command id * like : mtu, dmac filtering control */
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
 	struct cgx_prbs_args prbs_args;

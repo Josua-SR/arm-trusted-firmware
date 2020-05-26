@@ -4061,3 +4061,69 @@ void cgx_set_serdes_tune(int cgx_id, int lane_mask, int tx_swing, int tx_pre, in
 		}
 	}
 }
+
+void cgx_set_serdes_rx_leq_adaptation(int cgx_id, int lmac_id,
+	int leq_lfg_start, int leq_hfg_sql_start, int leq_mbf_start,
+	int leq_mbg_start, int gn_apg_start)
+{
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+	int qlm, gserx, lane_mask, num_lanes;
+
+	debug_cgx("%s: %d:%d\n", __func__, cgx_id, lmac_id);
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+	gserx = lmac->gserx + lmac->shift_from_first;
+	qlm = lmac->qlm + lmac->shift_from_first;
+	lane_mask = lmac->lane_mask;
+
+	debug_cgx("lstart = %d, sstart = %d, mstart %d, mbg_start = %d, gn = %d\n",
+		leq_lfg_start, leq_hfg_sql_start, leq_mbf_start,
+		leq_mbg_start, gn_apg_start);
+
+	while (lane_mask) {
+		/* Get the number of lanes on this QLM/DLM */
+		num_lanes = qlm_get_lanes(qlm);
+		for (int lane = 0; lane < num_lanes; lane++) {
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			/* Configure Rx LEQ Adaptation */
+			cgx->qlm_ops->qlm_rx_leq_adapt(gserx, lane,
+				leq_lfg_start, leq_hfg_sql_start, leq_mbf_start,
+				leq_mbg_start, gn_apg_start);
+		}
+		lane_mask >>= num_lanes;
+		gserx++;
+		qlm++;
+	}
+}
+
+void cgx_set_serdes_rx_dfe_adaptation(int cgx_id, int lmac_id)
+{
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+	int qlm, gserx, lane_mask, num_lanes;
+
+	debug_cgx("%s: %d:%d:\n", __func__, cgx_id, lmac_id);
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+	gserx = lmac->gserx + lmac->shift_from_first;
+	qlm = lmac->qlm + lmac->shift_from_first;
+	lane_mask = lmac->lane_mask;
+
+	while (lane_mask) {
+		/* Get the number of lanes on this QLM/DLM */
+		num_lanes = qlm_get_lanes(qlm);
+		for (int lane = 0; lane < num_lanes; lane++) {
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			/* Configure Rx DFE Adaptation */
+			cgx->qlm_ops->qlm_rx_dfe_adapt(gserx, lane);
+		}
+		lane_mask >>= num_lanes;
+		gserx++;
+		qlm++;
+	}
+}
