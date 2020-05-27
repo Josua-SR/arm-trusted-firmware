@@ -428,13 +428,15 @@ static int octeontx2_parse_sw_rvu(const void *fdt, int parentoffset,
 	if (!str) {
 		/*
 		 * The provision-mode property is required for SDP.
-		 * If missing, issue warning message, then default to legacy.
-		 * All others simply default to legacy (no warning).
+		 * If missing, issue [DEBUG] warning message, default to legacy.
+		 * All others simply default to legacy (no [DEBUG] warning).
 		 */
+#if DEBUG
 		if ((sw_rvu_pf >= SW_RVU_SDP_PF(0)) &&
 		    (sw_rvu_pf - SW_RVU_SDP_PF(0) < SW_RVU_SDP_NUM_PF))
 			WARN("RVU: node %s, no provision-mode, using LEGACY\n",
 			     name);
+#endif
 		sw_pf->mapping = SW_RVU_MAP_LEGACY;
 	} else if (!strncmp(str, "LEGACY", 6))
 		sw_pf->mapping = SW_RVU_MAP_LEGACY;
