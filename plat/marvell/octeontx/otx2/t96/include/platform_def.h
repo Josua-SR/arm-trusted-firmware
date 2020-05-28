@@ -131,7 +131,7 @@
  * at non-secure memory region, with size of 40M
  */
 #define RVU_MEM_BASE			(TZDRAM_BASE + TZDRAM_SIZE)
-#define RVU_MEM_SIZE			0x02800000
+#define RVU_MEM_SIZE			0x02600000
 
 /*
  * Memory used for SFP slot config/status, EEPROM info
