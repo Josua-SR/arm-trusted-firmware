@@ -1983,12 +1983,12 @@ int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data)
 		return -1;
 	}
 	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+	lmac = &cgx_cfg->lmac_cfg[qlm_lane];
 	if (lmac->lmac_enable == 0) {
 		WARN("QLM%d: Lane%d is not configured\n", qlm, qlm_lane);
 		return -1;
 	}
 
-	lmac = &cgx_cfg->lmac_cfg[qlm_lane];
 	gserx = lmac->gserx;
 
 	if (show_data) {
