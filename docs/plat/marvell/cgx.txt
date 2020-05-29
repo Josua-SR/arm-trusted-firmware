@@ -701,6 +701,74 @@ This command can be called any time when CGX LMAC status needs to be obtained
 
 mode is the current QLM-MODE (cgx_mode_t) for which the CGX LMAC is configured to.
 
+3.2.2.14 Serdes Loopback
+""""""""""""""""""""""""
+
+This command CGX_CMD_LOOP_SERDES is used to configure serdes (GSERR/GSERC)
+in analog or digital loopback mode.
+
+.. code-block:: c
+
+  /* command argument to be passed for cmd ID - CGX_CMD_LOOP_SERDES */
+  /* Resp to cmd ID - CGX_CMD_SERDES_LOOP
+ * flags : 2 bits
+ * typedef enum {
+ *     QLM_LOOP_DISABLED,
+ *     // Loop external data RX->TX
+ *     QLM_LOOP_SHALLOW,
+ *     // Loop internal data TX->RX in analog domain
+ *     QLM_LOOP_NEAR_END,
+ *     //Loop internal data TX->RX in digital domain
+ *     QLM_LOOP_CORE,
+ * } qlm_loop_t;
+ */
+ struct cgx_gser_loop {
+        uint64_t reserved1:8;
+        uint64_t flags:2;
+        uint64_t reserved2:53;
+ };
+
+Once serdes are configured in loopback mode, it cannot be changed to disable
+loopback mode.
+
+3.2.2.15 Serdes Tuning
+""""""""""""""""""""""
+
+This command CGX_CMD_TUNE_SERDES is used to tune serdes TX parameters like
+SWING, PRE and POST. The tuning parameters are applied to the lanes passed
+via lane_mask.
+
+.. code-block:: c
+
+ /* Configure TX tuning parameters */
+ struct cgx_gser_tune {
+        uint64_t reserved1:8;
+        uint64_t lane_mask:8;
+        uint64_t tx_swing:8;
+        uint64_t tx_pre:8;
+        uint64_t tx_post:8;
+        uint64_t reserved2:24;
+ };
+
+3.2.2.16 Disable Adaptation
+"""""""""""""""""""""""""""
+
+Added two different commands to disable LEQ and DFE adaptation for GSERR and
+GSERC serdes required to achieve CDR lock.
+
+.. code-block:: c
+
+ /* command argument to be passed for cmd ID - CGX_CMD_LEQ_ADAPT_SERDES */
+ struct gser_leq_adapt {
+        uint64_t reserved1:8;
+        uint64_t ifg_start:5;
+        uint64_t hfg_sqi_start:5;
+        uint64_t mbf_start:4;
+        uint64_t mbg_start:4;
+        uint64_t apg_start:3;
+        uint64_t reserved2:35;
+ };
+
 3.2.3 Interface from ATF to U-Boot/Kernel
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
