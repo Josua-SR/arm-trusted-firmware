@@ -579,7 +579,9 @@ from ethernet(eCPRI) to CPRI and also to different baud rates in CPRI mode.
         uint64_t gserc_idx:4;
         uint64_t lane_idx:4;
         uint64_t rate:16; /* 9830/4915/2458/6144/3072 */
-        uint64_t reserved2:28;
+        uint64_t leq_disable:1;  /* set it to 1 to disable LEQ Adaptation */
+        uint64_t dfe_disable:1;  /* set it to 1 to disable DFE Adaptation */
+        uint64_t reserved2:30;
   };
 
 Since the command uses CGX framework, any CGX IDx and LMAC IDx other than CGX index as 0

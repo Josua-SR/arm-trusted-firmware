@@ -55,7 +55,7 @@ static int qlm_gserc_get_lmac_phy_lane(int qlm, int lane, int lane_to_sds)
 	return phy_lane;
 }
 
-static void qlm_gserc_rx_leq_adaptation(int qlm, int lane, int leq_lfg_start,
+void qlm_gserc_rx_leq_adaptation(int qlm, int lane, int leq_lfg_start,
 	int leq_hfg_sql_start, int leq_mbf_start, int leq_mbg_start,
 	int gn_apg_start)
 {
@@ -92,7 +92,7 @@ static void qlm_gserc_rx_leq_adaptation(int qlm, int lane, int leq_lfg_start,
 		c.s.eq_mbf_start = leq_mbf_start);
 }
 
-static void qlm_gserc_rx_dfe_adaptation(int qlm, int lane)
+void qlm_gserc_rx_dfe_adaptation(int qlm, int lane)
 {
 	int disable = 1;
 	/* Configure DFE adaptation */

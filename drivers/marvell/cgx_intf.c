@@ -986,10 +986,13 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 	int current_rate, is_allowed;
 	int max_lane_count = 2; /* GSERC has only 2 lanes per DLM */
 	cgx_lmac_config_t *lmac;
+	bool leq_disable = 0, dfe_disable = 0;
 
 	req_rate = args->rate;
 	gserc_idx = args->gserc_idx;
 	lane_idx = args->lane_idx;
+	leq_disable = args->leq_disable;
+	dfe_disable = args->dfe_disable;
 
 	debug_cgx_intf("%s: gser %d lane %d rate req %d\n",
 			__func__, gserc_idx, lane_idx, req_rate);
@@ -1046,7 +1049,8 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 		 * ecpri mode, set_mode API doesn't work
 		 * correctly
 		 */
-		cgx->qlm_ops->qlm_set_mode(gserc_idx, -1, QLM_MODE_CPRI, req_rate, 0);
+		cgx->qlm_ops->qlm_set_mode(gserc_idx, -1, QLM_MODE_CPRI, req_rate,
+			leq_disable << 2 | dfe_disable << 1);
 		for (int j = 0; j < max_lane_count; j++)
 			plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[j]
 							= req_rate;
@@ -1074,7 +1078,7 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 		}
 		/* Change the SERDES speed */
 		cgx->qlm_ops->qlm_set_mode(gserc_idx, lane_idx, QLM_MODE_CPRI,
-					req_rate, 0);
+					req_rate,  leq_disable << 2 | dfe_disable << 1);
 		plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[lane_idx]
 							= req_rate;
 	}
