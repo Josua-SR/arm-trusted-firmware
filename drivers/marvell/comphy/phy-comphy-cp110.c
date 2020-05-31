@@ -1540,7 +1540,7 @@ static int mvebu_cp110_comphy_pcie_power_on(uint64_t comphy_base,
 
 	/* Disable G0/G1/GN1 adaptation */
 	mask = HPIPE_TX_TRAIN_CTRL_G1_MASK | HPIPE_TX_TRAIN_CTRL_GN1_MASK
-		| HPIPE_TX_TRAIN_CTRL_G0_OFFSET;
+		| HPIPE_TX_TRAIN_CTRL_G0_MASK;
 	data = 0;
 	reg_set(hpipe_addr + HPIPE_TX_TRAIN_CTRL_REG, data, mask);
 
