@@ -928,7 +928,7 @@ int qlm_gserr_ned_loopback(int module, int lane, bool enable)
  *
  * @return Zero on success, negative on failure
  */
-static int qlm_gserr_fea_loopback(int module, int lane, bool enable)
+int qlm_gserr_fea_loopback(int module, int lane, bool enable)
 {
 	/* Skip running if we aren't changing anything */
 	GSER_CSR_INIT(afe_loopback_ctrl, CAVM_GSERRX_LNX_TOP_AFE_LOOPBACK_CTRL(module, lane));

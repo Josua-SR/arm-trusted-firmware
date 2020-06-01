@@ -254,4 +254,15 @@ int qlm_gserc_display_trace(int module, int lane, int unused);
  */
 int qlm_gserc_ned_loopback(int module, int lane, bool enable);
 
+/**
+ * Implementation of Far-End Analog (FEA) Loopback
+ *
+ * @param node
+ * @param module
+ * @param lane
+ *
+ * @return Zero on success, negative on failure
+ */
+int qlm_gserc_fea_loopback(int module, int lane, bool enable);
+
 #endif /* _QLM_GSERC_H_ */

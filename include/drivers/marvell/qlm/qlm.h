@@ -255,6 +255,7 @@ typedef struct {
 		int gn_apg_start);
 	void (*qlm_rx_dfe_adapt)(int qlm, int lane);
 	int (*qlm_ned_loopback)(int qlm, int lane, bool enable);
+	int (*qlm_fea_loopback)(int qlm, int lane, bool enable);
 } qlm_ops_t;
 
 /* QLM platform specific API */
