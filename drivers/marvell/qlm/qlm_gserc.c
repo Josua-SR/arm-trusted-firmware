@@ -620,7 +620,7 @@ void qlm_gserc_inject_prbs_error(int qlm, int lane)
  *
  * @return Zero on success, negative on failure
  */
-static int qlm_gserc_ned_loopback(int module, int lane, bool enable)
+int qlm_gserc_ned_loopback(int module, int lane, bool enable)
 {
 	/* Skip running if we aren't changing anything */
 	GSER_CSR_INIT(dpl_rxdp_ctrl1, CAVM_GSERCX_LNX_TOP_DPL_RXDP_CTRL1(module, lane));

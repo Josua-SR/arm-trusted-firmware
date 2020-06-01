@@ -595,7 +595,7 @@ void qlm_gserr_inject_prbs_error(int qlm, int lane)
  *
  * @return Zero on success, negative on failure
  */
-static int qlm_gserr_ned_loopback(int module, int lane, bool enable)
+int qlm_gserr_ned_loopback(int module, int lane, bool enable)
 {
 	/* Skip running if we aren't changing anything */
 	GSER_CSR_INIT(dpl_rxdp_ctrl1, CAVM_GSERRX_LNX_TOP_DPL_RXDP_CTRL1(module, lane));

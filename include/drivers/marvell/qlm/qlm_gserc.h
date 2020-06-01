@@ -241,4 +241,17 @@ int qlm_gserc_tx_control(int qlm, int lane, int enable_tx);
  */
 int qlm_gserc_display_trace(int module, int lane, int unused);
 
+/**
+ * Implementation of NED Loopback with Internal BIST PRBS Generator/Checker.
+ * Based on CNF95XX_B0_GSERC_Programming_v1p2.pdf
+ *
+ * @param node
+ * @param module
+ * @param lane
+ * @param enable
+ *
+ * @return Zero on success, negative on failure
+ */
+int qlm_gserc_ned_loopback(int module, int lane, bool enable);
+
 #endif /* _QLM_GSERC_H_ */

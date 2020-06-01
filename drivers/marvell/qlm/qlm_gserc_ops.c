@@ -466,4 +466,5 @@ const qlm_ops_t qlm_gserc_ops = {
 	.qlm_display_trace = qlm_gserc_display_trace,
 	.qlm_rx_leq_adapt = qlm_gserc_rx_leq_adaptation,
 	.qlm_rx_dfe_adapt = qlm_gserc_rx_dfe_adaptation,
+	.qlm_ned_loopback = qlm_gserc_ned_loopback,
 };
