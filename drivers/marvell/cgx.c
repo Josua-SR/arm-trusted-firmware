@@ -2631,7 +2631,9 @@ static int cgx_complete_sw_an_wo_mcp(int cgx_id, int lmac_id)
 	if (cgx_link_training_wait(cgx_id, lmac_id)) {
 		debug_cgx("%s:%d:%d: Link training failed, Restarting AN.\n",
 			__func__, cgx_id, lmac_id);
-		cgx->qlm_ops->qlm_get_link_training_status(gserx, lane);
+#ifdef DEBUG_ATF_CGX
+		cgx_link_training_tracing(cgx_id, lmac_id);
+#endif
 		cgx_set_error_type(cgx_id, lmac_id,
 				CGX_ERR_TRAINING_FAIL);
 		goto restart_an;

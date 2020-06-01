@@ -245,7 +245,6 @@ typedef struct {
 	void (*qlm_start_an)(int qlm, int lane);
 	void (*qlm_set_phy_strap)(int qlm, int lane);
 	int (*qlm_an_complete)(int qlm, int lane);
-	void (*qlm_get_link_training_status)(int qlm, int lane);
 	void (*qlm_clear_link_stat)(int qlm, int lane);
 	int (*qlm_prbs_chk)(int qlm, int lane);
 	int (*qlm_farend_lpbk_chk)(int qlm, int lane);

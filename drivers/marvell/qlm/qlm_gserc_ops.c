@@ -350,42 +350,6 @@ static int qlm_gserc_an_complete(int qlm, int lane)
 		return 1;
 }
 
-/**
- * Read CSRs to determine Link Training Status
- *
- * @param  qlm   Index into GSER* group
- * @param  lane    Which lane
- */
-static void qlm_gserc_get_link_training_status(int qlm, int lane)
-{
-#ifdef DEBUG_ATF_GSER
-	GSER_CSR_INIT(fsm_ctrl5, CAVM_GSERCX_LNX_LT_TX_FSM_CTRL5(qlm, lane));
-	GSER_TRACE(QLM, "GSERC%d_LN%d_LT_TX_FSM_CTRL5\n", qlm, lane);
-			GSER_TRACE(QLM, "remote_rx_ready: %d\trx_trained: %d\n",
-			fsm_ctrl5.s.remote_rx_ready,
-			fsm_ctrl5.s.rx_trained);
-
-	GSER_CSR_INIT(fsm_status, CAVM_GSERCX_LNX_LT_TX_FSM_STATUS(qlm, lane));
-	GSER_TRACE(QLM, "GSERC%d_LN%d_LT_TX_FSM_STATUS\n", qlm, lane);
-	GSER_TRACE(QLM, "fsm_local_rx_ready: %d\tsignal_detect: %d\ttraining_fail: %d\n",
-			fsm_status.s.fsm_local_rx_ready,
-			fsm_status.s.signal_detect,
-			fsm_status.s.training_fail);
-
-	GSER_CSR_INIT(fsm_state_status0, CAVM_GSERCX_LNX_LT_TX_FSM_STATE_STATUS0(qlm, lane));
-	GSER_TRACE(QLM, "GSERC%d_LN%d_LT_TX_FSM_STATE_STATUS0\n", qlm, lane);
-	GSER_TRACE(QLM, "prev1: %d\tcurrent: %d\n",
-			fsm_state_status0.s.prev1,
-			fsm_state_status0.s.current);
-
-	GSER_CSR_INIT(fsm_state_status1, CAVM_GSERCX_LNX_LT_TX_FSM_STATE_STATUS1(qlm, lane));
-	GSER_TRACE(QLM, "GSERC%d_LN%d_LT_TX_FSM_STATE_STATUS1\n", qlm, lane);
-	GSER_TRACE(QLM, "prev2: %d\tprev3: %d\n",
-			fsm_state_status1.s.prev2,
-			fsm_state_status1.s.prev3);
-#endif
-}
-
 static void qlm_gserc_clear_link_stat(int qlm, int lane)
 {
 	GSER_CSR_MODIFY(control_bcfg, CAVM_GSERCX_LANEX_CONTROL_BCFG(
@@ -459,7 +423,6 @@ const qlm_ops_t qlm_gserc_ops = {
 	.qlm_start_an = qlm_gserc_start_an,
 	.qlm_set_phy_strap = qlm_gserc_set_phy_strap,
 	.qlm_an_complete = qlm_gserc_an_complete,
-	.qlm_get_link_training_status = qlm_gserc_get_link_training_status,
 	.qlm_clear_link_stat = qlm_gserc_clear_link_stat,
 	.qlm_prbs_chk = qlm_gserc_prbs_chk,
 	.qlm_farend_lpbk_chk = qlm_gserc_farend_lpbk_chk,
