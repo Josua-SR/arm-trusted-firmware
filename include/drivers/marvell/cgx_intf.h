@@ -482,15 +482,9 @@ struct cgx_display_args {
 
 /* Resp to cmd ID - CGX_CMD_SERDES_LOOP
  * flags : 2 bits
- * typedef enum {
- *     QLM_LOOP_DISABLED,
- *     // Loop external data RX->TX
- *     QLM_LOOP_SHALLOW,
- *     // Loop internal data TX->RX in analog domain
- *     QLM_LOOP_NEAR_END,
- *     //Loop internal data TX->RX in digital domain
- *     QLM_LOOP_CORE,
- * } qlm_loop_t;
+ *    if 0 : disable FEA and NED serdes loopback
+ *    if 1 : FEA serdes loopback
+ *    if 2 : NED serdes loopback
  */
 struct cgx_gser_loop {
 	uint64_t reserved1:8;

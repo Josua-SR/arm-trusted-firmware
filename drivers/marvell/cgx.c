@@ -4000,13 +4000,20 @@ int cgx_get_lane_count(int lmac_type)
 	return table[lmac_type];
 }
 
-/* Configure Rambus serdes in NED (Near End Digital) loopback mode */
+/*
+ * Configure Rambus serdes in NED (Near End Digital) or FEA (Far End Analog)
+ * loopback modes. 
+ *    If type = 2, perform NED
+ *       type = 1, perform FEA 
+ *       type = 0, disable serdes loopback
+ */
 void cgx_set_serdes_loop(int cgx_id, int lmac_id, int type)
 {
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
+	int qlm, gserx, lane_mask, num_lanes;
 
-	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+	printf("%s %d:%d\n", __func__, cgx_id, lmac_id);
 
 	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
 		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
@@ -4031,7 +4038,29 @@ void cgx_set_serdes_loop(int cgx_id, int lmac_id, int type)
 	/* Assuming NED is requested for GSERR configured to 10G/25G speed
 	 * GSERC is configured at higher speeds
 	 */
-	cgx->qlm_ops->qlm_enable_loop(lmac->gserx + lmac->shift_from_first, type);
+	gserx = lmac->gserx + lmac->shift_from_first;
+	qlm = lmac->qlm + lmac->shift_from_first;
+	lane_mask = lmac->lane_mask;
+
+	while (lane_mask) {
+		/* Get the number of lanes on this QLM/DLM */
+		num_lanes = qlm_get_lanes(qlm);
+		for (int lane = 0; lane < num_lanes; lane++) {
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			/* Enable/Disable NED loopback */
+			if (type == 0) {
+				cgx->qlm_ops->qlm_ned_loopback(gserx, lane, 0);
+				cgx->qlm_ops->qlm_fea_loopback(gserx, lane, 0);
+			} else if (type == 1)
+				cgx->qlm_ops->qlm_fea_loopback(gserx, lane, 1);
+			else
+				cgx->qlm_ops->qlm_ned_loopback(gserx, lane, 1);
+		}
+		lane_mask >>= num_lanes;
+		gserx++;
+		qlm++;
+	}
 }
 
 /* Configure tx tuning parameters for configuring serdes */

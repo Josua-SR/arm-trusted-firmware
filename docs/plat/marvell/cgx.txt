@@ -712,15 +712,9 @@ in analog or digital loopback mode.
   /* command argument to be passed for cmd ID - CGX_CMD_LOOP_SERDES */
   /* Resp to cmd ID - CGX_CMD_SERDES_LOOP
  * flags : 2 bits
- * typedef enum {
- *     QLM_LOOP_DISABLED,
- *     // Loop external data RX->TX
- *     QLM_LOOP_SHALLOW,
- *     // Loop internal data TX->RX in analog domain
- *     QLM_LOOP_NEAR_END,
- *     //Loop internal data TX->RX in digital domain
- *     QLM_LOOP_CORE,
- * } qlm_loop_t;
+ *    if 0 : disable FEA and NED serdes loopback
+ *    if 1 : FEA serdes loopback
+ *    if 2 : NED serdes loopback
  */
  struct cgx_gser_loop {
         uint64_t reserved1:8;
@@ -728,8 +722,8 @@ in analog or digital loopback mode.
         uint64_t reserved2:53;
  };
 
-Once serdes are configured in loopback mode, it cannot be changed to disable
-loopback mode.
+The serdes lane corresponding to cgx_id and lmac_id will be configured in
+loopback mode not all lanes in QLM/DLM.
 
 3.2.2.15 Serdes Tuning
 """"""""""""""""""""""
