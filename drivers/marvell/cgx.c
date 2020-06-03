@@ -4015,7 +4015,7 @@ void cgx_set_serdes_loop(int cgx_id, int lmac_id, int type)
 	cgx_lmac_config_t *lmac;
 	int qlm, gserx, lane_mask, num_lanes;
 
-	printf("%s %d:%d\n", __func__, cgx_id, lmac_id);
+	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
 
 	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
 		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
@@ -4070,26 +4070,44 @@ void cgx_set_serdes_tune(int cgx_id, int lane_mask, int tx_swing, int tx_pre, in
 {
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
-	int lmac_id;
+	int lmac_id = 0;
 
 	debug_cgx("%s: cgx%d, lane_mask = %x\n", __func__, cgx_id, lane_mask);
 
-	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
-		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
-		return;
-
 	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	while (lane_mask) {
+		int lmask, gserx, qlm;
+		int num_lanes;
 
-	for (lmac_id = 0; lmac_id < MAX_LMAC_PER_CGX; lmac_id++) {
-		if (lane_mask & (1 << lmac_id)) {
-			int gserx;
-
-			lmac = &cgx->lmac_cfg[lmac_id];
-			gserx = lmac->gserx + lmac->shift_from_first;
-			debug_cgx("%d:%d: TX_SWING = %d, TX_PRE = %d, TX_POST = %d\n",
-				gserx, lmac_id, tx_swing, tx_pre, tx_post);
-			cgx->qlm_ops->qlm_tune_lane_tx(gserx, lmac_id, tx_swing, tx_pre, tx_post, -1, -1);
+		if ((lane_mask & 1) == 0) {
+			lmac_id++;
+			lane_mask >>= 1;
+			continue;
 		}
+		lmac = &cgx->lmac_cfg[lmac_id];
+
+		gserx = lmac->gserx + lmac->shift_from_first;
+		qlm = lmac->qlm + lmac->shift_from_first;
+		lmask = lmac->lane_mask;
+
+		while (lmask) {
+			/* Get the number of lanes on this QLM/DLM */
+			num_lanes = qlm_get_lanes(qlm);
+			for (int lane = 0; lane < num_lanes; lane++) {
+				if (!(lmask & (1 << lane)))
+					continue;
+				debug_cgx("%s:%d:%d: TX_SWING = %d, TX_PRE = %d, TX_POST = %d\n",
+					__func__, gserx, lane, tx_swing,
+					tx_pre, tx_post);
+				cgx->qlm_ops->qlm_tune_lane_tx(gserx, lane,
+					tx_swing, tx_pre, tx_post, -1, -1);
+			}
+			gserx++;
+			qlm++;
+			lmask >>= num_lanes;
+		}
+		lmac_id++;
+		lane_mask >>= 1;
 	}
 }
 
