@@ -48,8 +48,9 @@
  * 5 CAVM_TIM_AF_INT_VEC_E_xxx
  * 3 CAVM_NDC_AF_INT_VEC_E_xxx
  * 4 CAVM_CPT_AF_INT_VEC_E_xxx
+ * 2 * 4 CAVM_REE_AF_INT_VEC_E_xxx
  */
-#define DEFAULT_MSIX_AF		42
+#define DEFAULT_MSIX_AF		50
 
 /* RVU node names definitions */
 #define RVU_ADMIN_FDT_NODE	"rvu-admin@0"
