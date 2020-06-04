@@ -38,7 +38,17 @@
  */
 #define DEFAULT_MSIX_LMAC	210
 
-/* Default number of MSIX vectors for AF PF */
+/*
+ * Default number of MSIX vectors for AF PF (must match DTS rvu-admin node).
+ * 5 CAVM_RVU_AF_INT_VEC_E_xxx
+ * 7 CAVM_RVU_PF_INT_VEC_E_xxx
+ * 2 * 5 CAVM_NIX_AF_INT_VEC_E_xxx
+ * 5 CAVM_NPA_AF_INT_VEC_E_xxx
+ * 3 CAVM_SSO_AF_INT_VEC_E_xxx
+ * 5 CAVM_TIM_AF_INT_VEC_E_xxx
+ * 3 CAVM_NDC_AF_INT_VEC_E_xxx
+ * 4 CAVM_CPT_AF_INT_VEC_E_xxx
+ */
 #define DEFAULT_MSIX_AF		42
 
 /* RVU node names definitions */
