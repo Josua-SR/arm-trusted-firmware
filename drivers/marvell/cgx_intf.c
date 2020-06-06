@@ -1960,11 +1960,13 @@ int cgx_display_eye(int qlm, int qlm_lane, int show_data)
 int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data)
 {
 	int max_lane;
-	int gserx;
-	int cgx_id;
+	int gserx, lmask, num_lanes, lqlm;
+	int cgx_id, lmac_id;
 	cgx_config_t *cgx_cfg;
 	cgx_lmac_config_t *lmac;
 
+	debug_cgx_intf("%s: qlm%d lane%d, show_data = %d\n", __func__, qlm,
+			qlm_lane, show_data);
 	if (qlm >= MAX_QLM || qlm < 0) {
 		WARN("%d not in range, available QLM0-%d\n", qlm, MAX_QLM - 1);
 		return -1;
@@ -1983,21 +1985,40 @@ int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data)
 		return -1;
 	}
 	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
-	lmac = &cgx_cfg->lmac_cfg[qlm_lane];
+	lmac_id = plat_get_lmac_idx(qlm, qlm_lane);
+	if (lmac_id == -1) {
+		WARN("QLM%d:%d is not mapped to CGX lmacid.\n", qlm, qlm_lane);
+		return -1;
+	}
+	lmac = &cgx_cfg->lmac_cfg[lmac_id];
 	if (lmac->lmac_enable == 0) {
 		WARN("QLM%d: Lane%d is not configured\n", qlm, qlm_lane);
 		return -1;
 	}
 
-	gserx = lmac->gserx;
+	gserx = lmac->gserx + lmac->shift_from_first;
+	lqlm = lmac->qlm + lmac->shift_from_first;
+	lmask = lmac->lane_mask;
 
-	if (show_data) {
-		cgx_cfg->qlm_ops->qlm_display_settings(gserx, qlm_lane, 1, 1,
-				NULL, 0);
-	} else {
-		cgx_cfg->qlm_ops->qlm_display_settings(gserx, qlm_lane, 1, 1,
-				(char *)(SERDES_SETTINGS_DATA_BASE),
-				SERDES_SETTINGS_DATA_SIZE);
+	while (lmask) {
+		/* Get the number of lanes on this QLM/DLM */
+		num_lanes = qlm_get_lanes(lqlm);
+		for (int lane = 0; lane < num_lanes; lane++) {
+			if (!(lmask & (1 << lane)))
+				continue;
+			if (show_data) {
+				cgx_cfg->qlm_ops->qlm_display_settings(gserx,
+					lane, 1, 1, NULL, 0);
+			} else {
+				cgx_cfg->qlm_ops->qlm_display_settings(gserx,
+					lane, 1, 1,
+					(char *)(SERDES_SETTINGS_DATA_BASE),
+					SERDES_SETTINGS_DATA_SIZE);
+			}
+		}
+		lmask >>= num_lanes;
+		qlm++;
+		gserx++;
 	}
 
 	return CGX_DISPLAY_OK;
