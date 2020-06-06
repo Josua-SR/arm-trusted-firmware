@@ -215,6 +215,15 @@ int plat_get_cgx_idx(int qlm)
 	return idx;
 }
 
+/* Return QLM.LANE<->CGX mapping */
+int plat_get_lmac_idx(int qlm, int qlm_lane)
+{
+	if (qlm_lane >= plat_get_max_lane_num(qlm))
+		return -1;
+
+	return qlm_lane;
+}
+
 /*
  * BDK uses CPC RAM memory as key memory.
  * This is indicated by storing the ROTPK at TRUST-ROT-ADDR,
