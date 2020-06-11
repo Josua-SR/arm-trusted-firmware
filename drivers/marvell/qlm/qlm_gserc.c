@@ -259,10 +259,8 @@ extern void qlm_gserc_rx_leq_adaptation(int qlm, int lane,
         int leq_lfg_start, int leq_hfg_sql_start, int leq_mbf_start,
         int leq_mbg_start, int gn_apg_start);
 extern void qlm_gserc_rx_dfe_adaptation(int qlm, int lane);
-				if (flags & 0x2) // disable dfe adaptation
-					qlm_gserc_rx_dfe_adaptation(qlm, l);
-				if (flags & 0x4) // disable leq adaptation
-					qlm_gserc_rx_leq_adaptation(qlm, l, 2, 8, 0, 8, 3);
+				qlm_gserc_rx_dfe_adaptation(qlm, l);
+				qlm_gserc_rx_leq_adaptation(qlm, l, 2, 8, 0, 8, 3);
 			}
 #endif
 		}
