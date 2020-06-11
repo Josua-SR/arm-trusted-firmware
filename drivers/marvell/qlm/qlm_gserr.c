@@ -234,13 +234,15 @@ int qlm_gserr_set_mode(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
 		{
 			need_full_reset |= lane_new.s.ln_an_cfg;
 			gser_wait_usec(1000);
-			//if (need_full_reset)
-			//{
-				//qlm_gserr_init_reset();
-				//qlm_gserr_init();
-				//break; /* Full reset finishes reconfig, so exit loop */
-			//}
-			//else
+#if 0
+			if (need_full_reset)
+			{
+				qlm_gserr_init_reset();
+				qlm_gserr_init();
+				break; /* Full reset finishes reconfig, so exit loop */
+			}
+			else
+#endif
 				qlm_gserr_change_lane_rate(qlm, l);
 			gser_wait_usec(1000);
 		}
@@ -348,6 +350,8 @@ int qlm_gserr_enable_prbs(int qlm, int prbs, qlm_direction_t dir, int qlm_lane)
 	int num_lanes = get_num_lanes(qlm);
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
+		if ((qlm_lane != -1) && (qlm_lane != lane))
+			continue;
 		if (dir & QLM_DIRECTION_TX)
 		{
 			/* No error injection */
@@ -582,6 +586,74 @@ void qlm_gserr_inject_prbs_error(int qlm, int lane)
 	GSER_CSR_WRITE(CAVM_GSERRX_LNX_BIST_TX_BER_CTRL2(qlm, lane), ctrl2.u);
 	GSER_CSR_WRITE(CAVM_GSERRX_LNX_BIST_TX_BER_CTRL1(qlm, lane), ctrl1.u);
 	GSER_CSR_WRITE(CAVM_GSERRX_LNX_BIST_TX_BER_CTRL0(qlm, lane), ctrl0.u);
+}
+
+/**
+ * Reset the GSER lane.
+ *
+ * @param node
+ * @param module
+ * @param lane   Which lane
+ * @param reset  1) Set reset 0) Clear reset
+ */
+static void qlm_gserr_lane_rst(int module, int lane, bool reset)
+{
+	if (reset)
+		GSER_TRACE(QLM, "GSERR%d.%d: Setting Lane Reset\n", module, lane);
+	else
+		GSER_TRACE(QLM, "GSERR%d.%d: Clearing Lane Reset\n", module, lane);
+
+	if (reset)
+	{
+		GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+			c.s.ln_ctrl_tx_en = 0);
+		gser_wait_usec(1);
+	}
+
+	/* Assert or deassert Lane reset */
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+		c.s.ln_rst = reset);
+
+	if (reset)
+	{
+		/* Wait for the PHY firmware to signal that the Lane is in the Reset
+		   power state which is signaled by the lane Tx and Rx blocks negating
+			the Tx/Rx ready signals.
+			Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+				LN_TX_RDY=0 Lane Tx is not ready
+				LN_RX_RDY=0 Lane Rx is not ready
+				LN_STATE_CHNG_RDY = 0 Lane is transitioning states */
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_TX_RDY, ==, 0, 500))
+			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_tx_rdy]=0 (lane is reset)\n", module, lane);
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_RX_RDY, ==, 0, 500))
+			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_rx_rdy]=0 (lane is reset)\n", module, lane);
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+		{
+			/* This happens fast, so sometimes we miss it */
+			//gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0\n (lane is reset)", module, lane);
+		}
+	}
+	else
+	{
+		/* Read/Poll for the GSERR to set the Lane State Change Ready flag and
+		drive the Lane Tx and Rx ready flags to signal that the lane as
+		returned to the ACTIVE state.
+		Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+			LN_TX_RDY=1 Lane Tx is ready
+			LN_RX_RDY=1 Lane Rx is ready
+			LN_STATE_CHNG_RDY = 1 Lane is in the “Active” power state */
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_TX_RDY, ==, 1, 5000))
+			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_tx_rdy]=1 (reset done)\n", module, lane);
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_RX_RDY, ==, 1, 5000))
+			gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_rx_rdy]=1 (reset done)\n", module, lane);
+	}
+
+	/* Wait for the “Lane State Change Ready” to signal that the lane has
+	   transitioned to the “Reset” state.
+	   Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+		gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (reset done)\n", module, lane);
 }
 
 /**
@@ -925,6 +997,7 @@ int qlm_gserr_ned_loopback(int module, int lane, bool enable)
  * @param node
  * @param module
  * @param lane
+ * @param enable
  *
  * @return Zero on success, negative on failure
  */
@@ -948,6 +1021,11 @@ int qlm_gserr_fea_loopback(int module, int lane, bool enable)
 	   not used in silicon testing. This step will use the recovered clock to
 	   drive the transmit driver, therefore it will result in much higher jitter
 	   content on the TX signal in silicon). */
+
+	/* Reset lane if disabling FEA loopback */
+	if (!enable)
+		qlm_gserr_lane_rst(module, lane, 1);
+
 	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_AFE_LOOPBACK_CTRL(module, lane),
 		c.s.loopback_rxclk_en = enable);
 
@@ -966,10 +1044,70 @@ int qlm_gserr_fea_loopback(int module, int lane, bool enable)
 	   interface by programming lane top registers:
 			a. Program register field AFE_TXDP_CTRL0.TXDP_DATA_WIDTH to 0x1
 			b. Program register field AFE_RXDP_CTRL1.RXDP_DATA_WIDTH to 0x1 */
-	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_AFE_TXDP_CTRL0(module, lane),
-		c.s.txdp_data_width = 1);
-	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_AFE_RXDP_CTRL1(module, lane),
-		c.s.rxdp_data_width = 1);
+	if (enable)
+	{
+		GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_AFE_TXDP_CTRL0(module, lane),
+			c.s.txdp_data_width = 1);
+		GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_AFE_RXDP_CTRL1(module, lane),
+			c.s.rxdp_data_width = 1);
+	}
+	else
+	{
+		/* Program AFE txdp_data_width */
+		int txdp_width;
+		int rxdp_width;
+
+		/* Bit-stuffed/stripped modes set width to 1 */
+		GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+		if (bcfg.s.ln_ctrl_tx_rate == 2)
+		{
+			txdp_width = 1;
+		}
+		else
+		{
+			switch (bcfg.s.ln_ctrl_tx_width)
+			{
+				case 0x1: /* 10-bit Reserved */
+				case 0x2: /* 16-bit 40G,10G,DXAUI,RXAUI,XAUI,QSGMII,SGMII */
+				case 0x3: /* 20-bit Reserved */
+					txdp_width = 0;
+					break;
+				case 0x4: /* 32-bit 25G,50G,100G data rate (default) */
+				case 0x5: /* 40-bit Reserved */
+				default:
+					txdp_width = 1;
+					break;
+			}
+		}
+
+		/* Program AFE rxdp_data_width set width to 1 */
+		/* Bit-stuffed/stripped modes */
+		if (bcfg.s.ln_ctrl_rx_rate == 2)
+		{
+			rxdp_width = 1;
+		}
+		else
+		{
+			switch (bcfg.s.ln_ctrl_rx_width)
+			{
+				case 0x1: /* 10-bit Reserved */
+				case 0x2: /* 16-bit 40G,10G,DXAUI,RXAUI,XAUI,QSGMII,SGMII */
+				case 0x3: /* 20-bit Reserved */
+					rxdp_width = 0;
+					break;
+				case 0x4: /* 32-bit 25G,50G,100G data rate (default) */
+				case 0x5: /* 40-bit Reserved */
+				default:
+					rxdp_width = 1;
+					break;
+			}
+		}
+		GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_AFE_TXDP_CTRL0(module, lane),
+			c.s.txdp_data_width = txdp_width);
+
+		GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_AFE_RXDP_CTRL1(module, lane),
+			c.s.rxdp_data_width = rxdp_width);
+	}
 
 	/* 6. Recalibrate TXDP clock using the corresponding mailbox command.
 			a. Read top mailbox register CMD_FLAG. It should be 0.
@@ -983,12 +1121,15 @@ int qlm_gserr_fea_loopback(int module, int lane, bool enable)
 				code (0 == no error). Read top mailbox register RSP_DATA0 to
 				get the calibration’s result.
 			g. Write 1 to RSP_FLAG to clear it. */
-	if (mailbox_command(module, 0x81, lane) != 0)
-		return -1;
-	uint64_t resp0 = 0;
-	uint64_t resp1 = 0;
-	if (mailbox_response(module, &resp0, &resp1) != 0)
-		gser_warn("GSERR%d.%d: TXDP recalibrate failed\n", module, lane);
+	if (enable)
+	{
+		if (mailbox_command(module, 0x81, lane) != 0)
+			return -1;
+		uint64_t resp0 = 0;
+		uint64_t resp1 = 0;
+		if (mailbox_response(module, &resp0, &resp1) != 0)
+			gser_warn("GSERR%d.%d: TXDP recalibrate failed\n", module, lane);
+	}
 	/* 7. Override tx_en indicator by programming a lane top register
 	   LN_CTRL_OVR0. Note that all of its fields must be programmed
 	   appropriately.
@@ -1004,6 +1145,11 @@ int qlm_gserr_fea_loopback(int module, int lane, bool enable)
 		c.s.edge_rxpolarity = 0;
 		c.s.data_rxpolarity = 0;
 		c.s.ovr_en = enable);
+
+	/* Complete lane reset if disabling FEA loopback */
+	if (!enable)
+		qlm_gserr_lane_rst(module, lane, 0);
+
 	return 0;
 }
 
@@ -2800,9 +2946,13 @@ static int qlm_gserr_change_phy_rate(int module)
 //		tech_abilities_15_8 |= 1 << 1;
 //		tech_abilities_15_8 |= 1 << 2;
 //		tech_abilities_15_8 |= 1 << 3;
+//		tech_abilities_15_8 |= 1 << 4;
 //	}
 //	if ((qlm_state.s.mode == QLM_MODE_50G_CR2) || (qlm_state.s.mode == QLM_MODE_50G_KR2))
+//	{
+//		tech_abilities_15_8 |= 1 << 5;
 //		tech_abilities_15_8 |= 1 << 6;
+//	}
 //	write_dmem(module, lane_offset++, tech_abilities_15_8);
 //	/* 0x11 tech_abilities_7_0
 //	   0:0 Advertise 1000BASE-KX in Base Page bit A0
@@ -3461,7 +3611,7 @@ void qlm_gserr_init_reset()
 //	else if (gser_is_model(OCTEONTX_LOKI))
 //		sensor = 2;  /* TSN2 is nearest to GSERR */
 //	else if (gser_is_model(OCTEONTX_F95MM))
-//		sensor = 7;  /* TSN7 is nearest to GSERR */
+//		sensor = 2;  /* TSN2 is nearest to GSERR, updated 5/12/2020 */
 //	else if (gser_is_model(OCTEONTX_CN98XX))
 //		sensor = 14; /* TSN14 is nearest to GSERR */
 //	else
@@ -3690,6 +3840,11 @@ void qlm_gserr_init_reset()
 //
 //	while (1)
 //	{
+//		/* Changing BIAS_UP/DN to value of 5 (in Shim) improved the yield at cold for 20G */
+//		GSER_CSR_MODIFY(c, CAVM_GSERRX_CM0_PLL_AFE_PROP_CTRL3_RSVD(module),
+//			c.s.cmpll_pkvco_bias_dn = 5;
+//			c.s.cmpll_pkvco_bias_up = 5);
+//
 //		/* the DOSC threshold must be written before CMU_RESET is deasserted.
 //		   Adjust the DOSC skew threshold. The default of 10% is way too large */
 //		GSER_CSR_MODIFY(c, CAVM_GSERRX_CM0_FEATURE_SPARE_CFG5_RSVD(module),
