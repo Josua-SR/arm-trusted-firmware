@@ -101,7 +101,8 @@
 #define PCIE_AUTO_FLUSH_EN_MASK		0x1
 
 #define PCIE_REQ_RESET			0x8058
-#define PCIE_LINK_REQ_RST_MASK		0x2
+#define PCIE_LINK_REQ_RST_MASK		BIT(1)
+#define PCIE_SMLH_REQ_RST_MASK		BIT(4)
 
 #define PCIE_NUM_OF_VFS_TO_CONFIGURE	0x4
 #define PCIE_VF_REGS_OFFSET		0x1000
@@ -227,6 +228,11 @@ static void dw_pcie_configure(uintptr_t dw_base, uint32_t cap_speed)
 	 */
 	reg = mmio_read_32(dw_base + PCIE_REQ_RESET);
 	reg &= ~PCIE_LINK_REQ_RST_MASK;
+	mmio_write_32(dw_base + PCIE_REQ_RESET, reg);
+
+	/* Request a Reset on link failure */
+	reg = mmio_read_32(dw_base + PCIE_REQ_RESET);
+	reg &= ~PCIE_SMLH_REQ_RST_MASK;
 	mmio_write_32(dw_base + PCIE_REQ_RESET, reg);
 
 	/*
