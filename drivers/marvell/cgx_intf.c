@@ -1963,33 +1963,33 @@ int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data)
 	int gserx;
 	int cgx_id;
 	cgx_config_t *cgx_cfg;
-	cgx_lmac_config_t *lmac;
 
 	if (qlm >= MAX_QLM || qlm < 0) {
-		WARN("%d not in range, available QLM0-%d\n", qlm, MAX_QLM - 1);
+		WARN("%s: %d not in range, available QLM0-%d\n", __func__, qlm,
+				MAX_QLM - 1);
 		return -1;
 	}
 
 	max_lane = plat_octeontx_scfg->qlm_max_lane_num[qlm];
 	if (qlm_lane >= max_lane || qlm_lane < 0) {
-		WARN("%d not in range, available for QLM%d lanes are 0-%d\n",
-				qlm_lane, qlm, max_lane - 1);
+		WARN("%s: %d not in range, available for QLM%d lanes are 0-%d\n",
+				__func__, qlm_lane, qlm, max_lane - 1);
 		return -1;
 	}
 
 	cgx_id = plat_get_cgx_idx(qlm);
 	if (cgx_id == -1) {
-		WARN("To QLM%d any CGX cannot by wired.\n", qlm);
-		return -1;
-	}
-	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
-	lmac = &cgx_cfg->lmac_cfg[qlm_lane];
-	if (lmac->lmac_enable == 0) {
-		WARN("QLM%d: Lane%d is not configured\n", qlm, qlm_lane);
+		WARN("%s: QLM%d is not mapped to CGX.\n", __func__, qlm);
 		return -1;
 	}
 
-	gserx = lmac->gserx;
+	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		gserx = qlm;
+	else
+		gserx = plat_otx2_get_gserx(qlm, NULL);
 
 	if (show_data) {
 		cgx_cfg->qlm_ops->qlm_display_settings(gserx, qlm_lane, 1, 1,
