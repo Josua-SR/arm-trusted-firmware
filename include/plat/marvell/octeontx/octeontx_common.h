@@ -79,6 +79,13 @@ DEFINE_RENAME_SYSREG_RW_FUNCS(cvmnvbar_el3, AP_CVM_NVBAR_EL3)
 /* Default value for better performance */
 #define TLBI_BLOCK_VALUE	ULL(0xf)
 
+/*
+ * Defines for AP_CVMCTL2_EL1 register
+ */
+#define LIVELOCK_STALL_WIDTH	4
+#define LIVELOCK_STALL_SHIFT	8
+#define LIVELOCK_STALL_VALUE	ULL(0x8)
+
 /* In Mhz */
 #define OCTEONTX_SYSCNT_FREQ	100ull
 

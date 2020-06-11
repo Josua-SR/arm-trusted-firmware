@@ -332,6 +332,12 @@ void plat_octeontx_cpu_setup(void)
 			TLBI_BLOCK_SHIFT, TLBI_BLOCK_WIDTH);
 
 	/*
+	 * Increase livelock stall for retiring instructions
+	 */
+	cvmctl2_el1 = octeontx_bit_insert(cvmctl2_el1, LIVELOCK_STALL_VALUE,
+			LIVELOCK_STALL_SHIFT, LIVELOCK_STALL_WIDTH);
+
+	/*
 	 * Fix up defaults from the BDK which is broken and
 	 * violates the ARM ARM.
 	 */
