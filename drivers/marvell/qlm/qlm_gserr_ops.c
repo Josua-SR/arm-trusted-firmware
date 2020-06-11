@@ -26,6 +26,14 @@ static void qlm_gserr_set_state(int qlm, int lane, qlm_state_lane_t state)
  */
 static int qlm_gserr_rx_signal_detect(int qlm, int lane)
 {
+	/* Skip check if nea or ned loopbacks enabled */
+	GSER_CSR_INIT(dpl_rxdp_ctrl1, CAVM_GSERRX_LNX_TOP_DPL_RXDP_CTRL1(qlm, lane));
+	GSER_CSR_INIT(afe_loopback_ctrl, CAVM_GSERRX_LNX_TOP_AFE_LOOPBACK_CTRL(qlm, lane));
+
+	if (dpl_rxdp_ctrl1.s.rx_dmux_sel ||
+		afe_loopback_ctrl.s.loopback_nea_en)
+		return 0;
+
 	CSR_INIT(bsts, CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane));
 	if (bsts.s.ln_stat_los)
 		return 1;
