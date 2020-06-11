@@ -74,6 +74,14 @@
 #define PCIE0_REFCLK_BUFF_SOURCE			0x400
 
 /*******************************************************************************
+ * PCIE SYSRST OUTn Config Register
+ ******************************************************************************/
+#define MVEBU_PCIE_SYSRST_OUT_CONFIG			(0x440254)
+#define PCIE0_RST_OUT_MASK				BIT(1)
+#define PCIE1_RST_OUT_MASK				BIT(2)
+#define PCIE2_RST_OUT_MASK				BIT(3)
+
+/*******************************************************************************
  * MSS Device Push Set Register
  ******************************************************************************/
 #define MVEBU_CP_MSS_DPSHSR_REG				(0x280040)
@@ -209,6 +217,19 @@ static void cp110_pcie_clk_cfg(uintptr_t base)
 		}
 	}
 }
+
+#if PCI_EP_SUPPORT
+/* Set SYSRST_OUTn configuration */
+static void cp110_pcie_sysrst_out_cfg(uintptr_t base)
+{
+	uint32_t data;
+
+	/* Do Not Mask PCIe0/1/2_Rst_Out from influencing the SYSRST_OUTn */
+	data = mmio_read_32(base + MVEBU_PCIE_SYSRST_OUT_CONFIG);
+	data &= ~(PCIE0_RST_OUT_MASK | PCIE1_RST_OUT_MASK | PCIE2_RST_OUT_MASK);
+	mmio_write_32(base + MVEBU_PCIE_SYSRST_OUT_CONFIG, data);
+}
+#endif
 
 /* Set a unique stream id for all DMA capable devices */
 static void cp110_stream_id_init(uintptr_t base, uint32_t stream_id)
@@ -404,6 +425,11 @@ void cp110_init(uintptr_t cp110_base, uint32_t stream_id)
 
 	/* Reset RTC if needed */
 	cp110_rtc_init(cp110_base);
+
+#if PCI_EP_SUPPORT
+	/* Configure PCIe SYSRST OUT */
+	cp110_pcie_sysrst_out_cfg(cp110_base);
+#endif
 }
 
 /* Do the minimal setup required to configure the CP in BLE */
