@@ -4,7 +4,9 @@
  * and is distributed under the applicable Marvell proprietary limited use
  * license agreement.
  */
-
+#include <stdio.h>
+#include <string.h>
+#include <limits.h>
 #include <platform_def.h>
 #include <platform_setup.h>
 #include <debug.h>
@@ -35,6 +37,8 @@
 #else
 #define debug_dts(...) ((void) (0))
 #endif
+
+#define MHZ_TICKS_PER_SEC 1000000
 
 /* List of GPIO types - used as expanders in case of SFP/QSFP/PHY */
 static const gpio_compat_t gpio_compat_list[] = {
@@ -239,6 +243,74 @@ static int octeontx2_fdt_lookup_phandle(const void *fdt_addr, int offset,
 					fdt32_to_cpu(*phandle));
 	else
 		return -FDT_ERR_NOTFOUND;
+}
+
+/*
+ * Finds first matching substring str2 in str1 and returns that offset @str1
+ */
+static const char *octeontx2_first_substring(const char *str1,
+	 const char *str2)
+{
+	char temp_str[1024];
+
+	if (!str1 || !str2)
+		return NULL;
+
+	while (*str1 != '\0') {
+		if (*str1 == *str2) {
+			strlcpy(temp_str, str1, strlen(str2));
+			temp_str[strlen(str2)] = '\0';
+			if (strcmp(temp_str, str2) == 0)
+				return str1;
+		}
+		str1++;
+	}
+	return NULL;
+}
+
+/*
+ * Converts ascii string str to integer
+ */
+static int octeontx2_atoi(const char *str)
+{
+	int val = 0;
+	int len = 0;
+	int mul = 1;
+	int index = 0;
+
+	if (!str)
+		return -1;
+
+	len = strlen(str);
+	while (len) {
+		if (((str[index] < '0') || (str[index] > '9')))
+			return -1;
+
+		val = ((str[index] - '0') + (val * mul));
+		mul = mul * 10;
+		len--;
+		index++;
+	}
+	return val;
+}
+
+/* Return string pointer of the BDK field required. Return NULL, if such
+ * field isn't defined.
+ */
+static const char *octeontx2_fdtbdk_get_str(const void *fdt_addr,
+	 const char *prop)
+{
+	int offset;
+	const char *buf;
+	int len;
+
+	offset = fdt_path_offset(fdt_addr, "/cavium,bdk");
+	buf = fdt_getprop(fdt_addr, offset, prop, &len);
+	if (!buf) {
+		debug_dts("No %s option is set in BDK.\n", prop);
+		return NULL;
+	}
+	return buf;
 }
 
 /* Return numeric representation of the BDK field required. Return -1, if such
@@ -1484,6 +1556,161 @@ static int octeontx2_fill_cgx_struct(int cgx_idx, int qlm, int gserx,
 	return (lcnt * lused);
 }
 
+/*
+ * From the  DTS str list of devices finds the required led_node
+ * And from the LED node gets the gpio pin and returns it
+ *
+ */
+static int octeontx2_cgx_update_gpio_leds_helper(const char *property_start,
+	const char *property_end, const char *led_node, const char *find_attr)
+{
+	char gpio[2];
+	int devstr_len = 0;
+	int index = 0, gindex = 0;
+	const char *node_ptr = NULL;
+	const char *gpio_ptr = NULL;
+
+	if (!property_start || !property_end) {
+		debug_dts("GPIO Led helper start and end pointers not valid\n");
+		return -1;
+	}
+
+	while (property_start < property_end) {
+		node_ptr = octeontx2_first_substring(property_start, led_node);
+		if (!node_ptr)
+			property_start += (strlen(property_start) + 1);
+		else
+			break;
+	}
+
+	if (!node_ptr) {
+		debug_dts
+			("GPIO LED link node not found for CGX LMAC::%s\n"
+			, led_node);
+		return -1;
+	}
+
+	gpio_ptr = octeontx2_first_substring(node_ptr, find_attr);
+	if (!gpio_ptr) {
+		debug_dts
+			("GPIO LED link gpio not found for CGX LMAC::%s\n"
+			, led_node);
+		return -1;
+	}
+
+	devstr_len = strlen(gpio_ptr);
+	index = 0;
+	while (index < devstr_len) {
+		if (gpio_ptr[index] == ',') {
+			/*Assuming GPIO value between 0-9*/
+			if (gindex)
+				break;
+
+			debug_dts
+				("GPIO LED link gpio missed for CGX LMAC::%s\n"
+				, led_node);
+			return -1;
+		}
+		if (gpio_ptr[index] >= '0' && gpio_ptr[index] <= '9')
+			gpio[gindex++] = gpio_ptr[index];
+
+		/*Assuming GPIO value only between 10-99*/
+		if (gindex >= 2)
+			break;
+
+		index++;
+	}
+
+	gpio[gindex] = '\0';
+	return octeontx2_atoi(gpio);
+}
+
+static void octeontx2_cgx_update_gpio_leds(const void *fdt,
+	int cgx_idx, int lmac_idx, cgx_lmac_config_t *lmac)
+{
+	char prop[64];
+	int offset = 0;
+	int gpio_act = 0;
+	int gpio_link = 0;
+	int property_len = 0;
+	int gpio_link_drv = 1;
+	const char *act_node = NULL;
+	const char *link_node = NULL;
+	const void *property_end = NULL;
+	const void *property_start = NULL;
+
+	if (lmac) {
+		lmac->gpio_led.prev_tx_pkt_cnt = 0;
+		lmac->gpio_led.prev_rx_pkt_cnt = 0;
+		lmac->gpio_led.is_act_supported = 0;
+		lmac->gpio_led.is_link_supported = 0;
+		lmac->gpio_led.link_active_high = 1;
+	}
+
+	snprintf(prop, sizeof(prop), "NETWORK-LED-LINK-FAST.N0.CGX%d.P%d",
+		 cgx_idx, lmac_idx);
+
+	link_node = octeontx2_fdtbdk_get_str(fdt, prop);
+	if (!link_node) {
+		debug_dts
+			("Gpio LED link not set for CGX::%d LMAC::%d\n",
+				cgx_idx, lmac_idx);
+	}
+
+	memset(prop, 0, sizeof(prop));
+	snprintf(prop, sizeof(prop), "NETWORK-LED-ACTIVITY.N0.CGX%d.P%d",
+		 cgx_idx, lmac_idx);
+	act_node = octeontx2_fdtbdk_get_str(fdt, prop);
+	if (!act_node) {
+		debug_dts("Gpio LED act not set for CGX::%d LMAC::%d\n",
+			cgx_idx, lmac_idx);
+	}
+
+	if (!link_node && !act_node) {
+		debug_dts("Gpio LED property not set for CGX::%d LMAC::%d\n",
+			 cgx_idx, lmac_idx);
+		return;
+	}
+	offset = fdt_path_offset(fdt, "/cavium,bdk");
+	if (offset > 0) {
+		property_start = fdt_getprop(fdt, offset, "DEVICES",
+			&property_len);
+		if (property_start == NULL) {
+			debug_dts("GPIO LED devices property not found\n");
+			return;
+		}
+		property_end = property_start + property_len;
+	} else {
+		debug_dts("GPIO LED fdt root offset not found\n");
+		return;
+	}
+
+	if (link_node) {
+		gpio_link = octeontx2_cgx_update_gpio_leds_helper(
+			property_start, property_end, link_node,
+			 "gpio");
+		gpio_link_drv = octeontx2_cgx_update_gpio_leds_helper(
+			property_start, property_end, link_node,
+			 "active_high");
+	}
+
+	if (act_node) {
+		gpio_act = octeontx2_cgx_update_gpio_leds_helper(property_start,
+			 property_end, act_node, "gpio");
+	}
+	if (gpio_link >= 0) {
+		lmac->gpio_led.link_status = 0;
+		lmac->gpio_led.link = gpio_link;
+		lmac->gpio_led.link_active_high = gpio_link_drv;
+		lmac->gpio_led.is_link_supported = 1;
+	}
+
+	if (gpio_act >= 0) {
+		lmac->gpio_led.activity = gpio_act;
+		lmac->gpio_led.is_act_supported = 1;
+	}
+}
+
 static int octeontx2_cgx_get_phy_info(const void *fdt, int lmac_offset, int cgx_idx, int lmac_idx)
 {
 	cgx_lmac_config_t *lmac;
@@ -1665,6 +1892,9 @@ static void octeontx2_cgx_lmacs_check_linux(const void *fdt,
 						cgx_idx, lmac_idx);
 			continue;
 		}
+
+		/* Update GPIO LED information in LMAC config */
+		octeontx2_cgx_update_gpio_leds(fdt, cgx_idx, lmac_idx, lmac);
 
 		strlcpy(sfpname, "sfp-slot", sizeof(sfpname));
 		strlcpy(qsfpname, "qsfp-slot", sizeof(qsfpname));

@@ -357,5 +357,6 @@ void cgx_set_serdes_rx_leq_adaptation(int cgx_id, int lmac_id,
 	int leq_lfg_start, int leq_hfg_sql_start, int leq_mbf_start,
 	int leq_mbg_start, int gn_apg_start);
 void cgx_set_serdes_rx_dfe_adaptation(int cgx_id, int lmac_id);
+void cgx_gpio_led_handle(int cgx_id, int lmac_id, uint64_t link_up);
 
 #endif

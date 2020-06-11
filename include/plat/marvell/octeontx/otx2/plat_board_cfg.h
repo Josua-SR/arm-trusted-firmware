@@ -31,6 +31,9 @@ typedef enum {
 	SW_RVU_MAP_FORCE,
 } sw_rvu_mapping;
 
+/* Frequency in Hz for GPIO activity LED */
+#define GPIO_LED_ACTVITY_FREQ_HZ 0x4ULL
+
 typedef struct rvu_sw_rvu_pf {
 	int num_rvu_vfs;
 	int num_msix_vec;
@@ -102,6 +105,17 @@ typedef struct rvu_config {
 	rvu_sw_rvu_pf_t sw_pf[SW_RVU_NUM_PF];
 } rvu_config_t;
 
+typedef struct gpio_led_eth {
+	uint8_t  link;
+	uint8_t  activity;
+	uint64_t prev_tx_pkt_cnt;
+	uint64_t prev_rx_pkt_cnt;
+	uint8_t  link_status:1;
+	uint8_t  link_active_high:1;
+	uint8_t  is_link_supported:1;
+	uint8_t  is_act_supported:1;
+} gpio_led_eth_t;
+
 /* Define LMAC structure. */
 typedef struct cgx_lmac_config {
 	/* for RVU */
@@ -147,6 +161,7 @@ typedef struct cgx_lmac_config {
 	int max_lane_count;
 	int an_loopback;
 	int lane_an_master;
+	gpio_led_eth_t gpio_led;
 } cgx_lmac_config_t;
 
 typedef enum {

@@ -10,6 +10,7 @@
 #include <arch.h>
 #include <stdio.h>
 #include <string.h>
+#include <limits.h>
 #include <debug.h>
 #include <drivers/delay_timer.h>
 #include <platform_def.h>
@@ -21,6 +22,7 @@
 #include <qlm/qlm.h>
 #include <octeontx_utils.h>
 #include <gser_internal.h>
+#include <gpio_octeontx.h>
 
 #include "cavm-csrs-cgx.h"
 
@@ -1940,6 +1942,30 @@ void cgx_lmac_init(int cgx_id, int lmac_id)
 	CSR_WRITE(CAVM_CGXX_CMR_CHAN_MSK_AND(cgx_id),
 			(chan_msk_and.s.msk_and |
 			(((1ull << 1) - 1ull) << (lmac_id * MAX_CHAN_PER_LMAC))));
+
+	if (lmac->gpio_led.is_act_supported) {
+		uint32_t gpio_clk_divisor, sclk;
+
+		/* Using constant frequency for the Activity LED blinks.
+		 * Maximum number of GPIO clock generators is limited in
+		 * HW, so we cannot assign it per port. Using only one GPIO
+		 * clock generator to all the ports with a constant blink
+		 * frequency. LED blink frequency is configured at 4Hz so that
+		 * the blinks can be more or less same for less or high packet
+		 * rates.
+		 * When there is TX/RX activity in the last second then that
+		 * port's GPIO LED will be attached to this GPIO_CLK_GEN(0).
+		 * This will make the acitivity LED to blink at 4Hz.
+		 * And if there is no TX/RX activity in the last second then
+		 * GPIO LED attachment will be removed if it is already
+		 * congigured.
+		 */
+		CSR_INIT(rst_boot, CAVM_RST_BOOT);
+#define MHZ_TICKS_PER_SEC 1000000
+		sclk = rst_boot.s.pnr_mul * 50 * MHZ_TICKS_PER_SEC;
+		gpio_clk_divisor = GPIO_LED_ACTVITY_FREQ_HZ * UINT_MAX / sclk;
+		CSR_MODIFY(c, CAVM_GPIO_CLK_GENX(0), c.s.n = gpio_clk_divisor);
+	}
 }
 
 int cgx_get_lane_speed(int cgx_id, int lmac_id)
@@ -4204,5 +4230,63 @@ void cgx_set_serdes_rx_dfe_adaptation(int cgx_id, int lmac_id)
 		lane_mask >>= num_lanes;
 		gserx++;
 		qlm++;
+	}
+}
+
+void cgx_gpio_led_handle(int cgx, int lmac, uint64_t link_up)
+{
+	cgx_lmac_config_t *lmac_cfg;
+	uint64_t unblinked_pkts = 0;
+	uint64_t cur_rx_pkt_cnt = 0;
+	uint64_t cur_tx_pkt_cnt = 0;
+
+	lmac_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx].lmac_cfg[lmac];
+
+	if (lmac_cfg->gpio_led.is_link_supported) {
+		if (link_up &&
+			(!lmac_cfg->gpio_led.link_status)) {
+			if (lmac_cfg->gpio_led.link_active_high)
+				gpio_set_out(lmac_cfg->gpio_led.link);
+			else
+				gpio_clr_out(lmac_cfg->gpio_led.link);
+			lmac_cfg->gpio_led.link_status = 1;
+		} else if (!link_up &&
+			(lmac_cfg->gpio_led.link_status)) {
+			if (lmac_cfg->gpio_led.link_active_high)
+				gpio_clr_out(lmac_cfg->gpio_led.link);
+			else
+				gpio_set_out(lmac_cfg->gpio_led.link);
+			lmac_cfg->gpio_led.link_status = 0;
+		}
+	}
+
+	if (lmac_cfg->gpio_led.is_act_supported) {
+		cur_rx_pkt_cnt = CSR_READ(CAVM_CGXX_CMRX_RX_STAT0(cgx, lmac));
+		cur_tx_pkt_cnt = CSR_READ(CAVM_CGXX_CMRX_TX_STAT5(cgx, lmac));
+
+		/* Handle for counter wraps && for lmac disabled to enabled */
+		if (cur_rx_pkt_cnt < lmac_cfg->gpio_led.prev_rx_pkt_cnt)
+			lmac_cfg->gpio_led.prev_rx_pkt_cnt = 0;
+		if (cur_tx_pkt_cnt < lmac_cfg->gpio_led.prev_tx_pkt_cnt)
+			lmac_cfg->gpio_led.prev_tx_pkt_cnt = 0;
+
+		unblinked_pkts = (cur_rx_pkt_cnt -
+			lmac_cfg->gpio_led.prev_rx_pkt_cnt) + (cur_tx_pkt_cnt -
+			lmac_cfg->gpio_led.prev_tx_pkt_cnt);
+
+		CSR_INIT(ledact, CAVM_GPIO_BIT_CFGX(
+			lmac_cfg->gpio_led.activity));
+		if (!unblinked_pkts && (ledact.s.pin_sel != 0))
+			CSR_MODIFY(c, CAVM_GPIO_BIT_CFGX(
+				lmac_cfg->gpio_led.activity),
+				c.s.tx_oe = 0; c.s.pin_sel = 0);
+		else if (unblinked_pkts && (ledact.s.pin_sel == 0))
+			CSR_MODIFY(c, CAVM_GPIO_BIT_CFGX(
+				lmac_cfg->gpio_led.activity),
+				c.s.tx_oe = 1; c.s.pin_sel =
+				CAVM_GPIO_PIN_SEL_E_GPIO_CLKX_CN9(0));
+
+		lmac_cfg->gpio_led.prev_tx_pkt_cnt = cur_tx_pkt_cnt;
+		lmac_cfg->gpio_led.prev_rx_pkt_cnt = cur_rx_pkt_cnt;
 	}
 }

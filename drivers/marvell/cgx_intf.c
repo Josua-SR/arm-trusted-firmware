@@ -2542,6 +2542,11 @@ static int cgx_poll_for_link_cb(int timer)
 					cgx_handle_link_reqs(cgx, lmac,
 								&link);
 				}
+				if (lmac_cfg->gpio_led.is_link_supported ||
+					lmac_cfg->gpio_led.is_act_supported) {
+					cgx_gpio_led_handle(cgx, lmac,
+								link.s.link_up);
+				}
 			}
 		}
 	}
