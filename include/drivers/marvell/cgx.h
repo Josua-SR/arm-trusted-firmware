@@ -345,8 +345,6 @@ int cgx_smc_do_prbs(int cmd, int qlm, int x3, int x4);
 
 /* plat APIs specific to Octeon TX2 family */
 int plat_get_cgx_idx(int qlm);
-/* Return QLM.LANE<->CGX mapping */
-int plat_get_lmac_idx(int qlm, int qlm_lane);
 
 int cgx_set_ptp_mode(int cgx_id, int lmac_id, int enable);
 void cgx_set_serdes_loop(int cgx_id, int lmac_id, int type);
