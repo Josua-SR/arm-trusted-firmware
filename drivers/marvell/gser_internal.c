@@ -106,7 +106,8 @@ const char *qlm_mode_to_cfg_str(qlm_modes_t mode)
 	MODE_CASE(QLM_MODE_USXGMII_2X1);
 	MODE_CASE(QLM_MODE_USXGMII_1X1);
 	MODE_CASE(QLM_MODE_CPRI);
-
+	MODE_CASE(QLM_MODE_JESD204B);
+	MODE_CASE(QLM_MODE_JESD204C);
 	case QLM_MODE_LAST:
 		break; /* fall through error */
 	}
