@@ -129,6 +129,9 @@ int plat_otx2_get_gserx(int qlm, int *shift_from_first)
 	if (qlm >= plat_octeontx_get_gser_count())
 		return -1;
 
+	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1))
+		return qlm;
+
 	gserp_count = plat_octeontx_get_gserp_count();
 
 	if (qlm < gserp_count)

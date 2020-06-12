@@ -1981,11 +1981,7 @@ int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data)
 
 	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
 
-	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
-		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
-		gserx = qlm;
-	else
-		gserx = plat_otx2_get_gserx(qlm, NULL);
+	gserx = plat_otx2_get_gserx(qlm, NULL);
 
 	if (show_data) {
 		cgx_cfg->qlm_ops->qlm_display_settings(gserx, qlm_lane, 1, 1,
