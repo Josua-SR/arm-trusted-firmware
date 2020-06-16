@@ -218,6 +218,9 @@ int cgx_read_flash_mode_param(int cgx_id, int lmac_id, int *qlm_mode,
 		return -1;
 	}
 
+	if (!ptr->s.ignore)
+		return -1;
+
 	*qlm_mode = ptr->s.qlm_mode;
 	*lmac_mode = ptr->s.lmac_mode;
 	return 0;
@@ -289,10 +292,10 @@ static int cgx_update_flash_lmac_params(int cgx_id, int lmac_id, int cmd,
 	if (cmd == IGNORE)
 		ptr->s.ignore = (arg & 0x1) ? 0 : 1;
 
-	debug_cgx_flash("%s flash status %d cgx%d lmac%d qmode %x mode %x\n",
+	debug_cgx_flash("%s flash status %d cgx%d lmac%d qmode %x mode %x ignore %d\n",
 			__func__, ptr->s.status, ptr->s.cgx_id,
-			ptr->s.lmac_id, ptr->s.qlm_mode, ptr->s.lmac_mode);
-	debug_cgx_flash("%s fec invalid %d type%x mod invalid%d type%x\n",
+			ptr->s.lmac_id, ptr->s.qlm_mode, ptr->s.lmac_mode, ptr->s.ignore);
+	debug_cgx_flash("%s fec invalid %d type%x mod invalid %d type%x\n",
 			__func__, ptr->s.fec_invalid, ptr->s.fec_type,
 			ptr->s.mod_invalid, ptr->s.mod_type);
 	cgx_fdt_get_persist_offset(&offset);
