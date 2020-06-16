@@ -4031,12 +4031,6 @@ void cgx_set_serdes_loop(int cgx_id, int lmac_id, int type)
 		return;
 	}
 
-	/* For now allowing only near end digital loopback */
-	if (type == QLM_LOOP_DISABLED) {
-		WARN("%d:%d: Invalid parameter\n", cgx_id, lmac_id);
-		return;
-	}
-
 	/* Assuming NED is requested for GSERR configured to 10G/25G speed
 	 * GSERC is configured at higher speeds
 	 */
