@@ -115,7 +115,7 @@ static void init_rvu(uint64_t config_base, uint64_t config_size)
 	vsec_sctl.cn9.rid = plat_configure_rid();
 	octeontx_write32(config_base + CAVM_PCCPF_XXX_VSEC_SCTL, vsec_sctl.u);
 
-	octeontx_rvu_init();
+	//octeontx_rvu_init();
 }
 
 static void init_cgx(uint64_t config_base, uint64_t config_size)
