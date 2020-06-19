@@ -123,8 +123,10 @@ void phy_marvell_5113_config(int cgx_id, int lmac_id)
 	phy = &lmac_cfg->phy_config;
 	port = phy->port;
 
-	debug_phy_driver("%s: port %d AN %d QLM mode %d\n", __func__, port,
-			!lmac_cfg->autoneg_dis, lmac_cfg->mode_idx);
+	debug_phy_driver("%s: port %d AN %d QLM mode %d fec %d line fec %d\n",
+			__func__, port,
+			!lmac_cfg->autoneg_dis, lmac_cfg->mode_idx,
+			lmac_cfg->fec, lmac_cfg->line_fec);
 
 	/* If previously 20G clock was configured and current mode
 	 * is not 20G, Overwrite the clock modified to support 20G
@@ -167,56 +169,94 @@ void phy_marvell_5113_config(int cgx_id, int lmac_id)
 	break;
 	case QLM_MODE_XLAUI:
 	case QLM_MODE_XLAUI_C2M:
-		if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+		if (lmac_cfg->line_fec == CGX_FEC_BASE_R) {
 			mode_str = "40G-BASE-R4-FEC";
-			host_mode = line_mode = MXD_P40LF;
+			line_mode = MXD_P40LF;
 		} else {
 			mode_str = "40G-BASE-R4";
-			host_mode = line_mode = MXD_P40LN;
+			line_mode = MXD_P40LN;
+		}
+		if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+			mode_str = "40G-BASE-R4-FEC";
+			host_mode = MXD_P40LF;
+		} else {
+			mode_str = "40G-BASE-R4";
+			host_mode = MXD_P40LN;
 		}
 		marvell_5113_priv[cgx_id].port[port].use_an = 0;
 	break;
 	case QLM_MODE_40G_KR4:
-		if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+		if (lmac_cfg->line_fec == CGX_FEC_BASE_R) {
 			mode_str = "40G-BASE-KR4-FEC";
-			host_mode = line_mode = MXD_P40KF;
+			line_mode = MXD_P40KF;
 		} else {
 			mode_str = "40G-BASE-KR4";
-			host_mode = line_mode = MXD_P40KN;
+			line_mode = MXD_P40KN;
+		}
+		if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+			mode_str = "40G-BASE-KR4-FEC";
+			host_mode = MXD_P40KF;
+		} else {
+			mode_str = "40G-BASE-KR4";
+			host_mode = MXD_P40KN;
 		}
 		marvell_5113_priv[cgx_id].port[port].use_an = 1;
 	break;
 	case QLM_MODE_XFI:
 	case QLM_MODE_SFI:
-		if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+		if (lmac_cfg->line_fec == CGX_FEC_BASE_R) {
 			mode_str = "10G-BASE-R-FEC";
-			host_mode = line_mode = MXD_P10LF;
+			line_mode = MXD_P10LF;
 		} else {
 			mode_str = "10G-BASE-R";
-			host_mode = line_mode = MXD_P10LN;
+			line_mode = MXD_P10LN;
+		}
+		if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+			mode_str = "10G-BASE-R-FEC";
+			host_mode = MXD_P10LF;
+		} else {
+			mode_str = "10G-BASE-R";
+			host_mode = MXD_P10LN;
 		}
 		marvell_5113_priv[cgx_id].port[port].use_an = 0;
 	break;
 	case QLM_MODE_10G_KR:
-		if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+		if (lmac_cfg->line_fec == CGX_FEC_BASE_R) {
 			mode_str = "10G-BASE-KR-FEC";
-			host_mode = line_mode = MXD_P10KF;
+			line_mode = MXD_P10KF;
 		} else {
 			mode_str = "10G-BASE-KR";
-			host_mode = line_mode = MXD_P10KN;
+			line_mode =  MXD_P10KN;
+		}
+		if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+			mode_str = "10G-BASE-KR-FEC";
+			host_mode = MXD_P10KF;
+		} else {
+			mode_str = "10G-BASE-KR";
+			host_mode = MXD_P10KN;
 		}
 		marvell_5113_priv[cgx_id].port[port].use_an = 1;
 	break;
 	case QLM_MODE_20GAUI_C2C:
-		if (lmac_cfg->fec == CGX_FEC_RS) {
+		if (lmac_cfg->line_fec == CGX_FEC_RS) {
 			mode_str = "20G-BASE-R-RSFEC";
-			host_mode = line_mode = MXD_P25LR;
-		} else if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+			line_mode = MXD_P25LR;
+		} else if (lmac_cfg->line_fec == CGX_FEC_BASE_R) {
 			mode_str = "20G-BASE-R-FEC";
-			host_mode = line_mode = MXD_P25LF;
+			line_mode = MXD_P25LF;
 		} else {
 			mode_str = "20G-BASE-R";
-			host_mode = line_mode = MXD_P25LN;
+			line_mode = MXD_P25LN;
+		}
+		if (lmac_cfg->fec == CGX_FEC_RS) {
+			mode_str = "20G-BASE-R-RSFEC";
+			host_mode = MXD_P25LR;
+		} else if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+			mode_str = "20G-BASE-R-FEC";
+			host_mode = MXD_P25LF;
+		} else {
+			mode_str = "20G-BASE-R";
+			host_mode = MXD_P25LN;
 		}
 		marvell_5113_priv[cgx_id].port[port].use_an = 0;
 		marvell_5113_priv[cgx_id].mxddev.use20G = 1;
@@ -224,39 +264,59 @@ void phy_marvell_5113_config(int cgx_id, int lmac_id)
 	break;
 	case QLM_MODE_25GAUI_C2C:
 	case QLM_MODE_25GAUI_C2M:
-		if (lmac_cfg->fec == CGX_FEC_RS) {
+		if (lmac_cfg->line_fec == CGX_FEC_RS) {
 			mode_str = "25G-BASE-R-RSFEC";
-			host_mode = line_mode = MXD_P25LR;
-		} else if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+			line_mode = MXD_P25LR;
+		} else if (lmac_cfg->line_fec == CGX_FEC_BASE_R) {
 			mode_str = "25G-BASE-R-FEC";
-			host_mode = line_mode = MXD_P25LF;
+			line_mode = MXD_P25LF;
 		} else {
 			mode_str = "25G-BASE-R";
-			host_mode = line_mode = MXD_P25LN;
+			line_mode = MXD_P25LN;
+		}
+		if (lmac_cfg->fec == CGX_FEC_RS) {
+			mode_str = "25G-BASE-R-RSFEC";
+			host_mode = MXD_P25LR;
+		} else if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+			mode_str = "25G-BASE-R-FEC";
+			host_mode = MXD_P25LF;
+		} else {
+			mode_str = "25G-BASE-R";
+			host_mode = MXD_P25LN;
 		}
 		marvell_5113_priv[cgx_id].port[port].use_an = 0;
 	break;
 	case QLM_MODE_25G_KR:
 	/* FIXME for case QLM_MODE_25G_CR */
-		if (lmac_cfg->fec == CGX_FEC_RS) {
+		if (lmac_cfg->line_fec == CGX_FEC_RS) {
 			mode_str = "25G-BASE-KR-RSFEC";
-			host_mode = line_mode = MXD_P25KR;
+			line_mode = MXD_P25KR;
 		} else if (lmac_cfg->fec == CGX_FEC_BASE_R) {
 			mode_str = "25G-BASE-KR-FEC";
-			host_mode = line_mode = MXD_P25KF;
+			line_mode = MXD_P25KF;
 		} else {
 			mode_str = "25G-BASE-KR";
-			host_mode = line_mode = MXD_P25KN;
+			line_mode = MXD_P25KN;
+		}
+		if (lmac_cfg->fec == CGX_FEC_RS) {
+			mode_str = "25G-BASE-KR-RSFEC";
+			host_mode = MXD_P25KR;
+		} else if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+			mode_str = "25G-BASE-KR-FEC";
+			host_mode = MXD_P25KF;
+		} else {
+			mode_str = "25G-BASE-KR";
+			host_mode = MXD_P25KN;
 		}
 		marvell_5113_priv[cgx_id].port[port].use_an = 1;
 	break;
 	case QLM_MODE_40GAUI_2_C2C:
-		if (lmac_cfg->fec == CGX_FEC_RS) {
+		if (lmac_cfg->line_fec == CGX_FEC_RS) {
 			mode_str = "40G-BASE-R-RSFEC";
-			host_mode = line_mode = MXD_P50MR;
+			line_mode = MXD_P50MR;
 		} else if (lmac_cfg->fec == CGX_FEC_BASE_R) {
 			mode_str = "40G-BASE-R-FEC";
-			host_mode = line_mode = MXD_P50LF;
+			line_mode = MXD_P50LF;
 		} else {
 			mode_str = "40G-BASE-R";
 			/* For 40GAUI, in case of eval boards, configure the PHY
@@ -265,9 +325,27 @@ void phy_marvell_5113_config(int cgx_id, int lmac_id)
 			if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9", 4)) {
 				marvell_5113_priv[cgx_id].port[port].repeater_mode = 1;
 				marvell_5113_priv[cgx_id].port[port].num_slices = 2;
-				host_mode = line_mode =  MXD_MODE_R25L_R25L;
+				line_mode =  MXD_MODE_R25L_R25L;
 			} else
-				host_mode = line_mode = MXD_P50LN;
+				line_mode = MXD_P50LN;
+		}
+		if (lmac_cfg->fec == CGX_FEC_RS) {
+			mode_str = "40G-BASE-R-RSFEC";
+			host_mode = MXD_P50MR;
+		} else if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+			mode_str = "40G-BASE-R-FEC";
+			host_mode = MXD_P50LF;
+		} else {
+			mode_str = "40G-BASE-R";
+			/* For 40GAUI, in case of eval boards, configure the PHY
+			 * in repeater mode
+			 */
+			if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9", 4)) {
+				marvell_5113_priv[cgx_id].port[port].repeater_mode = 1;
+				marvell_5113_priv[cgx_id].port[port].num_slices = 2;
+				host_mode =  MXD_MODE_R25L_R25L;
+			} else
+				host_mode = MXD_P50LN;
 		}
 		marvell_5113_priv[cgx_id].port[port].use_an = 0;
 		marvell_5113_priv[cgx_id].mxddev.use20G = 1;
@@ -278,15 +356,25 @@ void phy_marvell_5113_config(int cgx_id, int lmac_id)
 		/* FIXME : to select the OP MODE for consortium/
 		 * non-standard
 		 */
-		if (lmac_cfg->fec == CGX_FEC_RS) {
+		if (lmac_cfg->line_fec == CGX_FEC_RS) {
 			mode_str = "50-BASE-R2-RSFEC";
-			host_mode = line_mode = MXD_P50MR;
-		} else if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+			line_mode = MXD_P50MR;
+		} else if (lmac_cfg->line_fec == CGX_FEC_BASE_R) {
 			mode_str = "50G-BASE-R2-FEC";
-			host_mode = line_mode = MXD_P50LF;
+			line_mode = MXD_P50LF;
 		} else {
 			mode_str = "50G-BASE-R2";
-			host_mode = line_mode = MXD_P50LN;
+			line_mode = MXD_P50LN;
+		}
+		if (lmac_cfg->fec == CGX_FEC_RS) {
+			mode_str = "50-BASE-R2-RSFEC";
+			host_mode = MXD_P50MR;
+		} else if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+			mode_str = "50G-BASE-R2-FEC";
+			host_mode = MXD_P50LF;
+		} else {
+			mode_str = "50G-BASE-R2";
+			host_mode = MXD_P50LN;
 		}
 		marvell_5113_priv[cgx_id].port[port].use_an = 0;
 	break;
@@ -295,22 +383,32 @@ void phy_marvell_5113_config(int cgx_id, int lmac_id)
 		/* FIXME : to select the OP MODE for consortium/
 		 * non-standard
 		 */
-		if (lmac_cfg->fec == CGX_FEC_RS) {
+		if (lmac_cfg->line_fec == CGX_FEC_RS) {
 			mode_str = "50-BASE-KR2-RSFEC";
-			host_mode = line_mode = MXD_P50JR;
-		} else if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+			line_mode = MXD_P50JR;
+		} else if (lmac_cfg->line_fec == CGX_FEC_BASE_R) {
 			mode_str = "50G-BASE-KR2-FEC";
-			host_mode = line_mode = MXD_P50KF;
+			line_mode = MXD_P50KF;
 		} else {
 			mode_str = "50G-BASE-KR2";
-			host_mode = line_mode = MXD_P50KN;
+			line_mode = MXD_P50KN;
+		}
+		if (lmac_cfg->fec == CGX_FEC_RS) {
+			mode_str = "50-BASE-KR2-RSFEC";
+			host_mode = MXD_P50JR;
+		} else if (lmac_cfg->fec == CGX_FEC_BASE_R) {
+			mode_str = "50G-BASE-KR2-FEC";
+			host_mode = MXD_P50KF;
+		} else {
+			mode_str = "50G-BASE-KR2";
+			host_mode = MXD_P50KN;
 		}
 		marvell_5113_priv[cgx_id].port[port].use_an = 1;
 	break;
 	case QLM_MODE_80GAUI_4_C2C:
-		if (lmac_cfg->fec == CGX_FEC_RS) {
+		if (lmac_cfg->line_fec == CGX_FEC_RS) {
 			mode_str = "80G-BASE-R4-RSFEC";
-			host_mode = line_mode = MXD_P100LR;
+			line_mode = MXD_P100LR;
 		} else {
 			mode_str = "80G-BASE-R4";
 			/* For 80GAUI, in case of eval boards, configure the PHY
@@ -319,33 +417,62 @@ void phy_marvell_5113_config(int cgx_id, int lmac_id)
 			if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9", 4)) {
 				marvell_5113_priv[cgx_id].port[port].repeater_mode = 1;
 				marvell_5113_priv[cgx_id].port[port].num_slices = 4;
-				host_mode = line_mode =  MXD_MODE_R25L_R25L;
+				line_mode =  MXD_MODE_R25L_R25L;
 			} else
-				host_mode = line_mode = MXD_P100LN;
-			}
+				line_mode = MXD_P100LN;
+		}
+		if (lmac_cfg->fec == CGX_FEC_RS) {
+			mode_str = "80G-BASE-R4-RSFEC";
+			host_mode = MXD_P100LR;
+		} else {
+			mode_str = "80G-BASE-R4";
+			/* For 80GAUI, in case of eval boards, configure the PHY
+			 * in repeater mode
+			 */
+			if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9", 4)) {
+				marvell_5113_priv[cgx_id].port[port].repeater_mode = 1;
+				marvell_5113_priv[cgx_id].port[port].num_slices = 4;
+				host_mode =  MXD_MODE_R25L_R25L;
+			} else
+				host_mode = MXD_P100LN;
+		}
 		marvell_5113_priv[cgx_id].port[port].use_an = 0;
 		marvell_5113_priv[cgx_id].mxddev.use20G = 1;
 		marvell_5113_priv[cgx_id].port[port].use_20G = 1;
 	break;
 	case QLM_MODE_CAUI_4_C2C:
 	case QLM_MODE_CAUI_4_C2M:
-		if (lmac_cfg->fec == CGX_FEC_RS) {
+		if (lmac_cfg->line_fec == CGX_FEC_RS) {
 			mode_str = "100G-BASE-R4-RSFEC";
-			host_mode = line_mode = MXD_P100LR;
+			line_mode = MXD_P100LR;
 		} else {
 			mode_str = "100G-BASE-R4";
-			host_mode = line_mode = MXD_P100LN;
+			line_mode = MXD_P100LN;
+		}
+		if (lmac_cfg->fec == CGX_FEC_RS) {
+			mode_str = "100G-BASE-R4-RSFEC";
+			host_mode = MXD_P100LR;
+		} else {
+			mode_str = "100G-BASE-R4";
+			host_mode = MXD_P100LN;
 		}
 		marvell_5113_priv[cgx_id].port[port].use_an = 0;
 	break;
 	case QLM_MODE_100G_KR4:
 	/* FIXME for case QLM_MODE_100G_CR4 */
-		if (lmac_cfg->fec == CGX_FEC_RS) {
+		if (lmac_cfg->line_fec == CGX_FEC_RS) {
 			mode_str = "100G-BASE-KR4-RSFEC";
-			host_mode = line_mode = MXD_P100KR;
+			line_mode = MXD_P100KR;
 		} else {
 			mode_str = "100G-BASE-KR4";
-			host_mode = line_mode = MXD_P100KN;
+			line_mode = MXD_P100KN;
+		}
+		if (lmac_cfg->fec == CGX_FEC_RS) {
+			mode_str = "100G-BASE-KR4-RSFEC";
+			host_mode = MXD_P100KR;
+		} else {
+			mode_str = "100G-BASE-KR4";
+			host_mode = MXD_P100KN;
 		}
 		marvell_5113_priv[cgx_id].port[port].use_an = 1;
 	break;

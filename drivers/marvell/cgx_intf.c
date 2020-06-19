@@ -417,7 +417,10 @@ static int cgx_link_bringup(int cgx_id, int lmac_id)
 	}
 
 	/* Save the current FEC what is configured by the user */
-	link.s.fec = lmac_ctx->s.fec = lmac_cfg->fec;
+	if (lmac_cfg->phy_present)
+		link.s.fec = lmac_ctx->s.fec = lmac_cfg->line_fec;
+	else
+		link.s.fec = lmac_ctx->s.fec = lmac_cfg->fec;
 
 	if ((lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_SGMII) ||
 		(lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_QSGMII)) {
@@ -1337,7 +1340,7 @@ int cgx_set_fec_type(int cgx_id, int lmac_id, int req_fec)
 		return -1;
 	}
 
-	if (req_fec == lmac->fec) {
+	if ((!lmac->phy_present) && (req_fec == lmac->fec)) {
 		WARN("%s: %d:%d FEC requested is same as current FEC state\n",
 				__func__, cgx_id, lmac_id);
 		return 0;
@@ -1352,19 +1355,28 @@ int cgx_set_fec_type(int cgx_id, int lmac_id, int req_fec)
 
 	/* FIXME: Validate FEC based on transceiver */
 
-	/* Update the new FEC requested by user in the board config */
-	lmac->fec = req_fec;
-
-	/* Configure PHY to new mode based on FEC requested
+	/* Update the new FEC requested by user in the board config
+	 * Configure PHY to new mode based on FEC requested
 	 * if PHY is present
 	 */
 	if ((lmac->phy_present) && (lmac->phy_config.init)) {
+		if (req_fec == lmac->line_fec) {
+			WARN("%s: %d:%d FEC requested is same as current FEC state\n",
+				__func__, cgx_id, lmac_id);
+			return 0;
+		}
+		lmac->line_fec = req_fec;
+		/* Update the line side of PHY fec but keep the
+		 * host fec as none
+		 */
+		lmac->fec = CGX_FEC_NONE;
 		phy_config(cgx_id, lmac_id);
 		mdelay(1);
-	}
+	} else
+		lmac->fec = req_fec;
 
 	/* Change CGX configuration to new FEC */
-	ret = cgx_fec_change(cgx_id, lmac_id, req_fec);
+	ret = cgx_fec_change(cgx_id, lmac_id, lmac->fec);
 	if (ret == -1) {
 		ERROR("%s: FEC type could not be changed\n", __func__);
 		cgx_set_error_type(cgx_id, lmac_id, CGX_ERR_SET_FEC_FAIL);
@@ -2411,9 +2423,6 @@ static int cgx_get_link_status(int cgx_id, int lmac_id,
 
 	debug_cgx_intf("%s: mode %d\n", __func__, lmac->mode);
 
-	/* Append the current FEC to new link status */
-	link->s.fec = lmac->fec;
-
 	if (lmac->phy_present) {
 		/* Get the PHY link status */
 		if (phy_get_link_status(cgx_id, lmac_id, link) == -1) {
@@ -2434,7 +2443,12 @@ static int cgx_get_link_status(int cgx_id, int lmac_id,
 					link->s.full_duplex);
 			return 0;
 		}
-	}
+		/* Append the line side FEC to link status in PHY case */
+		link->s.fec = lmac->line_fec;
+	} else
+		/* Append the current FEC to new link status */
+		link->s.fec = lmac->fec;
+
 
 	/* In case of SGMII/QSGMII/1000 BASE-X, with PHY not present,
 	 * (even loopback module) return the link as UP based on

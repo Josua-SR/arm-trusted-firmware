@@ -203,9 +203,14 @@ void phy_marvell_5123_config(int cgx_id, int lmac_id)
 		marvell_5123_priv.port[port_num].use_an = 1;
 
 	if (lmac_cfg->fec == CGX_FEC_RS)
-		fec_type = MCD_RS_FEC_HOST;
+		fec_type |= MCD_RS_FEC_HOST;
 	else if (lmac_cfg->fec == CGX_FEC_BASE_R)
-		fec_type = MCD_FC_FEC_HOST;
+		fec_type |= MCD_FC_FEC_HOST;
+
+	if (lmac_cfg->line_fec == CGX_FEC_RS)
+		fec_type |= MCD_RS_FEC_LINE;
+	else if (lmac_cfg->line_fec == CGX_FEC_BASE_R)
+		fec_type |= MCD_FC_FEC_LINE;
 
 	switch (lmac_cfg->mode_idx) {
 	case QLM_MODE_1G_X:

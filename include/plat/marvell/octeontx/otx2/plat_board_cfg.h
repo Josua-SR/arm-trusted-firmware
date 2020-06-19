@@ -127,7 +127,8 @@ typedef struct cgx_lmac_config {
 	int phy_present;
 	int sfp_slot;
 	int autoneg_dis;
-	int fec;
+	int fec;	/* host side of PHY's fec type */
+	int line_fec; /* line side of PHY's fec type */
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
 	int prbs_errors_host;
 	int prbs_errors_line;

@@ -178,7 +178,8 @@ void plat_octeontx_print_board_variables(void)
 						lmac->sgmii_1000x_mode,
 						lmac->autoneg_dis);
 			}
-			debug_dts("\tfec_type=%d\n", lmac->fec);
+			debug_dts("\tfec_type=%d line fec type=%d\n",
+					lmac->fec, lmac->line_fec);
 			debug_dts("\tLMAC enable=%d\n", lmac->lmac_enable);
 		}
 	}
@@ -1707,9 +1708,18 @@ static void octeontx2_cgx_lmacs_check_linux(const void *fdt,
 		 * same qlm mode.
 		 */
 		if (!cgx_read_flash_fec(cgx_idx, lmac_idx, &req_fec)) {
-			lmac->fec = req_fec;
+			if (lmac->phy_present) {
+				lmac->line_fec = req_fec;
+				lmac->fec = CGX_FEC_NONE;
+			} else {
+				lmac->fec = req_fec;
+				lmac->line_fec = CGX_FEC_NONE;
+			}
 		} else {
-			/* Handle FEC types */
+			/* Handle FEC types.
+			 * octeontx, fec-type : Host side of PHY/CGX
+			 * octeontx, line-fec-type : line side of PHY
+			 */
 			val = fdt_getprop(fdt, lmac_offset,
 					  "octeontx,fec-type", &len);
 			if (val) {
@@ -1723,6 +1733,18 @@ static void octeontx2_cgx_lmacs_check_linux(const void *fdt,
 				 * the default type.
 				 */
 				lmac->fec = -1;
+			}
+			val = fdt_getprop(fdt, lmac_offset,
+					  "octeontx,line-fec-type", &len);
+			if (val) {
+				req_fec = fdt32_to_cpu(*val);
+				lmac->line_fec = req_fec;
+			} else {
+				/* User did not specify FEC type property
+				 * in the DT. set it to CGX_FEC_NONE
+				 * to configure the default type.
+				 */
+				lmac->line_fec = CGX_FEC_NONE;
 			}
 		}
 		if (!cgx_read_flash_phy_mod(cgx_idx, lmac_idx,

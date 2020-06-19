@@ -194,22 +194,25 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 	MYD_DEV_PTR myd_dev;
 	PMYD_MODE_CONFIG myd_host_config;
 
-	debug_phy_driver("%s: %d:%d\n", __func__, cgx_id, lmac_id);
-
 	lmac_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	debug_phy_driver("%s: %d:%d fec %d line fec %d\n", __func__, cgx_id, lmac_id,
+			lmac_cfg->fec, lmac_cfg->line_fec);
+
 	phy = &lmac_cfg->phy_config;
 
 	switch (lmac_cfg->mode_idx) {
 	case QLM_MODE_XFI:
 	case QLM_MODE_SFI:
 	case QLM_MODE_10G_KR:
+		/* Update host_mode based on HOST FEC type
+		 * and line_mode based on LINE FEC type
+		 */
 		switch (lmac_cfg->fec) {
 		case CGX_FEC_BASE_R:
 			if (lmac_cfg->mode_idx == QLM_MODE_10G_KR)
 				host_mode = MYD_P10KF;
 			else
 				host_mode = MYD_P10LF;
-			line_mode = MYD_P10KF;
 			break;
 		case CGX_FEC_NONE:
 		default:
@@ -217,15 +220,43 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 				host_mode = MYD_P10KN;
 			else
 				host_mode = MYD_P10LN;
-			line_mode = MYD_P10LN;
+			break;
+		}
+		switch (lmac_cfg->line_fec) {
+		case CGX_FEC_BASE_R:
+			if (lmac_cfg->mode_idx == QLM_MODE_10G_KR)
+				line_mode = MYD_P10KF;
+			else
+				line_mode = MYD_P10LF;
+			break;
+		case CGX_FEC_NONE:
+		default:
+			if (lmac_cfg->mode_idx == QLM_MODE_10G_KR)
+				line_mode = MYD_P10KN;
+			else
+				line_mode = MYD_P10LN;
 			break;
 		}
 		break;
 
 	case QLM_MODE_25GAUI_C2C:
-		host_mode = MYD_P25LN; /* 25GBASE-R, no-FEC, no AN */
-
+		/* Update host_mode based on HOST FEC type
+		 * and line_mode based on LINE FEC type
+		 */
 		switch (lmac_cfg->fec) {
+		case CGX_FEC_RS:
+			host_mode = MYD_P25LR;
+			break;
+		case CGX_FEC_BASE_R:
+			host_mode = MYD_P25LF;
+			break;
+		case CGX_FEC_NONE:
+		default:
+			host_mode = MYD_P25LN;
+			break;
+		}
+
+		switch (lmac_cfg->line_fec) {
 		case CGX_FEC_RS:
 			line_mode = MYD_P25LR;
 			break;
@@ -240,9 +271,12 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 		break;
 
 	case QLM_MODE_25GAUI_2_C2C:
+		/* Update host_mode FEC to none as 25GAUI_2_C2C
+		 * doesn't FEC
+		 * set line_mode based on LINE FEC type
+		 */
 		host_mode = MYD_P25YN; /* 25GBASE-R2, no FEC, no AN */
-
-		switch (lmac_cfg->fec) {
+		switch (lmac_cfg->line_fec) {
 		case CGX_FEC_RS:
 			line_mode = MYD_P25LR;
 			break;
@@ -261,7 +295,7 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 		if (phy->mod_type == PHY_MOD_TYPE_PAM4) {
 			line_mode = MYD_P50UP; /* 50GBASE-R, RS-FEC, no AN */
 		} else {
-			switch (lmac_cfg->fec) {
+			switch (lmac_cfg->line_fec) {
 			case CGX_FEC_RS:
 				line_mode = MYD_P50MR;
 				break;
@@ -275,10 +309,21 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 			}
 		}
 
-		if (lmac_cfg->mode_idx == QLM_MODE_50GAUI_2_C2C)
-			host_mode = MYD_P50MN; /* 50GBASE-R2, no-FEC, no AN */
-		else
-			host_mode = MYD_P50LN; /* 50GBASE-R4, no FEC, no AN */
+		if (lmac_cfg->mode_idx == QLM_MODE_50GAUI_2_C2C) {
+			switch (lmac_cfg->fec) {
+			case CGX_FEC_BASE_R:
+				host_mode = MYD_P50MF;
+				break;
+			case CGX_FEC_RS:
+				host_mode = MYD_P50MR;
+				break;
+			case CGX_FEC_NONE:
+			default:
+				host_mode = MYD_P50MN;
+				break;
+			}
+		} else
+			host_mode = MYD_P50LN; /* 50GBASE-R4, no-FEC, no AN */
 		break;
 
 	default:
