@@ -381,7 +381,15 @@ static int octeontx_init_rvu_from_fdt(void)
 	int top_cgx_pf, top_uninit_pf;
 	rvu_sw_rvu_pf_t *sw_pf;
 	cgx_config_t *cgx;
-	struct rvu_pf_cgx_lmac cgx_lmac_list[MAX_CGX * MAX_LMAC_PER_CGX];
+	struct rvu_pf_cgx_lmac cgx_lmac_list[MAX_RVU_PFS];
+	/* Implementation note: this array only requires elements equal to the
+	 * max number of CGX devices (i.e. max_cgx * max_lmac_per_cgx).
+	 * However, since the CGX devices could potentially be placed anywhere
+	 * in the range of 0..<max_rvu_pf_num>, the array is defined with
+	 * sufficient size so that it can be accessed using the RVU PF device
+	 * number.  This simplifies the code; the extra space is negligible
+	 * as each array element is only 0x10 bytes.
+	 */
 
 	/* Check if FDT config is valid */
 	if (!(plat_octeontx_bcfg->rvu_config.valid)) {
