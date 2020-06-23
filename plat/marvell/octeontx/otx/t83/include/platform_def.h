@@ -122,6 +122,19 @@
 #define TSP_SEC_MEM_BASE		TZDRAM_BASE
 #define TSP_SEC_MEM_SIZE		TZDRAM_SIZE
 
+/*
+ * Memory used for redistributors LPI property, pending
+ * tables placed below BL33 memory region, with a size of 2MB
+ */
+#define LPI_NRBITS			16
+#define LPI_PROP_TBL_SIZE		(U(1) << LPI_NRBITS)
+#define LPI_PEND_TBL_SIZE		(U(1) << LPI_NRBITS)
+#define LPI_PROPPEND_TBLS_SIZE		(LPI_PROP_TBL_SIZE + \
+					 LPI_PEND_TBL_SIZE * \
+					 PLATFORM_CORE_COUNT)
+
+#define LPI_PROP_TBL_BASE		(NS_IMAGE_BASE - 0x200000)
+
 /* Load address of BL33 in the OcteonTX port. */
 #define NS_IMAGE_BASE			0x02800000
 #define NS_IMAGE_MAX_SIZE		(0x40000000 - NS_IMAGE_BASE)

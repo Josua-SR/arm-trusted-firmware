@@ -65,6 +65,8 @@
 /* RAS/EDAC support, see plat_ras.h for operations & details */
 #define OCTEONTX_EDAC			0xc2000c0b
 
+#define OCTEONTX_LPI_PROP_TBL_BASE	0xc2000c0c
+
 /*
  * No input
  * Return:
@@ -76,7 +78,7 @@
  */
 #define PLAT_OCTEONTX_SERDES_DBG_GET_MEM	0xc2000d04
 
-#define OCTEONTX_NUM_CALLS		20
+#define OCTEONTX_NUM_CALLS		21
 
 /*
  * Standard OcteonTX SMC responses
