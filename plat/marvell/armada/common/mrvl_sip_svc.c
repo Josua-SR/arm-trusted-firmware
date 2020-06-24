@@ -46,6 +46,9 @@
 #define MVEBU_COMPHY_OFFSET	0x441000
 #define MVEBU_CP_BASE_MASK	(~0xffffff)
 
+/* Common PHY register */
+#define COMPHY_TRX_TRAIN_CTRL_REG_0_OFFS	0x120a2c
+
 /* This macro is used to identify COMPHY related calls from SMC function ID */
 #define is_comphy_fid(fid)	\
 	((fid) >= MV_SIP_COMPHY_POWER_ON && (fid) <= MV_SIP_COMPHY_DIG_RESET)
@@ -72,7 +75,7 @@ uintptr_t mrvl_sip_smc_handler(uint32_t smc_fid,
 			       void *handle,
 			       u_register_t flags)
 {
-	u_register_t ret, read;
+	u_register_t ret, read, x5 = x1;
 	int i;
 
 	debug("%s: got SMC (0x%x) x1 0x%lx, x2 0x%lx, x3 0x%lx\n",
@@ -86,6 +89,7 @@ uintptr_t mrvl_sip_smc_handler(uint32_t smc_fid,
 			SMC_RET1(handle, SMC_UNK);
 		}
 
+		x5 = x1 + COMPHY_TRX_TRAIN_CTRL_REG_0_OFFS;
 		x1 += MVEBU_COMPHY_OFFSET;
 
 		if (x2 >= MAX_LANE_NR) {
@@ -100,7 +104,7 @@ uintptr_t mrvl_sip_smc_handler(uint32_t smc_fid,
 	/* Comphy related FID's */
 	case MV_SIP_COMPHY_POWER_ON:
 		/* x1:  comphy_base, x2: comphy_index, x3: comphy_mode */
-		ret = mvebu_cp110_comphy_power_on(x1, x2, x3);
+		ret = mvebu_cp110_comphy_power_on(x1, x2, x3, x5);
 		SMC_RET1(handle, ret);
 	case MV_SIP_COMPHY_POWER_OFF:
 		/* x1:  comphy_base, x2: comphy_index */
