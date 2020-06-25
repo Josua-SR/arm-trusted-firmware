@@ -68,6 +68,15 @@ default FEC type specific to mode will be configured.
            CGX_FEC_RS              /* RS-FEC */
    } fec_type_t;
 
+FEC configuration for each LMAC for line side of PHY is added if PHY is present.
+``octeontx,line-fec-type = <N>`` where N can be 0, 1 or 2. If this attribute is not specified,
+FEC is disabled on line side. ``octeontx,fec-type = <N>`` is used to configure the host side
+of PHY and on CGX. If PHY is present, it is expected to be 0 for most use cases and only
+line side FEC needs to be set based on the link partner's abilities and FEC type.
+
+If user wants to disable FEC on the line side of PHY, specify the value as 0 in the above
+property. If not, one of the above enum value can be specified.
+
 2.4 PAM4
 ^^^^^^^^
 
