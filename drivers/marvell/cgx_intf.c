@@ -2757,7 +2757,7 @@ void cgx_set_supported_link_modes(int cgx_id, int lmac_id)
 
 static void cgx_check_for_presence_of_phy(int cgx_id, int lmac_id)
 {
-	int mode, dev, reg, phy_id, phy_id_mask, val;
+	int mode, dev, reg, phy_id, phy_id_mask, val = 0;
 	cgx_lmac_config_t *lmac;
 	phy_config_t *phy;
 
@@ -2775,7 +2775,7 @@ static void cgx_check_for_presence_of_phy(int cgx_id, int lmac_id)
 		mode = CLAUSE45;
 		dev = PHY_88X5113_ID_DEV;
 		reg = PHY_88X5113_ID_REG;
-		phy_id = PHY_88X5113_ID,
+		phy_id = PHY_88X5113_ID;
 		phy_id_mask = PHY_88X5113_ID_MASK;
 		break;
 
