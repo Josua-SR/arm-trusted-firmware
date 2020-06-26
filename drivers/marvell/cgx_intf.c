@@ -2154,7 +2154,7 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 				link.s.link_up = lmac_ctx->s.link_up;
 				link.s.full_duplex = lmac_ctx->s.full_duplex;
 				link.s.speed = lmac_ctx->s.speed;
-				link.s.fec = lmac->fec;
+				link.s.fec = lmac_ctx->s.fec;
 				cgx_set_link_state(cgx_id, lmac_id, &link,
 					lmac_ctx->s.error_type);
 				cgx_set_link_mode(cgx_id, lmac_id,
