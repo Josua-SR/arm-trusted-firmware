@@ -341,4 +341,5 @@ unsigned int mcp_get_an_lt_state(int cgx_id, int lmac_id);
 unsigned int mcp_get_an_rx_sig_state(int cgx_id, int lmac_id);
 unsigned int mcp_set_an_lt_state(int cgx_id, int lmac_id, int state);
 unsigned int mcp_get_intf_rev(int cgx_id, int lmac_id);
+int mcp_get_fail_type(int cgx_id, int lmac_id);
 #endif /* __SFP_MGMT_H__ */

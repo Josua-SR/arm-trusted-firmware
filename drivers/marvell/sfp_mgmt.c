@@ -1335,3 +1335,45 @@ retry_acquire_lock:
 	sh_data->async_ctx.lock = AN_LT_OWN_NONE;
 	return mcp_rev;
 }
+
+/**
+ * Check MCP AN/LT Failure type
+ *
+ * @param qlm	  QLM to use
+ * @param lane	  Which lane
+ * @return 0 = LT failure, 1 = Link failure
+ */
+int mcp_get_fail_type(int cgx_id, int lmac_id)
+{
+	int retry_lock = 0;
+	int fail_type = 0;
+
+	sfp_shared_data_t *sh_data = sfp_get_sh_mem_ptr(cgx_id, lmac_id);
+
+	if (sh_data == NULL) {
+		ERROR("%s: SM pointer is NULL\n", __func__);
+		return -1;
+	}
+	debug_sfp_mgmt("%s: %d:%d\n", __func__, cgx_id, lmac_id);
+
+retry_acquire_lock:
+	if (sh_data->async_ctx.lock == AN_LT_OWN_NONE) {
+		sh_data->async_ctx.lock = AN_LT_OWN_AP;
+		if (retry_lock++ < 5) {
+			mdelay(1);
+			goto retry_acquire_lock;
+		}
+		debug_sfp_mgmt("%s %d:%d lock %d not available for AP\n",
+					 __func__,
+					cgx_id, lmac_id,
+					sh_data->async_ctx.lock);
+		return -1;
+	}
+
+	if (sh_data->an_lt_args.lnk_fail_count >= MCP_LINK_FAIL_MAX)
+		fail_type = 1;
+	else
+		fail_type = 0;
+
+	return fail_type;
+}

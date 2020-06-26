@@ -87,6 +87,9 @@
 #define PHY_FAIL_RETRIES 5
 #define LP_FAIL_RETRIES 5
 #define ETH_FAIL_RETRIES 5
+/* MCP AN/LT failure counts */
+#define MCP_LINK_FAIL_MAX 4
+#define MCP_LINK_LT_FAIL_MAX 4
 
 /* Maximum number of extended next page prints */
 #define AN_NP_PRINT_MAX 20

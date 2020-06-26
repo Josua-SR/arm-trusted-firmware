@@ -2514,25 +2514,8 @@ static int cgx_complete_sw_an_with_mcp(int cgx_id, int lmac_id, cgx_lmac_context
 							CGX_POLL_AN_RX_SIGNAL2 * gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
 						break;
 					} else if (status == AN_LT_STATE_STOPPED) {
-						debug_cgx("%s: %d:%d LT failed several times.\n",
-								__func__, cgx_id, lmac_id);
-						cgx_set_error_type(cgx_id, lmac_id,
-							   CGX_ERR_TRAINING_FAIL);
-						/* Print link training trace data */
-#ifdef DEBUG_ATF_CGX
-						cgx_link_training_tracing(cgx_id, lmac_id);
-#endif
-						ret = mcp_send_async_req(cgx_id, lmac_id,
-									REQ_AN_LT_START);
-						if (ret == -1) {
-							/* Request not sent */
-							debug_cgx("%s: %d:%d request not sent to MCP\n",
-								__func__, cgx_id, lmac_id);
-							goto restart_an;
-						}
-						break;
+						goto an_lt_link_failure;
 					}
-
 					/* Check if we have detected a signal during AN */
 					if (mcp_get_an_rx_sig_state(cgx_id, lmac_id))
 						signal_detect = true;
@@ -2550,39 +2533,54 @@ static int cgx_complete_sw_an_with_mcp(int cgx_id, int lmac_id, cgx_lmac_context
 				goto restart_an;
 			} else
 				goto an_check_state;
-			}
 		}
+	}
 an_check_state:
-		if (status == AN_LT_STATE_LINK_UP) {
-			debug_cgx("%s: %d:%d AN/LT and Link UP completed. Reset the state\n",
+	if (status == AN_LT_STATE_LINK_UP) {
+		debug_cgx("%s: %d:%d AN/LT and Link UP completed. Reset the state\n",
+				  __func__, cgx_id, lmac_id);
+		mcp_set_an_lt_state(cgx_id, lmac_id, AN_LT_NO_STATE);
+		return 0;
+	} else if (status == AN_LT_STATE_STOPPED) {
+		goto an_lt_link_failure;
+	} else {
+		debug_cgx("%s: %d:%d AN/LT in progress/Fail status %d\n",
+				__func__, cgx_id, lmac_id, status);
+		goto restart_an;
+	}
+an_lt_link_failure:
+	ret = mcp_get_fail_type(cgx_id, lmac_id);
+	if (ret == -1) {
+		debug_cgx("%s: %d:%d Link Up or Training failed several times.  Failed to get fail type.\n",
 				__func__, cgx_id, lmac_id);
-			mcp_set_an_lt_state(cgx_id, lmac_id, AN_LT_NO_STATE);
-			return 0;
-		} else if (status == AN_LT_STATE_STOPPED) {
-			debug_cgx("%s: %d:%d LT failed several times.\n",
+		cgx_set_error_type(cgx_id, lmac_id,
+			   CGX_ERR_PCS_LINK_FAIL);
+	} else if (ret == 1) {
+		debug_cgx("%s: %d:%d Failed Link Up several times.\n",
 				__func__, cgx_id, lmac_id);
-			cgx_set_error_type(cgx_id, lmac_id,
-				   CGX_ERR_TRAINING_FAIL);
+		cgx_set_error_type(cgx_id, lmac_id,
+			   CGX_ERR_PCS_LINK_FAIL);
+	} else {
+		debug_cgx("%s: %d:%d Failed Link Training several times.\n",
+				__func__, cgx_id, lmac_id);
+		cgx_set_error_type(cgx_id, lmac_id,
+			   CGX_ERR_TRAINING_FAIL);
+	}
+	/* Print link training trace data */
 #ifdef DEBUG_ATF_CGX
-			/* Print link training trace data */
-			cgx_link_training_tracing(cgx_id, lmac_id);
+	cgx_link_training_tracing(cgx_id, lmac_id);
 #endif
-			ret = mcp_send_async_req(cgx_id, lmac_id,
-						REQ_AN_LT_START);
-			if (ret == -1) {
-				/* Request not sent */
-				debug_cgx("%s: %d:%d request not sent to MCP\n",
-					__func__, cgx_id, lmac_id);
-				goto restart_an;
-			} else {
-				debug_cgx("%s: %d:%d request sent to MCP, restart AN/LT\n",
-					__func__, cgx_id, lmac_id);
-			}
-		} else {
-			debug_cgx("%s: %d:%d AN/LT in progress/Fail status %d\n",
-					__func__, cgx_id, lmac_id, status);
-			goto restart_an;
-		}
+	ret = mcp_send_async_req(cgx_id, lmac_id,
+				REQ_AN_LT_START);
+	if (ret == -1) {
+		/* Request not sent */
+		debug_cgx("%s: %d:%d request not sent to MCP\n",
+			__func__, cgx_id, lmac_id);
+	} else {
+		debug_cgx("%s: %d:%d request sent to MCP, restart AN/LT\n",
+			__func__, cgx_id, lmac_id);
+	}
+	goto restart_an;
 restart_an:
 	return -1;
 }
