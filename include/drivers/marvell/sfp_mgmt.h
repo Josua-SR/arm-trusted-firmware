@@ -339,7 +339,9 @@ sfp_shared_data_t *sfp_get_sh_mem_ptr(int cgx_id, int lmac_id);
 int mcp_send_async_req(int cgx_id, int lmac_id, int req_id);
 unsigned int mcp_get_an_lt_state(int cgx_id, int lmac_id);
 unsigned int mcp_get_an_rx_sig_state(int cgx_id, int lmac_id);
-unsigned int mcp_set_an_lt_state(int cgx_id, int lmac_id, int state);
+int mcp_set_an_lt_state(int cgx_id, int lmac_id, int state);
 unsigned int mcp_get_intf_rev(int cgx_id, int lmac_id);
 int mcp_get_fail_type(int cgx_id, int lmac_id);
+int mcp_get_neg_fec_tech(int cgx_id, int lmac_id, int *fec_type,
+                         int *qlm_mode, int *lmac_type);
 #endif /* __SFP_MGMT_H__ */

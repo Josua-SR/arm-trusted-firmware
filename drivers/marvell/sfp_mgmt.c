@@ -1272,7 +1272,7 @@ retry_acquire_lock:
 	return sig_detect;
 }
 
-unsigned int mcp_set_an_lt_state(int cgx_id, int lmac_id, int state)
+int mcp_set_an_lt_state(int cgx_id, int lmac_id, int state)
 {
 	int retry_lock = 0;
 	sfp_shared_data_t *sh_data = sfp_get_sh_mem_ptr(cgx_id, lmac_id);
@@ -1376,4 +1376,47 @@ retry_acquire_lock:
 		fail_type = 0;
 
 	return fail_type;
+}
+
+/**
+ * Get MCP AN/LT Negotiated Technology and FEC
+ *
+ * @param cgx_id     CGX to use
+ * @param lmac_id    LMAC to use
+ * @param fec_type   Negotiated FEC type
+ * @param qlm_mode   Negotiated QLM mode
+ * @param lmac_type  Negotiated LMAC type
+ * @return 0 on success, -1 on failure
+ */
+int mcp_get_neg_fec_tech(int cgx_id, int lmac_id, int *fec_type,
+                         int *qlm_mode, int *lmac_type)
+{
+	int retry_lock = 0;
+	sfp_shared_data_t *sh_data = sfp_get_sh_mem_ptr(cgx_id, lmac_id);
+
+	if (sh_data == NULL) {
+		ERROR("%s: SM pointer is NULL\n", __func__);
+		return -1;
+	}
+	debug_sfp_mgmt("%s: %d:%d\n", __func__, cgx_id, lmac_id);
+
+retry_acquire_lock:
+	if (sh_data->async_ctx.lock == AN_LT_OWN_NONE) {
+		sh_data->async_ctx.lock = AN_LT_OWN_AP;
+		if (retry_lock++ < 5) {
+			mdelay(1);
+			goto retry_acquire_lock;
+		}
+		debug_sfp_mgmt("%s %d:%d lock %d not available for AP\n",
+					 __func__,
+					cgx_id, lmac_id,
+					sh_data->async_ctx.lock);
+		return -1;
+	}
+
+    *fec_type = sh_data->an_lt_args.fec_type;
+    *qlm_mode = sh_data->an_lt_args.qlm_mode;
+    *lmac_type = sh_data->an_lt_args.lmac_type;
+
+    return 0;
 }

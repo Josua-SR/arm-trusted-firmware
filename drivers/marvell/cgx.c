@@ -2465,6 +2465,12 @@ static int cgx_complete_sw_an_with_mcp(int cgx_id, int lmac_id, cgx_lmac_context
 	int ret = -1, status;
 	bool signal_detect = 0;
 	uint64_t init_time, autoneg_timeout, an_signal_timeout;
+	int fec_type, qlm_mode, lmac_type;
+	cgx_config_t *cgx;
+	cgx_lmac_config_t *lmac;
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
 
 	status = mcp_get_an_lt_state(cgx_id, lmac_id);
 
@@ -2489,9 +2495,10 @@ static int cgx_complete_sw_an_with_mcp(int cgx_id, int lmac_id, cgx_lmac_context
 			debug_cgx("%s: %d:%d request sent to MCP\n",
 				__func__, cgx_id, lmac_id);
 			/* If it is for the first time that AN/LT is started
-			 * for the respective LMAC, wait for 500 ms after
+			 * for the respective LMAC, wait for
+			 * CGX_POLL_AN_COMPLETE_STATUS2 ms after
 			 * sending the request to check if MCP has completed
-			 * AN/LT. For subsequent request, just check the status
+			 * AN/LT. For subsequent requests, just check the status
 			 * and return without wait.
 			 */
 			if (!lmac_ctx->s.link_enable) {
@@ -2505,7 +2512,7 @@ static int cgx_complete_sw_an_with_mcp(int cgx_id, int lmac_id, cgx_lmac_context
 						< autoneg_timeout) {
 					status = mcp_get_an_lt_state(cgx_id, lmac_id);
 					if (status == AN_LT_STATE_LINK_UP)
-							return 0;
+						goto an_lt_link_up;
 					else if (status == AN_LT_STATE_AN_FAIL) {
 						cgx_set_error_type(cgx_id, lmac_id,
 							   CGX_ERR_AN_CPT_FAIL);
@@ -2537,10 +2544,7 @@ static int cgx_complete_sw_an_with_mcp(int cgx_id, int lmac_id, cgx_lmac_context
 	}
 an_check_state:
 	if (status == AN_LT_STATE_LINK_UP) {
-		debug_cgx("%s: %d:%d AN/LT and Link UP completed. Reset the state\n",
-				  __func__, cgx_id, lmac_id);
-		mcp_set_an_lt_state(cgx_id, lmac_id, AN_LT_NO_STATE);
-		return 0;
+		goto an_lt_link_up;
 	} else if (status == AN_LT_STATE_STOPPED) {
 		goto an_lt_link_failure;
 	} else {
@@ -2548,6 +2552,35 @@ an_check_state:
 				__func__, cgx_id, lmac_id, status);
 		goto restart_an;
 	}
+an_lt_link_up:
+	debug_cgx("%s: %d:%d AN/LT and Link UP completed. Reset the state\n",
+		__func__, cgx_id, lmac_id);
+	if (mcp_set_an_lt_state(cgx_id, lmac_id, AN_LT_NO_STATE)) {
+		debug_cgx("%s: %d:%d Unable to reset AN/LT state\n",
+			__func__, cgx_id, lmac_id);
+		goto restart_an;
+	}
+	if (mcp_get_neg_fec_tech(cgx_id, lmac_id, &fec_type,
+				&qlm_mode, &lmac_type)) {
+		debug_cgx("%s: %d:%d Failed to get AN negotiated technology and FEC types\n",
+				  __func__, cgx_id, lmac_id);
+		goto restart_an;
+	}
+	lmac->fec = fec_type;
+	lmac->mode = lmac_type;
+	/* Update QLM state */
+	if (lmac->mode_idx != qlm_mode) {
+		int baud_mhz = qlm_get_baud_rate_for_mode(qlm_mode);
+		int lane = lmac->lane_an_master;
+		int flags = 0;
+		int gserx = lmac->gserx;
+		qlm_state_lane_t state = qlm_build_state(qlm_mode, baud_mhz, flags);
+		cgx->qlm_ops->qlm_set_state(gserx, lane, state);
+		lmac->mode_idx = qlm_mode;
+	}
+	debug_cgx("%s: %d:%d AN negotiated qlm_mode:%d, lmac_type:%d, fec_type:%d\n",
+			  __func__, cgx_id, lmac_id, qlm_mode, lmac_type, fec_type);
+	return 0;
 an_lt_link_failure:
 	ret = mcp_get_fail_type(cgx_id, lmac_id);
 	if (ret == -1) {
