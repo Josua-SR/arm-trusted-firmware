@@ -3580,8 +3580,21 @@ int cgx_xaui_get_link(int cgx_id, int lmac_id,
 			}
 		}
 
+		bool prbs_lpbk_enabled = false;
+
+		if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+			(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+			prbs_lpbk_enabled = false;
+		else
+			prbs_lpbk_enabled = cgx_qlm_prbs_lpbk_chk(cgx_id, lmac_id);
+
 		/* Check if we are receiving Remote faults from link partner. */
-		if (smux_rx_ctl.s.status == 2) {
+		/* Don't check for remote faults if PRBS or Farend loopback enabled */
+		if (prbs_lpbk_enabled) {
+			debug_cgx("%s: %d:%d Not checking for remote fault. PRBS or Farend loopback enabled.\n",
+					__func__, cgx_id, lmac_id);
+			lmac_ctx->s.remote_fault = 0;
+		} else if (smux_rx_ctl.s.status == 2) {
 			/* Check if we need to start the remote fault timeout */
 			if (!lmac_ctx->s.remote_fault) {
 				debug_cgx("%s: %d:%d Remote fault detected\n",
