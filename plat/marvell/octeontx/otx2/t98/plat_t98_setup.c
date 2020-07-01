@@ -165,7 +165,7 @@ int plat_get_cgx_idx(int qlm)
 	int gserp_cnt = plat_octeontx_get_gserp_count();
 
 	if (qlm < gserp_cnt) {
-		printf("Invalid QLM%d for CGX\n", qlm);
+		//printf("Invalid QLM%d for CGX\n", qlm);
 		return -1;
 	}
 	return qlm - gserp_cnt;
