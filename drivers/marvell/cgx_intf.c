@@ -1036,11 +1036,13 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 		if (lmac->max_lane_count == 1) {
 			/* Obtain LMAC index for other lane */
 			cgx_obtain_lmac_index(gserc_idx, !lane_idx, &cgx_idx, &lmac_idx);
-			if ((cgx_idx == -1) && (lmac_idx == -1)) {
-				ERROR("%s: invalid CGX, LMAC index obtained\n", __func__);
-				return -1;
+			if ((cgx_idx != -1) && (lmac_idx != -1)) {
+				/* If CGX/LMAC index is obtained, bring down
+				 * the link. If not, continue with to change
+				 * the mode to CPRI
+				 */
+				cgx_link_bringdown(cgx_idx, lmac_idx);
 			}
-			cgx_link_bringdown(cgx_idx, lmac_idx);
 		}
 
 		/* Lane index to be passed as -1 when changing
