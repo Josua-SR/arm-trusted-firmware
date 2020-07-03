@@ -146,6 +146,16 @@ struct fdt_ghes *otx2_find_ghes(const char *name)
 			rc->fdt_ghes[i].base[GHES_PTRS - 1]);
 		return &rc->fdt_ghes[i];
 	}
+
+	if (!strcmp(name, rc->fdt_bert.name)) {
+		debug_ras("%s(%s) finds entry: %p %p %p\n",
+			__func__, name,
+			rc->fdt_bert.base[0],
+			rc->fdt_bert.base[1],
+			rc->fdt_bert.base[GHES_PTRS - 1]);
+		return &rc->fdt_bert;
+	}
+
 	return NULL;
 }
 
@@ -176,23 +186,21 @@ struct otx2_ghes_err_record *otx2_begin_ghes(const char *name,
 {
 	struct otx2_ghes_err_record *err_rec;
 	struct otx2_ghes_err_ring *err_ring;
-	uint32_t total_ring_len, tail, head;
+	uint32_t tail, head;
 	struct fdt_ghes *gh;
 
+	if (ringp)
+		*ringp = NULL;
+
 	gh = otx2_find_ghes(name);
-	if (!gh) {
-		if (ringp)
-			*ringp = NULL;
+	if (!gh)
 		return NULL;
-	}
 
 	err_ring = gh->base[GHES_PTR_RING];
-	total_ring_len = gh->size[GHES_PTR_RING];
-	/* TODO: fix me - head/tail/size need one-time init */
-	err_ring->size =
-		(total_ring_len -
-		 offsetof(struct otx2_ghes_err_ring, records[0])) /
-		sizeof(err_ring->records[0]);
+	if (!err_ring->size) {
+		ERROR("error ring '%s' size is uninitialized\n", name);
+		return NULL;
+	}
 
 	tail = err_ring->tail;
 	head = err_ring->head;
@@ -232,13 +240,18 @@ void otx2_send_ghes(struct otx2_ghes_err_record *rec,
 
 void otx2_map_ghes(void)
 {
-	ras_config_t *rc = &plat_octeontx_bcfg->ras_config;
-	uint64_t lo = ~0ULL;
-	uint64_t hi = 0;
+	struct fdt_ghes *g;
+	ras_config_t *rc;
+	uint64_t lo, hi;
 	int i, j;
 
+	rc = &plat_octeontx_bcfg->ras_config;
+	lo = ~0ULL;
+	hi = 0;
+
+	/* add mapping for GHES memory */
 	for (i = 0; i < rc->nr_ghes; i++) {
-		struct fdt_ghes *g = &rc->fdt_ghes[i];
+		g = &rc->fdt_ghes[i];
 
 		for (j = 0; j < GHES_PTRS; j++) {
 			debug_ras("(%s) %d.%d %x@%p\n",
@@ -253,19 +266,80 @@ void otx2_map_ghes(void)
 		}
 	}
 
-	if (lo >= hi)
-		return;
-	lo &= ~PAGE_SIZE_MASK;
-	hi |= PAGE_SIZE_MASK;
-	debug_ras("%s map %llx..%llx\n", __func__, lo, hi + 1 - lo);
-	mmap_add_region(lo, lo, hi + 1 - lo,
-		MT_MEMORY | MT_RW | MT_NS);
+	if (lo < hi) {
+		lo &= ~(uint64_t)PAGE_SIZE_MASK;
+		hi += PAGE_SIZE_MASK;
+		hi &= ~(uint64_t)PAGE_SIZE_MASK;
+		hi--;
+		debug_ras("%s map %llx..%llx\n", __func__, lo, hi + 1 - lo);
+		mmap_add_region(lo, lo, hi + 1 - lo,
+			MT_MEMORY | MT_RW | MT_NS);
+	}
+
+	/* add mapping for BERT memory */
+	lo = ~0ULL;
+	hi = 0;
+	g = &rc->fdt_bert;
+	for (j = 0; j < GHES_PTRS; j++) {
+		debug_ras("(%s) %d.%d %x@%p\n",
+			g->name, i, j, g->size[j], g->base[j]);
+		if (!g->size[j])
+			break;
+		if (lo > (uint64_t) g->base[j])
+			lo = (uint64_t) g->base[j];
+		if (hi < (uint64_t) g->base[j] + g->size[j])
+			hi = (uint64_t) g->base[j] + g->size[j];
+		debug_ras("range %llx..%llx\n", lo, hi);
+	}
+
+	if (lo < hi) {
+		lo &= ~(uint64_t)PAGE_SIZE_MASK;
+		hi += PAGE_SIZE_MASK;
+		hi &= ~(uint64_t)PAGE_SIZE_MASK;
+		hi--;
+		debug_ras("%s map %llx..%llx\n", __func__, lo, hi + 1 - lo);
+		mmap_add_region(lo, lo, hi + 1 - lo,
+			MT_MEMORY | MT_RW | MT_NS);
+	}
 }
 
 int otx2_ras_init(void)
 {
+	struct otx2_ghes_err_ring *err_ring;
+	uint32_t ring_len;
+	ras_config_t *cfg;
+	int i;
+
 	plat_ras_initialize_interrupt_array();
 	ras_init();
+
+	/* set default GHES ring size (based on total ring mem length) */
+	cfg = &plat_octeontx_bcfg->ras_config;
+	for (i = 0; i < ARRAY_SIZE(cfg->fdt_ghes); i++) {
+		err_ring = cfg->fdt_ghes[i].base[GHES_PTR_RING];
+		ring_len = cfg->fdt_ghes[i].size[GHES_PTR_RING];
+		if (err_ring && ring_len) {
+			err_ring->size =
+			   (ring_len -
+			    offsetof(struct otx2_ghes_err_ring, records[0])) /
+			   sizeof(err_ring->records[0]);
+		}
+	}
+
+	/* set default BERT ring size */
+	err_ring = cfg->fdt_bert.base[GHES_PTR_RING];
+	ring_len = cfg->fdt_bert.size[GHES_PTR_RING];
+	if (err_ring && ring_len)
+		err_ring->size = BERT_RAS_RING_SIZE;
+
+#if DEBUG_RAS
+	otx2_begin_ghes("bert", &err_ring);
+	if (err_ring) {
+		debug_ras("BERT ring head/tail/size %u/%u/%u\n",
+			  err_ring->head, err_ring->tail,
+			  err_ring->size);
+	}
+#endif
 
 	return 0;
 }
