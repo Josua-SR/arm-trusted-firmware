@@ -226,7 +226,7 @@ void otx2_send_ghes(struct otx2_ghes_err_record *rec,
 	/* Ensure that error record is written fully prior to advancing
 	 * the head (which indicates availability to consumer).
 	 */
-	dsbsy();
+	dmbsy();
 
 	if (++head >= err_ring->size)
 		head = 0;

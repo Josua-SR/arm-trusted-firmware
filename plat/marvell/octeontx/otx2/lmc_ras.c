@@ -1172,8 +1172,8 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 	union cavm_mccx_lmcoex_ras_err00status status;
 	union cavm_mccx_lmcoex_ras_err00addr erraddr;
 	union cavm_mccx_lmcoex_ras_err00misc0 misc0;
-	struct otx2_ghes_err_record *err_rec;
-	struct otx2_ghes_err_ring *err_ring;
+	struct otx2_ghes_err_record *err_rec, *fatal_rec;
+	struct otx2_ghes_err_ring *err_ring, *fatal_ring;
 	uint64_t paddr;
 	char *err_type = "";
 	char synstr[256];
@@ -1405,7 +1405,19 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 		ERROR("ASC_R%d(ns:%d s:%d) but sec:%d\n",
 			reg, ns_reg, s_reg, secure);
 
+	fatal_rec = NULL;
+	if (fatal) {
+		fatal_rec = otx2_begin_ghes("bert", &fatal_ring);
+		if (!fatal_rec)
+			ERROR("No fatal error records available\n");
+	}
+
 	err_rec = otx2_begin_ghes("mcc", &err_ring);
+
+	/* Ensure fatal error is recorded EVEN if non-fatal ring is full. */
+	if (!err_rec && fatal && fatal_rec)
+		err_rec = fatal_rec;
+
 	if (err_rec) {
 		err_rec->u.mcc.physical_addr = physaddr;
 		err_rec->u.mcc.card = lmc;
@@ -1425,7 +1437,27 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 			 "LMC%d: DIMM%d,Rank%d/%d,Bank%02d", lmc, dimm, prank,
 			 lrank, bank);
 
-		otx2_send_ghes(err_rec, err_ring, OCTEONTX_SDEI_RAS_MCC_EVENT);
+		/* If fatal error, copy it and update fatal ring */
+		if (fatal && fatal_rec) {
+			if (fatal_rec != err_rec)
+				memcpy(fatal_rec, err_rec, sizeof(*fatal_rec));
+			if (++fatal_ring->head >= fatal_ring->size)
+				fatal_ring->head = 0;
+			/* Ensure ring memory is updated prior to reset */
+			dmbsy();
+			l2c_flush();
+			debug_ras("fatal ring: %p, hd/tl/sz %d/%d/%d\n",
+				  fatal_ring, fatal_ring->head,
+				  fatal_ring->tail, fatal_ring->size);
+		}
+
+		/*
+		 * The 'err_rec' MAY == the 'fatal_rec' (see above).
+		 * If so, do not issue the non-fatal notification.
+		 */
+		if (err_rec != fatal_rec)
+			otx2_send_ghes(err_rec, err_ring,
+				       OCTEONTX_SDEI_RAS_MCC_EVENT);
 	}
 
 	if (av && !fatal && repair)
