@@ -14,10 +14,12 @@
 #include <octeontx_utils.h>
 #include <octeontx_common.h>
 #include <octeontx_mmap_utils.h>
+#include <plat_board_cfg.h>
 
 #include "cavm-csrs-rst.h"
 
 #pragma weak plat_flr_init
+#pragma weak plat_initialize_boot_error_data_area
 
 extern void plat_add_mmio();
 
@@ -67,6 +69,8 @@ static void plat_add_mmio_common(void)
 #else
 	mmap_add_region(NS_IMAGE_BASE, NS_IMAGE_BASE, NS_IMAGE_MAX_SIZE, attr);
 #endif
+
+	plat_initialize_boot_error_data_area(attr);
 }
 
 void plat_add_mmio_map()
@@ -91,4 +95,10 @@ void plat_error_handler(int err_code)
 
 void plat_flr_init(void) {
 	return;
+}
+
+/* This can be overridden by platform. */
+void plat_initialize_boot_error_data_area(unsigned long attr)
+{
+	(void)attr;
 }

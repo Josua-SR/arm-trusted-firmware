@@ -128,6 +128,7 @@ unsigned int octeontx_calc_core_pos(unsigned long mpidr);
 void sata_ipm_quirk(void);
 
 void plat_flr_init(void);
+void plat_initialize_boot_error_data_area(unsigned long attr);
 
 #ifdef NT_FW_CONFIG
 void plat_octeontx_set_nt_fw_config_size(uint64_t nt_fw_config_size);

@@ -22,6 +22,8 @@
 #include <octeontx_utils.h>
 #include <octeontx_security.h>
 #include <sh_fwdata.h>
+#include <octeontx_dram.h>
+#include <libfdt.h>
 
 #if RAS_EXTENSION
 #include <plat_ras.h>
@@ -380,4 +382,149 @@ int octeontx2_configure_ooo(int x1)
 	write_cvmctl_el1(cvmctl_el1);
 
 	return 0;
+}
+
+/*
+ * plat_initialize_boot_error_data_area()
+ *
+ * The Boot Error Data area shares the preserved, non-secure region
+ * with the RAMOOPS data (Linux persistent RAM).
+ * The device tree has been configured to assign entire
+ * NSECURE_PRESERVE memory to RAMOOPS.
+ * Adjust the DT settings to account for Boot Error Data area;
+ * also add mapping region for Boot Error Data area.
+ *
+ * on entry,
+ *   attr:  attributes to be used for Boot Error Data area mapping
+ *
+ * returns,
+ *   void
+ */
+void plat_initialize_boot_error_data_area(unsigned long attr)
+{
+#ifdef IMAGE_BL2
+	uint64_t base, size, oops_base, oops_size, bed_base, bed_size;
+	int bed_off, oops_off, bed_dev_off, fail;
+	const void *fdt = fdt_ptr;
+	const fdt64_t *freg;
+	fdt64_t dt_regs[9];
+	char bed_name[31];
+
+	fail = 1;
+
+	size = memory_region_get_info(NSECURE_PRESERVE, &base);
+
+	if (!base || !size) {
+		WARN("Cannot locate non-secure preserved area.\n");
+		goto exit;
+	}
+
+	bed_off = fdt_path_offset(fdt,
+				  "/reserved-memory/ghes-bert");
+	oops_off = fdt_path_offset(fdt,
+				   "/reserved-memory/ramoops");
+	bed_dev_off = fdt_path_offset(fdt,
+				   "/soc@0/bed-bert");
+	if (!bed_off)
+		WARN("Missing Boot Error Data from DT\n");
+	if (!oops_off)
+		WARN("Missing RAMMOOPS from DT\n");
+	if (!bed_dev_off)
+		WARN("Missing Boot Error Data Device Driver in DT\n");
+	if (!bed_off || !oops_off || !bed_dev_off)
+		goto exit;
+
+	/* Retrieve Boot Error Data area DT settings */
+	bed_base = bed_size = 0;
+	freg = fdt_getprop(fdt, bed_off, "reg", NULL);
+	if (freg) {
+		bed_base = fdt64p_to_cpu(&freg[0]);
+		bed_size = fdt64p_to_cpu(&freg[1]);
+	}
+	if (!bed_size || (bed_size > size)) {
+		WARN("Unexpected Boot Error Data DT size 0x%lx\n",
+		     (long)bed_size);
+		goto exit;
+	}
+
+	/* Retrieve RAMOOPS DT settings */
+	oops_base = oops_size = 0;
+	freg = fdt_getprop(fdt, oops_off, "reg", NULL);
+	if (freg) {
+		oops_base = fdt64p_to_cpu(&freg[0]);
+		oops_size = fdt64p_to_cpu(&freg[1]);
+	}
+
+	/*
+	 * Prior to our adjustment, we expect RAMOOPS in DT
+	 * to equal NSECURE_PRESERVE area.  If not, issue warning.
+	 * Otherwise, adjust size of RAMOOPS to make room for
+	 * Boot Error Data area.
+	 */
+	if ((oops_base != base) || (oops_size != size)) {
+		WARN("Unexpected RAMOOPS DT setting\n");
+		WARN("0x%lx/0x%lx vs 0x%lx/0x%lx\n",
+		     (long)oops_base, (long)oops_size,
+		     (long)base, (long)size);
+		goto exit;
+	}
+
+	/* adjust RAMOOPS size */
+	oops_size -= bed_size;
+	/* set Boot Error Data Base */
+	bed_base = oops_base + oops_size;
+
+	/* adjust RAMOOPS DT setting */
+	dt_regs[0] = cpu_to_fdt64(oops_base);
+	dt_regs[1] = cpu_to_fdt64(oops_size);
+	if (fdt_setprop((void *)fdt, oops_off, "reg", dt_regs,
+			sizeof(dt_regs[0]) * 2)) {
+		ERROR("Error adjusting RAMOOPS DT size to 0x%lx\n",
+		      (long)oops_size);
+		goto exit;
+	}
+
+	/* set Boot Data Area DT values */
+	dt_regs[0] = cpu_to_fdt64(bed_base);
+	dt_regs[1] = cpu_to_fdt64(bed_size);
+	if (fdt_setprop((void *)fdt, bed_off, "reg", dt_regs,
+			sizeof(dt_regs[0]) * 2)) {
+		ERROR("Error setting DT Boot Error Data 0x%lx/0x%lx\n",
+		      (long)bed_base, (long)bed_size);
+		goto exit;
+	}
+
+	snprintf(bed_name, sizeof(bed_name), "ghes-bert@%016lx",
+		 (long)bed_base);
+	if (fdt_set_name((void *)fdt, bed_off, bed_name))
+		WARN("Error setting ghes-bert DT node name %s\n", bed_name);
+
+	/* The 'fdt_set_name' may have change this offset; retrieve it again */
+	bed_dev_off = fdt_path_offset(fdt, "/soc@0/bed-bert");
+
+	/* set device driver DT 'ranges' values */
+	dt_regs[0] = 0;
+	dt_regs[1] = cpu_to_fdt64(bed_base);
+	dt_regs[2] = cpu_to_fdt64(bed_size);
+	/* set all three ranges to same value */
+	dt_regs[3] = dt_regs[6] = dt_regs[0];
+	dt_regs[4] = dt_regs[7] = dt_regs[1];
+	dt_regs[5] = dt_regs[8] = dt_regs[2];
+	if (fdt_setprop((void *)fdt, bed_dev_off, "ranges", dt_regs,
+			sizeof(dt_regs[0]) * 9)) {
+		ERROR("Error setting device driver DT ranges\n");
+		goto exit;
+	}
+
+	/* Add mapping region for Boot Error Data area */
+	NOTICE("Setting Boot Error Data area at 0x%lx (0x%lx B)\n",
+	       (long)bed_base, (long)bed_size);
+	mmap_add_region(base, bed_base, bed_size, attr);
+
+	fail = 0;
+
+exit:
+	if (fail)
+		ERROR("Boot Error Data area not available\n");
+#endif
 }
