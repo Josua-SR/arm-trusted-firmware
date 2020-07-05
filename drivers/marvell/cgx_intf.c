@@ -1579,6 +1579,22 @@ static int stop_prbs(int cgx_id, int qlm, int mode, int show_phy_host, int qlm_l
 	return 0;
 }
 
+static void clear_prbs_errors(int cgx_id, int qlm, int qlm_lane, int mode)
+{
+	int gserx;
+	cgx_config_t *cgx_cfg;
+
+	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+
+	/* gserx index is the same for every lane */
+	gserx = plat_otx2_get_gserx(qlm, NULL);
+
+	cgx_cfg->qlm_ops->qlm_get_prbs_errors(gserx, qlm_lane, 1);
+
+	if (cgx_cfg->lmac_cfg[qlm_lane].phy_present)
+		phy_get_prbs_errors(cgx_id, qlm_lane, 1, 1, mode);
+}
+
 static int get_prbs_errors(int cgx_id, int qlm, int mode,
 		int show_phy_host, int show_phy_line,
 		cgx_prbs_errors_t *errors, int qlm_lane)
@@ -1670,6 +1686,13 @@ int cgx_smc_do_prbs(int cmd, int qlm, int x3, int lane)
 				prbs_status[cgx_id].mode,
 				prbs_status[cgx_id].show_phy_host, lane);
 			prbs_status[cgx_id].started = 0;
+		}
+		break;
+
+	case CGX_PRBS_CLEAR_CMD:
+		if (prbs_status[cgx_id].started) {
+			clear_prbs_errors(cgx_id, qlm, lane,
+				prbs_status[cgx_id].mode);
 		}
 		break;
 

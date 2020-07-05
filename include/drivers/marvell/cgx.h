@@ -150,7 +150,8 @@
 enum cgx_prbs_cmd {
 	CGX_PRBS_START_CMD = 1,
 	CGX_PRBS_STOP_CMD,
-	CGX_PRBS_GET_DATA_CMD
+	CGX_PRBS_GET_DATA_CMD,
+	CGX_PRBS_CLEAR_CMD
 };
 
 /* enum declaration for FEC */
