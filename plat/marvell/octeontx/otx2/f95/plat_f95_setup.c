@@ -134,14 +134,15 @@ int plat_otx2_get_gserx(int qlm, int *shift_from_first)
 		return -1;
 
 	if (IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1))
-		return qlm;
+		gserx = qlm;
+	else {
+		gserp_count = plat_octeontx_get_gserp_count();
 
-	gserp_count = plat_octeontx_get_gserp_count();
+		if (qlm < gserp_count)
+			return -1;
 
-	if (qlm < gserp_count)
-		return -1;
-
-	gserx = qlm - gserp_count;
+		gserx = qlm - gserp_count;
+	}
 
 	if (shift_from_first != NULL)
 		*shift_from_first = 0;

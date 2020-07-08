@@ -130,14 +130,15 @@ int plat_otx2_get_gserx(int qlm, int *shift_from_first)
 		return -1;
 
 	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1))
-		return qlm;
+		gserx = qlm;
+	else {
+		gserp_count = plat_octeontx_get_gserp_count();
 
-	gserp_count = plat_octeontx_get_gserp_count();
+		if (qlm < gserp_count)
+			return -1;
 
-	if (qlm < gserp_count)
-		return -1;
-
-	gserx = qlm - gserp_count;
+		gserx = qlm - gserp_count;
+	}
 
 	if (shift_from_first != NULL) {
 		/* On T96 A0 and A1, qlm 4 and 5 are DLMs. 5 is second DLM */
