@@ -9,20 +9,31 @@ the data being transferred, allowing a RAS-aware OS (such as Linux 4.18 onward)
 to handle the outage as it sees fit, by analysing the context in which the data
 is being used.
 
-Uncorrectable errors in memory/cache transactions cause a "poisoned" cacheline
-to be left in place of the error, to be discovered later by the eventual user,
-while ATF handles the immedate exception, logging the details of hardware unit
-and physical address impacted, for later remedy
-ATF enables relevant exceptions in OcteonTX2 hardware units (MDC, MCC, LMC) and
-both:
+Errors in memory/cache transactions are detected by the hardware and handled
+by the firmware.  These can be correctable or uncorrectable.
+Correctable errors are benign and result in a system notification.  However,
+uncorrectable errors compromise the integrity of the system; after recording
+the error data and sending a notification, the firmware will reset the system
+to prevent further damage.  The recorded error data are made available to
+Linux upon a subsequent boot (via the Boot Error Record Table - BERT).
 
-- reports these to serial console
-- logs to a standard error-logging framework (GHES/HEST) understood by RAS-aware
-  OS software
+The firmware enables exceptions in relevant OcteonTX2 hardware units
+(MDC, MCC, LMC) and performs the following actions:
+
+- reports errors to serial console
+- logs errors to a standard error-logging framework which is understood by
+  RAS-aware OS software
+
+The error-logging framework consists of:
+  Generic Hardware Error Source (GHES)
+  Hardware Error Source Table (HEST)
+  Boot Error Record Table (BERT)
+
+  Please refer to the ACPI specification for details of these.
 
 While the access procedure for GHES is well defined in a UEFI/ACPI platform,
 many OcteonTX2 embedded deployments will use ATF & DeviceTree rather than ACPI,
-so a custom platform device in linux-4.18 is provided to derive GHES location
+so a custom platform device in linux is provided to derive the GHES location
 from device tree, and register the HEST, so the error indications flow to the
 standard processing of a kernel built with **MEMORY_FAILURE=y** option, which is
 notified in the standard fashion with an SDEI, and acts to contain uncorrectable
