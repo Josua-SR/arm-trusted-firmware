@@ -1709,6 +1709,30 @@ int cgx_smc_do_prbs(int cmd, int qlm, int x3, int lane)
 				prbs_status[cgx_id].show_phy_host,
 				prbs_status[cgx_id].show_phy_line,
 				prbs_data->errors, lane);
+		if (x3) {
+			printf("QLM%d.lane%d: errors:",qlm,lane);
+			if (prbs_data->errors[lane].err != -1)
+				printf("%lld", prbs_data->errors[lane].err);
+			else
+				printf("No lock");
+
+			if (prbs_data->errors[lane].phy_host != -2) {
+				printf(", PHY Host errors: ");
+				if (prbs_data->errors[lane].phy_host != -1)
+					printf("%lld", prbs_data->errors[lane].phy_host);
+				else
+					printf("No lock");
+			}
+
+			if (prbs_data->errors[lane].phy_line != -2) {
+				printf(", PHY Line errors: ");
+			if (prbs_data->errors[lane].phy_line != -1)
+				printf("%lld", prbs_data->errors[lane].phy_line);
+			else
+				printf("No lock");
+			}
+			printf("\n");
+		}
 		break;
 
 	default:
@@ -1717,75 +1741,6 @@ int cgx_smc_do_prbs(int cmd, int qlm, int x3, int lane)
 	}
 
 	return CGX_DISPLAY_OK;
-}
-
-static int do_prbs(int qlm, int mode, int time, int qlm_lane)
-{
-	int ec;
-	int show_phy_host = 1;
-	int show_phy_line = 1;
-	int time_left, delay;
-	int cgx_id;
-	cgx_prbs_errors_t errors[MAX_LMAC_PER_CGX];
-	const int DISPLAY_INTERVAL = 5;
-
-	if (qlm >= MAX_QLM || qlm < 0) {
-		WARN("%d not in range, available QLM0-%d\n", qlm, MAX_QLM - 1);
-		return -1;
-	}
-	cgx_id = plat_get_cgx_idx(qlm);
-	if (cgx_id == -1) {
-		WARN("To QLM%d any CGX cannot by wired.\n", qlm);
-		return -1;
-	}
-
-	printf("Start PRBS-%d on QLM%d.Lane%d (CGX %d), end in %d sec\n",
-			mode, qlm, qlm_lane, cgx_id, time);
-
-	ec = start_prbs(cgx_id, qlm, mode, &show_phy_host,
-			&show_phy_line, qlm_lane);
-	if (ec)
-		return -1;
-
-	/* Wait/display */
-	time_left = time;
-	while (time_left > 0) {
-		delay = time_left > DISPLAY_INTERVAL ?
-				DISPLAY_INTERVAL : time_left;
-		time_left -= delay;
-		mdelay(delay * 1000);
-
-		get_prbs_errors(cgx_id, qlm, mode, show_phy_host,
-				show_phy_line, errors, qlm_lane);
-
-		printf("Time: %d seconds QLM%d.Lane%d: errors: ",
-			time - time_left, qlm, qlm_lane);
-		if (errors[qlm_lane].err != -1)
-			printf("%lld", errors[qlm_lane].err);
-		else
-			printf("No lock");
-
-		if (show_phy_host) {
-			printf(", PHY Host errors: ");
-			if (errors[qlm_lane].phy_host >= 0)
-				printf("%lld", errors[qlm_lane].phy_host);
-			else
-				printf("No lock");
-		}
-		if (show_phy_line) {
-			printf(", PHY Line errors: ");
-			if (errors[qlm_lane].phy_line >= 0)
-				printf("%lld", errors[qlm_lane].phy_line);
-			else
-				printf("No lock");
-		}
-		printf("\n");
-	}
-
-	printf("Stopping pattern generator\n");
-	stop_prbs(cgx_id, qlm, mode, show_phy_host, qlm_lane);
-
-	return 0;
 }
 
 /*
@@ -2037,11 +1992,6 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 #endif
 		(request_id == CGX_CMD_SET_MAC_ADDR) ||
 		(request_id == CGX_CMD_GET_FWD_BASE) ||
-#ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
-		(request_id == CGX_CMD_PRBS) ||
-		(request_id == CGX_CMD_DISPLAY_EYE) ||
-		(request_id == CGX_CMD_DISPLAY_SERDES) ||
-#endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 		(request_id == CGX_CMD_LOOP_SERDES) ||
 		(request_id == CGX_CMD_TUNE_SERDES) ||
 		(request_id == CGX_CMD_LEQ_ADAPT_SERDES) ||
@@ -2099,28 +2049,6 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 			sh_fwdata_update_mac_addr(scratchx1.s.mac_args.addr,
 						  scratchx1.s.mac_args.pf_id);
 			break;
-#ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
-		case CGX_CMD_PRBS:
-			printf("do_prbs\n");
-			do_prbs(scratchx1.s.prbs_args.qlm,
-				scratchx1.s.prbs_args.mode,
-				scratchx1.s.prbs_args.time,
-				scratchx1.s.prbs_args.lane);
-			break;
-
-		case CGX_CMD_DISPLAY_EYE:
-			cgx_display_eye(scratchx1.s.dsp_eye_args.qlm,
-				scratchx1.s.dsp_eye_args.lane,
-				1 /* = show_data */);
-			break;
-
-		case CGX_CMD_DISPLAY_SERDES:
-			cgx_display_serdes_settings(
-				scratchx1.s.dsp_serdes_args.qlm,
-				scratchx1.s.dsp_serdes_args.lane,
-				1 /* = show_data */);
-			break;
-#endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 		case CGX_CMD_LOOP_SERDES:
 			cgx_set_serdes_loop(cgx_id, lmac_id,
 				 scratchx1.s.gser_loop.flags);
