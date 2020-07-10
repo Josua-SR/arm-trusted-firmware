@@ -305,13 +305,6 @@ void plat_octeontx_cpu_setup(void)
 	/* Errata AP-38511 : Disable WFE */
 	set_bit(cvmctl_el1, 34);
 
-	/*
-	 * Set cvm_ctl_el1[5] to workaround debug state execution in
-	 * incorrect EL
-	 */
-	if (IS_OCTEONTX_PASS(midr, T96PARTNUM, 1, 0))
-		set_bit(cvmctl_el1, 5);
-
 	set_bit(cvmmemctl1_el1, 3); /* Enable LMTST */
 	set_bit(cvmmemctl1_el1, 4); /* Enable SSO/PKO addr region */
 	set_bit(cvmmemctl1_el1, 5); /* Trap any accesses to nonzero node id */
@@ -338,6 +331,12 @@ void plat_octeontx_cpu_setup(void)
 	 */
 	cvmctl2_el1 = octeontx_bit_insert(cvmctl2_el1, LIVELOCK_STALL_VALUE,
 			LIVELOCK_STALL_SHIFT, LIVELOCK_STALL_WIDTH);
+	/*
+	 * Set cvm_ctl_el1[5] to workaround debug state execution in
+	 * incorrect EL and also to workaround livelock found in the wild
+	 */
+	set_bit(cvmctl_el1, 4); /* Force execution-unit clock */
+	set_bit(cvmctl_el1, 5); /* Force issue-unit clock */
 
 	/*
 	 * Fix up defaults from the BDK which is broken and
