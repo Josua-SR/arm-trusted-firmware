@@ -414,7 +414,8 @@ void plat_initialize_boot_error_data_area(unsigned long attr)
 	size = memory_region_get_info(NSECURE_PRESERVE, &base);
 
 	if (!base || !size) {
-		WARN("Cannot locate non-secure preserved area.\n");
+		fail = 0;
+		VERBOSE("Cannot locate non-secure preserved area.\n");
 		goto exit;
 	}
 
@@ -425,13 +426,15 @@ void plat_initialize_boot_error_data_area(unsigned long attr)
 	bed_dev_off = fdt_path_offset(fdt,
 				   "/soc@0/bed-bert");
 	if (!bed_off)
-		WARN("Missing Boot Error Data from DT\n");
+		VERBOSE("Missing BERT area from DT\n");
 	if (!oops_off)
-		WARN("Missing RAMMOOPS from DT\n");
+		VERBOSE("Missing RAMMOOPS from DT\n");
 	if (!bed_dev_off)
-		WARN("Missing Boot Error Data Device Driver in DT\n");
-	if (!bed_off || !oops_off || !bed_dev_off)
+		VERBOSE("Missing BERT area Device Driver from DT\n");
+	if (!bed_off || !oops_off || !bed_dev_off) {
+		fail = 0; /* this is not a failure */
 		goto exit;
+	}
 
 	/* Retrieve Boot Error Data area DT settings */
 	bed_base = bed_size = 0;
@@ -441,7 +444,7 @@ void plat_initialize_boot_error_data_area(unsigned long attr)
 		bed_size = fdt64p_to_cpu(&freg[1]);
 	}
 	if (!bed_size || (bed_size > size)) {
-		WARN("Unexpected Boot Error Data DT size 0x%lx\n",
+		WARN("Unexpected BERT area DT size 0x%lx\n",
 		     (long)bed_size);
 		goto exit;
 	}
@@ -478,7 +481,7 @@ void plat_initialize_boot_error_data_area(unsigned long attr)
 	dt_regs[1] = cpu_to_fdt64(oops_size);
 	if (fdt_setprop((void *)fdt, oops_off, "reg", dt_regs,
 			sizeof(dt_regs[0]) * 2)) {
-		ERROR("Error adjusting RAMOOPS DT size to 0x%lx\n",
+		ERROR("Unable to set adjusted RAMOOPS DT size to 0x%lx\n",
 		      (long)oops_size);
 		goto exit;
 	}
@@ -488,7 +491,7 @@ void plat_initialize_boot_error_data_area(unsigned long attr)
 	dt_regs[1] = cpu_to_fdt64(bed_size);
 	if (fdt_setprop((void *)fdt, bed_off, "reg", dt_regs,
 			sizeof(dt_regs[0]) * 2)) {
-		ERROR("Error setting DT Boot Error Data 0x%lx/0x%lx\n",
+		ERROR("Unable to set DT BERT area 0x%lx/0x%lx\n",
 		      (long)bed_base, (long)bed_size);
 		goto exit;
 	}
@@ -496,7 +499,7 @@ void plat_initialize_boot_error_data_area(unsigned long attr)
 	snprintf(bed_name, sizeof(bed_name), "ghes-bert@%016lx",
 		 (long)bed_base);
 	if (fdt_set_name((void *)fdt, bed_off, bed_name))
-		WARN("Error setting ghes-bert DT node name %s\n", bed_name);
+		INFO("Unable to set ghes-bert DT node name %s\n", bed_name);
 
 	/* The 'fdt_set_name' may have change this offset; retrieve it again */
 	bed_dev_off = fdt_path_offset(fdt, "/soc@0/bed-bert");
@@ -511,19 +514,21 @@ void plat_initialize_boot_error_data_area(unsigned long attr)
 	dt_regs[5] = dt_regs[8] = dt_regs[2];
 	if (fdt_setprop((void *)fdt, bed_dev_off, "ranges", dt_regs,
 			sizeof(dt_regs[0]) * 9)) {
-		ERROR("Error setting device driver DT ranges\n");
+		ERROR("Unable to set BERT device driver DT ranges\n");
 		goto exit;
 	}
 
 	/* Add mapping region for Boot Error Data area */
-	NOTICE("Setting Boot Error Data area at 0x%lx (0x%lx B)\n",
-	       (long)bed_base, (long)bed_size);
+	VERBOSE("Setting BERT area at 0x%lx (0x%lx B)\n",
+		(long)bed_base, (long)bed_size);
 	mmap_add_region(base, bed_base, bed_size, attr);
+	plat_octeontx_bcfg->bert_area.base = bed_base;
+	plat_octeontx_bcfg->bert_area.size = bed_size;
 
 	fail = 0;
 
 exit:
 	if (fail)
-		ERROR("Boot Error Data area not available\n");
+		ERROR("BERT area not available\n");
 #endif
 }

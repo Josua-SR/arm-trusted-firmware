@@ -235,6 +235,10 @@ typedef struct plat_octeontx_board_cfg {
 	int pf_mac_num;
 	int qlm_auto_config;
 	int show_smi_in_nsw; /* flag to show or hide SMI in non-secure world */
+	struct {
+		uint64_t base;
+		uint64_t size;
+	} bert_area; /* Boot Error Data area parameters */
 } plat_octeontx_board_cfg_t;
 
 extern plat_octeontx_board_cfg_t * const plat_octeontx_bcfg;

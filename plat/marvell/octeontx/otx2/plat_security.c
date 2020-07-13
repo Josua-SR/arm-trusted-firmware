@@ -290,6 +290,14 @@ void octeontx_security_setup(void)
 		region++;
 	}
 
+	/* Display Non-Secure Preserved Memory Region adjustments */
+	if (plat_octeontx_bcfg->bert_area.size) {
+		start = plat_octeontx_bcfg->bert_area.base;
+		end = start + plat_octeontx_bcfg->bert_area.size - 1,
+		NOTICE("BERT area: %llx to %llx (%lldKB)\n", start, end,
+		       ((end - start + 1) / 1024));
+	}
+
 	VERBOSE("Flushing L1C\n");
 	dcsw_op_all(DCCISW);
 
