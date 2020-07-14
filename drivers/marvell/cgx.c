@@ -2495,6 +2495,12 @@ an_lt_link_failure:
 		cgx_set_error_type(cgx_id, lmac_id,
 			   CGX_ERR_TRAINING_FAIL);
 	}
+	/* Set state to AN_LT_NO_STATE */
+	if (mcp_set_an_lt_state(cgx_id, lmac_id, AN_LT_NO_STATE)) {
+		debug_cgx("%s: %d:%d Unable to reset AN/LT state\n",
+			__func__, cgx_id, lmac_id);
+		goto restart_an;
+	}
 	/* Print link training trace data */
 #ifdef DEBUG_ATF_CGX
 	cgx_link_training_tracing(cgx_id, lmac_id);
