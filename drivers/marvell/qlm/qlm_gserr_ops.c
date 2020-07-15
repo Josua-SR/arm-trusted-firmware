@@ -140,58 +140,6 @@ static void qlm_gserr_rx_dfe_adaptation(int qlm, int lane)
 }
 
 /**
- * Get the LMAC's first GSER associated with the specified GSER.
- * Required for LMAC's that use DLM's
- *
- * @param  qlm	   QLM to use
- * @param  lane	   Which lane
- * @param  disable Disable Rx adaption and fix CDR
- * @param  is_10g  true if speed is 10G
- */
-static void qlm_gserr_rx_adaption_cdr_control(int qlm, int lane, bool disable, bool is_10g)
-{
-	int leq_lfg_start, leq_hfg_sql_start;
-	int leq_mbf_start, leq_mbg_start;
-	int gn_apg_start, rxcdr_bbstep;
-
-	if (disable) {
-		GSER_TRACE(QLM, "GSERR%d.%d: Disabling LEQ and DFE adaptation\n", qlm, lane);
-		leq_lfg_start = 0;
-		leq_hfg_sql_start = 9;
-		leq_mbf_start = 5;
-		leq_mbg_start = 7;
-		gn_apg_start = 3;
-		rxcdr_bbstep = 10;
-	} else {
-		GSER_TRACE(QLM, "GSERR%d.%d: Enabling LEQ and DFE adaptation\n", qlm, lane);
-		if (is_10g) {
-			leq_lfg_start = 0;
-			leq_hfg_sql_start = 20;
-			leq_mbf_start = 0;
-			leq_mbg_start = 0;
-			gn_apg_start = 7;
-		} else { /* 25Gb/s Settings */
-			leq_lfg_start = 6;
-			leq_hfg_sql_start = 24;
-			leq_mbf_start = 8;
-			leq_mbg_start = 8;
-			gn_apg_start = 4;
-		}
-		rxcdr_bbstep = 20;
-	}
-	/* Adjust CDR phase gain */
-	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_CDR_REFCLK_AFE_CTRL0(qlm, lane),
-		c.s.rxcdr_bbstep = rxcdr_bbstep);
-
-	/* Configure LEQ adaptation */
-	qlm_gserr_rx_leq_adaptation(qlm, lane, leq_lfg_start, leq_hfg_sql_start,
-		leq_mbf_start, leq_mbg_start, gn_apg_start);
-
-	/* Configure DFE adaptation */
-	qlm_gserr_rx_dfe_adaptation(qlm, lane);
-}
-
-/**
  * Reset the GSER lane.
  *
  * @param  qlm	     QLM to use
@@ -436,7 +384,6 @@ const qlm_ops_t qlm_gserr_ops = {
 	.qlm_tx_control = qlm_gserr_tx_control,
 	.qlm_rx_signal_detect = qlm_gserr_rx_signal_detect,
 	.qlm_get_lmac_phy_lane = qlm_gserr_get_lmac_phy_lane,
-	.qlm_rx_adaptation_cdr_control = qlm_gserr_rx_adaption_cdr_control,
 	.qlm_lane_rst = qlm_gserr_lane_rst,
 	.qlm_link_training_config = qlm_gserr_link_training_config,
 	.qlm_link_training_fail = qlm_gserr_link_training_fail,

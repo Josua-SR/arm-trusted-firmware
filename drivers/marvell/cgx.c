@@ -182,45 +182,6 @@ static int cgx_link_training_tracing(int cgx_id, int lmac_id)
 }
 #endif
 
-/* Configure SERDES for autoneg.  If SERDES config fails
- * return -1
- */
-static int cgx_autoneg_serdes_enable(int cgx_id, int lmac_id, bool enable, bool is_10g)
-{
-	uint64_t lane_mask;
-	int qlm, gserx, num_lanes;
-	cgx_config_t *cgx;
-	cgx_lmac_config_t *lmac;
-
-	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
-		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
-		return 0;
-
-	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
-	lmac = &cgx->lmac_cfg[lmac_id];
-	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
-
-	gserx = lmac->gserx + lmac->shift_from_first;
-	qlm = lmac->qlm + lmac->shift_from_first;
-	lane_mask = lmac->lane_mask;
-
-	while (lane_mask) {
-		/* Get the number of lanes on this QLM/DLM */
-		num_lanes = qlm_get_lanes(qlm);
-		for (int lane = 0; lane < num_lanes; lane++) {
-			if (!(lane_mask & (1 << lane)))
-				continue;
-			/* Configure Rx Adaptation & CDR*/
-			cgx->qlm_ops->qlm_rx_adaptation_cdr_control(gserx, lane, enable, is_10g);
-		}
-		lane_mask >>= num_lanes;
-		gserx++;
-		qlm++;
-	}
-
-	return 0;
-}
-
 /*
  * Called whenever CGX needs to enable or disable the SERDES transmitter
  */
@@ -1325,7 +1286,6 @@ static int cgx_an_hcd_check(int cgx_id, int lmac_id, int training_fail)
 {
 	cgx_lmac_config_t *lmac;
 	cavm_cgxx_spux_an_bp_status_t an_bp_status;
-	bool is_10g = 1;
 	int fec_new = 0, prot_new = 0, qlm_mode_new = 0;
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
@@ -1364,7 +1324,6 @@ static int cgx_an_hcd_check(int cgx_id, int lmac_id, int training_fail)
 			}
 		}
 
-		is_10g = false;
 		lmac->use_training = 1;
 
 		/* Check if negotiated protocol matches CGX lmac mode */
@@ -1393,13 +1352,11 @@ static int cgx_an_hcd_check(int cgx_id, int lmac_id, int training_fail)
 				prot_new = CAVM_CGX_LMAC_TYPES_E_FORTYG_R;
 				qlm_mode_new = QLM_MODE_40G_CR4;
 			}
-			is_10g = true;
 		} else if (an_bp_status.s.n40g_kr4) {
 			if (lmac->mode != CAVM_CGX_LMAC_TYPES_E_FORTYG_R) {
 				prot_new = CAVM_CGX_LMAC_TYPES_E_FORTYG_R;
 				qlm_mode_new = QLM_MODE_40G_KR4;
 			}
-			is_10g = true;
 		} else if (an_bp_status.s.n25g_kr_cr) {
 			if (lmac->mode != CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R) {
 				prot_new = CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R;
@@ -1425,13 +1382,11 @@ static int cgx_an_hcd_check(int cgx_id, int lmac_id, int training_fail)
 				prot_new = CAVM_CGX_LMAC_TYPES_E_TENG_R;
 				qlm_mode_new = QLM_MODE_10G_KR;
 			}
-			is_10g = true;
 		} else if (an_bp_status.s.n10g_kx4) {
 			if (lmac->mode != CAVM_CGX_LMAC_TYPES_E_XAUI) {
 				prot_new = CAVM_CGX_LMAC_TYPES_E_XAUI;
 				qlm_mode_new = QLM_MODE_XAUI;
 			}
-			is_10g = false;
 			lmac->use_training = 0;
 		}
 
@@ -1441,9 +1396,6 @@ static int cgx_an_hcd_check(int cgx_id, int lmac_id, int training_fail)
 			if (prot_new) {
 				debug_cgx("%s %d:%d AN HCD Protocol setting mismatch with CGX config\n", __func__, cgx_id, lmac_id);
 			}
-
-			/* Reconfigure SERDES for 25Gb/s or 10Gb/s */
-			cgx_autoneg_serdes_enable(cgx_id, lmac_id, false, is_10g);
 
 			/* Reinitialize GSER, LMAC and/or FEC */
 			cgx_an_lmac_serdes_reinit(cgx_id, lmac_id, prot_new, qlm_mode_new, fec_new, false, training_fail);
