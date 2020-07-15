@@ -17,6 +17,7 @@
 #include <plat/common/platform.h>
 
 #include <marvell_def.h>
+#include <marvell_ehf.h>
 #include <marvell_plat_priv.h>
 #include <plat_marvell.h>
 
@@ -163,6 +164,9 @@ void bl31_early_platform_setup2(u_register_t arg0, u_register_t arg1,
 void marvell_bl31_platform_setup(void)
 {
 	/* Initialize the GIC driver, cpu and distributor interfaces */
+#if EL3_EXCEPTION_HANDLING
+	marvell_ehf_setup();
+#endif
 	plat_marvell_gic_driver_init();
 	plat_marvell_gic_init();
 

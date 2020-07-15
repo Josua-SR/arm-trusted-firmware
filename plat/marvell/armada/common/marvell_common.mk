@@ -13,6 +13,11 @@ VERSION_STRING			+=(Marvell-${SUBVERSION})
 
 SEPARATE_CODE_AND_RODATA	:= 1
 
+EL3_EXCEPTION_HANDLING		:= 0
+
+# Software Delegated Exception support
+SDEI_SUPPORT			:= 0
+
 # flag to switch from PLL to ARO
 ARO_ENABLE			:= 0
 $(eval $(call add_define,ARO_ENABLE))
@@ -69,6 +74,14 @@ BL31_SOURCES		+=	$(MARVELL_PLAT_BASE)/common/marvell_bl31_setup.c	\
 				plat/common/plat_psci_common.c				\
 				$(MARVELL_PLAT_BASE)/common/plat_delay_timer.c		\
 				drivers/delay_timer/delay_timer.c
+
+ifeq (${EL3_EXCEPTION_HANDLING},1)
+BL31_SOURCES		+=	$(MARVELL_PLAT_BASE)/common/aarch64/marvell_ehf.c
+endif
+
+ifeq (${SDEI_SUPPORT},1)
+BL31_SOURCES		+=	$(MARVELL_PLAT_BASE)/common/aarch64/marvell_sdei.c
+endif
 
 # PSCI functionality
 $(eval $(call add_define,CONFIG_ARM64))

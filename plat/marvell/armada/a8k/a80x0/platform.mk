@@ -18,3 +18,7 @@ BOARD_DIR		:= $(shell dirname $(lastword $(MAKEFILE_LIST)))
 include plat/marvell/armada/a8k/common/a8k_common.mk
 
 include plat/marvell/armada/common/marvell_common.mk
+
+ifeq (${EL3_EXCEPTION_HANDLING}, 1)
+GICV2_G0_FOR_EL3	:= 1
+endif
