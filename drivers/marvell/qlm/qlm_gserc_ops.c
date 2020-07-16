@@ -212,19 +212,6 @@ static void qlm_gserc_lane_rst(int qlm, int lane, bool reset)
 }
 
 /**
- * Configure SERDES for Link Training
- *
- * @param qlm	  QLM to use
- * @param lane	  Which lane
- * @param en      0=Disable Training, 1=Enable Training
- */
-static void qlm_gserc_link_training_config(int qlm, int lane, bool en)
-{
-	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_LT_TX_FSM_CTRL0(qlm, lane),
-		c.s.mr_training_enable = en);
-}
-
-/**
  * Check whether SERDES Link Training Failed
  *
  * @param qlm	  QLM to use
@@ -372,7 +359,6 @@ const qlm_ops_t qlm_gserc_ops = {
 	.qlm_rx_signal_detect = qlm_gserc_rx_signal_detect,
 	.qlm_get_lmac_phy_lane = qlm_gserc_get_lmac_phy_lane,
 	.qlm_lane_rst = qlm_gserc_lane_rst,
-	.qlm_link_training_config = qlm_gserc_link_training_config,
 	.qlm_link_training_fail = qlm_gserc_link_training_fail,
 	.qlm_link_training_complete = qlm_gserc_link_training_complete,
 	.qlm_start_an = qlm_gserc_start_an,

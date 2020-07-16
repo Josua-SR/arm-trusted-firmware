@@ -337,58 +337,20 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 static int cgx_link_training_start(int cgx_id, int lmac_id, bool en)
 {
 	cavm_cgxx_spux_int_t spux_int;
-	cgx_config_t *cgx;
-	cgx_lmac_config_t *lmac;
-	int qlm, gserx, num_lanes;
-	uint64_t lane_mask;
-	bool is_gsern = 0;
 
 	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
 
-	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
-		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
-		is_gsern = true;
-
-	if (is_gsern) {
-		if (!en)
-			return 0;
-		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
+	if (!en)
+		return 0;
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
+		CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
+			train_en, 1);
+	CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
 			CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
-				train_en, 1);
-		CAVM_MODIFY_CGX_CSR(cavm_cgxx_spux_br_pmd_control_t,
-				CAVM_CGXX_SPUX_BR_PMD_CONTROL(cgx_id, lmac_id),
-				train_restart, 1);
-		spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
-		spux_int.s.training_done = 1;
-		CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id), spux_int.u);
-	} else {
-		/* To enable training, SERDES needs to be in reset */
-		if (en)
-			cgx_serdes_reset(cgx_id, lmac_id, true);
-
-		cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
-		lmac = &cgx->lmac_cfg[lmac_id];
-		qlm = lmac->qlm + lmac->shift_from_first;
-		gserx = lmac->gserx + lmac->shift_from_first;
-
-		lane_mask = lmac->lane_mask;
-		/* Start Link Training on all GSER lanes */
-		while (lane_mask) {
-			/* Get the number of lanes on this QLM/DLM */
-			num_lanes = qlm_get_lanes(qlm);
-			for (int lane = 0; lane < num_lanes; lane++) {
-				if (!(lane_mask & (1 << lane)))
-					continue;
-				cgx->qlm_ops->qlm_link_training_config(gserx, lane, en);
-			}
-			lane_mask >>= num_lanes;
-			qlm++;
-			gserx++;
-		}
-		/* Clear the CGX LMAC SERDES reset */
-		if (en)
-			cgx_serdes_reset(cgx_id, lmac_id, false);
-	}
+			train_restart, 1);
+	spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id));
+	spux_int.s.training_done = 1;
+	CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id), spux_int.u);
 
 	return 0;
 }

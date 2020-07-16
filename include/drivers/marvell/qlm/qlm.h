@@ -242,7 +242,6 @@ typedef struct {
 	int (*qlm_rx_signal_detect)(int qlm, int lane);
 	int (*qlm_get_lmac_phy_lane)(int qlm, int lane, int lane_to_sds);
 	void (*qlm_lane_rst)(int qlm, int lane, bool reset);
-	void (*qlm_link_training_config)(int qlm, int lane, bool en);
 	int (*qlm_link_training_fail)(int qlm, int lane);
 	int (*qlm_link_training_complete)(int qlm, int lane);
 	void (*qlm_start_an)(int qlm, int lane);
