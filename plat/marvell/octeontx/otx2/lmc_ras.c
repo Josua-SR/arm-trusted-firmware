@@ -817,7 +817,6 @@ static struct ras_dram_lmc_map *ras_dram_get_lmc_map(int lmc)
 		struct ras_dram_lmc_map *lm;
 		int mcc, lmcoe, abs_lmc;
 		int num_mccs = plat_octeontx_get_mcc_count();
-		int seen = 0;
 
 		for (mcc = 0; mcc < num_mccs; mcc++) {
 			mcc_const.u = CSR_READ(CAVM_MCCX_CONST(mcc));
@@ -830,13 +829,33 @@ static struct ras_dram_lmc_map *ras_dram_get_lmc_map(int lmc)
 				lm->lmc = abs_lmc;
 				lm->lmcoe = lmcoe;
 				lm->valid = 1;
-				seen++;
+			}
+		}
+
+		/* T98 has problem with MCCX_LMCOEX_CONST; use static config */
+		if (cavm_is_model(OCTEONTX_CN98XX)) {
+			/* Highlight problem with new chip revs. */
+			if (!cavm_is_model(OCTEONTX_CN98XX_PASS1_0))
+				ERROR("Software not configured for this chip.");
+			else {
+				plat_lmc_map[0] = (struct ras_dram_lmc_map) {
+				   .lmc = 0, .mcc = 0, .lmcoe = 0, .valid = 1 };
+				plat_lmc_map[1] = (struct ras_dram_lmc_map) {
+				   .lmc = 1, .mcc = 1, .lmcoe = 0, .valid = 1 };
+				plat_lmc_map[2] = (struct ras_dram_lmc_map) {
+				   .lmc = 2, .mcc = 0, .lmcoe = 1, .valid = 1 };
+				plat_lmc_map[3] = (struct ras_dram_lmc_map) {
+				   .lmc = 3, .mcc = 1, .lmcoe = 1, .valid = 1 };
+				plat_lmc_map[4] = (struct ras_dram_lmc_map) {
+				   .lmc = 4, .mcc = 0, .lmcoe = 2, .valid = 1 };
+				plat_lmc_map[5] = (struct ras_dram_lmc_map) {
+				   .lmc = 5, .mcc = 1, .lmcoe = 2, .valid = 1 };
 			}
 		}
 
 		once++;
 	} else if (!once && is_asim()) {
-		/* h/w discovery invalid in ASIM, force layout */
+		/* h/w discovery invalid in ASIM, use static config */
 		if (cavm_is_model(OCTEONTX_CN96XX)) {
 			plat_lmc_map[0] = (struct ras_dram_lmc_map) {
 				.lmc = 0, .mcc = 1, .lmcoe = 0, .valid = 1 };
