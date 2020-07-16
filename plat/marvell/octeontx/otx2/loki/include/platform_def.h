@@ -220,7 +220,18 @@
 #define MAX_RVU_PFS		16
 
 /* Priority levels for OcteonTX platforms */
+#if SDEI_SUPPORT
+/* Non-interrupt SDEI explicit events are used by RAS for EL0-2 notification;
+ * they must be higher priority than RAS interrupts.
+ */
+#define PLAT_SDEI_CRITICAL_PRI		0x10
+#define PLAT_RAS_PRI			0x20
 #define PLAT_IRQ_PRI			0x30
+#define PLAT_SDEI_NORMAL_PRI		0x70
+#else
+#define PLAT_RAS_PRI			0x10
+#define PLAT_IRQ_PRI			0x30
+#endif // SDEI_SUPPORT
 
 /* OcteonTX platforms use 3 upper bits of secure interrupt priority */
 #define OCTEONTX_PRI_BITS		3

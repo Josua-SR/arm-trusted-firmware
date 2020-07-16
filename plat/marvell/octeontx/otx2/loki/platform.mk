@@ -3,6 +3,9 @@
 # SPDX-License-Identifier:     BSD-3-Clause
 # https://spdx.org/licenses
 
+RAS_EXTENSION		:=       1
+HANDLE_EA_EL3_FIRST	:=       1
+
 # Include common Marvell platform's makefile helper
 include plat/marvell/octeontx/platform.mk
 

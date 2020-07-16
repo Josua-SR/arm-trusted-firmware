@@ -846,13 +846,13 @@ bool plat_ras_feature_supported(void)
 	/*
 	 * check if RAS functionality should be excluded by board
 	 *
-	 * example:
-	 *	if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, <name>, n)) {
-	 *		VERBOSE("%s: RAS support excluded from board %s\n",
-	 *			__func__, plat_octeontx_bcfg->bcfg.board_model);
-	 *		return ret; // i.e. false
-	 *	}
+	 * Disable on 9504n EBB due to problems with some DIMMs.
 	 */
+	if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504n", 8)) {
+		VERBOSE("%s: RAS support excluded from board %s\n",
+			__func__, plat_octeontx_bcfg->bcfg.board_model);
+		return ret; // i.e. false
+	}
 
 	ret = true;
 #endif
