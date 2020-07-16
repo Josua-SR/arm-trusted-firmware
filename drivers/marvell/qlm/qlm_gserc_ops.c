@@ -147,71 +147,6 @@ void qlm_gserc_rx_dfe_adaptation(int qlm, int lane)
 }
 
 /**
- * Reset the GSER lane.
- *
- * @param  qlm	     QLM to use
- * @param  lane	     Which lane
- * @param  reset_en  1) Enable reset 0) Clear reset
- * @return Returns the LMAC first GSER
- */
-static void qlm_gserc_lane_rst(int qlm, int lane, bool reset)
-{
-	if (reset)
-		GSER_TRACE(QLM, "GSERC%d.%d: Setting Lane Reset\n", qlm, lane);
-	else
-		GSER_TRACE(QLM, "GSERC%d.%d: Clearing Lane Reset\n", qlm, lane);
-
-	if (reset) {
-		GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(qlm, lane),
-			c.s.ln_ctrl_tx_en = 0);
-		gser_wait_usec(1);
-	}
-	/* Assert or deassert Lane reset */
-	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(qlm, lane),
-		c.s.ln_rst = reset);
-
-	if (reset) {
-		/* Wait for the PHY firmware to signal that the Lane is in the Reset
-			power state which is signaled by the lane Tx and Rx blocks negating
-			the Tx/Rx ready signals.
-			Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-				LN_TX_RDY=0 Lane Tx is not ready
-				LN_RX_RDY=0 Lane Rx is not ready
-				LN_STATE_CHNG_RDY = 0 Lane is transitioning states */
-		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(qlm, lane), GSERCX_STATUS_BSTS_LN_TX_RDY, ==, 0, 500))
-			gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_tx_rdy]=0 (lane is reset)\n", qlm, lane);
-		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(qlm, lane), GSERCX_STATUS_BSTS_LN_RX_RDY, ==, 0, 500))
-			gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_rx_rdy]=0 (lane is reset)\n", qlm, lane);
-		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(qlm, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 500))
-		{
-			/* This happens fast, so sometimes we miss it */
-			//gser_error("GSERR%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0\n (lane is reset)", module, lane);
-		}
-	} 
-	else 
-	{
-		/* Read/Poll for the GSERR to set the Lane State Change Ready flag and
-		drive the Lane Tx and Rx ready flags to signal that the lane as
-		returned to the ACTIVE state.
-		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-			LN_TX_RDY=1 Lane Tx is ready
-			LN_RX_RDY=1 Lane Rx is ready
-			LN_STATE_CHNG_RDY = 1 Lane is in the “Active” power state */
-		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(qlm, lane), GSERCX_STATUS_BSTS_LN_TX_RDY, ==, 1, 5000))
-			gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_tx_rdy]=1 (reset done)\n", qlm, lane);
-		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(qlm, lane), GSERCX_STATUS_BSTS_LN_RX_RDY, ==, 1, 5000))
-			gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_rx_rdy]=1 (reset done)\n", qlm, lane);
-	}
-
-	/* 4. Wait for the “Lane State Change Ready” to signal that the lane has
-		transitioned to the “Reset” state.
-		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(qlm, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
-		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (lane is reset)\n", qlm, lane);
-}
-
-/**
  * Check whether SERDES Link Training Failed
  *
  * @param qlm	  QLM to use
@@ -358,7 +293,6 @@ const qlm_ops_t qlm_gserc_ops = {
 	.qlm_tx_control = qlm_gserc_tx_control,
 	.qlm_rx_signal_detect = qlm_gserc_rx_signal_detect,
 	.qlm_get_lmac_phy_lane = qlm_gserc_get_lmac_phy_lane,
-	.qlm_lane_rst = qlm_gserc_lane_rst,
 	.qlm_link_training_fail = qlm_gserc_link_training_fail,
 	.qlm_link_training_complete = qlm_gserc_link_training_complete,
 	.qlm_start_an = qlm_gserc_start_an,

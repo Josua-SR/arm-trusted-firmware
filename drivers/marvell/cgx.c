@@ -104,45 +104,6 @@ static int cgx_poll_for_csr(uint64_t addr, uint64_t mask,
 	return ret_val;
 }
 
-/* Change the Reset state of the CGX LMAC SERDES lanes.  If SERDES reset fails
- * return -1
- */
-static int cgx_serdes_reset(int cgx_id, int lmac_id, bool reset)
-{
-	uint64_t lane_mask;
-	int qlm, gserx, num_lanes;
-	cgx_config_t *cgx;
-	cgx_lmac_config_t *lmac;
-
-	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
-		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
-		return 0;
-
-	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
-	lmac = &cgx->lmac_cfg[lmac_id];
-	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
-
-	gserx = lmac->gserx + lmac->shift_from_first;
-	qlm = lmac->qlm + lmac->shift_from_first;
-	lane_mask = lmac->lane_mask;
-
-	while (lane_mask) {
-		/* Get the number of lanes on this QLM/DLM */
-		num_lanes = qlm_get_lanes(qlm);
-		for (int lane = 0; lane < num_lanes; lane++) {
-			if (!(lane_mask & (1 << lane)))
-				continue;
-			/* Change the SERDES reset state */
-			cgx->qlm_ops->qlm_lane_rst(gserx, lane, reset);
-		}
-		lane_mask >>= num_lanes;
-		gserx++;
-		qlm++;
-	}
-
-	return 0;
-}
-
 #ifdef DEBUG_ATF_CGX
 /* Prints out the link training tracing data */
 static int cgx_link_training_tracing(int cgx_id, int lmac_id)
@@ -1599,13 +1560,11 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 			((gser_clock_get_count(GSER_CLOCK_TIME) - init_time) *
 			 1000 / gser_clock_get_rate(GSER_CLOCK_TIME)));
 	} else {
-	/* Put the CGX LMAC SERDES lanes in Reset
-	 * if link training is enabled
-	 */
-		if (lmac->use_training) {
+		/* Put the CGX LMAC SERDES lanes in Reset
+		 * if link training is enabled
+		 */
+		if (lmac->use_training)
 			cgx_serdes_tx_control(cgx_id, lmac_id, false);
-			cgx_serdes_reset(cgx_id, lmac_id, true);
-		}
 
 		/* Check auto-neg HCD to see if their is a CGX mismatch.
 		 * Function will restart auto-neg if training failed
@@ -1630,11 +1589,8 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 			if (lmac->use_training) {
 				spux_an_ctl.u = CSR_READ(CAVM_CGXX_SPUX_AN_CONTROL(
 								cgx_id, lmac_id));
-				if (!spux_an_ctl.s.an_arb_link_chk_en) {
+				if (!spux_an_ctl.s.an_arb_link_chk_en)
 					cgx_link_training_start(cgx_id, lmac_id, true);
-					/* Clear the CGX LMAC SERDES reset */
-					cgx_serdes_reset(cgx_id, lmac_id, false);
-				}
 				/* Enable the SERDES Tx */
 				cgx_serdes_tx_control(cgx_id, lmac_id, true);
 			}
