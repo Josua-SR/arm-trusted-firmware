@@ -2520,63 +2520,6 @@ restart_an:
 	return -1;
 }
 
-static int cgx_complete_sw_an_wo_mcp(int cgx_id, int lmac_id)
-{
-	int gserx, lane, qlm, num_lanes;
-	cgx_config_t *cgx;
-	cgx_lmac_config_t *lmac;
-
-	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
-	lmac = &cgx->lmac_cfg[lmac_id];
-
-	gserx = lmac->gserx;
-	qlm = lmac->qlm;
-	num_lanes = qlm_get_lanes(qlm);
-
-	/* Set lane # to support any
-	 * lane module type (SLM, DLM, QLM)
-	 * 9XXX does not support AN on 1 LMAC
-	 * across multiple lane modules
-	 */
-	if (num_lanes == 1)
-		lane = 0;
-	else if (num_lanes == 2)
-		lane = lmac->lane_an_master % 2;
-	else
-		lane = lmac->lane_an_master;
-	debug_cgx("%s:%d:%d: starting AN gserx %d lane %d\n",
-		__func__, cgx_id, lmac_id, gserx, lane);
-	/*  PCS link is down, so clear ln_link_stat when restarting AN */
-	cgx->qlm_ops->qlm_clear_link_stat(gserx, lane);
-
-	/* Start AN */
-	cgx->qlm_ops->qlm_start_an(gserx, lane);
-
-	/* Enable the SERDES Tx */
-	cgx_serdes_tx_control(cgx_id, lmac_id, true);
-
-	if (cgx_autoneg_wait(cgx_id, lmac_id)) {
-		debug_cgx("%s:%d:%d: AN failed, Restarting AN.\n",
-			__func__, cgx_id, lmac_id);
-		goto restart_an;
-	}
-
-	if (cgx_link_training_wait(cgx_id, lmac_id)) {
-		debug_cgx("%s:%d:%d: Link training failed, Restarting AN.\n",
-			__func__, cgx_id, lmac_id);
-#ifdef DEBUG_ATF_CGX
-		cgx_link_training_tracing(cgx_id, lmac_id);
-#endif
-		cgx_set_error_type(cgx_id, lmac_id,
-				CGX_ERR_TRAINING_FAIL);
-		goto restart_an;
-	}
-	return 0;
-
-restart_an:
-	return -1;
-}
-
 /* Complete SPU autonegotiation and link training
  * Return 0 on success, -1 on fail
  */
@@ -2685,9 +2628,9 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_
 			ret = cgx_complete_sw_an_with_mcp(cgx_id, lmac_id,
 						lmac_ctx);
 		} else {
-			debug_cgx("%s: %d:%d AN/LT handshaking not handled by MCP\n",
-					__func__, cgx_id, lmac_id);
-			ret = cgx_complete_sw_an_wo_mcp(cgx_id, lmac_id);
+			WARN("%s: %d:%d MCP AN/LT INTF version mismatch. Cannot bring link up.\n",
+				__func__, cgx_id, lmac_id);
+			goto restart_an;
 		}
 		if (ret == -1)
 			goto restart_an;

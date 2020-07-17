@@ -172,23 +172,6 @@ static int qlm_gserr_link_training_complete(int qlm, int lane)
 }
 
 /**
- * Set GSERR handshake bit to start AN
- *
- * @param  qlm    Index into GSER* group
- * @param lane       Which lane
- */
-static void qlm_gserr_start_an(int qlm, int lane)
-{
-	/* AN Handshaking bit assignments
-	 * GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD[data]
-	 * data[3] = Handshake enable
-	 * data[4] = Handshake ready
-	 */
-	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD(qlm, lane),
-				c.s.data &= 0xf7);
-}
-
-/**
  * Set Phy Strap
  *
  * @param qlm    Index into GSER* group
@@ -219,13 +202,6 @@ static int qlm_gserr_an_complete(int qlm, int lane)
 		return 0;
 	else
 		return 1;
-}
-
-static void qlm_gserr_clear_link_stat(int qlm, int lane)
-{
-	GSER_CSR_MODIFY(control_bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(
-		qlm, lane),
-		control_bcfg.s.ln_link_stat = 0);
 }
 
 /**
@@ -306,10 +282,8 @@ const qlm_ops_t qlm_gserr_ops = {
 	.qlm_get_lmac_phy_lane = qlm_gserr_get_lmac_phy_lane,
 	.qlm_link_training_fail = qlm_gserr_link_training_fail,
 	.qlm_link_training_complete = qlm_gserr_link_training_complete,
-	.qlm_start_an = qlm_gserr_start_an,
 	.qlm_set_phy_strap = qlm_gserr_set_phy_strap,
 	.qlm_an_complete = qlm_gserr_an_complete,
-	.qlm_clear_link_stat = qlm_gserr_clear_link_stat,
 	.qlm_prbs_chk = qlm_gserr_prbs_chk,
 	.qlm_farend_lpbk_chk = qlm_gserr_farend_lpbk_chk,
 	.qlm_display_trace = qlm_gserr_display_trace,
