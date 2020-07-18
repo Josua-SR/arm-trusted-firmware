@@ -80,6 +80,10 @@ BL31_SOURCES		+=	plat/marvell/octeontx/otx2/plat_topology.c		\
 				plat/marvell/octeontx/otx2/loki/plat_loki_svc.c		\
 				plat/marvell/octeontx/otx2/plat_svc.c		\
 
+ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
+BL31_SOURCES		+=	drivers/marvell/serdes_diagnostics.c
+endif
+
 ifeq (${RAS_EXTENSION},1)
 BL31_SOURCES		+=	plat/marvell/octeontx/otx2/smc_ras.c
 BL31_SOURCES		+=	plat/marvell/octeontx/otx2/lmc_ras.c

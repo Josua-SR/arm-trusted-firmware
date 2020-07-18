@@ -18,7 +18,7 @@ ifdef SCMI_WITH_LEGACY_PM
 endif
 
 # Define DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS to enable diagnostic cmds
-#DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS		:=	1
+# DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS		:=	1
 ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
     $(eval $(call add_define,DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS))
 endif
@@ -83,6 +83,10 @@ BL31_SOURCES		+=	plat/marvell/octeontx/otx2/plat_topology.c		\
 				plat/marvell/octeontx/otx2/plat_legacy_pm_ops.c		\
 				plat/marvell/octeontx/otx2/f95/plat_f95_svc.c  \
 				plat/marvell/octeontx/otx2/plat_svc.c		\
+
+ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
+BL31_SOURCES		+=	drivers/marvell/serdes_diagnostics.c
+endif
 
 ifeq (${RAS_EXTENSION},1)
 BL31_SOURCES		+=	plat/marvell/octeontx/otx2/smc_ras.c
