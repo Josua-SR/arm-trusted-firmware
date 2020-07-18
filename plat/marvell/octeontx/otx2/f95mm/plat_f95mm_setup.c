@@ -408,6 +408,17 @@ void plat_add_mmio(void)
 		add_map_record(CAVM_CCU_BAR_E_CCUX_PF_BAR4(i),
 			       CAVM_CCU_BAR_E_CCUX_PF_BAR4_SIZE, attr);
 	}
+
+#ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
+	mmap_add_region(SERDES_EYE_DATA_BASE, SERDES_EYE_DATA_BASE,
+			SERDES_EYE_DATA_SIZE, (MT_MEMORY | MT_RW | MT_NS));
+
+	mmap_add_region(SERDES_SETTINGS_DATA_BASE, SERDES_SETTINGS_DATA_BASE,
+		SERDES_SETTINGS_DATA_SIZE, (MT_MEMORY | MT_RW | MT_NS));
+
+	mmap_add_region(SERDES_PRBS_DATA_BASE, SERDES_PRBS_DATA_BASE,
+		SERDES_PRBS_DATA_SIZE, (MT_MEMORY | MT_RW | MT_NS));
+#endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 }
 
 void plat_set_gpio_msix_vectors(int gpio_num, int irq_num, int enable)
