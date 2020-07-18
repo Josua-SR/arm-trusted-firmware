@@ -121,35 +121,15 @@ int plat_octeontx_get_gserr_count(void)
 	return 2;
 }
 
-int plat_octeontx_get_gserc_count(void)
-{
-	return 0;
-}
-
-int plat_octeontx_get_gserp_count(void)
-{
-	return 0;
-}
-
 int plat_otx2_get_gserx(int qlm, int *shift_from_first)
 {
-	int gserx;
-	int gserp_count;
-
-	if (qlm >= plat_octeontx_get_gser_count())
+	if (qlm < 0 || qlm >= plat_octeontx_get_gser_count())
 		return -1;
-
-	gserp_count = plat_octeontx_get_gserp_count();
-
-	if (qlm < gserp_count)
-		return -1;
-
-	gserx = qlm - gserp_count;
 
 	if (shift_from_first != NULL)
 		*shift_from_first = 0;
 
-	return gserx;
+	return qlm;
 }
 
 extern const qlm_ops_t qlm_gserr_ops;

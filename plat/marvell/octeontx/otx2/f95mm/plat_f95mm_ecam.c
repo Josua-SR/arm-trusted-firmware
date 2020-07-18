@@ -58,8 +58,8 @@ static int is_qlm_configured_as_cgx(int qlm)
 	for (int lane = 0; lane < lnum; lane++) {
 		qlm_state = cgx->qlm_ops->qlm_get_state(gserx, lane);
 		if (qlm_state.s.cgx) {
-			debug_plat_ecam("%s: CGX detected on qlm %d lane %d\n",
-				__func__, qlm_idx, lane);
+			debug_plat_ecam("%s: CGX%d detected on qlm %d lane %d\n",
+				__func__, cgx_idx, qlm, lane);
 			return 1;
 		}
 	}
