@@ -36,8 +36,10 @@ PLAT_BL_COMMON_SOURCES	+=	plat/marvell/octeontx/otx2/f95mm/plat_f95mm_setup.c	\
 				drivers/marvell/cgx_flash_ops.c		\
 				drivers/marvell/gser_internal.c			\
 				drivers/marvell/qlm/qlm.c			\
+				drivers/marvell/qlm/qlm_gserj.c			\
 				drivers/marvell/qlm/qlm_gserr.c			\
 				drivers/marvell/qlm/qlm_gserr_ops.c		\
+				drivers/marvell/qlm/qlm_gserj_ops.c		\
 				drivers/marvell/qlm/qlm_gserx_tuning.c		\
 				plat/marvell/octeontx/otx2/plat_setup.c		\
 				plat/marvell/octeontx/otx2/aarch64/plat_octeontx_common.S	\
