@@ -141,7 +141,7 @@ struct {
 	int show_phy_line;
 	int mode;
 	int started;
-} prbs_status[MAX_CGX];
+} prbs_status[MAX_QLM][MAX_LANES_PER_QLM];
 
 /* Check if memory region for PRBS data is big enough */
 CASSERT(sizeof(cgx_prbs_data) <= SERDES_PRBS_DATA_SIZE,
@@ -165,42 +165,42 @@ int cgx_smc_do_prbs(int cmd, int qlm, int x3, int lane)
 
 	switch (cmd) {
 	case CGX_PRBS_START_CMD:
-		if (prbs_status[cgx_id].started) {
+		if (prbs_status[qlm][lane].started) {
 			stop_prbs(cgx_id, qlm,
-				prbs_status[cgx_id].mode,
-				prbs_status[cgx_id].show_phy_host, lane);
-			prbs_status[cgx_id].started = 0;
+				prbs_status[qlm][lane].mode,
+				prbs_status[qlm][lane].show_phy_host, lane);
+			prbs_status[qlm][lane].started = 0;
 		}
 
-		prbs_status[cgx_id].mode = x3;
+		prbs_status[qlm][lane].mode = x3;
 		rc = start_prbs(cgx_id, qlm,
-				prbs_status[cgx_id].mode,
-				&prbs_status[cgx_id].show_phy_host,
-				&prbs_status[cgx_id].show_phy_line, lane);
+				prbs_status[qlm][lane].mode,
+				&prbs_status[qlm][lane].show_phy_host,
+				&prbs_status[qlm][lane].show_phy_line, lane);
 		if (rc)
 			return -1;
 
-		prbs_status[cgx_id].started = 1;
+		prbs_status[qlm][lane].started = 1;
 		break;
 
 	case CGX_PRBS_STOP_CMD:
-		if (prbs_status[cgx_id].started) {
+		if (prbs_status[qlm][lane].started) {
 			stop_prbs(cgx_id, qlm,
-				prbs_status[cgx_id].mode,
-				prbs_status[cgx_id].show_phy_host, lane);
-			prbs_status[cgx_id].started = 0;
+				prbs_status[qlm][lane].mode,
+				prbs_status[qlm][lane].show_phy_host, lane);
+			prbs_status[qlm][lane].started = 0;
 		}
 		break;
 
 	case CGX_PRBS_CLEAR_CMD:
-		if (prbs_status[cgx_id].started) {
+		if (prbs_status[qlm][lane].started) {
 			clear_prbs_errors(cgx_id, qlm, lane,
-				prbs_status[cgx_id].mode);
+				prbs_status[qlm][lane].mode);
 		}
 		break;
 
 	case CGX_PRBS_GET_DATA_CMD:
-		if (!prbs_status[cgx_id].started) {
+		if (!prbs_status[qlm][lane].started) {
 			WARN("PRBS for QLM%d is not started\n", qlm);
 			return -1;
 		}
@@ -208,9 +208,9 @@ int cgx_smc_do_prbs(int cmd, int qlm, int x3, int lane)
 		prbs_data = (cgx_prbs_data *)(SERDES_PRBS_DATA_BASE);
 
 		get_prbs_errors(cgx_id, qlm,
-				prbs_status[cgx_id].mode,
-				prbs_status[cgx_id].show_phy_host,
-				prbs_status[cgx_id].show_phy_line,
+				prbs_status[qlm][lane].mode,
+				prbs_status[qlm][lane].show_phy_host,
+				prbs_status[qlm][lane].show_phy_line,
 				prbs_data->errors, lane);
 
 		if (x3) {
