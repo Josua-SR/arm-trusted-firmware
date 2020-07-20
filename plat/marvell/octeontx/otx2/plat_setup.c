@@ -421,19 +421,21 @@ void plat_initialize_boot_error_data_area(unsigned long attr)
 
 	bed_off = fdt_path_offset(fdt,
 				  "/reserved-memory/ghes-bert");
+	if (bed_off == -1) {
+		VERBOSE("Missing BERT area from DT\n");
+		return;
+	}
 	oops_off = fdt_path_offset(fdt,
 				   "/reserved-memory/ramoops");
+	if (oops_off == -1) {
+		VERBOSE("Missing RAMMOOPS from DT\n");
+		return;
+	}
 	bed_dev_off = fdt_path_offset(fdt,
 				   "/soc@0/bed-bert");
-	if (!bed_off)
-		VERBOSE("Missing BERT area from DT\n");
-	if (!oops_off)
-		VERBOSE("Missing RAMMOOPS from DT\n");
-	if (!bed_dev_off)
+	if (bed_dev_off == -1) {
 		VERBOSE("Missing BERT area Device Driver from DT\n");
-	if (!bed_off || !oops_off || !bed_dev_off) {
-		fail = 0; /* this is not a failure */
-		goto exit;
+		return;
 	}
 
 	/* Retrieve Boot Error Data area DT settings */
