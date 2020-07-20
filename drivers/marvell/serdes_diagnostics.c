@@ -14,13 +14,39 @@
 #include <gser_internal.h>
 #include <platform_setup.h>
 
+#if defined(PLAT_f95mm)
+extern const qlm_ops_t qlm_ops_f95mm;
+const qlm_ops_t *get_qlm_ops_gserj_f95mm(void)
+{
+	return &qlm_ops_f95mm;
+}
+#else
+const qlm_ops_t *get_qlm_ops_gserj_f95mm(void)
+{
+	gser_fatal("GSERJ: %s: Unrecognized qlm\n", __func__);
+	return NULL;
+}
+#endif /* defined(PLAT_f95mm) */
+
+#define CGX_FAKE_ID	-2
+
 static int start_prbs(int cgx_id, int qlm, int mode, int *show_phy_host,
 		int *show_phy_line, int qlm_lane)
 {
 	int gserx;
 	cgx_config_t *cgx_cfg;
+	const qlm_ops_t *qlm_ops;
 
-	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+	if (cgx_id == CGX_FAKE_ID) {
+		qlm_ops = get_qlm_ops_gserj_f95mm();
+		cgx_cfg = NULL;
+	} else {
+		cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+		qlm_ops = cgx_cfg->qlm_ops;
+	}
+
+	if (qlm_ops == NULL)
+		return -1;
 
 	if (mode == 0) {
 		WARN("PRBS with pattern memory not implemented yet.\n");
@@ -30,10 +56,10 @@ static int start_prbs(int cgx_id, int qlm, int mode, int *show_phy_host,
 	gserx = plat_otx2_get_gserx(qlm, NULL);
 
 	/* Start PRBS */
-	cgx_cfg->qlm_ops->qlm_enable_prbs(gserx, mode, QLM_DIRECTION_TX, qlm_lane);
+	qlm_ops->qlm_enable_prbs(gserx, mode, QLM_DIRECTION_TX, qlm_lane);
 
 	/* BDK use here bdk_netphy_get_handle function */
-	if (cgx_cfg->lmac_cfg[qlm_lane].phy_present) {
+	if ((cgx_id != CGX_FAKE_ID) && cgx_cfg->lmac_cfg[qlm_lane].phy_present) {
 		if (*show_phy_host) {
 			if (phy_enable_prbs(cgx_id, qlm_lane, 1, mode, 1))
 				*show_phy_host = 0;
@@ -44,10 +70,10 @@ static int start_prbs(int cgx_id, int qlm, int mode, int *show_phy_host,
 		}
 	}
 	udelay(1000);  /* Let TX run for 1ms before starting RX */
-	cgx_cfg->qlm_ops->qlm_enable_prbs(gserx, mode, QLM_DIRECTION_RX, qlm_lane);
+	qlm_ops->qlm_enable_prbs(gserx, mode, QLM_DIRECTION_RX, qlm_lane);
 
 	/* BDK use here bdk_netphy_get_handle function */
-	if (cgx_cfg->lmac_cfg[qlm_lane].phy_present) {
+	if ((cgx_id != CGX_FAKE_ID) && cgx_cfg->lmac_cfg[qlm_lane].phy_present) {
 		if (*show_phy_host) {
 			if (phy_enable_prbs(cgx_id, qlm_lane, 1, mode, 1))
 				*show_phy_host = 0;
@@ -65,16 +91,31 @@ static int stop_prbs(int cgx_id, int qlm, int mode, int show_phy_host, int qlm_l
 {
 	int gserx;
 	cgx_config_t *cgx_cfg;
+	const qlm_ops_t *qlm_ops;
 
-	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+	if (cgx_id == -1)
+		return 0;
+
+	if (cgx_id == CGX_FAKE_ID) {
+		qlm_ops = get_qlm_ops_gserj_f95mm();
+		cgx_cfg = NULL;
+	} else {
+		cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+		qlm_ops = cgx_cfg->qlm_ops;
+	}
+
+	if (qlm_ops == NULL)
+		return -1;
 
 	gserx = plat_otx2_get_gserx(qlm, NULL);
 
 	/* Stop PRBS */
-	cgx_cfg->qlm_ops->qlm_disable_prbs(gserx, qlm_lane);
+	qlm_ops->qlm_disable_prbs(gserx, qlm_lane);
 
 	/* BDK use here bdk_netphy_get_handle function */
-	if (cgx_cfg->lmac_cfg[qlm_lane].phy_present && show_phy_host) {
+	if ((cgx_id != CGX_FAKE_ID)
+	     && cgx_cfg->lmac_cfg[qlm_lane].phy_present
+	     && show_phy_host) {
 		phy_disable_prbs(cgx_id, qlm_lane, 1, mode);
 		phy_disable_prbs(cgx_id, qlm_lane, 0, mode);
 	}
@@ -86,15 +127,25 @@ static void clear_prbs_errors(int cgx_id, int qlm, int qlm_lane, int mode)
 {
 	int gserx;
 	cgx_config_t *cgx_cfg;
+	const qlm_ops_t *qlm_ops;
 
-	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+	if (cgx_id == CGX_FAKE_ID) {
+		qlm_ops = get_qlm_ops_gserj_f95mm();
+		cgx_cfg = NULL;
+	} else {
+		cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+		qlm_ops = cgx_cfg->qlm_ops;
+	}
+
+	if (qlm_ops == NULL)
+		return;
 
 	/* gserx index is the same for every lane */
 	gserx = plat_otx2_get_gserx(qlm, NULL);
 
-	cgx_cfg->qlm_ops->qlm_get_prbs_errors(gserx, qlm_lane, 1);
+	qlm_ops->qlm_get_prbs_errors(gserx, qlm_lane, 1);
 
-	if (cgx_cfg->lmac_cfg[qlm_lane].phy_present)
+	if ((cgx_id != CGX_FAKE_ID) && cgx_cfg->lmac_cfg[qlm_lane].phy_present)
 		phy_get_prbs_errors(cgx_id, qlm_lane, 1, 1, mode);
 }
 
@@ -104,19 +155,33 @@ static int get_prbs_errors(int cgx_id, int qlm, int mode,
 {
 	int gserx;
 	cgx_config_t *cgx_cfg;
+	const qlm_ops_t *qlm_ops;
 
-	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+	if (cgx_id == -1)
+		return 0;
+
+	if (cgx_id == CGX_FAKE_ID) {
+		qlm_ops = get_qlm_ops_gserj_f95mm();
+		cgx_cfg = NULL;
+	} else {
+		cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+		qlm_ops = cgx_cfg->qlm_ops;
+	}
+
+	if (qlm_ops == NULL)
+		return -1;
 
 	/* gserx index is the same for every lane */
 	gserx = plat_otx2_get_gserx(qlm, NULL);
 
-	errors[qlm_lane].err = cgx_cfg->qlm_ops->qlm_get_prbs_errors(gserx,
+	errors[qlm_lane].err = qlm_ops->qlm_get_prbs_errors(gserx,
 			qlm_lane, 0);
 
 	/* BDK use here bdk_netphy_get_handle */
 	if (!show_phy_host) {
 		errors[qlm_lane].phy_host = -2;
-	} else if (cgx_cfg->lmac_cfg[qlm_lane].phy_present) {
+	} else if ((cgx_id != CGX_FAKE_ID)
+		   && cgx_cfg->lmac_cfg[qlm_lane].phy_present) {
 		errors[qlm_lane].phy_host = phy_get_prbs_errors(cgx_id,
 						qlm_lane, 1, 0, mode);
 	} else {
@@ -125,7 +190,8 @@ static int get_prbs_errors(int cgx_id, int qlm, int mode,
 	/* BDK use here bdk_netphy_get_handle */
 	if (!show_phy_line) {
 		errors[qlm_lane].phy_line = -2;
-	} else if (cgx_cfg->lmac_cfg[qlm_lane].phy_present) {
+	} else if ((cgx_id != CGX_FAKE_ID)
+		   && cgx_cfg->lmac_cfg[qlm_lane].phy_present) {
 		errors[qlm_lane].phy_line = phy_get_prbs_errors(cgx_id,
 						qlm_lane, 0, 0, mode);
 	} else {
@@ -165,10 +231,14 @@ int cgx_smc_do_prbs(int cmd, int qlm, int x3, int lane)
 		return -1;
 	}
 
-	cgx_id = plat_get_cgx_idx(qlm);
-	if (cgx_id == -1) {
-		WARN("%s: QLM%d is not mapped to CGX.\n", __func__, qlm);
-		return -1;
+	if (cavm_is_model(OCTEONTX_F95MM) && (qlm > 1))
+		cgx_id = CGX_FAKE_ID;
+	else {
+		cgx_id = plat_get_cgx_idx(qlm);
+		if (cgx_id == -1) {
+			WARN("%s: QLM%d is not mapped to CGX.\n", __func__, qlm);
+			return -1;
+		}
 	}
 
 	switch (cmd) {
@@ -307,9 +377,10 @@ int cgx_display_eye(int qlm, int qlm_lane, int show_data)
 	int eye_width = 0;
 	int eye_height = 0;
 	int gserx;
-	int cgx_id;
+	int cgx_id = -1;
 	int ec;
 	cgx_config_t *cgx_cfg;
+	const qlm_ops_t *qlm_ops;
 	char color_str[] = "\33[40m"; /* Note: This is modified, not constant */
 
 	if (qlm >= MAX_QLM || qlm < 0) {
@@ -323,29 +394,37 @@ int cgx_display_eye(int qlm, int qlm_lane, int show_data)
 		return -1;
 	}
 
-	cgx_id = plat_get_cgx_idx(qlm);
-	if (cgx_id == -1) {
-		WARN("%s: QLM%d is not mapped to CGX.\n", __func__, qlm);
-		return -1;
+	if (cavm_is_model(OCTEONTX_F95MM) && (qlm > 1)) {
+		qlm_ops = get_qlm_ops_gserj_f95mm();
+		cgx_cfg = NULL;
+		gserx = qlm;
+	} else {
+		cgx_id = plat_get_cgx_idx(qlm);
+		if (cgx_id == -1) {
+			WARN("To QLM%d any CGX cannot by wired.\n", qlm);
+			return -1;
+		}
+		cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+		qlm_ops = cgx_cfg->qlm_ops;
+		gserx = plat_otx2_get_gserx(qlm, NULL);
 	}
-	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
 
-	gserx = cgx_cfg->lmac_cfg[qlm_lane].gserx;
+	if (qlm_ops == NULL)
+		return -1;
 
-	ec = cgx_cfg->qlm_ops->qlm_eye_capture(gserx, qlm_lane,
-						show_data, &eye);
+	ec = qlm_ops->qlm_eye_capture(gserx, qlm_lane, show_data, &eye);
 	if (ec)
 		return ec;
 
 	if (!show_data) {
-		eye.type = cgx_cfg->qlm_ops->type;
+		eye.type = qlm_ops->type;
 		memcpy((void *)(SERDES_EYE_DATA_BASE), &eye,
 				sizeof(gser_qlm_eye_t));
 
 		return CGX_DISPLAY_OK;
 	}
 
-	if (cgx_cfg->qlm_ops->type == QLM_GSERN_TYPE) {
+	if (qlm_ops->type == QLM_GSERN_TYPE) {
 		uint64_t data;
 		for (y = 0; y < eye.height; y++) {
 			for (x = 0; x < eye.width; x++) {
@@ -423,8 +502,9 @@ int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data)
 {
 	int max_lane;
 	int gserx;
-	int cgx_id;
+	int cgx_id = -1;
 	cgx_config_t *cgx_cfg;
+	const qlm_ops_t *qlm_ops;
 
 	if (qlm >= MAX_QLM || qlm < 0) {
 		WARN("%s: %d not in range, available QLM0-%d\n", __func__, qlm,
@@ -438,21 +518,29 @@ int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data)
 		return -1;
 	}
 
-	cgx_id = plat_get_cgx_idx(qlm);
-	if (cgx_id == -1) {
-		WARN("%s: QLM%d is not mapped to CGX.\n", __func__, qlm);
-		return -1;
+	if (cavm_is_model(OCTEONTX_F95MM) && (qlm > 1)) {
+		qlm_ops = get_qlm_ops_gserj_f95mm();
+		cgx_cfg = NULL;
+		gserx = qlm;
+	} else {
+		cgx_id = plat_get_cgx_idx(qlm);
+		if (cgx_id == -1) {
+			WARN("To QLM%d any CGX cannot by wired.\n", qlm);
+			return -1;
+		}
+		cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
+		qlm_ops = cgx_cfg->qlm_ops;
+		gserx = plat_otx2_get_gserx(qlm, NULL);
 	}
 
-	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
-
-	gserx = plat_otx2_get_gserx(qlm, NULL);
+	if (qlm_ops == NULL)
+		return -1;
 
 	if (show_data) {
-		cgx_cfg->qlm_ops->qlm_display_settings(gserx, qlm_lane, 1, 1,
+		qlm_ops->qlm_display_settings(gserx, qlm_lane, 1, 1,
 				NULL, 0);
 	} else {
-		cgx_cfg->qlm_ops->qlm_display_settings(gserx, qlm_lane, 1, 1,
+		qlm_ops->qlm_display_settings(gserx, qlm_lane, 1, 1,
 				(char *)(SERDES_SETTINGS_DATA_BASE),
 				SERDES_SETTINGS_DATA_SIZE);
 	}

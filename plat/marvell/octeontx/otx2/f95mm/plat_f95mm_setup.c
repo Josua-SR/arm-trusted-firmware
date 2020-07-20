@@ -24,6 +24,7 @@
 
 /* This file map memory for different blocks so it needs all csrs definitions */
 #include "cavm-csrs.h"
+#include "cavm-csrs-gserj.h"
 
 #define CAVM_BPHY_BAR_E_BPHY_PF_BAR0 (0x860000000000ll)
 #define CAVM_BPHY_BAR_E_BPHY_PF_BAR0_SIZE 0x8000000000ull
@@ -114,6 +115,11 @@ int plat_octeontx_get_pem_count(void)
 int plat_octeontx_get_gser_count(void)
 {
 	return 10;
+}
+
+int plat_octeontx_get_gserj_count(void)
+{
+	return 8;
 }
 
 int plat_octeontx_get_gserr_count(void)
@@ -286,6 +292,11 @@ void plat_add_mmio(void)
 	for (i = 0; i < device_type_count; i++)
 		add_map_record(CAVM_GSERR_BAR_E_GSERRX_PF_BAR0(i),
 			       CAVM_GSERR_BAR_E_GSERRX_PF_BAR0_SIZE, attr);
+
+	device_type_count = plat_octeontx_get_gserj_count();
+	for (i = 0; i < device_type_count; i++)
+		add_map_record(CAVM_GSERJ_BAR_E_GSERJX_PF_BAR0(i),
+			       CAVM_GSERJ_BAR_E_GSERJX_PF_BAR0_SIZE, attr);
 
 	add_map_record(CAVM_GPIO_BAR_E_GPIO_PF_BAR0_CN9,
 			CAVM_GPIO_BAR_E_GPIO_PF_BAR0_CN9_SIZE, attr);
