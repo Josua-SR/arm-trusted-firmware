@@ -151,15 +151,23 @@ int cgx_smc_do_prbs(int cmd, int qlm, int x3, int lane)
 {
 	int rc;
 	int cgx_id;
+	int max_lane;
 	cgx_prbs_data *prbs_data;
 
 	if (qlm >= MAX_QLM || qlm < 0) {
 		WARN("%d not in range, available QLM0-%d\n", qlm, MAX_QLM - 1);
 		return -1;
 	}
+
+	max_lane = plat_octeontx_scfg->qlm_max_lane_num[qlm];
+	if (lane >= max_lane || lane < 0) {
+		WARN("For QLM%d supported lanes are 0-%d\n", qlm, max_lane - 1);
+		return -1;
+	}
+
 	cgx_id = plat_get_cgx_idx(qlm);
 	if (cgx_id == -1) {
-		WARN("To QLM%d any CGX cannot by wired.\n", qlm);
+		WARN("%s: QLM%d is not mapped to CGX.\n", __func__, qlm);
 		return -1;
 	}
 
@@ -311,14 +319,13 @@ int cgx_display_eye(int qlm, int qlm_lane, int show_data)
 
 	max_lane = plat_octeontx_scfg->qlm_max_lane_num[qlm];
 	if (qlm_lane >= max_lane || qlm_lane < 0) {
-		WARN("%d not in range, available for QLM%d lanes are 0-%d\n",
-				qlm_lane, qlm, max_lane - 1);
+		WARN("For QLM%d supported lanes are 0-%d\n", qlm, max_lane - 1);
 		return -1;
 	}
 
 	cgx_id = plat_get_cgx_idx(qlm);
 	if (cgx_id == -1) {
-		WARN("To QLM%d any CGX cannot by wired.\n", qlm);
+		WARN("%s: QLM%d is not mapped to CGX.\n", __func__, qlm);
 		return -1;
 	}
 	cgx_cfg = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
@@ -427,8 +434,7 @@ int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data)
 
 	max_lane = plat_octeontx_scfg->qlm_max_lane_num[qlm];
 	if (qlm_lane >= max_lane || qlm_lane < 0) {
-		WARN("%s: %d not in range, available for QLM%d lanes are 0-%d\n",
-				__func__, qlm_lane, qlm, max_lane - 1);
+		WARN("For QLM%d supported lanes are 0-%d\n", qlm, max_lane - 1);
 		return -1;
 	}
 
