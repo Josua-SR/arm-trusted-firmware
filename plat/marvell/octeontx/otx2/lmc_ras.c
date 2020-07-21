@@ -101,7 +101,10 @@ static uint64_t el3_test_target[2 * CACHE_WRITEBACK_GRANULE / 8];
 struct ras_ccs_addr_conversion_data {
 	uint64_t addr;          //uint64_t addr;
 	int phys_lmc_mask;      //MASK of LMC
-	int idx_alias;
+	int num_regions;
+	uint64_t regions_start[16], regions_end[16], regions_offset[16];
+	uint8_t regions_lmc_mode[16], regions_lmc_mask[16];
+	uint8_t rgn_idx_to_id[16]; //added by ATF
 	int ASC_REGION;
 	int ASC_REM;
 	int ASC_MD_LR_BIT;      //Left Right Bit selector
@@ -110,6 +113,11 @@ struct ras_ccs_addr_conversion_data {
 	uint64_t ASC_MD_LR_EN;	//Bit mask of Address bits used in hash
 	uint64_t ASC_OFFSET;	//Address offset
 	uint64_t ASC_MCS_EN[4];	//Bit Masks for Hashing
+	// T98 specific variables
+	int lrbit;
+	int t98_cfg;
+	int abs_lmc; //Absolute LMC aka 0-5 b/c phys_lmc_mask is relative on t98
+	int md_right;
 };
 
 // Table to translate ECC single-bit syndrome to "byte.bit" format.
@@ -155,6 +163,19 @@ static int edac_timer = -1; /* periodic poll */
 int edac_alive; /* protect against EDAC_POLLED early polling */
 
 /**
+ * Find the number of bits to add to LMC addresses to include LMC num
+ *
+ * @return number xbits to add to LMC addresses
+ */
+static inline int ras_ccs_get_num_xbits(void)
+{
+	if (cavm_is_model(OCTEONTX_CN98XX))
+		return 3;
+	else
+		return 2;
+}
+
+/**
  * Add 2 bits into the LMC address to represent the LMC the address
  * came from. (like the CN8xxx LMC address configuration)
  *
@@ -165,8 +186,10 @@ int edac_alive; /* protect against EDAC_POLLED early polling */
  */
 static inline uint64_t ras_ccs_get_lmc_addr(uint64_t addr, int lmc)
 {
-	return (((((((1ULL << 36)-1) << 7) & addr) << 2) |
-		 (0x7f & addr)) | ((lmc & 0x3) << 7));
+	int xbits = ras_ccs_get_num_xbits();
+
+	return  (((((((1ULL << 36)-1) << 7) & addr) << xbits) |
+		  (0x7f & addr)) | (lmc  << 7));
 }
 
 /**
@@ -179,7 +202,9 @@ static inline uint64_t ras_ccs_get_lmc_addr(uint64_t addr, int lmc)
  */
 static inline uint64_t ras_ccs_get_dram_addr(uint64_t addr)
 {
-	return (((((1ULL << 36)-1) << 9) & addr) >> 2) |
+	int xbits = ras_ccs_get_num_xbits();
+
+	return (((((1ULL << 36)-1) << 9) & addr) >> xbits) |
 	       (0x7f & addr);
 }
 
@@ -193,7 +218,9 @@ static inline uint64_t ras_ccs_get_dram_addr(uint64_t addr)
  */
 static inline int ras_ccs_find_lmc(uint64_t address)
 {
-	return (address >> 7) & 0x3;
+	int xbits = ras_ccs_get_num_xbits();
+
+	return (address >> 7) & ((0x1 << xbits)-1);
 }
 
 /**
@@ -289,21 +316,21 @@ uint64_t ras_ccs_reverse_lmc_hash(uint64_t _pa_no_lr_hash,
  * Convert an LMC address into a Physical Address used coreside
  * this tries conversion within a single translation region
  *
- * @param addr_data	Data used to decode the LMC Address
+ * @param ccs_data	Data used to decode the LMC Address
  *
  * @return  on success	Physical address coressponding to the LMC address
  *          on failure	-1
  */
 uint64_t ras_ccs_convert_lmc_to_pa_algorithm(
-				struct ras_ccs_addr_conversion_data *addr_data)
+				struct ras_ccs_addr_conversion_data *ccs_data)
 {
-	uint64_t pre_offset     = addr_data->addr;
-	int region		= addr_data->ASC_REGION;
-	int ASC_MD_LR_BIT       = addr_data->ASC_MD_LR_BIT;
-	uint64_t ASC_MD_LR_EN   = addr_data->ASC_MD_LR_EN;
-	int ASC_LMC_MASK        = addr_data->ASC_LMC_MASK;
-	int ASC_LMC_MODE        = addr_data->ASC_LMC_MODE;
-	int phys_lmc_mask       = addr_data->phys_lmc_mask;
+	uint64_t pre_offset     = ccs_data->addr;
+	int region              = ccs_data->ASC_REGION;
+	int ASC_MD_LR_BIT       = ccs_data->ASC_MD_LR_BIT;
+	uint64_t ASC_MD_LR_EN   = ccs_data->ASC_MD_LR_EN;
+	int ASC_LMC_MASK        = ccs_data->ASC_LMC_MASK;
+	int ASC_LMC_MODE        = ccs_data->ASC_LMC_MODE;
+	int phys_lmc_mask       = ccs_data->phys_lmc_mask;
 
 	uint64_t pa_no_lr;
 	uint64_t pa_no_lr_hash = 0;
@@ -318,157 +345,197 @@ uint64_t ras_ccs_convert_lmc_to_pa_algorithm(
 	int MD_right_calculated;
 	int lmcquarter;
 	int pa_no_lr_hash_mod6;
+	int pa_no_lr_hash8 = 0;
 
 	debug2ras("Starting LMC to PA Conversion Algorithm\n");
-	debug2ras("region:%d pre_offset:0x%llx pmask:%x lmask:%x mode:%d\n",
-		region, pre_offset, phys_lmc_mask, ASC_LMC_MASK, ASC_LMC_MODE);
+	debug2ras("%-40s: 0x%016lx\n", "pre_offset", (long)pre_offset);
 
 	/* check if lmcmask and ASC LMC MASK intersect if not this region
 	 * isn't mapped to this ASC
 	 */
 	if ((phys_lmc_mask & ASC_LMC_MASK) == 0) {
-		debug_ras("LMC mask 0x%x Does not Fit into ASC%d LMC_MASK %x\n",
+		debug_ras("LMC mask 0x%x can't Fit into ASC %d LMC_MASK 0x%x\n",
 			  phys_lmc_mask, region, ASC_LMC_MASK);
 		return -1;
 	}
 
-	switch (ASC_LMC_MODE) {
+	if (ccs_data->t98_cfg) {
+		MD_right = ccs_data->abs_lmc & 0x1;
+		switch (ASC_LMC_MODE) {
+		case CAVM_CCS_LMC_MODE_E_FLAT_1:
+			pa_no_lr_hash = pre_offset << 8;
+			debug2ras("%-40s: 0x%016lx\n", "pa_no_lr_hash",
+				  (long)pa_no_lr_hash);
+			break;
+		case CAVM_CCS_LMC_MODE_E_STRIPE_2:
+			if (ASC_LMC_MASK == 0x3)                    //LMC01
+				pa_no_lr_hash8 = phys_lmc_mask & 0x1 ? 0 : 1;
+			else if (ASC_LMC_MASK == 0x5)               //LMC02
+				pa_no_lr_hash8 = phys_lmc_mask & 0x1 ? 0 : 1;
+			else if (ASC_LMC_MASK == 0x6)               //LMC12
+				pa_no_lr_hash8 = phys_lmc_mask & 0x2 ? 0 : 1;
+			pa_no_lr_hash = ((pre_offset << 1) | pa_no_lr_hash8)
+					<< 8;
 
-	case CAVM_CCS_LMC_MODE_E_FLAT_1:
-		MD_right = pre_offset & 0x1;
-		/* right shift by 1 to get bits 34:1
-		 * and left shift by 8 to move bits to [41:8]
-		 */
-		pa_no_lr_hash = (pre_offset >> 1);
-		pa_no_lr_hash <<= 8;
-		/* Drop pa_no_lr_hash[42] */
-		pa_no_lr_hash &= ((1ULL << 41) - 1);
-
-		debug2ras("%-40s: %d\n", "MD_right", MD_right);
-		debug2ras("%-40s: 0x%016llx\n", "pa_no_lr_hash", pa_no_lr_hash);
+			debug2ras("%-40s: %d\n", "pa_no_lr_hash8",
+				  pa_no_lr_hash8);
+			debug2ras("%-40s: 0x%016lx\n", "pa_no_lr_hash",
+				  (long)pa_no_lr_hash);
 		break;
 
-	case CAVM_CCS_LMC_MODE_E_STRIPE_2:
-		pa_no_lr_hash = pre_offset << 8;
-		/* if phys_lmc_mask is LMC0 MD_right is 1 if it is LMC1
-		 * MD_right is 0
-		 */
-		if (ASC_LMC_MASK == 0x3)                    /* LMC01 */
-			MD_right = phys_lmc_mask & 0x1 ? 1 : 0;
-		/* if phys_lmc_mask is LMC0 MD_right is 1 if it is LMC2
-		 * MD_right is 0
-		 */
-		else if (ASC_LMC_MASK == 0x5)               /* LMC02 */
-			MD_right = phys_lmc_mask & 0x1 ? 1 : 0;
-		/* if phys_lmc_mask is LMC2 MD_right is 1 if it is LMC1
-		 * MD_right is 0
-		 */
-		else if (ASC_LMC_MASK == 0x6)               /* LMC12 */
-			MD_right = phys_lmc_mask & 0x4 ? 1 : 0;
-
-		debug2ras("%-40s: %d\n", "MD_right", MD_right);
-		debug2ras("%-40s: 0x%016llx\n", "pa_no_lr_hash", pa_no_lr_hash);
-		break;
-
-	case CAVM_CCS_LMC_MODE_E_STRIPE_3:
-		lmcquarter = pre_offset & 0x3;
-		pa_no_lr_hash_mod6 = 0;
-
-		/* Determine pa_no_lr_hash_mod6 and MD_right based upon which
-		 * LMC the addr came from and the LMC quarter
-		 */
-		if (phys_lmc_mask == 0x1) {     /* LMC0 */
-			MD_right = 1;
-			if (lmcquarter == 0x0)
-				pa_no_lr_hash_mod6 = 0;
-			else if (lmcquarter == 0x1)
-				pa_no_lr_hash_mod6 = 0x3;
-			else if (lmcquarter == 0x2)
-				pa_no_lr_hash_mod6 = 0x5;
-			else if (lmcquarter == 0x3) {
-				pa_no_lr_hash_mod6 = 0x1;
-				MD_right = 0;
-			} else {
-				ERROR("Unsupported lmc, lmcquarter: %x %x\n",
-					  phys_lmc_mask, lmcquarter);
-				return -1;
-			}
-		} else if (phys_lmc_mask == 0x2) { /* LMC1 */
-			MD_right = 0;
-			if (lmcquarter == 0x0)
-				pa_no_lr_hash_mod6 = 0;
-			else if (lmcquarter == 0x1)
-				pa_no_lr_hash_mod6 = 0x2;
-			else if (lmcquarter == 0x2)
-				pa_no_lr_hash_mod6 = 0x3;
-			else if (lmcquarter == 0x3)
-				pa_no_lr_hash_mod6 = 0x4;
-			else {
-				ERROR("Unsupported lmc, lmcquarter: %x %x\n",
-					  phys_lmc_mask, lmcquarter);
-				return -1;
-			}
-		} else if (phys_lmc_mask == 0x4) { /* LMC2 */
-			MD_right = 1;
-			if (lmcquarter == 0x0)
-				pa_no_lr_hash_mod6 = 0x1;
-			else if (lmcquarter == 0x1)
-				pa_no_lr_hash_mod6 = 0x2;
-			else if (lmcquarter == 0x2)
-				pa_no_lr_hash_mod6 = 0x4;
-			else if (lmcquarter == 0x3) {
-				pa_no_lr_hash_mod6 = 0x5;
-				MD_right = 0;
-			} else {
-				ERROR("Unsupported lmc, lmcquarter: %x %x\n",
-					  phys_lmc_mask, lmcquarter);
-				return -1;
-			}
+		case CAVM_CCS_LMC_MODE_E_STRIPE_3:
+			pa_no_lr_hash = (pre_offset*3 + phys_lmc_mask/2) << 8;
+			debug2ras("%-40s: 0x%016lx\n", "pa_no_lr_hash",
+				  (long)pa_no_lr_hash);
+			break;
+		default:
+			debug2ras("Unsupported lmc_mode: %x\n", ASC_LMC_MODE);
+			return -1;
 		}
+	} else {
+		switch (ASC_LMC_MODE) {
+		case CAVM_CCS_LMC_MODE_E_FLAT_1:
+			MD_right = pre_offset & 0x1;
+			//right shift by 1 to get bits 34:1
+			//and left shift by 8 to move bits to [41:8]
+			pa_no_lr_hash = (pre_offset >> 1);
+			pa_no_lr_hash <<= 8;
+			pa_no_lr_hash &= ((1ULL << 41) - 1);
 
-		pa_no_lr_hash = (((pre_offset >> 2) * 6) +
-						pa_no_lr_hash_mod6) << 8;
-
-		debug2ras("%-40s: %d\n", "lmcquarter", lmcquarter);
-		debug2ras("%-40s: 0x%x\n", "pa_no_lr_hash_mod6",
-			  pa_no_lr_hash_mod6);
-		debug2ras("%-40s: %d\n", "MD_right", MD_right);
-		debug2ras("%-40s: 0x%016llx\n", "pa_no_lr_hash", pa_no_lr_hash);
-
+			debug2ras("%-40s: %d\n", "MD_right", MD_right);
+			debug2ras("%-40s: 0x%016lx\n", "pa_no_lr_hash",
+				  (long)pa_no_lr_hash);
 		break;
 
-	default:
-		debug_ras("Unsupported lmc_mode: %x\n", ASC_LMC_MODE);
-		return -1;
+		case CAVM_CCS_LMC_MODE_E_STRIPE_2:
+			pa_no_lr_hash = (pre_offset << 8);
+			/*
+			 * if phys_lmc_mask is LMC0 MD_right is 1
+			 * if it is LMC1 MD_right is 0
+			 */
+			if (ASC_LMC_MASK == 0x3)                    //LMC01
+				MD_right = phys_lmc_mask & 0x1 ? 1 : 0;
+			/*
+			 * if phys_lmc_mask is LMC0 MD_right is 1
+			 * if it is LMC2 MD_right is 0
+			 */
+			else if (ASC_LMC_MASK == 0x5)               //LMC02
+				MD_right = phys_lmc_mask & 0x1 ? 1 : 0;
+			/*
+			 * if phys_lmc_mask is LMC2 MD_right is 1
+			 * if it is LMC1 MD_right is 0
+			 */
+			else if (ASC_LMC_MASK == 0x6)               //LMC12
+				MD_right = phys_lmc_mask & 0x4 ? 1 : 0;
+
+			debug2ras("%-40s: %d\n", "MD_right", MD_right);
+			debug2ras("%-40s: 0x%016lx\n", "pa_no_lr_hash",
+				  (long)pa_no_lr_hash);
+			break;
+
+		case CAVM_CCS_LMC_MODE_E_STRIPE_3:
+			lmcquarter = pre_offset & 0x3;
+			pa_no_lr_hash_mod6 = 0;
+
+			/*
+			 * Determine pa_no_lr_hash_mod6 and MD_right based upon
+			 * which LMC the addr came from and the LMC quarter
+			 */
+			if (phys_lmc_mask == 0x1) {     //LMC0
+				MD_right = 1;
+				if (lmcquarter == 0x0)
+					pa_no_lr_hash_mod6 = 0;
+				else if (lmcquarter == 0x1)
+					pa_no_lr_hash_mod6 = 0x3;
+				else if (lmcquarter == 0x2)
+					pa_no_lr_hash_mod6 = 0x5;
+				else if (lmcquarter == 0x3) {
+					pa_no_lr_hash_mod6 = 0x1;
+					MD_right = 0;
+				} else {
+					debug_ras("ERROR: Unsupported lmc, "
+						  "lmcquarter: %x %x\n",
+						  phys_lmc_mask, lmcquarter);
+					return -1;
+				}
+			} else if (phys_lmc_mask == 0x2) {  //LMC1
+				MD_right = 0;
+				if (lmcquarter == 0x0)
+					pa_no_lr_hash_mod6 = 0;
+				else if (lmcquarter == 0x1)
+					pa_no_lr_hash_mod6 = 0x2;
+				else if (lmcquarter == 0x2)
+					pa_no_lr_hash_mod6 = 0x3;
+				else if (lmcquarter == 0x3)
+					pa_no_lr_hash_mod6 = 0x4;
+				else {
+					debug_ras("ERROR: Unsupported lmc, "
+						  "lmcquarter: %x %x\n",
+						  phys_lmc_mask, lmcquarter);
+					return -1;
+				}
+			} else if (phys_lmc_mask == 0x4) {  //LMC2
+				MD_right = 1;
+				if (lmcquarter == 0x0)
+					pa_no_lr_hash_mod6 = 0x1;
+				else if (lmcquarter == 0x1)
+					pa_no_lr_hash_mod6 = 0x2;
+				else if (lmcquarter == 0x2)
+					pa_no_lr_hash_mod6 = 0x4;
+				else if (lmcquarter == 0x3) {
+					pa_no_lr_hash_mod6 = 0x5;
+					MD_right = 0;
+				} else {
+					debug_ras("ERROR: Unsupported lmc, "
+						  "lmcquarter: %x %x\n",
+						  phys_lmc_mask, lmcquarter);
+					return -1;
+				}
+			}
+
+			pa_no_lr_hash = (((pre_offset >> 2) * 6) +
+					 pa_no_lr_hash_mod6) << 8;
+
+			debug2ras("%-40s: %d\n", "lmcquarter", lmcquarter);
+			debug2ras("%-40s: 0x%x\n", "pa_no_lr_hash_mod6",
+				  pa_no_lr_hash_mod6);
+			debug2ras("%-40s: %d\n", "MD_right", MD_right);
+			debug2ras("%-40s: 0x%016lx\n", "pa_no_lr_hash",
+				  (long)pa_no_lr_hash);
+
+			break;
+
+		default:
+			debug_ras("Unsupported lmc_mode: %x\n", ASC_LMC_MODE);
+			return -1;
+		}
 	}
 
 	pa_no_lr = ras_ccs_reverse_lmc_hash(pa_no_lr_hash,
-					    addr_data->ASC_MCS_EN);
-	debug2ras("%-40s: 0x%016llx\n", "pa_no_lr", pa_no_lr);
+					    ccs_data->ASC_MCS_EN);
+	debug2ras("%-40s: 0x%016lx\n", "pa_no_lr", (long)pa_no_lr);
 	if (pa_no_lr == (uint64_t)-1) {
-		debug_ras("No Valid LMC Hash Combinations Work"
-			  " for lmc%0d address: 0x%016llx.\n",
-			  phys_lmc_mask, pre_offset);
+		debug_ras("No Valid LMC Hash Combinations Work for lmc%0d "
+			  "address: %0lx.\n", phys_lmc_mask, (long)pre_offset);
 		return -1;
 	}
 
-	/* left mask */
+	//left mask
 	left_mask = ((1ULL << (42 - (ASC_MD_LR_BIT + 7))) - 1) <<
-							(ASC_MD_LR_BIT + 8);
+		    (ASC_MD_LR_BIT + 8);
 
-	/* right mask */
+	//right mask
 	right_mask = (1ULL << (ASC_MD_LR_BIT + 8)) - 1;
 
-	debug2ras("%-40s: 0x%llx\n", "left_mask", left_mask);
-	debug2ras("%-40s: 0x%llx\n", "right_mask", right_mask);
+	debug2ras("%-40s: 0x%lx\n", "left_mask", (long)left_mask);
+	debug2ras("%-40s: 0x%lx\n", "right_mask", (long)right_mask);
 
-	/* pa_no_lr is currently bits 42:0 but bits 7:0 are left as 0 */
+	//pa_no_lr is currently bits 42:0 but bits 7:0 are left as 0
 	pa = (pa_no_lr & left_mask) | ((pa_no_lr & right_mask) >> 1);
 
-	debug2ras("%-40s: 0x%016llx\n", "pre_pa", pa);
+	debug2ras("%-40s: 0x%016lx\n", "pre_pa", (long)pa);
 
 	MD_right_calculated = __rxor((ASC_MD_LR_EN << 7) & pa) ^ MD_mirror;
-
 	if (MD_right == MD_right_calculated)
 		lrbit = 0;
 	else
@@ -476,8 +543,64 @@ uint64_t ras_ccs_convert_lmc_to_pa_algorithm(
 
 	gen_addr = (pa | lrbit << (ASC_MD_LR_BIT + 7));
 
-	debug2ras("Generated Addr: 0x%016llx\n", gen_addr);
+	debug2ras("Generated Addr: 0x%016lx\n", (long)gen_addr);
 	return gen_addr;
+}
+
+static int prep_done /* = 0 */;
+static struct ras_ccs_addr_conversion_data  ccs_data;
+
+static int ras_ccs_do_prep(void)
+{
+	int i, region;
+
+	if (!prep_done) {
+
+		//memset(&ccs_data, 0, sizeof(bdk_ccs_addr_conversion_data_t));
+
+		CSR_INIT(adr_ctl, CAVM_CCS_ADR_CTL);
+		ccs_data.ASC_MD_LR_BIT =   adr_ctl.s.md_lr_bit;
+		ccs_data.ASC_MD_LR_EN =    adr_ctl.s.md_lr_en;
+
+		//T98 hashing algorithm is different
+		ccs_data.t98_cfg = cavm_is_model(OCTEONTX_CN98XX);
+
+		for (i = 0; i < 4; i++)
+			ccs_data.ASC_MCS_EN[i] = CSR_READ(CAVM_CCS_ADR_MCSX(i));
+
+		// extract the ASC region info
+		CSR_INIT(ccs_const, CAVM_CCS_CONST);
+		int max_regions = ccs_const.s.asc;
+
+		int idx = 0;
+
+		for (region = 0; region < max_regions; region++) {
+
+			//Check if the ASC Region is Enabled or not
+			CSR_INIT(region_attr,
+				 CAVM_CCS_ASC_REGIONX_ATTR(region));
+			if ((region_attr.s.s_en == 0) &&
+			    (region_attr.s.ns_en == 0))
+				continue; //Region is disabled, go to the next
+
+			ccs_data.rgn_idx_to_id[idx] = region; // added by ATF
+			// record the region's info
+			ccs_data.regions_lmc_mode[idx] = region_attr.s.lmc_mode;
+			ccs_data.regions_lmc_mask[idx] = region_attr.s.lmc_mask;
+			CSR_INIT(start,  CAVM_CCS_ASC_REGIONX_START(region));
+			CSR_INIT(end,    CAVM_CCS_ASC_REGIONX_END(region));
+			CSR_INIT(offset, CAVM_CCS_ASC_REGIONX_OFFSET(region));
+			ccs_data.regions_start[idx]  = start.u;
+			ccs_data.regions_end[idx]    = end.u + (1UL << 24);
+			ccs_data.regions_offset[idx] = offset.u;
+
+			idx++; // count it
+		}
+		ccs_data.num_regions = idx;
+
+		prep_done = 1;
+	}
+	return 0;
 }
 
 /**
@@ -497,93 +620,100 @@ static uint64_t ras_ccs_convert_lmc_to_pa(uint64_t _lmc_addr,
 				int *r_p, int *s_p, int *ns_p)
 {
 	int region;
+	uint64_t phys_addr;
 	uint64_t internal_lmc_addr;
 	int found_good_addr = 0;
 	uint64_t final_phys_addr = 0;
 	int lmc;
-	int MAX_ASCS;
-	union cavm_ccs_const ccs_const;
-	struct ras_ccs_addr_conversion_data addr_data;
 
 	debug2ras("Starting LMC to PA Conversion\n");
-	memset(&addr_data, 0, sizeof(struct ras_ccs_addr_conversion_data));
 
+	/* added by ATF */
 	if (s_p)
 		*s_p = 0;
 	if (ns_p)
 		*ns_p = 0;
 
-	for (int mcs = 0; mcs < 4; mcs++)
-		addr_data.ASC_MCS_EN[mcs] = CSR_READ(CAVM_CCS_ADR_MCSX(mcs));
+	ras_ccs_do_prep();
 
-	debug2ras("Original LMC ADDR: 0x%016llx\n", _lmc_addr);
+	debug2ras("Original LMC ADDR: 0x%016lx\n", (long)_lmc_addr);
+
 	lmc = ras_ccs_find_lmc(_lmc_addr);
 	internal_lmc_addr = ras_ccs_get_dram_addr(_lmc_addr);
-	addr_data.phys_lmc_mask = 0x1 << lmc;
-	debug2ras("ADDR: 0x%016llx LMC origin: %d\n", internal_lmc_addr, lmc);
 
-	/* Find number of ASC regions on this chip */
-	ccs_const.u = CSR_READ(CAVM_CCS_CONST);
-	MAX_ASCS = ccs_const.s.asc;
+	if (ccs_data.t98_cfg) {
+		ccs_data.phys_lmc_mask = 0x1 << (lmc/2);
+		ccs_data.lrbit = lmc & 0x1;
+		ccs_data.abs_lmc = lmc; // Include absolute LMC number for t98
+	} else
+		ccs_data.phys_lmc_mask = 0x1 << lmc;
 
-	for (region = 0; region < MAX_ASCS; region++) {
-		union cavm_ccs_asc_regionx_attr attr;
-		union cavm_ccs_adr_ctl adr_ctl;
-		union cavm_ccs_asc_regionx_offset offset;
-		uint64_t phys_addr;
+	debug2ras("ADDR: 0x%016lx LMC origin: %d\n", (long)internal_lmc_addr,
+		  lmc);
 
-		attr.u = CSR_READ(CAVM_CCS_ASC_REGIONX_ATTR(region));
-
-		/* check if region is enabled & populated */
-		if (!(attr.s.ns_en | attr.s.s_en))
-			continue;
-		if (!attr.s.lmc_mask)
-			continue;
-
-		debug2ras("ASC_R%d: Checking Conversion from LMC to PA\n",
+	for (region = 0; region < ccs_data.num_regions; region++) {
+		// every counted region is enabled
+		debug2ras("ASC%d: Checking Conversion from LMC to PA\n",
 			  region);
-		adr_ctl.u = CSR_READ(CAVM_CCS_ADR_CTL);
-		addr_data.ASC_MD_LR_BIT = adr_ctl.s.md_lr_bit;
-		addr_data.ASC_MD_LR_EN = adr_ctl.s.md_lr_en;
-		addr_data.ASC_LMC_MASK = attr.s.lmc_mask;
-		addr_data.ASC_LMC_MODE = attr.s.lmc_mode;
-		addr_data.ASC_REGION = region;
-		addr_data.addr = internal_lmc_addr /
-				    CACHE_WRITEBACK_GRANULE;
 
-		phys_addr = ras_ccs_convert_lmc_to_pa_algorithm(
-							&addr_data);
-		if (phys_addr == (uint64_t) -1) {
+		ccs_data.ASC_REGION = region;
+		ccs_data.ASC_LMC_MASK = ccs_data.regions_lmc_mask[region];
+		ccs_data.ASC_LMC_MODE = ccs_data.regions_lmc_mode[region];
+
+		ccs_data.addr = internal_lmc_addr /
+			CACHE_WRITEBACK_GRANULE; /* i.e. BDK_CACHE_LINE_SIZE */
+
+		phys_addr = ras_ccs_convert_lmc_to_pa_algorithm(&ccs_data);
+		if (phys_addr == (uint64_t)-1) {
 			debug_ras("ASC%d: Failed to Convert LMC to Phys Addr\n",
 				  region);
 			continue;
+		} else {
+			int rgn_id;
+			uint64_t scaled_offset =
+					ccs_data.regions_offset[region];
+			if (scaled_offset != 0) {
+				switch (ccs_data.ASC_LMC_MODE) {
+				case 0: /* CAVM_CCS_LMC_MODE_E_FLAT_1 */
+					scaled_offset <<= 24; // 16 MB units
+					break;
+				case 2: /* CAVM_CCS_LMC_MODE_E_STRIPE_2 */
+					scaled_offset <<= 25 ; // 32 MB units
+					break;
+				case 3: /* CAVM_CCS_LMC_MODE_E_STRIPE_3 */
+					scaled_offset *= 3;
+					scaled_offset <<= 24; // 48 MB units
+					break;
+				}
+			}
+
+			/* added by ATF */
+			rgn_id = ccs_data.rgn_idx_to_id[region];
+			CSR_INIT(region_attr,
+				 CAVM_CCS_ASC_REGIONX_ATTR(rgn_id));
+			if (r_p)
+				*r_p = rgn_id;
+			if (region_attr.s.s_en && s_p)
+				*s_p = 1;
+			if (region_attr.s.ns_en && ns_p)
+				*ns_p = 1;
+
+			final_phys_addr = (phys_addr - scaled_offset) &
+					  ((1ULL << 42) - 1);
+			found_good_addr++;
+			debug2ras("ASC%d: Found Phys Addr: 0x%016lx\n", region,
+				  (long)final_phys_addr);
+			break; // FIXME? no further checking now for overlap/etc
 		}
-		offset.u = CSR_READ(
-				CAVM_CCS_ASC_REGIONX_OFFSET(region));
-		phys_addr += (offset.s.offset << 17);
-		debug_ras("ASC%d: Found Phys Addr: 0x%016llx\n",
-			  region, phys_addr);
-
-		if (r_p)
-			*r_p = region;
-		if (attr.s.s_en && s_p)
-			*s_p = 1;
-		if (attr.s.ns_en && ns_p)
-			*ns_p = 1;
-
-		/* duplicate translations are OK */
-		if (found_good_addr && final_phys_addr == phys_addr)
-			continue;
-		found_good_addr++;
-		final_phys_addr = phys_addr;
 	}
 
 	if (found_good_addr == 1)
-		return final_phys_addr;
-	else if (found_good_addr > 1)
-		ERROR("LMC->PA ECC decode non-unique DRAM address\n");
+		return final_phys_addr; // ATF; bdk_numa_get_address(...);
+	if (found_good_addr > 1)
+		debug_ras("ERROR FOUND ALIASING!\n");
 	else
-		ERROR("ECC LMC->PA maps to no DRAM address\n");
+		debug_ras("ERROR UNABLE TO FIND PHYS ADDR!\n");
+	//printf("CCS Decode - LMC to PA returned -1\n");
 	return -1;
 }
 
