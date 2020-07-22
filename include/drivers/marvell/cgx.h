@@ -156,7 +156,7 @@ enum cgx_prbs_cmd {
 
 /* enum declaration for FEC */
 typedef enum cgx_fec_type {
-	CGX_FEC_NONE,
+	CGX_FEC_NONE = 0,
 	CGX_FEC_BASE_R,
 	CGX_FEC_RS
 } fec_type_t;

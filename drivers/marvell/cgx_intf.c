@@ -1217,13 +1217,19 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 			if (lmac->mode_idx == QLM_MODE_1G_X)
 				lmac->sgmii_1000x_mode = 1;
 
-			/* Check FEC capability and update FEC for mode.
+			/* Check FEC capability (If PHY present, check for
+			 * line_fec, and if PHY not present, check for
+			 * fec) and update FEC for mode.
 			 * If current LMAC's FEC doesn't match the mode's
 			 * capability, disable FEC
 			 */
-			if (!(lmac->fec & cgx_get_fec_for_speed(qlm_mode)))
-				lmac->fec = CGX_FEC_NONE;
-
+			if (lmac->phy_present) {
+				if (!(lmac->line_fec & cgx_get_fec_for_speed(qlm_mode)))
+					lmac->line_fec = CGX_FEC_NONE;
+			} else {
+				if (!(lmac->fec & cgx_get_fec_for_speed(qlm_mode)))
+					lmac->fec = CGX_FEC_NONE;
+			}
 			lmac->mode = lmac_type;
 			qlm = lmac->qlm + lmac->shift_from_first;
 			gserx = lmac->gserx + lmac->shift_from_first;
@@ -2374,6 +2380,8 @@ void cgx_fw_intf_init(void)
 				if (lmac_cfg->lmac_enable) {
 					cgx_check_for_presence_of_phy(cgx, lmac);
 					if (lmac_cfg->phy_present) {
+						lmac_cfg->line_fec = lmac_cfg->fec;
+						lmac_cfg->fec = CGX_FEC_NONE;
 						/* If PHY is present, look up for PHY
 						 * driver and init
 						 */
@@ -2384,6 +2392,8 @@ void cgx_fw_intf_init(void)
 							phy_probe(cgx, lmac);
 							lmac_cfg->phy_config.init = 1;
 						}
+					} else {
+						lmac_cfg->line_fec = CGX_FEC_NONE;
 					}
 					/* Enable LMAC */
 					cgx_lmac_init_link(cgx, lmac);

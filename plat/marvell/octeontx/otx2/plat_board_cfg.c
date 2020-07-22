@@ -1939,13 +1939,7 @@ static void octeontx2_cgx_lmacs_check_linux(const void *fdt,
 		 * same qlm mode.
 		 */
 		if (!cgx_read_flash_fec(cgx_idx, lmac_idx, &req_fec)) {
-			if (lmac->phy_present) {
-				lmac->line_fec = req_fec;
-				lmac->fec = CGX_FEC_NONE;
-			} else {
-				lmac->fec = req_fec;
-				lmac->line_fec = CGX_FEC_NONE;
-			}
+			lmac->fec = req_fec;
 		} else {
 			/* Handle FEC types.
 			 * octeontx, fec-type : Host side of PHY/CGX
