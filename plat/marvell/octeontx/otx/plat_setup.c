@@ -38,10 +38,10 @@ void plat_pwrc_setup(void)
 	octeontx_legacy_pwrc_setup();
 }
 
-void plat_setup_psci_ops(uintptr_t sec_entrypoint,
+int plat_setup_psci_ops(uintptr_t sec_entrypoint,
 			 const plat_psci_ops_t **psci_ops)
 {
-	octeontx_legacy_setup_psci_ops(sec_entrypoint, psci_ops);
+	return octeontx_legacy_setup_psci_ops(sec_entrypoint, psci_ops);
 }
 
 /*

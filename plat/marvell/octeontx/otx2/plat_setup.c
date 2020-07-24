@@ -174,19 +174,19 @@ void plat_pwrc_setup(void)
 #endif
 }
 
-void plat_setup_psci_ops(uintptr_t sec_entrypoint,
+int plat_setup_psci_ops(uintptr_t sec_entrypoint,
 			 const plat_psci_ops_t **psci_ops)
 {
 #ifdef SCMI_WITH_LEGACY_PM
 	/*
 	 * Always use legacy PSCI ops
 	 */
-	octeontx_legacy_setup_psci_ops(sec_entrypoint, psci_ops);
+	return octeontx_legacy_setup_psci_ops(sec_entrypoint, psci_ops);
 #else
 	if (scmi_handle == NULL) {
-		octeontx_legacy_setup_psci_ops(sec_entrypoint, psci_ops);
+		return octeontx_legacy_setup_psci_ops(sec_entrypoint, psci_ops);
 	} else {
-		octeontx_setup_psci_ops(sec_entrypoint, psci_ops);
+		return octeontx_setup_psci_ops(sec_entrypoint, psci_ops);
 	}
 #endif
 }
