@@ -13,6 +13,7 @@
 #include <octeontx_common.h>
 #include <cgx_intf.h>
 #include <cgx.h>
+#include <plat/common/platform.h>
 #include <plat_pwrc.h>
 #include <octeontx_legacy_pwrc.h>
 #include <gpio_octeontx.h>
@@ -32,7 +33,7 @@
 #include "cavm-csrs-fusf.h"
 #include "cavm-csrs-gpio.h"
 
-static int disable_ooo;
+static uint64_t disable_ooo_mask;
 
 extern void plat_armtrace_init(void);
 /* Any SoC family specific setup
@@ -251,16 +252,13 @@ int plat_get_altpkg(void)
 }
 
 /*
- * Return to enable/disable OOO
+ * Return to enable/disable OOO mask
  *
- * @return non-zero to diable OOO
+ * @return cpu core mask on disable OOO
  */
-int plat_get_ooo_status(void)
+uint64_t plat_get_ooo_status(void)
 {
-	if (disable_ooo)
-		return 1;
-	else
-		return 0;
+	return disable_ooo_mask;
 }
 
 void plat_octeontx_cpu_setup(void)
@@ -349,7 +347,7 @@ void plat_octeontx_cpu_setup(void)
 	unset_bit(cvmmemctl0_el1, 18);
 
 	/* Disable/enable OOO */
-	if (plat_get_ooo_status())
+	if (plat_get_ooo_status() & (1UL << plat_my_core_pos()))
 		set_bit(cvmctl_el1, 44);
 	else
 		unset_bit(cvmctl_el1, 44);
@@ -366,14 +364,14 @@ void plat_octeontx_cpu_setup(void)
 	write_cvm_access_el3(read_cvm_access_el3() & ~(1 << 8));
 }
 
-int octeontx2_configure_ooo(int x1)
+int octeontx2_configure_ooo(uint64_t x1)
 {
 	uint64_t cvmctl_el1;
 
-	disable_ooo = x1 ? 1 : 0;
+	disable_ooo_mask = x1;
 
 	cvmctl_el1 = read_cvmctl_el1();
-	if (disable_ooo)
+	if (disable_ooo_mask & (1UL << plat_my_core_pos()))
 		set_bit(cvmctl_el1, 44);
 	else
 		unset_bit(cvmctl_el1, 44);
