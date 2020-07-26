@@ -9,6 +9,7 @@
 #include <common/runtime_svc.h>
 #include <drivers/marvell/cache_llc.h>
 #include <drivers/marvell/mochi/ap_setup.h>
+#include <drivers/rambus/trng_ip_76.h>
 #include <lib/smccc.h>
 
 #include <marvell_plat_priv.h>
@@ -41,6 +42,9 @@
 #define MV_SIP_DFX		0x82000014
 #define MV_SIP_DDR_PHY_WRITE	0x82000015
 #define MV_SIP_DDR_PHY_READ	0x82000016
+
+/* TRNG */
+#define MV_SIP_RNG_64		0xC200FF11
 
 #define MAX_LANE_NR		6
 #define MVEBU_COMPHY_OFFSET	0x441000
@@ -76,6 +80,7 @@ uintptr_t mrvl_sip_smc_handler(uint32_t smc_fid,
 			       u_register_t flags)
 {
 	u_register_t ret, read, x5 = x1;
+	uint32_t w2[2] = {0, 0};
 	int i;
 
 	debug("%s: got SMC (0x%x) x1 0x%lx, x2 0x%lx, x3 0x%lx\n",
@@ -159,6 +164,9 @@ uintptr_t mrvl_sip_smc_handler(uint32_t smc_fid,
 		read = 0;
 		ret = mvebu_ddr_phy_read(x1, (uint16_t *)&read);
 		SMC_RET2(handle, ret, read);
+	case MV_SIP_RNG_64:
+		ret = eip76_rng_get_random((uint8_t *)&w2, 4 * (x1 % 2 + 1));
+		SMC_RET3(handle, ret, w2[0], w2[1]);
 	default:
 		ERROR("%s: unhandled SMC (0x%x)\n", __func__, smc_fid);
 		SMC_RET1(handle, SMC_UNK);
