@@ -287,7 +287,10 @@ static int cgx_update_flash_lmac_params(int cgx_id, int lmac_id, int cmd,
 			ptr->s.mod_type = lmac->phy_config.mod_type;
 		}
 		ptr->s.fec_invalid = 0;
-		ptr->s.fec_type = lmac->fec;
+		if (lmac->phy_present)
+			ptr->s.fec_type = lmac->line_fec;
+		else
+			ptr->s.fec_type = lmac->fec;
 	}
 	if (cmd == IGNORE)
 		ptr->s.ignore = (arg & 0x1) ? 0 : 1;
