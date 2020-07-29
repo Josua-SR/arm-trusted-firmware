@@ -1917,7 +1917,8 @@ static void octeontx2_cgx_lmacs_check_linux(const void *fdt,
 
 		/* Enable SFP management only for LIO3 & LOKI EBB board */
 		if ((!strncmp(plat_octeontx_bcfg->bcfg.board_model, "cn33", 4))
-			|| (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504n", 8))) {
+			|| (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504n", 8))
+			|| (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504mm", 9))) {
 			/* Check for sfp-slot info */
 			sfp_offset = octeontx2_fdt_lookup_phandle(fdt,
 						lmac_offset, sfpname);
