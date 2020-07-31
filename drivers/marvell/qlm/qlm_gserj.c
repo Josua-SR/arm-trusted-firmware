@@ -27,7 +27,6 @@ static uint64_t prbs_errors[8][2];
 /**
  * Function to return the number of lanes in the SERDES group
  *
- * @param node   Node to query
  * @param module Index into GSER* group
  *
  * @return Number of lanes (2,4)
@@ -41,7 +40,6 @@ static int get_num_lanes(int module)
 /**
  * Get the SERDES state
  *
- * @param node   Node to query
  * @param qlm	Index into GSER* group
  * @param lane   Lane in GSER*
  *
@@ -84,7 +82,6 @@ int qlm_gserj_measure_refclock(int qlm)
 /**
  * Put a QLM into hardware reset
  *
- * @param node   Node to use in a numa setup
  * @param qlm	QLM to use
  *
  * @return Zero on success, negative on failure
@@ -102,7 +99,6 @@ int qlm_gserj_reset(int qlm)
 /**
  * Enable PRBS on a QLM
  *
- * @param node   Node to use in a numa setup
  * @param qlm	QLM to use
  * @param prbs   PRBS mode (31, etc)
  * @param dir	Directions to enable. This is so you can enable TX and later
@@ -110,7 +106,7 @@ int qlm_gserj_reset(int qlm)
  *
  * @return Zero on success, negative on failure
  */
-int _qlm_gserj_enable_prbs(int qlm, int prbs, qlm_direction_t dir, int qlm_lane)
+int qlm_gserj_enable_prbs(int qlm, int prbs, qlm_direction_t dir, int qlm_lane)
 {
 	int pattern = 1;
 	uint64_t user_defined[4] = { 0, 0, 0, 0 };
@@ -254,12 +250,11 @@ int _qlm_gserj_enable_prbs(int qlm, int prbs, qlm_direction_t dir, int qlm_lane)
 /**
  * Disable PRBS on a QLM
  *
- * @param node   Node to use in a numa setup
  * @param qlm	QLM to use
  *
  * @return Zero on success, negative on failure
  */
-int _qlm_gserj_disable_prbs(int qlm, int qlm_lane)
+int qlm_gserj_disable_prbs(int qlm, int qlm_lane)
 {
 	int num_lanes = get_num_lanes(qlm);
 	for (int lane = 0; lane < num_lanes; lane++)
@@ -285,14 +280,13 @@ int _qlm_gserj_disable_prbs(int qlm, int qlm_lane)
 /**
  * Return the number of PRBS errors since PRBS started running
  *
- * @param node   Node to use in numa setup
  * @param qlm	QLM to use
  * @param lane   Which lane
  * @param clear  Clear counter after return the current value
  *
  * @return Number of errors
  */
-uint64_t _qlm_gserj_get_prbs_errors(int qlm, int lane, int clear)
+uint64_t qlm_gserj_get_prbs_errors(int qlm, int lane, int clear)
 {
 	GSER_CSR_INIT(status, CAVM_GSERJX_LNX_BIST_RX_STATUS(qlm, lane));
 	switch (status.s.state)
@@ -341,7 +335,6 @@ uint64_t _qlm_gserj_get_prbs_errors(int qlm, int lane, int clear)
 /**
  * Inject an error into PRBS
  *
- * @param node   Node to use in numa setup
  * @param qlm	QLM to use
  * @param lane   Which lane
  */
@@ -392,14 +385,13 @@ void qlm_gserj_inject_prbs_error(int qlm, int lane)
  * Implementation of NED Loopback with Internal BIST PRBS Generator/Checker.
  * Based on CNF95XX_B0_GSERJ_Programming_v1p2.pdf
  *
- * @param node
  * @param module
  * @param lane
  * @param enable
  *
  * @return Zero on success, negative on failure
  */
-static int qlm_gserj_ned_loopback(int module, int lane, bool enable)
+int qlm_gserj_ned_loopback(int module, int lane, bool enable)
 {
 	/* Skip running if we aren't changing anything */
 	GSER_CSR_INIT(dpl_rxdp_ctrl1, CAVM_GSERJX_LNX_TOP_DPL_RXDP_CTRL1(module, lane));
@@ -726,13 +718,12 @@ static int qlm_gserj_ned_loopback(int module, int lane, bool enable)
 /**
  * Implementation of Far-End Analog (FEA) Loopback
  *
- * @param node
  * @param module
  * @param lane
  *
  * @return Zero on success, negative on failure
  */
-static int qlm_gserj_fea_loopback(int module, int lane, bool enable)
+int qlm_gserj_fea_loopback(int module, int lane, bool enable)
 {
 	/* Skip running if we aren't changing anything */
 	GSER_CSR_INIT(afe_loopback_ctrl, CAVM_GSERJX_LNX_TOP_AFE_LOOPBACK_CTRL(module, lane));
@@ -814,7 +805,6 @@ static int qlm_gserj_fea_loopback(int module, int lane, bool enable)
 /**
  * Enable shallow loopback on a QLM
  *
- * @param node   Node to use in a numa setup
  * @param qlm	QLM to use
  * @param loop   Type of loopback. Not all QLMs support all modes
  *
@@ -840,7 +830,6 @@ int qlm_gserj_enable_loop(int qlm, qlm_loop_t loop)
 /**
  * Configure the TX tuning parameters for a QLM lane
  *
- * @param node	   Node to configure
  * @param qlm		QLM to configure
  * @param lane	   Lane to configure
  * @param tx_swing   Transmitter Main (C0) equalizer tap coefficient value.
@@ -918,7 +907,6 @@ int qlm_gserj_tune_lane_tx(int qlm, int lane, int tx_swing, int tx_cpre, int tx_
 /**
  * Get the TX tuning parameters for a QLM lane
  *
- * @param node	   Node to configure
  * @param qlm		QLM to configure
  * @param lane	   Lane to configure
  * @param tx_swing   Transmitter Main (C0) equalizer tap coefficient value.
@@ -972,13 +960,12 @@ static unsigned int gray2binary(unsigned int num)
 /**
  * Display the current settings of a QLM lane
  *
- * @param node	 Node the QLM is on
  * @param qlm	  QLM to display
  * @param qlm_lane Lane to use
  * @param show_tx  Display TX parameters
  * @param show_rx  Display RX parameters
  */
-void _qlm_gserj_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_rx, char *buf, int size)
+void qlm_gserj_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_rx, char *buf, int size)
 {
 	#define printf(...) \
 	do {                                                            \
@@ -1094,7 +1081,6 @@ void _qlm_gserj_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_
 /**
  * Issue a mailbox command to the serdes firmware
  *
- * @param node   Node to access
  * @param qlm	QLM to access
  * @param cmd	Command to issue
  * @param args   Arguments to command. LSB = arg0, MSB = arg7
@@ -1138,7 +1124,6 @@ static int mailbox_command(int qlm, uint8_t cmd, uint64_t args)
 /**
  * Read a mailbox response from the serdes firmware
  *
- * @param node   Node to access
  * @param qlm	QLM to access
  * @param arg0   First 8 arguments of the response. LSB = data0, MSB = data7
  * @param arg1   Second 8 arguments of the response. LSB = data8, MSB = data15
@@ -1199,7 +1184,6 @@ static int mailbox_response(int qlm, uint64_t *arg0, uint64_t *arg1)
 /**
  * Clean the mailbox to the serdes firmware
  *
- * @param node   Node to access
  * @param qlm	QLM to access
  *
  * @return Zero on success, negative on failure
@@ -1231,7 +1215,6 @@ static int mailbox_cleanup(int qlm)
 
 typedef struct
 {
-	gser_node_t node;
 	int qlm;
 	int lane;
 	int ber;
@@ -1276,7 +1259,6 @@ static uint64_t get_eye_sample(eye_temp_state_t *s)
  * Capture an eye diagram for the given QLM lane. The output data is written
  * to "eye".
  *
- * @param node	  Node to use in numa setup
  * @param qlm	   QLM to use
  * @param qlm_lane  Which lane
  * @param show_data Set to non-zero to have the eye capture dump the raw eye data as
@@ -1285,7 +1267,7 @@ static uint64_t get_eye_sample(eye_temp_state_t *s)
  *
  * @return Zero on success, negative on failure
  */
-int _qlm_gserj_eye_capture(int qlm, int lane, int show_data, qlm_eye_t *eye_data)
+int qlm_gserj_eye_capture(int qlm, int lane, int show_data, qlm_eye_t *eye_data)
 {
 	int x_min = 0;
 	int x_max = 127;

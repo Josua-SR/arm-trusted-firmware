@@ -79,7 +79,7 @@ static int _get_gserx(int cgx_id, int qlm)
 {
 	int gserx;
 	if (cgx_id == CGX_FAKE_ID)
-		gserx = qlm;
+		gserx = qlm + CGX_FAKE_ID;
 	else
 		gserx = plat_otx2_get_gserx(qlm, NULL);
 
