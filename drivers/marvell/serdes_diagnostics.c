@@ -527,3 +527,73 @@ int cgx_display_serdes_settings(int qlm, int qlm_lane, int show_data)
 
 	return CGX_DISPLAY_OK;
 }
+
+/*
+ * Apply Serdes TX tuning parameters to the passed QLM and Lane in the QLM.
+ */
+int cgx_smc_set_serdes_tune(int qlm, int lane, int tx_swing, int tx_pre_post)
+{
+	int gserx, i;
+	int cgx_id = -1;
+	const qlm_ops_t *qlm_ops;
+
+	if (lane == -1)
+		i = 0;
+	else
+		i = lane;
+
+	cgx_id = _get_cgx_id(qlm, i);
+	if (cgx_id  == -1)
+		return -1;
+
+	qlm_ops = _get_qlm_ops(cgx_id);
+	if (qlm_ops == NULL)
+		return -1;
+
+	gserx = _get_gserx(cgx_id, qlm);
+
+	if (lane == -1) {
+		int max_lane = plat_octeontx_scfg->qlm_max_lane_num[qlm];
+		/* Apply tuning to all lanes in the given qlm */
+		for (i = 0; i < max_lane; i++) {
+			qlm_ops->qlm_tune_lane_tx(gserx, i, tx_swing,
+				tx_pre_post >> 8, tx_pre_post & 0xff, -1, -1);
+		}
+	} else {
+		qlm_ops->qlm_tune_lane_tx(gserx, lane, tx_swing,
+			tx_pre_post >> 8, tx_pre_post & 0xff, -1, -1);
+	}
+
+	return 0;
+}
+
+/*
+ * Configure Serdes in NED (type = 2) loopback or FEA (type = 1) loopback
+ * or disable serdes loopback for normal operation.
+ */
+int cgx_smc_set_serdes_loop(int qlm, int lane, int type)
+{
+	int gserx;
+	int cgx_id = -1;
+	const qlm_ops_t *qlm_ops;
+
+	cgx_id = _get_cgx_id(qlm, lane);
+	if (cgx_id  == -1)
+		return -1;
+
+	qlm_ops = _get_qlm_ops(cgx_id);
+	if (qlm_ops == NULL)
+		return -1;
+
+	gserx = _get_gserx(cgx_id, qlm);
+
+	/* Enable/Disable NED loopback */
+	if (type == 0) {
+		qlm_ops->qlm_ned_loopback(gserx, lane, 0);
+		qlm_ops->qlm_fea_loopback(gserx, lane, 0);
+	} else if (type == 1)
+		qlm_ops->qlm_fea_loopback(gserx, lane, 1);
+	else
+		qlm_ops->qlm_ned_loopback(gserx, lane, 1);
+	return 0;
+}

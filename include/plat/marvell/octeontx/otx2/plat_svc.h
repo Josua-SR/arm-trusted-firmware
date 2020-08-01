@@ -79,8 +79,32 @@
  */
 #define PLAT_OCTEONTX_SERDES_DBG_PRBS		0xc2000d07
 
+/*
+ * x1 - qlm
+ * x2 - lane
+ * x3 - tx_swing
+ * x4 - tx_pre
+ * x5 - tx_post
+ * Return:
+ *	x0:
+ *		0x0 -- Success
+ *		0x2 -- Fail
+ */
+#define PLAT_OCTEONTX_SERDES_DBG_SET_CONF	0xc2000d08
+
+/*
+ * x1 - qlm
+ * x2 - lane
+ * x3 - flags
+ * Return:
+ *	x0:
+ *		0x0 -- Success
+ *		0x2 -- Fail
+ */
+#define PLAT_OCTEONTX_SERDES_DBG_SET_LOOP	0xc2000d09
+
 /* Number of family specific SMCs */
-#define OTX2_NUM_SMC_CALLS			11
+#define OTX2_NUM_SMC_CALLS			12
 
 /* API that allows to define platform specific SMC CALLS */
 uintptr_t otx2_svc_smc_handler(uint32_t smc_fid,

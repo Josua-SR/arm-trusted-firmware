@@ -91,6 +91,17 @@ uintptr_t plat_octeontx_svc_smc_handler(uint32_t smc_fid,
 
 		SMC_RET1(handle, ret);
 		break;
+
+	case PLAT_OCTEONTX_SERDES_DBG_SET_CONF:
+		ret = cgx_smc_set_serdes_tune(x1, x2, x3, x4);
+		SMC_RET1(handle, ret);
+		break;
+
+	case PLAT_OCTEONTX_SERDES_DBG_SET_LOOP:
+		ret = cgx_smc_set_serdes_loop(x1, x2, x3);
+		SMC_RET1(handle, ret);
+		break;
+
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 
 	default:
