@@ -82,7 +82,7 @@ void sh_fwdata_init(void)
 		fwdata->vf_macs[i] = 0;
 
 	/* Init PF MAC address; Skip PF 0 used as AF */
-	for (i = 1; i < pf_mac_num; i++) {
+	for (i = 1; i <= pf_mac_num; i++) {
 		if (i >= PF_MACNUM_MAX)
 			break;
 		fwdata->pf_macs[i] = pf_mac;
