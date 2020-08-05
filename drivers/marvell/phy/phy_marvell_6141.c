@@ -28,7 +28,15 @@
 #include "mydHwSerdesCntl.h"
 #include "mydFEC.h"
 
-MYD_DEV marvell_6141_priv[MAX_CGX];
+typedef struct {
+	MYD_DEV myd_dev;
+#define STATE_DOWN       0
+#define STATE_UP         1
+#define STATE_CONFIGURED 2
+	int state;
+} priv_6141_t;
+
+priv_6141_t marvell_6141_priv[MAX_CGX];
 
 static MYD_STATUS myd_read_mdio(MYD_DEV_PTR pDev, MYD_U16 mdioPort,
 				MYD_U16 mmd, MYD_U16 reg, MYD_U16 *value)
@@ -368,6 +376,8 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 				     line_mode, mode_option,
 				     &result);
 	if (status == MYD_OK) {
+		priv_6141_t *priv_6141;
+
 		if (host_mode == MYD_P25YN) {
 			/* Hack the 6141's P25YN mode to make its 25GBASE-R2 PCS
 			 * conform to the T9x's "implementation" of 25GBASE-R2
@@ -384,11 +394,85 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 			myd_write_mdio(phy->priv, phy->addr,
 					31, 0xF003, 0x0080);
 		}
+
+		priv_6141 = phy->priv;
+		priv_6141->state = STATE_CONFIGURED;
 		return;
 	}
 
 	ERROR("%s: %d:%d mydSetModeSelection() failed, lane=%hu, result=%hu\n",
 	      __func__, cgx_id, lmac_id, lane, result);
+}
+
+static MYD_BOOL host_side_has_block_lock(phy_config_t *phy)
+{
+	MYD_U16 value = 0;
+
+#define BASE_R_STATUS_1 0x1020
+	myd_read_mdio(phy->priv, phy->addr, MYD_HOST_SIDE, BASE_R_STATUS_1,
+		      &value);
+
+#define BLOCK_LOCK_MASK 1
+	if (value & BLOCK_LOCK_MASK)
+		return MYD_TRUE;
+
+	return MYD_FALSE;
+}
+
+static void check_for_host_side_link_flap(int cgx_id, int lmac_id,
+					  int line_side_is_up)
+{
+	cgx_lmac_config_t *lmac_cfg;
+	priv_6141_t *priv_6141;
+	phy_config_t *phy;
+	int *state;
+
+	lmac_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
+	phy = &lmac_cfg->phy_config;
+	priv_6141 = phy->priv;
+	state = &priv_6141->state;
+
+	switch (*state) {
+	case STATE_DOWN:
+		if (line_side_is_up) {
+			if (host_side_has_block_lock(phy))
+				*state = STATE_UP;
+		}
+		break;
+
+	case STATE_UP:
+		if (line_side_is_up) {
+			if (host_side_has_block_lock(phy)) {
+				/* Remain at STATE_UP */
+			} else {
+				/* Host-side link flap detected.  Reconfig the
+				 * PHY.  This will cause host-side RX adaptation
+				 * to be executed again.  Tests show that this
+				 * results in better subsequent performance of
+				 * the host-side RX equalizer, and no repeated
+				 * link flapping.
+				 */
+				debug_phy_driver("%d:%d 6141 PHY host-side link flap detected.\n",
+						 cgx_id, lmac_id);
+				phy_marvell_6141_config(cgx_id, lmac_id);
+				/* The above PHY config function already assigns
+				 * STATE_CONFIGURED to "*state", so we don't
+				 * need to explicitly do the assignment here.
+				 * Besides getting called from this state
+				 * machine, phy_marvell_6141_config() can get
+				 * called from elsewhere.
+				 */
+			}
+		} else {
+			*state = STATE_DOWN;
+		}
+		break;
+
+	case STATE_CONFIGURED:
+	default:
+		*state = STATE_DOWN;
+		break;
+	}
 }
 
 void phy_marvell_6141_get_link_status(int cgx_id, int lmac_id,
@@ -420,6 +504,10 @@ void phy_marvell_6141_get_link_status(int cgx_id, int lmac_id,
 		      __func__, cgx_id, lmac_id, lane);
 		return;
 	}
+
+	if (lmac_cfg->mode_idx == QLM_MODE_50GAUI_2_C2C)
+		check_for_host_side_link_flap(cgx_id, lmac_id,
+					      statusDetail.lineCurrent);
 
 	if (currentStatus != MYD_LINK_UP)
 		return;
