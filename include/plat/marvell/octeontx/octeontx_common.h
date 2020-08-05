@@ -107,7 +107,7 @@ static inline int octeontx_llc_lock(uint64_t phys_addr, uint64_t size)
 
 	while (size) {
 		/* Ensure cache block is allocated in LLC for this address */
-		*(uint8_t *)phys_addr = 0x0;
+		*(volatile uint8_t *)phys_addr = *(volatile uint8_t *)phys_addr;
 		CACHE_LCK_L2(phys_addr);
 		phys_addr += CACHE_WRITEBACK_GRANULE;
 		size -= CACHE_WRITEBACK_GRANULE;
