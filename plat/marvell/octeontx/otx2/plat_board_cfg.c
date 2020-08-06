@@ -2585,6 +2585,46 @@ static void octeontx2_fill_show_smi_flag(const void *fdt)
 	}
 }
 
+static void octeontx2_fill_timer_ms(const void *fdt)
+{
+	int offset, val = 0;
+	const uint32_t *reg;
+
+	/* By default, update timer to 1s */
+	plat_octeontx_bcfg->timer1_ms = 1000;
+	plat_octeontx_bcfg->timer2_ms = 1000;
+
+	if (fdt_check_header(fdt))
+		return;
+
+	offset = fdt_path_offset(fdt, "/cgx_poll_timer");
+	if (offset > 0) {
+		reg = (fdt_getprop(fdt, offset, "cmd_timer",
+				NULL));
+		if (reg) {
+			val = fdt32_to_cpu(*reg);
+			/* If the timer frequency is less than 200ms
+			 * default to 1s.
+			 */
+			if (val >= 200)
+				plat_octeontx_bcfg->timer1_ms = val;
+		}
+
+		reg = (fdt_getprop(fdt, offset, "link_mgmt_timer",
+				NULL));
+		if (reg) {
+			val = fdt32_to_cpu(*reg);
+			/* If the timer frequency is less than 200ms
+			 * default to 1s.
+			 */
+			if (val >= 200)
+				plat_octeontx_bcfg->timer2_ms = val;
+		}
+	} else
+		WARN("%s: Not able to find cgx_poll_timer offset %d\n", __func__,
+			offset);
+}
+
 int plat_octeontx_fill_board_details(void)
 {
 	const void *fdt = fdt_ptr;
@@ -2615,6 +2655,8 @@ int plat_octeontx_fill_board_details(void)
 	octeontx2_fill_twsi_slave_details(fdt);
 
 	octeontx2_fill_show_smi_flag(fdt);
+
+	octeontx2_fill_timer_ms(fdt);
 
 	return 0;
 }

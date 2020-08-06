@@ -2421,11 +2421,13 @@ void cgx_fw_intf_init(void)
 	}
 
 	/* start with 1 timer to handle & process CGX requests */
-	cgx_timers[0] = timer_create(TM_PERIODIC, 1000, cgx_handle_requests_cb);
+	cgx_timers[0] = timer_create(TM_PERIODIC, plat_octeontx_bcfg->timer1_ms,
+					cgx_handle_requests_cb);
 	timer_start(cgx_timers[0]);
 
-	/* start 2nd timer to peridically poll for link status */
-	cgx_timers[1] = timer_create(TM_PERIODIC, 1000, cgx_poll_for_link_cb);
+	/* start 2nd timer to periodically poll for link status */
+	cgx_timers[1] = timer_create(TM_PERIODIC, plat_octeontx_bcfg->timer2_ms,
+					cgx_poll_for_link_cb);
 	timer_start(cgx_timers[1]);
 }
 
