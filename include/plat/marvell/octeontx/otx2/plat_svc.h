@@ -29,6 +29,13 @@
  *	0x2 -- Fail
  */
 #define PLAT_OCTEONTX_OOO_CONFIG	0xc2000b04
+/*
+ * x1 - wfe mask
+ * Return:
+ *	0x0 -- Success
+ *	0x2 -- Fail
+ */
+#define PLAT_OCTEONTX_WFE_CONFIG	0xc2000b06
 
 /*
  * No input
@@ -117,6 +124,7 @@ uintptr_t otx2_svc_smc_handler(uint32_t smc_fid,
 			       u_register_t flags);
 
 int octeontx2_configure_ooo(uint64_t x1);
+int octeontx2_configure_wfe(uint64_t x1);
 
 #endif /* __PLAT_SVC_H__ */
 

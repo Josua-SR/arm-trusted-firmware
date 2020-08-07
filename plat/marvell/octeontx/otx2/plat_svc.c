@@ -65,6 +65,12 @@ uintptr_t plat_octeontx_svc_smc_handler(uint32_t smc_fid,
 		SMC_RET1(handle, ret);
 		break;
 
+	case PLAT_OCTEONTX_WFE_CONFIG:
+		INFO("SVC WFE CONFIG: x1 = 0x%lx\n", x1);
+		ret = octeontx2_configure_wfe(x1);
+		SMC_RET1(handle, ret);
+		break;
+
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
 	case PLAT_OCTEONTX_SERDES_DBG_GET_EYE:
 		ret = cgx_display_eye(x1, x2, x3);

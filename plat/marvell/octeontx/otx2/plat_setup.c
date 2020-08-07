@@ -35,6 +35,7 @@
 #include "cavm-csrs-gpio.h"
 
 static uint64_t disable_ooo_mask;
+static uint64_t enable_wfe_mask;
 
 extern void plat_armtrace_init(void);
 /* Any SoC family specific setup
@@ -306,10 +307,21 @@ uint64_t plat_get_ooo_status(void)
 	return disable_ooo_mask;
 }
 
+/*
+ * Return to enable/disable WFE mask
+ *
+ * @return cpu core mask on enabel/disable WFE
+ */
+uint64_t plat_get_wfe_status(void)
+{
+	return enable_wfe_mask;
+}
+
 void plat_octeontx_cpu_setup(void)
 {
 	uint64_t cvmctl_el1, cvmmemctl0_el1, cvmmemctl1_el1, cvmmemctl2_el1;
 	uint64_t cvmctl2_el1, midr;
+	int core = plat_my_core_pos();
 
 	cvmctl_el1 = read_cvmctl_el1();
 	cvmctl2_el1 = read_cvmctl2_el1();
@@ -345,8 +357,11 @@ void plat_octeontx_cpu_setup(void)
 	 */
 	set_bit(cvmctl_el1, 61);
 
-	/* Errata AP-38511 : Disable WFE */
-	set_bit(cvmctl_el1, 34);
+	/* Errata AP-38511 : Disable/Enable WFE */
+	if (plat_get_wfe_status() & (1UL << core))
+		unset_bit(cvmctl_el1, 34);
+	else
+		set_bit(cvmctl_el1, 34);
 
 	set_bit(cvmmemctl1_el1, 3); /* Enable LMTST */
 	set_bit(cvmmemctl1_el1, 4); /* Enable SSO/PKO addr region */
@@ -392,7 +407,7 @@ void plat_octeontx_cpu_setup(void)
 	unset_bit(cvmmemctl0_el1, 18);
 
 	/* Disable/enable OOO */
-	if (plat_get_ooo_status() & (1UL << plat_my_core_pos()))
+	if (plat_get_ooo_status() & (1UL << core))
 		set_bit(cvmctl_el1, 44);
 	else
 		unset_bit(cvmctl_el1, 44);
@@ -420,6 +435,23 @@ int octeontx2_configure_ooo(uint64_t x1)
 		set_bit(cvmctl_el1, 44);
 	else
 		unset_bit(cvmctl_el1, 44);
+
+	write_cvmctl_el1(cvmctl_el1);
+
+	return 0;
+}
+
+int octeontx2_configure_wfe(uint64_t x1)
+{
+	uint64_t cvmctl_el1;
+
+	enable_wfe_mask = x1;
+
+	cvmctl_el1 = read_cvmctl_el1();
+	if (enable_wfe_mask & (1UL << plat_my_core_pos()))
+		unset_bit(cvmctl_el1, 44);
+	else
+		set_bit(cvmctl_el1, 44);
 
 	write_cvmctl_el1(cvmctl_el1);
 
