@@ -721,13 +721,6 @@ static struct ras_dram_lmc_map *ras_dram_get_lmc_map(int lmc)
 				.valid = 0 };
 			plat_lmc_map[2] = (struct ras_dram_lmc_map) {
 				.lmc = 2, .mcc = 0, .lmcoe = 1, .valid = 1 };
-		} else if (cavm_is_model(OCTEONTX_LOKI)) {
-			plat_lmc_map[0] = (struct ras_dram_lmc_map) {
-				.lmc = 0, .mcc = 0, .lmcoe = 0, .valid = 1 };
-			plat_lmc_map[1] = (struct ras_dram_lmc_map) {
-				.valid = 0 };
-			plat_lmc_map[2] = (struct ras_dram_lmc_map) {
-				.lmc = 2, .mcc = 0, .lmcoe = 1, .valid = 1 };
 		} else {
 			ERROR("RAS support mis-configured for this chip.\n");
 		}

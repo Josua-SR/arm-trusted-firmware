@@ -15,14 +15,6 @@
 /* Definitions of SGI IRQs (range 0-7 NS, 8-15 Secure) */
 #define SGI_IRQ_OFFSET			0x0
 
-#define IRQ_SEC_SGI(x)		((SGI_IRQ_OFFSET) + 8 + (x))
-
-/* SGI used for SDEI signaling */
-#if SDEI_SUPPORT
-#define SDEI_SGI_IRQS		1
-#define SDEI_SGI_IRQ		IRQ_SEC_SGI(0)
-#endif
-
 /* Definitions of IRQ PPI (Per-Processor Interrupt) IDs (range 0x10 - 0x1f) */
 #define PPI_IRQ_OFFSET			0x10
 
