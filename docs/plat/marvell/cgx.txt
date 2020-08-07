@@ -1535,7 +1535,7 @@ Replace argument ``0xXXXXXXX`` from the below table for the corresponding mode.
      - 0x200000
    * - 8
      - CGX_MODE_25G_C2C
-     - ETHTOOL_LINK_MODE_10000BaseCR_Full_BIT
+     - ETHTOOL_LINK_MODE_25000BaseCR_Full_BIT
      - 0x40000000000
    * - 9
      - CGX_MODE_25G_C2M
