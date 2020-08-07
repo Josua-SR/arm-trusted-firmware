@@ -14,6 +14,7 @@
 #include <cgx_intf.h>
 #include <cgx.h>
 #include <plat/common/platform.h>
+#include <plat_otx2_configuration.h>
 #include <plat_pwrc.h>
 #include <octeontx_legacy_pwrc.h>
 #include <gpio_octeontx.h>
@@ -72,6 +73,50 @@ void plat_octeontx_setup(void)
 
 	/* otx2 trace init */
 	plat_armtrace_init();
+}
+
+unsigned int is_pem_in_ep_mode(int pem)
+{
+	cavm_pemx_cfg_t pemx_cfg;
+	cavm_pemx_on_t pemx_on;
+
+	/* Check pemon and hostmd bits of PEM for EP mode */
+	pemx_on.u = CSR_READ(CAVM_PEMX_ON(pem));
+	pemx_cfg.u = CSR_READ(CAVM_PEMX_CFG(pem));
+	if (pemx_on.cn9.pemon && !pemx_cfg.cn9.hostmd)
+		return 1;
+
+	return 0;
+}
+
+/*
+ * Program REVID for SDP RVU PF
+ */
+unsigned int plat_configure_sdp_rid(void)
+{
+	uint64_t midr;
+	int pem;
+
+	midr = read_midr();
+
+	if (IS_OCTEONTX_PN(midr, T98PARTNUM)) {
+		/* check which PEM is in EP */
+		for (pem = 0; pem < plat_octeontx_get_pem_count(); pem++) {
+			if (is_pem_in_ep_mode(pem))
+				break;
+		}
+
+		/* return revision as 0 to indicate SDP0
+		 * and 1 to indicate SDP1
+		 */
+		return pem / 2;
+
+	} else if (IS_OCTEONTX_PN(midr, T96PARTNUM) ||
+		   IS_OCTEONTX_PN(midr, LOKIPARTNUM)) {
+		return 0;
+	}
+
+	return 0;
 }
 
 /*

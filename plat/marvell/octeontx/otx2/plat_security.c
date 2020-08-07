@@ -15,6 +15,7 @@
 #include <octeontx_security.h>
 #include <octeontx_dram.h>
 #include <octeontx_utils.h>
+#include <plat_otx2_configuration.h>
 
 #include "cavm-csrs-ap.h"
 #include "cavm-csrs-ccs.h"
@@ -423,8 +424,6 @@ void octeontx_configure_pem_ep_security(int pem, int secure)
 	int domain_idx;
 	int strm_ns, phys_ns;
 	uint32_t streamid;
-	cavm_pemx_cfg_t pemx_cfg;
-	cavm_pemx_on_t pemx_on;
 	cavm_smmux_s_gbpa_t s_gbpa;
 
 	switch (MIDR_PARTNUM(read_midr())) {
@@ -436,11 +435,7 @@ void octeontx_configure_pem_ep_security(int pem, int secure)
 		else
 			break;
 
-		pemx_on.u = CSR_READ(CAVM_PEMX_ON(pem));
-		pemx_cfg.u = CSR_READ(CAVM_PEMX_CFG(pem));
-
-		/* if PEM0 disabled or in RC mode, exit */
-		if (!pemx_on.cn9.pemon || pemx_cfg.cn9.hostmd)
+		if (!is_pem_in_ep_mode(pem))
 			break;
 
 		strm_ns = !secure; /* set according to caller's request */

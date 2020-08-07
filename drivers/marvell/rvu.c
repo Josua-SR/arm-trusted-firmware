@@ -202,17 +202,10 @@ static void octeontx_init_rvu_lmac(int *hwvf, int rvu, cgx_config_t *cgx,
 /* Return true if any PEM is in EP mode */
 static int octeontx_is_in_ep_mode(void)
 {
-	cavm_pemx_cfg_t pemx_cfg;
-	cavm_pemx_on_t pemx_on;
-	int pem, pem_num;
+	int pem;
 
-	pem_num = plat_octeontx_get_pem_count();
-
-	for (pem = 0; pem < pem_num; pem++) {
-		/* Check pemon and hostmd bits of PEM0 for EP mode */
-		pemx_on.u = CSR_READ(CAVM_PEMX_ON(pem));
-		pemx_cfg.u = CSR_READ(CAVM_PEMX_CFG(pem));
-		if (pemx_on.cn9.pemon && !pemx_cfg.cn9.hostmd)
+	for (pem = 0; pem < plat_octeontx_get_pem_count(); pem++) {
+		if (is_pem_in_ep_mode(pem))
 			return 1;
 	}
 
