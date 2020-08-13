@@ -2621,8 +2621,7 @@ static void octeontx2_fill_timer_ms(const void *fdt)
 				plat_octeontx_bcfg->timer2_ms = val;
 		}
 	} else
-		WARN("%s: Not able to find cgx_poll_timer offset %d\n", __func__,
-			offset);
+		debug_dts("%s: Not able to find cgx_poll_timer node, using 1sec as default\n", __func__);
 }
 
 int plat_octeontx_fill_board_details(void)
