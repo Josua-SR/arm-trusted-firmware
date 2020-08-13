@@ -258,7 +258,7 @@ static const char *octeontx2_first_substring(const char *str1,
 
 	while (*str1 != '\0') {
 		if (*str1 == *str2) {
-			strlcpy(temp_str, str1, strlen(str2));
+			strlcpy(temp_str, str1, sizeof(temp_str));
 			temp_str[strlen(str2)] = '\0';
 			if (strcmp(temp_str, str2) == 0)
 				return str1;
