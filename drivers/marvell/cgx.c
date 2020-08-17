@@ -1343,7 +1343,7 @@ static int cgx_an_hcd_check(int cgx_id, int lmac_id, int training_fail)
 /* Wait for autoneg to complete.  If autoneg fails
  * return -1
  */
-static int cgx_autoneg_wait(int cgx_id, int lmac_id)
+static int cgx_autoneg_wait(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ctx)
 {
 	int still_negotiating = 1;
 	bool anpage_rcvd = false;
@@ -1401,8 +1401,12 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id)
 			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
 	anpage_timeout = init_time + CGX_POLL_AN_PAGE_STATUS *
 			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
-	an_signal_timeout = init_time + CGX_POLL_AN_RX_SIGNAL *
-			gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+	if (!lmac_ctx->s.link_enable)
+		an_signal_timeout = init_time + CGX_POLL_AN_RX_SIGNAL_LONG *
+				gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
+	else
+		an_signal_timeout = init_time + CGX_POLL_AN_RX_SIGNAL_SHORT *
+				gser_clock_get_rate(GSER_CLOCK_TIME)/1000000;
 
 	if (is_gsern) {
 		while (still_negotiating &&
@@ -2602,7 +2606,7 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_
 				goto restart_an;
 			}
 		} else {
-			if (cgx_autoneg_wait(cgx_id, lmac_id)) {
+			if (cgx_autoneg_wait(cgx_id, lmac_id, lmac_ctx)) {
 				debug_cgx("%s:%d:%d: AN failed, Restarting AN.\n",
 					__func__, cgx_id, lmac_id);
 				goto restart_an;
