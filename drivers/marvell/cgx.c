@@ -2444,61 +2444,84 @@ static int cgx_complete_sw_an(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_
 	 * 96XX Ax/Bx (1.x). CGX will automatically complete link
 	 * training if AN HCD matches CGX config
 	 */
-	if (is_gsern && spux_an_ctl.s.an_arb_link_chk_en) {
-		/* Enable the SERDES Tx */
-		cgx_serdes_tx_control(cgx_id, lmac_id, true);
+	if (is_gsern) {
+		if (spux_an_ctl.s.an_arb_link_chk_en) {
+			/* Enable the SERDES Tx */
+			cgx_serdes_tx_control(cgx_id, lmac_id, true);
 
-		/* an_complete means both auto-neg and
-		 * link training (if enabled) were successful
-		 */
-		if (spux_int.s.an_complete) {
-			debug_cgx("%s:%d:%d: AN completed successfully\n",
-					__func__, cgx_id, lmac_id);
-			if (lmac->use_training)
-				debug_cgx("%s:%d:%d: Link training completed successfully\n",
-					__func__, cgx_id, lmac_id);
-		} else if (spux_int.s.an_link_good) {
-			/* AN LINK GOOD means we got a successful HCD match */
-			debug_cgx("%s:%d:%d: AN_LINK_GOOD\n",
-					__func__, cgx_id, lmac_id);
-
-			/* Check if link training failed */
-			if (spux_int.s.training_failure)
-				training_fail = 1;
-
-			/* Check auto-neg HCD to see if their is a CGX mismatch.
-			 * Function will restart auto-neg if training failed
+			/* an_complete means both auto-neg and
+			 * link training (if enabled) were successful
 			 */
-			ret = cgx_an_hcd_check(cgx_id, lmac_id, training_fail);
-			if (ret == -1)
-				return -1;
-			else if (ret == 1)
-				debug_cgx("%s:%d:%d: Auto-neg HCD mismatch detected\n",
-					__func__, cgx_id, lmac_id);
+			if (spux_int.s.an_complete) {
+				debug_cgx("%s:%d:%d: AN complete\n",
+						__func__, cgx_id, lmac_id);
+				if (lmac->use_training)
+					debug_cgx("%s:%d:%d: LT complete\n",
+						__func__, cgx_id, lmac_id);
+			} else if (spux_int.s.an_link_good) {
+				/* AN LINK GOOD - successful HCD match */
+				debug_cgx("%s:%d:%d: AN_LINK_GOOD\n",
+						__func__, cgx_id, lmac_id);
 
-			/* Wait for training to complete or fail */
-			if (!training_fail) {
-				if (cgx_link_training_wait(cgx_id, lmac_id))
+				/* Check if link training failed */
+				if (spux_int.s.training_failure)
 					training_fail = 1;
-			}
 
-			/* If link training fails restart AN */
-			if (training_fail) {
-				debug_cgx("%s:%d:%d: Link training failed, Restarting AN.\n",
-					__func__, cgx_id, lmac_id);
-				cgx_set_error_type(cgx_id, lmac_id,
-					CGX_ERR_TRAINING_FAIL);
-				goto restart_an;
+				/* Check auto-neg HCD to see if there
+				 * is a CGX mismatch. Function will
+				 * restart auto-neg if training failed
+				 */
+				ret = cgx_an_hcd_check(cgx_id, lmac_id,
+								training_fail);
+				if (ret == -1)
+					return -1;
+				else if (ret == 1)
+					debug_cgx("%s:%d:%d: AN HCD mismatch\n",
+						__func__, cgx_id, lmac_id);
+
+				/* Wait for training to complete or fail */
+				if (!training_fail) {
+					if (cgx_link_training_wait(cgx_id,
+								lmac_id))
+						training_fail = 1;
+				}
+
+				/* If link training fails restart AN */
+				if (training_fail) {
+					debug_cgx("%s:%d:%d: LT failed\n",
+						__func__, cgx_id, lmac_id);
+					cgx_set_error_type(cgx_id, lmac_id,
+						CGX_ERR_TRAINING_FAIL);
+					goto restart_an;
+				}
+			} else {
+				if (cgx_autoneg_wait(cgx_id, lmac_id,
+								lmac_ctx)) {
+					debug_cgx("%s:%d:%d: AN failed\n",
+						__func__, cgx_id, lmac_id);
+					goto restart_an;
+				}
+
+				if (cgx_link_training_wait(cgx_id, lmac_id)) {
+					debug_cgx("%s:%d:%d: LT failed\n",
+						__func__, cgx_id, lmac_id);
+					cgx_set_error_type(cgx_id, lmac_id,
+						CGX_ERR_TRAINING_FAIL);
+					goto restart_an;
+				}
 			}
-		} else {
+		} else { /* an_arb_link_chk_en = 0 */
+			/* Enable the SERDES Tx */
+			cgx_serdes_tx_control(cgx_id, lmac_id, true);
+
 			if (cgx_autoneg_wait(cgx_id, lmac_id, lmac_ctx)) {
-				debug_cgx("%s:%d:%d: AN failed, Restarting AN.\n",
+				debug_cgx("%s:%d:%d: AN failed, Restart AN.\n",
 					__func__, cgx_id, lmac_id);
 				goto restart_an;
 			}
 
 			if (cgx_link_training_wait(cgx_id, lmac_id)) {
-				debug_cgx("%s:%d:%d: Link training failed, Restarting AN.\n",
+				debug_cgx("%s:%d:%d: LT failed, Restart AN.\n",
 					__func__, cgx_id, lmac_id);
 				cgx_set_error_type(cgx_id, lmac_id,
 					CGX_ERR_TRAINING_FAIL);
