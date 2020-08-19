@@ -194,7 +194,7 @@ static int cgx_serdes_tx_control(int cgx_id, int lmac_id, bool enable_tx)
  * detects a signal on all associated GSER lanes
  * return 0 on successful signal detect, -1 on failed signal detect
  */
-static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
+static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ctx)
 {
 	int qlm, gserx, lane, num_lanes;
 	uint64_t lane_mask;
@@ -222,7 +222,10 @@ static int cgx_serdes_rx_signal_detect(int cgx_id, int lmac_id)
 		rx_signal_stable_us = 1;
 	} else {
 		rx_signal_detect_us = 10000;
-		rx_signal_stable_us = 10000;
+		if (!lmac_ctx->s.link_enable)
+			rx_signal_stable_us = 10000;
+		else
+			rx_signal_stable_us = 500;
 	}
 
 	lane = lmac->first_phy_lane;
@@ -1356,7 +1359,7 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ct
 				> an_signal_timeout))
 			break;
 
-		if (!cgx_serdes_rx_signal_detect(cgx_id, lmac_id))
+		if (!cgx_serdes_rx_signal_detect(cgx_id, lmac_id, lmac_ctx))
 			signal_detect = true;
 
 		/* Check if any AN pages are received */
@@ -3056,7 +3059,7 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ctx)
 		/* Check if SERDES Rx is detecting a signal
 		 * on all associated lanes
 		 */
-		if (cgx_serdes_rx_signal_detect(cgx_id, lmac_id)) {
+		if (cgx_serdes_rx_signal_detect(cgx_id, lmac_id, lmac_ctx)) {
 			debug_cgx("%s: %d:%d No SERDES Rx signal detected\n",
 					  __func__, cgx_id, lmac_id);
 			cgx_set_error_type(cgx_id, lmac_id,
@@ -3778,9 +3781,9 @@ int cgx_get_lane_count(int lmac_type)
 
 /*
  * Configure Rambus serdes in NED (Near End Digital) or FEA (Far End Analog)
- * loopback modes. 
+ * loopback modes.
  *    If type = 2, perform NED
- *       type = 1, perform FEA 
+ *       type = 1, perform FEA
  *       type = 0, disable serdes loopback
  */
 void cgx_set_serdes_loop(int cgx_id, int lmac_id, int type)
