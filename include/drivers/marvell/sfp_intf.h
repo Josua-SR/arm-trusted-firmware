@@ -8,7 +8,7 @@
 #ifndef __SFP_INTF_H__
 #define __SFP_INTF_H__
 
-#define MCP_ANLT_INTF_VER 0xABCD1234
+#define MCP_ANLT_INTF_VER 0xABCD1235
 #define SFP_MAX_EEPROM_SIZE    0x100
 
 /* Type of GPIO pin */
@@ -225,6 +225,20 @@ typedef enum async_req_id {
 	REQ_AN_LT_STOP,
 } async_req_id_t;
 
+typedef union mcp_an_dbg_state {
+	uint64_t u64;
+	struct mcp_an_dbg_state_s {
+		uint32_t fail_mode:2; /* fail mode (an, lt, link) */
+		uint32_t lt_fail_count:4;
+		uint32_t lnk_fail_count:4;
+		uint32_t fail_type:4; /* Detailed failure */
+		uint32_t err_cnt:22;  /* BER/ERR_BLK count */
+		uint32_t lt_time:10;  /* Link Training time in ms */
+		uint32_t lnk_time:14; /* Link time in ms */
+		uint32_t reserved:4;
+	} s;
+} mcp_an_dbg_state_t;
+
 typedef struct req_an_lt_args {
 	uint32_t gser_type; /* GSERR, GSERC... */
 	uint32_t gser_index;
@@ -233,8 +247,7 @@ typedef struct req_an_lt_args {
 	uint32_t an_master; /* Logical lane 0 */
 	uint32_t qlm;
 	uint32_t max_num_lanes;
-	uint32_t lt_fail_count;
-	uint32_t lnk_fail_count;
+	mcp_an_dbg_state_t mcp_an_dbg;
 	uint32_t qlm_mode; /*current/negotiated qlm_mode */
 	uint32_t lmac_type; /*current/negotiated lmac_type */
 	uint32_t fec_type; /*current/negotiated fec_type */
@@ -242,9 +255,36 @@ typedef struct req_an_lt_args {
 
 typedef struct async_req {
 	uint32_t req_id;
-	/* For ex: which GPIO pin to toggle, which page/byte of EEPROM to read */
+	/* For ex: which GPIO pin to toggle,
+	 * which page/byte of EEPROM to read
+	 */
 	uint32_t req_args;
 } async_req_t;
+
+typedef enum lnk_fail_type {
+	RCV_LNK_FAIL = 0,
+	LOCAL_FLT_FAIL,
+	ERR_BLKS_FAIL,
+	BER_CNT_FAIL,
+	REMOTE_FLT_FAIL,
+	STABLE_TIMEOUT,
+} lnk_fail_type_t;
+
+typedef enum an_fail_type {
+	UNSUPPORTED_TECH = 0,
+	INVALID_WIDTH,
+} an_fail_type_t;
+
+typedef enum lt_fail_type {
+	SERDES_TIMEOUT = 0,
+	SW_TIMEOUT,
+} lt_fail_type_t;
+
+typedef enum mcp_an_fail_mode {
+	LT_FAIL = 0,
+	LNK_FAIL = 1,
+	AN_FAIL = 2,
+} mcp_an_fail_mode_t;
 
 typedef enum an_lt_state {
 	AN_LT_NO_STATE = 0,
@@ -281,7 +321,7 @@ typedef struct async_context {
 	uint32_t req_stat;
 	/* to return any data if required as a response */
 	uint32_t data; /* state to be updated for REQ_AN_LT_GET_STATE */
-	uint32_t sig_detect; /* set to 1 when Rx Signal detected once during AN */
+	uint32_t sig_detect; /* set when Rx Signal detected once during AN */
 } async_context_t;
 
 typedef struct sfp_shared_data {
@@ -297,7 +337,8 @@ typedef struct sfp_shared_data {
 	sfp_context_t sfp_ctx;
 	uint32_t cgx_id;
 	uint32_t lmac_id;
-	async_req_an_lt_args_t an_lt_args;  /* Required parameters to process for Rambus AN/LT */
+	/* Required parameters to process for Rambus AN/LT */
+	async_req_an_lt_args_t an_lt_args;
 	/* Post Req to MCP async_req_id_t */
 	async_req_t async_req;
 	/* Context maintained for Async requests btw AP and MCP */

@@ -1337,16 +1337,16 @@ retry_acquire_lock:
 }
 
 /**
- * Check MCP AN/LT Failure type
+ * Get MCP AN/LT debug data
  *
- * @param qlm	  QLM to use
- * @param lane	  Which lane
- * @return 0 = LT failure, 1 = Link failure
+ * @param qlm	      QLM to use
+ * @param lane	      Which lane
+ * @param mcp_an_dbg  MCP AN/LT debug data
+ * @return 0 = success, -1 = failure
  */
-int mcp_get_fail_type(int cgx_id, int lmac_id)
+int mcp_get_an_lt_data(int cgx_id, int lmac_id, mcp_an_dbg_state_t *mcp_an_dbg)
 {
 	int retry_lock = 0;
-	int fail_type = 0;
 
 	sfp_shared_data_t *sh_data = sfp_get_sh_mem_ptr(cgx_id, lmac_id);
 
@@ -1369,13 +1369,8 @@ retry_acquire_lock:
 					sh_data->async_ctx.lock);
 		return -1;
 	}
-
-	if (sh_data->an_lt_args.lnk_fail_count >= MCP_LINK_FAIL_MAX)
-		fail_type = 1;
-	else
-		fail_type = 0;
-
-	return fail_type;
+	*mcp_an_dbg = sh_data->an_lt_args.mcp_an_dbg;
+	return 0;
 }
 
 /**
@@ -1389,7 +1384,7 @@ retry_acquire_lock:
  * @return 0 on success, -1 on failure
  */
 int mcp_get_neg_fec_tech(int cgx_id, int lmac_id, int *fec_type,
-                         int *qlm_mode, int *lmac_type)
+			 int *qlm_mode, int *lmac_type)
 {
 	int retry_lock = 0;
 	sfp_shared_data_t *sh_data = sfp_get_sh_mem_ptr(cgx_id, lmac_id);
@@ -1414,9 +1409,9 @@ retry_acquire_lock:
 		return -1;
 	}
 
-    *fec_type = sh_data->an_lt_args.fec_type;
-    *qlm_mode = sh_data->an_lt_args.qlm_mode;
-    *lmac_type = sh_data->an_lt_args.lmac_type;
+	*fec_type = sh_data->an_lt_args.fec_type;
+	*qlm_mode = sh_data->an_lt_args.qlm_mode;
+	*lmac_type = sh_data->an_lt_args.lmac_type;
 
-    return 0;
+	return 0;
 }

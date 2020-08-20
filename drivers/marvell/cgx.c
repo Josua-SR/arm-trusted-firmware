@@ -2258,6 +2258,7 @@ static int cgx_complete_sw_an_with_mcp(int cgx_id, int lmac_id, cgx_lmac_context
 	int fec_type, qlm_mode, lmac_type;
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
+	mcp_an_dbg_state_t mcp_an_dbg;
 
 	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
 	lmac = &cgx->lmac_cfg[lmac_id];
@@ -2345,15 +2346,22 @@ an_check_state:
 an_lt_link_up:
 	debug_cgx("%s: %d:%d AN/LT and Link UP completed. Reset the state\n",
 		__func__, cgx_id, lmac_id);
+	if (mcp_get_an_lt_data(cgx_id, lmac_id, &mcp_an_dbg))
+		debug_cgx("%s: %d:%d Unable to get link up and LT data\n",
+			  __func__, cgx_id, lmac_id);
+	else
+		debug_cgx("%s: %d:%d Link Up time: %d ms, LT time: %d ms\n",
+			  __func__, cgx_id, lmac_id,
+			  mcp_an_dbg.s.lnk_time, mcp_an_dbg.s.lt_time);
 	if (mcp_set_an_lt_state(cgx_id, lmac_id, AN_LT_NO_STATE)) {
 		debug_cgx("%s: %d:%d Unable to reset AN/LT state\n",
-			__func__, cgx_id, lmac_id);
+			  __func__, cgx_id, lmac_id);
 		goto restart_an;
 	}
 	if (mcp_get_neg_fec_tech(cgx_id, lmac_id, &fec_type,
-				&qlm_mode, &lmac_type)) {
+				 &qlm_mode, &lmac_type)) {
 		debug_cgx("%s: %d:%d Failed to get AN negotiated technology and FEC types\n",
-				  __func__, cgx_id, lmac_id);
+			  __func__, cgx_id, lmac_id);
 		goto restart_an;
 	}
 	lmac->fec = fec_type;
@@ -2365,29 +2373,72 @@ an_lt_link_up:
 		int flags = 0;
 		int gserx = lmac->gserx;
 		qlm_state_lane_t state = qlm_build_state(qlm_mode, baud_mhz, flags);
+
 		cgx->qlm_ops->qlm_set_state(gserx, lane, state);
 		lmac->mode_idx = qlm_mode;
 	}
 	debug_cgx("%s: %d:%d AN negotiated qlm_mode:%d, lmac_type:%d, fec_type:%d\n",
-			  __func__, cgx_id, lmac_id, qlm_mode, lmac_type, fec_type);
+		  __func__, cgx_id, lmac_id, qlm_mode, lmac_type, fec_type);
 	return 0;
 an_lt_link_failure:
-	ret = mcp_get_fail_type(cgx_id, lmac_id);
-	if (ret == -1) {
-		debug_cgx("%s: %d:%d Link Up or Training failed several times.  Failed to get fail type.\n",
-				__func__, cgx_id, lmac_id);
+	if (mcp_get_an_lt_data(cgx_id, lmac_id, &mcp_an_dbg)) {
+		debug_cgx("%s: %d:%d Link Up, Autoneg or Training failed "
+			  "several times. Failed to get fail type.\n",
+			  __func__, cgx_id, lmac_id);
 		cgx_set_error_type(cgx_id, lmac_id,
-			   CGX_ERR_PCS_LINK_FAIL);
-	} else if (ret == 1) {
-		debug_cgx("%s: %d:%d Failed Link Up several times.\n",
-				__func__, cgx_id, lmac_id);
-		cgx_set_error_type(cgx_id, lmac_id,
-			   CGX_ERR_PCS_LINK_FAIL);
+				   CGX_ERR_PCS_LINK_FAIL);
 	} else {
-		debug_cgx("%s: %d:%d Failed Link Training several times.\n",
-				__func__, cgx_id, lmac_id);
-		cgx_set_error_type(cgx_id, lmac_id,
-			   CGX_ERR_TRAINING_FAIL);
+		if (mcp_an_dbg.s.fail_mode == LT_FAIL) {
+			debug_cgx("%s: %d:%d Failed Link Training several times.\n",
+				  __func__, cgx_id, lmac_id);
+			if (mcp_an_dbg.s.fail_type == SW_TIMEOUT)
+				debug_cgx("%s: %d:%d LT Software timeout\n",
+					  __func__, cgx_id, lmac_id);
+			cgx_set_error_type(cgx_id, lmac_id,
+					   CGX_ERR_TRAINING_FAIL);
+#ifdef DEBUG_ATF_LT_TRACE
+			/* Print link training trace data */
+			cgx_link_training_tracing(cgx_id, lmac_id);
+#endif
+		} else if (mcp_an_dbg.s.fail_mode == AN_FAIL) {
+			debug_cgx("%s: %d:%d Autoneg failure.\n",
+				  __func__, cgx_id, lmac_id);
+		} else {
+			debug_cgx("%s: %d:%d Failed Link Up several times. time: %d ms\n",
+				  __func__, cgx_id, lmac_id,
+				  mcp_an_dbg.s.lnk_time);
+			cgx_set_error_type(cgx_id, lmac_id,
+					   CGX_ERR_PCS_LINK_FAIL);
+			switch (mcp_an_dbg.s.fail_type) {
+			case RCV_LNK_FAIL:
+				debug_cgx("%s: %d:%d RCV_LNK timeout\n",
+					  __func__, cgx_id, lmac_id);
+				break;
+			case LOCAL_FLT_FAIL:
+				debug_cgx("%s: %d:%d Local fault\n",
+					  __func__, cgx_id, lmac_id);
+				break;
+			case ERR_BLKS_FAIL:
+				debug_cgx("%s: %d:%d error blocks %d\n",
+					  __func__, cgx_id, lmac_id,
+					  mcp_an_dbg.s.err_cnt);
+				break;
+			case BER_CNT_FAIL:
+				debug_cgx("%s: %d:%d ber count %d\n",
+					  __func__, cgx_id, lmac_id,
+					  mcp_an_dbg.s.err_cnt);
+				break;
+			case REMOTE_FLT_FAIL:
+				debug_cgx("%s: %d:%d Remote fault\n",
+					  __func__, cgx_id, lmac_id);
+				break;
+			default:
+				debug_cgx("%s: %d:%d timeout waiting "
+					  "for RX link to be stable\n",
+					  __func__, cgx_id, lmac_id);
+				break;
+			}
+		}
 	}
 	/* Set state to AN_LT_NO_STATE */
 	if (mcp_set_an_lt_state(cgx_id, lmac_id, AN_LT_NO_STATE)) {
@@ -2395,10 +2446,6 @@ an_lt_link_failure:
 			__func__, cgx_id, lmac_id);
 		goto restart_an;
 	}
-	/* Print link training trace data */
-#ifdef DEBUG_ATF_LT_TRACE
-	cgx_link_training_tracing(cgx_id, lmac_id);
-#endif
 	ret = mcp_send_async_req(cgx_id, lmac_id,
 				REQ_AN_LT_START);
 	if (ret == -1) {
