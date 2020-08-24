@@ -1342,16 +1342,16 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ct
 		spux_int.u = CSR_READ(CAVM_CGXX_SPUX_INT(
 				cgx_id, lmac_id));
 
-	spux_an_status.u = CSR_READ(CAVM_CGXX_SPUX_AN_STATUS(
-			cgx_id, lmac_id));
+		spux_an_status.u = CSR_READ(CAVM_CGXX_SPUX_AN_STATUS(
+				cgx_id, lmac_id));
 
-	/* Check if AN completed */
-	if (spux_int.s.an_complete ||
-		spux_an_status.s.an_complete ||
-		spux_int.s.an_link_good) {
-		still_negotiating = 0;
-		break;
-	}
+		/* Check if AN completed */
+		if (spux_int.s.an_complete ||
+			spux_an_status.s.an_complete ||
+			spux_int.s.an_link_good) {
+			still_negotiating = 0;
+			break;
+		}
 
 		/* Check if we have detecting an AN signal */
 		if (!signal_detect &&
@@ -1368,95 +1368,95 @@ static int cgx_autoneg_wait(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ct
 				> anpage_timeout))
 			break;
 
-	if (spux_int.s.an_page_rx) {
-		anpage_rcvd = true;
-		lp_xnp[np].u = CSR_READ(CAVM_CGXX_SPUX_AN_LP_XNP(
-					   cgx_id, lmac_id));
-		lp_base[np].u = CSR_READ(CAVM_CGXX_SPUX_AN_LP_BASE(
-					   cgx_id, lmac_id));
-		xnp_tx[np].u = CSR_READ(CAVM_CGXX_SPUX_AN_XNP_TX(cgx_id, lmac_id));
+		if (spux_int.s.an_page_rx) {
+			anpage_rcvd = true;
+			lp_xnp[np].u = CSR_READ(CAVM_CGXX_SPUX_AN_LP_XNP(
+						   cgx_id, lmac_id));
+			lp_base[np].u = CSR_READ(CAVM_CGXX_SPUX_AN_LP_BASE(
+						   cgx_id, lmac_id));
+			xnp_tx[np].u = CSR_READ(CAVM_CGXX_SPUX_AN_XNP_TX(cgx_id, lmac_id));
 
-		an_adv[np].u = CSR_READ(CAVM_CGXX_SPUX_AN_ADV(cgx_id, lmac_id));
+			an_adv[np].u = CSR_READ(CAVM_CGXX_SPUX_AN_ADV(cgx_id, lmac_id));
 
-		/* Check if LP's or our Extended Next Page (NP) bit is set */
-		/* Must send either NULL message or Eth consortium message */
-		if ((xnp_tx[np].s.np == 1) ||
-			(lp_xnp[np].s.np == 1))
-			transmit_np = 1;
-
-		/* If we received a LP base page, check if NP=1 */
-		if (lp_xnp[np].u == 0) {
-			if (lp_base[np].s.np == 1)
+			/* Check if LP's or our Extended Next Page (NP) bit is set */
+			/* Must send either NULL message or Eth consortium message */
+			if ((xnp_tx[np].s.np == 1) ||
+				(lp_xnp[np].s.np == 1))
 				transmit_np = 1;
-		}
 
-		/* Check to see if we are configured to send Extended next pages
-		 * and in a supported Ethernet Consortium lmac_mode
-		 * FIXME: Add support for 25G ethernet consortium
-		 */
-		if (an_adv[np].s.np && is_50gbaser2) {
-			switch (num_eth_pages) {
-			case 0: /* Send ethernet consortium header */
-				xnp_tx[np].s.u = 0x4df0353; //0x3530fd40;
-				xnp_tx[np].s.np = 1;
-				xnp_tx[np].s.mp = 1;
-				xnp_tx[np].s.m_u = 0x005;
-				transmit_np = 1;
-				num_eth_pages++;
-				break;
-			case 1: /* Send ethernet consortium data */
-				if (is_25gbaser) {
-					xnp_tx[np].s.u |= 1 << 4;  /* 25GBASE-KR */
-					xnp_tx[np].s.u |= 1 << 5;  /* 25GBASE-CR */
-				} else if (is_50gbaser2) {
-					xnp_tx[np].s.u |= 1 << 8; /* 50GBASE-KR2 */
-					xnp_tx[np].s.u |= 1 << 9;  /* 50GBASE-CR2 */
+			/* If we received a LP base page, check if NP=1 */
+			if (lp_xnp[np].u == 0) {
+				if (lp_base[np].s.np == 1)
+					transmit_np = 1;
+			}
+
+			/* Check to see if we are configured to send Extended next pages
+			 * and in a supported Ethernet Consortium lmac_mode
+			 * FIXME: Add support for 25G ethernet consortium
+			 */
+			if (an_adv[np].s.np && is_50gbaser2) {
+				switch (num_eth_pages) {
+				case 0: /* Send ethernet consortium header */
+					xnp_tx[np].s.u = 0x4df0353; //0x3530fd40;
+					xnp_tx[np].s.np = 1;
+					xnp_tx[np].s.mp = 1;
+					xnp_tx[np].s.m_u = 0x005;
+					transmit_np = 1;
+					num_eth_pages++;
+					break;
+				case 1: /* Send ethernet consortium data */
+					if (is_25gbaser) {
+						xnp_tx[np].s.u |= 1 << 4;  /* 25GBASE-KR */
+						xnp_tx[np].s.u |= 1 << 5;  /* 25GBASE-CR */
+					} else if (is_50gbaser2) {
+						xnp_tx[np].s.u |= 1 << 8; /* 50GBASE-KR2 */
+						xnp_tx[np].s.u |= 1 << 9;  /* 50GBASE-CR2 */
+					}
+					xnp_tx[np].s.u |= 1 << 24;  /* F1 - Clause 91 FEC ability */
+					xnp_tx[np].s.u |= 1 << 25;  /* F2 - Clause 74 FEC ability */
+					if (lmac->fec == CGX_FEC_RS)
+						/* F3 - Claue 91 RS-FEC request */
+						xnp_tx[np].s.u |= 1 << 26;
+					if (lmac->fec == CGX_FEC_BASE_R)
+						/* F3 - Claue 74 BASE-R FEC request */
+						xnp_tx[np].s.u |= 1 << 27;
+					xnp_tx[np].s.np = 0;
+					xnp_tx[np].s.mp = 0;
+					xnp_tx[np].s.m_u = 0x203;
+					transmit_np = 1;
+					num_eth_pages++;
+					break;
+				default: /* Send NULL message */
+					xnp_tx[np].s.mp = 1;
+					xnp_tx[np].s.m_u = 0x1;
+					xnp_tx[np].s.np = 0;
+					xnp_tx[np].s.u = 0;
+					break;
 				}
-				xnp_tx[np].s.u |= 1 << 24;  /* F1 - Clause 91 FEC ability */
-				xnp_tx[np].s.u |= 1 << 25;  /* F2 - Clause 74 FEC ability */
-				if (lmac->fec == CGX_FEC_RS)
-					/* F3 - Claue 91 RS-FEC request */
-					xnp_tx[np].s.u |= 1 << 26;
-				if (lmac->fec == CGX_FEC_BASE_R)
-					/* F3 - Claue 74 BASE-R FEC request */
-					xnp_tx[np].s.u |= 1 << 27;
-				xnp_tx[np].s.np = 0;
-				xnp_tx[np].s.mp = 0;
-				xnp_tx[np].s.m_u = 0x203;
-				transmit_np = 1;
-				num_eth_pages++;
-				break;
-			default: /* Send NULL message */
+			} else {
+				/* Send next page with NULL message */
 				xnp_tx[np].s.mp = 1;
 				xnp_tx[np].s.m_u = 0x1;
 				xnp_tx[np].s.np = 0;
 				xnp_tx[np].s.u = 0;
-				break;
 			}
-		} else {
-			/* Send next page with NULL message */
-			xnp_tx[np].s.mp = 1;
-			xnp_tx[np].s.m_u = 0x1;
-			xnp_tx[np].s.np = 0;
-			xnp_tx[np].s.u = 0;
-		}
 
-		/* Clear AN Page Rx interrupt only as SPUX_INT is W1C */
-		spux_int.u = 0;
-		spux_int.s.an_page_rx = 1;
-		CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
-				spux_int.u);
+			/* Clear AN Page Rx interrupt only as SPUX_INT is W1C */
+			spux_int.u = 0;
+			spux_int.s.an_page_rx = 1;
+			CSR_WRITE(CAVM_CGXX_SPUX_INT(cgx_id, lmac_id),
+					spux_int.u);
 
-		/* Send extended next page */
-		if (transmit_np) {
-			CSR_WRITE(CAVM_CGXX_SPUX_AN_XNP_TX(cgx_id, lmac_id),
-					xnp_tx[np].u);
-			num_pages++;
-			transmit_np = 0;
-		}
-		/* Only increase if less than 19 (max index) */
-		if (np < (AN_NP_PRINT_MAX - 1))
-			np++;
+			/* Send extended next page */
+			if (transmit_np) {
+				CSR_WRITE(CAVM_CGXX_SPUX_AN_XNP_TX(cgx_id, lmac_id),
+						xnp_tx[np].u);
+				num_pages++;
+				transmit_np = 0;
+			}
+			/* Only increase if less than 19 (max index) */
+			if (np < (AN_NP_PRINT_MAX - 1))
+				np++;
 		}
 		udelay(1);
 	}
