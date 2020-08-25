@@ -35,6 +35,11 @@
 #define debug_cgx(...) ((void) (0))
 #endif
 
+/* define DEBUG_ATF_CGX and DEBUG_ATF_LT_TRACE
+ * to enable link training trace data
+ */
+#undef DEBUG_ATF_LT_TRACE
+
 /* table to map speed in Mbps with cgx_link_speed enum */
 static int cgx_link_speed_mbps[CGX_LINK_MAX] = {
 		0, 10, 100, 1000, 2500, 5000, 10000, 20000, 25000,
@@ -104,7 +109,7 @@ static int cgx_poll_for_csr(uint64_t addr, uint64_t mask,
 	return ret_val;
 }
 
-#ifdef DEBUG_ATF_CGX
+#ifdef DEBUG_ATF_LT_TRACE
 /* Prints out the link training tracing data */
 static int cgx_link_training_tracing(int cgx_id, int lmac_id)
 {
@@ -2391,7 +2396,7 @@ an_lt_link_failure:
 		goto restart_an;
 	}
 	/* Print link training trace data */
-#ifdef DEBUG_ATF_CGX
+#ifdef DEBUG_ATF_LT_TRACE
 	cgx_link_training_tracing(cgx_id, lmac_id);
 #endif
 	ret = mcp_send_async_req(cgx_id, lmac_id,
