@@ -113,11 +113,13 @@ struct otx2_ghes_err_record {
 	char fru_text[OTX2_GHES_ERR_REC_FRU_TEXT_LEN];
 };
 
+#define OTX2_GHES_ERR_RING_SIG ((int)'M' << 24 | 'R' << 16 | 'V' << 8 | 'L')
 /* This is shared with Linux sdei-ghes driver */
 struct otx2_ghes_err_ring {
 	uint32_t volatile head;
 	uint32_t volatile tail;
 	uint32_t size;       /* ring size */
+	uint32_t sig;        /* set to OTX2_GHES_ERR_RING_SIG if initialized */
 	/* ring of records */
 	struct otx2_ghes_err_record records[1] __aligned(8);
 };

@@ -303,6 +303,41 @@ void otx2_map_ghes(void)
 	}
 }
 
+/*
+ * err_ring_init()
+ *
+ * Used to initialilze an error ring.
+ *
+ * on entry,
+ *   err_ring: error ring
+ *   len:      allocated length for entirety of ring (including header)
+ *   entries:  if non-zero, # of entries to use in ring
+ *             if zero, # of entries to use in ring is calculated dynamically
+ *
+ * Returns,
+ *   false if ring was NOT already initialized
+ *   !false if ring WAS already initialized
+ */
+static bool
+err_ring_init(struct otx2_ghes_err_ring *err_ring, int len, int entries)
+{
+	bool init = false;
+
+	if (err_ring && len) {
+		init = (err_ring->sig == OTX2_GHES_ERR_RING_SIG);
+		if (!init) {
+			err_ring->sig = OTX2_GHES_ERR_RING_SIG;
+			err_ring->head = err_ring->tail = 0;
+			err_ring->size = entries ? entries :
+			   (len -
+			    offsetof(struct otx2_ghes_err_ring, records[0])) /
+			   sizeof(err_ring->records[0]);
+		}
+	}
+
+	return init;
+}
+
 int otx2_ras_init(void)
 {
 	struct otx2_ghes_err_ring *err_ring;
@@ -318,19 +353,13 @@ int otx2_ras_init(void)
 	for (i = 0; i < ARRAY_SIZE(cfg->fdt_ghes); i++) {
 		err_ring = cfg->fdt_ghes[i].base[GHES_PTR_RING];
 		ring_len = cfg->fdt_ghes[i].size[GHES_PTR_RING];
-		if (err_ring && ring_len) {
-			err_ring->size =
-			   (ring_len -
-			    offsetof(struct otx2_ghes_err_ring, records[0])) /
-			   sizeof(err_ring->records[0]);
-		}
+		err_ring_init(err_ring, ring_len, 0);
 	}
 
 	/* set default BERT ring size */
 	err_ring = cfg->fdt_bert.base[GHES_PTR_RING];
 	ring_len = cfg->fdt_bert.size[GHES_PTR_RING];
-	if (err_ring && ring_len)
-		err_ring->size = BERT_RAS_RING_SIZE;
+	err_ring_init(err_ring, ring_len, BERT_RAS_RING_SIZE);
 
 #if DEBUG_RAS
 	otx2_begin_ghes("bert", &err_ring);
