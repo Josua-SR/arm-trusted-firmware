@@ -197,4 +197,6 @@
 
 #define MVEBU_PMU_IRQ_WA
 
+#define SHARED_DDR_BTW_BLE_UBOOT 0x6000000
+
 #endif /* PLATFORM_DEF_H */

@@ -21,5 +21,6 @@
 #define MVEBU_SOC_AP807		1
 #define I2C_SPD_ADDR		0x53	/* Access SPD data */
 #define I2C_SPD_P0_ADDR		0x36	/* Select SPD data page 0 */
+#define I2C_SPD_P1_ADDR         0x37    /* Select SPD data page 1 */
 
 #endif /* __MVEBU_DEF_H__ */

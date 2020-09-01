@@ -4,7 +4,6 @@
  * SPDX-License-Identifier:	BSD-3-Clause
  * https://spdx.org/licenses
  */
-
 #include <arch_helpers.h>
 #include <common/debug.h>
 #include <drivers/mentor/mi2cv.h>
@@ -20,6 +19,13 @@
 #define MVEBU_CP_MPP_CTRL38_I2C0_SDA_ENA	0x2
 
 #define MVEBU_MPP_CTRL_MASK			0xf
+
+#define PAGE1_DATA_INDEX (MV_DDR_SPD_DATA_BLOCK0_SIZE + \
+			MV_DDR_SPD_DATA_BLOCK1M_SIZE + \
+			MV_DDR_SPD_DATA_BLOCK1H_SIZE)
+#define PAGE1_DATA_SIZE 128
+#define DDR_SPEED_INFO_INDEX MV_DDR_SPD_DATA_BLOCK0_SIZE
+u32 mv_ddr_freq_get(enum mv_ddr_freq freq);
 
 /*
  * This struct provides the DRAM training code with
@@ -138,9 +144,10 @@ static void mpp_config(void)
 void plat_marvell_dram_update_topology(void)
 {
 	struct mv_ddr_topology_map *tm = mv_ddr_topology_map_get();
+	u8 buffer = 0;
+	u32 bytes_to_read;
 
 	INFO("Gathering DRAM information\n");
-
 	if (tm->cfg_src == MV_DDR_CFG_SPD) {
 		/* configure MPPs to enable i2c */
 		mpp_config();
@@ -148,11 +155,36 @@ void plat_marvell_dram_update_topology(void)
 		/* initialize i2c */
 		i2c_init((void *)MVEBU_CP0_I2C_BASE);
 
-		/* select SPD memory page 0 to access DRAM configuration */
-		i2c_write(I2C_SPD_P0_ADDR, 0x0, 1, tm->spd_data.all_bytes, 0);
+		/* page 0: select SPD memory to access DRAM configuration */
+		i2c_write(I2C_SPD_P0_ADDR, 0x0, 1, &buffer, 1);
+
+		bytes_to_read = sizeof(tm->spd_data.all_bytes);
+		if (bytes_to_read > 256)
+			bytes_to_read = 256;
 
 		/* read data from spd */
-		i2c_read(I2C_SPD_ADDR, 0x0, 1, tm->spd_data.all_bytes,
-			 sizeof(tm->spd_data.all_bytes));
+		i2c_read(I2C_SPD_ADDR, 0x0, 1, tm->spd_data.all_bytes, bytes_to_read);
+
+		/* page 1: select SPD memory to access DRAM configuration */
+		i2c_write(I2C_SPD_P1_ADDR, 0x0, 1, &buffer, 1);
+
+		/* read data from spd */
+		i2c_read(I2C_SPD_ADDR, 0x0, 1,
+				&tm->spd_data.all_bytes[PAGE1_DATA_INDEX],
+				PAGE1_DATA_SIZE);
 	}
 }
+
+void copy_ddr_conf_to_ddr_location(void)
+{
+	void *dst = (void *)SHARED_DDR_BTW_BLE_UBOOT;
+	struct mv_ddr_topology_map *tm = mv_ddr_topology_map_get();
+	struct if_params *iface_params = &(tm->interface_params[0]);
+
+	/* Get the frequency and store it at 256th byte location for uboot consumption */
+	u32 freq = mv_ddr_freq_get(iface_params->memory_freq);
+	*(uint32_t *)&tm->spd_data.all_bytes[DDR_SPEED_INFO_INDEX] = freq;
+
+	memcpy(dst, tm->spd_data.all_bytes, sizeof(tm->spd_data.all_bytes));
+}
+
