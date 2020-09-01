@@ -67,6 +67,7 @@ int marvell_check_mpidr(u_register_t mpidr);
 /* BLE utility functions */
 int ble_plat_setup(int *skip);
 void plat_marvell_dram_update_topology(void);
+void copy_ddr_conf_to_ddr_location(void);
 void ble_plat_pcie_ep_setup(void);
 struct pci_hw_cfg *plat_get_pcie_hw_data(void);
 

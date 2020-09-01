@@ -20,6 +20,11 @@
 #define BR_FLAG_SILENT		0x1
 #define SKIP_IMAGE_CODE		0xDEADB002
 
+#pragma weak copy_ddr_conf_to_ddr_location
+void copy_ddr_conf_to_ddr_location(void)
+{
+}
+
 void mailbox_clean(void)
 {
 	uintptr_t *mailbox = (void *)PLAT_MARVELL_MAILBOX_BASE;
@@ -83,6 +88,8 @@ int exec_ble_main(int bootrom_flags)
 		marvell_ble_prepare_exit();
 		bootrom_exit();
 	}
+
+	copy_ddr_conf_to_ddr_location();
 
 	return 0;
 }
