@@ -371,7 +371,7 @@ static int octeontx_init_rvu_from_fdt(void)
 {
 	int cgx_id, lmac_id, pf, current_hwvf = 0;
 	int uninit_pfs = 0, sso_tim_pfs, npa_pfs;
-	int top_cgx_pf, top_uninit_pf;
+	int top_cgx_pf, top_uninit_pf, top_pool_pf;
 	rvu_sw_rvu_pf_t *sw_pf;
 	cgx_config_t *cgx;
 	struct rvu_pf_cgx_lmac cgx_lmac_list[MAX_RVU_PFS];
@@ -389,6 +389,9 @@ static int octeontx_init_rvu_from_fdt(void)
 		ERROR("Invalid RVU configuration, skipping RVU init!.\n");
 		return -1;
 	}
+
+	/* Normally start allocating "other" devices from end of net reserved */
+	top_pool_pf = RVU_CGX_LAST;
 
 	/*
 	 * Firstly, initialize fixed setup
@@ -411,8 +414,12 @@ static int octeontx_init_rvu_from_fdt(void)
 	    (sw_pf->mapping != SW_RVU_MAP_NONE))
 		octeontx_init_rvu_fixed(&current_hwvf, FIXED_RVU_SSO_TIM,
 					SW_RVU_SSO_TIM_PF(0), TRUE);
-	else
+	else {
+		uninit_pfs++;
+		/* not using legacy 'fixed' PF; use it for 'pool' */
+		top_pool_pf++;
 		debug_rvu("RVU: skipping fixed SSO_TIM allocation\n");
+	}
 
 	/*
 	 * Init RVU(last-1) - NPA (PF(last-1)) UNLESS NPA provision-mode
@@ -446,13 +453,19 @@ static int octeontx_init_rvu_from_fdt(void)
 		    (sw_pf->mapping != SW_RVU_MAP_NONE))
 			octeontx_init_rvu_fixed(&current_hwvf, FIXED_RVU_NPA,
 						SW_RVU_NPA_PF(0), TRUE);
-		else
+		else {
+			uninit_pfs++;
+			/* not using legacy 'fixed' PF; use it for 'pool' */
+			top_pool_pf++;
 			debug_rvu("RVU: skipping fixed NPA allocation\n");
+		}
 	}
 
-	if (plat_octeontx_bcfg->rvu_config.cpt_dis)
-		uninit_pfs = 1;
-	else {
+	if (plat_octeontx_bcfg->rvu_config.cpt_dis) {
+		uninit_pfs++;
+		/* not using legacy 'fixed' PF; use it for 'pool' */
+		top_pool_pf++;
+	} else {
 		/* Init last RVU - as CPT if present */
 		octeontx_init_rvu_fixed(&current_hwvf, RVU_LAST,
 				SW_RVU_CPT_PF(0), TRUE);
@@ -486,6 +499,8 @@ static int octeontx_init_rvu_from_fdt(void)
 	/* This represents the [numerically] highest RVU PF required by CGX */
 	top_cgx_pf = RVU_CGX_FIRST;
 
+	uninit_pfs += (RVU_CGX_LAST - RVU_CGX_FIRST + 1);
+
 	/* Determine the required number of CGX LMAC PFs */
 	for (cgx_id = 0; cgx_id < MAX_CGX; cgx_id++) {
 		cgx = &(plat_octeontx_bcfg->cgx_cfg[cgx_id]);
@@ -500,22 +515,23 @@ static int octeontx_init_rvu_from_fdt(void)
 					cgx_lmac_list[pf].lmac_id = lmac_id;
 
 					top_cgx_pf = pf++;
-				} else
-					uninit_pfs++;
+					uninit_pfs--;
+				}
 			}
-		} else {
-			/* all four LMACs are not initialized */
-			uninit_pfs += MAX_LMAC_PER_CGX;
 		}
 	}
 
-	debug_rvu("RVU: PF%d is last PF required for CGX\n", top_cgx_pf);
+	if (top_cgx_pf == RVU_CGX_FIRST)
+		debug_rvu("RVU: no PFs provisioned to CGX\n");
+	else
+		debug_rvu("RVU: PF%d is last PF required for CGX\n",
+			  top_cgx_pf);
 
 	/*
 	 * Now, provision RVU PFs for SW_RVU_xxx devices DOWNWARD starting from
-	 * END of [required] CGX PFs.
+	 * the 'pool' of available PFs.
 	 */
-	top_uninit_pf = rvu_provision_pfs_for_sw_devs(RVU_CGX_LAST, top_cgx_pf,
+	top_uninit_pf = rvu_provision_pfs_for_sw_devs(top_pool_pf, top_cgx_pf,
 						      &current_hwvf,
 						      &uninit_pfs,
 						      cgx_lmac_list);
@@ -547,7 +563,8 @@ static int octeontx_init_rvu_from_fdt(void)
 		}
 	}
 
-	debug_rvu("RVU: PF%d was last PF provisioned for CGX\n", pf-1);
+	if (pf != RVU_CGX_FIRST)
+		debug_rvu("RVU: PF%d was last PF provisioned for CGX\n", pf-1);
 	debug_rvu("RVU: PF%d is top uninitialized PF, count %d\n",
 		  top_uninit_pf, uninit_pfs);
 
@@ -562,10 +579,14 @@ static int octeontx_init_rvu_from_fdt(void)
 
 	sso_tim_pfs = uninit_pfs * SSO_TIM_TO_NPA_PFS_FACTOR;
 	npa_pfs = uninit_pfs - sso_tim_pfs;
+	debug_rvu("RVU: allocating %u SSO PFs, %u NPA PFs, starting at PF%u\n",
+		  sso_tim_pfs, npa_pfs, pf);
 	while (sso_tim_pfs > 0) {
-		/* If CPT was disabled, its reserved PF is uninitialized. */
-		if (pf > top_uninit_pf)
-			pf = RVU_LAST;
+		if (pf > top_uninit_pf) {
+			ERROR("RVU: PF%d exceeds uninialized limit (PF%d)\n",
+			      pf, top_uninit_pf);
+			return 0;
+		}
 		octeontx_init_rvu_fixed(&current_hwvf, pf++,
 					SW_RVU_SSO_TIM_PF(0), FALSE);
 		sso_tim_pfs--;
@@ -573,8 +594,11 @@ static int octeontx_init_rvu_from_fdt(void)
 
 	while (npa_pfs > 0) {
 		/* If CPT was disabled, its reserved PF is uninitialized. */
-		if (pf > top_uninit_pf)
-			pf = RVU_LAST;
+		if (pf > top_uninit_pf) {
+			ERROR("RVU: PF%d exceeds uninialized limit (PF%d)\n",
+			      pf, top_uninit_pf);
+			return 0;
+		}
 		octeontx_init_rvu_fixed(&current_hwvf, pf++,
 					SW_RVU_NPA_PF(0), FALSE);
 		npa_pfs--;
