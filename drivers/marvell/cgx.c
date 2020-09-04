@@ -2398,7 +2398,8 @@ an_lt_link_failure:
 					   CGX_ERR_TRAINING_FAIL);
 #ifdef DEBUG_ATF_LT_TRACE
 			/* Print link training trace data */
-			cgx_link_training_tracing(cgx_id, lmac_id);
+			if (mcp_an_dbg.s.fail_type == SERDES_TIMEOUT)
+				cgx_link_training_tracing(cgx_id, lmac_id);
 #endif
 		} else if (mcp_an_dbg.s.fail_mode == AN_FAIL) {
 			debug_cgx("%s: %d:%d Autoneg failure.\n",
