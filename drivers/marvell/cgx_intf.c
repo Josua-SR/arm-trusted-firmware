@@ -1134,6 +1134,7 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 	int lane, lane_count;
 	uint64_t req_mode;
 	uint32_t lane_mask;
+	int req_train_en;
 
 	lmac_ctx = &lmac_context[cgx_id][lmac_id];
 	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
@@ -1184,6 +1185,14 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 		goto mode_err;
 	}
 
+	req_train_en = cgx_get_training_for_mode(req_mode);
+
+	if ((req_an && req_train_en) || lmac->use_training) {
+		debug_cgx_intf("%s:%d:%d: Changing mode to/from AN to AN/non-AN is not allowed\n",
+				__func__, cgx_id, lmac_id);
+		goto mode_err;
+	}
+
 	/* User is requesting for a different speed. Check if
 	 * it is valid to change to user requested speed
 	 */
@@ -1211,7 +1220,7 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 			 */
 			lmac->use_training = 0;
 			lmac->sgmii_1000x_mode = 0;
-			lmac->use_training = cgx_get_training_for_mode(req_mode);
+			lmac->use_training = req_train_en;
 
 			/* Update attributes for 1000 BASE-X */
 			if (lmac->mode_idx == QLM_MODE_1G_X)
