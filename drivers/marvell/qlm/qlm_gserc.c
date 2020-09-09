@@ -123,14 +123,12 @@ static bool gserc_is_cpri(int qlm, int lane)
  * @param node
  * @param module
  */
-static void apply_tuning(int module)
+static void apply_tuning(int module, int lane)
 {
 	if (!gser_is_platform(GSER_PLATFORM_HW))
 		return;
 
 	int qlm = map_module_to_qlm(module);
-	int num_lanes = get_num_lanes(module);
-	for (int lane = 0; lane < num_lanes; lane++)
 	{
 		/* Get settings from the device tree */
 		qlm_state_lane_t qlm_state = qlm_gserc_get_state(module, lane);
@@ -157,7 +155,7 @@ static void apply_tuning(int module)
 
 		/* If no parameters were changed skip to next lane */
 		if ((tx_swing == -1) && (tx_cpre == -1) && (tx_cpost == -1))
-			continue;
+			return;
 
 		/* At least one parameter changed, but maybe not all. Get the original
 		   values to use as a default for any parameter not filled in yet */
@@ -265,11 +263,11 @@ extern void qlm_gserc_rx_dfe_adaptation(int qlm, int lane);
 				qlm_gserc_rx_leq_adaptation(qlm, l, 2, 8, 0, 8, 3);
 			}
 #endif
+			apply_tuning(qlm, l);
 		}
 		else
 			GSER_TRACE(QLM, "GSERC%d.%d: Lane mode already correct\n", qlm, l);
 	}
-	apply_tuning(qlm);
 
 	return 0;
 }

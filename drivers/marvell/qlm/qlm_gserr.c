@@ -116,14 +116,12 @@ qlm_state_lane_t qlm_gserr_get_state(int qlm, int lane)
  * @param node
  * @param module
  */
-static void apply_tuning(int module)
+static void apply_tuning(int module, int lane)
 {
 	if (!gser_is_platform(GSER_PLATFORM_HW))
 		return;
 
 	int qlm = map_module_to_qlm(module);
-	int num_lanes = get_num_lanes(module);
-	for (int lane = 0; lane < num_lanes; lane++)
 	{
 		/* Get settings from the device tree */
 		qlm_state_lane_t qlm_state = qlm_gserr_get_state(module, lane);
@@ -150,7 +148,7 @@ static void apply_tuning(int module)
 
 		/* If no parameters were changed skip to next lane */
 		if ((tx_swing == -1) && (tx_cpre == -1) && (tx_cpost == -1))
-			continue;
+			return;
 
 		/* At least one parameter changed, but maybe not all. Get the original
 		   values to use as a default for any parameter not filled in yet */
@@ -244,12 +242,12 @@ int qlm_gserr_set_mode(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
 			else
 #endif
 				qlm_gserr_change_lane_rate(qlm, l);
+				apply_tuning(qlm, l);
 			gser_wait_usec(1000);
 		}
 		else
 			GSER_TRACE(QLM, "GSERR%d.%d: Lane mode already correct\n", qlm, l);
 	}
-	apply_tuning(qlm);
 
 	return 0;
 }
