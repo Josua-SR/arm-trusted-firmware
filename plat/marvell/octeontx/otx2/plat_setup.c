@@ -319,7 +319,7 @@ uint64_t plat_get_wfe_status(void)
 
 void plat_octeontx_cpu_setup(void)
 {
-	uint64_t cvmctl_el1, cvmmemctl0_el1, cvmmemctl1_el1, cvmmemctl2_el1;
+	uint64_t cvmctl_el1, cvmmemctl0_el1, cvmmemctl1_el1, cvmmemctl2_el1, cvmmemctl3_el1;
 	uint64_t cvmctl2_el1, midr;
 	int core = plat_my_core_pos();
 
@@ -328,6 +328,7 @@ void plat_octeontx_cpu_setup(void)
 	cvmmemctl0_el1 = read_cvmmemctl0_el1();
 	cvmmemctl1_el1 = read_cvmmemctl1_el1();
 	cvmmemctl2_el1 = read_cvmmemctl2_el1();
+	cvmmemctl3_el1 = read_cvmmemctl3_el1();
 	midr = read_midr();
 
 	/* Enable CAS/CASP and v8.1 support */
@@ -385,6 +386,11 @@ void plat_octeontx_cpu_setup(void)
 			TLBI_BLOCK_SHIFT, TLBI_BLOCK_WIDTH);
 
 	/*
+	 * Errata AP-38589: Disable ordering collision optimizations
+	 */
+	set_bit(cvmmemctl3_el1, 12);
+
+	/*
 	 * Increase livelock stall for retiring instructions
 	 */
 	cvmctl2_el1 = octeontx_bit_insert(cvmctl2_el1, LIVELOCK_STALL_VALUE,
@@ -417,6 +423,7 @@ void plat_octeontx_cpu_setup(void)
 	write_cvmmemctl0_el1(cvmmemctl0_el1);
 	write_cvmmemctl1_el1(cvmmemctl1_el1);
 	write_cvmmemctl2_el1(cvmmemctl2_el1);
+	write_cvmmemctl3_el1(cvmmemctl3_el1);
 
 	/* Allow CVM CACHE instructions from EL1/EL2 */
 	write_cvm_access_el1(read_cvm_access_el1() & ~(1 << 8));
