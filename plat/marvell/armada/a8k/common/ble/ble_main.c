@@ -84,8 +84,6 @@ int exec_ble_main(int bootrom_flags)
 		bootrom_exit();
 	}
 
-	copy_ddr_conf_to_ddr_location();
-
 	return 0;
 }
 
