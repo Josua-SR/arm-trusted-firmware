@@ -65,6 +65,12 @@ uintptr_t plat_octeontx_svc_smc_handler(uint32_t smc_fid,
 		SMC_RET1(handle, ret);
 		break;
 
+	case PLAT_OCTEONTX_OOO_MASK:
+		INFO("SVC OOO MASK: x1 = 0x%lx\n", x1);
+		ret = octeontx2_configure_ooo_mask(x1);
+		SMC_RET1(handle, ret);
+		break;
+
 	case PLAT_OCTEONTX_WFE_CONFIG:
 		INFO("SVC WFE CONFIG: x1 = 0x%lx\n", x1);
 		ret = octeontx2_configure_wfe(x1);

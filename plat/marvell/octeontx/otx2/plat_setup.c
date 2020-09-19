@@ -34,6 +34,7 @@
 #include "cavm-csrs-fusf.h"
 #include "cavm-csrs-gpio.h"
 
+static int disable_ooo;
 static uint64_t disable_ooo_mask;
 static uint64_t enable_wfe_mask;
 
@@ -302,9 +303,22 @@ int plat_get_altpkg(void)
  *
  * @return cpu core mask on disable OOO
  */
-uint64_t plat_get_ooo_status(void)
+uint64_t plat_get_ooo_mask_status(void)
 {
 	return disable_ooo_mask;
+}
+
+/*
+ * Return to enable/disable OOO
+ *
+ * @return non-zero to disable OOO
+ */
+int plat_get_ooo_status(void)
+{
+	if (disable_ooo)
+		return 1;
+	else
+		return 0;
 }
 
 /*
@@ -322,6 +336,7 @@ void plat_octeontx_cpu_setup(void)
 	uint64_t cvmctl_el1, cvmmemctl0_el1, cvmmemctl1_el1, cvmmemctl2_el1, cvmmemctl3_el1;
 	uint64_t cvmctl2_el1, midr;
 	int core = plat_my_core_pos();
+	uint64_t o_mask = plat_get_ooo_mask_status();
 
 	cvmctl_el1 = read_cvmctl_el1();
 	cvmctl2_el1 = read_cvmctl2_el1();
@@ -412,11 +427,15 @@ void plat_octeontx_cpu_setup(void)
 	/* Set Write-buffer timeout for NSH entries to 218 cycles. */
 	unset_bit(cvmmemctl0_el1, 18);
 
-	/* Disable/enable OOO */
-	if (plat_get_ooo_status() & (1UL << core))
+	/* Disable/enable OOO based on coremask */
+	if (o_mask & (1UL << core))
 		set_bit(cvmctl_el1, 44);
 	else
 		unset_bit(cvmctl_el1, 44);
+
+	/* Disable all cores if disable_ooo is set */
+	if (plat_get_ooo_status() && !o_mask)
+		set_bit(cvmctl_el1, 44);
 
 	write_cvmctl_el1(cvmctl_el1);
 	write_cvmctl2_el1(cvmctl2_el1);
@@ -431,7 +450,7 @@ void plat_octeontx_cpu_setup(void)
 	write_cvm_access_el3(read_cvm_access_el3() & ~(1 << 8));
 }
 
-int octeontx2_configure_ooo(uint64_t x1)
+int octeontx2_configure_ooo_mask(uint64_t x1)
 {
 	uint64_t cvmctl_el1;
 
@@ -439,6 +458,23 @@ int octeontx2_configure_ooo(uint64_t x1)
 
 	cvmctl_el1 = read_cvmctl_el1();
 	if (disable_ooo_mask & (1UL << plat_my_core_pos()))
+		set_bit(cvmctl_el1, 44);
+	else
+		unset_bit(cvmctl_el1, 44);
+
+	write_cvmctl_el1(cvmctl_el1);
+
+	return 0;
+}
+
+int octeontx2_configure_ooo(unsigned int x1)
+{
+	uint64_t cvmctl_el1;
+
+	disable_ooo = x1;
+
+	cvmctl_el1 = read_cvmctl_el1();
+	if (disable_ooo && !disable_ooo_mask)
 		set_bit(cvmctl_el1, 44);
 	else
 		unset_bit(cvmctl_el1, 44);
