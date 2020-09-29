@@ -482,6 +482,15 @@ static int octeontx2_parse_sw_rvu(const void *fdt, int parentoffset,
 		sw_pf->num_msix_vec = fdt32_to_cpu(*val);
 	}
 
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) &&
+		(sw_rvu_pf == SW_RVU_SSO_TIM_PF(0))) {
+		if ((sw_pf->num_msix_vec != 128) ||
+		     (sw_pf->num_msix_vec != DEFAULT_MSIX_SW)) {
+			sw_pf->num_msix_vec = 128;
+			VERBOSE("RVU: Defaulting MSI-X RVU PF count to 128 for Ax pass\n");
+		}
+	}
+
 	/* Get number of VFs from FDT */
 	val = fdt_getprop(fdt, offset, "num-rvu-vfs", &len);
 	if (!val) {
