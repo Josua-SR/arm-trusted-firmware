@@ -144,18 +144,13 @@ typedef enum {
 	QLM_DIRECTION_BOTH = 3,
 } qlm_direction_t;
 
-typedef enum {
-	/* No loopback */
-	QLM_LOOP_DISABLED,
-	/* Loop external data RX->TX (Not supported on CN8XXX) */
-	QLM_LOOP_SHALLOW,
-	/*
-	 * Loop internal data TX->RX in analog domain
-	 * (Not supported on CN8XXX)
-	 */
-	QLM_LOOP_NEAR_END,
-	/* Loop internal data TX->RX in digital domain */
-	QLM_LOOP_CORE,
+typedef enum
+{
+    QLM_LOOP_DISABLED,  /* No loopback */
+    QLM_LOOP_FEA,  /* Loop Far End Analog (Not supported on CN8XXX) */
+    QLM_LOOP_NEA,  /* Loop Near End Analog (Not supported on CN8XXX) */
+    QLM_LOOP_NED,  /* Loop Near End Digital (Not supported on CN8XXX) */
+    QLM_LOOP_FED,  /* Loop Far End Digital (Not supported on CN8XXX) */
 } qlm_loop_t;
 
 typedef enum {

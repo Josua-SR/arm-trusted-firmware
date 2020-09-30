@@ -4,7 +4,7 @@
  */
 
 /***********************license start***********************************
-* Copyright (C) 2018 Marvell International Ltd.
+* Copyright (C) 2018-2020 Marvell International Ltd.
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -259,8 +259,8 @@ extern void qlm_gserc_rx_leq_adaptation(int qlm, int lane,
 	int leq_lfg_start, int leq_hfg_sql_start, int leq_mbf_start,
 	int leq_mbg_start, int gn_apg_start);
 extern void qlm_gserc_rx_dfe_adaptation(int qlm, int lane);
-				qlm_gserc_rx_dfe_adaptation(qlm, l);
-				qlm_gserc_rx_leq_adaptation(qlm, l, 2, 8, 0, 8, 3);
+				 qlm_gserc_rx_dfe_adaptation(qlm, l);
+				 qlm_gserc_rx_leq_adaptation(qlm, l, 2, 8, 0, 8, 3);
 			}
 #endif
 			apply_tuning(qlm, l);
@@ -677,8 +677,18 @@ static void qlm_gserc_lane_rst(int module, int lane, bool reset)
 	   transitioned to the “Reset” state.
 	   Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
 			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000)) {
 		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (reset done)\n", module, lane);
+		return;
+	}
+
+	/* set SerDes lane tx_en on */
+	if (!reset)
+	{
+		GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+					   c.s.ln_ctrl_tx_en = 1);
+		gser_wait_usec(1);
+	}
 }
 
 /**
@@ -706,8 +716,9 @@ int qlm_gserc_ned_loopback(int module, int lane, bool enable)
 	/* 1. Disable the firmware receive control state machine.
 		Write GSERC(0..2)_LN(0..3)_FEATURE_TEST_CFG0
 			RX_CTRL_DIS=1 */
-	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_TEST_CFG0(module, lane),
-		c.s.rx_ctrl_dis = enable);
+	if (enable)
+		GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_TEST_CFG0(module, lane),
+			c.s.rx_ctrl_dis = enable);
 
 	/* 2. Bring-up the lane to the active power state, refer to the steps in
 		Section 1.4 GSERC Software Initialization. */
@@ -910,8 +921,11 @@ int qlm_gserc_ned_loopback(int module, int lane, bool enable)
 	/* 12. Drive the LN_STAT_RXVALID signal output on the selected lane.
 		Write GSERC(0..2)_LN(0..3)_TOP_LN_STAT_CTRL0
 			RXVALID=1 */
+#if 0
 	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_LN_STAT_CTRL0(module, lane),
 		c.s.rxvalid = 1);
+#endif
+	/* Skip step; Not needed, may cause issues exiting */
 
 	/* 13. Read/Poll for LN_STAT_RXVALID=1.
 		GSERC(0..2)_LANE(0..3)_STATUS_BSTS
@@ -1013,6 +1027,16 @@ int qlm_gserc_ned_loopback(int module, int lane, bool enable)
 	}
 	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_DPL_RXDP_CTRL1(module, lane),
 		c.s.rx_fifo_en = 1);
+
+	if (!enable)
+	{
+		/* 2. Disable the firmware receive control state machine. */
+		GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_TEST_CFG0(module, lane),
+			c.s.rx_ctrl_dis = enable);
+		/* Toggle Reset */
+		qlm_gserc_lane_rst(module, lane, 1);
+		qlm_gserc_lane_rst(module, lane, 0);
+	}
 	return 0;
 }
 
@@ -1169,7 +1193,7 @@ int qlm_gserc_fea_loopback(int module, int lane, bool enable)
 			e. OVR_EN = 0x1 (should be programmed last or at the same time as
 				all other fields) */
 	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_LN_CTRL_OVR0(module, lane),
-		c.s.tx_en = 1;
+		c.s.tx_en = enable;
 		c.s.eye_rxpolarity = 0;
 		c.s.edge_rxpolarity = 0;
 		c.s.data_rxpolarity = 0;
@@ -1179,6 +1203,402 @@ int qlm_gserc_fea_loopback(int module, int lane, bool enable)
 	if (!enable)
 		qlm_gserc_lane_rst(module, lane, 0);
 
+	return 0;
+}
+
+/**
+ * Implementation of Far-End Digital (FED) Loopback
+ *
+ * @param module   which GSERC instance
+ * @param lane	 which lane
+ * @param enable
+ *
+ * @return Zero on success, negative on failure
+ */
+int qlm_gserc_fed_loopback(int module, int lane, bool enable)
+{
+	/* Skip running if we aren't changing anything */
+	GSER_CSR_INIT(dpl_txdp_ctrl1, CAVM_GSERCX_LNX_TOP_DPL_TXDP_CTRL1(module, lane));
+	if (enable && dpl_txdp_ctrl1.s.lb_fed_tx_en)
+		return 0;
+	if (!enable && !dpl_txdp_ctrl1.s.lb_fed_tx_en)
+		return 0;
+
+	/* These steps are from the Salina platform programming guide */
+	/* 1. Bring up the lane to the ACTIVE power state as in the normal operating
+	   mode (i.e. lnX_tx_rdy_o and lnX_rx_rdy_o asserted). Valid data must be
+	   transmitted into RX pins (lnX_rxp/m_i). */
+	/* Already been done when the SERDES was configured */
+
+	qlm_gserc_lane_rst(module, lane, 1);
+	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_LN_CTRL_OVR3(module, lane),
+		c.s.rx_data_width = enable ? 4 : 0;  // 32-bit
+		c.s.tx_data_width = enable ? 4 : 0;  // 32-bit
+		c.s.ovr_en = enable);
+
+	/* assert rate chng */
+	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_LN_CTRL_OVR1(module, lane),
+		c.s.rate_chng = 1;
+		c.s.ovr_en = 1);
+ 
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+		{
+			gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0\n (lane is reset)", module, lane);
+		}
+	/* de-assert rate chng */
+	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_LN_CTRL_OVR1(module, lane),
+		c.s.rate_chng = 0;
+		c.s.ovr_en = 1);
+
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+		{
+			gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1\n (lane is reset)", module, lane);
+		}
+	/* de-assert ovr_en */
+	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_LN_CTRL_OVR1(module, lane),
+		c.s.ovr_en = 0);
+
+	if (enable)
+		qlm_gserc_lane_rst(module, lane, 0);
+
+	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_AFE_TXCP_CTRL2(module, lane),
+		c.s.txcp_clkdiv = 0x0);
+
+	/* 2. Set the lane top register field AFE_LOOPBACK_CTRL.LOOPBACK_RXCLK_EN.
+	   (Note: This is a required step for simulation testing, but is generally
+	   not used in silicon testing. This step will use the recovered clock to
+	   drive the transmit driver, therefore it will result in much higher jitter
+	   content on the TX signal in silicon). */
+	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_AFE_LOOPBACK_CTRL(module, lane),
+		c.s.loopback_rxclk_en = enable);
+
+	/* 3. Wait until lnX_stat_rxvalid_o PHY top-level interface signal to be set
+	   to 1. If desired, a lane top register field LN_STAT_CTRL0.RXVALID can be
+	   polled. By this time, CDR is locked and received data are valid. */
+	if (enable && GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LNX_TOP_LN_STAT_CTRL0(module, lane), GSERCX_LNX_TOP_LN_STAT_CTRL0_RXVALID, ==, 1, 10000))
+		gser_warn("GSERC%d.%d: [1] No receive signal detected\n", module, lane);
+
+	/* 4. Configure the clocks for the Transmit FIFO and Receiver gearbox clocks.
+		Write GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_TXB
+			CTRL_SRC_OVR_VAL=2’h0 //Select lnX_clk_rx TX_GBX off
+		Write GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_TXF
+			CTRL_SRC_OVR_VAL=2’h0 //Select lnX_clk_rx TX_GBX off
+		Write GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_RXB
+			CTRL_SRC_OVR_VAL=2’h3 //lnX_clk_rx RX_GBX off
+		Write GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_RXF
+			CTRL_SRC_SEL=2’h3 //lnX_clk_rx RX_GBX off */
+	cavm_gsercx_phy0_top_clock_ln0_clk_txb_t clk_txb = {.u = 0};
+	cavm_gsercx_phy0_top_clock_ln0_clk_txf_t clk_txf = {.u = 0};
+	cavm_gsercx_phy0_top_clock_ln0_clk_rxb_t clk_rxb = {.u = 0};
+	cavm_gsercx_phy0_top_clock_ln0_clk_rxf_t clk_rxf = {.u = 0};
+	clk_txb.s.ctrl_src_ovr_val = enable ? 0 : 0;
+	clk_txf.s.ctrl_src_ovr_val = enable ? 0 : 0;
+	clk_rxb.s.ctrl_src_ovr_val = enable ? 3 : 0;
+	clk_rxf.s.ctrl_src_sel = enable ? 3 : 3;
+
+	switch (lane)
+	{
+		case 0:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CLK_TXF(module), clk_txf.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CLK_RXB(module), clk_rxb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CLK_RXF(module), clk_rxf.u);
+			break;
+		case 1:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CLK_TXF(module), clk_txf.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CLK_RXB(module), clk_rxb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CLK_RXF(module), clk_rxf.u);
+			break;
+#if QUAD_LANE
+		case 2:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CLK_TXF(module), clk_txf.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CLK_RXB(module), clk_rxb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CLK_RXF(module), clk_rxf.u);
+			break;
+		case 3:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CLK_TXF(module), clk_txf.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CLK_RXB(module), clk_rxb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CLK_RXF(module), clk_rxf.u);
+			break;
+#endif
+	}
+
+	/* 5. Enable the clocks for the Transmit FIFO and Receiver gearbox clocks.
+		Write GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_TXB
+			CTRL_SRC_OVR_EN=1
+		Write GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_TXF
+			CTRL_SRC_OVR_EN=1
+		Write GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_RXB
+			CTRL_SRC_OVR_EN=1
+		Note there is no CTRL_SRC_OVR_EN bit for the CLK_RXF gearbox clock, it
+		is controlled only by the GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_RXF[CTRL_SRC_SEL]
+		field in Step 5 above. */
+	clk_txb.s.ctrl_src_ovr_en = enable;
+	clk_txf.s.ctrl_src_ovr_en = enable;
+	clk_rxb.s.ctrl_src_ovr_en = enable;
+	switch (lane)
+	{
+		case 0:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CLK_TXF(module), clk_txf.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CLK_RXB(module), clk_rxb.u);
+			break;
+		case 1:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CLK_TXF(module), clk_txf.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CLK_RXB(module), clk_rxb.u);
+			break;
+#if QUAD_LANE
+		case 2:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CLK_TXF(module), clk_txf.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CLK_RXB(module), clk_rxb.u);
+			break;
+		case 3:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CLK_TXF(module), clk_txf.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CLK_RXB(module), clk_rxb.u);
+			break;
+#endif
+	}
+
+	/* 6. Wait 1 usecond for the clocks to settle */
+	gser_wait_usec(1);
+
+	/* 7. Enable FED loopback on the selected lane */
+	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_DPL_TXDP_CTRL1(module, lane),
+		c.s.dmux_txa_sel_ovr_val = 0x1;  // Rx data for Far-End-Digital FED loopback
+		c.s.dmux_txa_sel_ovr_en = enable);   // Enables register control of Tx data path mux in DPL
+
+	/* 8. Recalibrate TXDP clock using the corresponding mailbox command.
+			a. Read top mailbox register CMD_FLAG. It should be 0.
+			b. Read top mailbox register RSP_FLAG. If it is 1, write a 1 to
+				clear it.
+			c. Write the lane number (0 to NUM_LANES) to top mailbox register
+				CMD_DATA0.
+			d. Write 0x81 to top mailbox register CMD.
+			e. Wait for top mailbox register RSP_FLAG to read 1.
+			f. Read top mailbox register RSP to get the calibration’s error
+				code (0 == no error). Read top mailbox register RSP_DATA0 to
+				get the calibration’s result.
+			g. Write 1 to RSP_FLAG to clear it. */
+	if (enable) {
+		if (mailbox_command(module, 0x81, lane) != 0)
+			return -1;
+		uint64_t resp0 = 0;
+		uint64_t resp1 = 0;
+		if (mailbox_response(module, &resp0, &resp1) != 0)
+			gser_warn("GSERC%d.%d: TXDP recalibrate failed\n", module, lane);
+	}
+
+	if (enable && GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LNX_TOP_LN_STAT_CTRL0(module, lane), GSERCX_LNX_TOP_LN_STAT_CTRL0_RXVALID, ==, 1, 10000))
+		gser_warn("GSERC%d.%d: [2] No receive signal detected\n", module, lane);
+
+	/* 9. Enable the transmitter for the LB_FED path */
+	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_DPL_TXDP_CTRL1(module, lane),
+		c.s.lb_fed_tx_en = enable);
+
+	/* Complete lane reset if disabling FED loopback */
+	if (!enable) {
+		qlm_gserc_lane_rst(module, lane, 0);
+	}
+
+	return 0;
+}
+
+/**
+ * Implementation of Near-End Analog (NEA) Loopback
+ *
+ * @param module   which GSERC instance
+ * @param lane	 which lane
+ * @param enable
+ *
+ * @return Zero on success, negative on failure
+ */
+int qlm_gserc_nea_loopback(int module, int lane, bool enable)
+{
+	GSER_CSR_INIT(afe_loopback_ctrl, CAVM_GSERCX_LNX_TOP_AFE_LOOPBACK_CTRL(module, lane));
+	if (enable && afe_loopback_ctrl.s.loopback_nea_en)
+		return 0;
+	if (!enable && !afe_loopback_ctrl.s.loopback_nea_en)
+		return 0;
+	if (enable)
+	{
+		/* 1. Assert Reset. */
+		qlm_gserc_lane_rst(module, lane, 1);
+		/* 2. Disable the firmware receive control state machine. */
+		GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_TEST_CFG0(module, lane),
+			c.s.rx_ctrl_dis = 1); // maybe use enable?
+		/* 3. De-Assert Reset */
+		qlm_gserc_lane_rst(module, lane, 0);
+	}
+	/* 4. Configure the clocks for the Transmit FIFO and Receiver gearbox clocks.
+		Write GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_TXB
+			CTRL_SRC_OVR_VAL=2’h2 //Select cmu clock
+		Write GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_TXF
+			CTRL_SRC_OVR_VAL=2’h2 //Select cmu clock
+		Write GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_RXB
+			CTRL_SRC_OVR_VAL=2’h2 //Select cmu clock
+		Write GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_RXF
+			CTRL_SRC_SEL=2’h2 //Select cmu clock */
+	cavm_gsercx_phy0_top_clock_ln0_clk_txb_t clk_txb = {.u = 0};
+	cavm_gsercx_phy0_top_clock_ln0_clk_txf_t clk_txf = {.u = 0};
+	//cavm_gsercx_phy0_top_clock_ln0_clk_rxb_t clk_rxb = {.u = 0};
+	//cavm_gsercx_phy0_top_clock_ln0_clk_rxf_t clk_rxf = {.u = 0};
+	clk_txb.s.ctrl_src_ovr_val = enable ? 3 : 0;
+	clk_txf.s.ctrl_src_ovr_val = enable ? 3 : 0;
+	//clk_rxb.s.ctrl_src_ovr_val = enable ? 1 : 0;
+	//clk_rxf.s.ctrl_src_sel = enable ? 3 : 0;
+	switch (lane)
+	{
+		case 0:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CLK_TXF(module), clk_txf.u);
+			//GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CLK_RXB(module), clk_rxb.u);
+			//GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CLK_RXF(module), clk_rxf.u);
+			break;
+		case 1:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CLK_TXF(module), clk_txf.u);
+			//GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CLK_RXB(module), clk_rxb.u);
+			//GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CLK_RXF(module), clk_rxf.u);
+			break;
+#if QUAD_LANE
+		case 2:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CLK_TXF(module), clk_txf.u);
+			//GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CLK_RXB(module), clk_rxb.u);
+			//GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CLK_RXF(module), clk_rxf.u);
+			break;
+		case 3:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CLK_TXF(module), clk_txf.u);
+			//GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CLK_RXB(module), clk_rxb.u);
+			//GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CLK_RXF(module), clk_rxf.u);
+			break;
+#endif
+	}
+
+	/* 5. Enable the clocks for the Transmit FIFO and Receiver gearbox clocks.
+		Write GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_TXB
+			CTRL_SRC_OVR_EN=1
+		Write GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_TXF
+			CTRL_SRC_OVR_EN=1
+		Write GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_RXB
+			CTRL_SRC_OVR_EN=1
+		Note there is no CTRL_SRC_OVR_EN bit for the CLK_RXF gearbox clock, it
+		is controlled only by the GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_RXF[CTRL_SRC_SEL]
+		field in Step 5 above. */
+	clk_txb.s.ctrl_src_ovr_en = enable;
+	clk_txf.s.ctrl_src_ovr_en = enable;
+	//clk_rxb.s.ctrl_src_ovr_en = enable;
+	switch (lane)
+	{
+		case 0:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CLK_TXF(module), clk_txf.u);
+			//GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CLK_RXB(module), clk_rxb.u);
+			break;
+		case 1:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CLK_TXF(module), clk_txf.u);
+			//GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CLK_RXB(module), clk_rxb.u);
+			break;
+#if QUAD_LANE
+		case 2:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CLK_TXF(module), clk_txf.u);
+			//GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CLK_RXB(module), clk_rxb.u);
+			break;
+		case 3:
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CLK_TXB(module), clk_txb.u);
+			GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CLK_TXF(module), clk_txf.u);
+			//GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CLK_RXB(module), clk_rxb.u);
+			break;
+#endif
+	}
+
+
+	/* 6. Wait 1 usecond for the clocks to settle */
+	gser_wait_usec(1);
+
+	/* 7. Recalibrate TXDP clock using the corresponding mailbox command.
+			a. Read top mailbox register CMD_FLAG. It should be 0.
+			b. Read top mailbox register RSP_FLAG. If it is 1, write a 1 to
+				clear it.
+			c. Write the lane number (0 to NUM_LANES) to top mailbox register
+				CMD_DATA0.
+			d. Write 0x81 to top mailbox register CMD.
+			e. Wait for top mailbox register RSP_FLAG to read 1.
+			f. Read top mailbox register RSP to get the calibration’s error
+				code (0 == no error). Read top mailbox register RSP_DATA0 to
+				get the calibration’s result.
+			g. Write 1 to RSP_FLAG to clear it. */
+	if (enable) {
+		if (mailbox_command(module, 0x81, lane) != 0)
+			return -1;
+		uint64_t resp0 = 0;
+		uint64_t resp1 = 0;
+		if (mailbox_response(module, &resp0, &resp1) != 0)
+			gser_warn("GSERC%d.%d: TXDP recalibrate failed\n", module, lane);
+	}
+
+	/* 8. Enable NEA loopback on the selected lane. */
+	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_AFE_LOOPBACK_CTRL(module, lane),
+		c.s.loopback_nea_en = enable);
+
+	/* 9. Enable the lane recieve clock. */
+	switch(lane)
+	{
+		case 0 :
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_PHY0_TOP_CLOCK_LN0_CG_CTRL(module),
+				c.s.clk_rx = enable);
+			break;
+		case 1 :
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_PHY0_TOP_CLOCK_LN1_CG_CTRL(module),
+				c.s.clk_rx = enable);
+			break;
+#if QUAD_LANE
+		case 2 :
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_PHY0_TOP_CLOCK_LN2_CG_CTRL(module),
+				c.s.clk_rx = enable);
+			break;
+		case 3 :
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_PHY0_TOP_CLOCK_LN3_CG_CTRL(module),
+				c.s.clk_rx = enable);
+			break;
+#endif
+	}
+
+	/* 10. Bring-up the CGX MAC and start the MAC transmitter. */
+	// TODO
+
+	/* 11. Wait 1 usecond for looped Tx data to fully propegate to the receive data path. */
+	gser_wait_usec(1);
+
+	/* 13. Drive the RXVALID on the selected lane. */
+	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_LN_STAT_CTRL0(module, lane),
+		c.s.rxvalid = enable);
+
+	if (!enable)
+	{
+		/* 2. Disable the firmware receive control state machine. */
+		GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_TEST_CFG0(module, lane),
+			c.s.rx_ctrl_dis = enable); // maybe use enable?
+		qlm_gserc_lane_rst(module, lane, 1);
+		/* 3. De-Assert Reset */
+		qlm_gserc_lane_rst(module, lane, 0);
+	}
+
+	/* 14. Poll for Rx CDR locked.
+	   Ignore the LN_STAT_LOS flag in NEA loopback. */
+	if (enable && GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_LNX_TOP_LN_STAT_CTRL0_RXVALID, ==, 1, 10000))
+		gser_warn("GSERC%d.%d: Wait for GSERCX_LANEX_STATUS_BSTS[LN_STAT_RXVALID]=1 timeout\n", module, lane);
+
+	/* 15. Start the CGX MAC Receiver, CGX should now be receiving all transmit data to the GSER* lane in NEA loopback. */
 	return 0;
 }
 
@@ -1193,17 +1613,18 @@ int qlm_gserc_fea_loopback(int module, int lane, bool enable)
  */
 int qlm_gserc_enable_loop(int qlm, qlm_loop_t loop)
 {
-	int use_fea = (loop == QLM_LOOP_SHALLOW);
-	int use_ned = (loop == QLM_LOOP_CORE);
-	/* We haven't implemented near-end analog loopback, so use the digital one
-	   instead. I doubt anyone will notice */
-	use_ned |= (loop == QLM_LOOP_NEAR_END);
+	int use_fea = (loop == QLM_LOOP_FEA);
+	int use_ned = (loop == QLM_LOOP_NED);
+	int use_fed = (loop == QLM_LOOP_FED);
+	int use_nea = (loop == QLM_LOOP_NEA);
 
 	int num_lanes = get_num_lanes(qlm);
 	for (int lane = 0; lane < num_lanes; lane++)
 	{
 		qlm_gserc_fea_loopback(qlm, lane, use_fea);
 		qlm_gserc_ned_loopback(qlm, lane, use_ned);
+		qlm_gserc_fed_loopback(qlm, lane, use_fed);
+		qlm_gserc_nea_loopback(qlm, lane, use_nea);
 	}
 	return 0;
 }
@@ -1640,9 +2061,11 @@ int qlm__gserc_rx_equalization(int qlm, int qlm_lane)
 			continue;
 
 		GSER_CSR_INIT(rxdp_ctrl1, CAVM_GSERCX_LNX_TOP_DPL_RXDP_CTRL1(qlm, lane));
-		if (rxdp_ctrl1.s.rx_dmux_sel)
+		GSER_CSR_INIT(afe_loopback_ctrl, CAVM_GSERCX_LNX_TOP_AFE_LOOPBACK_CTRL(qlm, lane));
+		if (rxdp_ctrl1.s.rx_dmux_sel ||
+			afe_loopback_ctrl.s.loopback_nea_en)
 		{
-			GSER_TRACE(QLM, "N0.GSERC%d.%d: NED loopback, skipping adaption\n", qlm, lane);
+			GSER_TRACE(QLM, "N0.GSERC%d.%d: NED or NEA loopback, skipping adaption\n", qlm, lane);
 			continue;
 		}
 
@@ -1661,7 +2084,8 @@ int qlm__gserc_rx_equalization(int qlm, int qlm_lane)
 		}
 
 		GSER_TRACE(QLM, "N0.GSERC%d.%d: RX signal, CDR locked, running adaption\n", qlm, lane);
-		GSER_CSR_WRITE(CAVM_GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD(qlm, lane), ADAPTION_TYPE_RUNNING);
+		GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD(qlm, lane),
+			c.u |= ADAPTION_TYPE_RUNNING);
 	}
 	return result;
 }
@@ -1881,6 +2305,223 @@ int qlm_gserc_eye_capture(int qlm, int lane, int show_data, qlm_eye_t *eye_data)
 	return 0;
 }
 
+#if 0
+/**
+ * Send the AN/training handshake to the serdes firmware
+ *
+ * @param node	  Which node to use
+ * @param module	Which serdes module to use
+ * @param lane	  Which lane to use
+ * @param enable_an True if the lane should be allowed to progress through AN. False if the
+ *				  lane should be held in reset
+ *
+ * @return Zero on success, negative on failure
+ */
+static int firmware_handshake(int module, int lane, bool enable_an)
+{
+	/* AN Handshaking bit assignments:
+		GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD[data]
+			data[3] = Handshake enable
+			data[4] = Handshake ready
+		AN master lanes will wait in RESET state while (handshake_en && !handshake_ready),
+		and proceed with AN otherwise. */
+
+	/* We never use the handshake, so READY should always be zero */
+	GSER_CSR_INIT(cfg6, CAVM_GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane));
+	if (cfg6.s.data & (1 << 4))
+	{
+		gser_error("GSERC%d.%d: Firmware has AN ready set\n", module, lane);
+		return -1;
+	}
+
+	/* If AN is enabled, allow lane by setting ENABLE=0. If AN is not enabled,
+	   force the lane in reset with ENABLE=1 */
+	if (enable_an)
+	{
+		if (cfg6.s.data & 8)
+		{
+			cfg6.s.data &= 0xf7;
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane), cfg6.u);
+			GSER_TRACE(QLM, "GSERC%d.%d: Handshake to allow AN\n", module, lane);
+		}
+	}
+	else
+	{
+		if ((cfg6.s.data & 8) == 0)
+		{
+			cfg6.s.data |= 0x8;
+			GSER_CSR_WRITE(CAVM_GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane), cfg6.u);
+			GSER_TRACE(QLM, "GSERC%d.%d: Handshake to reset AN\n", module, lane);
+		}
+	}
+	return 0;
+}
+
+/**
+ * Show the current state of a serdes lane
+ *
+ * @param node   Which node to use
+ * @param module Which serdes module to use
+ * @param lane   Which lane to use
+ */
+static void show_lane_state(int module, int lane)
+{
+/*
+ * Added in qlm-gserc.patch applied by gser-update script in SDK
+ * Suppress unused variable warning when debug prints are disabled.
+ */
+#ifdef DEBUG_ATF_GSER
+	const char *str = "UNKNOWN";
+	switch (lane_state[module][lane])
+	{
+		case LANE_STATE_TX_OFF:
+			str = "Off";
+			break;
+		case LANE_STATE_TX_ON:
+			str = "On";
+			break;
+		case LANE_STATE_AN:
+			str = "AN";
+			break;
+		case LANE_STATE_TRAINING:
+			str = "Training";
+			break;
+		case LANE_STATE_CGX:
+			str = "CGX";
+			break;
+	}
+	GSER_TRACE(QLM, "GSERC%d.%d: Lane: %s\n", module, lane, str);
+/*
+ * Added in qlm-gserc.patch applied by gser-update script in SDK
+ */
+#endif
+}
+
+/**
+ * Update the state of a serdes lane based on changes in AN, training, and CGX
+ *
+ * @param node   Which node to use
+ * @param module Which serdes module to use
+ * @param lane   Which lane to use
+ */
+static void update_lane_state(int module, int lane)
+{
+	GSER_CSR_INIT(bcfg, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane));
+	GSER_CSR_INIT(bsts, CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane));
+	GSER_CSR_INIT(status, CAVM_GSERCX_LNX_LT_TX_FSM_STATUS(module, lane));
+	bool need_an = (bcfg.s.ln_an_cfg != 0);
+	bool rx_signal = (bsts.s.ln_stat_los == 0);
+
+	switch (lane_state[module][lane])
+	{
+		case LANE_STATE_TX_OFF:
+			/* SERDES are off, nothing to do */
+			firmware_handshake(module, lane, false);
+			return;
+		case LANE_STATE_TX_ON:
+			/* See if we need to start AN */
+			if (need_an)
+			{
+				if (bcfg.s.ln_an_cfg == 2)
+				{
+					/* Start AN */
+					GSER_TRACE(QLM, "GSERC%d.%d: Starting AN\n", module, lane);
+					lane_state[module][lane] = LANE_STATE_AN;
+					firmware_handshake(module, lane, true);
+				}
+				else
+				{
+					GSER_TRACE(QLM, "GSERC%d.%d: Lane is slave during AN\n", module, lane);
+					lane_state[module][lane] = LANE_STATE_TRAINING;
+				}
+			}
+			else
+			{
+				if (rx_signal)
+				{
+					GSER_TRACE(QLM, "GSERC%d.%d: RX signal detected\n", module, lane);
+					lane_state[module][lane] = LANE_STATE_CGX;
+				}
+			}
+			return;
+		case LANE_STATE_AN:
+		{
+			if (bsts.s.ln_an_stat_resolved)
+			{
+				GSER_TRACE(QLM, "GSERC%d.%d: AN resolved %d, start training\n", module, lane, bsts.s.ln_an_link_sel);
+				lane_state[module][lane] = LANE_STATE_TRAINING;
+			}
+			return;
+		}
+		case LANE_STATE_TRAINING:
+		{
+			/* See if training is complete */
+			if (bsts.s.ln_lt_sigdet)
+			{
+				lane_state[module][lane] = LANE_STATE_CGX;
+				GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_link_stat = bsts.s.ln_an_link_sel);
+				GSER_TRACE(QLM, "GSERC%d.%d: Training finished\n", module, lane);
+			}
+			else if (status.s.training_fail || !status.s.training)
+			{
+				GSER_TRACE(QLM, "GSERC%d.%d: Training failed, restarting AN\n", module, lane);
+				GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_link_stat = 0);
+				lane_state[module][lane] = LANE_STATE_TX_ON;
+			}
+			else
+			{
+				//GSER_TRACE(QLM, "GSERC%d.%d: Training running\n", module, lane);
+			}
+			return;
+		}
+		case LANE_STATE_CGX:
+		{
+			/* CGX should be ready to link up */
+			if (need_an && !rx_signal)
+			{
+				GSER_TRACE(QLM, "GSERC%d.%d: Loss of signal, restart\n", module, lane);
+				GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_link_stat = 0);
+				lane_state[module][lane] = LANE_STATE_TX_ON;
+			}
+			return;
+		}
+	}
+}
+
+/**
+ * Update the state of all serdes lanes
+ *
+ * @param node   Which node to use
+ */
+static void update_all_lane_state()
+{
+	if (num_gserc == 0)
+	{
+		if (gser_is_model(OCTEONTX_LOKI))
+			num_gserc = 5;
+		else
+		{
+			gser_error("GSERC: Unrecognized chip\n");
+			return;
+		}
+	}
+
+	/* Loop twice in case a later lane is connected to an early lane */
+	for (int count = 0; count < 2; count++)
+	{
+		for (int module = 0; module < num_gserc; module++)
+		{
+			int num_lanes = get_num_lanes(module);
+			for (int lane = 0; lane < num_lanes; lane++)
+				update_lane_state(module, lane);
+		}
+	}
+}
+#endif
+
 /**
  * Manually turn on or off the SERDES transmitter
  *
@@ -1895,8 +2536,104 @@ int qlm_gserc_tx_control(int qlm, int lane, int enable_tx)
 	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(qlm, lane),
 		c.s.ln_ctrl_tx_en = en);
 	lane_state[qlm][lane] = en ? LANE_STATE_TX_ON : LANE_STATE_TX_OFF;
+#if 0
+	update_all_lane_state();
+	show_lane_state(qlm, lane);
+#endif
 	return 0;
 }
+
+#if 0
+/**
+ * Called when networking needs to start or restart AN. This function may be
+ * called multiple times before AN is finished.
+ *
+ * @param node   Node to setup
+ * @param module QLM/DLM to setup
+ * @param lane   Lane to setup
+ * @param unused Unused argument. Present so a number of QLM functions have the same signature
+ *			   for easy calling in the network driver
+ *
+ * @return Zero on success, negative on failure. Network driver shouldn't continue with
+ *		 AN until this returns 0
+ */
+int qlm_gserc_start_an(int module, int lane, int unused)
+{
+	update_all_lane_state();
+	show_lane_state(module, lane);
+	switch (lane_state[module][lane])
+	{
+		case LANE_STATE_TX_OFF:
+		case LANE_STATE_TX_ON:
+			return -1;
+		case LANE_STATE_AN:
+		case LANE_STATE_TRAINING:
+		case LANE_STATE_CGX:
+			return 0;
+	}
+	return -1;
+}
+
+/**
+ * Called when networking needs to finish AN. The start AN function will always
+ * be called at least once before this function is called
+ *
+ * @param node   Node to setup
+ * @param module QLM/DLM to setup
+ * @param lane   Lane to setup
+ * @param start_training
+ *			   True if we need to start training right after AN
+ *
+ * @return Zero on success, negative on failure. Network driver shouldn't continue until
+ *		 this returns 0
+ */
+int qlm_gserc_finish_an(int module, int lane, int start_training)
+{
+	update_all_lane_state();
+	show_lane_state(module, lane);
+	switch (lane_state[module][lane])
+	{
+		case LANE_STATE_TX_OFF:
+		case LANE_STATE_TX_ON:
+		case LANE_STATE_AN:
+			return -1;
+		case LANE_STATE_TRAINING:
+		case LANE_STATE_CGX:
+			return 0;
+	}
+	return -1;
+}
+
+/**
+ * Called when networking needs to complete training. This function may be
+ * called multiple times before training is finished.
+ *
+ * @param node   Node to setup
+ * @param module QLM/DLM to setup
+ * @param lane   Lane to setup
+ * @param unused Unused argument. Present so a number of QLM functions have the same signature
+ *			   for easy calling in the network driver
+ *
+ * @return Zero when training is complete, positive if training is still running,
+ *		 negative on training failure
+ */
+int qlm_gserc_finish_training(int module, int lane, int unused)
+{
+	update_all_lane_state();
+	show_lane_state(module, lane);
+	switch (lane_state[module][lane])
+	{
+		case LANE_STATE_TX_OFF:
+		case LANE_STATE_TX_ON:
+		case LANE_STATE_AN:
+		case LANE_STATE_TRAINING:
+			return -1;
+		case LANE_STATE_CGX:
+			return 0;
+	}
+	return -1;
+}
+#endif
 
 /**
  * Poll serdes for errors removed by gser-update script (qlm.sed)
@@ -2051,17 +2788,51 @@ static cavm_gsercx_common_phy_ctrl_bcfg_t qlm_gserc_get_clock_mode(int module)
 	GSER_TRACE(QLM, "GSERC%d: phy_ctrl_rate1=0x%02x, phy_ctrl_rate2=0x%02x\n",
 		module, phy_ctrl_rate1, phy_ctrl_rate2);
 
+	/* Refclk routing, from F95N_detailed_refclk_distribution_diagram_r3.pdf
+		1) GSERC_REF_CLK2, 156.25MHz for etherent, comes into GSERR0 refclk
+			bumps on GSERR0. This is then forwarded out ref_a_r_o to GSERC0.
+			GSERC0 receives etherent clk on ref_a_r_i and forwards it out
+			ref_a_r_o. GSERC1-3 do the same, then GSERC4 receives it on
+			ref_a_r_i. REFCLK_PAD_ENA must be 1 on GSERR0.
+		2) GSERC_REF_CLK3, 156.25MHz for SyncEtherent, comes into GSERC4 refclk
+			bumps on GSERC4. This is then forwarded out ref_b_r_o to GSERC3.
+			GSERC3 receives SyncEtherent clk on ref_b_r_i and forwards it out
+			ref_b_r_o. GSERC2-1 do the same, then GSERC0 receives it on
+			ref_b_r_i and forwards it out ref_b_r_o to GSERR0. REFCLK_PAD_ENA
+			must be 1 on GSERC3.
+		3) GSERC_REF_CLK4, 122.88MHz for CPRI, comes into GSERC0 refclk
+			bumps on GSERC0. This is then forwarded out ref_a_l_o to GSERC1.
+			GSERC1 receives CPRI clk on ref_a_l_i and forwards it out
+			ref_a_l_o. GSERC1-3 do the same, then GSERC4 receives it on
+			ref_a_l_i. REFCLK_PAD_ENA must be 1 on GSERC0. */
+	bool use_gserc_ref_clk2 = !need_cpri_9g && !need_cpri_6g;
+	bool use_gserc_ref_clk3 = false;
+	bool use_gserc_ref_clk4 = need_cpri_9g || need_cpri_6g;
+
 	GSER_CSR_INIT(bcfg, CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(module));
-	if (need_cpri_9g || need_cpri_6g)
+	if (use_gserc_ref_clk2)
 	{
+		bcfg.s.refclk_input_sel = 2; /* ref_a_r_i */
+		bcfg.s.phy_ctrl_refclk = 0x0e; /* Assumes 156.25MHz */
+		bcfg.s.refclk_pad_ena = 0; /* No pads used */
+	}
+	else if (use_gserc_ref_clk3)
+	{
+		/* module 3 uses pad, others use ref_b_r_i */
+		bcfg.s.refclk_input_sel = (module == 4) ? 0 : 6;
+		bcfg.s.phy_ctrl_refclk = 0x0e; /* Assumes 156.25MHz */
+		bcfg.s.refclk_pad_ena = (module == 4) ? 1 : 0;; /* Pad on GSERC4 */
+	}
+	else if (use_gserc_ref_clk4)
+	{
+		/* module 0 uses pad, others use ref_a_l_i */
 		bcfg.s.refclk_input_sel = (module == 0) ? 0 : 1;
-		bcfg.s.phy_ctrl_refclk = 0x14;
+		bcfg.s.phy_ctrl_refclk = 0x14; /* Assumes 122.88MHz */
+		bcfg.s.refclk_pad_ena = (module == 0) ? 1 : 0;; /* Pad on GSERC0 */
 	}
 	else
-	{
-		bcfg.s.refclk_input_sel = 2;
-		bcfg.s.phy_ctrl_refclk = 0x0e;
-	}
+		gser_error("GSERC%d: No refclk selected\n", module);
+
 	bcfg.s.phy_ctrl_rate1 = phy_ctrl_rate1;
 	bcfg.s.phy_ctrl_rate2 = phy_ctrl_rate2;
 
@@ -2209,6 +2980,9 @@ static cavm_gsercx_lanex_control_bcfg_t qlm_gserc_get_lane_mode(int module, int 
 	bcfg.s.ln_link_stat = 0;
 	bcfg.s.ln_an_cfg = ln_an_cfg;
 	bcfg.s.rx_bitstrip_en = (state.s.baud_mhz == 2458);
+	/* Program RX polarity. The TX polarity is programemd in qlm_gserc_init() */
+	bcfg.s.ln_ctrl_rxpolarity = gser_config_get_int(GSER_CONFIG_QLM_LANE_RX_POLARITY,
+		map_module_to_qlm(module), lane);
 
 	return bcfg;
 }
@@ -2242,7 +3016,7 @@ static int qlm_gserc_change_lane_rate(int module, int lane)
 		writing
 		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
 			LN_CTRL_TX_EN=0 Disable the transmitter
-		Wait at leaset 100 nanoseconds to allow the Transmitter to turn off
+		Wait at least 100 nanoseconds to allow the Transmitter to turn off
 		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
 			LN_RST = 1 Put the PHY lane in Reset */
 	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
@@ -2542,7 +3316,7 @@ static int qlm_gserc_change_phy_rate(int module)
 
 	/* 11. Read/Poll for the CM0 State Change Ready to reassert
 	   Read/Poll GSERC(0..2)_COMMON_PHY_STATUS_BSTS
-		CM0_STATE_CHNG_RDY=1 //CM0 has completed power state transtion */
+		CM0_STATE_CHNG_RDY=1 //CM0 has completed power state transition */
 	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_COMMON_PHY_STATUS_BSTS(module), GSERCX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 50000))
 		gser_error("GSERC%d: Timeout waiting for GSERCX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1 (change rate)\n", module);
 
@@ -2582,7 +3356,7 @@ static int qlm_gserc_change_phy_rate(int module)
 //	int cgx = qlm_to_network(qlm, &is_split, &is_upper);
 //	/* Lane order can change mapping for CGX lmac to lane */
 //	int lane_order = gser_config_get_int(GSER_CONFIG_NETWORK_LANE_ORDER, cgx);
-//	/* Find which lmac coresponds to this lane */
+//	/* Find which lmac corresponds to this lane */
 //	int lmac;
 //	for (lmac = 0; lmac < 4; lmac++)
 //	{
@@ -2629,7 +3403,7 @@ static int qlm_gserc_change_phy_rate(int module)
 //	}
 //
 //	/* Configure the link training to request PRESET or INITIALIZE */
-//	if (use_training && (an_lane_mode == 2))
+//	if (use_training && (an_lane_mode != 0))
 //	{
 //		if (gser_config_get_int(GSER_CONFIG_QLM_LINK_TRAINING_INITIAL_STATE, qlm, lane))
 //		{
@@ -2637,13 +3411,19 @@ static int qlm_gserc_change_phy_rate(int module)
 //			GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_SPARE_CFG0_RSVD(module, lane),
 //				c.s.data |= 0x4);
 //		}
+//		else
+//		{
+//			/* Configure LT to request Init */
+//			GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_SPARE_CFG0_RSVD(module, lane),
+//				c.s.data |= 0x8);
+//		}
 //	}
 //
 //	/* Program the AN config structure for this lane */
 //	const int AN_CFG_DATA_ADDR = 0x0;
 //	const int AN_CFG_DATA_STRUCT_SIZE = 0x6b;
 //	/* First 4 bytes are indexes into AN_CFG_DATA_STRUCT for each lane. These
-//	   are always sequencial in our setup */
+//	   are always sequential in our setup */
 //	write_dmem(module, AN_CFG_DATA_ADDR+0, 0x00);
 //	write_dmem(module, AN_CFG_DATA_ADDR+1, 0x01);
 //	write_dmem(module, AN_CFG_DATA_ADDR+2, 0x02);
@@ -2713,7 +3493,6 @@ static int qlm_gserc_change_phy_rate(int module)
 //		tech_abilities_15_8 |= 1 << 5;
 //		tech_abilities_15_8 |= 1 << 6;
 //	}
-//	write_dmem(module, lane_offset++, tech_abilities_15_8);
 //	/* 0x11 tech_abilities_7_0
 //	   0:0 Advertise 1000BASE-KX in Base Page bit A0
 //	   1:1 Advertise 10GBASE-KX4 in Base Page bit A1
@@ -2735,6 +3514,16 @@ static int qlm_gserc_change_phy_rate(int module)
 //		tech_abilities_7_0 |= 1 << 4;
 //	if (qlm_state.s.mode == QLM_MODE_100G_KR4)
 //		tech_abilities_7_0 |= 1 << 7;
+//
+//	int64_t tech_abilities_override = gser_config_get_int(GSER_CONFIG_QLM_OVERRIDE_AN_ABILITIES, qlm, lane);
+//	if (tech_abilities_override)
+//	{
+//		GSER_TRACE(QLM, "GSERC%d.%d: Override AN tech_abilites: Default: 0x%02x%02x, Override: 0x%04x\n",
+//			module, lane, tech_abilities_15_8, tech_abilities_7_0, (uint32_t)(tech_abilities_override & 0xffff));
+//		tech_abilities_15_8 = (tech_abilities_override >> 8) & 0xff;
+//		tech_abilities_7_0 = tech_abilities_override & 0xff;
+//	}
+//	write_dmem(module, lane_offset++, tech_abilities_15_8);
 //	write_dmem(module, lane_offset++, tech_abilities_7_0);
 //	/* 0x12 eee_tech_abilities_15_8 (RESERVED)
 //	   0:0 Advertise 100GBASE-CR4 has EEE deep sleep capability
@@ -2773,18 +3562,18 @@ static int qlm_gserc_change_phy_rate(int module)
 //	   6:6 Request Clause 91 FEC (Reed Solomon) in 25G/50G Consortium OUI Next Pages
 //	   7:7 Request Clause 74 FEC (Fire Code) in 25G/50G Consortium OUI Next Page */
 //	uint8_t fec = 0;
+//	fec |= 1 << 0; /* Advertise FEC in base page */
+//	fec |= 1 << 4; /* Advertise RS-FEC for 25G/50G Consortium */
+//	fec |= 1 << 5; /* Advertise FEC for 25G/50G Consortium */
 //	if (net_flags & GSER_NETPHY_FLAG_FEC) /* Fire Code */
 //	{
-//		fec |= 1 << 0;
 //		fec |= 1 << 1;
 //		fec |= 1 << 3;
-//		fec |= 1 << 5;
 //		fec |= 1 << 7;
 //	}
 //	if (net_flags & GSER_NETPHY_FLAG_RS_FEC) /* Reed Solomon */
 //	{
 //		fec |= 1 << 2;
-//		fec |= 1 << 4;
 //		fec |= 1 << 6;
 //	}
 //	write_dmem(module, lane_offset++, fec);
@@ -2799,7 +3588,8 @@ static int qlm_gserc_change_phy_rate(int module)
 //	   2:2 Send an EEE technology Next Page during negotiation
 //			(RESERVED setting – leave at 0, as the AFE does support EEE functionality). */
 //	uint8_t np_cfg = 0;
-//	if ((qlm_state.s.mode == QLM_MODE_50G_CR2) || (qlm_state.s.mode == QLM_MODE_50G_KR2))
+//	if ((qlm_state.s.mode == QLM_MODE_50G_CR2) || (qlm_state.s.mode == QLM_MODE_50G_KR2) ||
+//		(qlm_state.s.mode == QLM_MODE_25G_CR) || (qlm_state.s.mode == QLM_MODE_25G_KR))
 //		np_cfg |= 1 << 0;
 //	write_dmem(module, lane_offset++, np_cfg);
 //	/* 0x17 reserved 7:0 N/A */
@@ -3312,11 +4102,50 @@ int qlm_gserc_display_trace(int module, int lane, int unused)
 	return 0;
 }
 
+#if 0
+/**
+ * Some SERDES may record errors before a link is up solid due to RX bouncing or
+ * noise. This function should be called once a link is determined to be good to
+ * clear out these spurious errors. This allows real error detection while the
+ * link is up without pollution from before link.
+ *
+ * @param node   Node to clear
+ * @param module QLM/DLM to clear
+ * @param lane   Lane to clear
+ * @param unused Unused argument. Present so a number of QLM functions have the same signature
+ *			   for easy calling in the network driver
+ *
+ * @return Zero on success, negative on failure
+ */
+int qlm_gserc_clear_errors(int module, int lane, int unused)
+{
+	/* Clear top level errors */
+	GSER_CSR_INIT(phy0_top_err_ctrl0, CAVM_GSERCX_PHY0_TOP_ERR_CTRL0(module));
+	if (phy0_top_err_ctrl0.s.err_o)
+	{
+		GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_ERR_CTRL0(module), 0);
+		GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_ERR_CTRL1(module), 0);
+		GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_ERR_CTRL2(module), 0);
+	}
+
+	/* Clear Lane Errors */
+	GSER_CSR_INIT(ctrl, CAVM_GSERCX_LNX_TOP_PHY_IF_CTRL_RSVD(module, lane));
+	if (ctrl.s.ln_rx_rdy && ctrl.s.ln_tx_rdy)
+	{
+		GSER_CSR_WRITE(CAVM_GSERCX_LNX_TOP_ERR_CTRL1(module, lane), 0);
+		GSER_CSR_WRITE(CAVM_GSERCX_LNX_TOP_ERR_CTRL2(module, lane), 0);
+		GSER_CSR_WRITE(CAVM_GSERCX_LNX_TOP_ERR_CTRL3(module, lane), 0);
+	}
+	return 0;
+}
+#endif
+
 /**
  * Reset the QLM layer
  */
 void qlm_gserc_init_reset()
 {
+//	update_all_lane_state();
 	GSER_CSR_INIT(gsercx_init_ctl, CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(0));
 	if (!gsercx_init_ctl.s.cpu_reset)
 	{
@@ -3570,11 +4399,6 @@ void qlm_gserc_init_reset()
 //
 //	while (1)
 //	{
-//		/* Changing BIAS_UP/DN to value of 5 (in Shim) improved the yield at cold for 20G */
-//		GSER_CSR_MODIFY(c, CAVM_GSERCX_CM0_PLL_AFE_PROP_CTRL3_RSVD(module),
-//			c.s.cmpll_pkvco_bias_dn = 5;
-//			c.s.cmpll_pkvco_bias_up = 5);
-//
 //		/* the DOSC threshold must be written before CMU_RESET is deasserted.
 //		   Adjust the DOSC skew threshold. The default of 10% is way too large */
 //		GSER_CSR_MODIFY(c, CAVM_GSERCX_CM0_FEATURE_SPARE_CFG5_RSVD(module),
@@ -3622,10 +4446,6 @@ void qlm_gserc_init_reset()
 //			qlm_gserc_poll_error(module);
 //		}
 //
-//		/* Enable the GSERC0 output pad */
-//		GSER_CSR_MODIFY(c, CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(module),
-//			c.s.refclk_pad_ena = (module == 0));
-//
 //		/* Reference clock is now measurable */
 //		int hz = qlm_gserc_measure_refclock(module);
 //		GSER_TRACE(QLM, "GSERC%d: Reference clock at %dHz\n", module, hz);
@@ -3659,6 +4479,11 @@ void qlm_gserc_init_reset()
 //				bool ena_8b10b = (state.s.baud_mhz <= 6250) && (state.s.baud_mhz != 2458) && (state.s.baud_mhz != 3072);
 //				GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_ADAPT_CFG0(module, lane),
 //					c.s.ena_8b10b = ena_8b10b);
+//				/* Program TX polarity. RX polarity is programmed in the call to
+//				   qlm_gserc_get_lane_mode() */
+//				GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_DPL_TXDP_CTRL1(module, lane),
+//					c.s.txpolarity = gser_config_get_int(GSER_CONFIG_QLM_LANE_TX_POLARITY,
+//						map_module_to_qlm(module), lane));
 //			}
 //			/* Enable the BIST/PRBS clocks before starting each lane */
 //			GSER_TRACE(QLM, "GSERC%d: Enabling BIST/PRBS logic\n", module);

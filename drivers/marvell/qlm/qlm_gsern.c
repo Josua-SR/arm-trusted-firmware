@@ -4,7 +4,7 @@
  */
 
 /***********************license start***********************************
-* Copyright (C) 2018 Marvell International Ltd.
+* Copyright (C) 2018-2020 Marvell International Ltd.
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -538,7 +538,7 @@ int qlm_enable_loop_gsern(int qlm, qlm_loop_t loop)
 				lanex_rx_st_bcfg.s.en_lb			= 0; /* Near end loop TX to RX */
 				lanex_tx_1_bcfg.s.tx_enloop		 = 0; /* Near end loop TX to RX in analog */
 				break;
-			case QLM_LOOP_SHALLOW: /* External */
+			case QLM_LOOP_FEA: /* External */
 				lanex_pll_2_bcfg.s.shlb_en		  = 1; /* Far end loop RX CDR to TX */
 				lanex_lt_bcfg.s.core_loopback_mode  = 0; /* Near end loop TX to RX in PCS lite */
 				lanex_lt_bcfg.s.sloop_mode		  = 1; /* Far end loop RX to TX in PCS lite */
@@ -546,7 +546,7 @@ int qlm_enable_loop_gsern(int qlm, qlm_loop_t loop)
 				lanex_rx_st_bcfg.s.en_lb			= 0; /* Near end loop TX to RX */
 				lanex_tx_1_bcfg.s.tx_enloop		 = 0; /* Near end loop TX to RX in analog */
 				break;
-			case QLM_LOOP_NEAR_END: /* Internal analog */
+			case QLM_LOOP_NEA: /* Internal analog */
 				lanex_pll_2_bcfg.s.shlb_en		  = 0; /* Far end loop RX CDR to TX */
 				lanex_lt_bcfg.s.core_loopback_mode  = 0; /* Near end loop TX to RX in PCS lite */
 				lanex_lt_bcfg.s.sloop_mode		  = 0; /* Far end loop RX to TX in PCS lite */
@@ -554,7 +554,7 @@ int qlm_enable_loop_gsern(int qlm, qlm_loop_t loop)
 				lanex_rx_st_bcfg.s.en_lb			= 1; /* Near end loop TX to RX */
 				lanex_tx_1_bcfg.s.tx_enloop		 = 1; /* Near end loop TX to RX in analog */
 				break;
-			case QLM_LOOP_CORE: /* Internal digital */
+			case QLM_LOOP_NED: /* Internal digital */
 				lanex_pll_2_bcfg.s.shlb_en		  = 0; /* Far end loop RX CDR to TX */
 				lanex_lt_bcfg.s.core_loopback_mode  = 1; /* Near end loop TX to RX in PCS lite */
 				lanex_lt_bcfg.s.sloop_mode		  = 0; /* Far end loop RX to TX in PCS lite */
@@ -1657,7 +1657,7 @@ int qlm_set_mode_gsern(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
 			break;
 		case QLM_MODE_RXAUI:
 			gsern_mode = GSERN_MODE_CGX;
-			/* RXAUI requires synchonization between the lanes, need DUAL flag */
+			/* RXAUI requires synchronization between the lanes, need DUAL flag */
 			gsern_flags = GSERN_FLAGS_DUAL;
 			is_network = true;
 			break;
@@ -1673,7 +1673,7 @@ int qlm_set_mode_gsern(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
 			break;
 		case QLM_MODE_XAUI:
 			gsern_mode = GSERN_MODE_CGX;
-			/* XAUI requires synchonization between the lanes, need QUAD flag */
+			/* XAUI requires synchronization between the lanes, need QUAD flag */
 			gsern_flags = GSERN_FLAGS_QUAD;
 			is_network = true;
 			break;
