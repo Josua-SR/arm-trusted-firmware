@@ -3858,8 +3858,10 @@ int cgx_get_lane_count(int lmac_type)
 /*
  * Configure Rambus serdes in NED (Near End Digital) or FEA (Far End Analog)
  * loopback modes.
- *    If type = 2, perform NED
- *       type = 1, perform FEA
+ *    If type = 1, perform FEA
+ *       type = 2, perform NED // for backward compatible
+ *       type = 3, perform NEA
+ *       type = 4, perform FED
  *       type = 0, disable serdes loopback
  */
 void cgx_set_serdes_loop(int cgx_id, int lmac_id, int type)
@@ -3901,10 +3903,16 @@ void cgx_set_serdes_loop(int cgx_id, int lmac_id, int type)
 			if (type == 0) {
 				cgx->qlm_ops->qlm_ned_loopback(gserx, lane, 0);
 				cgx->qlm_ops->qlm_fea_loopback(gserx, lane, 0);
+				cgx->qlm_ops->qlm_nea_loopback(gserx, lane, 0);
+				cgx->qlm_ops->qlm_fed_loopback(gserx, lane, 0);
 			} else if (type == 1)
 				cgx->qlm_ops->qlm_fea_loopback(gserx, lane, 1);
-			else
+			else if (type == 2)
 				cgx->qlm_ops->qlm_ned_loopback(gserx, lane, 1);
+			else if (type == 3)
+				cgx->qlm_ops->qlm_nea_loopback(gserx, lane, 1);
+			else
+				cgx->qlm_ops->qlm_fed_loopback(gserx, lane, 1);
 		}
 		lane_mask >>= num_lanes;
 		gserx++;

@@ -531,6 +531,7 @@ int qlm_enable_loop_gsern(int qlm, qlm_loop_t loop)
 		switch (loop)
 		{
 			case QLM_LOOP_DISABLED:
+			default:
 				lanex_pll_2_bcfg.s.shlb_en		  = 0; /* Far end loop RX CDR to TX */
 				lanex_lt_bcfg.s.core_loopback_mode  = 0; /* Near end loop TX to RX in PCS lite */
 				lanex_lt_bcfg.s.sloop_mode		  = 0; /* Far end loop RX to TX in PCS lite */

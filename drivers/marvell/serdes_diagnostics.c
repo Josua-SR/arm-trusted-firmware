@@ -587,13 +587,24 @@ int cgx_smc_set_serdes_loop(int qlm, int lane, int type)
 
 	gserx = _get_gserx(cgx_id, qlm);
 
-	/* Enable/Disable NED loopback */
+	/* Enable/Disable serdes loopback */
+	if (cavm_is_model(OCTEONTX_F95MM) && (qlm > 1)) {
+		if ((type == 2) || (type == 4))
+			return -1;
+	}
+
 	if (type == 0) {
 		qlm_ops->qlm_ned_loopback(gserx, lane, 0);
 		qlm_ops->qlm_fea_loopback(gserx, lane, 0);
+		qlm_ops->qlm_nea_loopback(gserx, lane, 0);
+		qlm_ops->qlm_fed_loopback(gserx, lane, 0);
 	} else if (type == 1)
 		qlm_ops->qlm_fea_loopback(gserx, lane, 1);
-	else
+	else if (type == 2)
 		qlm_ops->qlm_ned_loopback(gserx, lane, 1);
+	else if (type == 3)
+		qlm_ops->qlm_nea_loopback(gserx, lane, 1);
+	else
+		qlm_ops->qlm_fed_loopback(gserx, lane, 1);
 	return 0;
 }

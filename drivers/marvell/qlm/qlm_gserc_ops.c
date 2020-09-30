@@ -280,4 +280,6 @@ const qlm_ops_t qlm_gserc_ops = {
 	.qlm_rx_dfe_adapt = qlm_gserc_rx_dfe_adaptation,
 	.qlm_ned_loopback = qlm_gserc_ned_loopback,
 	.qlm_fea_loopback = qlm_gserc_fea_loopback,
+	.qlm_nea_loopback = qlm_gserc_nea_loopback,
+	.qlm_fed_loopback = qlm_gserc_fed_loopback,
 };
