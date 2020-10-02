@@ -2814,7 +2814,7 @@ static cavm_gsercx_common_phy_ctrl_bcfg_t qlm_gserc_get_clock_mode(int module)
 	{
 		bcfg.s.refclk_input_sel = 2; /* ref_a_r_i */
 		bcfg.s.phy_ctrl_refclk = 0x0e; /* Assumes 156.25MHz */
-		bcfg.s.refclk_pad_ena = 0; /* No pads used */
+		bcfg.s.refclk_pad_ena = (module == 0) ? 1 : 0;; /* Pad on GSERC0 */
 	}
 	else if (use_gserc_ref_clk3)
 	{
