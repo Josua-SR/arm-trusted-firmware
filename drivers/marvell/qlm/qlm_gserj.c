@@ -812,11 +812,8 @@ int qlm_gserj_fea_loopback(int module, int lane, bool enable)
  */
 int qlm_gserj_enable_loop(int qlm, qlm_loop_t loop)
 {
-	int use_fea = (loop == QLM_LOOP_SHALLOW);
-	int use_ned = (loop == QLM_LOOP_CORE);
-	/* We haven't implemented near-end analog loopback, so use the digital one
-	   instead. I doubt anyone will notice */
-	use_ned |= (loop == QLM_LOOP_NEAR_END);
+	int use_fea = (loop == QLM_LOOP_FEA);
+	int use_ned = (loop == QLM_LOOP_NED);
 
 	int num_lanes = get_num_lanes(qlm);
 	for (int lane = 0; lane < num_lanes; lane++)
