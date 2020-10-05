@@ -197,6 +197,10 @@ void bl31_plat_runtime_setup(void)
 	marvell_bl31_plat_runtime_setup();
 }
 
+void bl31_plat_warmboot_setup(void)
+{
+}
+
 /*****************************************************************************
  * Perform the very early platform specific architectural setup shared between
  * ARM standard platforms. This only does basic initialization. Later

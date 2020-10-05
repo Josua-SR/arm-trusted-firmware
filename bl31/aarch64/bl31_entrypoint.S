@@ -213,6 +213,7 @@ func bl31_warm_entrypoint
 
 	bl	psci_warmboot_entrypoint
 
+	bl	bl31_plat_warmboot_setup
 #if ENABLE_RUNTIME_INSTRUMENTATION
 	pmf_calc_timestamp_addr rt_instr_svc, RT_INSTR_EXIT_PSCI
 	mov	x19, x0

@@ -221,6 +221,7 @@ void bl31_early_platform_setup2(u_register_t arg0, u_register_t arg1,
 void bl31_plat_arch_setup(void);
 void bl31_platform_setup(void);
 void bl31_plat_runtime_setup(void);
+void bl31_plat_warmboot_setup(void);
 struct entry_point_info *bl31_plat_get_next_image_ep_info(uint32_t type);
 
 /*******************************************************************************

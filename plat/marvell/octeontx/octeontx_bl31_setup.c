@@ -45,6 +45,7 @@
 #include <octeontx_board_cfg.h>
 #include <debug.h>
 #include <timers.h>
+#include <hw_timers.h>
 #include <platform_def.h>
 #include <plat_octeontx.h>
 #include <gicv3_setup.h>
@@ -269,4 +270,12 @@ void bl31_plat_runtime_setup(void)
 	octeontx_mmap_remove_dynamic_region_with_sync(ns_dma_memory_base,
 						      NS_DMA_MEMORY_SIZE);
 #endif
+}
+
+void bl31_plat_warmboot_setup(void)
+{
+	unsigned int cpu_idx = plat_my_core_pos();
+
+	if (cpu_idx == 0)
+		plat_timer_enable(1);
 }
