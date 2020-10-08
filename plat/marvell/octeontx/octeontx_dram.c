@@ -35,9 +35,13 @@ static inline uint32_t popcnt(uint64_t val)
 	return x;  /* (7 significant bits) */
 }
 
+/* This function returns the size of DRAM, which includes
+ * SECURE_NONPRESERVE and NSECURE_NONPRESERVE memory region
+ */
 uint64_t octeontx_dram_size()
 {
-	uint64_t addr = 0;
+	uint64_t size, addr = 0;
 
-	return memory_region_get_info(NSECURE_NONPRESERVE, &addr);
+	size = memory_region_get_info(NSECURE_NONPRESERVE, &addr);
+	return (size + addr);
 }
