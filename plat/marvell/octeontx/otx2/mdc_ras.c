@@ -918,6 +918,7 @@ int plat_dram_ras_init(void)
 
 	if (!(IS_OCTEONTX_PN(midr, T96PARTNUM) ||
 	      IS_OCTEONTX_PN(midr, F95PARTNUM) ||
+	      IS_OCTEONTX_PN(midr, F95MMPARTNUM) ||
 	      IS_OCTEONTX_PN(midr, LOKIPARTNUM) ||
 	      IS_OCTEONTX_PN(midr, T98PARTNUM))) {
 		ERROR("%s: unsupported device\n", __func__);
