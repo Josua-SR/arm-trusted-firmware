@@ -310,7 +310,9 @@ enum rvu_block_addr_e {
 	BLKADDR_NDC5    = 0x11ULL,
 	BLKADDR_NDC6    = 0x12ULL,
 	BLKADDR_NDC7    = 0x13ULL,
-	BLKADDR_MAX     = 0x14ULL,
+	BLKADDR_REE0    = 0x14ULL,
+	BLKADDR_REE1    = 0x15ULL,
+	BLKADDR_MAX     = 0x16ULL,
 };
 
 typedef enum flr_operation_e {
