@@ -459,6 +459,8 @@ int octeontx2_configure_ooo_mask(uint64_t x1)
 	cvmctl_el1 = read_cvmctl_el1();
 	if (disable_ooo_mask & (1UL << plat_my_core_pos()))
 		set_bit(cvmctl_el1, 44);
+	else if (disable_ooo && !disable_ooo_mask)
+		set_bit(cvmctl_el1, 44);
 	else
 		unset_bit(cvmctl_el1, 44);
 
