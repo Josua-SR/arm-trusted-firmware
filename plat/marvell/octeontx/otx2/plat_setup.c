@@ -494,9 +494,9 @@ int octeontx2_configure_wfe(uint64_t x1)
 
 	cvmctl_el1 = read_cvmctl_el1();
 	if (enable_wfe_mask & (1UL << plat_my_core_pos()))
-		unset_bit(cvmctl_el1, 44);
+		unset_bit(cvmctl_el1, 34);
 	else
-		set_bit(cvmctl_el1, 44);
+		set_bit(cvmctl_el1, 34);
 
 	write_cvmctl_el1(cvmctl_el1);
 
