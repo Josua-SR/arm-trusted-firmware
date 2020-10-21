@@ -428,7 +428,7 @@ static void ble_plat_svc_config(void)
 		INFO("SVC: Efuse WP: [0]=0x%x, [1]=0x%x, [2]=0x%x, [3]=0x%x\n",
 		     svc[0], svc[1], svc[2], svc[3]);
 		avs_data_bits = 7;
-		min_sw_ver = 2; /* parity check from sw revision 2 */
+		min_sw_ver = 3; /* parity check from sw revision 3 (not there yet) */
 		svc_fields = 4;
 	} else {
 		INFO("SVC: Efuse WP: [0]=0x%x, [1]=0x%x, [2]=0x%x\n",
