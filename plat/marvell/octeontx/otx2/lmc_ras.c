@@ -962,6 +962,38 @@ static int ras_print_syndrome(char *str, int len, uint8_t syn,
 	return 0;
 }
 
+static void ras_check_double_bit07(int mcc, int lmcoe,
+				union cavm_mccx_lmcoex_ras_err00status *status,
+				union cavm_mccx_lmcoex_ras_err00addr *erraddr,
+				uint64_t *syns_left)
+{
+	status->u  = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR07STATUS(mcc, lmcoe));
+	erraddr->u = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR07ADDR(mcc, lmcoe));
+	*syns_left = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR07MISC1(mcc, lmcoe));
+
+	/* Clear Error Interrupts by writing
+	 * CAVM_MCCX_LMCOEX_RAS_ERR07STATUS[V]
+	 */
+	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR07STATUS(mcc, lmcoe), status->u);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 07, mcc, lmcoe);
+}
+
+static void ras_check_double_bit06(int mcc, int lmcoe,
+				union cavm_mccx_lmcoex_ras_err00status *status,
+				union cavm_mccx_lmcoex_ras_err00addr *erraddr,
+				uint64_t *syns_left)
+{
+	status->u  = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR06STATUS(mcc, lmcoe));
+	erraddr->u = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR06ADDR(mcc, lmcoe));
+	*syns_left = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR06MISC1(mcc, lmcoe));
+
+	/* Clear Error Interrupts by writing
+	 * CAVM_MCCX_LMCOEX_RAS_ERR06STATUS[V]
+	 */
+	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR06STATUS(mcc, lmcoe), status->u);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 06, mcc, lmcoe);
+}
+
 static void ras_check_double_bit02(int mcc, int lmcoe,
 				union cavm_mccx_lmcoex_ras_err00status *status,
 				union cavm_mccx_lmcoex_ras_err00addr *erraddr,
@@ -975,7 +1007,7 @@ static void ras_check_double_bit02(int mcc, int lmcoe,
 	 * CAVM_MCCX_LMCOEX_RAS_ERR02STATUS[V]
 	 */
 	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR02STATUS(mcc, lmcoe), status->u);
-	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR02, mcc, lmcoe);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 02, mcc, lmcoe);
 }
 
 static void ras_check_double_bit03(int mcc, int lmcoe,
@@ -991,7 +1023,53 @@ static void ras_check_double_bit03(int mcc, int lmcoe,
 	 * CAVM_MCCX_LMCOEX_RAS_ERR02STATUS[V]
 	 */
 	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR03STATUS(mcc, lmcoe), status->u);
-	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR03, mcc, lmcoe);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 03, mcc, lmcoe);
+}
+
+static void ras_check_single_bit05(int mcc, int lmcoe,
+				union cavm_mccx_lmcoex_ras_err00status *status,
+				union cavm_mccx_lmcoex_ras_err00addr *erraddr,
+				union cavm_mccx_lmcoex_ras_err00misc0 *misc0,
+				uint64_t *syns_left)
+{
+	status->u  = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR05STATUS(mcc, lmcoe));
+	erraddr->u = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR05ADDR(mcc, lmcoe));
+	misc0->u   = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR05MISC0(mcc, lmcoe));
+	*syns_left = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR05MISC1(mcc, lmcoe));
+
+	/* Clear Error Interrupts by writing
+	 * CAVM_MCCX_LMCOEX_RAS_ERR05STATUS[V]
+	 */
+	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR05STATUS(mcc, lmcoe), status->u);
+
+	/* Clear error count */
+	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR05MISC0(mcc, lmcoe), 0UL);
+
+	/* Re-arm interrupt */
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 05, mcc, lmcoe);
+}
+
+static void ras_check_single_bit04(int mcc, int lmcoe,
+				union cavm_mccx_lmcoex_ras_err00status *status,
+				union cavm_mccx_lmcoex_ras_err00addr *erraddr,
+				union cavm_mccx_lmcoex_ras_err00misc0 *misc0,
+				uint64_t *syns_left)
+{
+	status->u  = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR04STATUS(mcc, lmcoe));
+	erraddr->u = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR04ADDR(mcc, lmcoe));
+	misc0->u   = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR04MISC0(mcc, lmcoe));
+	*syns_left = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR04MISC1(mcc, lmcoe));
+
+	/* Clear Error Interrupts by writing
+	 * CAVM_MCCX_LMCOEX_RAS_ERR04STATUS[V]
+	 */
+	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR04STATUS(mcc, lmcoe), status->u);
+
+	/* Clear error count */
+	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR04MISC0(mcc, lmcoe), 0UL);
+
+	/* Re-arm interrupt */
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 04, mcc, lmcoe);
 }
 
 static void ras_check_single_bit00(int mcc, int lmcoe,
@@ -1014,7 +1092,7 @@ static void ras_check_single_bit00(int mcc, int lmcoe,
 	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR00MISC0(mcc, lmcoe), 0UL);
 
 	/* Re-arm interrupt */
-	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR00, mcc, lmcoe);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 00, mcc, lmcoe);
 }
 
 static void ras_check_single_bit01(int mcc, int lmcoe,
@@ -1037,7 +1115,7 @@ static void ras_check_single_bit01(int mcc, int lmcoe,
 	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR01MISC0(mcc, lmcoe), 0UL);
 
 	/* Re-arm interrupt */
-	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR01, mcc, lmcoe);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 01, mcc, lmcoe);
 }
 
 static inline uint64_t virt_to_phys(uint64_t uaddr)
@@ -1396,7 +1474,7 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 	static int cnt;
 	static uint64_t was[MAX_LMC];
 
-	status.u = ~0ull;
+	status.u = 0;
 	erraddr.u = 0;
 	misc0.u = 0;
 
@@ -1419,7 +1497,8 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 	report_err = ((ras_int.u & ras_int_ena.u & 0xFF) != 0);
 
 	/* check for double bit errors only in MCC */
-	if ((ras_int.s.err03) || (ras_int.s.err02)) {
+	if (ras_int.s.err07 || ras_int.s.err06 || ras_int.s.err03 ||
+	    ras_int.s.err02) {
 		if (ras_int.s.err02)
 			ras_check_double_bit02(mcc, lmcoe,
 					       &status, &erraddr, &syns_left);
@@ -1427,10 +1506,17 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 			/* more double bit errors from MCC */
 			ras_check_double_bit03(mcc, lmcoe,
 					       &status, &erraddr, &syns_left);
+		else if (ras_int.s.err07) /* scrubber UE */
+			ras_check_double_bit07(mcc, lmcoe,
+					       &status, &erraddr, &syns_left);
+		else if (ras_int.s.err06) /* scrubber UE */
+			ras_check_double_bit06(mcc, lmcoe,
+					       &status, &erraddr, &syns_left);
 
 		err_type = "double";
 		fatal++;
-	} else if (ras_int.s.err01 || ras_int.s.err00) {
+	} else if (ras_int.s.err05 || ras_int.s.err04 || ras_int.s.err01 ||
+		   ras_int.s.err00) {
 		/* check for single bit errors
 		 * else check only when no double bit errs
 		 * single bit errors from MCC
@@ -1444,9 +1530,15 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 			ras_check_single_bit01(mcc, lmcoe,
 					       &status, &erraddr, &misc0,
 					       &syns_left);
-
 			/* err_type = "single ERR01"; */
-		}
+		} else if (ras_int.s.err05) /* scrubber CE */
+			ras_check_single_bit05(mcc, lmcoe,
+					       &status, &erraddr, &misc0,
+					       &syns_left);
+		else if (ras_int.s.err04) /* scrubber CE */
+			ras_check_single_bit04(mcc, lmcoe,
+					       &status, &erraddr, &misc0,
+					       &syns_left);
 		err_type = "single";
 	}
 
@@ -1696,7 +1788,7 @@ int lmc_ras_setup(int lmc_no)
 
 	CSR_WRITE(CAVM_LMCX_RAS_INT_ENA_W1C(lmc_no), ~0ULL);
 
-	arm_err_nn(1, CAVM_LMCX_RAS_ERR00, lmc_no);
+	arm_err_nn(1, CAVM_LMCX_RAS_ERR, 00, lmc_no);
 
 	int_ena.u = 0;
 	int_ena.s.err00 = 1;
@@ -1762,14 +1854,14 @@ int lmcoe_ras_setup(int mcc, int lmcoe)
 		CAVM_MCCX_LMCOEX_RAS_INT_ENA_W1C(mcc, lmcoe),
 		~0ULL);
 
-	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR00, mcc, lmcoe);
-	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR01, mcc, lmcoe);
-	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR02, mcc, lmcoe);
-	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR03, mcc, lmcoe);
-	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR04, mcc, lmcoe);
-	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR05, mcc, lmcoe);
-	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR06, mcc, lmcoe);
-	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR07, mcc, lmcoe);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 00, mcc, lmcoe);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 01, mcc, lmcoe);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 02, mcc, lmcoe);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 03, mcc, lmcoe);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 04, mcc, lmcoe);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 05, mcc, lmcoe);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 06, mcc, lmcoe);
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR, 07, mcc, lmcoe);
 
 	int_ena.u = 0;
 	int_ena.s.err00 = 1;
@@ -1792,22 +1884,21 @@ int lmcoe_scrubber_setup(int mcc, int lmcoe)
 {
 	union cavm_mccx_lmcoex_bscrub_cfg cfg;
 	union cavm_mccx_lmcoex_bscrub_cfg2 cfg2;
-	union cavm_ccs_asc_regionx_start r_start;
-	union cavm_ccs_asc_regionx_end r_end;
+	union cavm_lmcx_config lmc_cfg;
 	uint64_t a_start, a_end;
+	size_t lmc_addr_bits;
 
 	cfg.u = CSR_READ(CAVM_MCCX_LMCOEX_BSCRUB_CFG(mcc, lmcoe));
 	cfg2.u = CSR_READ(CAVM_MCCX_LMCOEX_BSCRUB_CFG2(mcc, lmcoe));
 
-	/*
-	 * FIXME: configure scrubber region more generally.
-	 * This just assumes existing bdk/atf practice of
-	 * REGION0 covering low DRAM, REGION1 high DRAM
-	 */
-	r_start.u = CSR_READ(CAVM_CCS_ASC_REGIONX_START(0));
-	r_end.u = CSR_READ(CAVM_CCS_ASC_REGIONX_END(1));
-	a_start = r_start.s.addr << 24;
-	a_end = r_end.s.addr << 24;
+	/* refer to LMCX_CONFIG[PBANK_LSB] */
+#define LMC_PBANK_LSB_BASE_ADDR (28)
+	lmc_cfg.u = CSR_READ(CAVM_LMCX_CONFIG(mcc_lmc(mcc, lmcoe)));
+	lmc_addr_bits = LMC_PBANK_LSB_BASE_ADDR + lmc_cfg.s.pbank_lsb;
+
+	/* set scrubber address range to that of memory attached to LMC */
+	a_start = 0;
+	a_end = BIT_64(lmc_addr_bits) - 1;
 
 	debug_ras("bscrub range was %llx-%llx, want %llx-%llx\n",
 		(uint64_t)cfg.s.start_address, (uint64_t)cfg2.s.stop_address,
@@ -2117,7 +2208,7 @@ uint64_t otx2_lmc_isr(uint32_t id, uint32_t flags, void *cookie)
 	m1.u = CSR_READ(CAVM_LMCX_RAS_ERR00MISC1(lmc));
 
 	CSR_WRITE(CAVM_LMCX_RAS_ERR00STATUS(lmc), status.u);
-	arm_err_nn(1, CAVM_LMCX_RAS_ERR00, lmc);
+	arm_err_nn(1, CAVM_LMCX_RAS_ERR, 00, lmc);
 	debug2ras("%s lmc%d st:%llx ad:%llx m0:%llx m1:%llx\n",
 		__func__, lmc, status.u, erraddr.u, m0.u, m1.u);
 

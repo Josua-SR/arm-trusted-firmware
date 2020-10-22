@@ -66,6 +66,7 @@ const char *ras_serr_str[256] = {
 	[CAVM_RAS_SERR_E_EXT_TO]		= "EXT_TO",
 	[CAVM_RAS_SERR_E_INT_TO]		= "INT_TO",
 	[CAVM_RAS_SERR_E_DEF_MAS]		= "DEF_MAS",
+	[CAVM_RAS_SERR_E_DEF_MAS ... 255]	= "",
 };
 
 /* MDC_RAS_ENTRY_S in HRM */
@@ -452,7 +453,7 @@ static void check_lmc_ras(void)
 		PR(CAVM_LMCX_RAS_ERR00MISC0);
 		PR(CAVM_LMCX_RAS_ERR00MISC1);
 #undef PR
-		arm_err_nn(1, CAVM_LMCX_RAS_ERR00, lmc_no);
+		arm_err_nn(1, CAVM_LMCX_RAS_ERR, 00, lmc_no);
 	}
 }
 

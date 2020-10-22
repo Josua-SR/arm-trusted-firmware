@@ -80,11 +80,15 @@ extern int64_t plat_ras_mdc_rom(u_register_t x2);
 
 extern const char *ras_serr_str[];
 
-/* enable reporting on a _RAS_ERRnn object, with thresh events until irq */
-#define arm_err_nn(thresh, csr_family, ...) __arm_err_nn(thresh, \
-					csr_family##FR(__VA_ARGS__), \
-					csr_family##CTLR(__VA_ARGS__), \
-					csr_family##MISC0(__VA_ARGS__))
+/* Enable reporting on a _RAS_ERRnn object, with thresh events until irq.
+ * NOTE: for nn in {01..07}, the _RAS_ERRnnFR & _RAS_ERRnnCTRL regs are RAZ;
+ * so, always use _RAS_ERR00FR & _RAS_ERR00CTRL.
+ */
+#define arm_err_nn(thresh, csr_family, nn, ...) __arm_err_nn(thresh, \
+					csr_family##00FR(__VA_ARGS__), \
+					csr_family##00CTLR(__VA_ARGS__), \
+					csr_family##nn##MISC0(__VA_ARGS__))
+
 extern void __arm_err_nn(int thresh, uint64_t fr_r, uint64_t ctlr_r,
 						    uint64_t misc0_r);
 
