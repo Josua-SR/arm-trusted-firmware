@@ -994,6 +994,52 @@ static void ras_check_double_bit03(int mcc, int lmcoe,
 	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR03, mcc, lmcoe);
 }
 
+static void ras_check_single_bit00(int mcc, int lmcoe,
+				union cavm_mccx_lmcoex_ras_err00status *status,
+				union cavm_mccx_lmcoex_ras_err00addr *erraddr,
+				union cavm_mccx_lmcoex_ras_err00misc0 *misc0,
+				uint64_t *syns_left)
+{
+	status->u  = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR00STATUS(mcc, lmcoe));
+	erraddr->u = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR00ADDR(mcc, lmcoe));
+	misc0->u   = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR00MISC0(mcc, lmcoe));
+	*syns_left = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR00MISC1(mcc, lmcoe));
+
+	/* Clear Error Interrupts by writing
+	 * CAVM_MCCX_LMCOEX_RAS_ERR00STATUS[V]
+	 */
+	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR00STATUS(mcc, lmcoe), status->u);
+
+	/* Clear error count */
+	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR00MISC0(mcc, lmcoe), 0UL);
+
+	/* Re-arm interrupt */
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR00, mcc, lmcoe);
+}
+
+static void ras_check_single_bit01(int mcc, int lmcoe,
+				union cavm_mccx_lmcoex_ras_err00status *status,
+				union cavm_mccx_lmcoex_ras_err00addr *erraddr,
+				union cavm_mccx_lmcoex_ras_err00misc0 *misc0,
+				uint64_t *syns_left)
+{
+	status->u  = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR01STATUS(mcc, lmcoe));
+	erraddr->u = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR01ADDR(mcc, lmcoe));
+	misc0->u   = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR01MISC0(mcc, lmcoe));
+	*syns_left = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR01MISC1(mcc, lmcoe));
+
+	/* Clear Error Interrupts by writing
+	 * CAVM_MCCX_LMCOEX_RAS_ERR01STATUS[V]
+	 */
+	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR01STATUS(mcc, lmcoe), status->u);
+
+	/* Clear error count */
+	CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR01MISC0(mcc, lmcoe), 0UL);
+
+	/* Re-arm interrupt */
+	arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR01, mcc, lmcoe);
+}
+
 static inline uint64_t virt_to_phys(uint64_t uaddr)
 {
 	uint64_t par, pa;
@@ -1390,50 +1436,16 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 		 * single bit errors from MCC
 		 */
 		if (ras_int.s.err00) {
-			status.u  = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR00STATUS
-						(mcc, lmcoe));
-			erraddr.u = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR00ADDR
-						(mcc, lmcoe));
-			misc0.u   = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR00MISC0
-						(mcc, lmcoe));
-			syns_left = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR00MISC1
-						(mcc, lmcoe));
-
-			/* Clear Error Interrupts by writing
-			 * CAVM_MCCX_LMCOEX_RAS_ERR00STATUS[V]
-			 */
-			CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR00STATUS(mcc,
-								lmcoe),
-				  status.u);
-			CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR00MISC0(mcc,
-							lmcoe),
-				  0UL);
-			arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR00,
-				   mcc, lmcoe);
+			ras_check_single_bit00(mcc, lmcoe,
+					       &status, &erraddr, &misc0,
+					       &syns_left);
 			/* err_type = "single ERR00"; */
 		} else if (ras_int.s.err01) {
-			/* more single bit errors from MCC */
-			status.u = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR01STATUS
-						(mcc, lmcoe));
-			erraddr.u = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR01ADDR
-						(mcc, lmcoe));
-			misc0.u   = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR01MISC0
-						(mcc, lmcoe));
-			syns_left = CSR_READ(CAVM_MCCX_LMCOEX_RAS_ERR01MISC1
-						(mcc, lmcoe));
+			ras_check_single_bit01(mcc, lmcoe,
+					       &status, &erraddr, &misc0,
+					       &syns_left);
 
-			/* Clear Error Interrupts by writing
-			 * CAVM_MCCX_LMCOEX_RAS_ERR01STATUS[V]
-			 */
-			CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR01STATUS(mcc,
-								 lmcoe),
-				  status.u);
-			CSR_WRITE(CAVM_MCCX_LMCOEX_RAS_ERR01MISC0(mcc,
-								lmcoe),
-				  0UL);
 			/* err_type = "single ERR01"; */
-			arm_err_nn(1, CAVM_MCCX_LMCOEX_RAS_ERR01,
-				   mcc, lmcoe);
 		}
 		err_type = "single";
 	}
@@ -1772,6 +1784,54 @@ int lmcoe_ras_setup(int mcc, int lmcoe)
 	CSR_WRITE(
 		CAVM_MCCX_LMCOEX_RAS_INT_ENA_W1S(mcc, lmcoe),
 		int_ena.u);
+
+	return 0;
+}
+
+int lmcoe_scrubber_setup(int mcc, int lmcoe)
+{
+	union cavm_mccx_lmcoex_bscrub_cfg cfg;
+	union cavm_mccx_lmcoex_bscrub_cfg2 cfg2;
+	union cavm_ccs_asc_regionx_start r_start;
+	union cavm_ccs_asc_regionx_end r_end;
+	uint64_t a_start, a_end;
+
+	cfg.u = CSR_READ(CAVM_MCCX_LMCOEX_BSCRUB_CFG(mcc, lmcoe));
+	cfg2.u = CSR_READ(CAVM_MCCX_LMCOEX_BSCRUB_CFG2(mcc, lmcoe));
+
+	/*
+	 * FIXME: configure scrubber region more generally.
+	 * This just assumes existing bdk/atf practice of
+	 * REGION0 covering low DRAM, REGION1 high DRAM
+	 */
+	r_start.u = CSR_READ(CAVM_CCS_ASC_REGIONX_START(0));
+	r_end.u = CSR_READ(CAVM_CCS_ASC_REGIONX_END(1));
+	a_start = r_start.s.addr << 24;
+	a_end = r_end.s.addr << 24;
+
+	debug_ras("bscrub range was %llx-%llx, want %llx-%llx\n",
+		(uint64_t)cfg.s.start_address, (uint64_t)cfg2.s.stop_address,
+		a_start, a_end);
+
+	/*
+	 * background-scrubber idle count, currently default from HRM,
+	 * perhaps should scale to SCLK, with later adjustment via SMC
+	 */
+	cfg.s.bs_idle_cnt = 0x4f;
+
+	if (cfg.s.enable || cfg.s.busy) {
+		ERROR("%s(%d,%d) sees en:%d busy:%d scrubber\n",
+			__func__, mcc, lmcoe,
+			cfg.s.enable, cfg.s.busy);
+		return -1;
+	}
+
+	cfg.s.start_address = a_start;
+	cfg2.s.stop_address = a_end;
+
+	CSR_WRITE(CAVM_MCCX_LMCOEX_BSCRUB_CFG2(mcc, lmcoe), cfg2.u);
+	cfg.s.enable = 1;
+	CSR_WRITE(CAVM_MCCX_LMCOEX_BSCRUB_CFG(mcc, lmcoe), cfg.u);
 
 	return 0;
 }

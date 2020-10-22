@@ -732,54 +732,6 @@ uint64_t otx2_mcc_isr(uint32_t id, uint32_t flags, void *cookie)
 	return 0;
 }
 
-int lmcoe_scrubber_setup(int mcc, int lmcoe)
-{
-	union cavm_mccx_lmcoex_bscrub_cfg cfg;
-	union cavm_mccx_lmcoex_bscrub_cfg2 cfg2;
-	union cavm_ccs_asc_regionx_start r_start;
-	union cavm_ccs_asc_regionx_end r_end;
-	uint64_t a_start, a_end;
-
-	cfg.u = CSR_READ(CAVM_MCCX_LMCOEX_BSCRUB_CFG(mcc, lmcoe));
-	cfg2.u = CSR_READ(CAVM_MCCX_LMCOEX_BSCRUB_CFG2(mcc, lmcoe));
-
-	/*
-	 * FIXME: configure scrubber region more generally.
-	 * This just assumes existing bdk/atf practice of
-	 * REGION0 covering low DRAM, REGION1 high DRAM
-	 */
-	r_start.u = CSR_READ(CAVM_CCS_ASC_REGIONX_START(0));
-	r_end.u = CSR_READ(CAVM_CCS_ASC_REGIONX_END(1));
-	a_start = r_start.s.addr << 24;
-	a_end = r_end.s.addr << 24;
-
-	debug_ras("bscrub range was %llx-%llx, want %llx-%llx\n",
-		(uint64_t)cfg.s.start_address, (uint64_t)cfg2.s.stop_address,
-		a_start, a_end);
-
-	/*
-	 * background-scrubber idle count, currently default from HRM,
-	 * perhaps should scale to SCLK, with later adjustment via SMC
-	 */
-	cfg.s.bs_idle_cnt = 0x4f;
-
-	if (cfg.s.enable || cfg.s.busy) {
-		ERROR("%s(%d,%d) sees en:%d busy:%d scrubber\n",
-			__func__, mcc, lmcoe,
-			cfg.s.enable, cfg.s.busy);
-		return -1;
-	}
-
-	cfg.s.start_address = a_start;
-	cfg2.s.stop_address = a_end;
-
-	CSR_WRITE(CAVM_MCCX_LMCOEX_BSCRUB_CFG2(mcc, lmcoe), cfg2.u);
-	cfg.s.enable = 1;
-	CSR_WRITE(CAVM_MCCX_LMCOEX_BSCRUB_CFG(mcc, lmcoe), cfg.u);
-
-	return 0;
-}
-
 static int ras_init_mcc(int mcc)
 {
 	union cavm_mccx_const mc;

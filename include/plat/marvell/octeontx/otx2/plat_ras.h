@@ -28,6 +28,7 @@ int otx2_lmc_probe(const struct err_record_info *info, int *probe_data);
 int otx2_ras_init(void);
 int plat_dram_ras_init(void);
 int lmcoe_ras_setup(int mcc, int lmcoe);
+int lmcoe_scrubber_setup(int mcc, int lmcoe);
 int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe);
 void l2c_flush(void);
 void ras_rewrite_cacheline(uint64_t physaddr, int secure);
