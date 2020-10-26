@@ -353,26 +353,10 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 			 __func__, cgx_id, lmac_id);
 	/* Tune CTLE coefficients for cable lengths 0.5m to 3m */
 	/* MYD_MODE_CTLE */
-	if (phy->addr == 15) {
-		/* On LIO3 B0 and C1, the lengths of the PCB traces from QLM6 to
-		 * its 6141 (PHY addr 15) are shorter than those of the other
-		 * QLM/6141 pair.  PHY 15's host-side RX equalizer sometimes
-		 * performs poorly when its modeParams are set to the legacy
-		 * MYD_MODE_OPTION_IGNORE (note that the other 6141's RX EQ
-		 * consistently performs just fine, though).  Tests show that
-		 * setting PHY 15's host-side RX EQ modeParams to
-		 * MYD_MODE_OPTION_DEFAULT makes it perform well all the time.
-		 */
-		myd_dev->modeParams.hostMaxHF = MYD_MODE_OPTION_DEFAULT;
-		myd_dev->modeParams.hostMinHF = MYD_MODE_OPTION_DEFAULT;
-		myd_dev->modeParams.hostMaxLF = MYD_MODE_OPTION_DEFAULT;
-		myd_dev->modeParams.hostMinLF = MYD_MODE_OPTION_DEFAULT;
-	} else {
-		myd_dev->modeParams.hostMaxHF = MYD_MODE_OPTION_IGNORE;
-		myd_dev->modeParams.hostMinHF = MYD_MODE_OPTION_IGNORE;
-		myd_dev->modeParams.hostMaxLF = MYD_MODE_OPTION_IGNORE;
-		myd_dev->modeParams.hostMinLF = MYD_MODE_OPTION_IGNORE;
-	}
+	myd_dev->modeParams.hostMaxHF = MYD_MODE_OPTION_DEFAULT;
+	myd_dev->modeParams.hostMinHF = MYD_MODE_OPTION_DEFAULT;
+	myd_dev->modeParams.hostMaxLF = MYD_MODE_OPTION_DEFAULT;
+	myd_dev->modeParams.hostMinLF = MYD_MODE_OPTION_DEFAULT;
 
 	myd_dev->modeParams.lineMaxHF = 0x6;
 	myd_dev->modeParams.lineMinHF = MYD_MODE_OPTION_IGNORE;
@@ -380,13 +364,8 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 	myd_dev->modeParams.lineMinLF = MYD_MODE_OPTION_IGNORE;
 
 	/* MYD_MODE_INIT_CTLE */
-	if (phy->addr == 15) {
-		myd_dev->modeParams.hostInitHF = MYD_MODE_OPTION_DEFAULT;
-		myd_dev->modeParams.hostInitLF = MYD_MODE_OPTION_DEFAULT;
-	} else {
-		myd_dev->modeParams.hostInitHF = MYD_MODE_OPTION_IGNORE;
-		myd_dev->modeParams.hostInitLF = MYD_MODE_OPTION_IGNORE;
-	}
+	myd_dev->modeParams.hostInitHF = MYD_MODE_OPTION_DEFAULT;
+	myd_dev->modeParams.hostInitLF = MYD_MODE_OPTION_DEFAULT;
 	myd_dev->modeParams.lineInitHF = 0;
 	myd_dev->modeParams.lineInitLF = 4;
 
