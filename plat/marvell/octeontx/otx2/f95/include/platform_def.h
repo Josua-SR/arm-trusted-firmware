@@ -127,11 +127,25 @@
 #define TSP_SEC_MEM_SIZE		TZDRAM_SIZE
 
 /*
- * Memory used for mailbox and RVU MSI-X - placed
- * at non-secure memory region, with size of 38M
+ * BL32 secure memory
+ * NOTE: Any change in BL32 BASE addresses or sizes,
+ * needs a corresponding changes in OPTEE-OS config.
  */
-#define RVU_MEM_BASE			(TZDRAM_BASE + TZDRAM_SIZE)
-#define RVU_MEM_SIZE			0x02600000
+#define BL32_BASE			(TZDRAM_BASE + 0x1000)
+#define BL32_MAX_SIZE			0x000a00000
+#define BL32_LIMIT			(BL32_BASE + BL32_MAX_SIZE)
+
+/* BL32 non-secure shared memory */
+#define BL32_NSEC_SHMEM_BASE		(TZDRAM_BASE + TZDRAM_SIZE)
+#define BL32_NSEC_SHMEM_SIZE		0x000800000
+
+/*
+ * Memory used for mailbox and RVU MSI-X - placed
+ * at non-secure memory region, with size of 30M
+ */
+#define RVU_MEM_BASE			(TZDRAM_BASE + TZDRAM_SIZE + \
+					 BL32_NSEC_SHMEM_SIZE)
+#define RVU_MEM_SIZE			0x01E00000
 
 /*
  * Memory used for SFP slot config/status, EEPROM info

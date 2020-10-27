@@ -132,10 +132,10 @@
 
 /*
  * Memory used for mailbox and RVU MSI-X - placed
- * at non-secure memory region, with size of 38M
+ * at non-secure memory region, with size of 30M
  */
 #define RVU_MEM_BASE			(TZDRAM_BASE + TZDRAM_SIZE)
-#define RVU_MEM_SIZE			0x02600000
+#define RVU_MEM_SIZE			0x01E00000
 
 /*
  * Memory used for SFP slot config/status, EEPROM info
