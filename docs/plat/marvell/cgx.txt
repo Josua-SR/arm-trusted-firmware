@@ -720,16 +720,18 @@ in analog or digital loopback mode.
 
   /* command argument to be passed for cmd ID - CGX_CMD_LOOP_SERDES */
   /* Resp to cmd ID - CGX_CMD_SERDES_LOOP
- * flags : 2 bits
- *    if 0 : disable FEA and NED serdes loopback
+ * flags : 3 bits
+ *    if 0 : disable serdes loopback
  *    if 1 : FEA serdes loopback
  *    if 2 : NED serdes loopback
+ *    if 3 : NEA serdes loopback
+ *    if 4 : FED serdes loopback
  */
- struct cgx_gser_loop {
-        uint64_t reserved1:8;
-        uint64_t flags:2;
-        uint64_t reserved2:53;
- };
+struct cgx_gser_loop {
+	uint64_t reserved1:8;
+	uint64_t flags:3;
+	uint64_t reserved2:53;
+};
 
 The serdes lane corresponding to cgx_id and lmac_id will be configured in
 loopback mode not all lanes in QLM/DLM.

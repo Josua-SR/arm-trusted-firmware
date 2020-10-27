@@ -479,14 +479,16 @@ struct cgx_display_args {
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
 
 /* Resp to cmd ID - CGX_CMD_SERDES_LOOP
- * flags : 2 bits
- *    if 0 : disable FEA and NED serdes loopback
+ * flags : 3 bits
+ *    if 0 : disable serdes loopback
  *    if 1 : FEA serdes loopback
  *    if 2 : NED serdes loopback
+ *    if 3 : NEA serdes loopback
+ *    if 4 : FED serdes loopback
  */
 struct cgx_gser_loop {
 	uint64_t reserved1:8;
-	uint64_t flags:2;
+	uint64_t flags:3;
 	uint64_t reserved2:53;
 };
 
