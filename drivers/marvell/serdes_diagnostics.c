@@ -241,6 +241,7 @@ struct {
 	int show_phy_line;
 	int mode;
 	int started;
+	int inject;
 } prbs_status[MAX_QLM][MAX_LANES_PER_QLM];
 
 /* Check if memory region for PRBS data is big enough */
@@ -257,6 +258,8 @@ int cgx_smc_do_prbs(int cmd, int qlm, int x3, int lane)
 	if (cgx_id == -1)
 		return -1;
 
+	//printf("%s: cmd: %d, qlm %d, mode %d, inject_errors = %d lane %d\n",
+	//		cmd, qlm, x3 & 0xff, x3 >> 8, lane);
 	switch (cmd) {
 	case CGX_PRBS_START_CMD:
 		if (prbs_status[qlm][lane].started) {
@@ -266,7 +269,8 @@ int cgx_smc_do_prbs(int cmd, int qlm, int x3, int lane)
 			prbs_status[qlm][lane].started = 0;
 		}
 
-		prbs_status[qlm][lane].mode = x3;
+		prbs_status[qlm][lane].mode = x3 & 0xff;
+		prbs_status[qlm][lane].inject = (x3 >> 8) & 0x1;
 		rc = start_prbs(cgx_id, qlm,
 				prbs_status[qlm][lane].mode,
 				&prbs_status[qlm][lane].show_phy_host,
@@ -290,6 +294,7 @@ int cgx_smc_do_prbs(int cmd, int qlm, int x3, int lane)
 		if (prbs_status[qlm][lane].started) {
 			clear_prbs_errors(cgx_id, qlm, lane,
 				prbs_status[qlm][lane].mode);
+			prbs_status[qlm][lane].inject = 0;
 		}
 		break;
 
@@ -306,6 +311,17 @@ int cgx_smc_do_prbs(int cmd, int qlm, int x3, int lane)
 				prbs_status[qlm][lane].show_phy_host,
 				prbs_status[qlm][lane].show_phy_line,
 				prbs_data->errors, lane);
+
+		/* Inject error if requested */
+		if (prbs_data->errors[lane].err != -1) {
+			if (prbs_status[qlm][lane].inject) {
+				const qlm_ops_t *qlm_ops;
+
+				qlm_ops = _get_qlm_ops(cgx_id);
+				if (qlm_ops != NULL)
+					qlm_ops->qlm_inject_prbs_error(qlm, lane);
+			}
+		}
 
 		if (x3) {
 			printf("QLM%d.Lane%d: errors:", qlm, lane);
