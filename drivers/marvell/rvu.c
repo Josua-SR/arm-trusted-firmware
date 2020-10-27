@@ -258,7 +258,10 @@ static int rvu_provision_pfs_for_sw_devs(int rvu_pf_start, int top_cgx_pf,
 		}
 
 		sw_pf = find_sw_rvu_pf_info(SW_RVU_REE_PF(i));
-		assert(sw_pf != NULL);
+		if (sw_pf == NULL) {
+			ERROR("Internal error locating REE info\n");
+			panic();
+		}
 
 		/* Legacy not valid for REE */
 		if ((sw_pf->mapping == SW_RVU_MAP_LEGACY) ||
@@ -316,7 +319,10 @@ static int rvu_provision_pfs_for_sw_devs(int rvu_pf_start, int top_cgx_pf,
 			break;
 
 		sw_pf = find_sw_rvu_pf_info(SW_RVU_SDP_PF(i));
-		assert(sw_pf != NULL);
+		if (sw_pf == NULL) {
+			ERROR("Internal error locating SDP info\n");
+			panic();
+		}
 
 		/* [single SDP] already LEGACY-mapped */
 		if (sw_pf->mapping == SW_RVU_MAP_LEGACY)
@@ -408,7 +414,10 @@ static int octeontx_init_rvu_from_fdt(void)
 	 * a fixed allocation.
 	 */
 	sw_pf = find_sw_rvu_pf_info(SW_RVU_SSO_TIM_PF(0));
-	assert(sw_pf != NULL);
+	if (sw_pf == NULL) {
+		ERROR("Internal error locating TIM info\n");
+		panic();
+	}
 	/* If provision-mode == "AVAILABLE", don't alloc fixed SSO_TIM */
 	if (sw_pf && (sw_pf->mapping != SW_RVU_MAP_AVAILABLE) &&
 	    (sw_pf->mapping != SW_RVU_MAP_NONE))
@@ -437,7 +446,10 @@ static int octeontx_init_rvu_from_fdt(void)
 	 * For 'legacy' SDP, provision PF(last-1) as SDP instead of NPA.
 	 */
 	sw_pf = find_sw_rvu_pf_info(SW_RVU_SDP_PF(0));
-	assert(sw_pf != NULL);
+	if (sw_pf == NULL) {
+		ERROR("Internal error locating SDP info\n");
+		panic();
+	}
 	if (sw_pf && (sw_pf->mapping == SW_RVU_MAP_LEGACY) &&
 	    octeontx_is_in_ep_mode()) {
 		debug_rvu("RVU: provision PF%d -> SW_RVU_SDP (override NPA)\n",
@@ -446,7 +458,10 @@ static int octeontx_init_rvu_from_fdt(void)
 					SW_RVU_SDP_PF(0), TRUE);
 	} else {
 		sw_pf = find_sw_rvu_pf_info(SW_RVU_NPA_PF(0));
-		assert(sw_pf != NULL);
+		if (sw_pf == NULL) {
+			ERROR("Internal error locating NPA info\n");
+			panic();
+		}
 
 		/* If provision-mode == "AVAILABLE", don't alloc fixed NPA */
 		if (sw_pf && (sw_pf->mapping != SW_RVU_MAP_AVAILABLE) &&
