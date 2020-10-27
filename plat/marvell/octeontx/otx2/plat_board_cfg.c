@@ -581,7 +581,7 @@ static void octeontx2_parse_rvu_config(const void *fdt, int *fdt_vfs)
 				    SW_RVU_SSO_TIM_PF(0), fdt_vfs);
 	if (rc < 0) {
 		WARN("RVU: Unable to fill PF%d-SSO_TIM structure\n",
-			RVU_SSO_TIM);
+			FIXED_RVU_SSO_TIM);
 		return;
 	} else if (!SW_RVU_SSO_TIM_NUM_PF) {
 		/* Platform DTS should not contain entry for non-existent dev */
@@ -592,7 +592,7 @@ static void octeontx2_parse_rvu_config(const void *fdt, int *fdt_vfs)
 	rc = octeontx2_parse_sw_rvu(fdt, offset, RVU_NPA_FDT_NODE,
 				    SW_RVU_NPA_PF(0), fdt_vfs);
 	if (rc < 0) {
-		WARN("RVU: Unable to fill PF%d-NPA structure\n", RVU_NPA);
+		WARN("RVU: Unable to fill PF%d-NPA structure\n", FIXED_RVU_NPA);
 		return;
 	} else if (!SW_RVU_NPA_NUM_PF) {
 		/* Platform DTS should not contain entry for non-existent dev */

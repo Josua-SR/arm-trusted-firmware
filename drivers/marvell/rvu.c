@@ -397,12 +397,31 @@ static int octeontx_init_rvu_from_fdt(void)
 	/* Init RVU0 - AF (PF0) */
 	octeontx_init_rvu_af(&current_hwvf);
 
-	/* Init RVU(last-2) - SSO_TIM (PF(last-2)) */
-	octeontx_init_rvu_fixed(&current_hwvf, RVU_SSO_TIM,
-				SW_RVU_SSO_TIM_PF(0), TRUE);
+	/* Init RVU(last-2) - SSO_TIM (PF(last-2)) UNLESS SSO_TIM
+	 * provision-mode is set to "AVAILABLE.
+	 * On existing systems, provision-mode will be empty, thus
+	 * defaulting to "LEGACY".  New systems which don't necessarily
+	 * require a fixed SSO_TIM can set "AVAILABLE", thus bypassing
+	 * a fixed allocation.
+	 */
+	sw_pf = find_sw_rvu_pf_info(SW_RVU_SSO_TIM_PF(0));
+	assert(sw_pf != NULL);
+	/* If provision-mode == "AVAILABLE", don't alloc fixed SSO_TIM */
+	if (sw_pf && (sw_pf->mapping != SW_RVU_MAP_AVAILABLE) &&
+	    (sw_pf->mapping != SW_RVU_MAP_NONE))
+		octeontx_init_rvu_fixed(&current_hwvf, FIXED_RVU_SSO_TIM,
+					SW_RVU_SSO_TIM_PF(0), TRUE);
+	else
+		debug_rvu("RVU: skipping fixed SSO_TIM allocation\n");
 
 	/*
-	 * Init RVU(last-1) - NPA (PF(last-1))
+	 * Init RVU(last-1) - NPA (PF(last-1)) UNLESS NPA provision-mode
+	 * is set to "AVAILABLE".
+	 *
+	 * On existing systems, provision-mode will be empty, thus
+	 * defaulting to "LEGACY".  New systems which don't necessarily
+	 * require a fixed NPA can set "AVAILABLE", thus bypassing a fixed
+	 * allocation.
 	 *
 	 * Check for 'legacy' SDP provisioning, which is dependent upon ALL of:
 	 *   FDT entry indicates 'LEGACY'
@@ -415,12 +434,21 @@ static int octeontx_init_rvu_from_fdt(void)
 	if (sw_pf && (sw_pf->mapping == SW_RVU_MAP_LEGACY) &&
 	    octeontx_is_in_ep_mode()) {
 		debug_rvu("RVU: provision PF%d -> SW_RVU_SDP (override NPA)\n",
-			  RVU_NPA);
-		octeontx_init_rvu_fixed(&current_hwvf, RVU_NPA,
+			  FIXED_RVU_NPA);
+		octeontx_init_rvu_fixed(&current_hwvf, FIXED_RVU_NPA,
 					SW_RVU_SDP_PF(0), TRUE);
-	} else
-		octeontx_init_rvu_fixed(&current_hwvf, RVU_NPA,
-					SW_RVU_NPA_PF(0), TRUE);
+	} else {
+		sw_pf = find_sw_rvu_pf_info(SW_RVU_NPA_PF(0));
+		assert(sw_pf != NULL);
+
+		/* If provision-mode == "AVAILABLE", don't alloc fixed NPA */
+		if (sw_pf && (sw_pf->mapping != SW_RVU_MAP_AVAILABLE) &&
+		    (sw_pf->mapping != SW_RVU_MAP_NONE))
+			octeontx_init_rvu_fixed(&current_hwvf, FIXED_RVU_NPA,
+						SW_RVU_NPA_PF(0), TRUE);
+		else
+			debug_rvu("RVU: skipping fixed NPA allocation\n");
+	}
 
 	if (plat_octeontx_bcfg->rvu_config.cpt_dis)
 		uninit_pfs = 1;
