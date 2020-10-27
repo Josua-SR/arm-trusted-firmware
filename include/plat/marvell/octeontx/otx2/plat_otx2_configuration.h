@@ -38,5 +38,16 @@ unsigned int plat_configure_sdp_rid(void);
 unsigned int plat_configure_rid(void);
 unsigned int plat_configure_cpt_rid(void);
 struct otx2_stream_security_setting *plat_get_otx2_stream_security(int *count);
+int plat_octeontx_get_eth_count(void);
+int plat_octeontx_get_eth_lmac_count(void);
+void plat_octeontx_get_eth_lmac_rvu_info(unsigned int eth_id,
+					 unsigned int lmac_id,
+					 int *num_rvu_vfs,
+					 int *num_msix_vec,
+					 int *nix_block);
+void plat_octeontx_enable_eth_lmac(unsigned int eth_id, unsigned int lmac_id,
+				   int enabled);
+int plat_octeontx_is_enabled_eth_lmac(unsigned int eth_id,
+				      unsigned int lmac_id);
 
 #endif /* __PLAT_OTX2_CONFIGURATION_H__ */
