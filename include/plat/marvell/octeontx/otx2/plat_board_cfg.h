@@ -135,12 +135,12 @@ typedef struct cgx_lmac_config {
 	/* NOTE: when this bit is set, it doesn't necessarily
 	 * mean the link is up until the user sends LINK UP command
 	 */
-	int lmac_enable;
-	int phy_mode;		/* MAC or PHY mode for SGMII */
-	int sgmii_1000x_mode;	/* SGMII or 1000x mode for SGMII */
-	int phy_present;
-	int sfp_slot;
-	int autoneg_dis;
+	bool lmac_enable;
+	bool phy_mode;		/* MAC or PHY mode for SGMII */
+	bool sgmii_1000x_mode;	/* SGMII or 1000x mode for SGMII */
+	bool phy_present;
+	bool sfp_slot;
+	bool autoneg_dis;
 	int fec;	/* host side of PHY's fec type */
 	int line_fec; /* line side of PHY's fec type */
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
