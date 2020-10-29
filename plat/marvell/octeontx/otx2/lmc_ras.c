@@ -832,6 +832,15 @@ static struct ras_dram_lmc_map *ras_dram_get_lmc_map(int lmc)
 			}
 		}
 
+/*
+ * A conditional is required here to prevent a compiler array bounds error
+ * initializing plat_lmc_map[].  When compiled for platforms OTHER than t98,
+ * variable plat_lmc_map[MAX_LMC] has fewer than 6 elements, causing a
+ * compiler error.  The compiler has no way of knowing that the run-time
+ * check for 'OCTEONTX_CN98XX' will prevent invalid memory accesses on
+ * non-t98 platforms.  This error was seen with GCC10, not GCC7.
+ */
+#ifdef PLAT_t98
 		/* T98 has problem with MCCX_LMCOEX_CONST; use static config */
 		if (cavm_is_model(OCTEONTX_CN98XX)) {
 			/* Highlight problem with new chip revs. */
@@ -852,6 +861,7 @@ static struct ras_dram_lmc_map *ras_dram_get_lmc_map(int lmc)
 				   .lmc = 5, .mcc = 1, .lmcoe = 2, .valid = 1 };
 			}
 		}
+#endif
 
 		once++;
 	} else if (!once && is_asim()) {
