@@ -163,7 +163,7 @@ static int gser_config_get_qlm_tuning(int prop, const char *mode, int baud_mhz,
 		debug_gser("No %s option is set in BDK DT\n", name);
 		return -1;
 	}
-	return strtol(buf, NULL, 10);
+	return strtol(buf, NULL, 16);
 }
 
 static int gser_get_lane_config(int prop, int qlm, int lane)
