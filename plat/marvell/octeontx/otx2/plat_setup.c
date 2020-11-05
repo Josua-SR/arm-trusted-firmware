@@ -70,8 +70,10 @@ void plat_octeontx_setup(void)
 	plat_flr_init();
 
 #if RAS_EXTENSION
-	otx2_ras_init();
-	plat_dram_ras_init();
+	if (plat_ras_feature_supported() == true) {
+		otx2_ras_init();
+		plat_dram_ras_init();
+	}
 #endif /* RAS_EXTENSION */
 
 
@@ -803,4 +805,56 @@ int plat_octeontx_is_eth_lmac_rfoe(unsigned int eth_id,
 	}
 
 	return rfoe_flag;
+}
+
+/*
+ * plat_ras_feature_supported
+ *
+ * Indicates if platform supports RAS features.
+ *
+ * on entry,
+ *   void
+ * returns,
+ *   true if platform supports RAS features else false
+ */
+bool plat_ras_feature_supported(void)
+{
+	uint64_t midr;
+	static int ret = -1;
+
+	(void)midr;
+
+	/* only perform run-time check ONCE */
+	if (ret == -1)
+		ret = false; /* default to false (no support) */
+	else
+		return ret;
+
+#if RAS_EXTENSION
+	midr = read_midr();
+
+	/* check if RAS functionality is supported by chip */
+	if (!(IS_OCTEONTX_PN(midr, T96PARTNUM) ||
+	      IS_OCTEONTX_PN(midr, F95PARTNUM) ||
+	      IS_OCTEONTX_PN(midr, F95MMPARTNUM) ||
+	      IS_OCTEONTX_PN(midr, LOKIPARTNUM) ||
+	      IS_OCTEONTX_PN(midr, T98PARTNUM))) {
+		ERROR("%s: RAS enabled on unsupported device\n", __func__);
+		return ret;
+	}
+
+	/*
+	 * check if RAS functionality should be excluded by board
+	 *
+	 * example:
+	 *	if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, <name>, n)) {
+	 *		VERBOSE("%s: RAS support excluded from board %s\n",
+	 *			__func__, plat_octeontx_bcfg->bcfg.board_model);
+	 *		return ret; // i.e. false
+	 *	}
+	 */
+
+	ret = true;
+#endif
+	return ret;
 }

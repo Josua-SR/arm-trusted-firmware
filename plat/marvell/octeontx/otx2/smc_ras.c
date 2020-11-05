@@ -38,6 +38,10 @@
 int64_t plat_ras_smc_op(u_register_t x1, u_register_t x2,
 			u_register_t x3, u_register_t x4)
 {
+	/* Ensure RAS features are not run-time disabled */
+	if (!plat_ras_feature_supported())
+		return -EINVAL;
+
 	/* log the interesting calls */
 	if (x1 != OCTEONTX_EDAC_MDC_RW)
 		debug_ras("%s(op:%lx x2:%lx x3:%lx x4:%lx)\n",

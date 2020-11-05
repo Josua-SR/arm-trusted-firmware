@@ -865,18 +865,7 @@ static int ras_init_mccs(void)
 
 int plat_dram_ras_init(void)
 {
-	uint64_t midr = read_midr();
-
 	debug_ras("%s\n", __func__);
-
-	if (!(IS_OCTEONTX_PN(midr, T96PARTNUM) ||
-	      IS_OCTEONTX_PN(midr, F95PARTNUM) ||
-	      IS_OCTEONTX_PN(midr, F95MMPARTNUM) ||
-	      IS_OCTEONTX_PN(midr, LOKIPARTNUM) ||
-	      IS_OCTEONTX_PN(midr, T98PARTNUM))) {
-		ERROR("%s: unsupported device\n", __func__);
-		return 0;
-	}
 
 	ras_init_mccs();
 	debug_ras("RAS handlers registered\n");
