@@ -42,6 +42,7 @@
 #pragma weak plat_octeontx_get_eth_lmac_rvu_info
 #pragma weak plat_octeontx_enable_eth_lmac
 #pragma weak plat_octeontx_is_enabled_eth_lmac
+#pragma weak plat_octeontx_is_eth_lmac_rfoe
 
 static int disable_ooo;
 static uint64_t disable_ooo_mask;
@@ -773,4 +774,33 @@ int plat_octeontx_is_enabled_eth_lmac(unsigned int eth_id, unsigned int lmac_id)
 	}
 
 	return enabled;
+}
+
+/*
+ * Indicates if a particular ETH/LMAC combination is configured as rfoe.
+ *
+ * On entry,
+ *   eth_id:  ETH instance ID (0..n, see 'plat_octeontx_get_eth_count')
+ *   lmac_id: LMAC instance ID (0..n, see 'plat_octeontx_get_eth_lmac_count')
+ *
+ * Returns,
+ *   true if ETH/LMAC combo is configured as rfoe, else false
+ */
+int plat_octeontx_is_eth_lmac_rfoe(unsigned int eth_id,
+				   unsigned int lmac_id)
+{
+	cgx_config_t *cgx_cfg;
+	int rfoe_flag;
+
+	assert(eth_id < MAX_CGX);
+	assert(lmac_id < MAX_LMAC_PER_CGX);
+
+	rfoe_flag = 0;
+
+	if ((eth_id < MAX_CGX) && (lmac_id < MAX_LMAC_PER_CGX)) {
+		cgx_cfg = &plat_octeontx_bcfg->cgx_cfg[eth_id];
+		rfoe_flag = cgx_cfg->is_rfoe;
+	}
+
+	return rfoe_flag;
 }

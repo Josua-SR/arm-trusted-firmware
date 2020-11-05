@@ -49,5 +49,7 @@ void plat_octeontx_enable_eth_lmac(unsigned int eth_id, unsigned int lmac_id,
 				   int enabled);
 int plat_octeontx_is_enabled_eth_lmac(unsigned int eth_id,
 				      unsigned int lmac_id);
+int plat_octeontx_is_eth_lmac_rfoe(unsigned int eth_id,
+				   unsigned int lmac_id);
 
 #endif /* __PLAT_OTX2_CONFIGURATION_H__ */
