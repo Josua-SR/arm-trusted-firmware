@@ -39,6 +39,7 @@ static int qlm_gserc_change_lane_rate(int module, int lane);
 static int qlm_gserc_change_phy_rate(int module);
 static int mailbox_command(int qlm, uint8_t cmd, uint64_t args);
 static int mailbox_response(int qlm, uint64_t *arg0, uint64_t *arg1);
+static void qlm_gserc_lane_rst(int module, int lane, bool reset);
 
 typedef enum
 {
@@ -264,6 +265,11 @@ extern void qlm_gserc_rx_dfe_adaptation(int qlm, int lane);
 			}
 #endif
 			apply_tuning(qlm, l);
+			/* Perform lane reset */
+			if (mode == QLM_MODE_CPRI) {
+				qlm_gserc_lane_rst(qlm, l, 1);
+				qlm_gserc_lane_rst(qlm, l, 0);
+			}
 		}
 		else
 			GSER_TRACE(QLM, "GSERC%d.%d: Lane mode already correct\n", qlm, l);
