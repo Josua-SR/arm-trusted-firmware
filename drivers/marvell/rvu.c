@@ -51,6 +51,25 @@ struct rvu_pf_eth_lmac {
 
 static struct rvu_device rvu_dev[MAX_RVU_PFS];
 
+typedef enum {
+	avail_from_bot = 1,
+	avail_from_top = -1,
+} rvu_pf_avail_dir_t;
+
+static int rvu_first_available(rvu_pf_avail_dir_t dir)
+{
+	int i;
+
+	i = (dir == avail_from_top) ? RVU_LAST : RVU_ETH_FIRST;
+	while ((i >= RVU_ETH_FIRST) && (i <= RVU_LAST) && rvu_dev[i].enable)
+		i += (int)dir;
+
+	if ((i < RVU_ETH_FIRST) || (i > RVU_LAST))
+		return -1;
+
+	return i;
+}
+
 static inline int octeontx_get_msix_for_npa(void)
 {
 	union cavm_npa_priv_lfx_int_cfg npa_int_cfg;
@@ -167,6 +186,10 @@ static void octeontx_init_rvu_fixed(int *hwvf, int rvu, int bfdt_index,
 	rvu_dev[rvu].pci.class_code = sw_dev->pci.class_code & CLASS_CODE_MASK;
 	rvu_dev[rvu].vf_num_msix_vec = has_vfs ? sw_pf->num_msix_vec : 0;
 
+	debug_rvu("rvu %02d [%04x/%04x]: swidx %d, rvu_vfs %d, msix_vec %d\n",
+		rvu, rvu_dev[rvu].pci.pf_devid, rvu_dev[rvu].pci.vf_devid,
+		bfdt_index, sw_pf->num_rvu_vfs, sw_pf->num_msix_vec);
+
 	/* Increment already allocated HWVFs */
 	*hwvf += rvu_dev[rvu].num_vfs;
 }
@@ -222,15 +245,14 @@ static int octeontx_is_in_ep_mode(void)
  *
  * Performs provisioning of RVU PFs to SW_RVU_xxx devices.
  *
- * RVU PFs for these devices are provisioned dynamically from the 'top'
- * of the RVU PFs allocated for ETH LMACs (i.e. RVU PF <last-3>).
+ * RVU PFs for these devices are provisioned dynamically from any available
+ * PF starting from the 'top' (i.e. last PF).
  * Depending upon the "provision-mode", RVU PFs MAY be allocated to
  * the SW_RVU_xxx devices which 'override' an RVU PF reserved for an ETH LMAC.
  *
  * Refer to the RVU PF provisioning document for more information.
  *
  * on entry,
- *   rvu_pf:        starting RVU PF number to provision
  *   top_eth_pf:    [numerically] highest RVU PF # reserved for ETH LMACs
  *   cur_hwvf:      [pointer to] starting RVU SR-IOV VF number to provision
  *                  (i.e. 0 ... RVU_PRIV_CONST[HWVFS]-1)
@@ -240,21 +262,20 @@ static int octeontx_is_in_ep_mode(void)
  *                  (used to 'override' an RVU PF allocated to an ETH dev)
  *
  * returns,
- *   [numerically] highest RVU PF remaining to be provisioned from
- *   range reserved for ETH LMACs
+ *   void
  *
  */
-static int rvu_provision_pfs_for_sw_devs(int rvu_pf_start, int top_eth_pf,
-					 int *cur_hwvf, int *uninit_pf_cnt,
-					 struct rvu_pf_eth_lmac *eth_lmac_list)
+static void rvu_provision_pfs_for_sw_devs(int top_eth_pf,
+					  int *cur_hwvf, int *uninit_pf_cnt,
+					  struct rvu_pf_eth_lmac *eth_lmac_list)
 {
 	rvu_sw_rvu_pf_t *sw_pf;
 	int i, rvu_pf;
 
-	rvu_pf = rvu_pf_start;
-
 	/* Provision RVU PFs for REE. */
 	for (i = SW_RVU_REE_NUM_PF - 1; (int)i >= 0; i--) {
+		rvu_pf = rvu_first_available(avail_from_top);
+
 		/* Enforce constraint */
 		if (rvu_pf < RVU_ETH_FIRST) {
 			ERROR("RVU: too many SW_RVU_xxx devices (REE%d).\n", i);
@@ -309,12 +330,12 @@ static int rvu_provision_pfs_for_sw_devs(int rvu_pf_start, int top_eth_pf,
 			debug_rvu("RVU: Decrement uninit_pfs -> %d\n",
 				  *uninit_pf_cnt);
 		}
-
-		rvu_pf--;
 	}
 
 	/* Provision RVU PFs for SDP. */
 	for (i = SW_RVU_SDP_NUM_PF - 1; (int)i >= 0; i--) {
+		rvu_pf = rvu_first_available(avail_from_top);
+
 		/* Enforce constraint */
 		if (rvu_pf < RVU_ETH_FIRST) {
 			ERROR("RVU: too many SW_RVU_xxx devices (SDP%d).\n", i);
@@ -374,18 +395,14 @@ static int rvu_provision_pfs_for_sw_devs(int rvu_pf_start, int top_eth_pf,
 			debug_rvu("RVU: Decrement uninit_pfs -> %d\n",
 				  *uninit_pf_cnt);
 		}
-
-		rvu_pf--;
 	}
-
-	return rvu_pf;
 }
 
 static int octeontx_init_rvu_from_fdt(void)
 {
 	int eth_id, lmac_id, pf, current_hwvf = 0;
 	int uninit_pfs = 0, sso_tim_pfs, npa_pfs;
-	int top_eth_pf, top_uninit_pf, top_pool_pf;
+	int top_eth_pf;
 	rvu_sw_rvu_pf_t *sw_pf;
 	struct rvu_pf_eth_lmac eth_lmac_list[MAX_RVU_PFS];
 	/* Implementation note: this array only requires elements equal to the
@@ -402,9 +419,6 @@ static int octeontx_init_rvu_from_fdt(void)
 		ERROR("Invalid RVU configuration, skipping RVU init!.\n");
 		return -1;
 	}
-
-	/* Normally start allocating "other" devices from end of net reserved */
-	top_pool_pf = RVU_ETH_LAST;
 
 	/*
 	 * Firstly, initialize fixed setup
@@ -432,8 +446,6 @@ static int octeontx_init_rvu_from_fdt(void)
 					SW_RVU_SSO_TIM_PF(0), TRUE);
 	else {
 		uninit_pfs++;
-		/* not using legacy 'fixed' PF; use it for 'pool' */
-		top_pool_pf++;
 		debug_rvu("RVU: skipping fixed SSO_TIM allocation\n");
 	}
 
@@ -477,16 +489,12 @@ static int octeontx_init_rvu_from_fdt(void)
 						SW_RVU_NPA_PF(0), TRUE);
 		else {
 			uninit_pfs++;
-			/* not using legacy 'fixed' PF; use it for 'pool' */
-			top_pool_pf++;
 			debug_rvu("RVU: skipping fixed NPA allocation\n");
 		}
 	}
 
 	if (plat_octeontx_bcfg->rvu_config.cpt_dis) {
 		uninit_pfs++;
-		/* not using legacy 'fixed' PF; use it for 'pool' */
-		top_pool_pf++;
 	} else {
 		/* Init last RVU - as CPT if present */
 		octeontx_init_rvu_fixed(&current_hwvf, RVU_LAST,
@@ -551,10 +559,10 @@ static int octeontx_init_rvu_from_fdt(void)
 	 * Now, provision RVU PFs for SW_RVU_xxx devices DOWNWARD starting from
 	 * the 'pool' of available PFs.
 	 */
-	top_uninit_pf = rvu_provision_pfs_for_sw_devs(top_pool_pf, top_eth_pf,
-						      &current_hwvf,
-						      &uninit_pfs,
-						      eth_lmac_list);
+	rvu_provision_pfs_for_sw_devs(top_eth_pf,
+				      &current_hwvf,
+				      &uninit_pfs,
+				      eth_lmac_list);
 
 	/*
 	 * Finally, after any possible 'overrides' by SW_RVU_xxx devices,
@@ -584,8 +592,7 @@ static int octeontx_init_rvu_from_fdt(void)
 
 	if (pf != RVU_ETH_FIRST)
 		debug_rvu("RVU: PF%d was last PF provisioned for ETH\n", pf-1);
-	debug_rvu("RVU: PF%d is top uninitialized PF, count %d\n",
-		  top_uninit_pf, uninit_pfs);
+	debug_rvu("RVU: uninitialized PF count %d\n", uninit_pfs);
 
 	/*
 	 * For all unitialized PFs, divide them by factor and configure:
@@ -600,25 +607,27 @@ static int octeontx_init_rvu_from_fdt(void)
 	npa_pfs = uninit_pfs - sso_tim_pfs;
 	debug_rvu("RVU: allocating %u SSO PFs, %u NPA PFs, starting at PF%u\n",
 		  sso_tim_pfs, npa_pfs, pf);
+
 	while (sso_tim_pfs > 0) {
-		if (pf > top_uninit_pf) {
-			ERROR("RVU: PF%d exceeds uninialized limit (PF%d)\n",
-			      pf, top_uninit_pf);
+		pf = rvu_first_available(avail_from_bot);
+		if (pf == -1) {
+			ERROR("RVU: exceeded limit, %d SSO_TIM_PFs remaining\n",
+			      sso_tim_pfs);
 			return 0;
 		}
-		octeontx_init_rvu_fixed(&current_hwvf, pf++,
+		octeontx_init_rvu_fixed(&current_hwvf, pf,
 					SW_RVU_SSO_TIM_PF(0), FALSE);
 		sso_tim_pfs--;
 	}
 
 	while (npa_pfs > 0) {
-		/* If CPT was disabled, its reserved PF is uninitialized. */
-		if (pf > top_uninit_pf) {
-			ERROR("RVU: PF%d exceeds uninialized limit (PF%d)\n",
-			      pf, top_uninit_pf);
+		pf = rvu_first_available(avail_from_bot);
+		if (pf == -1) {
+			ERROR("RVU: exceeded limit, %d NPA_PFs remaining\n",
+			      npa_pfs);
 			return 0;
 		}
-		octeontx_init_rvu_fixed(&current_hwvf, pf++,
+		octeontx_init_rvu_fixed(&current_hwvf, pf,
 					SW_RVU_NPA_PF(0), FALSE);
 		npa_pfs--;
 	}
