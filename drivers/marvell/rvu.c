@@ -401,7 +401,7 @@ static void rvu_provision_pfs_for_sw_devs(int top_eth_pf,
 static int octeontx_init_rvu_from_fdt(void)
 {
 	int eth_id, lmac_id, pf, current_hwvf = 0;
-	int uninit_pfs = 0, sso_tim_pfs, npa_pfs;
+	int uninit_pfs = 0, fixed_sso_tim_pfs, sso_tim_pfs, npa_pfs;
 	int top_eth_pf;
 	rvu_sw_rvu_pf_t *sw_pf;
 	struct rvu_pf_eth_lmac eth_lmac_list[MAX_RVU_PFS];
@@ -439,12 +439,15 @@ static int octeontx_init_rvu_from_fdt(void)
 		ERROR("Internal error locating TIM info\n");
 		panic();
 	}
+
+	fixed_sso_tim_pfs = 0;
 	/* If provision-mode == "AVAILABLE", don't alloc fixed SSO_TIM */
 	if (sw_pf && (sw_pf->mapping != SW_RVU_MAP_AVAILABLE) &&
-	    (sw_pf->mapping != SW_RVU_MAP_NONE))
+	    (sw_pf->mapping != SW_RVU_MAP_NONE)) {
+		fixed_sso_tim_pfs++;
 		octeontx_init_rvu_fixed(&current_hwvf, FIXED_RVU_SSO_TIM,
 					SW_RVU_SSO_TIM_PF(0), TRUE);
-	else {
+	} else {
 		uninit_pfs++;
 		debug_rvu("RVU: skipping fixed SSO_TIM allocation\n");
 	}
@@ -604,6 +607,10 @@ static int octeontx_init_rvu_from_fdt(void)
 		return 0;
 
 	sso_tim_pfs = uninit_pfs * SSO_TIM_TO_NPA_PFS_FACTOR;
+	/* Limit number of SSO PFs so as not to waste [MSIX] resources */
+#	define MAX_ALLOWED_RVU_SSO_PFS 8
+	if (sso_tim_pfs > (MAX_ALLOWED_RVU_SSO_PFS - fixed_sso_tim_pfs))
+		sso_tim_pfs = MAX_ALLOWED_RVU_SSO_PFS - fixed_sso_tim_pfs;
 	npa_pfs = uninit_pfs - sso_tim_pfs;
 	debug_rvu("RVU: allocating %u SSO PFs, %u NPA PFs, starting at PF%u\n",
 		  sso_tim_pfs, npa_pfs, pf);
