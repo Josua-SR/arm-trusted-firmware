@@ -4,15 +4,13 @@
  */
 
 /***********************license start***********************************
-* Copyright (C) 2018-2020 Marvell International Ltd.
+* Copyright (C) 2018-2020 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
 #include <gser_internal.h>
 #include <qlm/qlm.h>
-#include <qlm/qlm_gsern.h>
 #include <qlm/qlm_gserc.h>
-#include <qlm/qlm_gserr.h>
 
 /**
  * Define to enable or disable lanes 2-3. Used to keep differences between
@@ -260,11 +258,11 @@ extern void qlm_gserc_rx_leq_adaptation(int qlm, int lane,
 	int leq_lfg_start, int leq_hfg_sql_start, int leq_mbf_start,
 	int leq_mbg_start, int gn_apg_start);
 extern void qlm_gserc_rx_dfe_adaptation(int qlm, int lane);
-				 qlm_gserc_rx_dfe_adaptation(qlm, l);
-				 qlm_gserc_rx_leq_adaptation(qlm, l, 2, 8, 0, 8, 3);
+				qlm_gserc_rx_dfe_adaptation(qlm, l);
+				qlm_gserc_rx_leq_adaptation(qlm, l, 2, 8, 0, 8, 3);
 			}
 #endif
-			apply_tuning(qlm, l);
+	                apply_tuning(qlm, l);
 			/* Perform lane reset */
 			if (mode == QLM_MODE_CPRI) {
 				qlm_gserc_lane_rst(qlm, l, 1);
@@ -1034,6 +1032,25 @@ int qlm_gserc_ned_loopback(int module, int lane, bool enable)
 	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_DPL_RXDP_CTRL1(module, lane),
 		c.s.rx_fifo_en = 1);
 
+	/* Additional Step. Override tx_en indicator by programming a lane top register
+	   LN_CTRL_OVR0, and modify rxpolarity to  Note that all of its fields must be programmed
+	   appropriately.
+			a. TX_EN = 0x1
+			b. DATA_RXPOLARITY = 0x1
+			c.  EDGE_RXPOLARITY = 0x0
+			d. EYE_RXPOLARITY = 0x0
+			e. OVR_EN = 0x1 (should be programmed last or at the same time as
+				all other fields) */
+	GSER_CSR_INIT(tx_pol, CAVM_GSERCX_LNX_TOP_DPL_TXDP_CTRL1(module, lane));
+	GSER_CSR_INIT(rx_pol, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane));
+	if (tx_pol.s.txpolarity != rx_pol.s.ln_ctrl_rxpolarity)
+		GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_LN_CTRL_OVR0(module, lane),
+			c.s.tx_en = enable;
+			c.s.eye_rxpolarity = 0;
+			c.s.edge_rxpolarity = 0;
+			c.s.data_rxpolarity = tx_pol.s.txpolarity;
+			c.s.ovr_en = enable);
+
 	if (!enable)
 	{
 		/* 2. Disable the firmware receive control state machine. */
@@ -1437,10 +1454,32 @@ int qlm_gserc_nea_loopback(int module, int lane, bool enable)
 		qlm_gserc_lane_rst(module, lane, 1);
 		/* 2. Disable the firmware receive control state machine. */
 		GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_TEST_CFG0(module, lane),
-			c.s.rx_ctrl_dis = 1); // maybe use enable?
-		/* 3. De-Assert Reset */
-		qlm_gserc_lane_rst(module, lane, 0);
+			c.s.rx_ctrl_dis = enable);
 	}
+
+	/* Additional Step. Override tx_en indicator by programming a lane top register
+		LN_CTRL_OVR0, and modify rxpolarity to  Note that all of its fields must be programmed
+		appropriately.
+		a. TX_EN = 0x1
+		b. DATA_RXPOLARITY = 0x1
+		c.  EDGE_RXPOLARITY = 0x1
+		d. EYE_RXPOLARITY = 0x1
+		e. OVR_EN = 0x1 (should be programmed last or at the same time as
+		all other fields) */
+	GSER_CSR_INIT(tx_pol, CAVM_GSERCX_LNX_TOP_DPL_TXDP_CTRL1(module, lane));
+	GSER_CSR_INIT(rx_pol, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane));
+	if (tx_pol.s.txpolarity != rx_pol.s.ln_ctrl_rxpolarity)
+		GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_TOP_LN_CTRL_OVR0(module, lane),
+			c.s.tx_en = enable;
+			c.s.eye_rxpolarity = tx_pol.s.txpolarity;
+			c.s.edge_rxpolarity = tx_pol.s.txpolarity;
+			c.s.data_rxpolarity = tx_pol.s.txpolarity;
+			c.s.ovr_en = enable);
+
+	/* 3. De-Assert Reset */
+	if (enable)
+		qlm_gserc_lane_rst(module, lane, 0);
+
 	/* 4. Configure the clocks for the Transmit FIFO and Receiver gearbox clocks.
 		Write GSERC(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_TXB
 			CTRL_SRC_OVR_VAL=2’h2 //Select cmu clock
@@ -1455,7 +1494,11 @@ int qlm_gserc_nea_loopback(int module, int lane, bool enable)
 	//cavm_gsercx_phy0_top_clock_ln0_clk_rxb_t clk_rxb = {.u = 0};
 	//cavm_gsercx_phy0_top_clock_ln0_clk_rxf_t clk_rxf = {.u = 0};
 	clk_txb.s.ctrl_src_ovr_val = enable ? 3 : 0;
-	clk_txf.s.ctrl_src_ovr_val = enable ? 3 : 0;
+	GSER_CSR_INIT(ln_bcfg, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane));
+	if (ln_bcfg.s.ln_ctrl_tx_width == 5)
+		clk_txf.s.ctrl_src_ovr_val = enable ? 2 : 0;
+	else
+		clk_txf.s.ctrl_src_ovr_val = enable ? 3 : 0;
 	//clk_rxb.s.ctrl_src_ovr_val = enable ? 1 : 0;
 	//clk_rxf.s.ctrl_src_sel = enable ? 3 : 0;
 	switch (lane)
@@ -1601,7 +1644,7 @@ int qlm_gserc_nea_loopback(int module, int lane, bool enable)
 
 	/* 14. Poll for Rx CDR locked.
 	   Ignore the LN_STAT_LOS flag in NEA loopback. */
-	if (enable && GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_LNX_TOP_LN_STAT_CTRL0_RXVALID, ==, 1, 10000))
+	if (enable && GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STAT_RXVALID, ==, 1, 10000))
 		gser_warn("GSERC%d.%d: Wait for GSERCX_LANEX_STATUS_BSTS[LN_STAT_RXVALID]=1 timeout\n", module, lane);
 
 	/* 15. Start the CGX MAC Receiver, CGX should now be receiving all transmit data to the GSER* lane in NEA loopback. */
@@ -1817,6 +1860,7 @@ void qlm_gserc_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 		int apg = -1;
 		int lfg = -1;
 		int hfg = -1;
+		int sql = -1;
 		int mbf = -1;
 		int mbg = -1;
 		switch (qlm_lane)
@@ -1826,6 +1870,7 @@ void qlm_gserc_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 				apg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN0_RXLEQ_GN_APG_O_READ_VAL_2_0_RSVD(qlm));
 				lfg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN0_RXLEQ_EQ_LFG_O_READ_VAL_4_0_RSVD(qlm));
 				hfg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN0_RXLEQ_EQ_HFG_O_READ_VAL_4_0_RSVD(qlm));
+				sql = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN0_RXLEQ_EQ_SQL_O_READ_VAL_2_0_RSVD(qlm));
 				mbf = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN0_RXLEQ_EQ_MBF_O_READ_VAL_3_0_RSVD(qlm));
 				mbg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN0_RXLEQ_EQ_MBG_O_READ_VAL_3_0_RSVD(qlm));
 				break;
@@ -1834,6 +1879,7 @@ void qlm_gserc_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 				apg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN1_RXLEQ_GN_APG_O_READ_VAL_2_0_RSVD(qlm));
 				lfg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN1_RXLEQ_EQ_LFG_O_READ_VAL_4_0_RSVD(qlm));
 				hfg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN1_RXLEQ_EQ_HFG_O_READ_VAL_4_0_RSVD(qlm));
+				sql = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN1_RXLEQ_EQ_SQL_O_READ_VAL_2_0_RSVD(qlm));
 				mbf = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN1_RXLEQ_EQ_MBF_O_READ_VAL_3_0_RSVD(qlm));
 				mbg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN1_RXLEQ_EQ_MBG_O_READ_VAL_3_0_RSVD(qlm));
 				break;
@@ -1843,6 +1889,7 @@ void qlm_gserc_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 				apg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN2_RXLEQ_GN_APG_O_READ_VAL_2_0_RSVD(qlm));
 				lfg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN2_RXLEQ_EQ_LFG_O_READ_VAL_4_0_RSVD(qlm));
 				hfg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN2_RXLEQ_EQ_HFG_O_READ_VAL_4_0_RSVD(qlm));
+				sql = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN2_RXLEQ_EQ_SQL_O_READ_VAL_2_0_RSVD(qlm));
 				mbf = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN2_RXLEQ_EQ_MBF_O_READ_VAL_3_0_RSVD(qlm));
 				mbg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN2_RXLEQ_EQ_MBG_O_READ_VAL_3_0_RSVD(qlm));
 				break;
@@ -1851,6 +1898,7 @@ void qlm_gserc_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 				apg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN3_RXLEQ_GN_APG_O_READ_VAL_2_0_RSVD(qlm));
 				lfg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN3_RXLEQ_EQ_LFG_O_READ_VAL_4_0_RSVD(qlm));
 				hfg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN3_RXLEQ_EQ_HFG_O_READ_VAL_4_0_RSVD(qlm));
+				sql = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN3_RXLEQ_EQ_SQL_O_READ_VAL_2_0_RSVD(qlm));
 				mbf = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN3_RXLEQ_EQ_MBF_O_READ_VAL_3_0_RSVD(qlm));
 				mbg = GSER_CSR_READ(CAVM_GSERCX_PHY0_AFE_OVR_AFE_LN3_RXLEQ_EQ_MBG_O_READ_VAL_3_0_RSVD(qlm));
 				break;
@@ -1860,7 +1908,7 @@ void qlm_gserc_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 		att = gray2binary(att);
 		apg = gray2binary(apg);
 		lfg = gray2binary(lfg);
-		hfg = gray2binary(hfg);
+		hfg = gray2binary(hfg) + 7 - gray2binary(sql);
 		mbf = gray2binary(mbf);
 		mbg = gray2binary(mbg);
 
@@ -1906,14 +1954,14 @@ void qlm_gserc_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 static int mailbox_command(int qlm, uint8_t cmd, uint64_t args)
 {
 	GSER_CSR_INIT(flag, CAVM_GSERCX_PHY0_MB_CMD_FLAG(qlm));
-	if (flag.s.data)
+	if ((flag.s.data) && (cmd != 0))
 	{
 		gser_error("GSERC%d: Mailbox already has a command\n", qlm);
 		return -1;
 	}
 
 	GSER_CSR_INIT(rsp_flag, CAVM_GSERCX_PHY0_MB_RSP_FLAG(qlm));
-	if (rsp_flag.s.data)
+	if ((rsp_flag.s.data) && (cmd != 0))
 	{
 		gser_error("GSERC%d: Mailbox already has a response\n", qlm);
 		return -1;
@@ -2311,223 +2359,6 @@ int qlm_gserc_eye_capture(int qlm, int lane, int show_data, qlm_eye_t *eye_data)
 	return 0;
 }
 
-#if 0
-/**
- * Send the AN/training handshake to the serdes firmware
- *
- * @param node	  Which node to use
- * @param module	Which serdes module to use
- * @param lane	  Which lane to use
- * @param enable_an True if the lane should be allowed to progress through AN. False if the
- *				  lane should be held in reset
- *
- * @return Zero on success, negative on failure
- */
-static int firmware_handshake(int module, int lane, bool enable_an)
-{
-	/* AN Handshaking bit assignments:
-		GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD[data]
-			data[3] = Handshake enable
-			data[4] = Handshake ready
-		AN master lanes will wait in RESET state while (handshake_en && !handshake_ready),
-		and proceed with AN otherwise. */
-
-	/* We never use the handshake, so READY should always be zero */
-	GSER_CSR_INIT(cfg6, CAVM_GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane));
-	if (cfg6.s.data & (1 << 4))
-	{
-		gser_error("GSERC%d.%d: Firmware has AN ready set\n", module, lane);
-		return -1;
-	}
-
-	/* If AN is enabled, allow lane by setting ENABLE=0. If AN is not enabled,
-	   force the lane in reset with ENABLE=1 */
-	if (enable_an)
-	{
-		if (cfg6.s.data & 8)
-		{
-			cfg6.s.data &= 0xf7;
-			GSER_CSR_WRITE(CAVM_GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane), cfg6.u);
-			GSER_TRACE(QLM, "GSERC%d.%d: Handshake to allow AN\n", module, lane);
-		}
-	}
-	else
-	{
-		if ((cfg6.s.data & 8) == 0)
-		{
-			cfg6.s.data |= 0x8;
-			GSER_CSR_WRITE(CAVM_GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD(module, lane), cfg6.u);
-			GSER_TRACE(QLM, "GSERC%d.%d: Handshake to reset AN\n", module, lane);
-		}
-	}
-	return 0;
-}
-
-/**
- * Show the current state of a serdes lane
- *
- * @param node   Which node to use
- * @param module Which serdes module to use
- * @param lane   Which lane to use
- */
-static void show_lane_state(int module, int lane)
-{
-/*
- * Added in qlm-gserc.patch applied by gser-update script in SDK
- * Suppress unused variable warning when debug prints are disabled.
- */
-#ifdef DEBUG_ATF_GSER
-	const char *str = "UNKNOWN";
-	switch (lane_state[module][lane])
-	{
-		case LANE_STATE_TX_OFF:
-			str = "Off";
-			break;
-		case LANE_STATE_TX_ON:
-			str = "On";
-			break;
-		case LANE_STATE_AN:
-			str = "AN";
-			break;
-		case LANE_STATE_TRAINING:
-			str = "Training";
-			break;
-		case LANE_STATE_CGX:
-			str = "CGX";
-			break;
-	}
-	GSER_TRACE(QLM, "GSERC%d.%d: Lane: %s\n", module, lane, str);
-/*
- * Added in qlm-gserc.patch applied by gser-update script in SDK
- */
-#endif
-}
-
-/**
- * Update the state of a serdes lane based on changes in AN, training, and CGX
- *
- * @param node   Which node to use
- * @param module Which serdes module to use
- * @param lane   Which lane to use
- */
-static void update_lane_state(int module, int lane)
-{
-	GSER_CSR_INIT(bcfg, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane));
-	GSER_CSR_INIT(bsts, CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane));
-	GSER_CSR_INIT(status, CAVM_GSERCX_LNX_LT_TX_FSM_STATUS(module, lane));
-	bool need_an = (bcfg.s.ln_an_cfg != 0);
-	bool rx_signal = (bsts.s.ln_stat_los == 0);
-
-	switch (lane_state[module][lane])
-	{
-		case LANE_STATE_TX_OFF:
-			/* SERDES are off, nothing to do */
-			firmware_handshake(module, lane, false);
-			return;
-		case LANE_STATE_TX_ON:
-			/* See if we need to start AN */
-			if (need_an)
-			{
-				if (bcfg.s.ln_an_cfg == 2)
-				{
-					/* Start AN */
-					GSER_TRACE(QLM, "GSERC%d.%d: Starting AN\n", module, lane);
-					lane_state[module][lane] = LANE_STATE_AN;
-					firmware_handshake(module, lane, true);
-				}
-				else
-				{
-					GSER_TRACE(QLM, "GSERC%d.%d: Lane is slave during AN\n", module, lane);
-					lane_state[module][lane] = LANE_STATE_TRAINING;
-				}
-			}
-			else
-			{
-				if (rx_signal)
-				{
-					GSER_TRACE(QLM, "GSERC%d.%d: RX signal detected\n", module, lane);
-					lane_state[module][lane] = LANE_STATE_CGX;
-				}
-			}
-			return;
-		case LANE_STATE_AN:
-		{
-			if (bsts.s.ln_an_stat_resolved)
-			{
-				GSER_TRACE(QLM, "GSERC%d.%d: AN resolved %d, start training\n", module, lane, bsts.s.ln_an_link_sel);
-				lane_state[module][lane] = LANE_STATE_TRAINING;
-			}
-			return;
-		}
-		case LANE_STATE_TRAINING:
-		{
-			/* See if training is complete */
-			if (bsts.s.ln_lt_sigdet)
-			{
-				lane_state[module][lane] = LANE_STATE_CGX;
-				GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-					c.s.ln_link_stat = bsts.s.ln_an_link_sel);
-				GSER_TRACE(QLM, "GSERC%d.%d: Training finished\n", module, lane);
-			}
-			else if (status.s.training_fail || !status.s.training)
-			{
-				GSER_TRACE(QLM, "GSERC%d.%d: Training failed, restarting AN\n", module, lane);
-				GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-					c.s.ln_link_stat = 0);
-				lane_state[module][lane] = LANE_STATE_TX_ON;
-			}
-			else
-			{
-				//GSER_TRACE(QLM, "GSERC%d.%d: Training running\n", module, lane);
-			}
-			return;
-		}
-		case LANE_STATE_CGX:
-		{
-			/* CGX should be ready to link up */
-			if (need_an && !rx_signal)
-			{
-				GSER_TRACE(QLM, "GSERC%d.%d: Loss of signal, restart\n", module, lane);
-				GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-					c.s.ln_link_stat = 0);
-				lane_state[module][lane] = LANE_STATE_TX_ON;
-			}
-			return;
-		}
-	}
-}
-
-/**
- * Update the state of all serdes lanes
- *
- * @param node   Which node to use
- */
-static void update_all_lane_state()
-{
-	if (num_gserc == 0)
-	{
-		if (gser_is_model(OCTEONTX_LOKI))
-			num_gserc = 5;
-		else
-		{
-			gser_error("GSERC: Unrecognized chip\n");
-			return;
-		}
-	}
-
-	/* Loop twice in case a later lane is connected to an early lane */
-	for (int count = 0; count < 2; count++)
-	{
-		for (int module = 0; module < num_gserc; module++)
-		{
-			int num_lanes = get_num_lanes(module);
-			for (int lane = 0; lane < num_lanes; lane++)
-				update_lane_state(module, lane);
-		}
-	}
-}
-#endif
-
 /**
  * Manually turn on or off the SERDES transmitter
  *
@@ -2542,104 +2373,8 @@ int qlm_gserc_tx_control(int qlm, int lane, int enable_tx)
 	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(qlm, lane),
 		c.s.ln_ctrl_tx_en = en);
 	lane_state[qlm][lane] = en ? LANE_STATE_TX_ON : LANE_STATE_TX_OFF;
-#if 0
-	update_all_lane_state();
-	show_lane_state(qlm, lane);
-#endif
 	return 0;
 }
-
-#if 0
-/**
- * Called when networking needs to start or restart AN. This function may be
- * called multiple times before AN is finished.
- *
- * @param node   Node to setup
- * @param module QLM/DLM to setup
- * @param lane   Lane to setup
- * @param unused Unused argument. Present so a number of QLM functions have the same signature
- *			   for easy calling in the network driver
- *
- * @return Zero on success, negative on failure. Network driver shouldn't continue with
- *		 AN until this returns 0
- */
-int qlm_gserc_start_an(int module, int lane, int unused)
-{
-	update_all_lane_state();
-	show_lane_state(module, lane);
-	switch (lane_state[module][lane])
-	{
-		case LANE_STATE_TX_OFF:
-		case LANE_STATE_TX_ON:
-			return -1;
-		case LANE_STATE_AN:
-		case LANE_STATE_TRAINING:
-		case LANE_STATE_CGX:
-			return 0;
-	}
-	return -1;
-}
-
-/**
- * Called when networking needs to finish AN. The start AN function will always
- * be called at least once before this function is called
- *
- * @param node   Node to setup
- * @param module QLM/DLM to setup
- * @param lane   Lane to setup
- * @param start_training
- *			   True if we need to start training right after AN
- *
- * @return Zero on success, negative on failure. Network driver shouldn't continue until
- *		 this returns 0
- */
-int qlm_gserc_finish_an(int module, int lane, int start_training)
-{
-	update_all_lane_state();
-	show_lane_state(module, lane);
-	switch (lane_state[module][lane])
-	{
-		case LANE_STATE_TX_OFF:
-		case LANE_STATE_TX_ON:
-		case LANE_STATE_AN:
-			return -1;
-		case LANE_STATE_TRAINING:
-		case LANE_STATE_CGX:
-			return 0;
-	}
-	return -1;
-}
-
-/**
- * Called when networking needs to complete training. This function may be
- * called multiple times before training is finished.
- *
- * @param node   Node to setup
- * @param module QLM/DLM to setup
- * @param lane   Lane to setup
- * @param unused Unused argument. Present so a number of QLM functions have the same signature
- *			   for easy calling in the network driver
- *
- * @return Zero when training is complete, positive if training is still running,
- *		 negative on training failure
- */
-int qlm_gserc_finish_training(int module, int lane, int unused)
-{
-	update_all_lane_state();
-	show_lane_state(module, lane);
-	switch (lane_state[module][lane])
-	{
-		case LANE_STATE_TX_OFF:
-		case LANE_STATE_TX_ON:
-		case LANE_STATE_AN:
-		case LANE_STATE_TRAINING:
-			return -1;
-		case LANE_STATE_CGX:
-			return 0;
-	}
-	return -1;
-}
-#endif
 
 /**
  * Poll serdes for errors removed by gser-update script (qlm.sed)
@@ -2820,7 +2555,7 @@ static cavm_gsercx_common_phy_ctrl_bcfg_t qlm_gserc_get_clock_mode(int module)
 	{
 		bcfg.s.refclk_input_sel = 2; /* ref_a_r_i */
 		bcfg.s.phy_ctrl_refclk = 0x0e; /* Assumes 156.25MHz */
-		bcfg.s.refclk_pad_ena = (module == 0) ? 1 : 0;; /* Pad on GSERC0 */
+		bcfg.s.refclk_pad_ena = (module == 0) ? 1 : 0; /* Pad on GSERC0 */
 	}
 	else if (use_gserc_ref_clk3)
 	{
@@ -4108,50 +3843,11 @@ int qlm_gserc_display_trace(int module, int lane, int unused)
 	return 0;
 }
 
-#if 0
-/**
- * Some SERDES may record errors before a link is up solid due to RX bouncing or
- * noise. This function should be called once a link is determined to be good to
- * clear out these spurious errors. This allows real error detection while the
- * link is up without pollution from before link.
- *
- * @param node   Node to clear
- * @param module QLM/DLM to clear
- * @param lane   Lane to clear
- * @param unused Unused argument. Present so a number of QLM functions have the same signature
- *			   for easy calling in the network driver
- *
- * @return Zero on success, negative on failure
- */
-int qlm_gserc_clear_errors(int module, int lane, int unused)
-{
-	/* Clear top level errors */
-	GSER_CSR_INIT(phy0_top_err_ctrl0, CAVM_GSERCX_PHY0_TOP_ERR_CTRL0(module));
-	if (phy0_top_err_ctrl0.s.err_o)
-	{
-		GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_ERR_CTRL0(module), 0);
-		GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_ERR_CTRL1(module), 0);
-		GSER_CSR_WRITE(CAVM_GSERCX_PHY0_TOP_ERR_CTRL2(module), 0);
-	}
-
-	/* Clear Lane Errors */
-	GSER_CSR_INIT(ctrl, CAVM_GSERCX_LNX_TOP_PHY_IF_CTRL_RSVD(module, lane));
-	if (ctrl.s.ln_rx_rdy && ctrl.s.ln_tx_rdy)
-	{
-		GSER_CSR_WRITE(CAVM_GSERCX_LNX_TOP_ERR_CTRL1(module, lane), 0);
-		GSER_CSR_WRITE(CAVM_GSERCX_LNX_TOP_ERR_CTRL2(module, lane), 0);
-		GSER_CSR_WRITE(CAVM_GSERCX_LNX_TOP_ERR_CTRL3(module, lane), 0);
-	}
-	return 0;
-}
-#endif
-
 /**
  * Reset the QLM layer
  */
 void qlm_gserc_init_reset()
 {
-//	update_all_lane_state();
 	GSER_CSR_INIT(gsercx_init_ctl, CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(0));
 	if (!gsercx_init_ctl.s.cpu_reset)
 	{

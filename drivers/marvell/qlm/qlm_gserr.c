@@ -4,14 +4,12 @@
  */
 
 /***********************license start***********************************
-* Copyright (C) 2018-2020 Marvell International Ltd.
+* Copyright (C) 2018-2020 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
 #include <gser_internal.h>
 #include <qlm/qlm.h>
-#include <qlm/qlm_gsern.h>
-#include <qlm/qlm_gserc.h>
 #include <qlm/qlm_gserr.h>
 
 /**
@@ -1001,6 +999,25 @@ int qlm_gserr_ned_loopback(int module, int lane, bool enable)
 	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_DPL_RXDP_CTRL1(module, lane),
 		c.s.rx_fifo_en = 1);
 
+	/* Additional Step. Override tx_en indicator by programming a lane top register
+	   LN_CTRL_OVR0, and modify rxpolarity to  Note that all of its fields must be programmed
+	   appropriately.
+			a. TX_EN = 0x1
+			b. DATA_RXPOLARITY = 0x1
+			c.  EDGE_RXPOLARITY = 0x0
+			d. EYE_RXPOLARITY = 0x0
+			e. OVR_EN = 0x1 (should be programmed last or at the same time as
+				all other fields) */
+	GSER_CSR_INIT(tx_pol, CAVM_GSERRX_LNX_TOP_DPL_TXDP_CTRL1(module, lane));
+	GSER_CSR_INIT(rx_pol, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+	if (tx_pol.s.txpolarity != rx_pol.s.ln_ctrl_rxpolarity)
+		GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_LN_CTRL_OVR0(module, lane),
+			c.s.tx_en = enable;
+			c.s.eye_rxpolarity = 0;
+			c.s.edge_rxpolarity = 0;
+			c.s.data_rxpolarity = tx_pol.s.txpolarity;
+			c.s.ovr_en = enable);
+
 	if (!enable)
 	{
 		/* 2. Disable the firmware receive control state machine. */
@@ -1398,10 +1415,32 @@ int qlm_gserr_nea_loopback(int module, int lane, bool enable)
 		qlm_gserr_lane_rst(module, lane, 1);
 		/* 2. Disable the firmware receive control state machine. */
 		GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_TEST_CFG0(module, lane),
-			c.s.rx_ctrl_dis = 1); // maybe use enable?
-		/* 3. De-Assert Reset */
-		qlm_gserr_lane_rst(module, lane, 0);
+			c.s.rx_ctrl_dis = enable);
 	}
+
+	/* Additional Step. Override tx_en indicator by programming a lane top register
+		LN_CTRL_OVR0, and modify rxpolarity to  Note that all of its fields must be programmed
+		appropriately.
+		a. TX_EN = 0x1
+		b. DATA_RXPOLARITY = 0x1
+		c.  EDGE_RXPOLARITY = 0x1
+		d. EYE_RXPOLARITY = 0x1
+		e. OVR_EN = 0x1 (should be programmed last or at the same time as
+		all other fields) */
+	GSER_CSR_INIT(tx_pol, CAVM_GSERRX_LNX_TOP_DPL_TXDP_CTRL1(module, lane));
+	GSER_CSR_INIT(rx_pol, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+	if (tx_pol.s.txpolarity != rx_pol.s.ln_ctrl_rxpolarity)
+		GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_TOP_LN_CTRL_OVR0(module, lane),
+			c.s.tx_en = enable;
+			c.s.eye_rxpolarity = tx_pol.s.txpolarity;
+			c.s.edge_rxpolarity = tx_pol.s.txpolarity;
+			c.s.data_rxpolarity = tx_pol.s.txpolarity;
+			c.s.ovr_en = enable);
+
+	/* 3. De-Assert Reset */
+	if (enable)
+		qlm_gserr_lane_rst(module, lane, 0);
+
 	/* 4. Configure the clocks for the Transmit FIFO and Receiver gearbox clocks.
 		Write GSERR(0..2)_PHY0_TOP_CLOCK_LN[0,1,2,3]_CLK_TXB
 			CTRL_SRC_OVR_VAL=2’h2 //Select cmu clock
@@ -1416,7 +1455,11 @@ int qlm_gserr_nea_loopback(int module, int lane, bool enable)
 	//cavm_gserrx_phy0_top_clock_ln0_clk_rxb_t clk_rxb = {.u = 0};
 	//cavm_gserrx_phy0_top_clock_ln0_clk_rxf_t clk_rxf = {.u = 0};
 	clk_txb.s.ctrl_src_ovr_val = enable ? 3 : 0;
-	clk_txf.s.ctrl_src_ovr_val = enable ? 3 : 0;
+	GSER_CSR_INIT(ln_bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+	if (ln_bcfg.s.ln_ctrl_tx_width == 5)
+		clk_txf.s.ctrl_src_ovr_val = enable ? 2 : 0;
+	else
+		clk_txf.s.ctrl_src_ovr_val = enable ? 3 : 0;
 	//clk_rxb.s.ctrl_src_ovr_val = enable ? 1 : 0;
 	//clk_rxf.s.ctrl_src_sel = enable ? 3 : 0;
 	switch (lane)
@@ -1772,6 +1815,7 @@ void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 		int apg = -1;
 		int lfg = -1;
 		int hfg = -1;
+		int sql = -1;
 		int mbf = -1;
 		int mbg = -1;
 		switch (qlm_lane)
@@ -1781,6 +1825,7 @@ void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 				apg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN0_RXLEQ_GN_APG_O_READ_VAL_2_0_RSVD(qlm));
 				lfg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN0_RXLEQ_EQ_LFG_O_READ_VAL_4_0_RSVD(qlm));
 				hfg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN0_RXLEQ_EQ_HFG_O_READ_VAL_4_0_RSVD(qlm));
+				sql = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN0_RXLEQ_EQ_SQL_O_READ_VAL_2_0_RSVD(qlm));
 				mbf = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN0_RXLEQ_EQ_MBF_O_READ_VAL_3_0_RSVD(qlm));
 				mbg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN0_RXLEQ_EQ_MBG_O_READ_VAL_3_0_RSVD(qlm));
 				break;
@@ -1789,6 +1834,7 @@ void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 				apg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN1_RXLEQ_GN_APG_O_READ_VAL_2_0_RSVD(qlm));
 				lfg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN1_RXLEQ_EQ_LFG_O_READ_VAL_4_0_RSVD(qlm));
 				hfg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN1_RXLEQ_EQ_HFG_O_READ_VAL_4_0_RSVD(qlm));
+				sql = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN1_RXLEQ_EQ_SQL_O_READ_VAL_2_0_RSVD(qlm));
 				mbf = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN1_RXLEQ_EQ_MBF_O_READ_VAL_3_0_RSVD(qlm));
 				mbg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN1_RXLEQ_EQ_MBG_O_READ_VAL_3_0_RSVD(qlm));
 				break;
@@ -1798,6 +1844,7 @@ void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 				apg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN2_RXLEQ_GN_APG_O_READ_VAL_2_0_RSVD(qlm));
 				lfg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN2_RXLEQ_EQ_LFG_O_READ_VAL_4_0_RSVD(qlm));
 				hfg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN2_RXLEQ_EQ_HFG_O_READ_VAL_4_0_RSVD(qlm));
+				sql = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN2_RXLEQ_EQ_SQL_O_READ_VAL_2_0_RSVD(qlm));
 				mbf = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN2_RXLEQ_EQ_MBF_O_READ_VAL_3_0_RSVD(qlm));
 				mbg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN2_RXLEQ_EQ_MBG_O_READ_VAL_3_0_RSVD(qlm));
 				break;
@@ -1806,6 +1853,7 @@ void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 				apg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN3_RXLEQ_GN_APG_O_READ_VAL_2_0_RSVD(qlm));
 				lfg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN3_RXLEQ_EQ_LFG_O_READ_VAL_4_0_RSVD(qlm));
 				hfg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN3_RXLEQ_EQ_HFG_O_READ_VAL_4_0_RSVD(qlm));
+				sql = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN3_RXLEQ_EQ_SQL_O_READ_VAL_2_0_RSVD(qlm));
 				mbf = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN3_RXLEQ_EQ_MBF_O_READ_VAL_3_0_RSVD(qlm));
 				mbg = GSER_CSR_READ(CAVM_GSERRX_PHY0_AFE_OVR_AFE_LN3_RXLEQ_EQ_MBG_O_READ_VAL_3_0_RSVD(qlm));
 				break;
@@ -1815,7 +1863,7 @@ void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx, bool show_r
 		att = gray2binary(att);
 		apg = gray2binary(apg);
 		lfg = gray2binary(lfg);
-		hfg = gray2binary(hfg);
+		hfg = gray2binary(hfg) + 7 - gray2binary(sql);
 		mbf = gray2binary(mbf);
 		mbg = gray2binary(mbg);
 
