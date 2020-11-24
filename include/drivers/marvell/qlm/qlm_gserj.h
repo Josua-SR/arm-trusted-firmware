@@ -190,4 +190,26 @@ int qlm_gserj_ned_loopback(int module, int lane, bool enable);
  */
 int qlm_gserj_fea_loopback(int module, int lane, bool enable);
 
+/**
+ * Implementation of Far-End Digital (FED) Loopback
+ *
+ * @param module	which GSERJ instance
+ * @param lane	 which lane
+ * @param enable
+ *
+ * @return Zero on success, negative on failure
+ */
+int qlm_gserj_fed_loopback(int module, int lane, bool enable);
+
+/**
+ * Implementation of Near-End Analog (NEA) Loopback
+ *
+ * @param module	which GSERJ instance
+ * @param lane	 which lane
+ * @param enable
+ *
+ * @return Zero on success, negative on failure
+ */
+int qlm_gserj_nea_loopback(int module, int lane, bool enable);
+
 #endif /* _QLM_GSERJ_H_ */

@@ -23,4 +23,6 @@ const qlm_ops_t qlm_ops_f95mm = {
 	.qlm_tune_lane_tx = qlm_gserj_tune_lane_tx,
 	.qlm_ned_loopback = qlm_gserj_ned_loopback,
 	.qlm_fea_loopback = qlm_gserj_fea_loopback,
+	.qlm_nea_loopback = qlm_gserj_nea_loopback,
+	.qlm_fed_loopback = qlm_gserj_fed_loopback,
 };

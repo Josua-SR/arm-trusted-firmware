@@ -603,11 +603,7 @@ int cgx_smc_set_serdes_loop(int qlm, int lane, int type)
 
 	gserx = _get_gserx(cgx_id, qlm);
 
-	/* Enable/Disable serdes loopback */
-	if (cavm_is_model(OCTEONTX_F95MM) && (qlm > 1)) {
-		if ((type == 2) || (type == 4))
-			return -1;
-	}
+	//printf("%s: qlm%d lane%d: gserx %d, type %d\n", __func__, qlm, lane, gserx, type);
 
 	if (type == 0) {
 		qlm_ops->qlm_ned_loopback(gserx, lane, 0);
@@ -622,5 +618,6 @@ int cgx_smc_set_serdes_loop(int qlm, int lane, int type)
 		qlm_ops->qlm_nea_loopback(gserx, lane, 1);
 	else
 		qlm_ops->qlm_fed_loopback(gserx, lane, 1);
+
 	return 0;
 }
