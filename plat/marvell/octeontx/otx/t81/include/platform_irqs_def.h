@@ -61,4 +61,9 @@
 #define SMMU_SPI_IRQ_BASE		(PEM_SPI_IRQ_BASE + (PEM_SPI_IRQ_DEVS*PEM_SPI_IRQS_PER_DEV))
 #define SMMU_SPI_IRQ(dev, irq)	((dev) * SMMU_SPI_IRQS_PER_DEV + (irq) + SMMU_SPI_IRQ_BASE)
 
+/* Default SPI to be used by per-core CWD GTI interrupt (range 0x33 - 0x36)*/
+#define GTI_CWD_SPI_IRQS	0x4
+#define GTI_CWD_SPI_IRQ_BASE	(SMMU_SPI_IRQ_BASE + (SMMU_SPI_IRQ_DEVS*SMMU_SPI_IRQS_PER_DEV))
+#define GTI_CWD_SPI_IRQ(irq)	((irq) + GTI_CWD_SPI_IRQ_BASE)
+
 #endif /* __PLATFORM_IRQS_DEF_H__ */

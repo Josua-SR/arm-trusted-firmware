@@ -326,13 +326,22 @@ int gti_watchdog_is_running(int core)
 	return wdog.s.mode != 0;
 }
 
+bool is_gti_wdog_supported(void)
+{
+	if ((IS_OCTEONTX_PN(read_midr(), T83PARTNUM)) ||
+	    (IS_OCTEONTX_PN(read_midr(), T81PARTNUM)) ||
+	    (IS_OCTEONTX_PN(read_midr(), T96PARTNUM)) ||
+	    (IS_OCTEONTX_PN(read_midr(), F95PARTNUM)))
+		return true;
+
+	return false;
+}
+
 int gti_wdog_remove_handler(void)
 {
 	int retval = 1;
 
-	if ((!IS_OCTEONTX_PN(read_midr(), T83PARTNUM)) &&
-		(!IS_OCTEONTX_PN(read_midr(), T96PARTNUM)) &&
-		(!IS_OCTEONTX_PN(read_midr(), F95PARTNUM)))
+	if (!is_gti_wdog_supported())
 		return 0;
 
 	gti_watchdog_disable();
@@ -378,9 +387,7 @@ int gti_wdog_install_handler(uint64_t core, uint64_t gti_elr, uint64_t gti_spsr,
 {
 	int retval = 1;
 
-	if ((!IS_OCTEONTX_PN(read_midr(), T83PARTNUM)) &&
-		(!IS_OCTEONTX_PN(read_midr(), T96PARTNUM)) &&
-		(!IS_OCTEONTX_PN(read_midr(), F95PARTNUM)))
+	if (!is_gti_wdog_supported())
 		return 0;
 
 	g_kernel_hyp_mode = kernel_in_hyp_mode ? 1 : 0;
@@ -412,9 +419,7 @@ int gti_wdog_start(uint64_t el0_kernel_wdog_callback,
 		   uint64_t el1_kernel_wdog_callback,
 		   uint64_t watchdog_timeout_ms, uint64_t cores)
 {
-	if ((!IS_OCTEONTX_PN(read_midr(), T83PARTNUM)) &&
-		(!IS_OCTEONTX_PN(read_midr(), T96PARTNUM)) &&
-		(!IS_OCTEONTX_PN(read_midr(), F95PARTNUM)))
+	if (!is_gti_wdog_supported())
 		return 0;
 
 	debug_gti_watchdog("timeout_ms = %lld, ",
@@ -432,9 +437,7 @@ int gti_wdog_start(uint64_t el0_kernel_wdog_callback,
 
 int gti_wdog_restore_wdog_ctxt(void)
 {
-	if ((!IS_OCTEONTX_PN(read_midr(), T83PARTNUM)) &&
-		(!IS_OCTEONTX_PN(read_midr(), T96PARTNUM)) &&
-		(!IS_OCTEONTX_PN(read_midr(), F95PARTNUM)))
+	if (!is_gti_wdog_supported())
 		return 0;
 
 	restore_elx_context_and_return();
