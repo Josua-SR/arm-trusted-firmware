@@ -210,7 +210,7 @@
 
 #define MAX_RVU_PFS		24
 
-#define SW_RVU_SDP_NUM_PF       1
+#define SW_RVU_SDP_NUM_PF       2
 
 #define SW_RVU_REE_NUM_PF       2
 

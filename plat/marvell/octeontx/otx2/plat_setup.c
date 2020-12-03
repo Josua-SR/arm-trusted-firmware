@@ -109,21 +109,21 @@ unsigned int is_pem_in_ep_mode(int pem)
 unsigned int plat_configure_sdp_rid(void)
 {
 	uint64_t midr;
-	int pem;
+	static int instance;
 
 	midr = read_midr();
 
+	/*
+	 * 98xx has 2xSDPs so mark first instance of SDP block revid as 0 so
+	 * that it will be SDP0 and second instance of SDP block revid as 1 so
+	 * that it will be SDP1
+	 */
 	if (IS_OCTEONTX_PN(midr, T98PARTNUM)) {
-		/* check which PEM is in EP */
-		for (pem = 0; pem < plat_octeontx_get_pem_count(); pem++) {
-			if (is_pem_in_ep_mode(pem))
-				break;
-		}
+		if (instance)
+			return 1;
 
-		/* return revision as 0 to indicate SDP0
-		 * and 1 to indicate SDP1
-		 */
-		return pem / 2;
+		instance = 1;
+		return 0;
 
 	} else if (IS_OCTEONTX_PN(midr, T96PARTNUM) ||
 		   IS_OCTEONTX_PN(midr, LOKIPARTNUM)) {
