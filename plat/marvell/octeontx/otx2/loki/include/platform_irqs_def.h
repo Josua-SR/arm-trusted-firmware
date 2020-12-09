@@ -151,8 +151,13 @@
 #define END_OF_BPHY_IRQS		(BPHY_PSM_MTO_IRQ_BASE +	\
 							BPHY_PSM_MTO_IRQS)
 
+/* Default SPI to be used by per-core CWD GTI interrupt (range 0x4d - 0x52 )*/
+#define GTI_CWD_SPI_IRQS		0x6
+#define GTI_CWD_SPI_IRQ_BASE	(END_OF_BPHY_IRQS)
+#define GTI_CWD_SPI_IRQ(irq)	((irq) + GTI_CWD_SPI_IRQ_BASE)
+
 #define MDC_SPI_IRQS		1
-#define MDC_SPI_IRQ_BASE	END_OF_BPHY_IRQS
+#define MDC_SPI_IRQ_BASE	(GTI_CWD_SPI_IRQ_BASE + GTI_CWD_SPI_IRQS)
 #define MDC_SPI_IRQ(irq)	MDC_SPI_IRQ_BASE
 
 #define MCC_SPI_IRQS		1
