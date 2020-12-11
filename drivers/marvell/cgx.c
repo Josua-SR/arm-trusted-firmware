@@ -2852,12 +2852,8 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id)
 	cavm_cgxx_smux_tx_ctl_t smux_tx_ctl;
 	cavm_cgxx_spu_usxgmii_control_t usxgmii_ctrl;
 	link_state_t link;
-	bool is_gsern = 0;
 
 	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
-	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
-		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
-		is_gsern = true;
 
 	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
 	lmac = &cgx->lmac_cfg[lmac_id];
@@ -3037,12 +3033,6 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id)
 			CAVM_CGXX_SPU_USXGMII_CONTROL(cgx_id),
 			enable, 1);
 
-	/* At this point CGX is driving the serdes. Enable serdes transmitter.
-	 * Only enable serdes transmitter if autoneg is disabled
-	 */
-	if (lmac->autoneg_dis || !is_gsern)
-		cgx_serdes_tx_control(cgx_id, lmac_id, true);
-
 	/* keep the reset values for lane polarity. select deficit
 	 * idle count mode and unidirectional enable/disable
 	 */
@@ -3098,6 +3088,9 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ctx)
 			return 0;
 		}
 	}
+
+	/* At this point CGX is driving the serdes. Enable serdes transmitter */
+	cgx_serdes_tx_control(cgx_id, lmac_id, true);
 
 	if (!lmac->autoneg_dis) {
 		/* Configure an_nonce_match_dis bit accordingly based
@@ -3529,6 +3522,9 @@ int cgx_xaui_set_link_down(int cgx_id, int lmac_id)
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
 			CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id),
 			data_pkt_tx_en, 0);
+
+	/* Disable serdes transmitter */
+	cgx_serdes_tx_control(cgx_id, lmac_id, false);
 
 	/* FIXME: if flow control is enabled, disable appropriate
 	 * flow control packets
