@@ -400,7 +400,9 @@ struct cpri_mode_change_args {
 	uint64_t gserc_idx:4; /* GSERC index 0 - 4 */
 	uint64_t lane_idx:4;  /* lane index 0 - 1 */
 	uint64_t rate:16; /* 9830/4915/2458/6144/3072 */
-	uint64_t reserved2:32;
+	uint64_t disable_leq:1;
+	uint64_t disable_dfe:1;
+	uint64_t reserved2:30;
 };
 
 /* command argument to be passed for cmd ID - CGX_CMD_CPRI_TX_CONTROL */

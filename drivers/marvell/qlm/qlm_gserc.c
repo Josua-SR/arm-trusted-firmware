@@ -254,12 +254,16 @@ int qlm_gserc_set_mode(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mo
 			gser_wait_usec(1000);
 #if defined(PLAT_loki)
 			if (mode == QLM_MODE_CPRI) {
+				if ((flags >> 3) & 0x1) {
+extern void qlm_gserc_rx_dfe_adaptation(int qlm, int lane);
+					qlm_gserc_rx_dfe_adaptation(qlm, l);
+				}
+				if ((flags >> 2) & 0x1) {
 extern void qlm_gserc_rx_leq_adaptation(int qlm, int lane,
 	int leq_lfg_start, int leq_hfg_sql_start, int leq_mbf_start,
 	int leq_mbg_start, int gn_apg_start);
-extern void qlm_gserc_rx_dfe_adaptation(int qlm, int lane);
-				qlm_gserc_rx_dfe_adaptation(qlm, l);
-				qlm_gserc_rx_leq_adaptation(qlm, l, 2, 8, 0, 8, 3);
+					qlm_gserc_rx_leq_adaptation(qlm, l, 2, 8, 0, 8, 3);
+				}
 			}
 #endif
 	                apply_tuning(qlm, l);
