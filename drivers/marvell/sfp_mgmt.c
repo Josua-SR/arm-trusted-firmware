@@ -1415,3 +1415,35 @@ retry_acquire_lock:
 
 	return 0;
 }
+
+/**
+ * Waits for MCP to clear command ack
+ *
+ * @param cgx_id     CGX to use
+ * @param lmac_id    LMAC to use
+ * @return 0 on success, -1 on failure/timeout
+ */
+int mcp_wait_for_cmd_ack_to_clr(int cgx_id, int lmac_id)
+{
+	int retry_lock = 0;
+	sfp_shared_data_t *sh_data = sfp_get_sh_mem_ptr(cgx_id, lmac_id);
+
+	if (sh_data == NULL) {
+		ERROR("%s: SM pointer is NULL\n", __func__);
+		return -1;
+	}
+	debug_sfp_mgmt("%s: %d:%d\n", __func__, cgx_id, lmac_id);
+
+retry_ack_check:
+	if (sh_data->async_ctx.ack) {
+		if (retry_lock++ < 5) {
+			mdelay(1);
+			goto retry_ack_check;
+		}
+		debug_sfp_mgmt("%s %d:%d Waiting for MCP to clear command ack\n",
+			       __func__, cgx_id, lmac_id);
+		return -1;
+	}
+
+	return 0;
+}

@@ -344,4 +344,5 @@ unsigned int mcp_get_intf_rev(int cgx_id, int lmac_id);
 int mcp_get_an_lt_data(int cgx_id, int lmac_id, mcp_an_dbg_state_t *mcp_an_dbg);
 int mcp_get_neg_fec_tech(int cgx_id, int lmac_id, int *fec_type,
 			 int *qlm_mode, int *lmac_type);
+int mcp_wait_for_cmd_ack_to_clr(int cgx_id, int lmac_id);
 #endif /* __SFP_MGMT_H__ */
