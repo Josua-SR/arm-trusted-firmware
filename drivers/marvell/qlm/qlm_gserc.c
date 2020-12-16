@@ -2437,6 +2437,45 @@ int qlm_gserc_tx_control(int qlm, int lane, int enable_tx)
 //}
 
 /**
+ * Updated IKVCO Settings Based on Speed
+ *
+ * @param module
+ *
+ */
+static void gserc_qlm_set_ikvco_override(int module)
+{
+	/* Find all needed clocks */
+	bool need_25g = false;
+	bool need_10g = false;
+	bool need_cpri_9g = false;
+	bool need_cpri_6g = false;
+	int cmpll_ikvco = 10;
+
+	int num_lanes = get_num_lanes(module);
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		qlm_state_lane_t state = qlm_gserc_get_state(module, lane);
+		need_25g |= (state.s.baud_mhz == 25781);
+		need_10g |= (state.s.baud_mhz == 10312);
+		need_cpri_9g |= (state.s.baud_mhz == 9830) || (state.s.baud_mhz == 4915) || (state.s.baud_mhz == 2458);
+		need_cpri_6g |= (state.s.baud_mhz == 6144) || (state.s.baud_mhz == 3072);
+	}
+
+	if(need_25g || need_10g || need_cpri_9g || need_cpri_6g)
+	{
+		if (need_25g || need_10g)
+			cmpll_ikvco = 8;
+		else if (need_cpri_9g || need_cpri_6g)
+			cmpll_ikvco = 12;
+		printf("GSERC%d Setting IKVCO Override to %d\n", module, cmpll_ikvco);
+		//GSER_TRACE(QLM, "GSERC%d Setting IKVCO Override to %d\n", module, cmpll_ikvco);
+	}
+
+	GSER_CSR_MODIFY(c, CAVM_GSERCX_CM0_PLL_AFE_INT_CTRL3_RSVD(module),
+			c.s.cmpll_ikvco = cmpll_ikvco);
+}
+
+/**
  * Determine the GSERC clocking needed based on the current config. No updates
  * are done, just determines what is needed. This will be input to the code that
  * actually makes changes.
@@ -3070,6 +3109,9 @@ static int qlm_gserc_change_phy_rate(int module)
 			CM0_OK=1 //CM0 status is Active power state */
 	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_COMMON_PHY_STATUS_BSTS(module), GSERCX_COMMON_PHY_STATUS_BSTS_CM0_OK, ==, 1, 50000))
 		gser_error("GSERC%d: Timeout waiting for GSERCX_COMMON_PHY_STATUS_BSTS[cm0_ok]=1 (change rate)\n", module);
+
+	/* Update IKVCO */
+	gserc_qlm_set_ikvco_override(module);
 
 	/* Program the new Lane Rates to the new PHY rates, refer to the steps in
 	   Section 1.4 Lane Rate Change. */
