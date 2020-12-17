@@ -2445,30 +2445,20 @@ int qlm_gserc_tx_control(int qlm, int lane, int enable_tx)
 static void gserc_qlm_set_ikvco_override(int module)
 {
 	/* Find all needed clocks */
-	bool need_25g = false;
-	bool need_10g = false;
 	bool need_cpri_9g = false;
 	bool need_cpri_6g = false;
 	int cmpll_ikvco = 10;
 
 	int num_lanes = get_num_lanes(module);
-	for (int lane = 0; lane < num_lanes; lane++)
-	{
+	for (int lane = 0; lane < num_lanes; lane++) {
 		qlm_state_lane_t state = qlm_gserc_get_state(module, lane);
-		need_25g |= (state.s.baud_mhz == 25781);
-		need_10g |= (state.s.baud_mhz == 10312);
 		need_cpri_9g |= (state.s.baud_mhz == 9830) || (state.s.baud_mhz == 4915) || (state.s.baud_mhz == 2458);
 		need_cpri_6g |= (state.s.baud_mhz == 6144) || (state.s.baud_mhz == 3072);
 	}
 
-	if(need_25g || need_10g || need_cpri_9g || need_cpri_6g)
-	{
-		if (need_25g || need_10g)
-			cmpll_ikvco = 8;
-		else if (need_cpri_9g || need_cpri_6g)
-			cmpll_ikvco = 12;
-		printf("GSERC%d Setting IKVCO Override to %d\n", module, cmpll_ikvco);
-		//GSER_TRACE(QLM, "GSERC%d Setting IKVCO Override to %d\n", module, cmpll_ikvco);
+	if (need_cpri_9g || need_cpri_6g) {
+		cmpll_ikvco = 12;
+		GSER_TRACE(QLM, "GSERC%d Setting IKVCO Override to %d\n", module, cmpll_ikvco);
 	}
 
 	GSER_CSR_MODIFY(c, CAVM_GSERCX_CM0_PLL_AFE_INT_CTRL3_RSVD(module),
