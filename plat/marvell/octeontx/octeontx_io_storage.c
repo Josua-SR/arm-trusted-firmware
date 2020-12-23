@@ -66,7 +66,7 @@ static io_block_spec_t fip_block_spec = {
 #ifdef FIP_IMG_FLASH_OFFSET
 	.offset	= FIP_IMG_FLASH_OFFSET,
 #else
-	.offset	= 0x440000,
+#	pragma GCC error "missing definition FIP_IMG_FLASH_OFFSET"
 #endif
 };
 

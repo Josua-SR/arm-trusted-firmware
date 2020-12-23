@@ -314,8 +314,9 @@ TF_LDFLAGS		+=	$(TF_LDFLAGS_$(ARCH))
 DTC_FLAGS		+=	-I dts -O dtb
 DTC_CPPFLAGS		+=	-nostdinc -Iinclude -undef -x assembler-with-cpp
 
-ifeq (${FIP_IMG_USER_LOC},1)
-TF_CFLAGS_aarch64	+=	-DFIP_IMG_FLASH_OFFSET=${FIP_IMG_FLASH_ADDRESS}
+# this conveys the FIP address to the I/O device driver
+ifneq (${FIP_IMG_FLASH_ADDRESS},)
+  TF_CFLAGS_aarch64	+=	-DFIP_IMG_FLASH_OFFSET=${FIP_IMG_FLASH_ADDRESS}
 endif
 
 ################################################################################
