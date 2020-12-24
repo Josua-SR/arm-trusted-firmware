@@ -1418,8 +1418,8 @@ static int cgx_control_higig2(int cgx_id, int lmac_id, int enable)
 {
 	struct val {
 		int ifg1, ifg2, len, fcssel, skip_after_term, hg2tx_en,
-		    hg2rx_en, phys_en, logl_en, pre_chk, pre_strp, hg_en,
-		    preamble, tx_en, rx_en;
+		    hg2rx_en, phys_en, pre_chk, pre_strp, hg_en,
+		    preamble, tx_en, rx_en, hg2_intra_en, mia_en;
 	};
 	static const struct val values[2] = {
 		[0] = { /* for disabling HiGig2 */
@@ -1431,13 +1431,14 @@ static int cgx_control_higig2(int cgx_id, int lmac_id, int enable)
 			.hg2tx_en	 = 0,
 			.hg2rx_en	 = 0,
 			.phys_en	 = 1,
-			.logl_en	 = 0xffff,
 			.pre_chk	 = 1,
 			.pre_strp	 = 1,
 			.hg_en		 = 0,
 			.preamble	 = 1,
 			.tx_en		 = 0,
-			.rx_en		 = 0
+			.rx_en		 = 0,
+			.hg2_intra_en    = 0,
+			.mia_en          = 0
 		},
 		[1] = { /* for enabling HiGig2 */
 			.ifg1		 = 4,
@@ -1448,13 +1449,14 @@ static int cgx_control_higig2(int cgx_id, int lmac_id, int enable)
 			.hg2tx_en	 = 1,
 			.hg2rx_en	 = 1,
 			.phys_en	 = 1,
-			.logl_en	 = 1,
 			.pre_chk	 = 0,
 			.pre_strp	 = 0,
 			.hg_en		 = 1,
 			.preamble	 = 0,
 			.tx_en		 = 0,
-			.rx_en		 = 0
+			.rx_en		 = 0,
+			.hg2_intra_en    = 0,
+			.mia_en          = 0
 		}
 	};
 	cavm_cgxx_spux_misc_control_t misc_control;
@@ -1465,6 +1467,7 @@ static int cgx_control_higig2(int cgx_id, int lmac_id, int enable)
 	cavm_cgxx_smux_cbfc_ctl_t cbfc_ctl;
 	cavm_cgxx_smux_tx_ctl_t tx_ctl;
 	cavm_cgxx_smux_tx_ifg_t ifg;
+	cavm_cgxx_smux_tx_pause_pkt_interval_t tx_pause;
 	cgx_lmac_config_t *lmac;
 	const struct val *v;
 
@@ -1499,11 +1502,14 @@ static int cgx_control_higig2(int cgx_id, int lmac_id, int enable)
 	misc_control.s.skip_after_term = v->skip_after_term;
 	CSR_WRITE(CAVM_CGXX_SPUX_MISC_CONTROL(cgx_id, lmac_id), misc_control.u);
 
+	tx_pause.u = CSR_READ(CAVM_CGXX_SMUX_TX_PAUSE_PKT_INTERVAL(cgx_id, lmac_id));
+	tx_pause.s.hg2_intra_en = v->hg2_intra_en;
+	CSR_WRITE(CAVM_CGXX_SMUX_TX_PAUSE_PKT_INTERVAL(cgx_id, lmac_id), tx_pause.u);
+
 	hg2_control.u = CSR_READ(CAVM_CGXX_SMUX_HG2_CONTROL(cgx_id, lmac_id));
 	hg2_control.s.hg2tx_en = v->hg2tx_en;
 	hg2_control.s.hg2rx_en = v->hg2rx_en;
 	hg2_control.s.phys_en  = v->phys_en;
-	hg2_control.s.logl_en  = v->logl_en;
 	CSR_WRITE(CAVM_CGXX_SMUX_HG2_CONTROL(cgx_id, lmac_id), hg2_control.u);
 
 	rx_frm_ctl.u = CSR_READ(CAVM_CGXX_SMUX_RX_FRM_CTL(cgx_id, lmac_id));
@@ -1513,6 +1519,7 @@ static int cgx_control_higig2(int cgx_id, int lmac_id, int enable)
 
 	tx_ctl.u = CSR_READ(CAVM_CGXX_SMUX_TX_CTL(cgx_id, lmac_id));
 	tx_ctl.s.hg_en = v->hg_en;
+	tx_ctl.s.mia_en = v->mia_en;
 	CSR_WRITE(CAVM_CGXX_SMUX_TX_CTL(cgx_id, lmac_id), tx_ctl.u);
 
 	tx_append.u = CSR_READ(CAVM_CGXX_SMUX_TX_APPEND(cgx_id, lmac_id));
