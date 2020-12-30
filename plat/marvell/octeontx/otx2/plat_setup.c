@@ -636,7 +636,7 @@ void plat_initialize_boot_error_data_area(unsigned long attr)
 	if (fdt_set_name((void *)fdt, bed_off, bed_name))
 		INFO("Unable to set ghes-bert DT node name %s\n", bed_name);
 
-	/* The 'fdt_set_name' may have change this offset; retrieve it again */
+	/* The 'fdt_set_name' may have changed this offset; retrieve it again */
 	bed_dev_off = fdt_path_offset(fdt, "/soc@0/bed-bert");
 
 	/* set device driver DT 'ranges' values */
@@ -665,6 +665,162 @@ void plat_initialize_boot_error_data_area(unsigned long attr)
 exit:
 	if (fail)
 		ERROR("BERT area not available\n");
+#endif
+}
+
+/*
+ * plat_initialize_ghes_hest_area()
+ *
+ * The Generic Hardware Error Source (GHES) and
+ * Hardware Error Source Table (HEST) areas must reside in
+ * reserved memory accessible to both firmware and Linux
+ * (i.e. non-secure, non-preserved region).
+ * In order to prevent fragmentation, these areas are
+ * reserved at the top (highest address) of this region.
+ *
+ * The device tree contains placeholders for these areas
+ * (GHES/HEST); here the DT entries are adjusted to use
+ * the correct reserved addresses at the top of the region.
+ *
+ * on entry,
+ *   void
+ *
+ * returns,
+ *   void
+ */
+void plat_initialize_ghes_hest_area(void)
+{
+#ifdef IMAGE_BL2
+	const char *sdei_ghes_mem_name = "/reserved-memory/ghes-hest";
+	uint64_t ghes_base, ghes_size, ghes_range_base;
+	const char *sdei_ghes_dev_name = "/soc@0/sdei-ghes";
+	int ghes_off, ghes_dev_off, fail, idx;
+	const void *fdt = fdt_ptr;
+	const fdt64_t *freg64;
+	const fdt32_t *freg32;
+	char ghes_name[31];
+	int freg_len;
+	struct {
+		/* NOTE: these are in FDT format, not CPU format */
+		fdt64_t addr; /* DT address-cells = 2 */
+		fdt64_t size; /* DT size-cells = 2 */
+	} dt_regs;
+	struct {
+		/* NOTE: these are in FDT format, not CPU format */
+		fdt64_t child_addr;  /* child DT address-cells = 2 */
+		fdt64_t parent_addr; /* parent DT address-cells = 2 */
+		fdt32_t child_size;  /* child DT size-cells = 1 */
+	} __packed ghes_ranges[3];
+
+	fail = 1;
+
+	ghes_off = fdt_path_offset(fdt, sdei_ghes_mem_name);
+	if (ghes_off == -1) {
+		VERBOSE("Missing GHES area from DT\n");
+		return;
+	}
+	ghes_dev_off = fdt_path_offset(fdt, sdei_ghes_dev_name);
+	if (ghes_dev_off == -1) {
+		VERBOSE("Missing GHES area Device Driver from DT\n");
+		return;
+	}
+
+	/* Retrieve GHES area DT settings */
+	ghes_base = ghes_size = 0;
+	freg64 = fdt_getprop(fdt, ghes_off, "reg", &freg_len);
+	if (freg64 && (freg_len >= (sizeof(*freg64) * 2))) {
+		ghes_base = fdt64p_to_cpu(&freg64[0]);
+		ghes_size = fdt64p_to_cpu(&freg64[1]);
+	}
+
+	if (ghes_base != 0) {
+		VERBOSE("Using fixed GHES addresses @ 0x%llx\n",
+			(long long)ghes_base);
+		return;
+	}
+
+	if (!ghes_size || (ghes_size & PAGE_SIZE_MASK)) {
+		WARN("Invalid size 0x%lx for %s\n", (long)ghes_size,
+		     sdei_ghes_mem_name);
+		goto exit;
+	}
+
+	ghes_base = octeontx_dram_reserve(ghes_size, NSECURE_NONPRESERVE);
+
+	/* set GHES DT values */
+	dt_regs.addr = cpu_to_fdt64(ghes_base);
+	dt_regs.size = cpu_to_fdt64(ghes_size);
+	if (fdt_setprop((void *)fdt, ghes_off, "reg", &dt_regs,
+			sizeof(dt_regs))) {
+		WARN("Unable to set DT GHES area 0x%lx/0x%lx\n",
+		     (long)ghes_base, (long)ghes_size);
+		goto exit;
+	}
+
+	snprintf(ghes_name, sizeof(ghes_name), "ghes-hest@%016lx",
+		 (long)ghes_base);
+	INFO("Set DT GHES area (%s) 0x%lx/0x%lx\n", ghes_name,
+	     (long)ghes_base, (long)ghes_size);
+	if (fdt_set_name((void *)fdt, ghes_off, ghes_name))
+		INFO("Unable to set ghes-hest DT node name %s\n", ghes_name);
+
+	/* The 'fdt_set_name' may have changed this offset; retrieve it again */
+	ghes_dev_off = fdt_path_offset(fdt, sdei_ghes_dev_name);
+
+	/* adjust device driver DT 'ranges' values with GHES base address */
+	freg64 = fdt_getprop(fdt, ghes_dev_off, "ranges", &freg_len);
+	/* We expect 3 ranges */
+	if (freg_len != sizeof(ghes_ranges)) {
+		WARN("Invalid GHES device driver DT ranges size (%d vs %d)\n",
+		     freg_len, (int)sizeof(ghes_ranges));
+		goto exit;
+	}
+	ghes_range_base = ghes_base;
+	for (idx = 0; idx < ARRAY_SIZE(ghes_ranges); idx++) {
+		/* per 'cell' settings, ranges consist of 64b, 64b, 32b */
+		freg32 = (const fdt32_t *)&freg64[2];
+		/*
+		 * To avoid unaligned accesses, don't de-reference [FDT] 'freg'
+		 * pointers.  Instead, use the 'fdtxxp_to_cpu' macro to extract
+		 * the value.  Since the extracted value is in CPU order, use
+		 * the function 'fdtxx_to_cpu' to convert it back to FDT order.
+		 */
+		ghes_ranges[idx].child_addr =
+			fdt64_to_cpu(fdt64p_to_cpu(&freg64[0]));
+		ghes_ranges[idx].parent_addr = 0; /* ignore placeholder value */
+		ghes_ranges[idx].child_size =
+			fdt32_to_cpu(fdt32p_to_cpu(freg32));
+
+		ghes_ranges[idx].parent_addr = fdt64_to_cpu(ghes_range_base);
+		ghes_range_base += fdt32p_to_cpu(&ghes_ranges[idx].child_size);
+
+		INFO("%s range %d: 0x%016llx 0x%016llx 0x%08x\n",
+		     sdei_ghes_dev_name, idx,
+		     fdt64_to_cpu(ghes_ranges[idx].child_addr),
+		     fdt64_to_cpu(ghes_ranges[idx].parent_addr),
+		     fdt32_to_cpu(ghes_ranges[idx].child_size));
+
+		freg64 = (void *)freg64 + sizeof(ghes_ranges[0]);
+	}
+
+	if ((ghes_range_base - ghes_base) > ghes_size) {
+		WARN("Ranges for %s exceed %s size\n",
+		     sdei_ghes_dev_name, sdei_ghes_mem_name);
+		goto exit;
+	}
+
+	/* write the modified ranges */
+	if (fdt_setprop((void *)fdt, ghes_dev_off, "ranges",
+			ghes_ranges, sizeof(ghes_ranges))) {
+		WARN("Unable to set GHES device driver DT ranges\n");
+		goto exit;
+	}
+
+	fail = 0;
+
+exit:
+	if (fail)
+		ERROR("GHES/HEST area not available\n");
 #endif
 }
 

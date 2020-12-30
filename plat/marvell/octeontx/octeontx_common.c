@@ -20,10 +20,14 @@
 
 #pragma weak plat_flr_init
 #pragma weak plat_initialize_boot_error_data_area
+#pragma weak plat_initialize_ghes_hest_area
 
 extern void plat_add_mmio();
 
-static void plat_initialize_os_persistent_area(void);
+static void plat_adjust_fdt(void);
+
+/* only invoked in BL2, but compiled for BL2/BL31; mark w/'unused' attribute */
+static void plat_initialize_os_persistent_area(void) __attribute__ ((unused));
 
 void *fdt_ptr = (void *)~0;
 
@@ -73,12 +77,6 @@ static void plat_add_mmio_common(void)
 #endif
 
 	plat_initialize_boot_error_data_area(attr);
-	/*
-	 * If appropriate, adjust OS persistent area Device Tree settings here,
-	 * before enabling mmu.  Once mmu has been enabled, the Device Tree is
-	 * read-only (see mapping of fdt_ptr above).
-	 */
-	plat_initialize_os_persistent_area();
 }
 
 void plat_add_mmio_map()
@@ -86,6 +84,28 @@ void plat_add_mmio_map()
 	plat_add_mmio_common();
 
 	plat_add_mmio();
+
+	/*
+	 * If appropriate, adjust any Device Tree settings here,
+	 * before enabling mmu.  Once mmu has been enabled, the Device Tree is
+	 * read-only (see mapping of fdt_ptr in plat_add_mmio_common()).
+	 */
+	plat_adjust_fdt();
+}
+
+/*
+ * plat_adjust_fdt()
+ *
+ * Perform any platform-specific adjustments to the Flattened Device Tree (FDT).
+ */
+void plat_adjust_fdt(void)
+{
+	/* NOTE: this should be invoked only ONCE, from BL2 */
+#ifdef IMAGE_BL2
+	plat_initialize_os_persistent_area();
+	if (plat_ras_feature_supported())
+		plat_initialize_ghes_hest_area();
+#endif
 }
 
 void plat_error_handler(int err_code)
@@ -111,6 +131,11 @@ void plat_initialize_boot_error_data_area(unsigned long attr)
 	(void)attr;
 }
 
+/* This can be overridden by platform. */
+void plat_initialize_ghes_hest_area(void)
+{
+}
+
 /*
  * plat_initialize_os_persistent_area()
  *
@@ -122,6 +147,7 @@ void plat_initialize_boot_error_data_area(unsigned long attr)
  */
 void plat_initialize_os_persistent_area(void)
 {
+#ifdef IMAGE_BL2
 	uint32_t rec_sz, pmsg_sz, cons_sz, ftrace_sz, *resize_val, new_size;
 	uint64_t oops_base, oops_size, size, remaining;
 	const char *resize_prop = NULL;
@@ -192,5 +218,6 @@ void plat_initialize_os_persistent_area(void)
 	    sizeof(dt_reg32)))
 		WARN("Cannot resize FDT property '%s' from 0x%x to 0x%x\n",
 		     resize_prop, *resize_val, new_size);
+#endif
 }
 

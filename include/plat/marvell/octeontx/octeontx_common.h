@@ -131,6 +131,7 @@ void sata_ipm_quirk(void);
 
 void plat_flr_init(void);
 void plat_initialize_boot_error_data_area(unsigned long attr);
+void plat_initialize_ghes_hest_area(void);
 
 bool plat_ras_feature_supported(void);
 
