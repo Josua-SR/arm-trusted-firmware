@@ -2841,7 +2841,13 @@ static int qlm_gserc_change_lane_rate(int module, int lane)
 	GSER_CSR_WRITE(CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane), bcfg.u);
 	gser_wait_usec(1);
 	qlm_state_lane_t state = qlm_gserc_get_state(module, lane);
-	bool ena_8b10b = (state.s.baud_mhz <= 6250) && (state.s.baud_mhz != 2458) && (state.s.baud_mhz != 3072);
+	bool ena_8b10b;
+
+	if (gserc_is_cpri(module, lane))
+		ena_8b10b = (state.s.baud_mhz == 9830) || (state.s.baud_mhz == 6144) || (state.s.baud_mhz == 4915);
+	else
+		ena_8b10b = (state.s.baud_mhz <= 6250);
+
 	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_ADAPT_CFG0(module, lane),
 		c.s.ena_8b10b = ena_8b10b);
 
