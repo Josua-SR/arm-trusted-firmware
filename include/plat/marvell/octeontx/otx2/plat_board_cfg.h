@@ -241,6 +241,7 @@ typedef struct plat_octeontx_board_cfg {
 		uint64_t base;
 		uint64_t size;
 	} bert_area; /* Boot Error Data area parameters */
+	int reserved_os_memory_size;
 } plat_octeontx_board_cfg_t;
 
 extern plat_octeontx_board_cfg_t * const plat_octeontx_bcfg;

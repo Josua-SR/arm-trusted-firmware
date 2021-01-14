@@ -24,6 +24,7 @@ typedef struct plat_octeontx_board_cfg {
 	int qlm_auto_config;
 
 	int gpio_intercept_intr;
+	int reserved_os_memory_size;
 } plat_octeontx_board_cfg_t;
 
 extern plat_octeontx_board_cfg_t * const plat_octeontx_bcfg;

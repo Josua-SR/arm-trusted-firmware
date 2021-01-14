@@ -37,7 +37,50 @@ static inline uint32_t popcnt(uint64_t val)
 
 uint64_t octeontx_dram_size()
 {
-	uint64_t addr = 0;
+	uint64_t addr = 0, size;
 
-	return memory_region_get_info(NSECURE_NONPRESERVE, &addr);
+	size = memory_region_get_info(NSECURE_NONPRESERVE, &addr);
+	size -= plat_octeontx_bcfg->reserved_os_memory_size;
+	return size;
+}
+
+/*
+ * This reserves memory from area used by OS (U-Boot/Linux).
+ * This is done by reducing the size of available memory that is reported by
+ * the API 'octeontx_dram_size()'.
+ *
+ * on entry,
+ *   size:    size in bytes to reserve
+ *            NOTE: this will be rounded UP to achieve 64K alignment
+ *   index:   must be NSECURE_NONPRESERVE
+ *            NOTE: This parameter exists solely for compatibility with other
+ *                  implementations of this API.
+ *
+ * returns,
+ *   Base address of OS memory.
+ */
+uint64_t octeontx_dram_reserve(uint64_t size, int index)
+{
+	/* Support memory reservation from NSECURE_NONPRESERVE only */
+	if (index != NSECURE_NONPRESERVE) {
+		ERROR("%s: Unsupported memory reservation type %d\n",
+		      __func__, index);
+		return 0;
+	}
+
+	/* convert size to integer multiple of 64K */
+	if (size & 0xffff) {
+		size += 0x10000;
+		size &= ~0xffff;
+	}
+
+	plat_octeontx_bcfg->reserved_os_memory_size += size;
+
+	/*
+	 * This API will evaluate 'reserved_os_memory_size', which
+	 * was just adjusted with the request size.
+	 */
+	size = octeontx_dram_size();
+
+	return size; /* assume base address = 0 for OS memory */
 }
