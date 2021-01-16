@@ -21,6 +21,7 @@
 #pragma weak plat_flr_init
 #pragma weak plat_initialize_boot_error_data_area
 #pragma weak plat_initialize_ghes_hest_area
+#pragma weak plat_ras_feature_supported
 
 extern void plat_add_mmio();
 
@@ -134,6 +135,12 @@ void plat_initialize_boot_error_data_area(unsigned long attr)
 /* This can be overridden by platform. */
 void plat_initialize_ghes_hest_area(void)
 {
+}
+
+/* This can be overridden by platform */
+bool plat_ras_feature_supported(void)
+{
+	return false;
 }
 
 /*
