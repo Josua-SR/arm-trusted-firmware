@@ -2748,9 +2748,7 @@ static cavm_gserrx_common_phy_ctrl_bcfg_t qlm_gserr_get_clock_mode(int module)
 	else if (need_25g)
 	{
 		phy_ctrl_rate1 = 0x03; /* 25G */
-		if (need_20g)
-			phy_ctrl_rate2 = 0x05; /* 20G */
-		else if (need_6g)
+		if (need_6g)
 			phy_ctrl_rate2 = 0x28; /* 6G */
 		else if (need_5g)
 			phy_ctrl_rate2 = 0x2a; /* 5G */
