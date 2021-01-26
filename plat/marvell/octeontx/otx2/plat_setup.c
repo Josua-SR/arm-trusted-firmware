@@ -792,7 +792,7 @@ void plat_initialize_ghes_hest_area(void)
 			fdt32_to_cpu(fdt32p_to_cpu(freg32));
 
 		ghes_ranges[idx].parent_addr = fdt64_to_cpu(ghes_range_base);
-		ghes_range_base += fdt32p_to_cpu(&ghes_ranges[idx].child_size);
+		ghes_range_base += fdt32_to_cpu(ghes_ranges[idx].child_size);
 
 		INFO("%s range %d: 0x%016llx 0x%016llx 0x%08x\n",
 		     sdei_ghes_dev_name, idx,
