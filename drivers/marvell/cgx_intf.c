@@ -2184,6 +2184,11 @@ void cgx_set_error_type(int cgx_id, int lmac_id, uint64_t type)
 void cgx_set_supported_link_modes(int cgx_id, int lmac_id)
 {
 	cgx_lmac_config_t *lmac_cfg;
+	bool is_gsern = false;
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		is_gsern = true;
 
 	lmac_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
@@ -2208,9 +2213,11 @@ void cgx_set_supported_link_modes(int cgx_id, int lmac_id)
 				(1 << CGX_MODE_10G_C2C_BIT) |
 				(1 << CGX_MODE_10G_C2M_BIT) |
 				(1 << CGX_MODE_10G_KR_BIT) |
-				(1 << CGX_MODE_25G_C2C_BIT) |
-				(1 << CGX_MODE_25G_C2M_BIT) |
 				(1 << CGX_MODE_20G_C2C_BIT));
+			if (!is_gsern)
+				lmac_cfg->supported_link_modes |=
+					((1 << CGX_MODE_25G_C2C_BIT) |
+					 (1 << CGX_MODE_25G_C2M_BIT));
 		} else if (lmac_cfg->sfp_info.is_qsfp) {
 			lmac_cfg->supported_link_modes = CGX_ALL_SUPPORTED_MODES;
 		}
@@ -2224,12 +2231,14 @@ void cgx_set_supported_link_modes(int cgx_id, int lmac_id)
 		(lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_TENG_R) ||
 		(lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_TWENTYFIVEG_R)) {
 		uint64_t modes_allowed = ((1 << CGX_MODE_1000_BASEX_BIT) |
-					 (1 << CGX_MODE_SGMII_BIT) |
-					 (1 << CGX_MODE_10G_C2C_BIT) |
-					 (1 << CGX_MODE_10G_C2M_BIT) |
-					 (1 << CGX_MODE_10G_KR_BIT) |
-					 (1 << CGX_MODE_20G_C2C_BIT) |
-					(1 << CGX_MODE_25G_C2C_BIT) |
+					  (1 << CGX_MODE_SGMII_BIT) |
+					  (1 << CGX_MODE_10G_C2C_BIT) |
+					  (1 << CGX_MODE_10G_C2M_BIT) |
+					  (1 << CGX_MODE_10G_KR_BIT) |
+					  (1 << CGX_MODE_20G_C2C_BIT));
+
+		if (!is_gsern)
+			modes_allowed |= ((1 << CGX_MODE_25G_C2C_BIT) |
 					(1 << CGX_MODE_25G_C2M_BIT));
 
 		if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "cn33", 4))
@@ -2239,51 +2248,60 @@ void cgx_set_supported_link_modes(int cgx_id, int lmac_id)
 
 		lmac_cfg->supported_link_modes &= modes_allowed;
 
-	} else if ((lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_FIFTYG_R) ||
-		 (lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R)) {
+	} else if (lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_FIFTYG_R) {
 		switch (lmac_cfg->mode_idx) {
-		case QLM_MODE_XLAUI:
-		case QLM_MODE_XLAUI_C2M:
-		case QLM_MODE_40G_CR4:
-		case QLM_MODE_40G_KR4:
-			lmac_cfg->supported_link_modes &=
-				((1 << CGX_MODE_40G_C2C_BIT) |
-				(1 << CGX_MODE_40G_C2M_BIT) |
-				(1 << CGX_MODE_40G_CR4_BIT) |
-				(1 << CGX_MODE_40G_KR4_BIT) |
-				(1 << CGX_MODE_80GAUI_C2C_BIT) |
-				(1 << CGX_MODE_100G_C2C_BIT) |
-				(1 << CGX_MODE_100G_C2M_BIT) |
-				(1 << CGX_MODE_100G_CR4_BIT) |
-				(1 << CGX_MODE_100G_KR4_BIT));
-		break;
-		case QLM_MODE_50GAUI_4_C2C:
+		case QLM_MODE_50GAUI_2_C2C:
+		case QLM_MODE_50GAUI_2_C2M:
+		case QLM_MODE_40GAUI_2_C2C:
+			/* non-GSERN: 40GAUI_2 to 50G_R2 change not supported */
+			if (!is_gsern)
+				lmac_cfg->supported_link_modes &=
+					((1 << CGX_MODE_50G_C2C_BIT) |
+					 (1 << CGX_MODE_50G_C2M_BIT));
+			break;
 		case QLM_MODE_25GAUI_2_C2C:
 			lmac_cfg->supported_link_modes &=
 				((1 << CGX_MODE_25G_2_C2C_BIT) |
-			(1 << CGX_MODE_50G_4_C2C_BIT) |
-			(1 << CGX_MODE_50G_C2C_BIT) |
-			(1 << CGX_MODE_10G_C2C_BIT) |
-			(1 << CGX_MODE_10G_C2M_BIT) |
-			(1 << CGX_MODE_10G_KR_BIT));
-		break;
+				 (1 << CGX_MODE_50G_4_C2C_BIT) |
+				 (1 << CGX_MODE_50G_C2C_BIT) |
+				 (1 << CGX_MODE_10G_C2C_BIT) |
+				 (1 << CGX_MODE_10G_C2M_BIT) |
+				 (1 << CGX_MODE_10G_KR_BIT));
+			break;
 		default:
-		break;
+			break;
 		}
 	} else if (lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_QSGMII)
 		lmac_cfg->supported_link_modes &=
 			(1 << CGX_MODE_QSGMII_BIT);
-	else if (lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R)
-		lmac_cfg->supported_link_modes &=
+	else if ((lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R) ||
+		 (lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_FORTYG_R)) {
+		switch (lmac_cfg->mode_idx) {
+		case QLM_MODE_50GAUI_4_C2C:
+			lmac_cfg->supported_link_modes &=
+				((1 << CGX_MODE_25G_2_C2C_BIT) |
+				 (1 << CGX_MODE_50G_4_C2C_BIT) |
+				 (1 << CGX_MODE_50G_C2C_BIT) |
+				 (1 << CGX_MODE_10G_C2C_BIT) |
+				 (1 << CGX_MODE_10G_C2M_BIT) |
+				 (1 << CGX_MODE_10G_KR_BIT));
+			break;
+		default:
+			lmac_cfg->supported_link_modes &=
 				((1 << CGX_MODE_40G_C2C_BIT) |
-				(1 << CGX_MODE_40G_C2M_BIT) |
-				(1 << CGX_MODE_40G_CR4_BIT) |
-				(1 << CGX_MODE_40G_KR4_BIT) |
-				(1 << CGX_MODE_80GAUI_C2C_BIT) |
-				(1 << CGX_MODE_100G_C2C_BIT) |
-				(1 << CGX_MODE_100G_C2M_BIT) |
-				(1 << CGX_MODE_100G_CR4_BIT) |
-				(1 << CGX_MODE_100G_KR4_BIT));
+				 (1 << CGX_MODE_40G_C2M_BIT) |
+				 (1 << CGX_MODE_40G_CR4_BIT) |
+				 (1 << CGX_MODE_40G_KR4_BIT) |
+				 (1 << CGX_MODE_80GAUI_C2C_BIT));
+			if (!is_gsern)
+				lmac_cfg->supported_link_modes |=
+					((1 << CGX_MODE_100G_C2C_BIT) |
+					 (1 << CGX_MODE_100G_C2M_BIT) |
+					 (1 << CGX_MODE_100G_CR4_BIT) |
+					 (1 << CGX_MODE_100G_KR4_BIT));
+			break;
+		}
+	}
 	else
 		lmac_cfg->supported_link_modes = 0;
 
