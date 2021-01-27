@@ -1695,9 +1695,12 @@ int qlm_gserr_tune_lane_tx(int qlm, int lane, int tx_swing, int tx_cpre, int tx_
 	GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL5(qlm, lane),
 		c.s.drv_swing = tx_swing);
 
-	/* Only request Tx coefficient update if CPU is out of reset */
+	/* Only request Tx coefficient update if CPU rst and lane rst are out of reset.
+	 * Tx coefficient update should only be applied if in ACTIVE power state
+	 */
 	GSER_CSR_INIT(gserrx_init_ctl, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(qlm));
-	if (!gserrx_init_ctl.s.cpu_reset)
+	GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(qlm, lane));
+	if (!gserrx_init_ctl.s.cpu_reset && !bcfg.s.ln_rst)
 	{
 		/* Request an update */
 		GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_DRV_REFCLK_TXEQ_CTRL0(qlm, lane),
