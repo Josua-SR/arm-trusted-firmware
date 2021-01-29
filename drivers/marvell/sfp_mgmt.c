@@ -1370,6 +1370,7 @@ retry_acquire_lock:
 		return -1;
 	}
 	*mcp_an_dbg = sh_data->an_lt_args.mcp_an_dbg;
+	sh_data->async_ctx.lock = AN_LT_OWN_NONE;
 	return 0;
 }
 
@@ -1412,7 +1413,7 @@ retry_acquire_lock:
 	*fec_type = sh_data->an_lt_args.fec_type;
 	*qlm_mode = sh_data->an_lt_args.qlm_mode;
 	*lmac_type = sh_data->an_lt_args.lmac_type;
-
+	sh_data->async_ctx.lock = AN_LT_OWN_NONE;
 	return 0;
 }
 
