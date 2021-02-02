@@ -90,6 +90,12 @@ There are several build options:
 
         Build trusted(=1)/non trusted(=0) image, default is non trusted.
 
+- DO_NOT_ENCRYPT
+
+        For A7K/8K/CN913x trusted boot only, ignore the AES key value from the configuration file.
+        Do not encrypt the trusted boot image, only sign it. Default value is 0 (follow
+        the configuration file settings).
+
 - BLE_PATH
 
         Points to BLE (Binary ROM extension) sources folder.

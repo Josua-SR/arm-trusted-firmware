@@ -158,6 +158,7 @@ typedef struct _options {
 	uint32_t  exec_addr;
 	uint32_t  baudrate;
 	uint8_t	  disable_print;
+	uint8_t   disable_encryption;
 	int8_t    key_index; /* For header signatures verification only */
 	uint32_t  nfc_io_args;
 } options_t;
@@ -198,6 +199,8 @@ void usage(void)
 #ifdef CONFIG_MVEBU_SECURE_BOOT
 	printf("  -c        Make trusted boot image using parameters\n");
 	printf("            from the configuration file.\n");
+	printf("  -d        Disable image encryption\n");
+	printf("            (override the configuration file parameter)\n");
 #endif
 	printf("  -p        Parse and display a pre-built boot image\n");
 #ifdef CONFIG_MVEBU_SECURE_BOOT
@@ -223,6 +226,7 @@ static options_t opts = {
 	.load_addr = 0x0,
 	.exec_addr = 0x0,
 	.disable_print = 0,
+	.disable_encryption = 0,
 	.baudrate = 0,
 	.key_index = -1,
 };
@@ -914,7 +918,7 @@ int format_sec_ext(char *filename, FILE *out_fd)
 	}
 
 	/* AES encryption stuff */
-	if (strlen(opts.sec_opts->aes_key_file) != 0) {
+	if ((opts.disable_encryption != 1) && (strlen(opts.sec_opts->aes_key_file) != 0)) {
 		FILE		*in_fd;
 
 		in_fd = fopen(opts.sec_opts->aes_key_file, "rb");
@@ -1598,7 +1602,7 @@ int main(int argc, char *argv[])
 	 */
 	snprintf(ext_file, MAX_FILENAME, "/tmp/ext_file-%x", getpid());
 
-	while ((opt = getopt(argc, argv, "hpms:i:l:e:a:b:u:n:t:c:k:")) != -1) {
+	while ((opt = getopt(argc, argv, "hpmds:i:l:e:a:b:u:n:t:c:k:")) != -1) {
 		switch (opt) {
 		case 'h':
 			usage();
@@ -1639,6 +1643,9 @@ int main(int argc, char *argv[])
 			break;
 		case 'k':
 			opts.key_index = strtoul(optarg, NULL, 0);
+			break;
+		case 'd':
+			opts.disable_encryption = 1;
 			break;
 #endif
 		default: /* '?' */

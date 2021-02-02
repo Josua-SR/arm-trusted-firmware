@@ -12,6 +12,9 @@ FLASH_IMAGE			:= flash-image.bin
 MARVELL_SECURE_BOOT		:= 0
 $(eval $(call add_define,MARVELL_SECURE_BOOT))
 
+DO_NOT_ENCRYPT			:= 0
+$(eval $(call add_define,DO_NOT_ENCRYPT))
+
 # Enable compilation for Palladium emulation platform
 PALLADIUM			:= 0
 $(eval $(call add_define,PALLADIUM))
@@ -22,6 +25,9 @@ $(eval $(call add_define,DDR32))
 
 ifeq (${MARVELL_SECURE_BOOT},1)
 DOIMAGE_SEC_FLAGS := -c $(DOIMAGE_SEC)
+ifeq (${DO_NOT_ENCRYPT},1)
+DOIMAGE_SEC_FLAGS += -d
+endif
 DOIMAGE_LIBS_CHECK = \
         if ! [ -d "/usr/include/mbedtls" ]; then \
                         echo "****************************************" >&2; \
