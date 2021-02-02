@@ -2258,6 +2258,15 @@ void cgx_set_supported_link_modes(int cgx_id, int lmac_id)
 				lmac_cfg->supported_link_modes &=
 					((1 << CGX_MODE_50G_C2C_BIT) |
 					 (1 << CGX_MODE_50G_C2M_BIT));
+
+			if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "cn33", 4)) {
+				if (!is_gsern)
+					lmac_cfg->supported_link_modes |=
+						((1 << CGX_MODE_25G_C2C_BIT) |
+						 (1 << CGX_MODE_25G_C2M_BIT) |
+						 (1 << CGX_MODE_10G_C2C_BIT) |
+						 (1 << CGX_MODE_10G_C2M_BIT));
+			}
 			break;
 		case QLM_MODE_25GAUI_2_C2C:
 			lmac_cfg->supported_link_modes &=
