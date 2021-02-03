@@ -291,4 +291,36 @@ int qlm_gserr_fed_loopback(int module, int lane, bool enable);
  */
 int qlm_gserr_nea_loopback(int module, int lane, bool enable);
 
+/**
+ * For chips that don't use pin strapping, this function programs
+ * the QLM lane(s) to the specified mode
+ *
+ * @param module           Index into GSER* group
+ * @param lane_mask        QLM module Lane mask to specify which lanes to configure
+ * @param mode	           Desired mode
+ * @param baud_mhz         Desired speed
+ * @param flags	           Flags to specify mode specific options
+ * @param lane_an_master   QLM module Lane to check
+ * @param fec_types        Mask of fec_types to advertise when using AN mode
+ * @param lt_init          Initial state requested during 802.3 Link training
+ *
+ * @return Zero on success, negative on failure
+ */
+int qlm_gserr_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud_mhz,
+		       qlm_mode_flags_t flags, int lane_an_master,
+		       qlm_802_3ap_fec_t fec_types, qlm_lt_init_state_t lt_init,
+		       int ignore_mode_chk);
+
+/**
+ * This function is used to determine if a mode change
+ * requires all module lanes to be reset due to
+ * clock management changes.
+ *
+ * @param module           Index into GSER* group
+ * @param baud_mhz         Desired speed
+ *
+ * @return Zero on no change req, positive on change required
+ */
+int qlm_gserr_mode_chg_full_reset(int module, int baud_mhz);
+
 #endif /* _QLM_GSERR_H_ */

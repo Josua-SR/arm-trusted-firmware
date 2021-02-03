@@ -17,6 +17,7 @@
  * GSERR, GSERC, and GSERJ minimal
  */
 #define QUAD_LANE 1
+#define MAX_LANES 4
 
 /**
  * This define controls whether VCO_DOSC_TEMP_SKEW is set in GSERR, enabling the
@@ -4614,3 +4615,1551 @@ void qlm_gserr_init_reset()
 //
 //	GSER_TRACE(QLM, "GSERR: End of init\n");
 //}
+
+/**
+ * Writes the AN config instance that will be used
+ * by the GSER lane to DMEM
+ *
+ * @param module     Index into GSER* group
+ * @param lane       QLM module Lane to update
+ * @param instance   AN config instance used by GSER lane
+ *
+ * @return Zero on success, negative on failure
+ */
+static int write_an_cfg_instance(int module, int lane, int instance)
+{
+	int retry_cnt = 0;
+	uint64_t resp0, resp1;
+	int resp_code;
+	/* Write the  AN instance # for the GSER lane */
+	/* MB_CMD_DATA0 = lane
+	 * MB_CMD_DATA1 = Config instance #
+	 */
+	uint64_t cmd_arg = (uint64_t)lane; /* data 0 */
+
+	cmd_arg |= (uint64_t)instance << 8; /* data 1 */
+
+retry_cmd:
+	/* Send Command */
+	if (mailbox_command(module, 0x90, cmd_arg))
+	{
+		/* Clean any stale data out of the mailbox */
+		mailbox_cleanup(module);
+		if (retry_cnt++ > 5)
+			goto retry_cmd;
+		else
+			return -1;
+	}
+	/* Response Codes
+	 * 0x00 = OK
+	 * 0xFE = Invalid Instance Number
+	 * 0xFD = Lane not in Fixed-rate Mode
+	 */
+	/* Check response */
+	resp_code = mailbox_response(module, &resp0, &resp1);
+	if (resp_code != 0)
+	{
+		if (resp_code == 0xFE)
+			gser_warn("GSERR%d.%d: AN CFG INST: Invalid Instance Number\n", module, lane);
+		else if (resp_code == 0xFD)
+			gser_warn("GSERR%d.%d: AN CFG INST: Lane not in Fixed-Rate mode\n", module, lane);
+		else
+			gser_warn("GSERR%d.%d: AN CFG INST: Unknown response code:%d\n", module, lane, resp_code);
+		return -1;
+	}
+
+	return 0;
+}
+
+/**
+ * Writes the AN config instance data for GSER lane
+ * to DMEM.
+ *
+ * @param module     Index into GSER* group
+ * @param cmd_arg    Data to be written by DMEM mailbox cmd
+ * @param cmd_type   0 = First Write, 1 = Continual Writes
+ *
+ * @return Zero on success, negative on failure
+ */
+static int write_an_cfg_data_bytes(int module, uint64_t cmd_arg, int cmd_type)
+{
+	int retry_cnt = 0;
+	uint64_t resp0, resp1;
+	int resp_code;
+
+	/* Write the  AN instance # for the GSER lane */
+	/* MB_CMD_DATA0 = lane
+	 * MB_CMD_DATA1-7 = 7 bytes AN Config instance data
+	 */
+retry_cmd:
+	/* Send Command */
+	if (mailbox_command(module, cmd_type, cmd_arg))
+	{
+		/* Clean any stale data out of the mailbox */
+		mailbox_cleanup(module);
+		if (retry_cnt++ > 5)
+			goto retry_cmd;
+		else
+			return -1;
+	}
+
+	/* Response Codes
+	 * 0x00 = OK
+	 * CMD_TYPE = START
+	 * 0xFD = Lane not in Fixed-rate mode
+	 * CMD_TYPE = CONTINUE
+	 * 0x01 = All AN CFG Instance data received
+	 */
+	/* Check response */
+	resp_code = mailbox_response(module, &resp0, &resp1);
+	if (resp_code != 0)
+	{
+		if ((cmd_type == AN_CFG_CMD_START) &&
+		    (resp_code == 0xfd))
+			gser_warn("GSERR%d AN CFG DATA: Lane not in Fixed-Rate mode\n", module);
+		else if ((cmd_type == AN_CFG_CMD_CONT) &&
+			 (resp_code == 0x1))
+			gser_warn("GSERR%d: AN CFG DATA: All AN CFG Instance data received\n", module);
+		else
+			gser_warn("GSERR%d: AN CFG DATA: Unknown response code: %d\n", module, resp_code);
+		return -1;
+	}
+	return 0;
+}
+
+/**
+ * Writes the AN config instance data for GSER lane
+ * to DMEM after receiving 7 bytes of data
+ * Writes data to 0 after receiving 7 bytes
+ *
+ * @param module     Index into GSER* group
+ * @param lane       QLM module Lane to update
+ * @param cmd_arg    Data to be written by DMEM mailbox cmd
+ * @param data       AN config instance data
+ * @param count      Tracks the number of data writes
+ *
+ * @return Zero on success, negative on failure
+ */
+static int write_an_cfg_data(int module, int lane, uint64_t *cmd_arg,
+			     uint8_t data, int count)
+{
+	uint64_t cmd_arg_tmp = *cmd_arg;
+	int cmd_offset;
+
+	/* The mailbox cmd interface expects
+	 * 7 bytes of AN cfg instance data at a time
+	 */
+	cmd_offset = count % 7;
+
+	/* AN CMD data
+	 * MB_CMD_DATA0 = lane
+	 * MB_CMD_DATA1-7 = 7 bytes of AN Config instance data
+	 */
+	if (cmd_offset == 0)
+		cmd_arg_tmp = (uint64_t)lane; /* data 0 */
+	cmd_arg_tmp |= (uint64_t)data << ((cmd_offset + 1) * 8);
+
+	/* Write data after receiving 7 bytes of data */
+	if (cmd_offset == 6)
+	{
+		/* First 7 bytes must use start function */
+		if (count <= 6)
+		{
+			if (write_an_cfg_data_bytes(module, cmd_arg_tmp, AN_CFG_CMD_START))
+				return -1;
+		}
+		else
+		{
+			if (write_an_cfg_data_bytes(module, cmd_arg_tmp, AN_CFG_CMD_CONT))
+				return -1;
+			/* Need to zero data for next 7 bytes */
+			cmd_arg_tmp = 0;
+		}
+	}
+
+	*cmd_arg = cmd_arg_tmp;
+	return 0;
+}
+
+/**
+ * Configure the autoneg advertisements in GSER DMEM using mailbox
+ *
+ * @param module         QLM/DLM to setup
+ * @param lane           Lane to setup
+ * @param ap_802_3_adv   802.3AP Autoneg advertisements
+ *
+ * @return Zero on success, negative on error
+ */
+static void qlm_gserr_config_an_mbox(int module, int lane, ap_802_3_adv_t ap_802_3_adv)
+{
+	int count = 0;
+	uint64_t cmd_arg = 0;
+
+	/* AN CFG Instance = Lane # */
+	write_an_cfg_instance(module, lane, lane);
+
+	/* 0x0 nonce_seed 7:0 Seed value for TX Nonce Generator
+	   The lane number (0-3) will be added to this value to guarantee that each
+	   lane has a unique TX nonce */
+	uint8_t nonce = 0;
+
+	while ((nonce < 1) || (nonce >= 0xfd))
+		nonce = gser_rng_get_random8();
+	write_an_cfg_data(module, lane, &cmd_arg, nonce, count++);
+
+	/* 0x1 priority_1g_kx 7:0 Resolution priority for 1000BASE-KX */
+	write_an_cfg_data(module, lane, &cmd_arg, 15, count++);
+	/* 0x2 priority_10g_kx4 7:0 Resolution priority for 10GBASE-KX
+	   Not supported by the PHY */
+	write_an_cfg_data(module, lane, &cmd_arg, 14, count++);
+	/* 0x3 priority_10g_kr 7:0 Resolution priority for 10GBASE-KR */
+	write_an_cfg_data(module, lane, &cmd_arg, 13, count++);
+	/* 0x4 priority_40g_kr4 7:0 Resolution priority for 40GBASE-KR4 */
+	write_an_cfg_data(module, lane, &cmd_arg, 8, count++);
+	/* 0x5 priority_40g_cr4 7:0 Resolution priority for 40GBASE-CR4 */
+	write_an_cfg_data(module, lane, &cmd_arg, 7, count++);
+	/* 0x6 priority_100g_cr10 7:0 Resolution priority for 100GBASE-CR10
+	   Not supported by the PHY */
+	write_an_cfg_data(module, lane, &cmd_arg, 4, count++);
+	/* 0x7 priority_100g_kp4 7:0 Resolution priority for 100GBASE-KP4
+	   Not supported by the PHY */
+	write_an_cfg_data(module, lane, &cmd_arg, 3, count++);
+	/* 0x8 priority_100g_kr4 7:0 Resolution priority for 100GBASE-KR4 */
+	write_an_cfg_data(module, lane, &cmd_arg, 2, count++);
+	/* 0x9 priority_100g_cr4 7:0 Resolution priority for 100GBASE-CR4 */
+	write_an_cfg_data(module, lane, &cmd_arg, 1, count++);
+	/* 0xA priority_25g_gr_s 7:0 Resolution priority for 802.3by 25GBASE-CR-S / 25GBASE-KR-S */
+	write_an_cfg_data(module, lane, &cmd_arg, 10, count++);
+	/* 0xB priority_25g_gr 7:0 Resolution priority for 802.3by 25GBASE-CR / 25GBASE-KR */
+	write_an_cfg_data(module, lane, &cmd_arg, 9, count++);
+	/* 0xC priority_25g_kr 7:0 Resolution priority for 25G/50G Consortium 25GBASE-KR */
+	write_an_cfg_data(module, lane, &cmd_arg, 12, count++);
+	/* 0xD priority_25g_cr 7:0 Resolution priority for 25G/50G Consortium 25GBASE-CR */
+	write_an_cfg_data(module, lane, &cmd_arg, 11, count++);
+	/* 0xE priority_50g_kr2 7:0 Resolution priority for 25G/50G Consortium 50GBASE-KR2 */
+	write_an_cfg_data(module, lane, &cmd_arg, 6, count++);
+	/* 0xF priority_50g_cr2 7:0 Resolution priority for 25G/50G Consortium 50GBASE-CR2 */
+	write_an_cfg_data(module, lane, &cmd_arg, 5, count++);
+
+	/* 0x10 tech_abilities_15_8
+	   0:0 Advertise 100GBASE-CR4 in Base Page bit A8
+	   1:1 Advertise 802.3by 25GBASE-KR-S or 25GBASE-CR-S in Base Page bit A9
+	   2:2 Advertise 802.3by 25GBASE-KR or 25GBASE-CR in Base Page bit A10
+	   3:3 Advertise 25G/50G Consortium 25GBASE-KR in 25G/50G Consortium OUI Next Page
+	   4:4 Advertise 25G/50G Consortium 25GBASE-CR in 25G/50G Consortium OUI Next Page
+	   5:5 Advertise 25G/50G Consortium 50GBASE-KR2 in 25G/50G Consortium OUI Next Page
+	   6:6 Advertise 25G/50G Consortium 50GBASE-CR2 in 25G/50G Consortium OUI Next Page
+	   7:7 Reserved */
+	uint8_t tech_abilities_15_8 = 0;
+
+	if (ap_802_3_adv.s.an_100gbase_cr4)
+		tech_abilities_15_8 |= 1 << 0;
+	if (ap_802_3_adv.s.an_25gbase_kcrs ||
+	    ap_802_3_adv.s.an_25gbase_kcr)
+		tech_abilities_15_8 |= 1 << 1;
+	if (ap_802_3_adv.s.an_25gbase_kcr)
+		tech_abilities_15_8 |= 1 << 2;
+	if (ap_802_3_adv.s.an_25gbase_kr_cons)
+		tech_abilities_15_8 |= 1 << 3;
+	if (ap_802_3_adv.s.an_25gbase_cr_cons)
+		tech_abilities_15_8 |= 1 << 4;
+	if (ap_802_3_adv.s.an_50gbase_kr2_cons)
+		tech_abilities_15_8 |= 1 << 5;
+	if (ap_802_3_adv.s.an_50gbase_cr2_cons)
+		tech_abilities_15_8 |= 1 << 6;
+	write_an_cfg_data(module, lane, &cmd_arg, tech_abilities_15_8, count++);
+	/* 0x11 tech_abilities_7_0
+	   0:0 Advertise 1000BASE-KX in Base Page bit A0
+	   1:1 Advertise 10GBASE-KX4 in Base Page bit A1
+			Not supported by the PHY
+	   2:2 Advertise 10GBASE-KR in Base Page bit A2
+	   3:3 Advertise 40GBASE-KR4 in Base Page bit A3
+	   4:4 Advertise 40GBASE-CR4 in Base Page bit A4
+	   5:5 Advertise 100GBASE-CR10 in Base Page bit A5
+			Not supported by the PHY
+	   6:6 Advertise 100GBASE-KP4 in Base Page bit A6
+			Not supported by the PHY
+	   7:7 Advertise 100GBASE-KR4 in Base Page bit A7 */
+	uint8_t tech_abilities_7_0 = 0;
+
+	if (ap_802_3_adv.s.an_10gbase_kr)
+		tech_abilities_7_0 |= 1 << 2;
+	if (ap_802_3_adv.s.an_40gbase_kr4)
+		tech_abilities_7_0 |= 1 << 3;
+	if (ap_802_3_adv.s.an_40gbase_cr4)
+		tech_abilities_7_0 |= 1 << 4;
+	if (ap_802_3_adv.s.an_100gbase_kr4)
+		tech_abilities_7_0 |= 1 << 7;
+	write_an_cfg_data(module, lane, &cmd_arg, tech_abilities_7_0, count++);
+	/* 0x12 eee_tech_abilities_15_8 (RESERVED)
+	   0:0 Advertise 100GBASE-CR4 has EEE deep sleep capability
+	   1:1 Advertise 802.3by 25GBASE-KR-S or 25GBASE-CR-S has EEE deep sleep capability
+	   2:2 Advertise 802.3by 25GBASE-KR or 25GBASE-CR has EEE deep sleep capability
+	   3:3 Advertise 25G/50G Consortium 25GBASE-KR has EEE deep sleep capability
+	   4:4 Advertise 25G/50G Consortium 50GBASE-CR has EEE deep sleep capability
+	   5:5 Advertise 25G/50G Consortium 25GBASE-KR2 has EEE deep sleep capability
+	   6:6 Advertise 25G/50G Consortium 50GBASE-CR2 has EEE deep sleep capability
+	   7:7 Reserved */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x13 eee_tech_abilities_7_0 (RESERVED)
+	   0:0 Advertise 1000BASE-KX has EEE capability
+	   1:1 Advertise 10GBASE-KX4 has EEE capability
+			Not supported by the PHY
+	   2:2 Advertise 10GBASE-KR has EEE capability
+	   3:3 Advertise 40GBASE-KR4 has EEE deep sleep capability
+	   4:4 Advertise 40GBASE-CR4 has EEE deep sleep capability
+	   5:5 Advertise 100GBASE-CR10 has EEE deep sleep capability
+			Not supported by the PHY
+	   6:6 Advertise 100GBASE-KP4 has EEE deep sleep capability
+			Not supported by the PHY
+	   7:7 Advertise 100GBASE-KR4 has EEE deep sleep capability */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x14 fec
+	   0:0 Advertise Clause 74 FEC (Fire Code) Ability in Base Page F0 bit
+	   1:1 Request Clause 74 FEC (Fire Code) in Base Page F1 bit
+	   2:2 Request Clause 91 FEC (Reed Solomon) for 8023.by 25GBASE-KR or
+			25GBASE-CR in Base Page F2 bit
+	   3:3 Request Clause 74 FEC (Fire Code) for 8023.by 25GBASE-KR or
+			25GBASE-CR-S or 25GBASE-KR-S or 25GBASE-CR-S in Base Page F3 bit
+	   4:4 Advertise Clause 91 FEC (Reed Solomon) Ability in 25G/50G Consortium
+			OUI Next Pages
+	   5:5 Advertise Clause 74 FEC (Fire Code) Ability in 25G/50G Consortium
+			OUI Next Pages
+	   6:6 Request Clause 91 FEC (Reed Solomon) in 25G/50G Consortium OUI Next Pages
+	   7:7 Request Clause 74 FEC (Fire Code) in 25G/50G Consortium OUI Next Page */
+	uint8_t fec = 0;
+
+	if (ap_802_3_adv.s.fec_10g_abil)
+		fec |= 1 << 0; /* Advertise BASE-R FEC ability in base page */
+	if (ap_802_3_adv.s.fec_10g_req)
+		fec |= 1 << 1; /* Request BASE-R FEC base page F1 bit */
+	if (ap_802_3_adv.s.fec_25g_rs)
+		fec |= 1 << 2; /* Request RS-FEC for 25BASE-KR/CR base page F2 bit */
+	if (ap_802_3_adv.s.fec_25g_baser)
+		fec |= 1 << 3; /* Request BASE-R FEC for 25BASE-KR/CR/KR-S/CR-S base page F3 bit */
+	if (ap_802_3_adv.s.fec_25g_rs_abil)
+		fec |= 1 << 4; /* Advertise RS-FEC for 25G/50G Consortium */
+	if (ap_802_3_adv.s.fec_25g_baser_abil)
+		fec |= 1 << 5; /* Advertise BASE-R FEC for 25G/50G Consortium */
+	if (ap_802_3_adv.s.fec_25g_rs_cons)
+		fec |= 1 << 6; /* Advertise RS-FEC for 25G/50G Consortium */
+	if (ap_802_3_adv.s.fec_25g_baser_cons)
+		fec |= 1 << 7; /* Advertise BASE-R for 25G/50G Consortium */
+	write_an_cfg_data(module, lane, &cmd_arg, fec, count++);
+	/* 0x15 pause
+	   0:0 Advertise Pause Ability in Base Page bit C0
+	   1:1 Advertise Pause ASM_DIR Ability in Base Page C1 */
+	uint8_t pause = 0;
+
+	if (ap_802_3_adv.s.fc_pause)
+		pause |= 1 << 0; /* Advertise Pause Ability in Base Page bit C0 */
+	if (ap_802_3_adv.s.fc_asm_dir)
+		pause |= 1 << 1; /* Advertise Pause ASM_DIR Ability in Base Page C1 */
+	write_an_cfg_data(module, lane, &cmd_arg, pause, count++);
+	/* 0x16 np_cfg
+	   0:0 Send 25G/50G Consortium OUI tagged Next Pages to advertise 25G/50G
+			abilities during negotiation
+	   1:1 Send a Device ID Next Pages during negotiation
+	   2:2 Send an EEE technology Next Page during negotiation
+			(RESERVED setting – leave at 0, as the AFE does support EEE functionality). */
+	uint8_t np_cfg = 0;
+
+	if ((ap_802_3_adv.s.an_25gbase_kr_cons) || (ap_802_3_adv.s.an_25gbase_cr_cons) ||
+	    (ap_802_3_adv.s.an_50gbase_kr2_cons) || (ap_802_3_adv.s.an_50gbase_cr2_cons))
+		np_cfg |= 1 << 0;
+	write_an_cfg_data(module, lane, &cmd_arg, np_cfg, count++);
+	/* 0x17 reserved 7:0 N/A */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x18 consortium_oui_23_16 7:0 OUI to use for the OUI field in 25G/50G Consortium OUI tagged Next Pages (Bits 23:16) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x6a, count++);
+	/* 0x19 consortium_oui_15_8 7:0 OUI to use for the OUI field in 25G/50G Consortium OUI tagged Next Pages (Bits 15:8) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x73, count++);
+	/* 0x1A consortium_oui_7_0 7:0 OUI to use for the OUI field in 25G/50G Consortium OUI tagged Next Pages (Bits 7:0) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x7d, count++);
+	/* 0x1B device_id_31_24 7:0 32-bit PHY Device ID to send in Device ID Next Pages (Bits 32:24) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x7d, count++);
+	/* 0x1C device_id_31_25 7:0 32-bit PHY Device ID to send in Device ID Next Pages (Bits 23:16) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x1D device_id_31_26 7:0 32-bit PHY Device ID to send in Device ID Next Pages (Bits 15:8) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x1E device_id_31_27 7:0 32-bit PHY Device ID to send in Device ID Next Pages (Bits 7:0) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x1F num_custom_tx_nps 7:0 How many custom Next Pages to send (Maximum 10)
+	   These are in addition to Device ID, EEE technology, and 25G/50G Consortium Next Pages */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x20 custom_tx_nps0_47_41 7:0 1st Custom Next Page to send (Bits 47:41) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x21 custom_tx_nps0_40_32 7:0 1st Custom Next Page to send (Bits 40:32) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x22 custom_tx_nps0_31_24 7:0 1st Custom Next Page to send (Bits 31:24) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x23 custom_tx_nps0_23_16 7:0 1st Custom Next Page to send (Bits 23:16) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x24 custom_tx_nps0_15_8 7:0 1st Custom Next Page to send (Bits 15:8) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x25 custom_tx_nps0_7_0 7:0 1st Custom Next Page to send (Bits 7:0) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x26 custom_tx_nps1_47_41 7:0 2nd Custom Next Page to send (Bits 47:41) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x27 custom_tx_nps1_40_32 7:0 2nd Custom Next Page to send (Bits 40:32) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x28 custom_tx_nps1_31_24 7:0 2nd Custom Next Page to send (Bits 31:24) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x29 custom_tx_nps1_23_16 7:0 2nd Custom Next Page to send (Bits 23:16) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x2A custom_tx_nps1_15_8 7:0 2nd Custom Next Page to send (Bits 15:8) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x2B custom_tx_nps1_7_0 7:0 2nd Custom Next Page to send (Bits 7:0) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x2C custom_tx_nps2_47_41 7:0 3rd Custom Next Page to send (Bits 47:41) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x2D custom_tx_nps2_40_32 7:0 3rd Custom Next Page to send (Bits 40:32) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x2E custom_tx_nps2_31_24 7:0 3rd Custom Next Page to send (Bits 31:24) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x2F custom_tx_nps2_23_16 7:0 3rd Custom Next Page to send (Bits 23:16) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x30 custom_tx_nps2_15_8 7:0 3rd Custom Next Page to send (Bits 15:8) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x31 custom_tx_nps2_7_0 7:0 3rd Custom Next Page to send (Bits 7:0) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x32 custom_tx_nps3_47_41 7:0 4th Custom Next Page to send (Bits 47:41) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x33 custom_tx_nps3_40_32 7:0 4th Custom Next Page to send (Bits 40:32) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x34 custom_tx_nps3_31_24 7:0 4th Custom Next Page to send (Bits 31:24) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x35 custom_tx_nps3_23_16 7:0 4th Custom Next Page to send (Bits 23:16) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x36 custom_tx_nps3_15_8 7:0 4th Custom Next Page to send (Bits 15:8) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x37 custom_tx_nps3_7_0 7:0 4th Custom Next Page to send (Bits 7:0) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x38 custom_tx_nps4_47_41 7:0 5th Custom Next Page to send (Bits 47:41) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x39 custom_tx_nps4_40_32 7:0 5th Custom Next Page to send (Bits 40:32) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x3A custom_tx_nps4_31_24 7:0 5th Custom Next Page to send (Bits 31:24) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x3B custom_tx_nps4_23_16 7:0 5th Custom Next Page to send (Bits 23:16) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x3C custom_tx_nps4_15_8 7:0 5th Custom Next Page to send (Bits 15:8) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x3D custom_tx_nps4_7_0 7:0 5th Custom Next Page to send (Bits 7:0) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x3E custom_tx_nps5_47_41 7:0 6th Custom Next Page to send (Bits 47:41) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x3F custom_tx_nps5_40_32 7:0 6th Custom Next Page to send (Bits 40:32) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x40 custom_tx_nps5_31_24 7:0 6th Custom Next Page to send (Bits 31:24) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x41 custom_tx_nps5_23_16 7:0 6th Custom Next Page to send (Bits 23:16) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x42 custom_tx_nps5_15_8 7:0 6th Custom Next Page to send (Bits 15:8) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x43 custom_tx_nps5_7_0 7:0 6th Custom Next Page to send (Bits 7:0) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x44 custom_tx_nps6_47_41 7:0 7th Custom Next Page to send (Bits 47:41) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x45 custom_tx_nps6_40_32 7:0 7th Custom Next Page to send (Bits 40:32) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x46 custom_tx_nps6_31_24 7:0 7th Custom Next Page to send (Bits 31:24) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x47 custom_tx_nps6_23_16 7:0 7th Custom Next Page to send (Bits 23:16) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x48 custom_tx_nps6_15_8 7:0 7th Custom Next Page to send (Bits 15:8) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x49 custom_tx_nps6_7_0 7:0 7th Custom Next Page to send (Bits 7:0) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x4A custom_tx_nps7_47_41 7:0 8th Custom Next Page to send (Bits 47:41) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x4B custom_tx_nps7_40_32 7:0 8th Custom Next Page to send (Bits 40:32) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x4C custom_tx_nps7_31_24 7:0 8th Custom Next Page to send (Bits 31:24) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x4D custom_tx_nps7_23_16 7:0 8th Custom Next Page to send (Bits 23:16) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x4E custom_tx_nps7_15_8 7:0 8th Custom Next Page to send (Bits 15:8) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x4F custom_tx_nps7_7_0 7:0 8th Custom Next Page to send (Bits 7:0) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x50 custom_tx_nps8_47_41 7:0 9th Custom Next Page to send (Bits 47:41) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x51 custom_tx_nps8_40_32 7:0 9th Custom Next Page to send (Bits 40:32) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x52 custom_tx_nps8_31_24 7:0 9th Custom Next Page to send (Bits 31:24) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x53 custom_tx_nps8_23_16 7:0 9th Custom Next Page to send (Bits 23:16) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x54 custom_tx_nps8_15_8 7:0 9th Custom Next Page to send (Bits 15:8) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x55 custom_tx_nps8_7_0 7:0 9th Custom Next Page to send (Bits 7:0) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x56 custom_tx_nps9_47_41 7:0 10th Custom Next Page to send (Bits 47:41) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x57 custom_tx_nps9_40_32 7:0 10th Custom Next Page to send (Bits 40:32) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x58 custom_tx_nps9_31_24 7:0 10th Custom Next Page to send (Bits 31:24) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x59 custom_tx_nps9_23_16 7:0 10th Custom Next Page to send (Bits 23:16) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x5A custom_tx_nps9_15_8 7:0 10th Custom Next Page to send (Bits 15:8) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x5B custom_tx_nps9_7_0 7:0 10th Custom Next Page to send (Bits 7:0) */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x00, count++);
+	/* 0x5C width_1g_kx 7:0 Parallel width to use for 1000BASE-KX */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x02, count++);
+	/* 0x5D width_10g_kx4 7:0 Parallel width to use for 10GBASE-KX
+	   Not supported by the PHY */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x02, count++);
+	/* 0x5E width_10g_kr
+	   7:4 Rx Parallel interface width to use for 10GBASE-KR
+	   3:0 Tx Parallel interface width to use for 10GBASE-KR */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x32, count++);
+	/* 0x5F width_40g_kr4
+	   7:4 Rx Parallel interface width to use for 40GBASE-KR4
+	   3:0 Tx Parallel interface width to use for 40GBASE-KR4 */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x32, count++);
+	/* 0x60 width_40g_cr4
+	   7:4 Rx Parallel interface width to use for 40GBASE-CR4
+	   3:0 Tx Parallel interface width to use for 40GBASE-CR4 */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x32, count++);
+	/* 0x61 width_100g_cr10 7:0 Parallel interface width to use for 100GBASE-CR10
+	   Not supported by the PHY */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x04, count++);
+	/* 0x62 width_100g_kp4 7:0 Parallel interface width to use for 100GBASE-KP4
+	   Not supported by the PHY */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x04, count++);
+	/* 0x63 width_100g_kr4
+	   7:4 Rx Parallel interface width to use for 100GBASE-KR4
+	   3:0 Tx Parallel interface width to use for 100GBASE-KR4 */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x54, count++);
+	/* 0x64 width_100g_cr4
+	   7:4 Rx Parallel interface width to use for 100GBASE-CR4
+	   3:0 Tx Parallel interface width to use for 100GBASE-CR4 */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x54, count++);
+	/* 0x65 width_25g_gr_s
+	   7:4 Rx Parallel interface width to use for 802.3by 25GBASE-CR-S / 25GBASE-KR-S
+	   3:0 Tx Parallel interface width to use for 802.3by 25GBASE-CR-S / 25GBASE-KR-S */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x54, count++);
+	/* 0x66 width_25g_gr
+	   7:4 Rx Parallel interface width to use for 802.3by 25GBASE-CR / 25GBASE-KR
+	   3:0 Tx Parallel interface width to use for 802.3by 25GBASE-CR / 25GBASE-KR */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x54, count++);
+	/* 0x67 width_25g_kr
+	   7:4 Rx Parallel interface width to use for 25G/50G Consortium 25GBASE-KR
+	   3:0 Tx Parallel interface width to use for 25G/50G Consortium 25GBASE-KR */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x54, count++);
+	/* 0x68 width_25g_cr
+	   7:4 Rx Parallel interface width to use for 25G/50G Consortium 25GBASE-CR
+	   3:0 Tx Parallel interface width to use for 25G/50G Consortium 25GBASE-CR */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x54, count++);
+	/* 0x69 width_50g_kr2
+	   7:4 Rx Parallel interface width to use for 25G/50G Consortium 50GBASE-KR2
+	   3:0 Tx Parallel interface width to use for 25G/50G Consortium 50GBASE-KR2 */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x54, count++);
+	/* 0x6A width_50g_cr2
+	   7:4 Rx Parallel interface width to use for 25G/50G Consortium 50GBASE-CR2
+	   3:0 Tx Parallel interface width to use for 25G/50G Consortium 50GBASE-CR2 */
+	write_an_cfg_data(module, lane, &cmd_arg, 0x54, count++);
+}
+
+/**
+ * Returns 802.3 autonegotiation advertisements for
+ * a QLM lane
+ *
+ * @param module     Index into GSER* group
+ * @param lane       QLM module Lane to check
+ *
+ * @return 802.3 AP advertisements, -1 on fail
+ */
+static ap_802_3_adv_t qlm_gserr_ap_adv(int module, int lane, qlm_802_3ap_fec_t fec_types)
+{
+	qlm_state_lane_t state = qlm_gserr_get_state(module, lane);
+	ap_802_3_adv_t ap_adv = {0};
+
+	switch (state.s.mode)
+	{
+		case QLM_MODE_10G_KR:
+			ap_adv.s.an_10gbase_kr = 1;
+			/* Advertise Clause 74 FEC (Fire Code) Ability in Base Page F0 bit */
+			ap_adv.s.fec_10g_abil = 1;
+			if (fec_types & QLM_802_3AP_FEC_BASER)
+				ap_adv.s.fec_10g_req = 1;
+			break;
+		case QLM_MODE_40G_CR4:
+			ap_adv.s.an_40gbase_cr4 = 1;
+			/* Advertise Clause 74 FEC (Fire Code) Ability in Base Page F0 bit */
+			ap_adv.s.fec_10g_abil = 1;
+			if (fec_types & QLM_802_3AP_FEC_BASER)
+				ap_adv.s.fec_10g_req = 1;
+			break;
+		case QLM_MODE_40G_KR4:
+			ap_adv.s.an_40gbase_kr4 = 1;
+			/* Advertise Clause 74 FEC (Fire Code) Ability in Base Page F0 bit */
+			ap_adv.s.fec_10g_abil = 1;
+			if (fec_types & QLM_802_3AP_FEC_BASER)
+				ap_adv.s.fec_10g_req = 1;
+			break;
+		case QLM_MODE_25G_CR:
+		case QLM_MODE_25G_KR:
+			ap_adv.s.an_25gbase_kcr = 1;
+			ap_adv.s.an_25gbase_kcrs = 1;
+			ap_adv.s.an_25gbase_kr_cons = 1;
+			ap_adv.s.an_25gbase_cr_cons = 1;
+			/* Advertise BASE-R FEC Ability for 25G/50G Consortium */
+			ap_adv.s.fec_25g_baser_abil = 1;
+			/* Advertise RS-FEC Ability for 25G/50G Consortium */
+			ap_adv.s.fec_25g_rs_abil = 1;
+			if (fec_types & QLM_802_3AP_FEC_BASER)
+			{
+				ap_adv.s.fec_25g_baser_cons = 1;
+				ap_adv.s.fec_25g_baser = 1;
+			}
+			if (fec_types & QLM_802_3AP_FEC_RSFEC)
+			{
+				ap_adv.s.fec_25g_rs_cons = 1;
+				ap_adv.s.fec_25g_rs = 1;
+			}
+			break;
+		case QLM_MODE_50G_CR2:
+		case QLM_MODE_50G_KR2:
+			ap_adv.s.an_50gbase_kr2_cons = 1;
+			ap_adv.s.an_50gbase_cr2_cons = 1;
+			/* Advertise BASE-R FEC Ability for 25G/50G Consortium */
+			ap_adv.s.fec_25g_baser_abil = 1;
+			/* Advertise RS-FEC Ability for 25G/50G Consortium */
+			ap_adv.s.fec_25g_rs_abil = 1;
+			if (fec_types & QLM_802_3AP_FEC_BASER)
+			{
+				ap_adv.s.fec_25g_baser_cons = 1;
+			}
+			if (fec_types & QLM_802_3AP_FEC_RSFEC)
+			{
+				ap_adv.s.fec_25g_rs_cons = 1;
+			}
+			break;
+		case QLM_MODE_100G_CR4:
+			ap_adv.s.an_100gbase_cr4 = 1;
+			/* If 100GBASE-CR4 is HCD, RS-FEC is alway enabled */
+			break;
+		case QLM_MODE_100G_KR4:
+			ap_adv.s.an_100gbase_kr4 = 1;
+			/* If 100GBASE-KR4 is HCD, RS-FEC is alway enabled */
+			break;
+		default: /* Mode does not support 802.3AP */
+			return ap_adv;
+	}
+	/* Standard Settings used for all modes */
+	/* Advertise Pause Ability in Base Page bit C0 */
+	ap_adv.s.fc_pause = 1;
+	/* Advertise Pause ASM_DIR Ability in Base Page C1 */
+	ap_adv.s.fc_asm_dir = 1;
+
+	return ap_adv;
+}
+
+/**
+ * For chips that don't use pin strapping, this function programs
+ * the QLM Clock management settings.
+ *
+ * @param module           Index into GSER* group
+ *
+ * @return Zero on success, negative on failure
+ */
+void qlm_gserr_cmu_cfg(int module)
+{
+	/* 1. Set tx/rx rate/width controls.  Completed in separate function */
+	/* 2. Bring all lanes to RESET power state. Completed in separate function */
+	/* 3. Wait for ln state change ready. Completed in separate function */
+	/* 4. Write the new PHY Rate 1 and Rate 2 settings from Table 2
+	 *	Write GSERR(0..2)_COMMON_PHY_CTRL_BCFG
+	 *		PHY_CTRL_RATE1 New PHY Rate 1 value from Table 2
+	 *		PHY_CTRL_RATE1 New PHY Rate 2 value from Table 2
+	 *	Wait 1 microsecond for the PHY firmware to pickup the new rates
+	 */
+	cavm_gserrx_common_phy_ctrl_bcfg_t bcfg = qlm_gserr_get_clock_mode(module);
+
+	GSER_CSR_WRITE(CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(module), bcfg.u);
+	gser_wait_usec(1);
+
+	/* 5. Reset the Clock Management Unit
+	 *	Write GSERR(0..2)_COMMON_PHY_CTRL_BCFG
+	 *		CM0_RST=1 Reset CMU
+	 */
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(module),
+		c.s.cm0_rst = 1);
+
+	/* 6. Read/Poll for the CM0 State Change Ready to deassert
+	 *	Read/Poll GSERR(0..2)_COMMON_PHY_STATUS_BSTS
+	 *		CM0_STATE_CHNG_RDY=0 //CM0 is transitioning power states
+	 */
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 0, 500))
+		GSER_TRACE(QLM, "GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=0 (change rate rst)\n", module);
+
+	/* 7. Read/Poll for the CM0 State Change Ready to reassert
+	 *	Read/Poll GSERR(0..2)_COMMON_PHY_STATUS_BSTS
+	 *		CM0_STATE_CHNG_RDY=1 //CM0 is in the Reset power state
+	 */
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 10000))
+		gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1 (change rate rst)\n", module);
+
+	/* 7b. Update the temperature sensor */
+	/* Program the temperature into the GSERR */
+	qlm_gserr_update_dosc_cal_temp(module);
+
+	/* 8. Release the Clock Management Unit reset
+	 *	Write GSERR(0..2)_COMMON_PHY_CTRL_BCFG
+	 *		CM0_RST=0 Release CMU reset
+	 */
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(module),
+		c.s.cm0_rst = 0);
+
+	/* 9. Read/Poll for the CM0 State Change Ready to deassert
+	 * Read/Poll GSERR(0..2)_COMMON_PHY_STATUS_BSTS
+	 * CM0_STATE_CHNG_RDY=0 //CM0 is transitioning power states
+	 */
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 0, 500))
+		GSER_TRACE(QLM, "GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=0 (change rate)\n", module);
+
+	/* 10. Read/Poll for the CM0 State Change Ready to reassert
+	 * Read/Poll GSERR(0..2)_COMMON_PHY_STATUS_BSTS
+	 *	CM0_STATE_CHNG_RDY=1 //CM0 has completed power state transition
+	 */
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 50000))
+		gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1 (change rate)\n", module);
+
+	/* 11. Read/Poll for the CM0 OK flag set
+	 *	Read/Poll GSERR(0..2)_COMMON_PHY_STATUS_BSTS
+	 *		CM0_OK=1 //CM0 status is Active power state
+	 */
+	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_OK, ==, 1, 50000))
+		gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_ok]=1 (change rate)\n", module);
+}
+
+/**
+ * This function is used to determine if a mode change
+ * requires all module lanes to be reset due to
+ * clock management changes.
+ *
+ * @param module           Index into GSER* group
+ * @param baud_mhz         Desired speed
+ *
+ * @return Zero on no change req, positive on change required
+ */
+int qlm_gserr_mode_chg_full_reset(int module, int baud_mhz)
+{
+	int full_reset_req = 0;
+
+	GSER_CSR_INIT(bcfg, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(module));
+
+	switch (baud_mhz)
+	{
+		case 25781:
+			if (bcfg.s.phy_ctrl_rate1 != 0x03)
+				full_reset_req = 1;
+			break;
+		case 20625:
+			if (bcfg.s.phy_ctrl_rate1 != 0x05)
+				full_reset_req = 1;
+			break;
+		case 10312:
+			if ((bcfg.s.phy_ctrl_rate1 == 0x23) ||
+			    (bcfg.s.phy_ctrl_rate2 == 0x23))
+				full_reset_req = 0;
+			else
+				full_reset_req = 1;
+			break;
+
+		case 6250:
+		case 3125:
+			if (bcfg.s.phy_ctrl_rate2 != 0x28)
+				full_reset_req = 1;
+			break;
+		case 5000:
+		case 2500:
+			if (bcfg.s.phy_ctrl_rate2 != 0x2a)
+				full_reset_req = 1;
+			break;
+		case 1250:
+			if (bcfg.s.phy_ctrl_rate2 != 0x23)
+				full_reset_req = 1;
+			break;
+		default:
+			break;
+	}
+
+	return full_reset_req;
+}
+
+/**
+ * For chips that don't use pin strapping, this function programs
+ * the QLM lane(s) to the specified mode
+ *
+ * @param module           Index into GSER* group
+ * @param lane_mask        QLM module Lane mask to specify which lanes to configure
+ * @param mode	           Desired mode
+ * @param baud_mhz         Desired speed
+ * @param flags	           Flags to specify mode specific options
+ * @param lane_an_master   QLM module AN master lane
+ * @param fec_types        Mask of fec_types to advertise when using AN mode
+ * @param lt_init          Initial state requested during 802.3 Link training
+ * @param ignore_mode_chk  Doesn't compare previous mode to new mode.
+ *
+ * @return Zero on success, negative on failure
+ */
+int qlm_gserr_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud_mhz, qlm_mode_flags_t flags,
+		       int lane_an_master, qlm_802_3ap_fec_t fec_types, qlm_lt_init_state_t lt_init,
+		       int ignore_mode_chk)
+{
+	/* Capture the previous state */
+	qlm_state_lane_t prev_state;
+	qlm_state_lane_t state = qlm_build_state(mode, baud_mhz, flags);
+	int num_lanes = get_num_lanes(module);
+	/* 1 = AN mode, 0 = non-AN mode */
+	bool prev_state_an = false;
+	bool req_state_an = false;
+	uint64_t ln_an_cfg_orig[MAX_LANES];
+	bool cmu_change = false; /* Set when CMU changes (clk rates, refclk) required */
+
+	/* Capture prev_state */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (!(lane_mask & (1 << lane)))
+			continue;
+		prev_state = qlm_gserr_get_state(module, lane);
+	}
+
+	if ((prev_state.s.mode == mode) && !ignore_mode_chk)
+	{
+		GSER_TRACE(QLM, "GSERR%d: Current and Requested modes are the same\n", qlm);
+		return 0;
+	}
+
+	/* Return without changing the SERDES if the microcontroller isn't
+	 * running. Setup will be completed when it is brought up.
+	 */
+	GSER_CSR_INIT(gserrx_init_ctl, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(module));
+	if (gserrx_init_ctl.s.cpu_reset || (mode == QLM_MODE_DISABLED))
+		return 0;
+
+	/* Change scratchpad state data for all lanes that are changing */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (!(lane_mask & (1 << lane)))
+			continue;
+		GSER_CSR_WRITE(CAVM_GSERRX_SCRATCHX(module, lane), state.u);
+	}
+
+	/* Check if previous and requested QLM modes supported AN */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (!(lane_mask & (1 << lane)))
+			continue;
+		GSER_CSR_INIT(lane_old, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+		cavm_gserrx_lanex_control_bcfg_t lane_new = qlm_gserr_get_lane_mode(module, lane);
+
+		prev_state_an = (lane_old.s.ln_an_cfg) ? 1 : 0;
+		req_state_an = (lane_new.s.ln_an_cfg) ? 1 : 0;
+	}
+
+	/* Capture all lane an and TX enable configurations. */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+		ln_an_cfg_orig[lane] = bcfg.s.ln_an_cfg;
+	}
+
+	/* Check if clocking needs to change */
+	GSER_CSR_INIT(bcfg_old, CAVM_GSERRX_COMMON_PHY_CTRL_BCFG(module));
+	cavm_gserrx_common_phy_ctrl_bcfg_t bcfg_new = qlm_gserr_get_clock_mode(module);
+
+	if (bcfg_old.u != bcfg_new.u)
+		cmu_change = true;
+
+	/* AN to Fixed Step 1a: Set new tx/rx rate and widths on changed lanes */
+	if (prev_state_an)
+	{
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			cavm_gserrx_lanex_control_bcfg_t lane_new = qlm_gserr_get_lane_mode(module, lane);
+
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+			    c.s.ln_ctrl_tx_rate = lane_new.s.ln_ctrl_tx_rate;
+			    c.s.ln_ctrl_rx_rate = lane_new.s.ln_ctrl_rx_rate;
+			    c.s.ln_ctrl_tx_width = lane_new.s.ln_ctrl_tx_width;
+			    c.s.ln_ctrl_rx_width = lane_new.s.ln_ctrl_rx_width);
+		}
+	}
+
+	/* Bring all lanes being changed to RESET or ACTIVE power state */
+	/* If changing clock settings all lanes must be reset */
+	/* Step 1: Assert lane reset on all lanes in link */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if ((!(lane_mask & (1 << lane))) && !cmu_change)
+			continue;
+		GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+				c.s.ln_rst = 1);
+		GSER_TRACE(QLM, "GSERR%d.%d: Setting Lane Reset\n", module, lane);
+	}
+
+	/* AN to Fixed Mode Step 2: Disable Link training */
+	if (prev_state_an && !req_state_an)
+	{
+		/* Disable link training */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_LT_TX_FSM_CTRL0(module, lane),
+			       c.s.mr_training_enable = 0);
+		}
+	}
+
+	/* If completing a CMU change need to
+	 * change lanes that are not included
+	 * in lane_mask to Fixed Mode
+	 */
+	if (cmu_change)
+	{
+		/* AN to Fixed Mode Step 3: Change AN slave lanes to fixed-rate mode.
+		 * AN slave lanes must be changed first.
+		 */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if ((!(lane_mask & (1 << lane))) &&
+			    (ln_an_cfg_orig[lane] == QLM_LANE_AN_SLAVE))
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+						c.s.ln_an_cfg = QLM_LANE_AN_DIS);
+		}
+
+		/* Delayed required between AN slave and AN master changes */
+		gser_wait_usec(1);
+
+		/* AN to Fixed Mode Step 4: Change AN master lanes to fixed-rate mode */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if ((!(lane_mask & (1 << lane))) &&
+			    (ln_an_cfg_orig[lane] == QLM_LANE_AN_MASTER))
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+						c.s.ln_an_cfg = QLM_LANE_AN_DIS);
+		}
+	}
+
+	if (prev_state_an)
+	{
+		/* AN Mode Changes: */
+		/* If changing clock settings all lanes need to
+		 * be put in RESET power state (including AN lanes)
+		 * AN to Fixed Mode Step 3: Change AN slave lanes to fixed-rate mode.
+		 * AN slave lanes must be changed first.
+		 */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+			if (bcfg.s.ln_an_cfg == QLM_LANE_AN_SLAVE)
+			{
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+						c.s.ln_an_cfg = QLM_LANE_AN_DIS);
+			}
+		}
+
+		/* Delayed required between AN slave and AN master changes */
+		gser_wait_usec(1);
+
+		/* AN to Fixed Mode Step 4: Change AN master lanes to fixed-rate mode */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+			if (bcfg.s.ln_an_cfg == QLM_LANE_AN_MASTER)
+			{
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+						c.s.ln_an_cfg = QLM_LANE_AN_DIS);
+			}
+		}
+	}
+
+	/* AN to Fixed/AN Mode Step 5: Wait for PHY firmware to release control of AN lane(s)
+	 * Wait for the “Lane State Change Ready” status bit to assert high
+	 * indicating the PHY firmware is releasing control of the lane
+	 * Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+	 * LN_STATE_CHNG_RDY = 1 PHY no longer controlling lane
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if ((!(lane_mask & (1 << lane))) && !cmu_change)
+			continue;
+		if (ln_an_cfg_orig[lane] != QLM_LANE_AN_DIS)
+		{
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+				gser_error("GSERR%d.%d: CHRDY1: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1\n", module, lane);
+		}
+	}
+
+	/* Fixed to AN/Fixed Mode Step 1b: Wait for completion of RESET state transition */
+	/* Wait for the “Lane State Change Ready” status bit to deassert
+	 * indicating the lane is transitioning to the “RESET” or "ACTIVE" state.
+	 * Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+	 * LN_STATE_CHNG_RDY = 0 Lane is transitioning power states
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if ((!(lane_mask & (1 << lane))) && !cmu_change)
+			continue;
+		if (ln_an_cfg_orig[lane] == QLM_LANE_AN_DIS)
+		{
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+			{
+				/* This is an interim step and happens fast, so sometimes we miss it */
+				//gser_error("GSERR%d.%d: CHRDY2: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0\n", module, lane);
+			}
+		}
+	}
+
+	/* Fixed to AN/Fixed Mode Step 1b: Wait for completion of RESET state transition */
+	/* Wait for the PHY “Lane State Change Ready” to signal that the lane has
+	 * transitioned to the “RESET" or "ACTIVE" state.
+	 * Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+	 * LN_STATE_CHNG_RDY = 1 Lane is in the “RESET” or "ACTIVE" power state
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if ((!(lane_mask & (1 << lane))) && !cmu_change)
+			continue;
+		if (ln_an_cfg_orig[lane] == QLM_LANE_AN_DIS)
+		{
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+				gser_error("GSERR%d.%d: CHRDY3: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1\n", module, lane);
+		}
+	}
+
+	/* All required lanes are now in RESET state in Fixed-Rate Mode */
+	/* AN mode to Fixed Mode */
+	/* AN to Fixed Mode Step 6a. Switch the tx_clk_mux to the clock required for the new rate
+	 * Write GSERR(0..2)_LANE(0..3)_CONTROL_BCFG
+	 * CFG_CGX=0 Hold the Tx/Rx Async FIFOs in reset
+	 * TX_CLK_MUX_SEL Table 2
+	 * LN_LINK_STAT Set to 0, no AN from the PHY
+	 * LN_AN_CFG Set to 0, no AN from thePHY
+	 * Wait one microsecond for the PHY firmware to receive the lane rate
+	 * change parameters and for the transmitter clock mux to switch to the
+	 * new Tx clock rate.
+	 */
+	if (prev_state_an && !req_state_an)
+	{
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			cavm_gserrx_lanex_control_bcfg_t lane_new = qlm_gserr_get_lane_mode(module, lane);
+
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.tx_clk_mux_sel = lane_new.s.tx_clk_mux_sel;
+					c.s.cgx_quad = lane_new.s.cgx_quad;
+					c.s.cgx_dual = lane_new.s.cgx_dual;
+					//c.s.cfg_cgx = 0; /* Not being done currently in BDK but is recommended */
+					c.s.ln_link_stat = 0);
+			gser_wait_usec(1);
+			qlm_state_lane_t state = qlm_gserr_get_state(module, lane);
+			bool ena_8b10b = (state.s.baud_mhz <= 6250);
+
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_ADAPT_CFG0(module, lane),
+				c.s.ena_8b10b = ena_8b10b);
+		}
+	}
+
+	/* Fixed to Fixed Mode Rate Change in RESET State Step 1 */
+	if (!prev_state_an && !req_state_an)
+	{
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			cavm_gserrx_lanex_control_bcfg_t lane_new = qlm_gserr_get_lane_mode(module, lane);
+
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_ctrl_tx_rate = lane_new.s.ln_ctrl_tx_rate;
+					c.s.ln_ctrl_rx_rate = lane_new.s.ln_ctrl_rx_rate;
+					c.s.ln_ctrl_tx_width = lane_new.s.ln_ctrl_tx_width;
+					c.s.ln_ctrl_rx_width = lane_new.s.ln_ctrl_rx_width);
+		}
+	}
+
+	/* AN to AN Extra Step 1
+	 * Switch the tx_clk_mux to the clock required for the new rate
+	 */
+	if (prev_state_an && req_state_an)
+	{
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			cavm_gserrx_lanex_control_bcfg_t lane_new = qlm_gserr_get_lane_mode(module, lane);
+
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.tx_clk_mux_sel = lane_new.s.tx_clk_mux_sel;
+					c.s.cgx_quad = lane_new.s.cgx_quad;
+					c.s.cgx_dual = lane_new.s.cgx_dual;
+					c.s.ln_link_stat = 0);
+		}
+	}
+
+	/* Fixed to AN Extra Step 1
+	 * Configure the lane clock settings
+	 */
+	if (!prev_state_an && req_state_an)
+	{
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			cavm_gserrx_lanex_control_bcfg_t lane_new = qlm_gserr_get_lane_mode(module, lane);
+
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_ctrl_tx_rate = lane_new.s.ln_ctrl_tx_rate;
+					c.s.ln_ctrl_rx_rate = lane_new.s.ln_ctrl_rx_rate;
+					c.s.ln_ctrl_tx_width = lane_new.s.ln_ctrl_tx_width;
+					c.s.ln_ctrl_rx_width = lane_new.s.ln_ctrl_rx_width;
+					c.s.tx_clk_mux_sel = lane_new.s.tx_clk_mux_sel;
+					c.s.cgx_quad = lane_new.s.cgx_quad;
+					c.s.cgx_dual = lane_new.s.cgx_dual;
+					c.s.ln_link_stat = 0);
+		}
+	}
+
+	/* Fixed to AN Mode Step 2. If necessary, change Clock Management settings */
+	/* AN to Fixed Mode Step 6c: If necessary, CMU rate strap changes may be performed */
+	if (cmu_change)
+	{
+		/* AN to AN Extra Step 1
+		 * Switch the tx_clk_mux to the clock required for the new rate
+		 */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if ((!(lane_mask & (1 << lane))) &&
+			    (ln_an_cfg_orig[lane] != QLM_LANE_AN_DIS))
+			{
+				cavm_gserrx_lanex_control_bcfg_t lane_new = qlm_gserr_get_lane_mode(module, lane);
+
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+						c.s.tx_clk_mux_sel = lane_new.s.tx_clk_mux_sel;
+						c.s.cgx_quad = lane_new.s.cgx_quad;
+						c.s.cgx_dual = lane_new.s.cgx_dual;
+						c.s.ln_link_stat = 0);
+			}
+		}
+
+		qlm_gserr_cmu_cfg(module);
+	}
+
+	/* Changes for AN mode change request */
+	if (req_state_an)
+	{
+		/* Fixed to AN mode Step 3. Write AN configuration to the AN master lane */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			if (lane == lane_an_master)
+			{
+				ap_802_3_adv_t ap_adv = qlm_gserr_ap_adv(module, lane, fec_types);
+
+				qlm_gserr_config_an_mbox(module, lane, ap_adv);
+			}
+		}
+
+		/* Fixed to AN mode Step 4. Enable/Configure link training */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			if (lt_init == LT_PRESET_STATE)
+			{
+				/* Clear LT Init bit */
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_SPARE_CFG0_RSVD(module, lane),
+				       c.s.data &= 0xf7);
+				/* Configure LT to request Preset */
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_SPARE_CFG0_RSVD(module, lane),
+				       c.s.data |= 0x4);
+			}
+			else if (lt_init == LT_INIT_STATE)
+			{
+				/* Clear LT Preset bit */
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_SPARE_CFG0_RSVD(module, lane),
+				       c.s.data &= 0xfb);
+				/* Configure LT to request Init */
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_SPARE_CFG0_RSVD(module, lane),
+				       c.s.data |= 0x8);
+			}
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_LT_TX_FSM_CTRL0(module, lane),
+			       c.s.mr_training_enable = 1);
+		}
+
+		/* Fixed to AN mode Step 6. Write the AN handshake ready bit to 1
+		 * STEP 6 IS DONE IN MCP
+		 * AN Handshaking bit assignments:
+		 * GSERRX_LNX_FEATURE_SPARE_CFG6_RSVD[data]
+		 * data[3] = Handshake enable
+		 * data[4] = Handshake ready
+		 * AN master lanes will wait in RESET state while (handshake_en && !handshake_ready),
+		 * and proceed with AN otherwise. We keep handshake=0 so MCP controls start of AN
+		 * Fixed to AN mode Step 7. Set lnx_link_stat = 0 (1G_KX)
+		 */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			if (lane == lane_an_master)
+			{
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_link_stat = 0);
+			}
+		}
+
+		/* Fixed to AN 7b: Update the Tx equalization settings */
+		/* Must be done prior to changing ln_an_cfg from 0 to 1/2 */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			apply_tuning(module, lane);
+		}
+
+		/* Fixed to AN mode Step 8. Set ln_an_cfg = 1 for all AN slave lanes */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			if (lane != lane_an_master)
+			{
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+				     c.s.ln_an_cfg = QLM_LANE_AN_SLAVE);
+			}
+		}
+
+		/* Delayed required between AN slave and AN master changes */
+		gser_wait_usec(1);
+
+		/* Fixed to AN mode Step 9. Set ln_an_cfg = 2 for all AN master lanes */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			if (lane == lane_an_master)
+			{
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+				     c.s.ln_an_cfg = QLM_LANE_AN_MASTER);
+			}
+		}
+	}
+
+	if (cmu_change)
+	{
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if ((!(lane_mask & (1 << lane))) &&
+			    (ln_an_cfg_orig[lane] == QLM_LANE_AN_MASTER))
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+						c.s.ln_link_stat = 0);
+		}
+
+		/* Restore original ln_an_cfg settings for lanes not being changed */
+		/* Set AN Slave lanes first */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if ((!(lane_mask & (1 << lane))) &&
+			    (ln_an_cfg_orig[lane] == QLM_LANE_AN_SLAVE))
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+						c.s.ln_an_cfg = ln_an_cfg_orig[lane]);
+		}
+
+		/* Delayed required between AN slave and AN master changes */
+		gser_wait_usec(1);
+
+		/* Set AN Master lanes */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if ((!(lane_mask & (1 << lane))) &&
+			    (ln_an_cfg_orig[lane] == QLM_LANE_AN_MASTER))
+				GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+						c.s.ln_an_cfg = ln_an_cfg_orig[lane]);
+		}
+	}
+
+	/* For AN enabled lanes:
+	 * Wait for the “Lane State Change Ready” status bit to deassert
+	 * indicating the PHY firmware has taken control of lane
+	 * Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+	 * LN_STATE_CHNG_RDY = 0
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if ((!(lane_mask & (1 << lane))) && !cmu_change)
+			continue;
+
+		GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+		if (bcfg.s.ln_an_cfg != QLM_LANE_AN_DIS)
+		{
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+				gser_error("GSERR%d.%d: CHRDY4: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0\n", module, lane);
+		}
+	}
+
+	/* Fixed Mode to Fixed Mode */
+	/* Complete Rate Change in Reset sequence */
+	if (!prev_state_an && !req_state_an)
+	{
+		/* Fixed to Fixed Mode Step 3. Trigger the lane rate change by writing the LN_RATE_CHNG field to
+		 * load the *new* lane rate settings.
+		 * Write GSERR(0..2)_LANE(0..3)_CONTROL_BCFG
+		 * LN_RATE_CHNG=1
+		 * Wait at least 200 nanoseconds for the PHY firmware to receive the lane
+		 * rate change request before moving to the next step. Note the
+		 * LN_STATE_CHNG_RDY will toggle from 1->0->1 when the LN_RATE_CHNG bit is
+		 * set above.
+		 */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+				c.s.ln_rate_chng = 1);
+		}
+
+		gser_wait_usec(1);
+
+		/* Fixed to Fixed Mode Step 4a. Wait for the “Lane State Change Ready” status bit to deassert
+		 * indicating the lane is transitioning to the “Rate Change” state.
+		 * Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+		 * LN_STATE_CHNG_RDY = 0 Lane is transitioning power states
+		 */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+			{
+				/* This is an interim step and happens fast, so sometimes we miss it */
+				//gser_error("GSERR%d.%d: CHRDY5: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (rate change)\n", module, lane);
+			}
+		}
+
+		/* Fixed to Fixed Mode Step 4b. Wait for the PHY “Lane State Change Ready” to signal that the lane has
+		 * transitioned to the “Rate Change” state.
+		 * Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+		 * LN_STATE_CHNG_RDY = 1 Lane is in the “Rate Change” power state
+		 */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+				gser_error("GSERR%d.%d: CHRDY6: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (rate change)\n", module, lane);
+		}
+
+		/* Fixed to Fixed Mode Step 5. Make any required configuration changes for the
+		 * new rate through the PHY register interface.
+		 * Write GSERR(0..2)_LANE(0..3)_CONTROL_BCFG
+		 * CFG_CGX=0 Hold the Tx/Rx Async FIFOs in reset
+		 * TX_CLK_MUX_SEL Table 2
+		 * LN_LINK_STAT Set to 0, no AN from the PHY
+		 * LN_AN_CFG Set to 0, no AN from thePHY
+		 * Wait one microsecond for the PHY firmware to receive the lane rate
+		 * change parameters and for the transmitter clock mux to switch to the
+		 * new Tx clock rate.
+		 */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			cavm_gserrx_lanex_control_bcfg_t lane_new = qlm_gserr_get_lane_mode(module, lane);
+
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+			    c.s.tx_clk_mux_sel = lane_new.s.tx_clk_mux_sel;
+			    c.s.cgx_quad = lane_new.s.cgx_quad;
+			    c.s.cgx_dual = lane_new.s.cgx_dual;
+					//c.s.cfg_cgx = 0; /* Not being done currently in BDK but is recommended */
+			    c.s.ln_link_stat = 0);
+			gser_wait_usec(1);
+			qlm_state_lane_t state = qlm_gserr_get_state(module, lane);
+			bool ena_8b10b = (state.s.baud_mhz <= 6250);
+
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LNX_FEATURE_ADAPT_CFG0(module, lane),
+				c.s.ena_8b10b = ena_8b10b);
+		}
+
+		/* Fixed to Fixed Mode Step 6. Deassert the LN_STATE_CHNG signal to complete the lane
+		 * reconfiguration
+		 * Write GSERR(0..2)_LANE(0..3)_CONTROL_BCFG
+		 * LN_RATE_CHNG=0
+		 * Wait 200 nanoseconds for the PHY firmware to receive the lane rate
+		 * change deassertion request.
+		 */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+				c.s.ln_rate_chng = 0);
+		}
+
+		gser_wait_usec(1);
+
+		/* Fixed to Fixed Mode Step 7a. Wait for the “Lane State Change Ready” status bit to deassert
+		 * indicating the lane is transitioning states.
+		 * Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+		 * LN_STATE_CHNG_RDY = 0 Lane is transitioning states
+		 */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+			{
+				/* This is an interim step and happens fast, so sometimes we miss it */
+				//gser_error("GSERR%d.%d: CHRDY7: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (change done)\n", module, lane);
+			}
+		}
+
+		/* Fixed to Fixed Mode Step 7b. Wait for the PHY “Lane State Change Ready” to signal that the lane
+		 * has transitioned back to the “Reset” state.
+		 * Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+		 * LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state
+		 */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+				gser_error("GSERR%d.%d: CHRDY8: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (change done)\n", module, lane);
+		}
+	}
+
+	/* AN/Fixed to Fixed: Update Tx equalization setting
+	 * before deasserting lane reset
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (!(lane_mask & (1 << lane)))
+			continue;
+		GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+		if (bcfg.s.ln_an_cfg == QLM_LANE_AN_DIS)
+		{
+			apply_tuning(module, lane);
+		}
+	}
+
+	/* Release all lanes in Fixed Rate mode from Reset */
+	/* AN mode to Fixed Mode
+	 * AN to Fixed Mode Step 7: Bring lanes out of reset and
+	 * into ACTIVE state in AN disabled/Fixed mode
+	 */
+	/* Fixed to Fixed Mode Step 8. Release the lane from reset.
+	 * Write GSERR(0..2)_LANE(0..3)_CONTROL_BCFG
+	 * LN_RST=0 Release the lane reset
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if ((!(lane_mask & (1 << lane))) && !cmu_change)
+			continue;
+
+		GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+		if (bcfg.s.ln_an_cfg == QLM_LANE_AN_DIS)
+		{
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_rst = 0);
+		}
+	}
+
+	/* Fixed mode lanes Only: */
+	/* Wait for the “Lane State Change Ready” status bit to deassert
+	 * indicating the lane is transitioning to the “RESET” or "ACTIVE" state.
+	 * Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+	 * LN_STATE_CHNG_RDY = 0 Lane is transitioning power states
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if ((!(lane_mask & (1 << lane))) && !cmu_change)
+			continue;
+
+		GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+		if (bcfg.s.ln_an_cfg == QLM_LANE_AN_DIS)
+		{
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+			{
+				/* This is an interim step and happens fast, so sometimes we miss it */
+				//gser_error("GSERR%d.%d: CHRDY9: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0\n", module, lane);
+			}
+		}
+	}
+
+	/* Fixed mode lanes Only: */
+	/* Read/Poll for the GSERR to set the Lane State Change Ready flag and
+	 * drive the Lane Tx and Rx ready flags to signal that the lane as
+	 * returned to the ACTIVE state.
+	 * Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+	 * LN_TX_RDY=1 Lane Tx is ready
+	 * LN_RX_RDY=1 Lane Rx is ready
+	 * LN_STATE_CHNG_RDY = 1 Lane is in the “Active” power state
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if ((!(lane_mask & (1 << lane))) && !cmu_change)
+			continue;
+
+		GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+		if (bcfg.s.ln_an_cfg == QLM_LANE_AN_DIS)
+		{
+			GSER_TRACE(QLM, "GSERR%d.%d: Clearing Lane Reset\n", module, lane);
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_TX_RDY, ==, 1, 5000))
+				gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_tx_rdy]=1 (reset done)\n", module, lane);
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_RX_RDY, ==, 1, 5000))
+				gser_error("GSERR%d.%d: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_rx_rdy]=1 (reset done)\n", module, lane);
+		}
+	}
+
+	/* Fixed mode lanes Only: */
+	/* Wait for the PHY “Lane State Change Ready” to signal that the lane has
+	 * transitioned to the “RESET" or "ACTIVE" state.
+	 * Read/Poll GSERR(0..2)_LANE(0..3)_STATUS_BSTS
+	 * LN_STATE_CHNG_RDY = 1 Lane is in the “RESET” or "ACTIVE" power state
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if ((!(lane_mask & (1 << lane))) && !cmu_change)
+			continue;
+
+		GSER_CSR_INIT(bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane));
+		if (bcfg.s.ln_an_cfg == QLM_LANE_AN_DIS)
+		{
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_LANEX_STATUS_BSTS(module, lane), GSERRX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+				gser_error("GSERR%d.%d: CHRDY10: Timeout waiting for GSERRX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1\n", module, lane);
+		}
+	}
+
+	if (!req_state_an)
+	{
+		/* Fixed to Fixed Mode Step 15. Enable the Tx/Rx FIFOs between CGX and GSERR
+		 * Write GSERR(0..2)_LANE(0..3)_CONTROL_BCFG
+		 * CFG_CGX = 1 Enable Tx and Rx Async FIFOs to CGX
+		 */
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.cfg_cgx = 1);
+		}
+
+		gser_wait_usec(1000);
+	}
+
+	return 0;
+}

@@ -265,6 +265,7 @@ const qlm_ops_t qlm_gserr_ops = {
 	.qlm_get_state = qlm_gserr_get_state,
 	.qlm_set_state = qlm_gserr_set_state,
 	.qlm_set_mode = qlm_gserr_set_mode,
+	.qlm_cfg_mode = qlm_gserr_cfg_mode,
 	.qlm_measure_refclock = qlm_gserr_measure_refclock,
 	.qlm_reset = qlm_gserr_reset,
 	.qlm_enable_prbs = qlm_gserr_enable_prbs,
@@ -293,4 +294,5 @@ const qlm_ops_t qlm_gserr_ops = {
 	.qlm_fea_loopback = qlm_gserr_fea_loopback,
 	.qlm_nea_loopback = qlm_gserr_nea_loopback,
 	.qlm_fed_loopback = qlm_gserr_fed_loopback,
+	.qlm_mode_chg_full_reset = qlm_gserr_mode_chg_full_reset,
 };

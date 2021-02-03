@@ -133,6 +133,54 @@ typedef union {
 	} s;
 } qlm_state_lane_t;
 
+/*
+ * The following structure is used to store the 802.3 autonegotiation advertisement data.
+ * This includes the advertised Technology/protocol, FEC ability and FEC request
+ */
+typedef union {
+	uint64_t u;
+	struct {
+		uint32_t  an_1000base_kx : 1;      /* Advertise 1000BASE-KX support */
+		uint32_t  an_10gbase_kx4 : 1;      /* Advertise 10GBASE-KR support */
+		uint32_t  an_10gbase_kr : 1;       /* Advertise 10GBASE-KR support */
+		uint32_t  an_40gbase_kr4 : 1;      /* Advertise 40GBASE-KR4 support */
+		uint32_t  an_40gbase_cr4 : 1;      /* Advertise 40GBASE-CR4 support */
+		uint32_t  an_100gbase_cr10 : 1;    /* Advertise 100GBASE-CR10 support */
+		uint32_t  an_100gbase_kp4 : 1;     /* Advertise 100GBASE-KP4 support */
+		uint32_t  an_100gbase_kr4 : 1;     /* Advertise 100GBASE-KR4 support */
+		uint32_t  an_100gbase_cr4 : 1;     /* Advertise 100GBASE-CR4 support */
+		uint32_t  an_25gbase_kcrs : 1;     /* Advertise 25GBASE-KR/CR-S(short) support */
+		uint32_t  an_25gbase_kcr : 1;      /* Advertise 25GBASE-KR/CR support */
+		uint32_t  an_2_5gbase_kx : 1;      /* Advertise 2.5GBASE-KX support */
+		uint32_t  an_5gbase_kr : 1;        /* Advertise 5GBASE-KR support */
+		uint32_t  an_50gbase_kcr : 1;      /* Advertise 50GBASE-KR/CR support */
+		uint32_t  an_100gbase_kcr2 : 1;    /* Advertise 100GBASE-KR2/CR2 support */
+		uint32_t  an_200gbase_kcr4 : 1;    /* Advertise 200GBASE-KR4/CR4 support */
+		uint32_t  an_25gbase_kr_cons : 1;  /* Advertise 25GBASE-KR Consortium support */
+		uint32_t  an_25gbase_cr_cons : 1;  /* Advertise 25GBASE-CR Consortium support */
+		uint32_t  an_50gbase_kr2_cons : 1; /* Advertise 50GBASE-KR2 Consortium support */
+		uint32_t  an_50gbase_cr2_cons : 1; /* Advertise 50GBASE-CR2 Consortium support */
+		uint32_t  fec_10g_abil : 1;        /* Advertise FEC ability (10Gb/s per lane only) */
+		uint32_t  fec_25g_rs_abil : 1;     /* Advertise 25Gb/s per lane RS-FEC ability (Consortium Only) */
+		uint32_t  fec_25g_baser_abil : 1;  /* Advertise 25Gb/s per lane BASE-R ability (Consortium Only) */
+		uint32_t  fec_10g_req : 1;         /* Advertise 10Gb/s per lane BASE-R FEC requested */
+		uint32_t  fec_25g_rs : 1;          /* Advertise 25Gb/s per lane RS-FEC requested */
+		uint32_t  fec_25g_baser : 1;       /* Advertise 25Gb/s per lane BASE-R FEC requested */
+		uint32_t  fec_25g_rs_cons : 1;     /* Advertise 25Gb/s per lane RS-FEC requested (Consortium Only) */
+		uint32_t  fec_25g_baser_cons : 1;  /* Advertise 25Gb/s per lane BASE-R FEC requested (Consortium Only) */
+		uint32_t  fc_pause : 1;            /* Advertise Symmetric pause capability */
+		uint32_t  fc_asm_dir : 1;          /* Advertise support for Asymmetric pause */
+		uint64_t  reserved: 34;		   /* Reserved for future use */
+	} s;
+} ap_802_3_adv_t;
+
+typedef enum {
+	QLM_802_3AP_FEC_DISABLED = 0,     /* 802.3AP No FEC requested */
+	QLM_802_3AP_FEC_BASER = 1,        /* 802.3AP BASE-R FEC requested */
+	QLM_802_3AP_FEC_RSFEC = 2,        /* 802.3AP RS-FEC requested */
+	QLM_802_3AP_FEC_BASER_RSFEC = 3,  /* 802.3AP BASE-R and RS-FEC requested */
+} qlm_802_3ap_fec_t;
+
 typedef enum {
 	QLM_MODE_FLAG_NONE = 0,     /* No flags */
 	QLM_MODE_FLAG_ENDPOINT = 1, /* PCIe in EP instead of RC */
@@ -164,6 +212,23 @@ typedef enum {
 	QLM_GSERJ_TYPE,
 	QLM_TYPE_END
 } qlm_type_t;
+
+typedef enum {
+	QLM_LANE_AN_DIS = 0,
+	QLM_LANE_AN_SLAVE = 1,
+	QLM_LANE_AN_MASTER = 2,
+} qlm_lane_an_mode_t;
+
+typedef enum {
+	LT_INIT_STATE = 0,
+	LT_PRESET_STATE = 1,
+	LT_INIT_UNCHANGED = 2,
+} qlm_lt_init_state_t;
+
+typedef enum {
+	AN_CFG_CMD_START = 0x91,
+	AN_CFG_CMD_CONT = 0x92,
+} qlm_an_cfg_cmd_type_t;
 
 /*
  * Eye diagram captures are stored in the following structure
@@ -221,6 +286,10 @@ typedef struct {
 	void (*qlm_set_state)(int qlm, int lane, qlm_state_lane_t state);
 	int (*qlm_set_mode)(int qlm, int lane, qlm_modes_t mode, int baud_mhz,
 			qlm_mode_flags_t flags);
+	int (*qlm_cfg_mode)(int module, uint8_t lane_mask, qlm_modes_t mode, int baud_mhz,
+			    qlm_mode_flags_t flags, int lane_an_master,
+			    qlm_802_3ap_fec_t fec_types, qlm_lt_init_state_t lt_init,
+			    int ignore_mode_chk);
 	int (*qlm_measure_refclock)(int qlm);
 	int (*qlm_reset)(int qlm);
 	int (*qlm_enable_prbs)(int qlm, int prbs, qlm_direction_t dir, int lane);
@@ -257,6 +326,7 @@ typedef struct {
 	int (*qlm_fea_loopback)(int qlm, int lane, bool enable);
 	int (*qlm_nea_loopback)(int qlm, int lane, bool enable);
 	int (*qlm_fed_loopback)(int qlm, int lane, bool enable);
+	int (*qlm_mode_chg_full_reset)(int module, int baud_mhz);
 } qlm_ops_t;
 
 /* QLM platform specific API */
