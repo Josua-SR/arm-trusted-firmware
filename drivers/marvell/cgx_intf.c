@@ -683,6 +683,12 @@ static int cgx_link_bringdown(int cgx_id, int lmac_id)
 	cgx_lmac_config_t *lmac_cfg;
 	cgx_lmac_context_t *lmac_ctx;
 	link_state_t link;
+	uint64_t link_enable_curr;
+	bool is_gsern = false;
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		is_gsern = true;
 
 	/* get the lmac type and based on lmac
 	 * type, bring down SGMII/XAUI link
@@ -692,6 +698,35 @@ static int cgx_link_bringdown(int cgx_id, int lmac_id)
 				cgx_id, lmac_id, lmac_cfg->mode);
 
 	lmac_ctx = &lmac_context[cgx_id][lmac_id];
+
+	link_enable_curr = lmac_ctx->s.link_enable;
+
+	/* Stop MCP AN for non-GSERN chips if
+	 * link training and autoneg enabled
+	 */
+	if (!is_gsern && !lmac_cfg->autoneg_dis && lmac_cfg->use_training) {
+		/* Stop ATF link polling */
+		lmac_ctx->s.link_enable = 0;
+		if (mcp_send_async_req(cgx_id, lmac_id,
+				       REQ_AN_LT_STOP)) {
+			/* Request not sent */
+			debug_cgx_intf("%s: %d:%d Stop request not sent to MCP\n",
+				       __func__, cgx_id, lmac_id);
+			goto link_down_fail;
+		}
+
+		if (mcp_wait_for_cmd_ack_to_clr(cgx_id, lmac_id)) {
+			/* Request not sent */
+			debug_cgx_intf("%s: %d:%d Timeout waiting for MCP to acknowledge command\n",
+				       __func__, cgx_id, lmac_id);
+			/* Don't fail when unable to detect ACK for STOP request.
+			 * The long ack time is caused by MCP SFP management.
+			 * After SFP management task completes the link
+			 * management task will see the REQ_AN_LT_STOP
+			 * command and not proceed with the link management task
+			 */
+		}
+	}
 
 	/* link_enable will be cleared when the LINK DOWN req is processed
 	 * To avoid processing duplication of requests, check for it
@@ -714,7 +749,7 @@ static int cgx_link_bringdown(int cgx_id, int lmac_id)
 	if ((lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_SGMII) ||
 		(lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_QSGMII)) {
 		if (cgx_sgmii_set_link_down(cgx_id, lmac_id) != 0)
-			return -1;
+			goto link_down_fail;
 
 	} else if ((lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_XAUI) ||
 		(lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_RXAUI) ||
@@ -725,7 +760,7 @@ static int cgx_link_bringdown(int cgx_id, int lmac_id)
 		(lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_HUNDREDG_R) ||
 		(lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_USXGMII)) {
 		if (cgx_xaui_set_link_down(cgx_id, lmac_id) != 0)
-			return -1;
+			goto link_down_fail;
 
 	} else {
 		debug_cgx_intf("%s LMAC%d mode %d not configured correctly"
@@ -733,7 +768,7 @@ static int cgx_link_bringdown(int cgx_id, int lmac_id)
 			__func__, lmac_id, lmac_cfg->mode);
 		cgx_set_error_type(cgx_id, lmac_id,
 			CGX_ERR_LMAC_MODE_INVALID);
-		return -1;
+		goto link_down_fail;
 	}
 
 	/* link is brought down successfully. update the link
@@ -750,6 +785,11 @@ static int cgx_link_bringdown(int cgx_id, int lmac_id)
 	lmac_ctx->s.init_link = 0;
 
 	return 0;
+
+link_down_fail:
+	/* Restore original link_enable in case of link down failure */
+	lmac_ctx->s.link_enable = link_enable_curr;
+	return -1;
 }
 
 static int cgx_get_lmac_type_for_req_mode(uint64_t req_mode)
@@ -990,6 +1030,7 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 	qlm_mode_flags_t flags;
 	int max_lane_count = 2; /* GSERC has only 2 lanes per DLM */
 	cgx_lmac_config_t *lmac;
+	uint8_t lane_mask = 0;
 
 	req_rate = args->rate;
 	gserc_idx = args->gserc_idx;
@@ -1047,13 +1088,17 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 			}
 		}
 
-		/* Lane index to be passed as -1 when changing
+		/* Lane mask set to include all lanes when changing
 		 * from ecpri to cpri as both the lanes can be
 		 * updated to CPRI. If one of the lanes is in
 		 * ecpri mode, set_mode API doesn't work
 		 * correctly
 		 */
-		cgx->qlm_ops->qlm_set_mode(gserc_idx, -1, QLM_MODE_CPRI, req_rate, flags);
+		lane_mask = (1 << max_lane_count) - 1;
+		if (cgx->qlm_ops->qlm_cfg_mode(gserc_idx, lane_mask,
+					       QLM_MODE_CPRI, req_rate, flags, 0,
+					       0, LT_INIT_UNCHANGED, 0))
+			return -1;
 		for (int j = 0; j < max_lane_count; j++)
 			plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[j]
 							= req_rate;
@@ -1080,8 +1125,12 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 			return -1;
 		}
 		/* Change the SERDES speed */
-		cgx->qlm_ops->qlm_set_mode(gserc_idx, lane_idx, QLM_MODE_CPRI,
-					req_rate, flags);
+		lane_mask |= 1 << lane_idx;
+		/* CPRI does not support AN or FEC so set to 0 */
+		if (cgx->qlm_ops->qlm_cfg_mode(gserc_idx, lane_mask,
+					       QLM_MODE_CPRI, req_rate, flags, 0,
+					       0, LT_INIT_UNCHANGED, 0))
+			return -1;
 		plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[lane_idx]
 							= req_rate;
 	}
@@ -1129,14 +1178,14 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 	cgx_lmac_config_t *lmac;
 	cgx_lmac_context_t *lmac_ctx;
 	cgx_config_t *cgx;
-	int qlm_mode = 0, baud_mhz = 0, req_an = 0, flags = 0;
+	int qlm_mode = 0, baud_mhz, req_an = 0, flags = 0;
 	int req_duplex = 0;
-	int qlm, gserx = 0, an = 0, invalid_req = 0, num_lanes;
+	int an = 0, invalid_req = 0;
 	link_state_t link;
-	int lane, lane_count;
 	uint64_t req_mode;
-	uint32_t lane_mask;
 	int req_train_en;
+	bool is_gsern = false;
+	bool gserx_all_ln_rst = false;
 
 	lmac_ctx = &lmac_context[cgx_id][lmac_id];
 	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
@@ -1146,6 +1195,10 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 	req_mode = args->mode;
 	req_duplex = args->duplex;
 	an = !lmac->autoneg_dis;
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		is_gsern = true;
 
 	debug_cgx_intf("%s: %d:%d speed %d req_speed %d req_an %d req_duplex %d req_mode 0x%llx\n",
 				__func__, cgx_id, lmac_id, lmac_ctx->s.speed,
@@ -1188,11 +1241,12 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 	}
 
 	req_train_en = cgx_get_training_for_mode(req_mode);
-
-	if ((req_an && req_train_en) || lmac->use_training) {
-		debug_cgx_intf("%s:%d:%d: Changing mode to/from AN to AN/non-AN is not allowed\n",
-				__func__, cgx_id, lmac_id);
-		goto mode_err;
+	if (is_gsern) {
+		if ((req_an && req_train_en) || lmac->use_training) {
+			debug_cgx_intf("%s:%d:%d: Changing mode to/from AN to AN/non-AN is not allowed\n",
+				       __func__, cgx_id, lmac_id);
+			goto mode_err;
+		}
 	}
 
 	/* User is requesting for a different speed. Check if
@@ -1208,9 +1262,41 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 						lmac_type, req_mode);
 		if (valid) {
 			/* Bring down the CGX link */
-			ret = cgx_link_bringdown(cgx_id, lmac_id);
+			if (cgx_link_bringdown(cgx_id, lmac_id)) {
+				debug_cgx_intf("%s: CGX%d:%d Failed to bring link down\n",
+					       __func__, cgx_id, lmac_id);
+				goto mode_err;
+			}
 
 			baud_mhz = qlm_get_baud_rate_for_mode(qlm_mode);
+
+			/* non-GSERN: Check if mode change required clock management changes.
+			 * This type of change requires all lanes to be reset.
+			 * Need to bring all other links down as a result.
+			 */
+			if (!is_gsern) {
+				if (cgx->qlm_ops->qlm_mode_chg_full_reset(lmac->gserx, baud_mhz)) {
+					cgx_lmac_config_t *lmac_tmp;
+
+					for (int lmac_idx = 0; lmac_idx < MAX_LMAC_PER_CGX; lmac_idx++) {
+						if (lmac_idx == lmac_id)
+							continue;
+						lmac_tmp = &cgx->lmac_cfg[lmac_idx];
+						if (lmac_tmp->gserx == lmac->gserx) {
+							if (cgx_link_bringdown(cgx_id, lmac_idx)) {
+								debug_cgx_intf("%s: CGX%d:%d Failed to bring link down\n",
+									       __func__, cgx_id, lmac_idx);
+								goto mode_err;
+							}
+							gserx_all_ln_rst = true;
+						}
+					}
+				}
+
+				if (gserx_all_ln_rst)
+					debug_cgx_intf("%s: CGX%d:%d GSERR%d: All lane reset required\n",
+						       __func__, cgx_id, lmac_id, lmac->gserx);
+			}
 
 			/* Update the new mode info to board config structure
 			 */
@@ -1242,38 +1328,17 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 					lmac->fec = CGX_FEC_NONE;
 			}
 			lmac->mode = lmac_type;
-			qlm = lmac->qlm + lmac->shift_from_first;
-			gserx = lmac->gserx + lmac->shift_from_first;
-
-			debug_cgx_intf("%s: Re-configuring serdes for mode %d, baud rate %d, lmac type %d\n",
-						__func__, qlm_mode, baud_mhz,
-						lmac->mode);
 
 			/* Configure SerDes for new QLM mode */
 			qlm_state_lane_t state = qlm_build_state(qlm_mode, baud_mhz, flags);
 
-			lane_count = cgx_get_lane_count(lmac_type);
-			lane_mask = 0;
-			for (int i = 0; i < lane_count; i++) {
-				lane = (lmac->lane_to_sds >> (i*2)) & 3;
-				lane_mask |= 1 << lane;
-			}
-			lmac->lane_mask = lane_mask;
+			/* Update MCP shared memory if AN/LT mode requested  */
+			if (req_train_en && req_an)
+				shmem_an_lt_update(cgx_id, lmac_id);
 
-			while (lane_mask) {
-				/* Get the number of lanes on this QLM/DLM */
-				num_lanes = qlm_get_lanes(qlm);
-				for (int lane = 0; lane < num_lanes; lane++) {
-					if (!(lane_mask & (1 << lane)))
-						continue;
-					/* Change the SERDES speed */
-					cgx->qlm_ops->qlm_set_mode(gserx, lane,
-							qlm_mode, baud_mhz, 0);
-				}
-				lane_mask >>= num_lanes;
-				qlm++;
-				gserx++;
-			}
+			/* Change SERDES mode */
+			if (cgx_gserx_mode_chg(cgx_id, lmac_id, baud_mhz, 0))
+				goto mode_err;
 
 			/* Update the SCRATCHX register with the new link info to the
 			 * original lane
@@ -1299,17 +1364,39 @@ int cgx_handle_mode_change(int cgx_id, int lmac_id,
 				}
 			}
 
-			cgx_lmac_init(cgx_id, lmac_id);
+			if (!gserx_all_ln_rst) {
+				cgx_lmac_init(cgx_id, lmac_id);
 
-			/* Bring UP the CGX link */
-			ret = cgx_link_bringup(cgx_id, lmac_id);
+				/* Bring UP the CGX link */
+				ret = cgx_link_bringup(cgx_id, lmac_id);
 
-			/* Clear any errors set during LINK bring up as the mode
-			 * is changed now successfully and link may come up
-			 * later. In this case, still return SUCCESS for MODE
-			 * change command
-			 */
-			cgx_set_error_type(cgx_id, lmac_id, 0);
+				/* Clear any errors set during LINK bring up as the mode
+				 * is changed now successfully and link may come up
+				 * later. In this case, still return SUCCESS for MODE
+				 * change command
+				 */
+				cgx_set_error_type(cgx_id, lmac_id, 0);
+			} else {
+				cgx_lmac_config_t *lmac_tmp;
+
+				for (int lmac_idx = 0; lmac_idx < MAX_LMAC_PER_CGX; lmac_idx++) {
+					lmac_tmp = &cgx->lmac_cfg[lmac_idx];
+					if (lmac_tmp->gserx == lmac->gserx) {
+						cgx_lmac_init(cgx_id, lmac_idx);
+
+						/* Bring UP the CGX link */
+						ret = cgx_link_bringup(cgx_id, lmac_idx);
+
+						/* Clear any errors set during LINK bring up as the mode
+						 * is changed now successfully and link may come up
+						 * later. In this case, still return SUCCESS for MODE
+						 * change command
+						 */
+						cgx_set_error_type(cgx_id, lmac_idx, 0);
+					}
+				}
+			}
+
 			return ret;
 		} else {
 			debug_cgx_intf("%s: %d: %d Invalid speed change request\n", __func__,
@@ -1335,6 +1422,11 @@ int cgx_set_fec_type(int cgx_id, int lmac_id, int req_fec)
 	link_state_t link;
 	cgx_lmac_config_t *lmac;
 	cgx_lmac_context_t *lmac_ctx;
+	bool is_gsern = 0;
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		is_gsern = true;
 
 	lmac_ctx = &lmac_context[cgx_id][lmac_id];
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
@@ -1395,11 +1487,20 @@ int cgx_set_fec_type(int cgx_id, int lmac_id, int req_fec)
 		lmac->fec = req_fec;
 
 	/* Change CGX configuration to new FEC */
-	ret = cgx_fec_change(cgx_id, lmac_id, lmac->fec);
-	if (ret == -1) {
-		ERROR("%s: FEC type could not be changed\n", __func__);
-		cgx_set_error_type(cgx_id, lmac_id, CGX_ERR_SET_FEC_FAIL);
-		return -1;
+		/* non-GSERN: Need complete gserx mode change to update FEC */
+	if (!is_gsern && lmac->use_training && !lmac->autoneg_dis) {
+		int baud_mhz = qlm_get_baud_rate_for_mode(lmac->mode_idx);
+
+		if (cgx_link_bringdown(cgx_id, lmac_id))
+			goto anlt_fec_fail;
+
+		if (cgx_gserx_mode_chg(cgx_id, lmac_id, baud_mhz, 1))
+			goto anlt_fec_fail;
+
+		cgx_link_bringup(cgx_id, lmac_id);
+	} else {
+		if (cgx_fec_change(cgx_id, lmac_id, lmac->fec))
+			goto anlt_fec_fail;
 	}
 
 	/* Just update the new FEC type but use the existing link status */
@@ -1412,6 +1513,11 @@ int cgx_set_fec_type(int cgx_id, int lmac_id, int req_fec)
 			cgx_get_error_type(cgx_id, lmac_id));
 
 	return 0;
+
+anlt_fec_fail:
+	ERROR("%s: FEC type could not be changed\n", __func__);
+	cgx_set_error_type(cgx_id, lmac_id, CGX_ERR_SET_FEC_FAIL);
+	return -1;
 }
 
 static int cgx_control_higig2(int cgx_id, int lmac_id, int enable)

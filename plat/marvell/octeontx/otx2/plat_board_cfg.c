@@ -2201,6 +2201,39 @@ static void octeontx2_fill_cgx_network_lane_order(const void *fdt)
 	}
 }
 
+static void octeontx2_fill_cgx_init_net_flags(const void *fdt)
+{
+	int cgx, order, lmac;
+	char prop[64];
+
+	for (cgx = 0; cgx < MAX_CGX; cgx++) {
+		for (lmac = 0; lmac < MAX_LMAC_PER_CGX; lmac++) {
+			snprintf(prop, sizeof(prop), "NETWORK-FLAGS.N0.CGX%d.P%d",
+				 cgx, lmac);
+			order = octeontx2_fdtbdk_get_num(fdt, prop, 16);
+			if (order == -1) {
+				snprintf(prop, sizeof(prop), "NETWORK-FLAGS.N0.CGX%d",
+					 cgx);
+				order = octeontx2_fdtbdk_get_num(fdt, prop, 16);
+				if (order == -1) {
+					snprintf(prop, sizeof(prop), "NETWORK-FLAGS.N0");
+					order = octeontx2_fdtbdk_get_num(fdt, prop, 16);
+					if (order == -1) {
+						/* Look for generic string */
+						snprintf(prop, sizeof(prop), "NETWORK-FLAGS");
+						order = octeontx2_fdtbdk_get_num(fdt, prop, 16);
+						if (order == -1)
+							order = 0; /* No FEC */
+					}
+				}
+			}
+			plat_octeontx_bcfg->cgx_cfg[cgx].lmac_cfg[lmac].net_flags = order;
+			debug_dts("%s: cgx%d.%d network_flags 0x%x\n", __func__, cgx, lmac,
+				  plat_octeontx_bcfg->cgx_cfg[cgx].lmac_cfg[lmac].net_flags);
+		}
+	}
+}
+
 static void octeontx2_map_cgx_to_nix(void)
 {
 	struct {
@@ -2299,6 +2332,7 @@ static void octeontx2_fill_cgx_details(const void *fdt)
 	const qlm_ops_t *qlm_ops;
 
 	octeontx2_fill_cgx_network_lane_order(fdt);
+	octeontx2_fill_cgx_init_net_flags(fdt);
 
 	for (cgx_idx = 0; cgx_idx < plat_octeontx_scfg->cgx_count; cgx_idx++) {
 		qlm_ops = plat_otx2_get_qlm_ops(cgx_idx);
@@ -2402,6 +2436,31 @@ static void octeontx2_fill_qlm_details(const void *fdt)
 			if (refset == -1)
 				refset = 3; /* Default value */
 			plat_octeontx_bcfg->qlm_cfg[qlm].lane_idle_refset[lane]
+				= refset;
+
+			snprintf(prop, sizeof(prop),
+				"QLM-LINK-TRAINING-INITIAL-STATE.N0.QLM%d.LANE%d",
+				qlm, lane);
+			refset = octeontx2_fdtbdk_get_num(fdt, prop, 10);
+			if (refset == -1) {
+				snprintf(prop, sizeof(prop),
+					 "QLM-LINK-TRAINING-INITIAL-STATE.N0.QLM%d",
+					 qlm);
+				refset = octeontx2_fdtbdk_get_num(fdt, prop, 10);
+				if (refset == -1) {
+					snprintf(prop, sizeof(prop),
+						 "QLM-LINK-TRAINING-INITIAL-STATE.N0");
+					refset = octeontx2_fdtbdk_get_num(fdt, prop, 10);
+					if (refset == -1) {
+						snprintf(prop, sizeof(prop),
+							 "QLM-LINK-TRAINING-INITIAL-STATE");
+						refset = octeontx2_fdtbdk_get_num(fdt, prop, 10);
+						if (refset == -1)
+							refset = -1; /* Default value */
+					}
+				}
+			}
+			plat_octeontx_bcfg->qlm_cfg[qlm].lt_init_state[lane]
 				= refset;
 		}
 	}

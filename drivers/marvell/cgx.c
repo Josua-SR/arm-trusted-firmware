@@ -2630,7 +2630,14 @@ static void cgx_fill_lmac_attributes(int cgx_idx, int lmac_idx)
 
 	switch (lmac->mode_idx) {
 	case QLM_MODE_10G_KR:
+	case QLM_MODE_25G_KR:
+	case QLM_MODE_25G_CR:
 	case QLM_MODE_40G_KR4:
+	case QLM_MODE_40G_CR4:
+	case QLM_MODE_50G_KR2:
+	case QLM_MODE_50G_CR2:
+	case QLM_MODE_100G_KR4:
+	case QLM_MODE_100G_CR4:
 		lmac->use_training = 1;
 		break;
 	case QLM_MODE_USXGMII_1X1:
@@ -3690,20 +3697,128 @@ void cgx_lmac_init_link(int cgx_id, int lmac_id)
 	}
 }
 
+/* This function updates GSERx SERDES based
+ * for a CGX LMAC. Expects LMAC/CGX
+ * structure with updated
+ * qlm mode and AN/LT settings
+ * Return 0 on success, -1 on fail
+ */
+int cgx_gserx_mode_chg(int cgx_id, int lmac_id, int baud_mhz, int anlt_fec_only_chg)
+{
+	cgx_lmac_config_t *lmac;
+	cgx_config_t *cgx;
+	int qlm, gserx = 0, qlm_mode, num_lanes;
+	uint32_t lane_mask;
+	int gserx_array[MAX_GSERX_PER_CGX];
+	int qlm_array[MAX_GSERX_PER_CGX];
+	uint8_t gserx_masks[MAX_GSERX_PER_CGX] = {0};
+	int lane, lane_count, i = 0;
+	bool is_gsern = false;
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+	    (IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		is_gsern = true;
+
+	qlm = lmac->qlm + lmac->shift_from_first;
+	gserx = lmac->gserx + lmac->shift_from_first;
+	qlm_mode = lmac->mode_idx;
+
+	debug_cgx("%s: Configuring serdes for mode %d, baud rate %d, lmac type %d\n",
+		       __func__, qlm_mode, baud_mhz,
+		       lmac->mode);
+
+	lane_count = cgx_get_lane_count(lmac->mode);
+	lane_mask = 0;
+	for (int i = 0; i < lane_count; i++) {
+		lane = (lmac->lane_to_sds >> (i*2)) & 3;
+		lane_mask |= 1 << lane;
+	}
+	lmac->lane_mask = lane_mask;
+
+	if (is_gsern) {
+		while (lane_mask) {
+			/* Get the number of lanes on this QLM/DLM */
+			num_lanes = qlm_get_lanes(qlm);
+			for (int lane = 0; lane < num_lanes; lane++) {
+				if (!(lane_mask & (1 << lane)))
+					continue;
+				/* Change the SERDES speed */
+				cgx->qlm_ops->qlm_set_mode(gserx, lane,
+							   qlm_mode, baud_mhz, 0);
+			}
+			lane_mask >>= num_lanes;
+			qlm++;
+			gserx++;
+		}
+	} else {
+		/* Create lane masks for all gserx's being updated */
+		while (lane_mask) {
+			/* Get the number of lanes on this QLM/DLM */
+			num_lanes = qlm_get_lanes(qlm);
+			for (int lane = 0; lane < num_lanes; lane++) {
+				if (!(lane_mask & (1 << lane)))
+					continue;
+				/* Update lane_mask */
+				gserx_masks[i] |= (1 << lane);
+			}
+			qlm_array[i] = qlm;
+			gserx_array[i++] = gserx++;
+			lane_mask >>= num_lanes;
+			qlm++;
+		}
+
+		for (int i = 0; i < MAX_GSERX_PER_CGX; i++) {
+			/* Check if any lanes are set */
+			if (gserx_masks[i]) {
+				int lane_an;
+				int lt_init_state;
+
+				num_lanes = qlm_get_lanes(qlm_array[i]);
+				if (num_lanes == 1)
+					lane_an = 0;
+				else if (num_lanes == 2)
+					lane_an = lmac->lane_an_master % 2;
+				else
+					lane_an = lmac->lane_an_master;
+
+				lt_init_state = plat_octeontx_bcfg->qlm_cfg[qlm_array[i]].lt_init_state[lane_an];
+				if (lt_init_state == -1) {
+					if (baud_mhz == 10312)
+						lt_init_state = LT_PRESET_STATE;
+					else
+						lt_init_state = LT_INIT_STATE;
+				}
+
+				/* Change the SERDES mode/speed */
+				if (cgx->qlm_ops->qlm_cfg_mode(gserx_array[i], gserx_masks[i],
+							       qlm_mode, baud_mhz, 0, lane_an,
+							       lmac->fec, lt_init_state,
+							       anlt_fec_only_chg))
+					return -1;
+			}
+		}
+	}
+
+	return 0;
+}
+
 /* this function to be called for every CGX either from
  * PCI scanning (CGX device enumeration) or
  * during INTF initialization
  */
 void cgx_hw_init(int cgx_id)
 {
-	int lmac_id, qlm_mode, lmac_type, lane_count;
-	int qlm, gserx, num_lanes;
-	int baud_rate, flags = 0, lane, ret;
+	int lmac_id, qlm_mode, lmac_type;
+	int qlm_mode_orig, an_ena_orig, lt_ena_orig;
+	int anlt_fec_only_chg = 0;
+	int baud_rate, flags = 0, ret;
 	qlm_state_lane_t state;
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
 	cavm_cgxx_cmrx_config_t cmr_config;
-	uint32_t lane_mask;
 
 	debug_cgx("%s: %d\n", __func__, cgx_id);
 
@@ -3736,40 +3851,34 @@ void cgx_hw_init(int cgx_id)
 					 * mode from flash if ignoreflash parameter
 					 * not set by user
 					 */
+					qlm_mode_orig = lmac->mode_idx;
+					an_ena_orig = !lmac->autoneg_dis;
+					lt_ena_orig = lmac->use_training;
 					lmac->mode_idx = qlm_mode;
 					lmac->mode = lmac_type;
 
 					/* Update PCS attributes based on each mode */
 					cgx_fill_lmac_attributes(cgx_id, lmac_id);
+
+					/* non-GSERN: If transitioning to/from AN/LT modes,
+					 * check if the change only affects the FEC
+					 * advertisement. This requires a QLM mode change
+					 * because the AN advertisement stored in GSERx memory.
+					 */
+					if (qlm_mode_orig == lmac->mode_idx) {
+						if (an_ena_orig && !lmac->autoneg_dis &&
+						    lt_ena_orig && lmac->use_training) {
+							if (lmac->fec == lmac->net_flags)
+								anlt_fec_only_chg = 1;
+						}
+					}
+
 					/* Configure SerDes for new QLM mode */
 					baud_rate = qlm_get_mode_strmap(qlm_mode).baud_rate;
 					state = qlm_build_state(qlm_mode, baud_rate, flags);
 
-					qlm = lmac->qlm + lmac->shift_from_first;
-					gserx = lmac->gserx + lmac->shift_from_first;
-
-					lane_count = cgx_get_lane_count(lmac_type);
-					lane_mask = 0;
-					for (int i = 0; i < lane_count; i++) {
-						lane = (lmac->lane_to_sds >> (i*2)) & 3;
-						lane_mask |= 1 << lane;
-					}
-					lmac->lane_mask = lane_mask;
-
-					while (lane_mask) {
-						/* Get the number of lanes on this QLM/DLM */
-						num_lanes = qlm_get_lanes(qlm);
-						for (int lane = 0; lane < num_lanes; lane++) {
-							if (!(lane_mask & (1 << lane)))
-								continue;
-							/* Change the SERDES speed */
-							cgx->qlm_ops->qlm_set_mode(gserx, lane,
-								qlm_mode, baud_rate, flags);
-							}
-						lane_mask >>= num_lanes;
-						qlm++;
-						gserx++;
-					}
+					/* Change SERDES mode */
+					cgx_gserx_mode_chg(cgx_id, lmac_id, baud_rate, anlt_fec_only_chg);
 
 					if (cgx->qlm_ops->type == QLM_GSERN_TYPE)
 						cgx->qlm_ops->qlm_set_state(

@@ -12,6 +12,7 @@
 
 /* max channels per lmac */
 #define MAX_CHAN_PER_LMAC	16
+#define MAX_GSERX_PER_CGX	2
 
 /* REF values from Octeon TX */
 
@@ -326,6 +327,7 @@ int cgx_validate_fec_config(int cgx_id, int lmac_id, int req_fec);
 int cgx_get_lane_speed(int cgx_id, int lmac_id);
 void cgx_lmac_init(int cgx_id, int lmac_id);
 void cgx_set_an_loopback(int cgx_id, int lmac_id, int enable);
+int cgx_gserx_mode_chg(int cgx_id, int lmac_id, int baud_mhz, int anlt_fec_only_chg);
 
 /* CGX FW interface APIs */
 void cgx_fw_intf_init(void);

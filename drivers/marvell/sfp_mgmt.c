@@ -47,14 +47,52 @@ sfp_shared_data_t *sfp_get_sh_mem_ptr(int cgx_id, int lmac_id)
 	return sh_data;
 }
 
+void shmem_an_lt_update(int cgx_id, int lmac_id)
+{
+	cgx_lmac_config_t *lmac;
+	cgx_config_t *cgx;
+	sfp_shared_data_t *sh_data = sfp_get_sh_mem_ptr(cgx_id, lmac_id);
+	const qlm_ops_t *qlm_ops;
+	int num_lanes, lane_an;
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+
+	/* Update SHMEM with AN/LT processing */
+	if ((!lmac->autoneg_dis) && (lmac->use_training)) {
+		debug_sfp_mgmt("%s:%d:%d updating AN/LT data\n",
+			       __func__, cgx_id, lmac_id);
+		num_lanes = qlm_get_lanes(lmac->qlm +
+			  lmac->shift_from_first);
+
+		if (num_lanes == 1)
+			lane_an = 0;
+		else if (num_lanes == 2)
+			lane_an = lmac->lane_an_master % 2;
+		else
+			lane_an = lmac->lane_an_master;
+
+		qlm_ops = plat_otx2_get_qlm_ops(cgx_id);
+		if (qlm_ops != NULL)
+			sh_data->an_lt_args.gser_type =
+				(uint32_t)qlm_ops->type;
+		sh_data->an_lt_args.gser_index = lmac->gserx;
+		sh_data->an_lt_args.shift_from_first =
+			lmac->shift_from_first;
+		sh_data->an_lt_args.lane_mask = lmac->lane_mask;
+		sh_data->an_lt_args.an_master = lane_an;
+		sh_data->an_lt_args.qlm =
+			(lmac->qlm + lmac->shift_from_first);
+		sh_data->an_lt_args.max_num_lanes = num_lanes;
+	}
+}
+
 void sfp_init_shmem(void)
 {
 	int cgx_idx, lmac_idx;
 	cgx_lmac_config_t *lmac;
 	cgx_config_t *cgx;
 	sfp_shared_data_t *sh_data;
-	const qlm_ops_t *qlm_ops;
-	int num_lanes, lane_an;
 
 	debug_sfp_mgmt("%s\n", __func__);
 	debug_sfp_mgmt("sizeof = %d\n", (int)sizeof(sfp_shared_data_t));
@@ -81,6 +119,9 @@ void sfp_init_shmem(void)
 			sh_data->cgx_id = cgx_idx;
 			sh_data->lmac_id = lmac_idx;
 
+			/* Program the AN/LT interface rev */
+			sh_data->intf_rev = 0xABCD0000;
+
 			/* Copy the board model */
 			strlcpy(sh_data->board_model,
 				plat_octeontx_bcfg->bcfg.board_model,
@@ -88,31 +129,7 @@ void sfp_init_shmem(void)
 
 			/* Update SHMEM with AN/LT processing */
 			if ((!lmac->autoneg_dis) && (lmac->use_training)) {
-				debug_sfp_mgmt("%s:%d:%d updating AN/LT data\n",
-					__func__, cgx_idx, lmac_idx);
-
-				num_lanes = qlm_get_lanes(lmac->qlm +
-					lmac->shift_from_first);
-				if (num_lanes == 1)
-					lane_an = 0;
-				else if (num_lanes == 2)
-					lane_an = lmac->lane_an_master % 2;
-				else
-					lane_an = lmac->lane_an_master;
-
-				qlm_ops = plat_otx2_get_qlm_ops(cgx_idx);
-				if (qlm_ops != NULL)
-					sh_data->an_lt_args.gser_type =
-						(uint32_t)qlm_ops->type;
-				sh_data->an_lt_args.gser_index = lmac->gserx;
-				sh_data->an_lt_args.shift_from_first =
-						lmac->shift_from_first;
-				sh_data->an_lt_args.lane_mask = lmac->lane_mask;
-				sh_data->an_lt_args.an_master = lane_an;
-				sh_data->an_lt_args.qlm =
-						(lmac->qlm + lmac->shift_from_first);
-				sh_data->an_lt_args.max_num_lanes = num_lanes;
-				sh_data->intf_rev = 0xABCD0000;
+				shmem_an_lt_update(cgx_idx, lmac_idx);
 			}
 		}
 	}

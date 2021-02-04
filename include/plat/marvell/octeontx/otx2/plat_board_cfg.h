@@ -162,6 +162,7 @@ typedef struct cgx_lmac_config {
 	int an_loopback;
 	int lane_an_master;
 	gpio_led_eth_t gpio_led;
+	int net_flags; /* EBF FEC setting */
 } cgx_lmac_config_t;
 
 typedef enum {
@@ -194,6 +195,7 @@ typedef struct qlm_config {
 	int is_cpri;
 	int cpri_baud_rate[MAX_LANES_PER_QLM];
 	int clk_term;
+	int lt_init_state[MAX_LANES_PER_QLM];
 } qlm_config_t;
 
 typedef struct mcc_ras_config {
