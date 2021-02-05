@@ -1437,7 +1437,7 @@ int mcp_wait_for_cmd_ack_to_clr(int cgx_id, int lmac_id)
 
 retry_ack_check:
 	if (sh_data->async_ctx.ack) {
-		if (retry_lock++ < 5) {
+		if (retry_lock++ < 60) {
 			mdelay(1);
 			goto retry_ack_check;
 		}
