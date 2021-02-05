@@ -418,9 +418,13 @@ void plat_add_mmio()
 	}
 
 	/*
-	 * Map temperature sensor used by qlm gsern code.
+	 * Map temperature sensor used by qlm gsern (9) and gserr (10) code.
 	 */
 	add_map_record(CAVM_TSN_BAR_E_TSNX_PF_BAR0(9),
+		       CAVM_TSN_BAR_E_TSNX_PF_BAR0_SIZE, attr);
+
+	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 3))
+		add_map_record(CAVM_TSN_BAR_E_TSNX_PF_BAR0(10),
 		       CAVM_TSN_BAR_E_TSNX_PF_BAR0_SIZE, attr);
 
 	/*

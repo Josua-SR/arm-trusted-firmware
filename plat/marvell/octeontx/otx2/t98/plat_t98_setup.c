@@ -366,6 +366,11 @@ void plat_add_mmio()
 	mmap_add_region(SERDES_PRBS_DATA_BASE, SERDES_PRBS_DATA_BASE,
 		SERDES_PRBS_DATA_SIZE, (MT_MEMORY | MT_RW | MT_NS));
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
+	/*
+	 * Map temperature sensor used by qlm gserr code.
+	 */
+	add_map_record(CAVM_TSN_BAR_E_TSNX_PF_BAR0(14),
+		       CAVM_TSN_BAR_E_TSNX_PF_BAR0_SIZE, attr);
 }
 
 void plat_set_gpio_msix_vectors(int gpio_num, int irq_num, int enable)
