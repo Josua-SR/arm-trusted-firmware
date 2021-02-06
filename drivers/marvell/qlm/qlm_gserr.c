@@ -171,6 +171,61 @@ static void apply_tuning(int module, int lane)
 }
 
 /**
+ * Update DOSC cal temp
+ *
+ * @param node
+ * @param module
+ */
+static void qlm_gserr_update_dosc_cal_temp(int module)
+{
+	int sensor;
+	int retry_count = 0;
+
+	/* Figure out which sensor to use */
+	if (gser_is_model(OCTEONTX_CN96XX))
+		sensor = 10; /* TSN10 is nearest to GSERR */
+	else if (gser_is_model(OCTEONTX_CNF95XX))
+		sensor = 2;  /* TSN2 is nearest to GSERR */
+	else if (gser_is_model(OCTEONTX_LOKI))
+		sensor = 2;  /* TSN2 is nearest to GSERR */
+	else if (gser_is_model(OCTEONTX_F95MM))
+		sensor = 2;  /* TSN2 is nearest to GSERR, updated 5/12/2020 */
+	else if (gser_is_model(OCTEONTX_CN98XX))
+		sensor = 14; /* TSN14 is nearest to GSERR */
+	else
+	{
+		gser_error("GSERR: Unrecognized chip\n");
+		return;
+	}
+
+	/* Update the temperature sensor */
+	/* Program the temperature into the GSERR */
+	GSER_CSR_INIT(temp_result, CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
+	while ((!temp_result.s.temp_valid && !gser_is_platform(GSER_PLATFORM_ASIM)) &&
+	       (retry_count < 1000)) {
+		temp_result.u = GSER_CSR_READ(CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
+		retry_count++;
+		gser_wait_usec(1);
+	}
+	if (retry_count >= 1000) {
+		gser_error("GSERR%d: Unable to read valid temp sensor temperature\n", module);
+		return;
+	}
+	int temp = gser_extracts(temp_result.s.temp_corrected, 2, 8);
+
+	temp += 40;
+	if (temp < 0)
+		temp = 0;
+	if (temp > 125 + 40)
+		temp = 125 + 40;
+	/* We program the temperature regardless of GSER_GSERR_ENABLE_DOSC_TEMP_SKEW.
+	   This allows checking that the correct value is programmed without
+	   performing DOSC_TEMP_SKEW */
+	GSER_CSR_MODIFY(c, CAVM_GSERRX_PHY0_TOP_DOSC_TEMP_DURING_CAL(module),
+			c.s.temp_value = temp);
+}
+
+/**
  * For chips that don't use pin strapping, this function programs
  * the QLM to the specified mode
  *
@@ -3244,6 +3299,10 @@ static int qlm_gserr_change_phy_rate(int module)
 			CM0_STATE_CHNG_RDY=1 //CM0 is in the Reset power state */
 	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERRX_COMMON_PHY_STATUS_BSTS(module), GSERRX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 10000))
 		gser_error("GSERR%d: Timeout waiting for GSERRX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1 (change rate rst)\n", module);
+
+	/* 8b. Update the temperature sensor */
+	/* Program the temperature into the GSERR */
+	qlm_gserr_update_dosc_cal_temp(module);
 
 	/* 9. Release the Clock Management Unit reset
 		Write GSERR(0..2)_COMMON_PHY_CTRL_BCFG
