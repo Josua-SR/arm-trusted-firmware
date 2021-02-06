@@ -78,7 +78,7 @@ static int map_module_to_qlm(int module)
 {
 	int qlm_offset = 0;
 
-	if (gser_is_model(OCTEONTX_LOKI))
+	if (gser_is_model(OCTEONTX_LOKI) || gser_is_model(OCTEONTX_F95O))
 		qlm_offset = 2; /* From GSERC_MIN in bdk-qlm-loki.c */
 	else
 		gser_fatal("GSERC: map_module_to_qlm(): Unrecognized chip\n");
@@ -3987,7 +3987,7 @@ void qlm_gserc_init_reset()
 //	int sensor;
 //
 //	/* Figure out which firmware file to use */
-//	if (gser_is_model(OCTEONTX_LOKI))
+//	if (gser_is_model(OCTEONTX_LOKI) || gser_is_model(OCTEONTX_F95O))
 //		sensor = 2;  /* TSN2 is nearest to GSERC */
 //	else
 //	{

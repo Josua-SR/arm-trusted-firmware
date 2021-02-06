@@ -881,7 +881,8 @@ static struct ras_dram_lmc_map *ras_dram_get_lmc_map(int lmc)
 				.valid = 0 };
 			plat_lmc_map[2] = (struct ras_dram_lmc_map) {
 				.lmc = 2, .mcc = 0, .lmcoe = 1, .valid = 1 };
-		} else if (cavm_is_model(OCTEONTX_LOKI)) {
+		} else if (cavm_is_model(OCTEONTX_LOKI) ||
+			   cavm_is_model(OCTEONTX_F95O)) {
 			plat_lmc_map[0] = (struct ras_dram_lmc_map) {
 				.lmc = 0, .mcc = 0, .lmcoe = 0, .valid = 1 };
 			plat_lmc_map[1] = (struct ras_dram_lmc_map) {
@@ -1752,6 +1753,8 @@ static int lmcoe_ras_int(int lmcoe)
 		return CAVM_MCC_INT_VEC_E_LMCOEX_RAS_INT_LOKI(lmcoe);
 	if (cavm_is_model(OCTEONTX_F95MM))
 		return CAVM_MCC_INT_VEC_E_LMCOEX_RAS_INT_F95MM(lmcoe);
+	if (cavm_is_model(OCTEONTX_F95O))
+		return CAVM_MCC_INT_VEC_E_LMCOEX_RAS_INT_F95O(lmcoe);
 	return -1;
 };
 

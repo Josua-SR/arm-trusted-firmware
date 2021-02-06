@@ -81,7 +81,7 @@ static int map_module_to_qlm(int module)
 		qlm_offset = 5; /* From GSERR_MIN in bdk-qlm-cn96xx-gserr.c */
 	else if (gser_is_model(OCTEONTX_CNF95XX))
 		qlm_offset = 0; /* From GSERR_MIN in bdk-qlm-cnf95xx-gserr.c */
-	else if (gser_is_model(OCTEONTX_LOKI))
+	else if (gser_is_model(OCTEONTX_LOKI) || gser_is_model(OCTEONTX_F95O))
 		qlm_offset = 1; /* From GSERR_MIN in bdk-qlm-loki.c */
 	else if (gser_is_model(OCTEONTX_F95MM))
 		qlm_offset = 0; /* From GSERR_MIN in bdk-qlm-f95mm.c */
@@ -2562,7 +2562,7 @@ static void update_all_lane_state()
 			num_gserr = 3;
 		else if (gser_is_model(OCTEONTX_CNF95XX))
 			num_gserr = 3;
-		else if (gser_is_model(OCTEONTX_LOKI))
+		else if (gser_is_model(OCTEONTX_LOKI) || gser_is_model(OCTEONTX_F95O))
 			num_gserr = 1;
 		else if (gser_is_model(OCTEONTX_F95MM))
 			num_gserr = 2;
@@ -4200,7 +4200,7 @@ void qlm_gserr_init_reset()
 //		sensor = 10; /* TSN10 is nearest to GSERR */
 //	else if (gser_is_model(OCTEONTX_CNF95XX))
 //		sensor = 2;  /* TSN2 is nearest to GSERR */
-//	else if (gser_is_model(OCTEONTX_LOKI))
+//	else if (gser_is_model(OCTEONTX_LOKI) || gser_is_model(OCTEONTX_F95O))
 //		sensor = 2;  /* TSN2 is nearest to GSERR */
 //	else if (gser_is_model(OCTEONTX_F95MM))
 //		sensor = 2;  /* TSN2 is nearest to GSERR, updated 5/12/2020 */

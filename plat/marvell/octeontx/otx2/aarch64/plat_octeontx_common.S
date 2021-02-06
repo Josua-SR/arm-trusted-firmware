@@ -17,6 +17,7 @@
 #define OCTEONTX2_CNF95XX_MIDR		0x430F0B30
 #define OCTEONTX2_LOKI_MIDR		0x430F0B40
 #define OCTEONTX2_F95MM_MIDR		0x430F0B50
+#define OCTEONTX2_F95O_MIDR		0x430F0B60
 
 #define EC_CAVIUM_IO_TRAP		U(0x1f)
 
@@ -119,6 +120,12 @@ declare_cpu_ops_eh octeontx2, OCTEONTX2_CN98XX_MIDR, \
 	octeontx2_cluster_pwr_dwn
 
 declare_cpu_ops_eh octeontx2, OCTEONTX2_F95MM_MIDR, \
+	octeontx2_reset_func, \
+	octeontx2_exception_handler, \
+	octeontx2_core_pwr_dwn, \
+	octeontx2_cluster_pwr_dwn
+
+declare_cpu_ops_eh octeontx2, OCTEONTX2_F95O_MIDR, \
 	octeontx2_reset_func, \
 	octeontx2_exception_handler, \
 	octeontx2_core_pwr_dwn, \

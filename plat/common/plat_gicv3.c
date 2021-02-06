@@ -106,8 +106,9 @@ uint32_t plat_ic_get_pending_interrupt_type(void)
  */
 uint32_t plat_ic_acknowledge_interrupt(void)
 {
-#if (defined(PLAT_f95) || defined(PLAT_t96) || (PLAT_loki) || \
-	defined(PLAT_t98) || defined(PLAT_f95mm) || defined(PLAT_t83))
+#if (defined(PLAT_f95) || defined(PLAT_t96) || defined(PLAT_loki) ||\
+	defined(PLAT_t98) || defined(PLAT_f95mm) || defined(PLAT_t83) || \
+	defined(PLAT_f95o))
 #	define IAR_RETRIES 1
 #	define GIC_IDLE_PRIORITY 0xff
 	uint64_t icc_ap0r0_el1[2];

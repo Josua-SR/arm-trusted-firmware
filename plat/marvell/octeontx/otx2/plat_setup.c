@@ -160,7 +160,7 @@ unsigned int plat_configure_cpt_rid(void)
  * Program REVID for PCIe devices.
  * Bits 0..1: minor pass
  * Bits 3..2: major pass
- * Bits 7..4: midr id, 0:96, 1:95, 2:loki, 3:98, 4:f95mm f:unknown
+ * Bits 7..4: midr id, 0:96, 1:95, 2:loki, 3:98, 4:f95mm 5:f95o f:unknown
  */
 unsigned int plat_configure_rid(void)
 {
@@ -190,6 +190,10 @@ unsigned int plat_configure_rid(void)
 
 	case F95MMPARTNUM:
 		midr_id = 4;
+		break;
+
+	case F95OPARTNUM:
+		midr_id = 5;
 		break;
 
 	default:
@@ -399,6 +403,7 @@ void plat_octeontx_cpu_setup(void)
 
 	if (IS_OCTEONTX_PN(midr, F95PARTNUM)
 	    || IS_OCTEONTX_PN(midr, LOKIPARTNUM)
+	    || IS_OCTEONTX_PN(midr, F95OPARTNUM)
 	    || IS_OCTEONTX_PN(midr, F95MMPARTNUM))
 		set_bit(cvmmemctl1_el1, 58); /* Enable 128-bit access to BPHY */
 
@@ -995,6 +1000,7 @@ bool plat_ras_feature_supported(void)
 	      IS_OCTEONTX_PN(midr, F95PARTNUM) ||
 	      IS_OCTEONTX_PN(midr, F95MMPARTNUM) ||
 	      IS_OCTEONTX_PN(midr, LOKIPARTNUM) ||
+	      IS_OCTEONTX_PN(midr, F95OPARTNUM) ||
 	      IS_OCTEONTX_PN(midr, T98PARTNUM))) {
 		ERROR("%s: RAS enabled on unsupported device\n", __func__);
 		return ret;
