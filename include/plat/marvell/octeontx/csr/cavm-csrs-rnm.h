@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -663,6 +663,7 @@ union cavm_rnm_ctl_status
     /* struct cavm_rnm_ctl_status_cn96xxp3 cn98xx; */
     /* struct cavm_rnm_ctl_status_cn96xxp1 cnf95xx; */
     /* struct cavm_rnm_ctl_status_cn96xxp1 f95mm; */
+    /* struct cavm_rnm_ctl_status_cn96xxp1 f95o; */
     /* struct cavm_rnm_ctl_status_cn96xxp1 loki; */
 };
 typedef union cavm_rnm_ctl_status cavm_rnm_ctl_status_t;
@@ -908,6 +909,8 @@ static inline uint64_t CAVM_RNM_ZUCX_INIT_LFSRX(uint64_t a, uint64_t b)
         return 0x87e00f000100ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
         return 0x87e00f000100ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) && (b<=15)))
+        return 0x87e00f000100ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b<=15)))
         return 0x87e00f000100ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RNM_ZUCX_INIT_LFSRX", 2, a, b, 0, 0, 0, 0);
@@ -959,6 +962,8 @@ static inline uint64_t CAVM_RNM_ZUCX_INIT_NLFX(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) && (b<=1)))
         return 0x87e00f000200ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1)))
+        return 0x87e00f000200ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) && (b<=1)))
         return 0x87e00f000200ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b<=1)))
         return 0x87e00f000200ll + 0x400ll * ((a) & 0x0) + 8ll * ((b) & 0x1);

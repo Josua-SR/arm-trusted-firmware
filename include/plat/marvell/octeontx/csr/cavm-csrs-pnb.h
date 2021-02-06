@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -48,6 +48,7 @@ union cavm_pnbx_ap_push_arb_wt
     /* struct cavm_pnbx_ap_push_arb_wt_s cn9; */
     /* struct cavm_pnbx_ap_push_arb_wt_s cnf95xx; */
     /* struct cavm_pnbx_ap_push_arb_wt_s f95mm; */
+    /* struct cavm_pnbx_ap_push_arb_wt_s f95o; */
     struct cavm_pnbx_ap_push_arb_wt_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -71,6 +72,8 @@ static inline uint64_t CAVM_PNBX_AP_PUSH_ARB_WT(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e041000150ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
+        return 0x87e041000150ll + 0x1000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e041000150ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e041000150ll + 0x1000000ll * ((a) & 0x1);
@@ -118,6 +121,8 @@ static inline uint64_t CAVM_PNBX_CONFIG(uint64_t a)
         return 0x87e041000000ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
         return 0x87e041000000ll + 0x1000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e041000000ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e041000000ll + 0x1000000ll * ((a) & 0x1);
     __cavm_csr_fatal("PNBX_CONFIG", 1, a, 0, 0, 0, 0, 0);
@@ -159,6 +164,8 @@ static inline uint64_t CAVM_PNBX_DMA_STRID(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e041000318ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
+        return 0x87e041000318ll + 0x1000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e041000318ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e041000318ll + 0x1000000ll * ((a) & 0x1);
@@ -202,6 +209,8 @@ static inline uint64_t CAVM_PNBX_ECO(uint64_t a)
         return 0x87e041000300ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
         return 0x87e041000300ll + 0x1000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e041000300ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e041000300ll + 0x1000000ll * ((a) & 0x1);
     __cavm_csr_fatal("PNBX_ECO", 1, a, 0, 0, 0, 0, 0);
@@ -239,6 +248,8 @@ static inline uint64_t CAVM_PNBX_ECO_SCRATCH(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e041000308ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
+        return 0x87e041000308ll + 0x1000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e041000308ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e041000308ll + 0x1000000ll * ((a) & 0x1);
@@ -288,6 +299,8 @@ static inline uint64_t CAVM_PNBX_GHABX_PULL_ARB_WT(uint64_t a, uint64_t b)
         return 0x87e041000100ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=7)))
         return 0x87e041000100ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=7)))
+        return 0x87e041000100ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=7)))
         return 0x87e041000100ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
     __cavm_csr_fatal("PNBX_GHABX_PULL_ARB_WT", 2, a, b, 0, 0, 0, 0);
@@ -334,6 +347,8 @@ static inline uint64_t CAVM_PNBX_GHABX_RRSP_ARB_WT(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X) && ((a<=1) && (b<=7)))
         return 0x87e041000180ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=7)))
+        return 0x87e041000180ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=7)))
         return 0x87e041000180ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=7)))
         return 0x87e041000180ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
@@ -389,6 +404,8 @@ static inline uint64_t CAVM_PNBX_GHAB_INB_ARB_WT(uint64_t a)
         return 0x87e041000140ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
         return 0x87e041000140ll + 0x1000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e041000140ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e041000140ll + 0x1000000ll * ((a) & 0x1);
     __cavm_csr_fatal("PNBX_GHAB_INB_ARB_WT", 1, a, 0, 0, 0, 0, 0);
@@ -434,6 +451,8 @@ static inline uint64_t CAVM_PNBX_GHAB_PULL_BUSHOG_MAX(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e041000010ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
+        return 0x87e041000010ll + 0x1000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e041000010ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e041000010ll + 0x1000000ll * ((a) & 0x1);
@@ -481,6 +500,8 @@ static inline uint64_t CAVM_PNBX_GHAB_RRSP_BUSHOG_MAX(uint64_t a)
         return 0x87e041000028ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
         return 0x87e041000028ll + 0x1000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e041000028ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e041000028ll + 0x1000000ll * ((a) & 0x1);
     __cavm_csr_fatal("PNBX_GHAB_RRSP_BUSHOG_MAX", 1, a, 0, 0, 0, 0, 0);
@@ -523,6 +544,8 @@ static inline uint64_t CAVM_PNBX_INB_ARB_BUSHOG_MAX(uint64_t a)
         return 0x87e041000020ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
         return 0x87e041000020ll + 0x1000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e041000020ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e041000020ll + 0x1000000ll * ((a) & 0x1);
     __cavm_csr_fatal("PNBX_INB_ARB_BUSHOG_MAX", 1, a, 0, 0, 0, 0, 0);
@@ -559,7 +582,7 @@ union cavm_pnbx_mabx_rrsp_hp
     /* struct cavm_pnbx_mabx_rrsp_hp_s cn9; */
     /* struct cavm_pnbx_mabx_rrsp_hp_s cnf95xx; */
     /* struct cavm_pnbx_mabx_rrsp_hp_s f95mm; */
-    struct cavm_pnbx_mabx_rrsp_hp_loki
+    struct cavm_pnbx_mabx_rrsp_hp_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_1_63         : 63;
@@ -574,7 +597,8 @@ union cavm_pnbx_mabx_rrsp_hp
                                                                  the MHAB/MDAB index within the GHAB (e.g., 0...4). */
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_pnbx_mabx_rrsp_hp_f95o loki; */
 };
 typedef union cavm_pnbx_mabx_rrsp_hp cavm_pnbx_mabx_rrsp_hp_t;
 
@@ -584,6 +608,8 @@ static inline uint64_t CAVM_PNBX_MABX_RRSP_HP(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X) && ((a<=1) && (b<=63)))
         return 0x87e041000600ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=63)))
+        return 0x87e041000600ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=63)))
         return 0x87e041000600ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=63)))
         return 0x87e041000600ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
@@ -635,6 +661,7 @@ union cavm_pnbx_mabx_strid
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_pnbx_mabx_strid_cnf95xxp2 f95mm; */
+    /* struct cavm_pnbx_mabx_strid_cnf95xxp2 f95o; */
     /* struct cavm_pnbx_mabx_strid_cnf95xxp2 loki; */
 };
 typedef union cavm_pnbx_mabx_strid cavm_pnbx_mabx_strid_t;
@@ -645,6 +672,8 @@ static inline uint64_t CAVM_PNBX_MABX_STRID(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=63)))
         return 0x87e041000400ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=63)))
+        return 0x87e041000400ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=63)))
         return 0x87e041000400ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=63)))
         return 0x87e041000400ll + 0x1000000ll * ((a) & 0x1) + 8ll * ((b) & 0x3f);
@@ -662,7 +691,10 @@ static inline uint64_t CAVM_PNBX_MABX_STRID(uint64_t a, uint64_t b)
  *
  * PNB GHAB Inbound Arbitration Weight Register
  * This register specifies the arbitration weights used when arbitrating
- * between PNBD DMA requests and GHAB requests to system memory.
+ * between PSM requests and GHAB requests to system memory.
+ * Note that PSM only performs low priority writes.  All PSM requests are
+ * served by PNB0, and the value in PNB(1)_PSM_INB_ARB_WT has no
+ * significance.
  */
 union cavm_pnbx_psm_inb_arb_wt
 {
@@ -689,7 +721,32 @@ union cavm_pnbx_psm_inb_arb_wt
         uint64_t reserved_54_63        : 10;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pnbx_psm_inb_arb_wt_s cn; */
+    /* struct cavm_pnbx_psm_inb_arb_wt_s cn9; */
+    /* struct cavm_pnbx_psm_inb_arb_wt_s cnf95xx; */
+    /* struct cavm_pnbx_psm_inb_arb_wt_s f95mm; */
+    /* struct cavm_pnbx_psm_inb_arb_wt_s f95o; */
+    struct cavm_pnbx_psm_inb_arb_wt_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_54_63        : 10;
+        uint64_t hp_wr_wgt             : 6;  /**< [ 53: 48](R/W) Reserved. */
+        uint64_t reserved_38_47        : 10;
+        uint64_t lp_wr_wgt             : 6;  /**< [ 37: 32](R/W) Arbitration weight for low-priority writes. */
+        uint64_t reserved_22_31        : 10;
+        uint64_t hp_rd_wgt             : 6;  /**< [ 21: 16](R/W) Reserved. */
+        uint64_t reserved_6_15         : 10;
+        uint64_t lp_rd_wgt             : 6;  /**< [  5:  0](R/W) Reserved. */
+#else /* Word 0 - Little Endian */
+        uint64_t lp_rd_wgt             : 6;  /**< [  5:  0](R/W) Reserved. */
+        uint64_t reserved_6_15         : 10;
+        uint64_t hp_rd_wgt             : 6;  /**< [ 21: 16](R/W) Reserved. */
+        uint64_t reserved_22_31        : 10;
+        uint64_t lp_wr_wgt             : 6;  /**< [ 37: 32](R/W) Arbitration weight for low-priority writes. */
+        uint64_t reserved_38_47        : 10;
+        uint64_t hp_wr_wgt             : 6;  /**< [ 53: 48](R/W) Reserved. */
+        uint64_t reserved_54_63        : 10;
+#endif /* Word 0 - End */
+    } loki;
 };
 typedef union cavm_pnbx_psm_inb_arb_wt cavm_pnbx_psm_inb_arb_wt_t;
 
@@ -699,6 +756,8 @@ static inline uint64_t CAVM_PNBX_PSM_INB_ARB_WT(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e041000148ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
+        return 0x87e041000148ll + 0x1000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e041000148ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e041000148ll + 0x1000000ll * ((a) & 0x1);
@@ -715,10 +774,10 @@ static inline uint64_t CAVM_PNBX_PSM_INB_ARB_WT(uint64_t a)
  * Register (RSL) pnb#_psm_push_arb_wt
  *
  * PNB PSM Push Arbitration Weight Register
- * This register specifies the arbitration weight for PSM writes to SMEM
- * (from WRMSG and WRSTS commands). Note that PSM writes always have low priority.
- * All PSM requests are served by PNB0, and the value in
- * PNB(1)_PSM_PUSH_ARB_WT has no significance.
+ * This register specifies the arbitration weight for PSM writes to SMEM.
+ * Note that PSM writes always have low priority.  All PSM requests are
+ * served by PNB0, and the value in PNB(1)_PSM_PUSH_ARB_WT has no
+ * significance.
  */
 union cavm_pnbx_psm_push_arb_wt
 {
@@ -743,7 +802,30 @@ union cavm_pnbx_psm_push_arb_wt
         uint64_t reserved_22_63        : 42;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pnbx_psm_push_arb_wt_s cn; */
+    /* struct cavm_pnbx_psm_push_arb_wt_s cn9; */
+    /* struct cavm_pnbx_psm_push_arb_wt_s cnf95xx; */
+    /* struct cavm_pnbx_psm_push_arb_wt_s f95mm; */
+    /* struct cavm_pnbx_psm_push_arb_wt_s f95o; */
+    struct cavm_pnbx_psm_push_arb_wt_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_22_63        : 42;
+        uint64_t hp_wgt                : 6;  /**< [ 21: 16](R/W) Reserved.
+                                                                 Internal:
+                                                                 High-priority weight. Unused since PSM writes are always low
+                                                                 priority. */
+        uint64_t reserved_6_15         : 10;
+        uint64_t lp_wgt                : 6;  /**< [  5:  0](R/W) Arbitration weight for PSM writes to SMEM. */
+#else /* Word 0 - Little Endian */
+        uint64_t lp_wgt                : 6;  /**< [  5:  0](R/W) Arbitration weight for PSM writes to SMEM. */
+        uint64_t reserved_6_15         : 10;
+        uint64_t hp_wgt                : 6;  /**< [ 21: 16](R/W) Reserved.
+                                                                 Internal:
+                                                                 High-priority weight. Unused since PSM writes are always low
+                                                                 priority. */
+        uint64_t reserved_22_63        : 42;
+#endif /* Word 0 - End */
+    } loki;
 };
 typedef union cavm_pnbx_psm_push_arb_wt cavm_pnbx_psm_push_arb_wt_t;
 
@@ -753,6 +835,8 @@ static inline uint64_t CAVM_PNBX_PSM_PUSH_ARB_WT(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e041000160ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
+        return 0x87e041000160ll + 0x1000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e041000160ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e041000160ll + 0x1000000ll * ((a) & 0x1);
@@ -793,6 +877,8 @@ static inline uint64_t CAVM_PNBX_PSM_STRID(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e041000310ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
+        return 0x87e041000310ll + 0x1000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e041000310ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e041000310ll + 0x1000000ll * ((a) & 0x1);
@@ -835,6 +921,8 @@ static inline uint64_t CAVM_PNBX_SMEM_PUSH_BUSHOG_MAX(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e041000018ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
+        return 0x87e041000018ll + 0x1000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e041000018ll + 0x1000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e041000018ll + 0x1000000ll * ((a) & 0x1);

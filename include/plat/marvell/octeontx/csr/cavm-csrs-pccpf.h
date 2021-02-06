@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -179,6 +179,8 @@
  * \<7:0\>.
  *
  * Internal:
+ * This enumeration is no longer updated with new codes, see instead CN10xxx version.
+ *
  * The class_codes are formatted as defined by PCC_CLASS_CODE_S.
  */
 #define CAVM_PCC_DEV_IDL_E_AP5 (0x76)
@@ -286,6 +288,7 @@
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_CNF95XX_P1(a) (0xf0 + (a))
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_CNF95XX_P2(a) (0xe0 + (a))
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_F95MM(a) (0xe0 + (a))
+#define CAVM_PCC_DEV_IDL_E_SW_RSVDX_F95O(a) (0xe0 + (a))
 #define CAVM_PCC_DEV_IDL_E_SW_RSVDX_LOKI(a) (0xe0 + (a))
 #define CAVM_PCC_DEV_IDL_E_SW_RVU_AF_VF (0xf8)
 #define CAVM_PCC_DEV_IDL_E_SW_RVU_CPT_PF (0xfd)
@@ -384,6 +387,7 @@
 #define CAVM_PCC_PROD_E_CN99XX (0xaf)
 #define CAVM_PCC_PROD_E_CNF95XX (0xb3)
 #define CAVM_PCC_PROD_E_CNF95XXMM (0xb5)
+#define CAVM_PCC_PROD_E_CNF95XXO (0xb6)
 #define CAVM_PCC_PROD_E_GEN (0xa0)
 #define CAVM_PCC_PROD_E_LOKI (0xb4)
 
@@ -516,13 +520,88 @@ union cavm_pcc_dev_con_s
  * implement a full EA parser including testing the [ENTRY_SIZE], [BASE64] and
  * [OFFSET64] fields.
  *
- * PCI configuration registers are 32-bits, however due to tool limitiations this
+ * PCI configuration registers are 32-bits, however due to tool limitations this
  * structure is described as a little-endian 64-bit wide structure.
  */
 union cavm_pcc_ea_entry_s
 {
     uint64_t u[3];
     struct cavm_pcc_ea_entry_s_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t basel                 : 30; /**< [ 63: 34] Lower bits of the entry 0 base address. */
+        uint64_t base64                : 1;  /**< [ 33: 33] 64-bit base, indicates [BASEH] is present. For CNXXXX always set. */
+        uint64_t reserved_32           : 1;
+        uint64_t enable                : 1;  /**< [ 31: 31] Enable. Always set. */
+        uint64_t w                     : 1;  /**< [ 30: 30] Writable. Always clear. */
+        uint64_t reserved_24_29        : 6;
+        uint64_t sec_prop              : 8;  /**< [ 23: 16] Secondary properties. For CNXXXX always 0xFF, indicating that the primary properties must
+                                                                 be used. */
+        uint64_t pri_prop              : 8;  /**< [ 15:  8] Primary properties.
+                                                                 0x0 = Memory space, non-prefetchable.
+                                                                 0x4 = Physical function indicating virtual function memory space, non-prefetchable. */
+        uint64_t bei                   : 4;  /**< [  7:  4] BAR equivalent indicator.
+                                                                 0x0 = Entry is equivalent to BAR 0.
+                                                                 0x2 = Entry is equivalent to BAR 2.
+                                                                 0x4 = Entry is equivalent to BAR 4.
+                                                                 0x7 = Equivalent not indicated.
+                                                                 0x9 = Entry is equivalent to SR-IOV BAR 0.
+                                                                 0xB = Entry is equivalent to SR-IOV BAR 2.
+                                                                 0xD = Entry is equivalent to SR-IOV BAR 4. */
+        uint64_t reserved_3            : 1;
+        uint64_t entry_size            : 3;  /**< [  2:  0] Number of 32-bit words following this entry format header, excluding the header
+                                                                 itself.
+                                                                 0x4 = Four 32-bit words; header followed by base low, offset low, base high,
+                                                                 offset high. */
+#else /* Word 0 - Little Endian */
+        uint64_t entry_size            : 3;  /**< [  2:  0] Number of 32-bit words following this entry format header, excluding the header
+                                                                 itself.
+                                                                 0x4 = Four 32-bit words; header followed by base low, offset low, base high,
+                                                                 offset high. */
+        uint64_t reserved_3            : 1;
+        uint64_t bei                   : 4;  /**< [  7:  4] BAR equivalent indicator.
+                                                                 0x0 = Entry is equivalent to BAR 0.
+                                                                 0x2 = Entry is equivalent to BAR 2.
+                                                                 0x4 = Entry is equivalent to BAR 4.
+                                                                 0x7 = Equivalent not indicated.
+                                                                 0x9 = Entry is equivalent to SR-IOV BAR 0.
+                                                                 0xB = Entry is equivalent to SR-IOV BAR 2.
+                                                                 0xD = Entry is equivalent to SR-IOV BAR 4. */
+        uint64_t pri_prop              : 8;  /**< [ 15:  8] Primary properties.
+                                                                 0x0 = Memory space, non-prefetchable.
+                                                                 0x4 = Physical function indicating virtual function memory space, non-prefetchable. */
+        uint64_t sec_prop              : 8;  /**< [ 23: 16] Secondary properties. For CNXXXX always 0xFF, indicating that the primary properties must
+                                                                 be used. */
+        uint64_t reserved_24_29        : 6;
+        uint64_t w                     : 1;  /**< [ 30: 30] Writable. Always clear. */
+        uint64_t enable                : 1;  /**< [ 31: 31] Enable. Always set. */
+        uint64_t reserved_32           : 1;
+        uint64_t base64                : 1;  /**< [ 33: 33] 64-bit base, indicates [BASEH] is present. For CNXXXX always set. */
+        uint64_t basel                 : 30; /**< [ 63: 34] Lower bits of the entry 0 base address. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t baseh                 : 32; /**< [127: 96] Upper bits of the entry 0 base address. */
+        uint64_t offsetl               : 30; /**< [ 95: 66] Lower bits of the entry 0 offset. Bits \<1:0\> of the offset are not present and
+                                                                 must be interpreted as all-ones. */
+        uint64_t offset64              : 1;  /**< [ 65: 65] 64-bit offset, indicates [OFFSETH] is present. For CNXXXX always set. */
+        uint64_t reserved_64           : 1;
+#else /* Word 1 - Little Endian */
+        uint64_t reserved_64           : 1;
+        uint64_t offset64              : 1;  /**< [ 65: 65] 64-bit offset, indicates [OFFSETH] is present. For CNXXXX always set. */
+        uint64_t offsetl               : 30; /**< [ 95: 66] Lower bits of the entry 0 offset. Bits \<1:0\> of the offset are not present and
+                                                                 must be interpreted as all-ones. */
+        uint64_t baseh                 : 32; /**< [127: 96] Upper bits of the entry 0 base address. */
+#endif /* Word 1 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
+        uint64_t reserved_160_191      : 32;
+        uint64_t offseth               : 32; /**< [159:128] Upper bits of the entry 0 offset. */
+#else /* Word 2 - Little Endian */
+        uint64_t offseth               : 32; /**< [159:128] Upper bits of the entry 0 offset. */
+        uint64_t reserved_160_191      : 32;
+#endif /* Word 2 - End */
+    } s;
+    /* struct cavm_pcc_ea_entry_s_s cn8; */
+    struct cavm_pcc_ea_entry_s_cn9
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t basel                 : 30; /**< [ 63: 34] Lower bits of the entry 0 base address. */
@@ -595,8 +674,15 @@ union cavm_pcc_ea_entry_s
         uint64_t offseth               : 32; /**< [159:128] Upper bits of the entry 0 offset. */
         uint64_t reserved_160_191      : 32;
 #endif /* Word 2 - End */
-    } s;
-    /* struct cavm_pcc_ea_entry_s_s cn; */
+    } cn9;
+    /* struct cavm_pcc_ea_entry_s_cn9 cn96xxp1; */
+    /* struct cavm_pcc_ea_entry_s_s cn96xxp3; */
+    /* struct cavm_pcc_ea_entry_s_s cn98xx; */
+    /* struct cavm_pcc_ea_entry_s_cn9 cnf95xxp1; */
+    /* struct cavm_pcc_ea_entry_s_s cnf95xxp2; */
+    /* struct cavm_pcc_ea_entry_s_s f95mm; */
+    /* struct cavm_pcc_ea_entry_s_cn9 f95o; */
+    /* struct cavm_pcc_ea_entry_s_s loki; */
 };
 
 /**
@@ -1883,6 +1969,7 @@ union cavm_pccpf_xxx_ea_cap_hdr
     /* struct cavm_pccpf_xxx_ea_cap_hdr_cn96xxp3 cn98xx; */
     /* struct cavm_pccpf_xxx_ea_cap_hdr_cn96xxp3 cnf95xx; */
     /* struct cavm_pccpf_xxx_ea_cap_hdr_cn96xxp3 f95mm; */
+    /* struct cavm_pccpf_xxx_ea_cap_hdr_cn96xxp3 f95o; */
     /* struct cavm_pccpf_xxx_ea_cap_hdr_cn96xxp3 loki; */
 };
 typedef union cavm_pccpf_xxx_ea_cap_hdr cavm_pccpf_xxx_ea_cap_hdr_t;
@@ -2004,6 +2091,7 @@ union cavm_pccpf_xxx_id
     /* struct cavm_pccpf_xxx_id_cn96xxp3 cn98xx; */
     /* struct cavm_pccpf_xxx_id_cn96xxp3 cnf95xx; */
     /* struct cavm_pccpf_xxx_id_cn96xxp3 f95mm; */
+    /* struct cavm_pccpf_xxx_id_cn96xxp3 f95o; */
     /* struct cavm_pccpf_xxx_id_cn96xxp3 loki; */
 };
 typedef union cavm_pccpf_xxx_id cavm_pccpf_xxx_id_t;
@@ -3305,6 +3393,7 @@ union cavm_pccpf_xxx_subid
     /* struct cavm_pccpf_xxx_subid_cn96xxp3 cn98xx; */
     /* struct cavm_pccpf_xxx_subid_cn96xxp3 cnf95xx; */
     /* struct cavm_pccpf_xxx_subid_cn96xxp3 f95mm; */
+    /* struct cavm_pccpf_xxx_subid_cn96xxp3 f95o; */
     /* struct cavm_pccpf_xxx_subid_cn96xxp3 loki; */
 };
 typedef union cavm_pccpf_xxx_subid cavm_pccpf_xxx_subid_t;
@@ -3815,7 +3904,7 @@ union cavm_pccpf_xxx_vsec_sctl
                                                                  PCCPF_XXX_SRIOV_BAR0L, PCCPF_XXX_SRIOV_BAR0U, PCCPF_XXX_SRIOV_BAR2L,
                                                                  PCCPF_XXX_SRIOV_BAR2U, PCCPF_XXX_SRIOV_BAR4L, PCCPF_XXX_SRIOV_BAR4U). */
         uint32_t reserved_2            : 1;
-        uint32_t msix_sec              : 1;  /**< [  1:  1](SR/W) All MSI-X interrupts are secure. This is equivelent to setting the per-vector secure bit
+        uint32_t msix_sec              : 1;  /**< [  1:  1](SR/W) All MSI-X interrupts are secure. This is equivalent to setting the per-vector secure bit
                                                                  (e.g. GTI_MSIX_VEC()_ADDR[SECVEC]) for all vectors in the block. */
         uint32_t msix_phys             : 1;  /**< [  0:  0](SR/W) MSI-X interrupts are physical.
                                                                  0 = MSI-X interrupt vector addresses are standard virtual addresses and subject to SMMU
@@ -3828,7 +3917,7 @@ union cavm_pccpf_xxx_vsec_sctl
                                                                  address translation.
                                                                  1 = MSI-X interrupt vector addresses are considered physical addresses and PCC MSI-X
                                                                  interrupt delivery will bypass the SMMU. */
-        uint32_t msix_sec              : 1;  /**< [  1:  1](SR/W) All MSI-X interrupts are secure. This is equivelent to setting the per-vector secure bit
+        uint32_t msix_sec              : 1;  /**< [  1:  1](SR/W) All MSI-X interrupts are secure. This is equivalent to setting the per-vector secure bit
                                                                  (e.g. GTI_MSIX_VEC()_ADDR[SECVEC]) for all vectors in the block. */
         uint32_t reserved_2            : 1;
         uint32_t ea                    : 1;  /**< [  3:  3](SR/W) Enable PCI enhanced allocation.
@@ -3884,7 +3973,7 @@ union cavm_pccpf_xxx_vsec_sctl
                                                                  Internal:
                                                                  Reserved for future use - Enable this PCC
                                                                  instance as the responder to PCC broadcast reads/writes. */
-        uint32_t msix_sec              : 1;  /**< [  1:  1](SR/W) All MSI-X interrupts are secure. This is equivelent to setting the per-vector secure bit
+        uint32_t msix_sec              : 1;  /**< [  1:  1](SR/W) All MSI-X interrupts are secure. This is equivalent to setting the per-vector secure bit
                                                                  (e.g. GTI_MSIX_VEC()_ADDR[SECVEC]) for all vectors in the block. */
         uint32_t msix_phys             : 1;  /**< [  0:  0](SR/W) MSI-X interrupts are physical.
                                                                  0 = MSI-X interrupt vector addresses are standard virtual addresses and subject to SMMU
@@ -3897,7 +3986,7 @@ union cavm_pccpf_xxx_vsec_sctl
                                                                  address translation.
                                                                  1 = MSI-X interrupt vector addresses are considered physical addresses and PCC MSI-X
                                                                  interrupt delivery will bypass the SMMU. */
-        uint32_t msix_sec              : 1;  /**< [  1:  1](SR/W) All MSI-X interrupts are secure. This is equivelent to setting the per-vector secure bit
+        uint32_t msix_sec              : 1;  /**< [  1:  1](SR/W) All MSI-X interrupts are secure. This is equivalent to setting the per-vector secure bit
                                                                  (e.g. GTI_MSIX_VEC()_ADDR[SECVEC]) for all vectors in the block. */
         uint32_t bcst_rsp              : 1;  /**< [  2:  2](SR/W) Reserved, must be 0.
                                                                  Internal:
@@ -4009,6 +4098,99 @@ union cavm_pccpf_xxx_vsec_sctl
                                                                  devices. */
 #endif /* Word 0 - End */
     } cn9;
+    /* struct cavm_pccpf_xxx_vsec_sctl_cn9 cn96xxp1; */
+    struct cavm_pccpf_xxx_vsec_sctl_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t nxtfn_s               : 8;  /**< [ 31: 24](SR/W) For secure accesses, the value to be presented in PCCPF_XXX_(S)ARI_NXT[NXTFN] indicating
+                                                                 the next valid function number for this device. Must be 0x0 for non-MRML PCC
+                                                                 devices. */
+        uint32_t rid                   : 8;  /**< [ 23: 16](SR/W) Revision ID. R/W version of the value to be presented in PCCPF_XXX_REV[RID]. */
+        uint32_t msix_sec_phys         : 1;  /**< [ 15: 15](SR/W) MSI-X secure physical:
+                                                                 _ 0 = Any MSI-X vectors with SECVEC = 1 use the same physical setting as
+                                                                 nonsecure vectors, i.e. [MSIX_PHYS].
+                                                                 _ 1 = Any MSI-X vectors with SECVEC = 1 are considered physical, regardless
+                                                                 of [MSIX_PHYS]. */
+        uint32_t reserved_12_14        : 3;
+        uint32_t gia_timeout           : 6;  /**< [ 11:  6](SR/W) GIA timeout (2^[GIA_TIMEOUT] clock cycles). Timeout for MSI-X commits. When zero, wait
+                                                                 for commits is disabled.
+                                                                 For RVU, hardware uses RVU PF0's [GIA_TIMEOUT]. */
+        uint32_t node                  : 2;  /**< [  5:  4](SR/W) Node number. */
+        uint32_t ea                    : 1;  /**< [  3:  3](SRO) Enable PCI enhanced allocation. Always set.
+
+                                                                 Addresses are discovered using enhanced allocation and PCCPF_XXX_EA_ENTRY().
+                                                                 Standard BARs are read-only zero (PCCPF_XXX_BAR0L, PCCPF_XXX_BAR0U,
+                                                                 PCCPF_XXX_BAR2L, PCCPF_XXX_BAR2U, PCCPF_XXX_BAR4L, PCCPF_XXX_BAR4U,
+                                                                 PCCPF_XXX_SRIOV_BAR0L, PCCPF_XXX_SRIOV_BAR0U, PCCPF_XXX_SRIOV_BAR2L,
+                                                                 PCCPF_XXX_SRIOV_BAR2U, PCCPF_XXX_SRIOV_BAR4L, PCCPF_XXX_SRIOV_BAR4U). */
+        uint32_t msix_sec_en           : 1;  /**< [  2:  2](SR/W) MSI-X secure enable:
+                                                                 _ 0 = Any MSI-X vectors with SECVEC = 1, or all vectors if [MSIX_SEC], use
+                                                                 the same enable settings as nonsecure vectors based on normal PCIe
+                                                                 rules, i.e. are enabled when PCCPF_XXX_MSIX_CAP_HDR[MSIXEN]=1 and
+                                                                 unmasked when PCCPF_XXX_MSIX_CAP_HDR[FUNM]=0 and PCCPF_XXX_CMD[ME]=1.
+                                                                 _ 1 = Any MSI-X vectors with SECVEC = 1, or all vectors if [MSIX_SEC], will
+                                                                 act as if PCCPF_XXX_MSIX_CAP_HDR[MSIXEN]=1, PCCPF_XXX_MSIX_CAP_HDR[FUNM]=0
+                                                                 and PCCPF_XXX_CMD[ME]=1,
+                                                                 regardless of the true setting of those bits. Nonsecure vectors are
+                                                                 unaffected. Blocks that have both secure and nonsecure vectors in use
+                                                                 simultaneously may want to use this setting to prevent the nonsecure world
+                                                                 from globally disabling secure interrupts. */
+        uint32_t msix_sec              : 1;  /**< [  1:  1](SR/W) All MSI-X interrupts are secure. This is equivalent to setting the per-vector secure bit
+                                                                 (e.g. GTI_MSIX_VEC()_ADDR[SECVEC]) for all vectors in the block. */
+        uint32_t msix_phys             : 1;  /**< [  0:  0](SR/W) MSI-X interrupts are physical.
+                                                                 0 = MSI-X interrupt vector addresses are standard virtual addresses and subject to SMMU
+                                                                 address translation.
+                                                                 1 = MSI-X interrupt vector addresses are considered physical addresses and PCC MSI-X
+                                                                 interrupt delivery will bypass the SMMU. */
+#else /* Word 0 - Little Endian */
+        uint32_t msix_phys             : 1;  /**< [  0:  0](SR/W) MSI-X interrupts are physical.
+                                                                 0 = MSI-X interrupt vector addresses are standard virtual addresses and subject to SMMU
+                                                                 address translation.
+                                                                 1 = MSI-X interrupt vector addresses are considered physical addresses and PCC MSI-X
+                                                                 interrupt delivery will bypass the SMMU. */
+        uint32_t msix_sec              : 1;  /**< [  1:  1](SR/W) All MSI-X interrupts are secure. This is equivalent to setting the per-vector secure bit
+                                                                 (e.g. GTI_MSIX_VEC()_ADDR[SECVEC]) for all vectors in the block. */
+        uint32_t msix_sec_en           : 1;  /**< [  2:  2](SR/W) MSI-X secure enable:
+                                                                 _ 0 = Any MSI-X vectors with SECVEC = 1, or all vectors if [MSIX_SEC], use
+                                                                 the same enable settings as nonsecure vectors based on normal PCIe
+                                                                 rules, i.e. are enabled when PCCPF_XXX_MSIX_CAP_HDR[MSIXEN]=1 and
+                                                                 unmasked when PCCPF_XXX_MSIX_CAP_HDR[FUNM]=0 and PCCPF_XXX_CMD[ME]=1.
+                                                                 _ 1 = Any MSI-X vectors with SECVEC = 1, or all vectors if [MSIX_SEC], will
+                                                                 act as if PCCPF_XXX_MSIX_CAP_HDR[MSIXEN]=1, PCCPF_XXX_MSIX_CAP_HDR[FUNM]=0
+                                                                 and PCCPF_XXX_CMD[ME]=1,
+                                                                 regardless of the true setting of those bits. Nonsecure vectors are
+                                                                 unaffected. Blocks that have both secure and nonsecure vectors in use
+                                                                 simultaneously may want to use this setting to prevent the nonsecure world
+                                                                 from globally disabling secure interrupts. */
+        uint32_t ea                    : 1;  /**< [  3:  3](SRO) Enable PCI enhanced allocation. Always set.
+
+                                                                 Addresses are discovered using enhanced allocation and PCCPF_XXX_EA_ENTRY().
+                                                                 Standard BARs are read-only zero (PCCPF_XXX_BAR0L, PCCPF_XXX_BAR0U,
+                                                                 PCCPF_XXX_BAR2L, PCCPF_XXX_BAR2U, PCCPF_XXX_BAR4L, PCCPF_XXX_BAR4U,
+                                                                 PCCPF_XXX_SRIOV_BAR0L, PCCPF_XXX_SRIOV_BAR0U, PCCPF_XXX_SRIOV_BAR2L,
+                                                                 PCCPF_XXX_SRIOV_BAR2U, PCCPF_XXX_SRIOV_BAR4L, PCCPF_XXX_SRIOV_BAR4U). */
+        uint32_t node                  : 2;  /**< [  5:  4](SR/W) Node number. */
+        uint32_t gia_timeout           : 6;  /**< [ 11:  6](SR/W) GIA timeout (2^[GIA_TIMEOUT] clock cycles). Timeout for MSI-X commits. When zero, wait
+                                                                 for commits is disabled.
+                                                                 For RVU, hardware uses RVU PF0's [GIA_TIMEOUT]. */
+        uint32_t reserved_12_14        : 3;
+        uint32_t msix_sec_phys         : 1;  /**< [ 15: 15](SR/W) MSI-X secure physical:
+                                                                 _ 0 = Any MSI-X vectors with SECVEC = 1 use the same physical setting as
+                                                                 nonsecure vectors, i.e. [MSIX_PHYS].
+                                                                 _ 1 = Any MSI-X vectors with SECVEC = 1 are considered physical, regardless
+                                                                 of [MSIX_PHYS]. */
+        uint32_t rid                   : 8;  /**< [ 23: 16](SR/W) Revision ID. R/W version of the value to be presented in PCCPF_XXX_REV[RID]. */
+        uint32_t nxtfn_s               : 8;  /**< [ 31: 24](SR/W) For secure accesses, the value to be presented in PCCPF_XXX_(S)ARI_NXT[NXTFN] indicating
+                                                                 the next valid function number for this device. Must be 0x0 for non-MRML PCC
+                                                                 devices. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pccpf_xxx_vsec_sctl_cn96xxp3 cn98xx; */
+    /* struct cavm_pccpf_xxx_vsec_sctl_cn9 cnf95xxp1; */
+    /* struct cavm_pccpf_xxx_vsec_sctl_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_pccpf_xxx_vsec_sctl_cn96xxp3 f95mm; */
+    /* struct cavm_pccpf_xxx_vsec_sctl_cn9 f95o; */
+    /* struct cavm_pccpf_xxx_vsec_sctl_cn96xxp3 loki; */
 };
 typedef union cavm_pccpf_xxx_vsec_sctl cavm_pccpf_xxx_vsec_sctl_t;
 

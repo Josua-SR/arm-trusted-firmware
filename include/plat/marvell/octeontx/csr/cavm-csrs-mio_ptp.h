@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -46,6 +46,7 @@
 #define CAVM_MIO_PTP_EXT_SEL_E_QLM_REFX_CN98XX(a) (0x10 + (a))
 #define CAVM_MIO_PTP_EXT_SEL_E_QLM_REFX_CNF95XX(a) (0x38 + (a))
 #define CAVM_MIO_PTP_EXT_SEL_E_QLM_REFX_F95MM(a) (0x38 + (a))
+#define CAVM_MIO_PTP_EXT_SEL_E_QLM_REFX_F95O(a) (0x38 + (a))
 #define CAVM_MIO_PTP_EXT_SEL_E_QLM_REFX_LOKI(a) (0x38 + (a))
 
 /**
@@ -534,6 +535,7 @@ union cavm_mio_ptp_clock_cfg
     /* struct cavm_mio_ptp_clock_cfg_s cnf95xxp1; */
     /* struct cavm_mio_ptp_clock_cfg_cn96xxp3 cnf95xxp2; */
     /* struct cavm_mio_ptp_clock_cfg_cn96xxp3 f95mm; */
+    /* struct cavm_mio_ptp_clock_cfg_cn96xxp3 f95o; */
     /* struct cavm_mio_ptp_clock_cfg_cn96xxp3 loki; */
 };
 typedef union cavm_mio_ptp_clock_cfg cavm_mio_ptp_clock_cfg_t;
@@ -1161,6 +1163,7 @@ union cavm_mio_ptp_msix_vecx_addr
     /* struct cavm_mio_ptp_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_mio_ptp_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_mio_ptp_msix_vecx_addr_cn96xxp3 f95mm; */
+    /* struct cavm_mio_ptp_msix_vecx_addr_cn96xxp3 f95o; */
     /* struct cavm_mio_ptp_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_mio_ptp_msix_vecx_addr cavm_mio_ptp_msix_vecx_addr_t;

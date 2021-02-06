@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -626,6 +626,70 @@ union cavm_ap_ccsidr_el1
     /* struct cavm_ap_ccsidr_el1_cn9 cnf95xxp1; */
     /* struct cavm_ap_ccsidr_el1_cn96xxp3 cnf95xxp2; */
     /* struct cavm_ap_ccsidr_el1_cn96xxp3 f95mm; */
+    struct cavm_ap_ccsidr_el1_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t wt                    : 1;  /**< [ 31: 31](RO) Indicates whether the selected cache level supports write-through.
+                                                                 0 = Write-through not supported.
+                                                                 1 = Write-through supported.
+
+                                                                 For CNXXXX does not apply as hardware managed coherence. */
+        uint32_t wb                    : 1;  /**< [ 30: 30](RO) Indicates whether the selected cache level supports write-back.
+                                                                 0 = Write-back not supported.
+                                                                 1 = Write-back supported.
+
+                                                                 For CNXXXX does not apply as hardware managed coherence. */
+        uint32_t ra                    : 1;  /**< [ 29: 29](RO) Indicates whether the selected cache level supports read-allocation.
+                                                                 0 = Read-allocation not supported.
+                                                                 1 = Read-allocation supported.
+
+                                                                 For CNXXXX does not apply as hardware managed coherence. */
+        uint32_t wa                    : 1;  /**< [ 28: 28](RO) Indicates whether the selected cache level supports write-allocation.
+                                                                 0 = Write-allocation not supported.
+                                                                 1 = Write-allocation supported.
+
+                                                                 For CNXXXX does not apply as hardware managed coherence. */
+        uint32_t numsets               : 15; /**< [ 27: 13](RO) Number of sets in cache minus 1, therefore a value of 0
+                                                                 indicates 1 set in the cache. The number of sets does not have
+                                                                 to be a power of 2. */
+        uint32_t associativity         : 10; /**< [ 12:  3](RO) Associativity of cache minus 1, therefore a value of 0 indicates
+                                                                 an associativity of 1. The associativity does not have to be a
+                                                                 power of 2. */
+        uint32_t linesize              : 3;  /**< [  2:  0](RO) Cache-line size, in (Log2(Number of bytes in cache line)) - 4.
+
+                                                                 For CNXXXX, 128 bytes. */
+#else /* Word 0 - Little Endian */
+        uint32_t linesize              : 3;  /**< [  2:  0](RO) Cache-line size, in (Log2(Number of bytes in cache line)) - 4.
+
+                                                                 For CNXXXX, 128 bytes. */
+        uint32_t associativity         : 10; /**< [ 12:  3](RO) Associativity of cache minus 1, therefore a value of 0 indicates
+                                                                 an associativity of 1. The associativity does not have to be a
+                                                                 power of 2. */
+        uint32_t numsets               : 15; /**< [ 27: 13](RO) Number of sets in cache minus 1, therefore a value of 0
+                                                                 indicates 1 set in the cache. The number of sets does not have
+                                                                 to be a power of 2. */
+        uint32_t wa                    : 1;  /**< [ 28: 28](RO) Indicates whether the selected cache level supports write-allocation.
+                                                                 0 = Write-allocation not supported.
+                                                                 1 = Write-allocation supported.
+
+                                                                 For CNXXXX does not apply as hardware managed coherence. */
+        uint32_t ra                    : 1;  /**< [ 29: 29](RO) Indicates whether the selected cache level supports read-allocation.
+                                                                 0 = Read-allocation not supported.
+                                                                 1 = Read-allocation supported.
+
+                                                                 For CNXXXX does not apply as hardware managed coherence. */
+        uint32_t wb                    : 1;  /**< [ 30: 30](RO) Indicates whether the selected cache level supports write-back.
+                                                                 0 = Write-back not supported.
+                                                                 1 = Write-back supported.
+
+                                                                 For CNXXXX does not apply as hardware managed coherence. */
+        uint32_t wt                    : 1;  /**< [ 31: 31](RO) Indicates whether the selected cache level supports write-through.
+                                                                 0 = Write-through not supported.
+                                                                 1 = Write-through supported.
+
+                                                                 For CNXXXX does not apply as hardware managed coherence. */
+#endif /* Word 0 - End */
+    } f95o;
     /* struct cavm_ap_ccsidr_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_ccsidr_el1 cavm_ap_ccsidr_el1_t;
@@ -5025,6 +5089,7 @@ union cavm_ap_cvm_debug7_el3
     /* struct cavm_ap_cvm_debug7_el3_s cnf95xxp1; */
     /* struct cavm_ap_cvm_debug7_el3_cn96xxp3 cnf95xxp2; */
     /* struct cavm_ap_cvm_debug7_el3_cn96xxp3 f95mm; */
+    /* struct cavm_ap_cvm_debug7_el3_s f95o; */
     /* struct cavm_ap_cvm_debug7_el3_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvm_debug7_el3 cavm_ap_cvm_debug7_el3_t;
@@ -5328,6 +5393,7 @@ union cavm_ap_cvm_erricache_el1
     /* struct cavm_ap_cvm_erricache_el1_cn9 cnf95xxp1; */
     /* struct cavm_ap_cvm_erricache_el1_cn96xxp3 cnf95xxp2; */
     /* struct cavm_ap_cvm_erricache_el1_cn96xxp3 f95mm; */
+    /* struct cavm_ap_cvm_erricache_el1_cn9 f95o; */
     /* struct cavm_ap_cvm_erricache_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvm_erricache_el1 cavm_ap_cvm_erricache_el1_t;
@@ -6450,6 +6516,7 @@ union cavm_ap_cvm_statprofcmp_el1
     /* struct cavm_ap_cvm_statprofcmp_el1_s cnf95xxp1; */
     /* struct cavm_ap_cvm_statprofcmp_el1_cn96xxp3 cnf95xxp2; */
     /* struct cavm_ap_cvm_statprofcmp_el1_cn96xxp3 f95mm; */
+    /* struct cavm_ap_cvm_statprofcmp_el1_s f95o; */
     /* struct cavm_ap_cvm_statprofcmp_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvm_statprofcmp_el1 cavm_ap_cvm_statprofcmp_el1_t;
@@ -6571,6 +6638,50 @@ union cavm_ap_cvm_statprofctl_el1
     /* struct cavm_ap_cvm_statprofctl_el1_s cnf95xxp1; */
     /* struct cavm_ap_cvm_statprofctl_el1_cn96xxp3 cnf95xxp2; */
     /* struct cavm_ap_cvm_statprofctl_el1_cn96xxp3 f95mm; */
+    struct cavm_ap_cvm_statprofctl_el1_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_6_63         : 58;
+        uint64_t el                    : 3;  /**< [  5:  3](R/W) When in directed sample mode, indicates whether the instruction matching
+                                                                 logic includes a comparison of the EL of the target instruction.
+                                                                 0x0 = Do not include an EL compare.
+                                                                 0x4 = Instruction match if value match and instruction EL=0.
+                                                                 0x5 = Instruction match if value match and instruction EL=1.
+                                                                 0x6 = Instruction match if value match and instruction EL=2.
+                                                                 0x7 = Instruction match if value match and instruction EL=3. */
+        uint64_t oc_pc                 : 1;  /**< [  2:  2](R/W) When in directed sample mode, indicates whether the instruction to be
+                                                                 sample is found by matching the PC or the OpCode.
+                                                                 0 = Comparator matches AP_CVM_STATPROFCMP_EL1[52:2] against instruction PC.
+                                                                 1 = Comparator matches AP_CVM_STATPROFCMP_EL1[31:0] against instruction opcode
+                                                                    with bits enabled for comparison with a corresponding 1 in AP_CVM_STATPROFCMP_EL1[63:32]. */
+        uint64_t dir_sample            : 1;  /**< [  1:  1](R/W) When set, replaces statistical profile's random sample selection logic with the
+                                                                 output of the instruction/address comparator described in AP_CVM_STATPROFCMP_EL1[CMP_VAL]
+                                                                 and AP_CVM_STATPROFCTL_EL1[OC_PC]. This provides the ability to profile a specific
+                                                                 instruction. */
+        uint64_t ernd                  : 1;  /**< [  0:  0](R/W) Provides the value for AP_PMSIDR_EL1[ERND]. This field describes how
+                                                                 randomization is used in selecting the sample. See AP_PMSIDR_EL1[ERND]. */
+#else /* Word 0 - Little Endian */
+        uint64_t ernd                  : 1;  /**< [  0:  0](R/W) Provides the value for AP_PMSIDR_EL1[ERND]. This field describes how
+                                                                 randomization is used in selecting the sample. See AP_PMSIDR_EL1[ERND]. */
+        uint64_t dir_sample            : 1;  /**< [  1:  1](R/W) When set, replaces statistical profile's random sample selection logic with the
+                                                                 output of the instruction/address comparator described in AP_CVM_STATPROFCMP_EL1[CMP_VAL]
+                                                                 and AP_CVM_STATPROFCTL_EL1[OC_PC]. This provides the ability to profile a specific
+                                                                 instruction. */
+        uint64_t oc_pc                 : 1;  /**< [  2:  2](R/W) When in directed sample mode, indicates whether the instruction to be
+                                                                 sample is found by matching the PC or the OpCode.
+                                                                 0 = Comparator matches AP_CVM_STATPROFCMP_EL1[52:2] against instruction PC.
+                                                                 1 = Comparator matches AP_CVM_STATPROFCMP_EL1[31:0] against instruction opcode
+                                                                    with bits enabled for comparison with a corresponding 1 in AP_CVM_STATPROFCMP_EL1[63:32]. */
+        uint64_t el                    : 3;  /**< [  5:  3](R/W) When in directed sample mode, indicates whether the instruction matching
+                                                                 logic includes a comparison of the EL of the target instruction.
+                                                                 0x0 = Do not include an EL compare.
+                                                                 0x4 = Instruction match if value match and instruction EL=0.
+                                                                 0x5 = Instruction match if value match and instruction EL=1.
+                                                                 0x6 = Instruction match if value match and instruction EL=2.
+                                                                 0x7 = Instruction match if value match and instruction EL=3. */
+        uint64_t reserved_6_63         : 58;
+#endif /* Word 0 - End */
+    } f95o;
     /* struct cavm_ap_cvm_statprofctl_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvm_statprofctl_el1 cavm_ap_cvm_statprofctl_el1_t;
@@ -6804,6 +6915,7 @@ union cavm_ap_cvm_trapctlx_el3
     /* struct cavm_ap_cvm_trapctlx_el3_s cnf95xxp1; */
     /* struct cavm_ap_cvm_trapctlx_el3_cn96xxp3 cnf95xxp2; */
     /* struct cavm_ap_cvm_trapctlx_el3_cn96xxp3 f95mm; */
+    /* struct cavm_ap_cvm_trapctlx_el3_s f95o; */
     /* struct cavm_ap_cvm_trapctlx_el3_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvm_trapctlx_el3 cavm_ap_cvm_trapctlx_el3_t;
@@ -7483,6 +7595,7 @@ union cavm_ap_cvmctl2_el1
     /* struct cavm_ap_cvmctl2_el1_cn96xxp1 cnf95xxp1; */
     /* struct cavm_ap_cvmctl2_el1_cn96xxp3 cnf95xxp2; */
     /* struct cavm_ap_cvmctl2_el1_cn96xxp3 f95mm; */
+    /* struct cavm_ap_cvmctl2_el1_s f95o; */
     /* struct cavm_ap_cvmctl2_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvmctl2_el1 cavm_ap_cvmctl2_el1_t;
@@ -8364,6 +8477,154 @@ union cavm_ap_cvmctl_el1
     } cnf95xxp1;
     /* struct cavm_ap_cvmctl_el1_cn96xxp3 cnf95xxp2; */
     /* struct cavm_ap_cvmctl_el1_cn96xxp3 f95mm; */
+    struct cavm_ap_cvmctl_el1_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t acquire_imposes_barrier : 1;/**< [ 63: 63](R/W) If set, instructions with acquire properties have additional dependence
+                                                                 with later instructions. */
+        uint64_t serialize_io_loads    : 1;  /**< [ 62: 62](R/W) If set, serialize IO loads. */
+        uint64_t disable_store_barrier_func : 1;/**< [ 61: 61](R/W) Disable store barrier functionality (v8.5 disable). */
+        uint64_t disable_large_offset_dpref : 1;/**< [ 60: 60](R/W) Disable large offset predictor. */
+        uint64_t disable_forward_progress : 1;/**< [ 59: 59](R/W) Disable forward progress requirement for remote TLBI flow. For diagnostic use only. */
+        uint64_t force_st_r            : 1;  /**< [ 58: 58](R/W) Force release attributes to all stores. For diagnostic use only. */
+        uint64_t force_ld_a            : 1;  /**< [ 57: 57](R/W) Force acquire attributes to all loads. For diagnostic use only. */
+        uint64_t disable_const         : 1;  /**< [ 56: 56](R/W) Disable constant optimization. */
+        uint64_t disable_alias         : 1;  /**< [ 55: 55](R/W) Disable alias optimization. */
+        uint64_t disable_ldp_stp_fiss  : 1;  /**< [ 54: 54](R/W) Disable ldp/stp fissioning with unaligned prediction. */
+        uint64_t disable_io_pred       : 1;  /**< [ 53: 53](R/W) Disable IO space prediction. */
+        uint64_t disable_unaligned_pred : 1; /**< [ 52: 52](R/W) Disable unaligned prediction. */
+        uint64_t disable_ldst_ordering_pred : 1;/**< [ 51: 51](R/W) Disable load/store ordering prediction. */
+        uint64_t force_trc_clock       : 1;  /**< [ 50: 50](R/W) Force trace etm/etr clocks on. For diagnostic use only. */
+        uint64_t disable_branch_elimination : 1;/**< [ 49: 49](R/W) Disable branch elimination. */
+        uint64_t disable_optimum_occupancy : 1;/**< [ 48: 48](R/W) Increase ibuf occupancy time. */
+        uint64_t rsvd_47               : 1;  /**< [ 47: 47](R/W) Reserved. */
+        uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
+                                                                 0 = Weak ordering.
+                                                                 1 = Strong ordering.
+
+                                                                 Internal:
+                                                                 CN8XXX is always strong ordering. */
+        uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
+        uint64_t disable_ooo           : 1;  /**< [ 44: 44](R/W) Disable all out-of-order. */
+        uint64_t dpref                 : 4;  /**< [ 43: 40](R/W) Dstream prefetch control.
+                                                                 0x0 = No hardware data prefetch. This implicitly disables large offset
+                                                                 prefetcher (AP_CVMCTL_EL1[DISABLE_LARGE_OFFSET_DPREF]).
+                                                                 0x1 = Delta stream prefetcher activated only when there is no backpressure.
+                                                                 0x2 = Both delta stream and next line prefetchers activated only when there is
+                                                                 no backpressure.
+                                                                 0x9 = Delta stream prefetcher activated regardless of backpressure.
+                                                                 0xA = Both delta stream and next line prefetchers activated regardless of
+                                                                 backpressure.
+                                                                 _else = Unpredictable.
+
+                                                                 For values 1, 2, 9, and 10, the large offset prefetcher
+                                                                 (AP_CVMCTL_EL1[DISABLE_LARGE_OFFSET_DPREF]) has to be activated / deactivated
+                                                                 separately. */
+        uint64_t mrs_msr_hazard        : 1;  /**< [ 39: 39](R/W) Disable MRS/MSR pipelining, assume hazards. */
+        uint64_t disable_eret_pred     : 1;  /**< [ 38: 38](R/W) Disable ERET prediction. */
+        uint64_t disable_casp          : 1;  /**< [ 37: 37](R/W) Disable the CASP instruction. */
+        uint64_t disable_cas           : 1;  /**< [ 36: 36](R/W) Disable the CAS instruction. */
+        uint64_t reserved_35           : 1;
+        uint64_t disable_wfe           : 1;  /**< [ 34: 34](R/W) Disable WFE. */
+        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1.
+                                                                 Internal:
+                                                                 FIXME does this go away with CN98XX. */
+        uint64_t isb_flush             : 1;  /**< [ 32: 32](R/W) Enable pipeline flush after an ISB. */
+        uint64_t wfe_defer             : 8;  /**< [ 31: 24](R/W) WFE defer timer setting.  Time in core-clocks = {| WFE_DEFER, WFE_DEFER\<3:0\>} \<\<
+                                                                 WFE_DEFER\<7:4\>. */
+        uint64_t ldil1hwprefdis        : 1;  /**< [ 23: 23](R/W) Disable Istream LDI L1 hardware prefetcher. */
+        uint64_t force_icache_parity   : 1;  /**< [ 22: 22](R/W) Force icache correctable parity error on next Icache fill. This bit clears itself after
+                                                                 the fill operation. */
+        uint64_t suppress_parity_checking : 1;/**< [ 21: 21](R/W) Suppress Icache correctable parity checking. */
+        uint64_t no_exc_icache_parity  : 1;  /**< [ 20: 20](R/W) Suppress exception on Icache correctable parity error. */
+        uint64_t reserved_16_19        : 4;
+        uint64_t reserved_10_15        : 6;
+        uint64_t reserved_9            : 1;
+        uint64_t disable_branch_folding : 1; /**< [  8:  8](R/W) Disable branch folding and other fusions. */
+        uint64_t disable_wfi           : 1;  /**< [  7:  7](R/W) Disable WFI/WFE. */
+        uint64_t ldil1swprefdis        : 1;  /**< [  6:  6](R/W) Disable LDI L1 software prefetch instructions (PRFM). */
+        uint64_t force_issue_clock     : 1;  /**< [  5:  5](R/W) Force issue-unit clock. */
+        uint64_t force_exe_clock       : 1;  /**< [  4:  4](R/W) Force execution-unit clock. */
+        uint64_t force_csr_clock       : 1;  /**< [  3:  3](R/W) Force CSR clock. */
+        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained).
+                                                                 Internal:
+                                                                 CN88XX-like mode. */
+        uint64_t random_icache         : 1;  /**< [  1:  1](R/W) Random Icache replacement. */
+        uint64_t disable_icache        : 1;  /**< [  0:  0](R/W) Disable Icache. */
+#else /* Word 0 - Little Endian */
+        uint64_t disable_icache        : 1;  /**< [  0:  0](R/W) Disable Icache. */
+        uint64_t random_icache         : 1;  /**< [  1:  1](R/W) Random Icache replacement. */
+        uint64_t ldil1specdis          : 1;  /**< [  2:  2](R/W) Disable all LDI L1 speculative fill requests (only demand fills with machine drained).
+                                                                 Internal:
+                                                                 CN88XX-like mode. */
+        uint64_t force_csr_clock       : 1;  /**< [  3:  3](R/W) Force CSR clock. */
+        uint64_t force_exe_clock       : 1;  /**< [  4:  4](R/W) Force execution-unit clock. */
+        uint64_t force_issue_clock     : 1;  /**< [  5:  5](R/W) Force issue-unit clock. */
+        uint64_t ldil1swprefdis        : 1;  /**< [  6:  6](R/W) Disable LDI L1 software prefetch instructions (PRFM). */
+        uint64_t disable_wfi           : 1;  /**< [  7:  7](R/W) Disable WFI/WFE. */
+        uint64_t disable_branch_folding : 1; /**< [  8:  8](R/W) Disable branch folding and other fusions. */
+        uint64_t reserved_9            : 1;
+        uint64_t reserved_10_15        : 6;
+        uint64_t reserved_16_19        : 4;
+        uint64_t no_exc_icache_parity  : 1;  /**< [ 20: 20](R/W) Suppress exception on Icache correctable parity error. */
+        uint64_t suppress_parity_checking : 1;/**< [ 21: 21](R/W) Suppress Icache correctable parity checking. */
+        uint64_t force_icache_parity   : 1;  /**< [ 22: 22](R/W) Force icache correctable parity error on next Icache fill. This bit clears itself after
+                                                                 the fill operation. */
+        uint64_t ldil1hwprefdis        : 1;  /**< [ 23: 23](R/W) Disable Istream LDI L1 hardware prefetcher. */
+        uint64_t wfe_defer             : 8;  /**< [ 31: 24](R/W) WFE defer timer setting.  Time in core-clocks = {| WFE_DEFER, WFE_DEFER\<3:0\>} \<\<
+                                                                 WFE_DEFER\<7:4\>. */
+        uint64_t isb_flush             : 1;  /**< [ 32: 32](R/W) Enable pipeline flush after an ISB. */
+        uint64_t enable_v81            : 1;  /**< [ 33: 33](RO) Enable v8.1 features, modifying the ID registers to show v8.1.
+                                                                 Internal:
+                                                                 FIXME does this go away with CN98XX. */
+        uint64_t disable_wfe           : 1;  /**< [ 34: 34](R/W) Disable WFE. */
+        uint64_t reserved_35           : 1;
+        uint64_t disable_cas           : 1;  /**< [ 36: 36](R/W) Disable the CAS instruction. */
+        uint64_t disable_casp          : 1;  /**< [ 37: 37](R/W) Disable the CASP instruction. */
+        uint64_t disable_eret_pred     : 1;  /**< [ 38: 38](R/W) Disable ERET prediction. */
+        uint64_t mrs_msr_hazard        : 1;  /**< [ 39: 39](R/W) Disable MRS/MSR pipelining, assume hazards. */
+        uint64_t dpref                 : 4;  /**< [ 43: 40](R/W) Dstream prefetch control.
+                                                                 0x0 = No hardware data prefetch. This implicitly disables large offset
+                                                                 prefetcher (AP_CVMCTL_EL1[DISABLE_LARGE_OFFSET_DPREF]).
+                                                                 0x1 = Delta stream prefetcher activated only when there is no backpressure.
+                                                                 0x2 = Both delta stream and next line prefetchers activated only when there is
+                                                                 no backpressure.
+                                                                 0x9 = Delta stream prefetcher activated regardless of backpressure.
+                                                                 0xA = Both delta stream and next line prefetchers activated regardless of
+                                                                 backpressure.
+                                                                 _else = Unpredictable.
+
+                                                                 For values 1, 2, 9, and 10, the large offset prefetcher
+                                                                 (AP_CVMCTL_EL1[DISABLE_LARGE_OFFSET_DPREF]) has to be activated / deactivated
+                                                                 separately. */
+        uint64_t disable_ooo           : 1;  /**< [ 44: 44](R/W) Disable all out-of-order. */
+        uint64_t disable_mem_ooo       : 1;  /**< [ 45: 45](R/W) Disable all memory out-of-order. */
+        uint64_t force_strong_ordering : 1;  /**< [ 46: 46](R/W) Force strong load ordering.
+                                                                 0 = Weak ordering.
+                                                                 1 = Strong ordering.
+
+                                                                 Internal:
+                                                                 CN8XXX is always strong ordering. */
+        uint64_t rsvd_47               : 1;  /**< [ 47: 47](R/W) Reserved. */
+        uint64_t disable_optimum_occupancy : 1;/**< [ 48: 48](R/W) Increase ibuf occupancy time. */
+        uint64_t disable_branch_elimination : 1;/**< [ 49: 49](R/W) Disable branch elimination. */
+        uint64_t force_trc_clock       : 1;  /**< [ 50: 50](R/W) Force trace etm/etr clocks on. For diagnostic use only. */
+        uint64_t disable_ldst_ordering_pred : 1;/**< [ 51: 51](R/W) Disable load/store ordering prediction. */
+        uint64_t disable_unaligned_pred : 1; /**< [ 52: 52](R/W) Disable unaligned prediction. */
+        uint64_t disable_io_pred       : 1;  /**< [ 53: 53](R/W) Disable IO space prediction. */
+        uint64_t disable_ldp_stp_fiss  : 1;  /**< [ 54: 54](R/W) Disable ldp/stp fissioning with unaligned prediction. */
+        uint64_t disable_alias         : 1;  /**< [ 55: 55](R/W) Disable alias optimization. */
+        uint64_t disable_const         : 1;  /**< [ 56: 56](R/W) Disable constant optimization. */
+        uint64_t force_ld_a            : 1;  /**< [ 57: 57](R/W) Force acquire attributes to all loads. For diagnostic use only. */
+        uint64_t force_st_r            : 1;  /**< [ 58: 58](R/W) Force release attributes to all stores. For diagnostic use only. */
+        uint64_t disable_forward_progress : 1;/**< [ 59: 59](R/W) Disable forward progress requirement for remote TLBI flow. For diagnostic use only. */
+        uint64_t disable_large_offset_dpref : 1;/**< [ 60: 60](R/W) Disable large offset predictor. */
+        uint64_t disable_store_barrier_func : 1;/**< [ 61: 61](R/W) Disable store barrier functionality (v8.5 disable). */
+        uint64_t serialize_io_loads    : 1;  /**< [ 62: 62](R/W) If set, serialize IO loads. */
+        uint64_t acquire_imposes_barrier : 1;/**< [ 63: 63](R/W) If set, instructions with acquire properties have additional dependence
+                                                                 with later instructions. */
+#endif /* Word 0 - End */
+    } f95o;
     /* struct cavm_ap_cvmctl_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvmctl_el1 cavm_ap_cvmctl_el1_t;
@@ -9837,6 +10098,144 @@ union cavm_ap_cvmmemctl1_el1
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_ap_cvmmemctl1_el1_cnf95xxp2 f95mm; */
+    struct cavm_ap_cvmmemctl1_el1_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t rsvd_59_63            : 5;  /**< [ 63: 59](R/W) Reserved. */
+        uint64_t bphy128ena            : 1;  /**< [ 58: 58](R/W) 0 = Accesses described below will trap. 1 = Allow \> 64-bit memory instructions,
+                                                                 multi-register memory instructions to BPHY I/O address regions. */
+        uint64_t specutlbmissdis       : 1;  /**< [ 57: 57](R/W) uTLB miss processing for speculative instructions disable. For diagnostic use only. */
+        uint64_t icremoteicflush       : 1;  /**< [ 56: 56](R/W) Force ICache flush when any remote IC is received.
+                                                                 0 = Do nothing.
+                                                                 1 = Flush the ICache. */
+        uint64_t rbfevictbyp3dis       : 1;  /**< [ 55: 55](R/W) MAF RBUF evict datapath 3-cycle bypass disable. For diagnostic use only. */
+        uint64_t rbfevictbyp2dis       : 1;  /**< [ 54: 54](R/W) MAF RBUF evict datapath 2-cycle bypass disable. For diagnostic use only. */
+        uint64_t xmcpriwbfdis          : 1;  /**< [ 53: 53](RO) XMC priority disable for predicted unlock WBF eviction. For diagnostic use only. */
+        uint64_t xmcpristdis           : 1;  /**< [ 52: 52](R/W) XMC priority disable for predicted unlock ST with release semantics. For diagnostic use only. */
+        uint64_t xmcpriswpdis          : 1;  /**< [ 51: 51](R/W) XMC priority disable for predicted unlock SWP with release semantics. For diagnostic use only. */
+        uint64_t xmcpricasdis          : 1;  /**< [ 50: 50](R/W) XMC priority disable for predicted unlock CAS with release semantics. For diagnostic use only. */
+        uint64_t iostmergedis          : 1;  /**< [ 49: 49](R/W) IO ST merging disable. */
+        uint64_t ioldmergedis          : 1;  /**< [ 48: 48](R/W) IO LD merging disable. */
+        uint64_t gclkforce             : 1;  /**< [ 47: 47](R/W) Force gated clocks to be on. For diagnostic use only. */
+        uint64_t ldil3prefdis          : 1;  /**< [ 46: 46](R/W) LDIL3 PREF instructions disable. */
+        uint64_t ldil2prefdis          : 1;  /**< [ 45: 45](R/W) LDIL2 PREF instructions disable. */
+        uint64_t spare44               : 1;  /**< [ 44: 44](R/W) Reserved; spare. */
+        uint64_t evatt_limited_size    : 1;  /**< [ 43: 43](R/W) 0 = Do not limit ASIDMAP/VMIDMAP size.
+                                                                 1 = ASIDMAP has 7 entries, VMIDMAP has 7 entries. */
+        uint64_t evatt_periodic_flush  : 1;  /**< [ 42: 42](R/W) 0 = EVATT is not periodically flushed.
+                                                                 1 = EVATT is flushed every 2^14 cycles. */
+        uint64_t cvap_dis              : 1;  /**< [ 41: 41](R/W) If set, convert DC_CVAP into DC_CVAC.  For diagnostic use only. */
+        uint64_t tlbinoadr             : 1;  /**< [ 40: 40](R/W) If set, convert broadcast TLBI address-based opcodes to context-based opcode. For
+                                                                 diagnostic use only. */
+        uint64_t utlbentriesm1_5       : 1;  /**< [ 39: 39](R/W) Bit\<5\> of [UTLBENTRIESM1], the number of uTLB entries minus one. The uTLB is flushed when this
+                                                                 value is changed. */
+        uint64_t tlbiremoteicflush     : 1;  /**< [ 38: 38](R/W) Force ICache flush when any remote TLBI is received.
+                                                                 0 = Do nothing.
+                                                                 1 = Flush the ICache. */
+        uint64_t tlbilocalicflush      : 1;  /**< [ 37: 37](R/W) Force ICache flush when any local TLBI is issued.
+                                                                 0 = Do nothing.
+                                                                 1 = Flush the ICache. */
+        uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
+                                                                 0 = Single counter mode (combined hit and miss latency counter).
+                                                                 1 = Dual counter mode (separate hit and miss latency counters). */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
+                                                                 Internal:
+                                                                 Backpressure is applied if:
+                                                                 \<pre\>
+                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
+                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
+                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
+                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
+                                                                 \</pre\>
+
+                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
+                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for LLC hit latency. */
+        uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
+        uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
+        uint64_t switchtagena          : 1;  /**< [  6:  6](R/W) Enable SSO switch-tag cache. */
+        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Trap any access to nonzero node id. This should be clear on multi-socket
+                                                                 systems, and set on single-socket systems. */
+        uint64_t ioatomicena           : 1;  /**< [  4:  4](R/W) Enable SSO and PKO address region.
+                                                                 0 = Accesses described below will trap.
+                                                                 1 = Allow \> 64-bit memory instructions, multi-register memory instructions, and
+                                                                 atomic instructions to SSO and PKO I/O address regions. This must be set if SSO
+                                                                 or PKO are to be used.
+
+                                                                 Other address regions (e.g. PEM) are not affected by this setting. */
+        uint64_t lmtstena              : 1;  /**< [  3:  3](R/W) Enable LMTST. */
+        uint64_t lodignoresh           : 1;  /**< [  2:  2](R/W) LocalOrderDomain DMB/DSB_NSH{ST} ignores shareability (applies to both nsh and ish pages). */
+        uint64_t lodishena             : 1;  /**< [  1:  1](R/W) LocalOrderDomain DMB/DSB_ISH{ST} enable. */
+        uint64_t lodnshena             : 1;  /**< [  0:  0](R/W) LocalOrderDomain DMB/DSB_NSH{ST} enable. */
+#else /* Word 0 - Little Endian */
+        uint64_t lodnshena             : 1;  /**< [  0:  0](R/W) LocalOrderDomain DMB/DSB_NSH{ST} enable. */
+        uint64_t lodishena             : 1;  /**< [  1:  1](R/W) LocalOrderDomain DMB/DSB_ISH{ST} enable. */
+        uint64_t lodignoresh           : 1;  /**< [  2:  2](R/W) LocalOrderDomain DMB/DSB_NSH{ST} ignores shareability (applies to both nsh and ish pages). */
+        uint64_t lmtstena              : 1;  /**< [  3:  3](R/W) Enable LMTST. */
+        uint64_t ioatomicena           : 1;  /**< [  4:  4](R/W) Enable SSO and PKO address region.
+                                                                 0 = Accesses described below will trap.
+                                                                 1 = Allow \> 64-bit memory instructions, multi-register memory instructions, and
+                                                                 atomic instructions to SSO and PKO I/O address regions. This must be set if SSO
+                                                                 or PKO are to be used.
+
+                                                                 Other address regions (e.g. PEM) are not affected by this setting. */
+        uint64_t node1trapena          : 1;  /**< [  5:  5](R/W) Trap any access to nonzero node id. This should be clear on multi-socket
+                                                                 systems, and set on single-socket systems. */
+        uint64_t switchtagena          : 1;  /**< [  6:  6](R/W) Enable SSO switch-tag cache. */
+        uint64_t spare                 : 1;  /**< [  7:  7](R/W) Reserved; spare. */
+        uint64_t dprefbpmissthresh     : 12; /**< [ 19:  8](R/W) Data-stream hardware prefetcher backpressure threshold for LLC miss latency. */
+        uint64_t dprefbphitthresh      : 12; /**< [ 31: 20](R/W) Data-stream hardware prefetcher backpressure threshold for LLC hit latency. */
+        uint64_t dprefbpctl            : 4;  /**< [ 35: 32](R/W) Data-stream hardware prefetcher backpressure control mask for dual counter mode.
+                                                                 Internal:
+                                                                 Backpressure is applied if:
+                                                                 \<pre\>
+                                                                   (   ([DPREFBPCTL]\<0\> && !hit_ctr_bp && !miss_ctr_bp)
+                                                                    || ([DPREFBPCTL]\<1\> && !hit_ctr_bp &&  miss_ctr_bp)
+                                                                    || ([DPREFBPCTL]\<2\> &&  hit_ctr_bp && !miss_ctr_bp)
+                                                                    || ([DPREFBPCTL]\<3\> &&  hit_ctr_bp &&  miss_ctr_bp))
+                                                                 \</pre\>
+
+                                                                 Where hit_ctr_bp is the MSB of the 4-bit hit counter being set, and miss_ctr_bp
+                                                                 is the MSB of the 4-bit miss counter being set. */
+        uint64_t dprefbpmode           : 1;  /**< [ 36: 36](R/W) Data-stream hardware prefetcher backpressure mode select.
+                                                                 0 = Single counter mode (combined hit and miss latency counter).
+                                                                 1 = Dual counter mode (separate hit and miss latency counters). */
+        uint64_t tlbilocalicflush      : 1;  /**< [ 37: 37](R/W) Force ICache flush when any local TLBI is issued.
+                                                                 0 = Do nothing.
+                                                                 1 = Flush the ICache. */
+        uint64_t tlbiremoteicflush     : 1;  /**< [ 38: 38](R/W) Force ICache flush when any remote TLBI is received.
+                                                                 0 = Do nothing.
+                                                                 1 = Flush the ICache. */
+        uint64_t utlbentriesm1_5       : 1;  /**< [ 39: 39](R/W) Bit\<5\> of [UTLBENTRIESM1], the number of uTLB entries minus one. The uTLB is flushed when this
+                                                                 value is changed. */
+        uint64_t tlbinoadr             : 1;  /**< [ 40: 40](R/W) If set, convert broadcast TLBI address-based opcodes to context-based opcode. For
+                                                                 diagnostic use only. */
+        uint64_t cvap_dis              : 1;  /**< [ 41: 41](R/W) If set, convert DC_CVAP into DC_CVAC.  For diagnostic use only. */
+        uint64_t evatt_periodic_flush  : 1;  /**< [ 42: 42](R/W) 0 = EVATT is not periodically flushed.
+                                                                 1 = EVATT is flushed every 2^14 cycles. */
+        uint64_t evatt_limited_size    : 1;  /**< [ 43: 43](R/W) 0 = Do not limit ASIDMAP/VMIDMAP size.
+                                                                 1 = ASIDMAP has 7 entries, VMIDMAP has 7 entries. */
+        uint64_t spare44               : 1;  /**< [ 44: 44](R/W) Reserved; spare. */
+        uint64_t ldil2prefdis          : 1;  /**< [ 45: 45](R/W) LDIL2 PREF instructions disable. */
+        uint64_t ldil3prefdis          : 1;  /**< [ 46: 46](R/W) LDIL3 PREF instructions disable. */
+        uint64_t gclkforce             : 1;  /**< [ 47: 47](R/W) Force gated clocks to be on. For diagnostic use only. */
+        uint64_t ioldmergedis          : 1;  /**< [ 48: 48](R/W) IO LD merging disable. */
+        uint64_t iostmergedis          : 1;  /**< [ 49: 49](R/W) IO ST merging disable. */
+        uint64_t xmcpricasdis          : 1;  /**< [ 50: 50](R/W) XMC priority disable for predicted unlock CAS with release semantics. For diagnostic use only. */
+        uint64_t xmcpriswpdis          : 1;  /**< [ 51: 51](R/W) XMC priority disable for predicted unlock SWP with release semantics. For diagnostic use only. */
+        uint64_t xmcpristdis           : 1;  /**< [ 52: 52](R/W) XMC priority disable for predicted unlock ST with release semantics. For diagnostic use only. */
+        uint64_t xmcpriwbfdis          : 1;  /**< [ 53: 53](RO) XMC priority disable for predicted unlock WBF eviction. For diagnostic use only. */
+        uint64_t rbfevictbyp2dis       : 1;  /**< [ 54: 54](R/W) MAF RBUF evict datapath 2-cycle bypass disable. For diagnostic use only. */
+        uint64_t rbfevictbyp3dis       : 1;  /**< [ 55: 55](R/W) MAF RBUF evict datapath 3-cycle bypass disable. For diagnostic use only. */
+        uint64_t icremoteicflush       : 1;  /**< [ 56: 56](R/W) Force ICache flush when any remote IC is received.
+                                                                 0 = Do nothing.
+                                                                 1 = Flush the ICache. */
+        uint64_t specutlbmissdis       : 1;  /**< [ 57: 57](R/W) uTLB miss processing for speculative instructions disable. For diagnostic use only. */
+        uint64_t bphy128ena            : 1;  /**< [ 58: 58](R/W) 0 = Accesses described below will trap. 1 = Allow \> 64-bit memory instructions,
+                                                                 multi-register memory instructions to BPHY I/O address regions. */
+        uint64_t rsvd_59_63            : 5;  /**< [ 63: 59](R/W) Reserved. */
+#endif /* Word 0 - End */
+    } f95o;
     /* struct cavm_ap_cvmmemctl1_el1_cnf95xxp2 loki; */
 };
 typedef union cavm_ap_cvmmemctl1_el1 cavm_ap_cvmmemctl1_el1_t;
@@ -10115,6 +10514,7 @@ union cavm_ap_cvmmemctl2_el1
     /* struct cavm_ap_cvmmemctl2_el1_s cnf95xxp1; */
     /* struct cavm_ap_cvmmemctl2_el1_cn96xxp3 cnf95xxp2; */
     /* struct cavm_ap_cvmmemctl2_el1_cn96xxp3 f95mm; */
+    /* struct cavm_ap_cvmmemctl2_el1_s f95o; */
     /* struct cavm_ap_cvmmemctl2_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_cvmmemctl2_el1 cavm_ap_cvmmemctl2_el1_t;
@@ -11644,6 +12044,7 @@ union cavm_ap_dspsr_el0
     /* struct cavm_ap_dspsr_el0_s cn98xx; */
     /* struct cavm_ap_dspsr_el0_s cnf95xx; */
     /* struct cavm_ap_dspsr_el0_s f95mm; */
+    /* struct cavm_ap_dspsr_el0_s f95o; */
     /* struct cavm_ap_dspsr_el0_s loki; */
 };
 typedef union cavm_ap_dspsr_el0 cavm_ap_dspsr_el0_t;
@@ -19726,6 +20127,7 @@ union cavm_ap_id_aa64isar1_el1
     /* struct cavm_ap_id_aa64isar1_el1_s cn98xx; */
     /* struct cavm_ap_id_aa64isar1_el1_s cnf95xx; */
     /* struct cavm_ap_id_aa64isar1_el1_s f95mm; */
+    /* struct cavm_ap_id_aa64isar1_el1_s f95o; */
     /* struct cavm_ap_id_aa64isar1_el1_s loki; */
 };
 typedef union cavm_ap_id_aa64isar1_el1 cavm_ap_id_aa64isar1_el1_t;
@@ -20920,6 +21322,7 @@ union cavm_ap_id_aa64pfr1_el1
     } cnf95xxp1;
     /* struct cavm_ap_id_aa64pfr1_el1_s cnf95xxp2; */
     /* struct cavm_ap_id_aa64pfr1_el1_s f95mm; */
+    /* struct cavm_ap_id_aa64pfr1_el1_s f95o; */
     /* struct cavm_ap_id_aa64pfr1_el1_s loki; */
 };
 typedef union cavm_ap_id_aa64pfr1_el1 cavm_ap_id_aa64pfr1_el1_t;
@@ -24363,6 +24766,7 @@ union cavm_ap_midr_el1
     /* struct cavm_ap_midr_el1_cn9 cnf95xxp1; */
     /* struct cavm_ap_midr_el1_cn96xxp3 cnf95xxp2; */
     /* struct cavm_ap_midr_el1_cn96xxp3 f95mm; */
+    /* struct cavm_ap_midr_el1_cn9 f95o; */
     /* struct cavm_ap_midr_el1_cn96xxp3 loki; */
 };
 typedef union cavm_ap_midr_el1 cavm_ap_midr_el1_t;
@@ -30164,6 +30568,7 @@ union cavm_ap_sctlr_el1
     /* struct cavm_ap_sctlr_el1_cn96xxp1_1 cn98xx; */
     /* struct cavm_ap_sctlr_el1_cn96xxp1_1 cnf95xx; */
     /* struct cavm_ap_sctlr_el1_cn96xxp1_1 f95mm; */
+    /* struct cavm_ap_sctlr_el1_cn96xxp1_1 f95o; */
     /* struct cavm_ap_sctlr_el1_cn96xxp1_1 loki; */
 };
 typedef union cavm_ap_sctlr_el1 cavm_ap_sctlr_el1_t;
@@ -30811,6 +31216,7 @@ union cavm_ap_sctlr_el2
     /* struct cavm_ap_sctlr_el2_s cn98xx; */
     /* struct cavm_ap_sctlr_el2_s cnf95xx; */
     /* struct cavm_ap_sctlr_el2_s f95mm; */
+    /* struct cavm_ap_sctlr_el2_s f95o; */
     /* struct cavm_ap_sctlr_el2_s loki; */
 };
 typedef union cavm_ap_sctlr_el2 cavm_ap_sctlr_el2_t;
@@ -32363,6 +32769,7 @@ union cavm_ap_sctlr_el2_e2h
     /* struct cavm_ap_sctlr_el2_e2h_cn96xxp1_1 cn98xx; */
     /* struct cavm_ap_sctlr_el2_e2h_cn96xxp1_1 cnf95xx; */
     /* struct cavm_ap_sctlr_el2_e2h_cn96xxp1_1 f95mm; */
+    /* struct cavm_ap_sctlr_el2_e2h_cn96xxp1_1 f95o; */
     /* struct cavm_ap_sctlr_el2_e2h_cn96xxp1_1 loki; */
 };
 typedef union cavm_ap_sctlr_el2_e2h cavm_ap_sctlr_el2_e2h_t;
@@ -32962,6 +33369,7 @@ union cavm_ap_sctlr_el3
     /* struct cavm_ap_sctlr_el3_s cn98xx; */
     /* struct cavm_ap_sctlr_el3_s cnf95xx; */
     /* struct cavm_ap_sctlr_el3_s f95mm; */
+    /* struct cavm_ap_sctlr_el3_s f95o; */
     /* struct cavm_ap_sctlr_el3_s loki; */
 };
 typedef union cavm_ap_sctlr_el3 cavm_ap_sctlr_el3_t;
@@ -33630,6 +34038,7 @@ union cavm_ap_spsr_elx
     /* struct cavm_ap_spsr_elx_s cn98xx; */
     /* struct cavm_ap_spsr_elx_s cnf95xx; */
     /* struct cavm_ap_spsr_elx_s f95mm; */
+    /* struct cavm_ap_spsr_elx_s f95o; */
     /* struct cavm_ap_spsr_elx_s loki; */
 };
 typedef union cavm_ap_spsr_elx cavm_ap_spsr_elx_t;
@@ -33853,6 +34262,8 @@ static inline uint64_t CAVM_AP_SSBS_FUNC(void)
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x30304020600ll;
     if (cavm_is_model(OCTEONTX_F95MM))
+        return 0x30304020600ll;
+    if (cavm_is_model(OCTEONTX_F95O))
         return 0x30304020600ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x30304020600ll;
@@ -39578,6 +39989,7 @@ union cavm_ap_vpidr_el2
     /* struct cavm_ap_vpidr_el2_cn9 cnf95xxp1; */
     /* struct cavm_ap_vpidr_el2_cn96xxp3 cnf95xxp2; */
     /* struct cavm_ap_vpidr_el2_cn96xxp3 f95mm; */
+    /* struct cavm_ap_vpidr_el2_cn9 f95o; */
     /* struct cavm_ap_vpidr_el2_cn96xxp3 loki; */
 };
 typedef union cavm_ap_vpidr_el2 cavm_ap_vpidr_el2_t;

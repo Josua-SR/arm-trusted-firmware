@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -353,6 +353,7 @@ union cavm_mdbw_jd_dma_cfg_word_2_s
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_mdbw_jd_dma_cfg_word_2_s_cnf95xxp2 f95mm; */
+    /* struct cavm_mdbw_jd_dma_cfg_word_2_s_cnf95xxp2 f95o; */
 };
 
 /**
@@ -543,6 +544,7 @@ union cavm_mdbw_jd_hdr_word_0_s
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_mdbw_jd_hdr_word_0_s_cnf95xxp2 f95mm; */
+    /* struct cavm_mdbw_jd_hdr_word_0_s_cnf95xxp2 f95o; */
 };
 
 /**
@@ -604,6 +606,8 @@ static inline uint64_t CAVM_MDBWX_AB_PORT_HP(uint64_t a)
         return 0x87e044002350ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044002350ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044002350ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_AB_PORT_HP", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -644,6 +648,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_CDERR_OFLOW_JTAG(uint64_t a, uint64_t 
         return 0x87e044000f40ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044000f40ll + 0x4000ll * ((a) & 0xf) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044000f40ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_CDERR_OFLOW_JTAG", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -684,6 +690,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_CDERR_UFLOW_JTAG(uint64_t a, uint64_t 
         return 0x87e044000f50ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044000f50ll + 0x4000ll * ((a) & 0xf) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044000f50ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_CDERR_UFLOW_JTAG", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -724,6 +732,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_CFG_FAT_JTAG(uint64_t a, uint64_t b)
         return 0x87e044001900ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001900ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001900ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_CFG_FAT_JTAG", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -764,6 +774,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_CFG_NFAT_JTAG(uint64_t a, uint64_t b)
         return 0x87e044002100ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044002100ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044002100ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_CFG_NFAT_JTAG", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -824,6 +836,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_CP_FAT_JTAG(uint64_t a, uint64_t b)
         return 0x87e044001a00ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001a00ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001a00ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_CP_FAT_JTAG", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -884,6 +898,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_CP_NFAT_JTAG(uint64_t a, uint64_t b)
         return 0x87e044002200ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044002200ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044002200ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_CP_NFAT_JTAG", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -949,6 +965,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_DEBUG0(uint64_t a, uint64_t b)
         return 0x87e044002330ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044002330ll + 0x4000ll * ((a) & 0xf) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044002330ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_DEBUG0", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -1025,6 +1043,34 @@ union cavm_mdbwx_ab_sltx_derr_ena_w1c
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } f95mm;
+    struct cavm_mdbwx_ab_sltx_derr_ena_w1c_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_27_63        : 37;
+        uint64_t cfg_dma_uflow         : 1;  /**< [ 26: 26](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[CFG_DMA_UFLOW]. */
+        uint64_t cfg_dma_oflow         : 1;  /**< [ 25: 25](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[CFG_DMA_OFLOW]. */
+        uint64_t reserved_13_24        : 12;
+        uint64_t wr_dma_uflow_port0    : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[WR_DMA_UFLOW_PORT0]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t wr_dma_oflow_port0    : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[WR_DMA_OFLOW_PORT0]. */
+        uint64_t reserved_5_7          : 3;
+        uint64_t rd_dma_uflow_port0    : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[RD_DMA_UFLOW_PORT0]. */
+        uint64_t reserved_1_3          : 3;
+        uint64_t rd_dma_oflow_port0    : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[RD_DMA_OFLOW_PORT0]. */
+#else /* Word 0 - Little Endian */
+        uint64_t rd_dma_oflow_port0    : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[RD_DMA_OFLOW_PORT0]. */
+        uint64_t reserved_1_3          : 3;
+        uint64_t rd_dma_uflow_port0    : 1;  /**< [  4:  4](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[RD_DMA_UFLOW_PORT0]. */
+        uint64_t reserved_5_7          : 3;
+        uint64_t wr_dma_oflow_port0    : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[WR_DMA_OFLOW_PORT0]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t wr_dma_uflow_port0    : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[WR_DMA_UFLOW_PORT0]. */
+        uint64_t reserved_13_24        : 12;
+        uint64_t cfg_dma_oflow         : 1;  /**< [ 25: 25](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[CFG_DMA_OFLOW]. */
+        uint64_t cfg_dma_uflow         : 1;  /**< [ 26: 26](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[CFG_DMA_UFLOW]. */
+        uint64_t reserved_27_63        : 37;
+#endif /* Word 0 - End */
+    } f95o;
 };
 typedef union cavm_mdbwx_ab_sltx_derr_ena_w1c cavm_mdbwx_ab_sltx_derr_ena_w1c_t;
 
@@ -1035,6 +1081,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_DERR_ENA_W1C(uint64_t a, uint64_t b)
         return 0x87e044001100ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001100ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001100ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_DERR_ENA_W1C", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -1111,6 +1159,34 @@ union cavm_mdbwx_ab_sltx_derr_ena_w1s
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } f95mm;
+    struct cavm_mdbwx_ab_sltx_derr_ena_w1s_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_27_63        : 37;
+        uint64_t cfg_dma_uflow         : 1;  /**< [ 26: 26](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[CFG_DMA_UFLOW]. */
+        uint64_t cfg_dma_oflow         : 1;  /**< [ 25: 25](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[CFG_DMA_OFLOW]. */
+        uint64_t reserved_13_24        : 12;
+        uint64_t wr_dma_uflow_port0    : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[WR_DMA_UFLOW_PORT0]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t wr_dma_oflow_port0    : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[WR_DMA_OFLOW_PORT0]. */
+        uint64_t reserved_5_7          : 3;
+        uint64_t rd_dma_uflow_port0    : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[RD_DMA_UFLOW_PORT0]. */
+        uint64_t reserved_1_3          : 3;
+        uint64_t rd_dma_oflow_port0    : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[RD_DMA_OFLOW_PORT0]. */
+#else /* Word 0 - Little Endian */
+        uint64_t rd_dma_oflow_port0    : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[RD_DMA_OFLOW_PORT0]. */
+        uint64_t reserved_1_3          : 3;
+        uint64_t rd_dma_uflow_port0    : 1;  /**< [  4:  4](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[RD_DMA_UFLOW_PORT0]. */
+        uint64_t reserved_5_7          : 3;
+        uint64_t wr_dma_oflow_port0    : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[WR_DMA_OFLOW_PORT0]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t wr_dma_uflow_port0    : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[WR_DMA_UFLOW_PORT0]. */
+        uint64_t reserved_13_24        : 12;
+        uint64_t cfg_dma_oflow         : 1;  /**< [ 25: 25](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[CFG_DMA_OFLOW]. */
+        uint64_t cfg_dma_uflow         : 1;  /**< [ 26: 26](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_DERR_INT[CFG_DMA_UFLOW]. */
+        uint64_t reserved_27_63        : 37;
+#endif /* Word 0 - End */
+    } f95o;
 };
 typedef union cavm_mdbwx_ab_sltx_derr_ena_w1s cavm_mdbwx_ab_sltx_derr_ena_w1s_t;
 
@@ -1121,6 +1197,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_DERR_ENA_W1S(uint64_t a, uint64_t b)
         return 0x87e044001000ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001000ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001000ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_DERR_ENA_W1S", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -1179,6 +1257,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_DERR_INT(uint64_t a, uint64_t b)
         return 0x87e044000e00ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044000e00ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044000e00ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_DERR_INT", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -1255,6 +1335,34 @@ union cavm_mdbwx_ab_sltx_derr_int_w1s
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } f95mm;
+    struct cavm_mdbwx_ab_sltx_derr_int_w1s_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_27_63        : 37;
+        uint64_t cfg_dma_uflow         : 1;  /**< [ 26: 26](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_DERR_INT[CFG_DMA_UFLOW]. */
+        uint64_t cfg_dma_oflow         : 1;  /**< [ 25: 25](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_DERR_INT[CFG_DMA_OFLOW]. */
+        uint64_t reserved_13_24        : 12;
+        uint64_t wr_dma_uflow_port0    : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_DERR_INT[WR_DMA_UFLOW_PORT0]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t wr_dma_oflow_port0    : 1;  /**< [  8:  8](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_DERR_INT[WR_DMA_OFLOW_PORT0]. */
+        uint64_t reserved_5_7          : 3;
+        uint64_t rd_dma_uflow_port0    : 1;  /**< [  4:  4](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_DERR_INT[RD_DMA_UFLOW_PORT0]. */
+        uint64_t reserved_1_3          : 3;
+        uint64_t rd_dma_oflow_port0    : 1;  /**< [  0:  0](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_DERR_INT[RD_DMA_OFLOW_PORT0]. */
+#else /* Word 0 - Little Endian */
+        uint64_t rd_dma_oflow_port0    : 1;  /**< [  0:  0](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_DERR_INT[RD_DMA_OFLOW_PORT0]. */
+        uint64_t reserved_1_3          : 3;
+        uint64_t rd_dma_uflow_port0    : 1;  /**< [  4:  4](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_DERR_INT[RD_DMA_UFLOW_PORT0]. */
+        uint64_t reserved_5_7          : 3;
+        uint64_t wr_dma_oflow_port0    : 1;  /**< [  8:  8](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_DERR_INT[WR_DMA_OFLOW_PORT0]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t wr_dma_uflow_port0    : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_DERR_INT[WR_DMA_UFLOW_PORT0]. */
+        uint64_t reserved_13_24        : 12;
+        uint64_t cfg_dma_oflow         : 1;  /**< [ 25: 25](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_DERR_INT[CFG_DMA_OFLOW]. */
+        uint64_t cfg_dma_uflow         : 1;  /**< [ 26: 26](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_DERR_INT[CFG_DMA_UFLOW]. */
+        uint64_t reserved_27_63        : 37;
+#endif /* Word 0 - End */
+    } f95o;
 };
 typedef union cavm_mdbwx_ab_sltx_derr_int_w1s cavm_mdbwx_ab_sltx_derr_int_w1s_t;
 
@@ -1265,6 +1373,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_DERR_INT_W1S(uint64_t a, uint64_t b)
         return 0x87e044001200ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001200ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001200ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_DERR_INT_W1S", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -1353,6 +1463,40 @@ union cavm_mdbwx_ab_sltx_fat_err_ena_w1c
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
     } f95mm;
+    struct cavm_mdbwx_ab_sltx_fat_err_ena_w1c_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_19_63        : 45;
+        uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
+                                                                 Internal:
+                                                                 Since this
+                                                                 happens before AB or job slot
+                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t wr_dma_port0          : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[WR_DMA_PORT0]. */
+        uint64_t reserved_1_7          : 7;
+        uint64_t rd_dma_port0          : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[RD_DMA_PORT0]. */
+#else /* Word 0 - Little Endian */
+        uint64_t rd_dma_port0          : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[RD_DMA_PORT0]. */
+        uint64_t reserved_1_7          : 7;
+        uint64_t wr_dma_port0          : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[WR_DMA_PORT0]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
+                                                                 Internal:
+                                                                 Since this
+                                                                 happens before AB or job slot
+                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
+        uint64_t reserved_19_63        : 45;
+#endif /* Word 0 - End */
+    } f95o;
 };
 typedef union cavm_mdbwx_ab_sltx_fat_err_ena_w1c cavm_mdbwx_ab_sltx_fat_err_ena_w1c_t;
 
@@ -1363,6 +1507,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_FAT_ERR_ENA_W1C(uint64_t a, uint64_t b
         return 0x87e044001500ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001500ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001500ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_FAT_ERR_ENA_W1C", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -1451,6 +1597,40 @@ union cavm_mdbwx_ab_sltx_fat_err_ena_w1s
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
     } f95mm;
+    struct cavm_mdbwx_ab_sltx_fat_err_ena_w1s_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_19_63        : 45;
+        uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
+                                                                 Internal:
+                                                                 Since this
+                                                                 happens before AB or job slot
+                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t wr_dma_port0          : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[WR_DMA_PORT0]. */
+        uint64_t reserved_1_7          : 7;
+        uint64_t rd_dma_port0          : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[RD_DMA_PORT0]. */
+#else /* Word 0 - Little Endian */
+        uint64_t rd_dma_port0          : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[RD_DMA_PORT0]. */
+        uint64_t reserved_1_7          : 7;
+        uint64_t wr_dma_port0          : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[WR_DMA_PORT0]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
+                                                                 Internal:
+                                                                 Since this
+                                                                 happens before AB or job slot
+                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
+        uint64_t reserved_19_63        : 45;
+#endif /* Word 0 - End */
+    } f95o;
 };
 typedef union cavm_mdbwx_ab_sltx_fat_err_ena_w1s cavm_mdbwx_ab_sltx_fat_err_ena_w1s_t;
 
@@ -1461,6 +1641,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_FAT_ERR_ENA_W1S(uint64_t a, uint64_t b
         return 0x87e044001400ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001400ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001400ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_FAT_ERR_ENA_W1S", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -1525,6 +1707,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_FAT_ERR_INT(uint64_t a, uint64_t b)
         return 0x87e044001300ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001300ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001300ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_FAT_ERR_INT", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -1613,6 +1797,40 @@ union cavm_mdbwx_ab_sltx_fat_err_int_w1s
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
     } f95mm;
+    struct cavm_mdbwx_ab_sltx_fat_err_int_w1s_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_19_63        : 45;
+        uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
+                                                                 Internal:
+                                                                 Since this
+                                                                 happens before AB or job slot
+                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t wr_dma_port0          : 1;  /**< [  8:  8](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[WR_DMA_PORT0]. */
+        uint64_t reserved_1_7          : 7;
+        uint64_t rd_dma_port0          : 1;  /**< [  0:  0](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[RD_DMA_PORT0]. */
+#else /* Word 0 - Little Endian */
+        uint64_t rd_dma_port0          : 1;  /**< [  0:  0](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[RD_DMA_PORT0]. */
+        uint64_t reserved_1_7          : 7;
+        uint64_t wr_dma_port0          : 1;  /**< [  8:  8](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[WR_DMA_PORT0]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[CFG_DMA]. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JOB_SD_FETCH]. */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[JD_FETCH].
+                                                                 Internal:
+                                                                 Since this
+                                                                 happens before AB or job slot
+                                                                 assignment, the error is a single bit and always reported in AB(0), Slot(0). */
+        uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_FAT_ERR_INT[AB]. */
+        uint64_t reserved_19_63        : 45;
+#endif /* Word 0 - End */
+    } f95o;
 };
 typedef union cavm_mdbwx_ab_sltx_fat_err_int_w1s cavm_mdbwx_ab_sltx_fat_err_int_w1s_t;
 
@@ -1623,6 +1841,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_FAT_ERR_INT_W1S(uint64_t a, uint64_t b
         return 0x87e044001600ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001600ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001600ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_FAT_ERR_INT_W1S", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -1703,6 +1923,36 @@ union cavm_mdbwx_ab_sltx_nfat_err_ena_w1c
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
     } f95mm;
+    struct cavm_mdbwx_ab_sltx_nfat_err_ena_w1c_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_19_63        : 45;
+        uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
+                                                                 Internal:
+                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t wr_dma_port0          : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[WR_DMA_PORT0]. */
+        uint64_t reserved_1_7          : 7;
+        uint64_t rd_dma_port0          : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[RD_DMA_PORT0]. */
+#else /* Word 0 - Little Endian */
+        uint64_t rd_dma_port0          : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[RD_DMA_PORT0]. */
+        uint64_t reserved_1_7          : 7;
+        uint64_t wr_dma_port0          : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[WR_DMA_PORT0]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
+                                                                 Internal:
+                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t ab                    : 1;  /**< [ 18: 18](R/W1C/H) Reads or clears enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
+        uint64_t reserved_19_63        : 45;
+#endif /* Word 0 - End */
+    } f95o;
 };
 typedef union cavm_mdbwx_ab_sltx_nfat_err_ena_w1c cavm_mdbwx_ab_sltx_nfat_err_ena_w1c_t;
 
@@ -1713,6 +1963,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_NFAT_ERR_ENA_W1C(uint64_t a, uint64_t 
         return 0x87e044001d00ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001d00ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001d00ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_NFAT_ERR_ENA_W1C", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -1793,6 +2045,36 @@ union cavm_mdbwx_ab_sltx_nfat_err_ena_w1s
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
     } f95mm;
+    struct cavm_mdbwx_ab_sltx_nfat_err_ena_w1s_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_19_63        : 45;
+        uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
+                                                                 Internal:
+                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t wr_dma_port0          : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[WR_DMA_PORT0]. */
+        uint64_t reserved_1_7          : 7;
+        uint64_t rd_dma_port0          : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[RD_DMA_PORT0]. */
+#else /* Word 0 - Little Endian */
+        uint64_t rd_dma_port0          : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[RD_DMA_PORT0]. */
+        uint64_t reserved_1_7          : 7;
+        uint64_t wr_dma_port0          : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[WR_DMA_PORT0]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
+                                                                 Internal:
+                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets enable for MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
+        uint64_t reserved_19_63        : 45;
+#endif /* Word 0 - End */
+    } f95o;
 };
 typedef union cavm_mdbwx_ab_sltx_nfat_err_ena_w1s cavm_mdbwx_ab_sltx_nfat_err_ena_w1s_t;
 
@@ -1803,6 +2085,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_NFAT_ERR_ENA_W1S(uint64_t a, uint64_t 
         return 0x87e044001c00ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001c00ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001c00ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_NFAT_ERR_ENA_W1S", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -1863,6 +2147,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_NFAT_ERR_INT(uint64_t a, uint64_t b)
         return 0x87e044001b00ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001b00ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001b00ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_NFAT_ERR_INT", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -1943,6 +2229,36 @@ union cavm_mdbwx_ab_sltx_nfat_err_int_w1s
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
     } f95mm;
+    struct cavm_mdbwx_ab_sltx_nfat_err_int_w1s_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_19_63        : 45;
+        uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
+                                                                 Internal:
+                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t wr_dma_port0          : 1;  /**< [  8:  8](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[WR_DMA_PORT0]. */
+        uint64_t reserved_1_7          : 7;
+        uint64_t rd_dma_port0          : 1;  /**< [  0:  0](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[RD_DMA_PORT0]. */
+#else /* Word 0 - Little Endian */
+        uint64_t rd_dma_port0          : 1;  /**< [  0:  0](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[RD_DMA_PORT0]. */
+        uint64_t reserved_1_7          : 7;
+        uint64_t wr_dma_port0          : 1;  /**< [  8:  8](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[WR_DMA_PORT0]. */
+        uint64_t reserved_9_11         : 3;
+        uint64_t cfg_dma               : 1;  /**< [ 12: 12](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[CFG_DMA]. */
+        uint64_t reserved_13_15        : 3;
+        uint64_t job_sd_fetch          : 1;  /**< [ 16: 16](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JOB_SD_FETCH]. */
+        uint64_t jd_fetch              : 1;  /**< [ 17: 17](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[JD_FETCH].
+                                                                 Internal:
+                                                                 This error, job tag is only valid for SLT(0). */
+        uint64_t ab                    : 1;  /**< [ 18: 18](R/W1S/H) Reads or sets MDBW(0..42)_AB_SLT(0..1)_NFAT_ERR_INT[AB]. */
+        uint64_t reserved_19_63        : 45;
+#endif /* Word 0 - End */
+    } f95o;
 };
 typedef union cavm_mdbwx_ab_sltx_nfat_err_int_w1s cavm_mdbwx_ab_sltx_nfat_err_int_w1s_t;
 
@@ -1953,6 +2269,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_NFAT_ERR_INT_W1S(uint64_t a, uint64_t 
         return 0x87e044001e00ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001e00ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001e00ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_NFAT_ERR_INT_W1S", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -1993,6 +2311,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_RD_FAT_JTAG(uint64_t a, uint64_t b)
         return 0x87e044001700ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001700ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001700ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_RD_FAT_JTAG", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -2033,6 +2353,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_RD_NFAT_JTAG(uint64_t a, uint64_t b)
         return 0x87e044001f00ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001f00ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001f00ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_RD_NFAT_JTAG", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -2073,6 +2395,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_RDERR_OFLOW_JTAG(uint64_t a, uint64_t 
         return 0x87e044000f00ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044000f00ll + 0x4000ll * ((a) & 0xf) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044000f00ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_RDERR_OFLOW_JTAG", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -2113,6 +2437,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_RDERR_UFLOW_JTAG(uint64_t a, uint64_t 
         return 0x87e044000f10ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044000f10ll + 0x4000ll * ((a) & 0xf) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044000f10ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_RDERR_UFLOW_JTAG", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -2153,6 +2479,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_WDERR_OFLOW_JTAG(uint64_t a, uint64_t 
         return 0x87e044000f20ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044000f20ll + 0x4000ll * ((a) & 0xf) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044000f20ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_WDERR_OFLOW_JTAG", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -2193,6 +2521,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_WDERR_UFLOW_JTAG(uint64_t a, uint64_t 
         return 0x87e044000f30ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044000f30ll + 0x4000ll * ((a) & 0xf) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044000f30ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_WDERR_UFLOW_JTAG", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -2234,6 +2564,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_WR_FAT_JTAG(uint64_t a, uint64_t b)
         return 0x87e044001800ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044001800ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044001800ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_WR_FAT_JTAG", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -2274,6 +2606,8 @@ static inline uint64_t CAVM_MDBWX_AB_SLTX_WR_NFAT_JTAG(uint64_t a, uint64_t b)
         return 0x87e044002000ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044002000ll + 0x4000ll * ((a) & 0xf) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044002000ll + 0x4000ll * ((a) & 0x3f) + 0x10ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_AB_SLTX_WR_NFAT_JTAG", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -2326,6 +2660,22 @@ union cavm_mdbwx_adr_err_ena_w1c
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } f95mm;
+    struct cavm_mdbwx_adr_err_ena_w1c_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_4_63         : 60;
+        uint64_t gaa_wr_nxm_err        : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for MDBW(0..42)_ADR_ERR_INT[GAA_WR_NXM_ERR]. */
+        uint64_t gaa_rd_nxm_err        : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for MDBW(0..42)_ADR_ERR_INT[GAA_RD_NXM_ERR]. */
+        uint64_t ddr_range_err         : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for MDBW(0..42)_ADR_ERR_INT[DDR_RANGE_ERR]. */
+        uint64_t smem_range_err        : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for MDBW(0..42)_ADR_ERR_INT[SMEM_RANGE_ERR]. */
+#else /* Word 0 - Little Endian */
+        uint64_t smem_range_err        : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for MDBW(0..42)_ADR_ERR_INT[SMEM_RANGE_ERR]. */
+        uint64_t ddr_range_err         : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for MDBW(0..42)_ADR_ERR_INT[DDR_RANGE_ERR]. */
+        uint64_t gaa_rd_nxm_err        : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for MDBW(0..42)_ADR_ERR_INT[GAA_RD_NXM_ERR]. */
+        uint64_t gaa_wr_nxm_err        : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for MDBW(0..42)_ADR_ERR_INT[GAA_WR_NXM_ERR]. */
+        uint64_t reserved_4_63         : 60;
+#endif /* Word 0 - End */
+    } f95o;
 };
 typedef union cavm_mdbwx_adr_err_ena_w1c cavm_mdbwx_adr_err_ena_w1c_t;
 
@@ -2336,6 +2686,8 @@ static inline uint64_t CAVM_MDBWX_ADR_ERR_ENA_W1C(uint64_t a)
         return 0x87e044000d10ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000d10ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000d10ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_ADR_ERR_ENA_W1C", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -2388,6 +2740,22 @@ union cavm_mdbwx_adr_err_ena_w1s
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } f95mm;
+    struct cavm_mdbwx_adr_err_ena_w1s_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_4_63         : 60;
+        uint64_t gaa_wr_nxm_err        : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for MDBW(0..42)_ADR_ERR_INT[GAA_WR_NXM_ERR]. */
+        uint64_t gaa_rd_nxm_err        : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for MDBW(0..42)_ADR_ERR_INT[GAA_RD_NXM_ERR]. */
+        uint64_t ddr_range_err         : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for MDBW(0..42)_ADR_ERR_INT[DDR_RANGE_ERR]. */
+        uint64_t smem_range_err        : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for MDBW(0..42)_ADR_ERR_INT[SMEM_RANGE_ERR]. */
+#else /* Word 0 - Little Endian */
+        uint64_t smem_range_err        : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for MDBW(0..42)_ADR_ERR_INT[SMEM_RANGE_ERR]. */
+        uint64_t ddr_range_err         : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for MDBW(0..42)_ADR_ERR_INT[DDR_RANGE_ERR]. */
+        uint64_t gaa_rd_nxm_err        : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for MDBW(0..42)_ADR_ERR_INT[GAA_RD_NXM_ERR]. */
+        uint64_t gaa_wr_nxm_err        : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for MDBW(0..42)_ADR_ERR_INT[GAA_WR_NXM_ERR]. */
+        uint64_t reserved_4_63         : 60;
+#endif /* Word 0 - End */
+    } f95o;
 };
 typedef union cavm_mdbwx_adr_err_ena_w1s cavm_mdbwx_adr_err_ena_w1s_t;
 
@@ -2398,6 +2766,8 @@ static inline uint64_t CAVM_MDBWX_ADR_ERR_ENA_W1S(uint64_t a)
         return 0x87e044000d08ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000d08ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000d08ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_ADR_ERR_ENA_W1S", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -2463,6 +2833,7 @@ union cavm_mdbwx_adr_err_int
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_mdbwx_adr_err_int_cnf95xxp2 f95mm; */
+    /* struct cavm_mdbwx_adr_err_int_cnf95xxp2 f95o; */
 };
 typedef union cavm_mdbwx_adr_err_int cavm_mdbwx_adr_err_int_t;
 
@@ -2473,6 +2844,8 @@ static inline uint64_t CAVM_MDBWX_ADR_ERR_INT(uint64_t a)
         return 0x87e044000d00ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000d00ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000d00ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_ADR_ERR_INT", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -2525,6 +2898,22 @@ union cavm_mdbwx_adr_err_int_w1s
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } f95mm;
+    struct cavm_mdbwx_adr_err_int_w1s_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_4_63         : 60;
+        uint64_t gaa_wr_nxm_err        : 1;  /**< [  3:  3](R/W1S/H) Reads or sets MDBW(0..42)_ADR_ERR_INT[GAA_WR_NXM_ERR]. */
+        uint64_t gaa_rd_nxm_err        : 1;  /**< [  2:  2](R/W1S/H) Reads or sets MDBW(0..42)_ADR_ERR_INT[GAA_RD_NXM_ERR]. */
+        uint64_t ddr_range_err         : 1;  /**< [  1:  1](R/W1S/H) Reads or sets MDBW(0..42)_ADR_ERR_INT[DDR_RANGE_ERR]. */
+        uint64_t smem_range_err        : 1;  /**< [  0:  0](R/W1S/H) Reads or sets MDBW(0..42)_ADR_ERR_INT[SMEM_RANGE_ERR]. */
+#else /* Word 0 - Little Endian */
+        uint64_t smem_range_err        : 1;  /**< [  0:  0](R/W1S/H) Reads or sets MDBW(0..42)_ADR_ERR_INT[SMEM_RANGE_ERR]. */
+        uint64_t ddr_range_err         : 1;  /**< [  1:  1](R/W1S/H) Reads or sets MDBW(0..42)_ADR_ERR_INT[DDR_RANGE_ERR]. */
+        uint64_t gaa_rd_nxm_err        : 1;  /**< [  2:  2](R/W1S/H) Reads or sets MDBW(0..42)_ADR_ERR_INT[GAA_RD_NXM_ERR]. */
+        uint64_t gaa_wr_nxm_err        : 1;  /**< [  3:  3](R/W1S/H) Reads or sets MDBW(0..42)_ADR_ERR_INT[GAA_WR_NXM_ERR]. */
+        uint64_t reserved_4_63         : 60;
+#endif /* Word 0 - End */
+    } f95o;
 };
 typedef union cavm_mdbwx_adr_err_int_w1s cavm_mdbwx_adr_err_int_w1s_t;
 
@@ -2535,6 +2924,8 @@ static inline uint64_t CAVM_MDBWX_ADR_ERR_INT_W1S(uint64_t a)
         return 0x87e044000d18ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000d18ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000d18ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_ADR_ERR_INT_W1S", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -2581,6 +2972,8 @@ static inline uint64_t CAVM_MDBWX_ADR_ERR_JTAG(uint64_t a)
         return 0x87e044000d20ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000d20ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000d20ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_ADR_ERR_JTAG", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -2619,6 +3012,7 @@ union cavm_mdbwx_adr_error_jce_w0
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_mdbwx_adr_error_jce_w0_s f95mm; */
+    /* struct cavm_mdbwx_adr_error_jce_w0_cnf95xxp2 f95o; */
 };
 typedef union cavm_mdbwx_adr_error_jce_w0 cavm_mdbwx_adr_error_jce_w0_t;
 
@@ -2629,6 +3023,8 @@ static inline uint64_t CAVM_MDBWX_ADR_ERROR_JCE_W0(uint64_t a)
         return 0x87e044000060ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000060ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000060ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_ADR_ERROR_JCE_W0", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -2667,6 +3063,7 @@ union cavm_mdbwx_adr_error_jce_w1
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_mdbwx_adr_error_jce_w1_s f95mm; */
+    /* struct cavm_mdbwx_adr_error_jce_w1_cnf95xxp2 f95o; */
 };
 typedef union cavm_mdbwx_adr_error_jce_w1 cavm_mdbwx_adr_error_jce_w1_t;
 
@@ -2677,6 +3074,8 @@ static inline uint64_t CAVM_MDBWX_ADR_ERROR_JCE_W1(uint64_t a)
         return 0x87e044000068ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000068ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000068ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_ADR_ERROR_JCE_W1", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -2935,6 +3334,7 @@ union cavm_mdbwx_cfg
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_mdbwx_cfg_cnf95xxp2 f95mm; */
+    /* struct cavm_mdbwx_cfg_cnf95xxp2 f95o; */
 };
 typedef union cavm_mdbwx_cfg cavm_mdbwx_cfg_t;
 
@@ -2945,6 +3345,8 @@ static inline uint64_t CAVM_MDBWX_CFG(uint64_t a)
         return 0x87e044000000ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000000ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000000ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_CFG", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3014,6 +3416,8 @@ static inline uint64_t CAVM_MDBWX_DEBUG1(uint64_t a)
         return 0x87e044002340ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044002340ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044002340ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_DEBUG1", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3053,6 +3457,8 @@ static inline uint64_t CAVM_MDBWX_DMA_ERROR_JCE_W0(uint64_t a)
         return 0x87e044000020ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000020ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000020ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_DMA_ERROR_JCE_W0", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3090,6 +3496,8 @@ static inline uint64_t CAVM_MDBWX_DMA_ERROR_JCE_W1(uint64_t a)
         return 0x87e044000028ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000028ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000028ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_DMA_ERROR_JCE_W1", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3132,6 +3540,8 @@ static inline uint64_t CAVM_MDBWX_DV_SCRATCH(uint64_t a)
         return 0x87e044002f10ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044002f10ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044002f10ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_DV_SCRATCH", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3170,6 +3580,8 @@ static inline uint64_t CAVM_MDBWX_ECO(uint64_t a)
         return 0x87e044002f00ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044002f00ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044002f00ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_ECO", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3215,6 +3627,8 @@ static inline uint64_t CAVM_MDBWX_ERR_STAT0(uint64_t a)
         return 0x87e044002318ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044002318ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044002318ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_ERR_STAT0", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3289,6 +3703,7 @@ union cavm_mdbwx_err_stat1
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_mdbwx_err_stat1_cnf95xxp2 f95mm; */
+    /* struct cavm_mdbwx_err_stat1_cnf95xxp2 f95o; */
 };
 typedef union cavm_mdbwx_err_stat1 cavm_mdbwx_err_stat1_t;
 
@@ -3299,6 +3714,8 @@ static inline uint64_t CAVM_MDBWX_ERR_STAT1(uint64_t a)
         return 0x87e044002320ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044002320ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044002320ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_ERR_STAT1", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3338,6 +3755,8 @@ static inline uint64_t CAVM_MDBWX_FATAL_ERROR_JCE_W0(uint64_t a)
         return 0x87e044000030ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000030ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000030ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_FATAL_ERROR_JCE_W0", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3377,6 +3796,8 @@ static inline uint64_t CAVM_MDBWX_FATAL_ERROR_JCE_W1(uint64_t a)
         return 0x87e044000038ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000038ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000038ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_FATAL_ERROR_JCE_W1", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3478,6 +3899,8 @@ static inline uint64_t CAVM_MDBWX_FYI(uint64_t a)
         return 0x87e044000100ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000100ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000100ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_FYI", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3687,6 +4110,7 @@ union cavm_mdbwx_jd_cfg
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_mdbwx_jd_cfg_cnf95xxp2 f95mm; */
+    /* struct cavm_mdbwx_jd_cfg_cnf95xxp2 f95o; */
 };
 typedef union cavm_mdbwx_jd_cfg cavm_mdbwx_jd_cfg_t;
 
@@ -3697,6 +4121,8 @@ static inline uint64_t CAVM_MDBWX_JD_CFG(uint64_t a)
         return 0x87e044000008ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000008ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000008ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_JD_CFG", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3737,6 +4163,8 @@ static inline uint64_t CAVM_MDBWX_JOB_COMPL_STAT(uint64_t a)
         return 0x87e044002308ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044002308ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044002308ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_JOB_COMPL_STAT", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3778,6 +4206,8 @@ static inline uint64_t CAVM_MDBWX_JOB_DROP_STAT(uint64_t a)
         return 0x87e044002310ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044002310ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044002310ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_JOB_DROP_STAT", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3817,6 +4247,8 @@ static inline uint64_t CAVM_MDBWX_JOB_ENQUEUE_STAT(uint64_t a)
         return 0x87e044002300ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044002300ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044002300ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_JOB_ENQUEUE_STAT", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3864,6 +4296,8 @@ static inline uint64_t CAVM_MDBWX_JOBQX_CFG(uint64_t a, uint64_t b)
         return 0x87e044000010ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=1)))
         return 0x87e044000010ll + 0x4000ll * ((a) & 0xf) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=1)))
+        return 0x87e044000010ll + 0x4000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("MDBWX_JOBQX_CFG", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -3905,6 +4339,8 @@ static inline uint64_t CAVM_MDBWX_NON_FATAL_ERROR_JCE_W0(uint64_t a)
         return 0x87e044000040ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000040ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000040ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_NON_FATAL_ERROR_JCE_W0", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3946,6 +4382,8 @@ static inline uint64_t CAVM_MDBWX_NON_FATAL_ERROR_JCE_W1(uint64_t a)
         return 0x87e044000048ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000048ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000048ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_NON_FATAL_ERROR_JCE_W1", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -3995,6 +4433,7 @@ union cavm_mdbwx_phymem_range
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_mdbwx_phymem_range_cnf95xxp2 f95mm; */
+    /* struct cavm_mdbwx_phymem_range_cnf95xxp2 f95o; */
 };
 typedef union cavm_mdbwx_phymem_range cavm_mdbwx_phymem_range_t;
 
@@ -4005,6 +4444,8 @@ static inline uint64_t CAVM_MDBWX_PHYMEM_RANGE(uint64_t a)
         return 0x87e044002410ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044002410ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044002410ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_PHYMEM_RANGE", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -4046,6 +4487,7 @@ union cavm_mdbwx_sysmem_range_max
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_mdbwx_sysmem_range_max_cnf95xxp2 f95mm; */
+    /* struct cavm_mdbwx_sysmem_range_max_cnf95xxp2 f95o; */
 };
 typedef union cavm_mdbwx_sysmem_range_max cavm_mdbwx_sysmem_range_max_t;
 
@@ -4056,6 +4498,8 @@ static inline uint64_t CAVM_MDBWX_SYSMEM_RANGE_MAX(uint64_t a)
         return 0x87e044002408ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044002408ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044002408ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_SYSMEM_RANGE_MAX", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -4097,6 +4541,7 @@ union cavm_mdbwx_sysmem_range_min
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_mdbwx_sysmem_range_min_cnf95xxp2 f95mm; */
+    /* struct cavm_mdbwx_sysmem_range_min_cnf95xxp2 f95o; */
 };
 typedef union cavm_mdbwx_sysmem_range_min cavm_mdbwx_sysmem_range_min_t;
 
@@ -4107,6 +4552,8 @@ static inline uint64_t CAVM_MDBWX_SYSMEM_RANGE_MIN(uint64_t a)
         return 0x87e044002400ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044002400ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044002400ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_SYSMEM_RANGE_MIN", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -4144,6 +4591,8 @@ static inline uint64_t CAVM_MDBWX_TIMEOUT_JCE_W0(uint64_t a)
         return 0x87e044000050ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000050ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000050ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_TIMEOUT_JCE_W0", 1, a, 0, 0, 0, 0, 0);
 }
 
@@ -4181,6 +4630,8 @@ static inline uint64_t CAVM_MDBWX_TIMEOUT_JCE_W1(uint64_t a)
         return 0x87e044000058ll + 0x4000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=14))
         return 0x87e044000058ll + 0x4000ll * ((a) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=42))
+        return 0x87e044000058ll + 0x4000ll * ((a) & 0x3f);
     __cavm_csr_fatal("MDBWX_TIMEOUT_JCE_W1", 1, a, 0, 0, 0, 0, 0);
 }
 

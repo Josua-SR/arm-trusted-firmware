@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -884,6 +884,7 @@ union cavm_bts_msix_vecx_addr
     /* struct cavm_bts_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_bts_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_bts_msix_vecx_addr_cn96xxp3 f95mm; */
+    /* struct cavm_bts_msix_vecx_addr_cn96xxp3 f95o; */
     /* struct cavm_bts_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_bts_msix_vecx_addr cavm_bts_msix_vecx_addr_t;
@@ -1689,6 +1690,7 @@ union cavm_bts_pll_ctl
     /* struct cavm_bts_pll_ctl_cn96xxp1 cnf95xxp1; */
     /* struct cavm_bts_pll_ctl_cn96xxp3 cnf95xxp2; */
     /* struct cavm_bts_pll_ctl_cn96xxp3 f95mm; */
+    /* struct cavm_bts_pll_ctl_cn96xxp3 f95o; */
     /* struct cavm_bts_pll_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_bts_pll_ctl cavm_bts_pll_ctl_t;
@@ -2080,6 +2082,7 @@ union cavm_bts_tp_mux_sel
     /* struct cavm_bts_tp_mux_sel_cn96xxp3 cn98xx; */
     /* struct cavm_bts_tp_mux_sel_cn96xxp3 cnf95xx; */
     /* struct cavm_bts_tp_mux_sel_cn96xxp3 f95mm; */
+    /* struct cavm_bts_tp_mux_sel_cn96xxp3 f95o; */
     /* struct cavm_bts_tp_mux_sel_cn96xxp3 loki; */
 };
 typedef union cavm_bts_tp_mux_sel cavm_bts_tp_mux_sel_t;

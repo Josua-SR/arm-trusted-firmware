@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -23,7 +23,7 @@
  * Register (RSL) pnb#_dma#_control
  *
  * PNB DMA AB Control Register
- * AB control register for PNB DMA operation
+ * AB control register for PNB DMA operation.
  */
 union cavm_pnbx_dmax_control
 {
@@ -54,6 +54,8 @@ static inline uint64_t CAVM_PNBX_DMAX_CONTROL(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
         return 0x87e043900000ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=1)))
+        return 0x87e043900000ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043900000ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043900000ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
@@ -97,6 +99,8 @@ static inline uint64_t CAVM_PNBX_DMAX_ECO(uint64_t a, uint64_t b)
         return 0x87e043900058ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=1)))
         return 0x87e043900058ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
+        return 0x87e043900058ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043900058ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     __cavm_csr_fatal("PNBX_DMAX_ECO", 2, a, b, 0, 0, 0, 0);
@@ -112,7 +116,7 @@ static inline uint64_t CAVM_PNBX_DMAX_ECO(uint64_t a, uint64_t b)
  * Register (RSL) pnb#_dma#_err_enable0
  *
  * PNB DMA AB Error Enable Register 0
- * This register enables error reporting for ERROR_SOURCE0 register
+ * This register enables error reporting for ERROR_SOURCE0 register.
  */
 union cavm_pnbx_dmax_err_enable0
 {
@@ -137,6 +141,8 @@ static inline uint64_t CAVM_PNBX_DMAX_ERR_ENABLE0(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
         return 0x87e043900040ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=1)))
+        return 0x87e043900040ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043900040ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043900040ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
@@ -187,6 +193,8 @@ static inline uint64_t CAVM_PNBX_DMAX_ERR_SOURCE0(uint64_t a, uint64_t b)
         return 0x87e043900030ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=1)))
         return 0x87e043900030ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
+        return 0x87e043900030ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043900030ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     __cavm_csr_fatal("PNBX_DMAX_ERR_SOURCE0", 2, a, b, 0, 0, 0, 0);
@@ -227,6 +235,8 @@ static inline uint64_t CAVM_PNBX_DMAX_SCRATCH(uint64_t a, uint64_t b)
         return 0x87e043900050ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=1)))
         return 0x87e043900050ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
+        return 0x87e043900050ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043900050ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     __cavm_csr_fatal("PNBX_DMAX_SCRATCH", 2, a, b, 0, 0, 0, 0);
@@ -242,7 +252,7 @@ static inline uint64_t CAVM_PNBX_DMAX_SCRATCH(uint64_t a, uint64_t b)
  * Register (RSL) pnb#_dma#_status
  *
  * PNB DMA AB Status Register
- * AB status register for PNB DMA operation
+ * AB status register for PNB DMA operation.
  */
 union cavm_pnbx_dmax_status
 {
@@ -271,6 +281,8 @@ static inline uint64_t CAVM_PNBX_DMAX_STATUS(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
         return 0x87e043900018ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=1)))
+        return 0x87e043900018ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043900018ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043900018ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);

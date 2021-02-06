@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -918,6 +918,195 @@ union cavm_fdeq_rdcfg_rb_params_jt0_s
                                                                  0x0 = 1.
                                                                  0x1 = 2.
                                                                  0x2 = 4.
+                                                                 0x3 = 8.
+
+                                                                 Must be same as FDEQ()_JD_JOB_TYPE_RS_PARAM[LAYER_MODE] for all RBs,
+                                                                 including any unallocated RBs. */
+        uint64_t subprb_ue3_enable     : 1;  /**< [ 26: 26] If set to 1, the  UE3 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t subprb_ue2_enable     : 1;  /**< [ 25: 25] If set to 1, the  UE2 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t subprb_ue1_enable     : 1;  /**< [ 24: 24] If set to 1, the  UE1 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t subprb_ue0_enable     : 1;  /**< [ 23: 23] If set to 1, the  UE0 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t subprb_case_index     : 3;  /**< [ 22: 20] Indicates the SubPRB allocation. See section Configuration steps for subPRB Ues. */
+        uint64_t layer_enable_rs1_3_layer7_3 : 1;/**< [ 19: 19] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_3_layer6_2 : 1;/**< [ 18: 18] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_3_layer5_1 : 1;/**< [ 17: 17] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_3_layer4_0 : 1;/**< [ 16: 16] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer3 : 1;/**< [ 15: 15] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer2 : 1;/**< [ 14: 14] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer1 : 1;/**< [ 13: 13] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer0 : 1;/**< [ 12: 12] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_2_layer7_3 : 1;/**< [ 11: 11] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_2_layer6_2 : 1;/**< [ 10: 10] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_2_layer5_1 : 1;/**< [  9:  9] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_2_layer4_0 : 1;/**< [  8:  8] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer3 : 1;/**< [  7:  7] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer2 : 1;/**< [  6:  6] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer1 : 1;/**< [  5:  5] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer0 : 1;/**< [  4:  4] In name field LAYER_ENABLE_RS_r_LAYER_l, the tuple (r,l) correspond to a RS
+                                                                 index and layer index pair. If set to 1, layer l is active on RS r. */
+        uint64_t rnn_rb                : 3;  /**< [  3:  1] Indicates the number of RBs over which Rnn is averaged.
+                                                                 0x0 = 1 RB.
+                                                                 0x1 = 2 RBs.
+                                                                 0x2 = 3 RBs.
+                                                                 0x3 = 4 RBs.
+                                                                 0x4 = 5 RBs.
+                                                                 0x5 = 6 RBs.
+                                                                 0x6 = 7 RBs.
+                                                                 0x7 = 8 RBs. */
+        uint64_t subprb_enable         : 1;  /**< [  0:  0] If set to 1, this RB is configured as Sub PRB. */
+#else /* Word 0 - Little Endian */
+        uint64_t subprb_enable         : 1;  /**< [  0:  0] If set to 1, this RB is configured as Sub PRB. */
+        uint64_t rnn_rb                : 3;  /**< [  3:  1] Indicates the number of RBs over which Rnn is averaged.
+                                                                 0x0 = 1 RB.
+                                                                 0x1 = 2 RBs.
+                                                                 0x2 = 3 RBs.
+                                                                 0x3 = 4 RBs.
+                                                                 0x4 = 5 RBs.
+                                                                 0x5 = 6 RBs.
+                                                                 0x6 = 7 RBs.
+                                                                 0x7 = 8 RBs. */
+        uint64_t layer_enable_rs0_layer0 : 1;/**< [  4:  4] In name field LAYER_ENABLE_RS_r_LAYER_l, the tuple (r,l) correspond to a RS
+                                                                 index and layer index pair. If set to 1, layer l is active on RS r. */
+        uint64_t layer_enable_rs0_layer1 : 1;/**< [  5:  5] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer2 : 1;/**< [  6:  6] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer3 : 1;/**< [  7:  7] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_2_layer4_0 : 1;/**< [  8:  8] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_2_layer5_1 : 1;/**< [  9:  9] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_2_layer6_2 : 1;/**< [ 10: 10] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_2_layer7_3 : 1;/**< [ 11: 11] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer0 : 1;/**< [ 12: 12] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer1 : 1;/**< [ 13: 13] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer2 : 1;/**< [ 14: 14] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer3 : 1;/**< [ 15: 15] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_3_layer4_0 : 1;/**< [ 16: 16] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_3_layer5_1 : 1;/**< [ 17: 17] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_3_layer6_2 : 1;/**< [ 18: 18] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_3_layer7_3 : 1;/**< [ 19: 19] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t subprb_case_index     : 3;  /**< [ 22: 20] Indicates the SubPRB allocation. See section Configuration steps for subPRB Ues. */
+        uint64_t subprb_ue0_enable     : 1;  /**< [ 23: 23] If set to 1, the  UE0 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t subprb_ue1_enable     : 1;  /**< [ 24: 24] If set to 1, the  UE1 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t subprb_ue2_enable     : 1;  /**< [ 25: 25] If set to 1, the  UE2 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t subprb_ue3_enable     : 1;  /**< [ 26: 26] If set to 1, the  UE3 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t layer_mode            : 2;  /**< [ 28: 27] Number of layers in this RB.
+                                                                 0x0 = 1.
+                                                                 0x1 = 2.
+                                                                 0x2 = 4.
+                                                                 0x3 = 8.
+
+                                                                 Must be same as FDEQ()_JD_JOB_TYPE_RS_PARAM[LAYER_MODE] for all RBs,
+                                                                 including any unallocated RBs. */
+        uint64_t ue_idx_rs0_layer0     : 5;  /**< [ 33: 29] In name field UE_IDX_RS_r_LAYER_l, the tuple (r,l) correspond to a RS index and
+                                                                 layer index pair. This parameter  indicates the index of UE that is mapped to RS
+                                                                 and layer tuple. */
+        uint64_t ue_idx_rs0_layer1     : 5;  /**< [ 38: 34] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs0_layer2     : 5;  /**< [ 43: 39] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs0_layer3     : 5;  /**< [ 48: 44] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs_0_2_layer_4_0 : 5;/**< [ 53: 49] In name field UE_IDX_RS_r_s_LAYER_l_m, the tuples (r,l) and (s,m) correspond to
+                                                                 a RS index and layer index pair. This parameter  indicates the index of UE that
+                                                                 is mapped to the active RS and layer tuple. When
+                                                                 FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] \<= 2, (r,l) is the active
+                                                                 tuple otherwise (s,m) is the active tuple. */
+        uint64_t ue_idx_rs_0_2_layer_5_1 : 5;/**< [ 58: 54] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_0_2_layer_6_2 : 5;/**< [ 63: 59] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t reserved_127          : 1;
+        uint64_t hrs_offset_rs1_3_layer_7_3 : 1;/**< [126:126] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_3_layer_6_2 : 1;/**< [125:125] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_3_layer_5_1 : 1;/**< [124:124] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_3_layer_4_0 : 1;/**< [123:123] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_layer3 : 1;  /**< [122:122] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs1_layer2 : 1;  /**< [121:121] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs1_layer1 : 1;  /**< [120:120] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs1_layer0 : 1;  /**< [119:119] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs0_2_layer_7_3 : 1;/**< [118:118] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs0_2_layer_6_2 : 1;/**< [117:117] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs0_2_layer_5_1 : 1;/**< [116:116] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs0_2_layer_4_0 : 1;/**< [115:115] In name field HRS_OFFSET_RSr_s_LAYER_l_m, the tuples (r,l) and (s,m) correspond
+                                                                 to a RS index and layer index pair. The parameter indicates whether the hrs
+                                                                 corresponding to the active RS and layer tuple  begins at word boundary or
+                                                                 middle of word. When FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] \<= 2,
+                                                                 (r,l) is the active tuple otherwise (s,m) is the active tuple. */
+        uint64_t hrs_offset_rs0_layer3 : 1;  /**< [114:114] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs0_layer2 : 1;  /**< [113:113] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs0_layer1 : 1;  /**< [112:112] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs0_layer0 : 1;  /**< [111:111] In name field HRS_OFFSET_RSr_LAYER_l, the tuple (r,l) correspond to a RS index
+                                                                 and layer index pair. The parameter indicates whether the hrs corresponding to
+                                                                 the active RS and layer tuple  begins at word boundary or middle of word. */
+        uint64_t ryy_rb                : 2;  /**< [110:109] The number of RBs over which Ryy is averaged.
+                                                                 0x0 = 1RB.
+                                                                 0x1 = 2RBs.
+                                                                 0x2 = 3RBs.
+                                                                 0x3 = 4RBs. */
+        uint64_t ue_idx_rs_1_3_layer_7_3 : 5;/**< [108:104] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_1_3_layer_6_2 : 5;/**< [103: 99] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_1_3_layer_5_1 : 5;/**< [ 98: 94] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_1_3_layer_4_0 : 5;/**< [ 93: 89] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs1_layer3     : 5;  /**< [ 88: 84] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs1_layer2     : 5;  /**< [ 83: 79] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs1_layer1     : 5;  /**< [ 78: 74] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs1_layer0     : 5;  /**< [ 73: 69] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs_0_2_layer_7_3 : 5;/**< [ 68: 64] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+#else /* Word 1 - Little Endian */
+        uint64_t ue_idx_rs_0_2_layer_7_3 : 5;/**< [ 68: 64] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs1_layer0     : 5;  /**< [ 73: 69] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs1_layer1     : 5;  /**< [ 78: 74] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs1_layer2     : 5;  /**< [ 83: 79] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs1_layer3     : 5;  /**< [ 88: 84] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs_1_3_layer_4_0 : 5;/**< [ 93: 89] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_1_3_layer_5_1 : 5;/**< [ 98: 94] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_1_3_layer_6_2 : 5;/**< [103: 99] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_1_3_layer_7_3 : 5;/**< [108:104] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ryy_rb                : 2;  /**< [110:109] The number of RBs over which Ryy is averaged.
+                                                                 0x0 = 1RB.
+                                                                 0x1 = 2RBs.
+                                                                 0x2 = 3RBs.
+                                                                 0x3 = 4RBs. */
+        uint64_t hrs_offset_rs0_layer0 : 1;  /**< [111:111] In name field HRS_OFFSET_RSr_LAYER_l, the tuple (r,l) correspond to a RS index
+                                                                 and layer index pair. The parameter indicates whether the hrs corresponding to
+                                                                 the active RS and layer tuple  begins at word boundary or middle of word. */
+        uint64_t hrs_offset_rs0_layer1 : 1;  /**< [112:112] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs0_layer2 : 1;  /**< [113:113] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs0_layer3 : 1;  /**< [114:114] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs0_2_layer_4_0 : 1;/**< [115:115] In name field HRS_OFFSET_RSr_s_LAYER_l_m, the tuples (r,l) and (s,m) correspond
+                                                                 to a RS index and layer index pair. The parameter indicates whether the hrs
+                                                                 corresponding to the active RS and layer tuple  begins at word boundary or
+                                                                 middle of word. When FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] \<= 2,
+                                                                 (r,l) is the active tuple otherwise (s,m) is the active tuple. */
+        uint64_t hrs_offset_rs0_2_layer_5_1 : 1;/**< [116:116] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs0_2_layer_6_2 : 1;/**< [117:117] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs0_2_layer_7_3 : 1;/**< [118:118] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_layer0 : 1;  /**< [119:119] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs1_layer1 : 1;  /**< [120:120] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs1_layer2 : 1;  /**< [121:121] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs1_layer3 : 1;  /**< [122:122] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs1_3_layer_4_0 : 1;/**< [123:123] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_3_layer_5_1 : 1;/**< [124:124] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_3_layer_6_2 : 1;/**< [125:125] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_3_layer_7_3 : 1;/**< [126:126] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t reserved_127          : 1;
+#endif /* Word 1 - End */
+    } cnf95xxp2;
+    struct cavm_fdeq_rdcfg_rb_params_jt0_s_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t ue_idx_rs_0_2_layer_6_2 : 5;/**< [ 63: 59] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_0_2_layer_5_1 : 5;/**< [ 58: 54] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_0_2_layer_4_0 : 5;/**< [ 53: 49] In name field UE_IDX_RS_r_s_LAYER_l_m, the tuples (r,l) and (s,m) correspond to
+                                                                 a RS index and layer index pair. This parameter  indicates the index of UE that
+                                                                 is mapped to the active RS and layer tuple. When
+                                                                 FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] \<= 2, (r,l) is the active
+                                                                 tuple otherwise (s,m) is the active tuple. */
+        uint64_t ue_idx_rs0_layer3     : 5;  /**< [ 48: 44] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs0_layer2     : 5;  /**< [ 43: 39] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs0_layer1     : 5;  /**< [ 38: 34] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs0_layer0     : 5;  /**< [ 33: 29] In name field UE_IDX_RS_r_LAYER_l, the tuple (r,l) correspond to a RS index and
+                                                                 layer index pair. This parameter  indicates the index of UE that is mapped to RS
+                                                                 and layer tuple. */
+        uint64_t layer_mode            : 2;  /**< [ 28: 27] Number of layers in this RB.
+                                                                 0x0 = 1.
+                                                                 0x1 = 2.
+                                                                 0x2 = 4.
                                                                  0x3 = 8. */
         uint64_t subprb_ue3_enable     : 1;  /**< [ 26: 26] If set to 1, the  UE3 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
         uint64_t subprb_ue2_enable     : 1;  /**< [ 25: 25] If set to 1, the  UE2 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
@@ -1080,7 +1269,7 @@ union cavm_fdeq_rdcfg_rb_params_jt0_s
         uint64_t hrs_offset_rs1_3_layer_7_3 : 1;/**< [126:126] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
         uint64_t reserved_127          : 1;
 #endif /* Word 1 - End */
-    } cnf95xxp2;
+    } f95o;
     /* struct cavm_fdeq_rdcfg_rb_params_jt0_s_cnf95xxp2 loki; */
 };
 
@@ -2247,6 +2436,507 @@ union cavm_fdeq_rdcfg_rb_params_jt1_s
                                                                  Note that DS index is absolute symbol index */
         uint64_t reserved_195_199      : 5;
         uint64_t rnn_symb              : 3;  /**< [194:192] Defines the number of RS over which Rnn are averaged.
+
+                                                                 If FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] = 1,
+
+                                                                 _ 0x1 = Rnn is not averaged.
+
+                                                                 If FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] = 2,
+
+                                                                 _ 0x1 = Rnn is not averaged.
+                                                                 _ 0x2 = Rnn on RS0 and RS1 are averaged.
+
+                                                                 If FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] = 3,
+
+                                                                 _ 0x1 = Rnn is not averaged.
+                                                                 _ 0x2 = Rnn on RS1 and RS2 are averaged.
+                                                                 _ 0x3 = Rnn on RS0, RS1, and RS2 are averaged.
+
+                                                                 If FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] = 4,
+
+                                                                 _ 0x1 = Rnn is not averaged.
+                                                                 _ 0x2 = Rnn on RS0 and RS1 are averaged and Rnn on RS2 and RS3 are averaged.
+                                                                 _ 0x4 = Rnn on RS0, RS1, RS2, and RS3 are averaged.
+
+                                                                 If RB is unallocated, [RNN_SYMB] must be 0x0. */
+#else /* Word 3 - Little Endian */
+        uint64_t rnn_symb              : 3;  /**< [194:192] Defines the number of RS over which Rnn are averaged.
+
+                                                                 If FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] = 1,
+
+                                                                 _ 0x1 = Rnn is not averaged.
+
+                                                                 If FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] = 2,
+
+                                                                 _ 0x1 = Rnn is not averaged.
+                                                                 _ 0x2 = Rnn on RS0 and RS1 are averaged.
+
+                                                                 If FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] = 3,
+
+                                                                 _ 0x1 = Rnn is not averaged.
+                                                                 _ 0x2 = Rnn on RS1 and RS2 are averaged.
+                                                                 _ 0x3 = Rnn on RS0, RS1, and RS2 are averaged.
+
+                                                                 If FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] = 4,
+
+                                                                 _ 0x1 = Rnn is not averaged.
+                                                                 _ 0x2 = Rnn on RS0 and RS1 are averaged and Rnn on RS2 and RS3 are averaged.
+                                                                 _ 0x4 = Rnn on RS0, RS1, RS2, and RS3 are averaged.
+
+                                                                 If RB is unallocated, [RNN_SYMB] must be 0x0. */
+        uint64_t reserved_195_199      : 5;
+        uint64_t ue_infoset_index      : 28; /**< [227:200] Each 2 bits indicates RS index to which FDEQ_RDCFG_RB_PARAMS_JT1_S[LAYER_ENABLE_RSx_LAYERy] and
+                                                                 FDEQ_RDCFG_RB_PARAMS_JT1_S[UE_IDX_RSx_LAYERy] are referred for each DS.
+                                                                 The two LSBs refer to RS index used for DS13 and two MSBs refer to RS index for
+                                                                 DS 0.Intermediate bits refer to respective DS's.
+                                                                 Note that DS index is absolute symbol index */
+        uint64_t freq_interp_mode      : 1;  /**< [228:228] When enabled, hrs of this RB is not interpolated in frequency domain with the previous RB. */
+        uint64_t test_mode             : 3;  /**< [231:229] Must be set to 0x0. */
+        uint64_t reserved_232          : 1;
+        uint64_t reserved_233_255      : 23;
+#endif /* Word 3 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
+        uint64_t reserved_318_319      : 2;
+        uint64_t layer_3_crc_layer_rbxsymb : 14;/**< [317:304] Refer to [LAYER_0_CRC_LAYER_RBXSYMB]. */
+        uint64_t reserved_302_303      : 2;
+        uint64_t layer_2_crc_layer_rbxsymb : 14;/**< [301:288] Refer to [LAYER_0_CRC_LAYER_RBXSYMB]. */
+        uint64_t reserved_286_287      : 2;
+        uint64_t layer_1_crc_layer_rbxsymb : 14;/**< [285:272] Refer to [LAYER_0_CRC_LAYER_RBXSYMB]. */
+        uint64_t reserved_270_271      : 2;
+        uint64_t layer_0_crc_layer_rbxsymb : 14;/**< [269:256] In the name LAYER_l_CRC_LAYER_RBXSYMB, l refers to layer number.
+                                                                 This bitmap indicates the CRC of each DS of layer l and this RB.
+                                                                 DS is indexed in increasing order with LSB referring to DS0.
+                                                                 When FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_ON_OFF] = 1 and
+                                                                 FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_WITH_CRC_MAP] = 1, the valid values are
+                                                                 0x0 = CRC PASS (SIC is performed).
+                                                                 0x1 = CRC FAIL(SIC is not performed).
+                                                                 When FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_ON_OFF] = 0 or
+                                                                 FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_WITH_CRC_MAP] = 0,
+                                                                 this value shall be set to 1. */
+#else /* Word 4 - Little Endian */
+        uint64_t layer_0_crc_layer_rbxsymb : 14;/**< [269:256] In the name LAYER_l_CRC_LAYER_RBXSYMB, l refers to layer number.
+                                                                 This bitmap indicates the CRC of each DS of layer l and this RB.
+                                                                 DS is indexed in increasing order with LSB referring to DS0.
+                                                                 When FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_ON_OFF] = 1 and
+                                                                 FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_WITH_CRC_MAP] = 1, the valid values are
+                                                                 0x0 = CRC PASS (SIC is performed).
+                                                                 0x1 = CRC FAIL(SIC is not performed).
+                                                                 When FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_ON_OFF] = 0 or
+                                                                 FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_WITH_CRC_MAP] = 0,
+                                                                 this value shall be set to 1. */
+        uint64_t reserved_270_271      : 2;
+        uint64_t layer_1_crc_layer_rbxsymb : 14;/**< [285:272] Refer to [LAYER_0_CRC_LAYER_RBXSYMB]. */
+        uint64_t reserved_286_287      : 2;
+        uint64_t layer_2_crc_layer_rbxsymb : 14;/**< [301:288] Refer to [LAYER_0_CRC_LAYER_RBXSYMB]. */
+        uint64_t reserved_302_303      : 2;
+        uint64_t layer_3_crc_layer_rbxsymb : 14;/**< [317:304] Refer to [LAYER_0_CRC_LAYER_RBXSYMB]. */
+        uint64_t reserved_318_319      : 2;
+#endif /* Word 4 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
+        uint64_t reserved_382_383      : 2;
+        uint64_t layer_7_crc_layer_rbxsymb : 14;/**< [381:368] Refer to [LAYER_0_CRC_LAYER_RBXSYMB]. */
+        uint64_t reserved_366_367      : 2;
+        uint64_t layer_6_crc_layer_rbxsymb : 14;/**< [365:352] Refer to [LAYER_0_CRC_LAYER_RBXSYMB]. */
+        uint64_t reserved_350_351      : 2;
+        uint64_t layer_5_crc_layer_rbxsymb : 14;/**< [349:336] Refer to [LAYER_0_CRC_LAYER_RBXSYMB]. */
+        uint64_t reserved_334_335      : 2;
+        uint64_t layer_4_crc_layer_rbxsymb : 14;/**< [333:320] Refer to [LAYER_0_CRC_LAYER_RBXSYMB]. */
+#else /* Word 5 - Little Endian */
+        uint64_t layer_4_crc_layer_rbxsymb : 14;/**< [333:320] Refer to [LAYER_0_CRC_LAYER_RBXSYMB]. */
+        uint64_t reserved_334_335      : 2;
+        uint64_t layer_5_crc_layer_rbxsymb : 14;/**< [349:336] Refer to [LAYER_0_CRC_LAYER_RBXSYMB]. */
+        uint64_t reserved_350_351      : 2;
+        uint64_t layer_6_crc_layer_rbxsymb : 14;/**< [365:352] Refer to [LAYER_0_CRC_LAYER_RBXSYMB]. */
+        uint64_t reserved_366_367      : 2;
+        uint64_t layer_7_crc_layer_rbxsymb : 14;/**< [381:368] Refer to [LAYER_0_CRC_LAYER_RBXSYMB]. */
+        uint64_t reserved_382_383      : 2;
+#endif /* Word 5 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 6 - Big Endian */
+        uint64_t reserved_444_447      : 4;
+        uint64_t rnn_index_for_r_symbol_13 : 2;/**< [443:442] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_12 : 2;/**< [441:440] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_11 : 2;/**< [439:438] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_10 : 2;/**< [437:436] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_9 : 2;/**< [435:434] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_8 : 2;/**< [433:432] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_7 : 2;/**< [431:430] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_6 : 2;/**< [429:428] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_5 : 2;/**< [427:426] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_4 : 2;/**< [425:424] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_3 : 2;/**< [423:422] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_2 : 2;/**< [421:420] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_1 : 2;/**< [419:418] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_0 : 2;/**< [417:416] In the name RNN_INDEX_FOR_R_SYMBOL_k, k refers to DS  number. Indicates the RS
+                                                                 index whose Rnn is used for filter kernel calculation.
+                                                                 Valid range is [3,0]. */
+        uint64_t reserved_412_415      : 4;
+        uint64_t irc_mode_data_symbol_13 : 2;/**< [411:410] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_12 : 2;/**< [409:408] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_11 : 2;/**< [407:406] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_10 : 2;/**< [405:404] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_9 : 2; /**< [403:402] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_8 : 2; /**< [401:400] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_7 : 2; /**< [399:398] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_6 : 2; /**< [397:396] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_5 : 2; /**< [395:394] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_4 : 2; /**< [393:392] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_3 : 2; /**< [391:390] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_2 : 2; /**< [389:388] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_1 : 2; /**< [387:386] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_0 : 2; /**< [385:384] In the name IRC_MODE_DATA_SYMBOL_k , k refers to DS index. This selects the IRC
+                                                                 method applied on the DS k.
+                                                                 0x0 =  R is Rnn+Rhh or Rnn.
+                                                                 0x1 = R is Ryy.
+                                                                 0x2 = R is (Rnn+Rhh or Rnn) or Ryy based on internal algorithm 1.
+                                                                 0x3 = R is (Rnn+Rhh or Rnn) or Ryy based on internal algorithm 2.
+                                                                 When (Rnn+Rhh or Rnn) is selected,
+                                                                 FDEQ_RDCFG_UE_PHYC_PARAMS_S[SIMO_RNN_BASED_IRC_ON] selects Rnn+Rhh or Rnn.
+                                                                 If FDEQ_RDCFG_UE_PHYC_PARAMS_S[PSINR_METHOD] is enabled, the this parameter is
+                                                                 forced to 0x0. */
+#else /* Word 6 - Little Endian */
+        uint64_t irc_mode_data_symbol_0 : 2; /**< [385:384] In the name IRC_MODE_DATA_SYMBOL_k , k refers to DS index. This selects the IRC
+                                                                 method applied on the DS k.
+                                                                 0x0 =  R is Rnn+Rhh or Rnn.
+                                                                 0x1 = R is Ryy.
+                                                                 0x2 = R is (Rnn+Rhh or Rnn) or Ryy based on internal algorithm 1.
+                                                                 0x3 = R is (Rnn+Rhh or Rnn) or Ryy based on internal algorithm 2.
+                                                                 When (Rnn+Rhh or Rnn) is selected,
+                                                                 FDEQ_RDCFG_UE_PHYC_PARAMS_S[SIMO_RNN_BASED_IRC_ON] selects Rnn+Rhh or Rnn.
+                                                                 If FDEQ_RDCFG_UE_PHYC_PARAMS_S[PSINR_METHOD] is enabled, the this parameter is
+                                                                 forced to 0x0. */
+        uint64_t irc_mode_data_symbol_1 : 2; /**< [387:386] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_2 : 2; /**< [389:388] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_3 : 2; /**< [391:390] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_4 : 2; /**< [393:392] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_5 : 2; /**< [395:394] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_6 : 2; /**< [397:396] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_7 : 2; /**< [399:398] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_8 : 2; /**< [401:400] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_9 : 2; /**< [403:402] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_10 : 2;/**< [405:404] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_11 : 2;/**< [407:406] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_12 : 2;/**< [409:408] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t irc_mode_data_symbol_13 : 2;/**< [411:410] Refer to [IRC_MODE_DATA_SYMBOL_0]. */
+        uint64_t reserved_412_415      : 4;
+        uint64_t rnn_index_for_r_symbol_0 : 2;/**< [417:416] In the name RNN_INDEX_FOR_R_SYMBOL_k, k refers to DS  number. Indicates the RS
+                                                                 index whose Rnn is used for filter kernel calculation.
+                                                                 Valid range is [3,0]. */
+        uint64_t rnn_index_for_r_symbol_1 : 2;/**< [419:418] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_2 : 2;/**< [421:420] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_3 : 2;/**< [423:422] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_4 : 2;/**< [425:424] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_5 : 2;/**< [427:426] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_6 : 2;/**< [429:428] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_7 : 2;/**< [431:430] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_8 : 2;/**< [433:432] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_9 : 2;/**< [435:434] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_10 : 2;/**< [437:436] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_11 : 2;/**< [439:438] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_12 : 2;/**< [441:440] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t rnn_index_for_r_symbol_13 : 2;/**< [443:442] Refer to [RNN_INDEX_FOR_R_SYMBOL_0]. */
+        uint64_t reserved_444_447      : 4;
+#endif /* Word 6 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 7 - Big Endian */
+        uint64_t reserved_500_511      : 12;
+        uint64_t layer_7_rs_crc_layer_rbxsymb : 4;/**< [499:496] Refer to [LAYER_0_RS_CRC_LAYER_RBXSYMB]. */
+        uint64_t layer_6_rs_crc_layer_rbxsymb : 4;/**< [495:492] Refer to [LAYER_0_RS_CRC_LAYER_RBXSYMB]. */
+        uint64_t layer_5_rs_crc_layer_rbxsymb : 4;/**< [491:488] Refer to [LAYER_0_RS_CRC_LAYER_RBXSYMB]. */
+        uint64_t layer_4_rs_crc_layer_rbxsymb : 4;/**< [487:484] Refer to [LAYER_0_RS_CRC_LAYER_RBXSYMB]. */
+        uint64_t layer_3_rs_crc_layer_rbxsymb : 4;/**< [483:480] Refer to [LAYER_0_RS_CRC_LAYER_RBXSYMB]. */
+        uint64_t layer_2_rs_crc_layer_rbxsymb : 4;/**< [479:476] Refer to [LAYER_0_RS_CRC_LAYER_RBXSYMB]. */
+        uint64_t layer_1_rs_crc_layer_rbxsymb : 4;/**< [475:472] Refer to [LAYER_0_RS_CRC_LAYER_RBXSYMB]. */
+        uint64_t layer_0_rs_crc_layer_rbxsymb : 4;/**< [471:468] In the name LAYER_l_RS_CRC_LAYER_RBXSYMB, l refers to layer number.
+                                                                 This bitmap indicates the CRC of each RS of layer l and this RB.
+                                                                 RS is indexed in increasing order with LSB referring to RS0.
+                                                                 When FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_ON_OFF] = 1 and
+                                                                 FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_WITH_CRC_MAP] = 1,the values are
+                                                                 0x0 = CRC PASS (SIC is performed).
+                                                                 0x1 = CRC FAIL (SIC is not performed).
+                                                                 When FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_ON_OFF] = 0 or
+                                                                 FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_WITH_CRC_MAP] = 0 ,
+                                                                 this value shall be set to 1 */
+        uint64_t rnn_calc_tone_bitmap  : 12; /**< [467:456] A bitmap, indicating if Rnn  is calculated on a tone in this RB. LSB refers to
+                                                                 tone 0 and MSB refers to tone 11.
+                                                                 0x0 = Rnn is not calculated.
+                                                                 0x1 = Rnn is calculated.
+
+                                                                 If FDEQ()_JD_RS_GENERAL_PARAMETER[RS_FREQ_SPARSE]=0x0, this must be all
+                                                                 0x1.If FDEQ()_JD_RS_GENERAL_PARAMETER[RS_FREQ_SPARSE]=0x1, 6 out of 12 bits
+                                                                 must be 0x1.
+
+                                                                 If RB is unallocated, [RNN_SYMB] must be 0x0. */
+        uint64_t reserved_452_455      : 4;
+        uint64_t tdce_rs_on_pattern    : 4;  /**< [451:448] A bitmap indicating if a RS is included in Time domain interpolation. LSB
+                                                                 refers to RS0. 0x0 = exclude the RS. 0x1 = include the RS. Hardware behavior
+                                                                 for 0000 and 1111 is the same. */
+#else /* Word 7 - Little Endian */
+        uint64_t tdce_rs_on_pattern    : 4;  /**< [451:448] A bitmap indicating if a RS is included in Time domain interpolation. LSB
+                                                                 refers to RS0. 0x0 = exclude the RS. 0x1 = include the RS. Hardware behavior
+                                                                 for 0000 and 1111 is the same. */
+        uint64_t reserved_452_455      : 4;
+        uint64_t rnn_calc_tone_bitmap  : 12; /**< [467:456] A bitmap, indicating if Rnn  is calculated on a tone in this RB. LSB refers to
+                                                                 tone 0 and MSB refers to tone 11.
+                                                                 0x0 = Rnn is not calculated.
+                                                                 0x1 = Rnn is calculated.
+
+                                                                 If FDEQ()_JD_RS_GENERAL_PARAMETER[RS_FREQ_SPARSE]=0x0, this must be all
+                                                                 0x1.If FDEQ()_JD_RS_GENERAL_PARAMETER[RS_FREQ_SPARSE]=0x1, 6 out of 12 bits
+                                                                 must be 0x1.
+
+                                                                 If RB is unallocated, [RNN_SYMB] must be 0x0. */
+        uint64_t layer_0_rs_crc_layer_rbxsymb : 4;/**< [471:468] In the name LAYER_l_RS_CRC_LAYER_RBXSYMB, l refers to layer number.
+                                                                 This bitmap indicates the CRC of each RS of layer l and this RB.
+                                                                 RS is indexed in increasing order with LSB referring to RS0.
+                                                                 When FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_ON_OFF] = 1 and
+                                                                 FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_WITH_CRC_MAP] = 1,the values are
+                                                                 0x0 = CRC PASS (SIC is performed).
+                                                                 0x1 = CRC FAIL (SIC is not performed).
+                                                                 When FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_ON_OFF] = 0 or
+                                                                 FDEQ(0..1)_JD_RS_GENERAL_PARAMETER[SIC_WITH_CRC_MAP] = 0 ,
+                                                                 this value shall be set to 1 */
+        uint64_t layer_1_rs_crc_layer_rbxsymb : 4;/**< [475:472] Refer to [LAYER_0_RS_CRC_LAYER_RBXSYMB]. */
+        uint64_t layer_2_rs_crc_layer_rbxsymb : 4;/**< [479:476] Refer to [LAYER_0_RS_CRC_LAYER_RBXSYMB]. */
+        uint64_t layer_3_rs_crc_layer_rbxsymb : 4;/**< [483:480] Refer to [LAYER_0_RS_CRC_LAYER_RBXSYMB]. */
+        uint64_t layer_4_rs_crc_layer_rbxsymb : 4;/**< [487:484] Refer to [LAYER_0_RS_CRC_LAYER_RBXSYMB]. */
+        uint64_t layer_5_rs_crc_layer_rbxsymb : 4;/**< [491:488] Refer to [LAYER_0_RS_CRC_LAYER_RBXSYMB]. */
+        uint64_t layer_6_rs_crc_layer_rbxsymb : 4;/**< [495:492] Refer to [LAYER_0_RS_CRC_LAYER_RBXSYMB]. */
+        uint64_t layer_7_rs_crc_layer_rbxsymb : 4;/**< [499:496] Refer to [LAYER_0_RS_CRC_LAYER_RBXSYMB]. */
+        uint64_t reserved_500_511      : 12;
+#endif /* Word 7 - End */
+    } cnf95xxp2;
+    struct cavm_fdeq_rdcfg_rb_params_jt1_s_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t ue_idx_rs_0_2_layer_6_2 : 5;/**< [ 63: 59] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_0_2_layer_5_1 : 5;/**< [ 58: 54] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_0_2_layer_4_0 : 5;/**< [ 53: 49] In name field UE_IDX_RS_r_s_LAYER_l_m, the tuples (r,l) and (s,m) correspond to
+                                                                 a RS index and layer index pair. This parameter  indicates the index of UE that
+                                                                 is mapped to the active RS and layer tuple. When
+                                                                 FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] \<= 2, (r,l) is the active
+                                                                 tuple otherwise (s,m) is the active tuple. */
+        uint64_t ue_idx_rs0_layer3     : 5;  /**< [ 48: 44] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs0_layer2     : 5;  /**< [ 43: 39] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs0_layer1     : 5;  /**< [ 38: 34] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs0_layer0     : 5;  /**< [ 33: 29] In name field UE_IDX_RS_r_LAYER_l, the tuple (r,l) correspond to a RS index and
+                                                                 layer index pair. This parameter  indicates the index of UE that is mapped to RS
+                                                                 and layer tuple. */
+        uint64_t layer_mode            : 2;  /**< [ 28: 27] Number of layers in this RB.
+                                                                 0x0 = 1.
+                                                                 0x1 = 2.
+                                                                 0x2 = 4.
+                                                                 0x3 = 8. */
+        uint64_t subprb_ue3_enable     : 1;  /**< [ 26: 26] If set to 1, the  UE3 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t subprb_ue2_enable     : 1;  /**< [ 25: 25] If set to 1, the  UE2 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t subprb_ue1_enable     : 1;  /**< [ 24: 24] If set to 1, the  UE1 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t subprb_ue0_enable     : 1;  /**< [ 23: 23] If set to 1, the  UE0 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t subprb_case_index     : 3;  /**< [ 22: 20] Indicates the SubPRB allocation. See section Configuration steps for subPRB Ues. */
+        uint64_t layer_enable_rs1_layer7 : 1;/**< [ 19: 19] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer6 : 1;/**< [ 18: 18] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer5 : 1;/**< [ 17: 17] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer4 : 1;/**< [ 16: 16] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer3 : 1;/**< [ 15: 15] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer2 : 1;/**< [ 14: 14] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer1 : 1;/**< [ 13: 13] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer0 : 1;/**< [ 12: 12] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer7 : 1;/**< [ 11: 11] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer6 : 1;/**< [ 10: 10] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer5 : 1;/**< [  9:  9] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer4 : 1;/**< [  8:  8] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer3 : 1;/**< [  7:  7] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer2 : 1;/**< [  6:  6] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer1 : 1;/**< [  5:  5] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer0 : 1;/**< [  4:  4] In name field LAYER_ENABLE_RS_r_LAYER_l, the tuple (r,l) correspond to a RS
+                                                                 index and layer index pair. If set to 1, layer l is active on RS r. */
+        uint64_t rnn_rb                : 3;  /**< [  3:  1] Indicates the number of RBs over which Rnn is averaged.
+                                                                 0x0 = 1 RB.
+                                                                 0x1 = 2 RBs.
+                                                                 0x2 = 3 RBs.
+                                                                 0x3 = 4 RBs.
+                                                                 0x4 = 5 RBs.
+                                                                 0x5 = 6 RBs.
+                                                                 0x6 = 7 RBs.
+                                                                 0x7 = 8 RBs. */
+        uint64_t subprb_enable         : 1;  /**< [  0:  0] If set to 1, this RB is configured as Sub PRB. */
+#else /* Word 0 - Little Endian */
+        uint64_t subprb_enable         : 1;  /**< [  0:  0] If set to 1, this RB is configured as Sub PRB. */
+        uint64_t rnn_rb                : 3;  /**< [  3:  1] Indicates the number of RBs over which Rnn is averaged.
+                                                                 0x0 = 1 RB.
+                                                                 0x1 = 2 RBs.
+                                                                 0x2 = 3 RBs.
+                                                                 0x3 = 4 RBs.
+                                                                 0x4 = 5 RBs.
+                                                                 0x5 = 6 RBs.
+                                                                 0x6 = 7 RBs.
+                                                                 0x7 = 8 RBs. */
+        uint64_t layer_enable_rs0_layer0 : 1;/**< [  4:  4] In name field LAYER_ENABLE_RS_r_LAYER_l, the tuple (r,l) correspond to a RS
+                                                                 index and layer index pair. If set to 1, layer l is active on RS r. */
+        uint64_t layer_enable_rs0_layer1 : 1;/**< [  5:  5] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer2 : 1;/**< [  6:  6] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer3 : 1;/**< [  7:  7] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer4 : 1;/**< [  8:  8] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer5 : 1;/**< [  9:  9] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer6 : 1;/**< [ 10: 10] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs0_layer7 : 1;/**< [ 11: 11] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer0 : 1;/**< [ 12: 12] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer1 : 1;/**< [ 13: 13] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer2 : 1;/**< [ 14: 14] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer3 : 1;/**< [ 15: 15] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer4 : 1;/**< [ 16: 16] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer5 : 1;/**< [ 17: 17] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer6 : 1;/**< [ 18: 18] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t layer_enable_rs1_layer7 : 1;/**< [ 19: 19] Refer to [LAYER_ENABLE_RS0_LAYER0]. */
+        uint64_t subprb_case_index     : 3;  /**< [ 22: 20] Indicates the SubPRB allocation. See section Configuration steps for subPRB Ues. */
+        uint64_t subprb_ue0_enable     : 1;  /**< [ 23: 23] If set to 1, the  UE0 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t subprb_ue1_enable     : 1;  /**< [ 24: 24] If set to 1, the  UE1 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t subprb_ue2_enable     : 1;  /**< [ 25: 25] If set to 1, the  UE2 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t subprb_ue3_enable     : 1;  /**< [ 26: 26] If set to 1, the  UE3 in case specified by [SUBPRB_CASE_INDEX], is enabled. */
+        uint64_t layer_mode            : 2;  /**< [ 28: 27] Number of layers in this RB.
+                                                                 0x0 = 1.
+                                                                 0x1 = 2.
+                                                                 0x2 = 4.
+                                                                 0x3 = 8. */
+        uint64_t ue_idx_rs0_layer0     : 5;  /**< [ 33: 29] In name field UE_IDX_RS_r_LAYER_l, the tuple (r,l) correspond to a RS index and
+                                                                 layer index pair. This parameter  indicates the index of UE that is mapped to RS
+                                                                 and layer tuple. */
+        uint64_t ue_idx_rs0_layer1     : 5;  /**< [ 38: 34] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs0_layer2     : 5;  /**< [ 43: 39] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs0_layer3     : 5;  /**< [ 48: 44] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs_0_2_layer_4_0 : 5;/**< [ 53: 49] In name field UE_IDX_RS_r_s_LAYER_l_m, the tuples (r,l) and (s,m) correspond to
+                                                                 a RS index and layer index pair. This parameter  indicates the index of UE that
+                                                                 is mapped to the active RS and layer tuple. When
+                                                                 FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] \<= 2, (r,l) is the active
+                                                                 tuple otherwise (s,m) is the active tuple. */
+        uint64_t ue_idx_rs_0_2_layer_5_1 : 5;/**< [ 58: 54] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_0_2_layer_6_2 : 5;/**< [ 63: 59] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t reserved_127          : 1;
+        uint64_t hrs_offset_rs1_3_layer_7_3 : 1;/**< [126:126] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_3_layer_6_2 : 1;/**< [125:125] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_3_layer_5_1 : 1;/**< [124:124] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_3_layer_4_0 : 1;/**< [123:123] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_layer3 : 1;  /**< [122:122] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs1_layer2 : 1;  /**< [121:121] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs1_layer1 : 1;  /**< [120:120] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs1_layer0 : 1;  /**< [119:119] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs0_2_layer_7_3 : 1;/**< [118:118] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs0_2_layer_6_2 : 1;/**< [117:117] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs0_2_layer_5_1 : 1;/**< [116:116] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs0_2_layer_4_0 : 1;/**< [115:115] In name field HRS_OFFSET_RSr_s_LAYER_l_m, the tuples (r,l) and (s,m) correspond
+                                                                 to a RS index and layer index pair. The parameter indicates whether the hrs
+                                                                 corresponding to the active RS and layer tuple  begins at word boundary or
+                                                                 middle of word. When FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] \<= 2,
+                                                                 (r,l) is the active tuple otherwise (s,m) is the active tuple.. */
+        uint64_t hrs_offset_rs0_layer3 : 1;  /**< [114:114] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs0_layer2 : 1;  /**< [113:113] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs0_layer1 : 1;  /**< [112:112] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs0_layer0 : 1;  /**< [111:111] In name field HRS_OFFSET_RSr_LAYER_l, the tuple (r,l) correspond to a RS index
+                                                                 and layer index pair. The parameter indicates whether the hrs corresponding to
+                                                                 the active RS and layer tuple  begins at word boundary or middle of word. */
+        uint64_t ryy_rb                : 2;  /**< [110:109] The number of RBs over which Ryy is averaged.
+                                                                 0x0 = 1RB.
+                                                                 0x1 = 2RBs.
+                                                                 0x2 = 3RBs.
+                                                                 0x3 = 4RBs. */
+        uint64_t ue_idx_rs_1_3_layer_7_3 : 5;/**< [108:104] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_1_3_layer_6_2 : 5;/**< [103: 99] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_1_3_layer_5_1 : 5;/**< [ 98: 94] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_1_3_layer_4_0 : 5;/**< [ 93: 89] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs1_layer3     : 5;  /**< [ 88: 84] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs1_layer2     : 5;  /**< [ 83: 79] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs1_layer1     : 5;  /**< [ 78: 74] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs1_layer0     : 5;  /**< [ 73: 69] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs_0_2_layer_7_3 : 5;/**< [ 68: 64] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+#else /* Word 1 - Little Endian */
+        uint64_t ue_idx_rs_0_2_layer_7_3 : 5;/**< [ 68: 64] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs1_layer0     : 5;  /**< [ 73: 69] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs1_layer1     : 5;  /**< [ 78: 74] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs1_layer2     : 5;  /**< [ 83: 79] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs1_layer3     : 5;  /**< [ 88: 84] Refer to [UE_IDX_RS0_LAYER0]. */
+        uint64_t ue_idx_rs_1_3_layer_4_0 : 5;/**< [ 93: 89] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_1_3_layer_5_1 : 5;/**< [ 98: 94] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_1_3_layer_6_2 : 5;/**< [103: 99] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ue_idx_rs_1_3_layer_7_3 : 5;/**< [108:104] Refer to [UE_IDX_RS_0_2_LAYER_4_0]. */
+        uint64_t ryy_rb                : 2;  /**< [110:109] The number of RBs over which Ryy is averaged.
+                                                                 0x0 = 1RB.
+                                                                 0x1 = 2RBs.
+                                                                 0x2 = 3RBs.
+                                                                 0x3 = 4RBs. */
+        uint64_t hrs_offset_rs0_layer0 : 1;  /**< [111:111] In name field HRS_OFFSET_RSr_LAYER_l, the tuple (r,l) correspond to a RS index
+                                                                 and layer index pair. The parameter indicates whether the hrs corresponding to
+                                                                 the active RS and layer tuple  begins at word boundary or middle of word. */
+        uint64_t hrs_offset_rs0_layer1 : 1;  /**< [112:112] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs0_layer2 : 1;  /**< [113:113] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs0_layer3 : 1;  /**< [114:114] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs0_2_layer_4_0 : 1;/**< [115:115] In name field HRS_OFFSET_RSr_s_LAYER_l_m, the tuples (r,l) and (s,m) correspond
+                                                                 to a RS index and layer index pair. The parameter indicates whether the hrs
+                                                                 corresponding to the active RS and layer tuple  begins at word boundary or
+                                                                 middle of word. When FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] \<= 2,
+                                                                 (r,l) is the active tuple otherwise (s,m) is the active tuple.. */
+        uint64_t hrs_offset_rs0_2_layer_5_1 : 1;/**< [116:116] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs0_2_layer_6_2 : 1;/**< [117:117] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs0_2_layer_7_3 : 1;/**< [118:118] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_layer0 : 1;  /**< [119:119] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs1_layer1 : 1;  /**< [120:120] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs1_layer2 : 1;  /**< [121:121] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs1_layer3 : 1;  /**< [122:122] Refer to [HRS_OFFSET_RS0_LAYER0]. */
+        uint64_t hrs_offset_rs1_3_layer_4_0 : 1;/**< [123:123] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_3_layer_5_1 : 1;/**< [124:124] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_3_layer_6_2 : 1;/**< [125:125] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t hrs_offset_rs1_3_layer_7_3 : 1;/**< [126:126] Refer to [HRS_OFFSET_RS0_2_LAYER_4_0]. */
+        uint64_t reserved_127          : 1;
+#endif /* Word 1 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
+        uint64_t reserved_186_191      : 6;
+        uint64_t rs3_rnn_a             : 6;  /**< [185:180] Refer to [RS0_RNN_A]. */
+        uint64_t rs3_noise_a           : 4;  /**< [179:176] Refer to [RS0_NOISE_A]. */
+        uint64_t reserved_170_175      : 6;
+        uint64_t rs2_rnn_a             : 6;  /**< [169:164] Refer to [RS0_RNN_A]. */
+        uint64_t rs2_noise_a           : 4;  /**< [163:160] Refer to [RS0_NOISE_A]. */
+        uint64_t reserved_154_159      : 6;
+        uint64_t rs1_rnn_a             : 6;  /**< [153:148] Refer to [RS0_RNN_A]. */
+        uint64_t rs1_noise_a           : 4;  /**< [147:144] Refer to [RS0_NOISE_A]. */
+        uint64_t reserved_138_143      : 6;
+        uint64_t rs0_rnn_a             : 6;  /**< [137:132] In the name RSr_RNN_A, r refers to the antenna number. The off diagonal terms
+                                                                 of Rnn of RSr are scaled by this parameter.
+                                                                 Valid ranges is [63,0].
+                                                                 Default value is  31 (no scaling). */
+        uint64_t rs0_noise_a           : 4;  /**< [131:128] In the name RSr_NOISE_A, r refers to the antenna number. The diagonal terms of
+                                                                 Rnn of RSr are scaled by this parameter.
+                                                                 Valid ranges is [12,0].
+                                                                 Default value is  0 (no scaling). */
+#else /* Word 2 - Little Endian */
+        uint64_t rs0_noise_a           : 4;  /**< [131:128] In the name RSr_NOISE_A, r refers to the antenna number. The diagonal terms of
+                                                                 Rnn of RSr are scaled by this parameter.
+                                                                 Valid ranges is [12,0].
+                                                                 Default value is  0 (no scaling). */
+        uint64_t rs0_rnn_a             : 6;  /**< [137:132] In the name RSr_RNN_A, r refers to the antenna number. The off diagonal terms
+                                                                 of Rnn of RSr are scaled by this parameter.
+                                                                 Valid ranges is [63,0].
+                                                                 Default value is  31 (no scaling). */
+        uint64_t reserved_138_143      : 6;
+        uint64_t rs1_noise_a           : 4;  /**< [147:144] Refer to [RS0_NOISE_A]. */
+        uint64_t rs1_rnn_a             : 6;  /**< [153:148] Refer to [RS0_RNN_A]. */
+        uint64_t reserved_154_159      : 6;
+        uint64_t rs2_noise_a           : 4;  /**< [163:160] Refer to [RS0_NOISE_A]. */
+        uint64_t rs2_rnn_a             : 6;  /**< [169:164] Refer to [RS0_RNN_A]. */
+        uint64_t reserved_170_175      : 6;
+        uint64_t rs3_noise_a           : 4;  /**< [179:176] Refer to [RS0_NOISE_A]. */
+        uint64_t rs3_rnn_a             : 6;  /**< [185:180] Refer to [RS0_RNN_A]. */
+        uint64_t reserved_186_191      : 6;
+#endif /* Word 2 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
+        uint64_t reserved_233_255      : 23;
+        uint64_t reserved_232          : 1;
+        uint64_t test_mode             : 3;  /**< [231:229] Must be set to 0x0. */
+        uint64_t freq_interp_mode      : 1;  /**< [228:228] When enabled, hrs of this RB is not interpolated in frequency domain with the previous RB. */
+        uint64_t ue_infoset_index      : 28; /**< [227:200] Each 2 bits indicates RS index to which FDEQ_RDCFG_RB_PARAMS_JT1_S[LAYER_ENABLE_RSx_LAYERy] and
+                                                                 FDEQ_RDCFG_RB_PARAMS_JT1_S[UE_IDX_RSx_LAYERy] are referred for each DS.
+                                                                 The two LSBs refer to RS index used for DS13 and two MSBs refer to RS index for
+                                                                 DS 0.Intermediate bits refer to respective DS's.
+                                                                 Note that DS index is absolute symbol index */
+        uint64_t reserved_195_199      : 5;
+        uint64_t rnn_symb              : 3;  /**< [194:192] Defines the number of RS over which Rnn are averaged.
                                                                  If FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] = 1,
                                                                  0x1 = Rnn is not averaged.
                                                                  If FDEQ()_JD_JOB_TYPE_RS_PARAM[HRS_SYMBOL_NUMBER] = 2,
@@ -2488,7 +3178,7 @@ union cavm_fdeq_rdcfg_rb_params_jt1_s
         uint64_t layer_7_rs_crc_layer_rbxsymb : 4;/**< [499:496] Refer to [LAYER_0_RS_CRC_LAYER_RBXSYMB]. */
         uint64_t reserved_500_511      : 12;
 #endif /* Word 7 - End */
-    } cnf95xxp2;
+    } f95o;
     /* struct cavm_fdeq_rdcfg_rb_params_jt1_s_cnf95xxp2 loki; */
 };
 
@@ -2585,6 +3275,7 @@ union cavm_fdeq_rdcfg_twf_set_s
         uint64_t reserved_126_127      : 2;
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeq_rdcfg_twf_set_s_cnf95xxp2 f95o; */
     /* struct cavm_fdeq_rdcfg_twf_set_s_cnf95xxp2 loki; */
 };
 
@@ -3405,6 +4096,7 @@ union cavm_fdeq_rdcfg_ue_phase_16r_s
         uint64_t phase_antenna_15      : 16; /**< [255:240] Refer to [PHASE_ANTENNA_0]. */
 #endif /* Word 3 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeq_rdcfg_ue_phase_16r_s_cnf95xxp2 f95o; */
     /* struct cavm_fdeq_rdcfg_ue_phase_16r_s_cnf95xxp2 loki; */
 };
 
@@ -3485,6 +4177,7 @@ union cavm_fdeq_rdcfg_ue_phase_8r_s
         uint64_t phase_antenna_7       : 16; /**< [127:112] Refer to [PHASE_ANTENNA_0]. */
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeq_rdcfg_ue_phase_8r_s_cnf95xxp2 f95o; */
     /* struct cavm_fdeq_rdcfg_ue_phase_8r_s_cnf95xxp2 loki; */
 };
 
@@ -4389,6 +5082,7 @@ union cavm_fdeq_rdcfg_ue_phyc_params_s
         uint64_t reserved_246_255      : 10;
 #endif /* Word 3 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeq_rdcfg_ue_phyc_params_s_cnf95xxp2 f95o; */
     /* struct cavm_fdeq_rdcfg_ue_phyc_params_s_cnf95xxp2 loki; */
 };
 
@@ -4557,6 +5251,7 @@ union cavm_fdeq_rdcfg_ue_tagc_s
         uint64_t reserved_125_127      : 3;
 #endif /* Word 1 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeq_rdcfg_ue_tagc_s_cnf95xxp2 f95o; */
     /* struct cavm_fdeq_rdcfg_ue_tagc_s_cnf95xxp2 loki; */
 };
 
@@ -4779,6 +5474,8 @@ static inline uint64_t CAVM_FDEQX_CONTROL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043200000ll + 0x800000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043200000ll + 0x800000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043200000ll + 0x800000ll * ((a) & 0x1);
     __cavm_csr_fatal("FDEQX_CONTROL", 1, a, 0, 0, 0, 0, 0);
@@ -4843,6 +5540,8 @@ static inline uint64_t CAVM_FDEQX_ERROR_SOURCE_REGISTER_0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043200030ll + 0x800000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043200030ll + 0x800000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043200030ll + 0x800000ll * ((a) & 0x1);
     __cavm_csr_fatal("FDEQX_ERROR_SOURCE_REGISTER_0", 1, a, 0, 0, 0, 0, 0);
@@ -4894,6 +5593,8 @@ static inline uint64_t CAVM_FDEQX_HAB_STATUS(uint64_t a) __attribute__ ((pure, a
 static inline uint64_t CAVM_FDEQX_HAB_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043200018ll + 0x800000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043200018ll + 0x800000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043200018ll + 0x800000ll * ((a) & 0x1);
@@ -4956,6 +5657,8 @@ static inline uint64_t CAVM_FDEQX_JD_ACT_UE_NUM_FOR_HOP(uint64_t a) __attribute_
 static inline uint64_t CAVM_FDEQX_JD_ACT_UE_NUM_FOR_HOP(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043202040ll + 0x800000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043202040ll + 0x800000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043202040ll + 0x800000ll * ((a) & 0x1);
@@ -5037,6 +5740,8 @@ static inline uint64_t CAVM_FDEQX_JD_HRS_BUFFER_PARAM_0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043202010ll + 0x800000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043202010ll + 0x800000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043202010ll + 0x800000ll * ((a) & 0x1);
     __cavm_csr_fatal("FDEQX_JD_HRS_BUFFER_PARAM_0", 1, a, 0, 0, 0, 0, 0);
@@ -5104,6 +5809,8 @@ static inline uint64_t CAVM_FDEQX_JD_HRS_BUFFER_PARAM_1(uint64_t a) __attribute_
 static inline uint64_t CAVM_FDEQX_JD_HRS_BUFFER_PARAM_1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043202018ll + 0x800000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043202018ll + 0x800000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043202018ll + 0x800000ll * ((a) & 0x1);
@@ -5173,6 +5880,70 @@ union cavm_fdeqx_jd_hrs_offset_per_ant
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_35_63        : 29;
         uint64_t gap_reduc_with_lim_rd_bw : 1;/**< [ 34: 34](R/W) Must be set to 1. If FDEQ()_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_MODE_ENABLE]
+                                                                 = 1, this parameter toggles between successive jobs.
+                                                                 Used only for FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1. */
+        uint64_t rb_param_buff_page    : 1;  /**< [ 33: 33](R/W) If FDEQ()_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_MODE_ENABLE] = 0,
+                                                                 this value shall be toggled from the previous Type 1 job.
+
+                                                                 If FDEQ()_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_MODE_ENABLE] = 1 and
+                                                                 FDEQ(0..1)_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_INDICATOR] = 0, this
+                                                                 value shall be toggled from the previous successive Type 1 job.
+
+                                                                 If FDEQ()_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_MODE_ENABLE] = 1 and
+                                                                 FDEQ()_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_INDICATOR] = 1, this
+                                                                 value shall be the same as the corresponding Type 1 job with
+                                                                 FDEQ()_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_INDICATOR] = 0.
+
+                                                                 Used only for FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1. */
+        uint64_t subprb_job_enable     : 1;  /**< [ 32: 32](R/W) If set to 1, this is a SUBPRB job. Used only for FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1. */
+        uint64_t gap_between_jobs      : 16; /**< [ 31: 16](R/W) Indicates the gap between the end of the current
+                                                                 FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1 to the next
+                                                                 FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1 at RD DMA interface in the
+                                                                 resolution of 20 cycles (i.e. 10 means 200 cycles). 0= @(\<20 cycle),1=@+20
+                                                                 cycle. MAX value is 11.
+                                                                 Used only for FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1. */
+        uint64_t reserved_9_15         : 7;
+        uint64_t hrs_addr_offs_per_ant : 9;  /**< [  8:  0](R/W) Address offset between subsequent antennas within internal Hrs_buffer of cell-
+                                                                 rs-layer.Must be \>= ceiling(NRB*(Nhtone_per_RB)/4,1).
+                                                                 Valid range is [420,0].
+                                                                 Used only for FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1. */
+#else /* Word 0 - Little Endian */
+        uint64_t hrs_addr_offs_per_ant : 9;  /**< [  8:  0](R/W) Address offset between subsequent antennas within internal Hrs_buffer of cell-
+                                                                 rs-layer.Must be \>= ceiling(NRB*(Nhtone_per_RB)/4,1).
+                                                                 Valid range is [420,0].
+                                                                 Used only for FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1. */
+        uint64_t reserved_9_15         : 7;
+        uint64_t gap_between_jobs      : 16; /**< [ 31: 16](R/W) Indicates the gap between the end of the current
+                                                                 FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1 to the next
+                                                                 FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1 at RD DMA interface in the
+                                                                 resolution of 20 cycles (i.e. 10 means 200 cycles). 0= @(\<20 cycle),1=@+20
+                                                                 cycle. MAX value is 11.
+                                                                 Used only for FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1. */
+        uint64_t subprb_job_enable     : 1;  /**< [ 32: 32](R/W) If set to 1, this is a SUBPRB job. Used only for FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1. */
+        uint64_t rb_param_buff_page    : 1;  /**< [ 33: 33](R/W) If FDEQ()_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_MODE_ENABLE] = 0,
+                                                                 this value shall be toggled from the previous Type 1 job.
+
+                                                                 If FDEQ()_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_MODE_ENABLE] = 1 and
+                                                                 FDEQ(0..1)_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_INDICATOR] = 0, this
+                                                                 value shall be toggled from the previous successive Type 1 job.
+
+                                                                 If FDEQ()_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_MODE_ENABLE] = 1 and
+                                                                 FDEQ()_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_INDICATOR] = 1, this
+                                                                 value shall be the same as the corresponding Type 1 job with
+                                                                 FDEQ()_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_INDICATOR] = 0.
+
+                                                                 Used only for FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1. */
+        uint64_t gap_reduc_with_lim_rd_bw : 1;/**< [ 34: 34](R/W) Must be set to 1. If FDEQ()_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_MODE_ENABLE]
+                                                                 = 1, this parameter toggles between successive jobs.
+                                                                 Used only for FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1. */
+        uint64_t reserved_35_63        : 29;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    struct cavm_fdeqx_jd_hrs_offset_per_ant_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_35_63        : 29;
+        uint64_t gap_reduc_with_lim_rd_bw : 1;/**< [ 34: 34](R/W) Must be set to 1. If FDEQ()_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_MODE_ENABLE]
                                                                  = 1, this parameters toggles between successive jobs.
                                                                  Used only for FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1. */
         uint64_t rb_param_buff_page    : 1;  /**< [ 33: 33](R/W) If FDEQ()_JD_JOB_TYPE_RS_PARAM[DATA_ONLY_JOB_MODE_ENABLE] = 1.
@@ -5209,7 +5980,7 @@ union cavm_fdeqx_jd_hrs_offset_per_ant
                                                                  Used only for FDEQ()_JD_JOB_TYPE_RS_PARAM[JOB_TYPE] = 0x1. */
         uint64_t reserved_35_63        : 29;
 #endif /* Word 0 - End */
-    } cnf95xxp2;
+    } f95o;
     /* struct cavm_fdeqx_jd_hrs_offset_per_ant_cnf95xxp2 loki; */
 };
 typedef union cavm_fdeqx_jd_hrs_offset_per_ant cavm_fdeqx_jd_hrs_offset_per_ant_t;
@@ -5218,6 +5989,8 @@ static inline uint64_t CAVM_FDEQX_JD_HRS_OFFSET_PER_ANT(uint64_t a) __attribute_
 static inline uint64_t CAVM_FDEQX_JD_HRS_OFFSET_PER_ANT(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043202008ll + 0x800000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043202008ll + 0x800000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043202008ll + 0x800000ll * ((a) & 0x1);
@@ -5396,6 +6169,7 @@ union cavm_fdeqx_jd_hrs_sym_idx_for_tdce
         uint64_t reserved_56_63        : 8;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeqx_jd_hrs_sym_idx_for_tdce_cnf95xxp2 f95o; */
     /* struct cavm_fdeqx_jd_hrs_sym_idx_for_tdce_cnf95xxp2 loki; */
 };
 typedef union cavm_fdeqx_jd_hrs_sym_idx_for_tdce cavm_fdeqx_jd_hrs_sym_idx_for_tdce_t;
@@ -5404,6 +6178,8 @@ static inline uint64_t CAVM_FDEQX_JD_HRS_SYM_IDX_FOR_TDCE(uint64_t a) __attribut
 static inline uint64_t CAVM_FDEQX_JD_HRS_SYM_IDX_FOR_TDCE(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043202028ll + 0x800000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043202028ll + 0x800000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043202028ll + 0x800000ll * ((a) & 0x1);
@@ -5630,6 +6406,7 @@ union cavm_fdeqx_jd_job_type_rs_param
                                                                  Used only for [JOB_TYPE] = 0x1. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeqx_jd_job_type_rs_param_cnf95xxp2 f95o; */
     /* struct cavm_fdeqx_jd_job_type_rs_param_cnf95xxp2 loki; */
 };
 typedef union cavm_fdeqx_jd_job_type_rs_param cavm_fdeqx_jd_job_type_rs_param_t;
@@ -5638,6 +6415,8 @@ static inline uint64_t CAVM_FDEQX_JD_JOB_TYPE_RS_PARAM(uint64_t a) __attribute__
 static inline uint64_t CAVM_FDEQX_JD_JOB_TYPE_RS_PARAM(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043202000ll + 0x800000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043202000ll + 0x800000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043202000ll + 0x800000ll * ((a) & 0x1);
@@ -5816,6 +6595,7 @@ union cavm_fdeqx_jd_rs_general_parameter
                                                                  are provided in job type 0. i.e. number of hrs per RB is 6. S */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_fdeqx_jd_rs_general_parameter_cnf95xxp2 f95o; */
     /* struct cavm_fdeqx_jd_rs_general_parameter_cnf95xxp2 loki; */
 };
 typedef union cavm_fdeqx_jd_rs_general_parameter cavm_fdeqx_jd_rs_general_parameter_t;
@@ -5824,6 +6604,8 @@ static inline uint64_t CAVM_FDEQX_JD_RS_GENERAL_PARAMETER(uint64_t a) __attribut
 static inline uint64_t CAVM_FDEQX_JD_RS_GENERAL_PARAMETER(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043202020ll + 0x800000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043202020ll + 0x800000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043202020ll + 0x800000ll * ((a) & 0x1);
@@ -5865,6 +6647,8 @@ static inline uint64_t CAVM_FDEQX_JD_RS_SXBC_MAP_0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043202030ll + 0x800000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043202030ll + 0x800000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043202030ll + 0x800000ll * ((a) & 0x1);
     __cavm_csr_fatal("FDEQX_JD_RS_SXBC_MAP_0", 1, a, 0, 0, 0, 0, 0);
@@ -5904,6 +6688,8 @@ static inline uint64_t CAVM_FDEQX_JD_RS_SXBC_MAP_1(uint64_t a) __attribute__ ((p
 static inline uint64_t CAVM_FDEQX_JD_RS_SXBC_MAP_1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043202038ll + 0x800000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043202038ll + 0x800000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043202038ll + 0x800000ll * ((a) & 0x1);

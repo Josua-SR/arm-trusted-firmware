@@ -1,5 +1,5 @@
 /***********************license start***********************************
-* Copyright (C) 2018 Marvell International Ltd.
+* Copyright (C) 2018-2020 Marvell International Ltd.
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -87,6 +87,10 @@
 #define OCTEONTX_F95MM             (OCTEONTX_F95MM_PASS1_0 | __OM_IGNORE_REVISION)
 #define OCTEONTX_F95MM_PASS1_X     (OCTEONTX_F95MM_PASS1_0 | __OM_IGNORE_MINOR_REVISION)
 
+#define OCTEONTX_F95O_PASS1_0     __OM_BUILD(0xb6, 1, 0) /* Called A0 */
+#define OCTEONTX_F95O             (OCTEONTX_F95O_PASS1_0 | __OM_IGNORE_REVISION)
+#define OCTEONTX_F95O_PASS1_X     (OCTEONTX_F95O_PASS1_0 | __OM_IGNORE_MINOR_REVISION)
+
 /* These match entire families of chips */
 #define OCTEONTX_CN8XXX           (OCTEONTX_CN83XX_PASS1_0 | __OM_IGNORE_MODEL)
 #define OCTEONTX_CN9XXX           (OCTEONTX_CN96XX_PASS1_0 | __OM_IGNORE_MODEL)
@@ -103,7 +107,7 @@
 /* These are for CN96XX pass Cx */
 #define OCTEONTX_ALT_CN93XXJ         (8+1) /* (J) 42.5mm pkg, 2 DDR, 4 lanes ethernet */
 #define OCTEONTX_ALT_CN96XXM         (8+4) /* (M) 50mm pkg, Ax compatible */
-#define OCTEONTX_ALT_CN93XXN         (8+5) /* (N) 42.5mm pkg, 2 DDR, 8 lanes ethernet */
+#define OCTEONTX_ALT_CN96XXN         (8+5) /* (N) 42.5mm pkg, 2 DDR, 8 lanes ethernet */
 #define OCTEONTX_ALT_CN96XXP         (8+7) /* (P) 50mm pkg, 3 DDR, TBD */
 
 static inline uint64_t cavm_get_model() __attribute__ ((pure, always_inline));

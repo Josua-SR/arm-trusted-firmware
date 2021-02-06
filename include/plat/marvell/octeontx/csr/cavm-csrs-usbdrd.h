@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -37,6 +37,24 @@
  */
 #define CAVM_UCTL_DMA_WRITE_CMD_E_RSTP (1)
 #define CAVM_UCTL_DMA_WRITE_CMD_E_STP (0)
+
+/**
+ * Enumeration uctl_ecc_err_source_e
+ *
+ * USB UCTL ECC Error Source Enumeration
+ * Enumerate sources of ECC error log information.
+ */
+#define CAVM_UCTL_ECC_ERR_SOURCE_E_NONE (0)
+#define CAVM_UCTL_ECC_ERR_SOURCE_E_RAM0_DBE (0xf)
+#define CAVM_UCTL_ECC_ERR_SOURCE_E_RAM0_SBE (7)
+#define CAVM_UCTL_ECC_ERR_SOURCE_E_RAM1_DBE (0xe)
+#define CAVM_UCTL_ECC_ERR_SOURCE_E_RAM1_SBE (6)
+#define CAVM_UCTL_ECC_ERR_SOURCE_E_RAM2_DBE (0xd)
+#define CAVM_UCTL_ECC_ERR_SOURCE_E_RAM2_SBE (5)
+#define CAVM_UCTL_ECC_ERR_SOURCE_E_XM_R_DBE (0xa)
+#define CAVM_UCTL_ECC_ERR_SOURCE_E_XM_R_SBE (2)
+#define CAVM_UCTL_ECC_ERR_SOURCE_E_XM_W_DBE (9)
+#define CAVM_UCTL_ECC_ERR_SOURCE_E_XM_W_SBE (1)
 
 /**
  * Enumeration uctl_endian_mode_e

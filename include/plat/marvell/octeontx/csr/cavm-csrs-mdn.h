@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -309,7 +309,86 @@ union cavm_mdn_bist_config
         uint32_t reserved_15_31        : 17;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_mdn_bist_config_s cn; */
+    /* struct cavm_mdn_bist_config_s cn9; */
+    /* struct cavm_mdn_bist_config_s cn96xxp1; */
+    struct cavm_mdn_bist_config_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_15_31        : 17;
+        uint32_t debug_kind            : 2;  /**< [ 14: 13](R/W) Selects row or column defect capture for debug according to the
+                                                                 MDN_DEBUG_KIND_E enumeration. */
+        uint32_t debug_algo            : 2;  /**< [ 12: 11](R/W) Selects the algorithm used to capture defects for debug according to the
+                                                                 MDN_DEBUG_ALGO_E enumeration. */
+        uint32_t continuous_enable     : 1;  /**< [ 10: 10](R/W) Run BIST continuously until turned off.  Use extreme caution when
+                                                                 running in this mode as BIST can draw a lot of power. */
+        uint32_t halt_enable           : 1;  /**< [  9:  9](R/W) BIST halt mode enable. When set, the BIST state machine will run until a defect
+                                                                 is detected; then it will halt. If no defect is detected, the BIST state machine
+                                                                 will run until it has finished and remove MDN_BIST_STATUS[STATUS] being
+                                                                 MDN_BIST_STATUS_E::ACTIVE if a defect is detected, it will assert set
+                                                                 MDN_BIST_STATUS[STATUS] to MDN_BIST_STATUS_E::HALTED and stop executing
+                                                                 BIST. The BIST state machine can be restarted at the next location in its march
+                                                                 by writing one to MDN_BIST_CONTROL[START]. */
+        uint32_t broadcast_disable     : 1;  /**< [  8:  8](R/W) Broadcast start BIST disable.  When set, disables the BIST state
+                                                                 machine performing BIST upon a broadcast write of one to
+                                                                 MDN_BIST_CONTROL[START].
+                                                                 Arbitrary sets of memories can be specified to run BIST by setting
+                                                                 or clearing this bit in all memories. */
+        uint32_t march_disable         : 8;  /**< [  7:  0](R/W) BIST march disable.  BIST can execute up to eight march patterns.  This
+                                                                 8-bit vector controls which marches are disabled.  When a bit in the
+                                                                 vector is cleared to zero, the associated march is enabled.  When a bit
+                                                                 in the vector is set to one the associated march is disabled.  Marches
+                                                                 7 through 4 are the retention patterns and are disabled by default.
+                                                                 The marches execute from 7 down to 0.  The marches include:
+                                                                   0x0 = Clear.
+                                                                   0x1 = Read-hammer, binary-CAM or ternary-CAM.
+                                                                   0x2 = MD2.
+                                                                   0x3 = Checkerboard.
+                                                                   0x4 = Inverse checkerboard read and compare.
+                                                                   0x5 = Inverse checkerboard write.
+                                                                   0x6 = Checkerboard read and compare.
+                                                                   0x7 = Checkerboard write. */
+#else /* Word 0 - Little Endian */
+        uint32_t march_disable         : 8;  /**< [  7:  0](R/W) BIST march disable.  BIST can execute up to eight march patterns.  This
+                                                                 8-bit vector controls which marches are disabled.  When a bit in the
+                                                                 vector is cleared to zero, the associated march is enabled.  When a bit
+                                                                 in the vector is set to one the associated march is disabled.  Marches
+                                                                 7 through 4 are the retention patterns and are disabled by default.
+                                                                 The marches execute from 7 down to 0.  The marches include:
+                                                                   0x0 = Clear.
+                                                                   0x1 = Read-hammer, binary-CAM or ternary-CAM.
+                                                                   0x2 = MD2.
+                                                                   0x3 = Checkerboard.
+                                                                   0x4 = Inverse checkerboard read and compare.
+                                                                   0x5 = Inverse checkerboard write.
+                                                                   0x6 = Checkerboard read and compare.
+                                                                   0x7 = Checkerboard write. */
+        uint32_t broadcast_disable     : 1;  /**< [  8:  8](R/W) Broadcast start BIST disable.  When set, disables the BIST state
+                                                                 machine performing BIST upon a broadcast write of one to
+                                                                 MDN_BIST_CONTROL[START].
+                                                                 Arbitrary sets of memories can be specified to run BIST by setting
+                                                                 or clearing this bit in all memories. */
+        uint32_t halt_enable           : 1;  /**< [  9:  9](R/W) BIST halt mode enable. When set, the BIST state machine will run until a defect
+                                                                 is detected; then it will halt. If no defect is detected, the BIST state machine
+                                                                 will run until it has finished and remove MDN_BIST_STATUS[STATUS] being
+                                                                 MDN_BIST_STATUS_E::ACTIVE if a defect is detected, it will assert set
+                                                                 MDN_BIST_STATUS[STATUS] to MDN_BIST_STATUS_E::HALTED and stop executing
+                                                                 BIST. The BIST state machine can be restarted at the next location in its march
+                                                                 by writing one to MDN_BIST_CONTROL[START]. */
+        uint32_t continuous_enable     : 1;  /**< [ 10: 10](R/W) Run BIST continuously until turned off.  Use extreme caution when
+                                                                 running in this mode as BIST can draw a lot of power. */
+        uint32_t debug_algo            : 2;  /**< [ 12: 11](R/W) Selects the algorithm used to capture defects for debug according to the
+                                                                 MDN_DEBUG_ALGO_E enumeration. */
+        uint32_t debug_kind            : 2;  /**< [ 14: 13](R/W) Selects row or column defect capture for debug according to the
+                                                                 MDN_DEBUG_KIND_E enumeration. */
+        uint32_t reserved_15_31        : 17;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_mdn_bist_config_cn96xxp3 cn98xx; */
+    /* struct cavm_mdn_bist_config_s cnf95xxp1; */
+    /* struct cavm_mdn_bist_config_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_mdn_bist_config_cn96xxp3 f95mm; */
+    /* struct cavm_mdn_bist_config_s f95o; */
+    /* struct cavm_mdn_bist_config_cn96xxp3 loki; */
 };
 typedef union cavm_mdn_bist_config cavm_mdn_bist_config_t;
 
@@ -810,7 +889,28 @@ union cavm_mdn_debug_skid
                                                                  the clock-cycle of the halt plus 1, bit 1 = halt + 2 cycles, etc. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_mdn_debug_skid_s cn; */
+    /* struct cavm_mdn_debug_skid_s cn9; */
+    /* struct cavm_mdn_debug_skid_s cn96xxp1; */
+    struct cavm_mdn_debug_skid_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t skid                  : 32; /**< [ 31:  0](RO/H) Skid FIFO for defect detection.  0 = No defect. 1 = Defect.
+                                                                 Each bit corresponds to a clock-cycle pipeline delay from the time
+                                                                 BIST SM was halted due to a defect detection.  Bit 0 corresponds to
+                                                                 the clock-cycle of the halt plus 1, bit 1 = halt + 2 cycles, etc. */
+#else /* Word 0 - Little Endian */
+        uint32_t skid                  : 32; /**< [ 31:  0](RO/H) Skid FIFO for defect detection.  0 = No defect. 1 = Defect.
+                                                                 Each bit corresponds to a clock-cycle pipeline delay from the time
+                                                                 BIST SM was halted due to a defect detection.  Bit 0 corresponds to
+                                                                 the clock-cycle of the halt plus 1, bit 1 = halt + 2 cycles, etc. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_mdn_debug_skid_cn96xxp3 cn98xx; */
+    /* struct cavm_mdn_debug_skid_s cnf95xxp1; */
+    /* struct cavm_mdn_debug_skid_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_mdn_debug_skid_cn96xxp3 f95mm; */
+    /* struct cavm_mdn_debug_skid_s f95o; */
+    /* struct cavm_mdn_debug_skid_cn96xxp3 loki; */
 };
 typedef union cavm_mdn_debug_skid cavm_mdn_debug_skid_t;
 

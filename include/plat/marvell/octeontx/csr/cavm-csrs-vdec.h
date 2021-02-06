@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -95,6 +95,7 @@ union cavm_vdec_common_cfg_s
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_vdec_common_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_vdec_common_cfg_s_cnf95xxp2 loki; */
 };
 
@@ -223,6 +224,7 @@ union cavm_vdec_lte_report_s
         uint64_t reserved_180_191      : 12;
 #endif /* Word 2 - End */
     } cnf95xxp2;
+    /* struct cavm_vdec_lte_report_s_cnf95xxp2 f95o; */
     /* struct cavm_vdec_lte_report_s_cnf95xxp2 loki; */
 };
 
@@ -606,6 +608,368 @@ union cavm_vdec_lte_task_cfg_s
     struct cavm_vdec_lte_task_cfg_s_cnf95xxp2
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t num_llr               : 18; /**< [ 63: 46] The number of input LLRs, up to 0x3CC00. When [BYPS_CIRC_EXT] = 1, this
+                                                                 field is ignored and the number of encoded LLRs must be 3 x [DEC_OUT_SIZE]. */
+        uint64_t byps_rm               : 1;  /**< [ 45: 45] When set, bypass rate dematching and subblock deinterleaving. */
+        uint64_t byps_circ_ext         : 1;  /**< [ 44: 44] When set, bypass circular extension. When circular extension is
+                                                                 bypassed, [BYPS_RM] is ignored and the rate de-matching and subblock
+                                                                 deinterleaving functions are bypassed as if [BYPS_RM] = 1.
+
+                                                                 When set to one, [REENC_ENA] must be 0, [BYPS_CH_DEINT] must be 1, and
+                                                                 [BYPS_LAYER_DEMAP] must be 1.  In addition, this field must be set
+                                                                 to 1 if [DEC_OUT_SIZE] is greater than 0x400.
+
+                                                                 If [BYPS_CIRC_EXT] is set to 1, circular extension must be performed
+                                                                 externally, and the input data must include
+                                                                 3*5*ceiling([TRACEBACK_LEN] / 5) bits of circular prefix and postfix
+                                                                 before and after the encoded data. The prefix and original encoded
+                                                                 data must be 128-bit aligned, with padding bits added to the end of
+                                                                 the prefix as required. The postfix must be packed immediately after
+                                                                 the encoded data, with no extra padding bits.
+
+                                                                 When [BYPS_CIRC_EXT] is set to 1, the coding rate is always 1/3. */
+        uint64_t byps_crc              : 1;  /**< [ 43: 43] When 1, CRC decoding is bypassed. When this field is 0, the code
+                                                                 block CRC is decoded using the polynomial selected by [CRC_SELECT].
+                                                                 The decoded CRC is stripped from the decoded output data. */
+        uint64_t crc_select            : 3;  /**< [ 42: 40] CRC size and type:
+                                                                 0x0 = CRC8.
+                                                                 0x1 = CRC16.
+                                                                 0x2 = CRC24A.
+                                                                 0x3 = CRC24B.
+                                                                 0x4-0x7 = Reserved. */
+        uint64_t byps_llr_negate       : 1;  /**< [ 39: 39] When set, bypass LLR negation. */
+        uint64_t total_num_sym         : 5;  /**< [ 38: 34] The number of input symbols to be deinterleaved.
+
+                                                                 _ When [BYPS_CH_DEINT] = 0, [TOTAL_NUM_SYM] shall be set to the total
+                                                                 number of OFDM symbols [0x1, 0x18] onto which the data/control LLR
+                                                                 values are mapped.  This is the same as the number of input threads
+                                                                 to be de-interleaved.
+
+                                                                 _ When [BYPS_CH_DEINT] = 1 and [BYPS_LAYER_DEMAP] = 1, then [TOTAL_NUM_SYM]
+                                                                 must be set to 0x1.
+
+                                                                 _ When [BYPS_CH_DEINT] = 1 and [BYPS_LAYER_DEMAP] = 0, then [TOTAL_NUM_SYM]
+                                                                 must be set to 0x2. */
+        uint64_t byps_layer_demap      : 1;  /**< [ 33: 33] Bypasses internal layer demapping.
+
+                                                                 _ When [BYPS_CH_DEINT] = 0, layer
+                                                                 demapping is performed as part of deinterleaving, and
+                                                                 [BYPS_LAYER_DEMAP] must be set to 1.
+
+                                                                 _ When [BYPS_CH_DEINT] = 1, this field determines whether VDEC performs
+                                                                 layer demapping. If [BYPS_LAYER_DEMAP] = 0, then [NUM_SYMBOLS] must be
+                                                                 0x2, and there must be two input DMA threads, using
+                                                                 MHBW_JD_DMA_CFG_WORD_0_S[CHUNK_SIZE] of 0xC (48 bytes). */
+        uint64_t byps_ch_deint         : 1;  /**< [ 32: 32] When set, the task will bypass channel deinterleaving. */
+        uint64_t reserved_23_31        : 9;
+        uint64_t num_layers            : 3;  /**< [ 22: 20] Number of layers the transport block is mapped to. Must be either 0x1 or 0x2. */
+        uint64_t mod_order             : 4;  /**< [ 19: 16] The modulation order:
+                                                                 0x1 = BPSK.
+                                                                 0x2 = QPSK.
+                                                                 0x4 = 16QAM.
+                                                                 0x6 = 64QAM.
+                                                                 0x8 = 256QAM.
+                                                                 0x0, 0x3, 0x5, 0x7, 0x9-0xF = Reserved.
+
+                                                                 Internal:
+                                                                 0xA specifies 1024QAM, but this mode is not supported by
+                                                                 the channel deinterleaver. */
+        uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job should be assigned a unique ID. The task ID will be
+                                                                 included in the output to correctly identify the output for each task. */
+#else /* Word 0 - Little Endian */
+        uint64_t task_id               : 16; /**< [ 15:  0] Each task in a job should be assigned a unique ID. The task ID will be
+                                                                 included in the output to correctly identify the output for each task. */
+        uint64_t mod_order             : 4;  /**< [ 19: 16] The modulation order:
+                                                                 0x1 = BPSK.
+                                                                 0x2 = QPSK.
+                                                                 0x4 = 16QAM.
+                                                                 0x6 = 64QAM.
+                                                                 0x8 = 256QAM.
+                                                                 0x0, 0x3, 0x5, 0x7, 0x9-0xF = Reserved.
+
+                                                                 Internal:
+                                                                 0xA specifies 1024QAM, but this mode is not supported by
+                                                                 the channel deinterleaver. */
+        uint64_t num_layers            : 3;  /**< [ 22: 20] Number of layers the transport block is mapped to. Must be either 0x1 or 0x2. */
+        uint64_t reserved_23_31        : 9;
+        uint64_t byps_ch_deint         : 1;  /**< [ 32: 32] When set, the task will bypass channel deinterleaving. */
+        uint64_t byps_layer_demap      : 1;  /**< [ 33: 33] Bypasses internal layer demapping.
+
+                                                                 _ When [BYPS_CH_DEINT] = 0, layer
+                                                                 demapping is performed as part of deinterleaving, and
+                                                                 [BYPS_LAYER_DEMAP] must be set to 1.
+
+                                                                 _ When [BYPS_CH_DEINT] = 1, this field determines whether VDEC performs
+                                                                 layer demapping. If [BYPS_LAYER_DEMAP] = 0, then [NUM_SYMBOLS] must be
+                                                                 0x2, and there must be two input DMA threads, using
+                                                                 MHBW_JD_DMA_CFG_WORD_0_S[CHUNK_SIZE] of 0xC (48 bytes). */
+        uint64_t total_num_sym         : 5;  /**< [ 38: 34] The number of input symbols to be deinterleaved.
+
+                                                                 _ When [BYPS_CH_DEINT] = 0, [TOTAL_NUM_SYM] shall be set to the total
+                                                                 number of OFDM symbols [0x1, 0x18] onto which the data/control LLR
+                                                                 values are mapped.  This is the same as the number of input threads
+                                                                 to be de-interleaved.
+
+                                                                 _ When [BYPS_CH_DEINT] = 1 and [BYPS_LAYER_DEMAP] = 1, then [TOTAL_NUM_SYM]
+                                                                 must be set to 0x1.
+
+                                                                 _ When [BYPS_CH_DEINT] = 1 and [BYPS_LAYER_DEMAP] = 0, then [TOTAL_NUM_SYM]
+                                                                 must be set to 0x2. */
+        uint64_t byps_llr_negate       : 1;  /**< [ 39: 39] When set, bypass LLR negation. */
+        uint64_t crc_select            : 3;  /**< [ 42: 40] CRC size and type:
+                                                                 0x0 = CRC8.
+                                                                 0x1 = CRC16.
+                                                                 0x2 = CRC24A.
+                                                                 0x3 = CRC24B.
+                                                                 0x4-0x7 = Reserved. */
+        uint64_t byps_crc              : 1;  /**< [ 43: 43] When 1, CRC decoding is bypassed. When this field is 0, the code
+                                                                 block CRC is decoded using the polynomial selected by [CRC_SELECT].
+                                                                 The decoded CRC is stripped from the decoded output data. */
+        uint64_t byps_circ_ext         : 1;  /**< [ 44: 44] When set, bypass circular extension. When circular extension is
+                                                                 bypassed, [BYPS_RM] is ignored and the rate de-matching and subblock
+                                                                 deinterleaving functions are bypassed as if [BYPS_RM] = 1.
+
+                                                                 When set to one, [REENC_ENA] must be 0, [BYPS_CH_DEINT] must be 1, and
+                                                                 [BYPS_LAYER_DEMAP] must be 1.  In addition, this field must be set
+                                                                 to 1 if [DEC_OUT_SIZE] is greater than 0x400.
+
+                                                                 If [BYPS_CIRC_EXT] is set to 1, circular extension must be performed
+                                                                 externally, and the input data must include
+                                                                 3*5*ceiling([TRACEBACK_LEN] / 5) bits of circular prefix and postfix
+                                                                 before and after the encoded data. The prefix and original encoded
+                                                                 data must be 128-bit aligned, with padding bits added to the end of
+                                                                 the prefix as required. The postfix must be packed immediately after
+                                                                 the encoded data, with no extra padding bits.
+
+                                                                 When [BYPS_CIRC_EXT] is set to 1, the coding rate is always 1/3. */
+        uint64_t byps_rm               : 1;  /**< [ 45: 45] When set, bypass rate dematching and subblock deinterleaving. */
+        uint64_t num_llr               : 18; /**< [ 63: 46] The number of input LLRs, up to 0x3CC00. When [BYPS_CIRC_EXT] = 1, this
+                                                                 field is ignored and the number of encoded LLRs must be 3 x [DEC_OUT_SIZE]. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t reserved_121_127      : 7;
+        uint64_t crc_mask_en           : 1;  /**< [120:120] When 0, no CRC mask is applied on the calculated CRC.  When 1,
+                                                                 the calculated CRC is masked with [CRC_MASK]. */
+        uint64_t symb_byte_align       : 2;  /**< [119:118] When 0x1, each [MOD_ORDER] bits of reencoded output are mapped to one
+                                                                 byte, with the (8 - [MOD_ORDER]) most significant bits padded with zeros.
+                                                                 When 0x0, the reencoded output bits are packed with no extra padding.
+
+                                                                 Internal:
+                                                                 Values of 0x2 and 0x3 are applicable only to 1024QAM.
+                                                                 When 0x2, from each 10 bits mapped to one symbol, the even bits
+                                                                 are mapped to the first byte and the odd bits are mapped to the
+                                                                 next byte.  The data bits are mapped in little endian format, and
+                                                                 the 3 MSB bits are set to 0.
+                                                                 When 0x3, from each 10 bits mapped to one symbol, the first 5 bits
+                                                                 are mapped to the first byte and the next 5 bits are mapped to the
+                                                                 next byte.  The data bits are mapped in little endian format, and
+                                                                 the 3 MSB bits are set to 0. */
+        uint64_t reenc_size            : 18; /**< [117:100] The reencoded output size, in bits, after rate matching. The maximum
+                                                                 size is 0x3CC00. */
+        uint64_t reenc_byte_order      : 2;  /**< [ 99: 98] Byte order for the reencoded output data.  See Baseband PHY (BPHY):
+                                                                 Data Packing section for details. Normal usage should use
+                                                                 [REENC_BYTE_ORDER] = 0x0. */
+        uint64_t reenc_bit_order       : 1;  /**< [ 97: 97] Bit order for the reencoded output data.  See Baseband PHY (BPHY):
+                                                                 Data Packing section for details. */
+        uint64_t dec_bit_order         : 1;  /**< [ 96: 96] The bit order for the decoded output data.  See Baseband PHY (BPHY):
+                                                                 Data Packing section for details. */
+        uint64_t dec_byte_order        : 2;  /**< [ 95: 94] The byte order for the decoded output data.  See Baseband PHY (BPHY):
+                                                                 Data Packing section for details. Normal usage should use
+                                                                 [DEC_BYTE_ORDER] = 0x0. */
+        uint64_t llr_lvl               : 4;  /**< [ 93: 90] Rounding level used when [LLR_MODE] = 0x0. Rounding is performed as
+                                                                 follows:
+
+                                                                 _ LLR \>= 0: (LLR + (1 \<\< ([LLR_LVL] - 1)) \>\> [LLR_LVL]
+
+                                                                 _ LLR \<  0: (LLR + NEG((1 \<\< ([LLR_LVL] - 1))) \>\> [LLR_LVL]
+
+                                                                 The result is then saturated to 8 bits (symmetrically).
+                                                                 Permitted values for this field are [0x0, 0x2]. */
+        uint64_t llr_mode              : 2;  /**< [ 89: 88] The LLR conversion mode.
+                                                                 0x0 = LLR conversion uses the setting in [LLR_LVL].
+                                                                 0x1 = LLRs are normalized by the average scale.
+                                                                 0x2 = LLRs are normalized by the maximum scale.
+                                                                 0x3 = Reserved.
+                                                                 Note, when [BYPS_CIRC_EXT] = 1, [LLR_MODE] must be 0x0. */
+        uint64_t traceback_len         : 8;  /**< [ 87: 80] Trace back depth of the Viterbi decoder. This must be set to a value between 0x14 and
+                                                                 0x60. It is recommended to always set this to 0x60 to achieve the best CBER performance.
+                                                                 However, using a lower value can result in higher decoder throughput. */
+        uint64_t byps_reenc_rm         : 1;  /**< [ 79: 79] When set, bypass rate-matching of the reencoded output, and output
+                                                                 3 x [DEC_OUT_SIZE] bits of encoder output. */
+        uint64_t reenc_ena             : 1;  /**< [ 78: 78] When set, enable re-encoding. */
+        uint64_t dec_out_size          : 14; /**< [ 77: 64] The number of decoded bits. This size always includes the CRC
+                                                                 bits, even if [BYPS_CRC] = 0 and the CRC is not included with
+                                                                 the output data.
+
+                                                                 _ When [BYPS_CIRC_EXT] = 0, the max size is 0x1000.
+
+                                                                 _ When [BYPS_CIRC_EXT] = 1, the max size is 0x2000. */
+#else /* Word 1 - Little Endian */
+        uint64_t dec_out_size          : 14; /**< [ 77: 64] The number of decoded bits. This size always includes the CRC
+                                                                 bits, even if [BYPS_CRC] = 0 and the CRC is not included with
+                                                                 the output data.
+
+                                                                 _ When [BYPS_CIRC_EXT] = 0, the max size is 0x1000.
+
+                                                                 _ When [BYPS_CIRC_EXT] = 1, the max size is 0x2000. */
+        uint64_t reenc_ena             : 1;  /**< [ 78: 78] When set, enable re-encoding. */
+        uint64_t byps_reenc_rm         : 1;  /**< [ 79: 79] When set, bypass rate-matching of the reencoded output, and output
+                                                                 3 x [DEC_OUT_SIZE] bits of encoder output. */
+        uint64_t traceback_len         : 8;  /**< [ 87: 80] Trace back depth of the Viterbi decoder. This must be set to a value between 0x14 and
+                                                                 0x60. It is recommended to always set this to 0x60 to achieve the best CBER performance.
+                                                                 However, using a lower value can result in higher decoder throughput. */
+        uint64_t llr_mode              : 2;  /**< [ 89: 88] The LLR conversion mode.
+                                                                 0x0 = LLR conversion uses the setting in [LLR_LVL].
+                                                                 0x1 = LLRs are normalized by the average scale.
+                                                                 0x2 = LLRs are normalized by the maximum scale.
+                                                                 0x3 = Reserved.
+                                                                 Note, when [BYPS_CIRC_EXT] = 1, [LLR_MODE] must be 0x0. */
+        uint64_t llr_lvl               : 4;  /**< [ 93: 90] Rounding level used when [LLR_MODE] = 0x0. Rounding is performed as
+                                                                 follows:
+
+                                                                 _ LLR \>= 0: (LLR + (1 \<\< ([LLR_LVL] - 1)) \>\> [LLR_LVL]
+
+                                                                 _ LLR \<  0: (LLR + NEG((1 \<\< ([LLR_LVL] - 1))) \>\> [LLR_LVL]
+
+                                                                 The result is then saturated to 8 bits (symmetrically).
+                                                                 Permitted values for this field are [0x0, 0x2]. */
+        uint64_t dec_byte_order        : 2;  /**< [ 95: 94] The byte order for the decoded output data.  See Baseband PHY (BPHY):
+                                                                 Data Packing section for details. Normal usage should use
+                                                                 [DEC_BYTE_ORDER] = 0x0. */
+        uint64_t dec_bit_order         : 1;  /**< [ 96: 96] The bit order for the decoded output data.  See Baseband PHY (BPHY):
+                                                                 Data Packing section for details. */
+        uint64_t reenc_bit_order       : 1;  /**< [ 97: 97] Bit order for the reencoded output data.  See Baseband PHY (BPHY):
+                                                                 Data Packing section for details. */
+        uint64_t reenc_byte_order      : 2;  /**< [ 99: 98] Byte order for the reencoded output data.  See Baseband PHY (BPHY):
+                                                                 Data Packing section for details. Normal usage should use
+                                                                 [REENC_BYTE_ORDER] = 0x0. */
+        uint64_t reenc_size            : 18; /**< [117:100] The reencoded output size, in bits, after rate matching. The maximum
+                                                                 size is 0x3CC00. */
+        uint64_t symb_byte_align       : 2;  /**< [119:118] When 0x1, each [MOD_ORDER] bits of reencoded output are mapped to one
+                                                                 byte, with the (8 - [MOD_ORDER]) most significant bits padded with zeros.
+                                                                 When 0x0, the reencoded output bits are packed with no extra padding.
+
+                                                                 Internal:
+                                                                 Values of 0x2 and 0x3 are applicable only to 1024QAM.
+                                                                 When 0x2, from each 10 bits mapped to one symbol, the even bits
+                                                                 are mapped to the first byte and the odd bits are mapped to the
+                                                                 next byte.  The data bits are mapped in little endian format, and
+                                                                 the 3 MSB bits are set to 0.
+                                                                 When 0x3, from each 10 bits mapped to one symbol, the first 5 bits
+                                                                 are mapped to the first byte and the next 5 bits are mapped to the
+                                                                 next byte.  The data bits are mapped in little endian format, and
+                                                                 the 3 MSB bits are set to 0. */
+        uint64_t crc_mask_en           : 1;  /**< [120:120] When 0, no CRC mask is applied on the calculated CRC.  When 1,
+                                                                 the calculated CRC is masked with [CRC_MASK]. */
+        uint64_t reserved_121_127      : 7;
+#endif /* Word 1 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
+        uint64_t reserved_152_191      : 40;
+        uint64_t crc_mask              : 24; /**< [151:128] CRC mask to be applied on the calculated CRC if [CRC_MASK_EN] is 1. */
+#else /* Word 2 - Little Endian */
+        uint64_t crc_mask              : 24; /**< [151:128] CRC mask to be applied on the calculated CRC if [CRC_MASK_EN] is 1. */
+        uint64_t reserved_152_191      : 40;
+#endif /* Word 2 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
+        uint64_t deint_skip_offset2    : 16; /**< [255:240] Reserved.
+                                                                 Internal:
+                                                                 Applicable only to frequency-first mode.
+                                                                 The number of initial REs to be discarded in the remaining
+                                                                 symbols after the first [SKIP_OFFSET1_NUM_SYM] symbols (including
+                                                                 tagged LLRs marked with the value 0x80).  The actual number of
+                                                                 LLRs that are discarded in each symbol is [DEINT_SKIP_OFFSET2] *
+                                                                 [MOD_ORDER]. */
+        uint64_t deint_skip_offset1    : 16; /**< [239:224] Reserved.
+                                                                 Internal:
+                                                                 Applicable only to frequency-first mode.
+                                                                 The number of initial REs to be discarded in the first
+                                                                 [SKIP_OFFSET1_NUM_SYM] symbols (including tagged LLRs marked
+                                                                 with the value 0x80).  The actual number of LLRs that are
+                                                                 discarded in each symbol is [DEINT_SKIP_OFFSET1] * [MOD_ORDER]. */
+        uint64_t skip_offset1_num_sym  : 16; /**< [223:208] Reserved.
+                                                                 Internal:
+                                                                 Applicable only to frequency-first mode.
+                                                                 Indicates the number of OFDM symbols for which the
+                                                                 [DEINT_SKIP_OFFSET1] parameter applies. */
+        uint64_t reserved_198_207      : 10;
+        uint64_t ch_deint_offset       : 5;  /**< [197:193] Number of REs to be discarded across all threads from the
+                                                                 beginning of the channel deinterleaver (excluding RI LLRs
+                                                                 that are marked with the value 0x80).  The actual number of
+                                                                 LLRs that are discarded is [CH_DEINT_OFFSET] * [MOD_ORDER].
+
+                                                                 Internal:
+                                                                 Applicable only to time-first mode. */
+        uint64_t ch_deint_mode         : 1;  /**< [192:192] Must be set to 0.
+                                                                 Internal:
+                                                                 Frequency-first mode is no longer needed for this block,
+                                                                 but the logic is still present.
+                                                                 When 0, time-first mode is enabled, and multi-threaded DMA must
+                                                                 be used.  When 1, frequency-first mode is enabled, and a
+                                                                 sequential DMA per symbol, or a 2D DMA across all symbols is used. */
+#else /* Word 3 - Little Endian */
+        uint64_t ch_deint_mode         : 1;  /**< [192:192] Must be set to 0.
+                                                                 Internal:
+                                                                 Frequency-first mode is no longer needed for this block,
+                                                                 but the logic is still present.
+                                                                 When 0, time-first mode is enabled, and multi-threaded DMA must
+                                                                 be used.  When 1, frequency-first mode is enabled, and a
+                                                                 sequential DMA per symbol, or a 2D DMA across all symbols is used. */
+        uint64_t ch_deint_offset       : 5;  /**< [197:193] Number of REs to be discarded across all threads from the
+                                                                 beginning of the channel deinterleaver (excluding RI LLRs
+                                                                 that are marked with the value 0x80).  The actual number of
+                                                                 LLRs that are discarded is [CH_DEINT_OFFSET] * [MOD_ORDER].
+
+                                                                 Internal:
+                                                                 Applicable only to time-first mode. */
+        uint64_t reserved_198_207      : 10;
+        uint64_t skip_offset1_num_sym  : 16; /**< [223:208] Reserved.
+                                                                 Internal:
+                                                                 Applicable only to frequency-first mode.
+                                                                 Indicates the number of OFDM symbols for which the
+                                                                 [DEINT_SKIP_OFFSET1] parameter applies. */
+        uint64_t deint_skip_offset1    : 16; /**< [239:224] Reserved.
+                                                                 Internal:
+                                                                 Applicable only to frequency-first mode.
+                                                                 The number of initial REs to be discarded in the first
+                                                                 [SKIP_OFFSET1_NUM_SYM] symbols (including tagged LLRs marked
+                                                                 with the value 0x80).  The actual number of LLRs that are
+                                                                 discarded in each symbol is [DEINT_SKIP_OFFSET1] * [MOD_ORDER]. */
+        uint64_t deint_skip_offset2    : 16; /**< [255:240] Reserved.
+                                                                 Internal:
+                                                                 Applicable only to frequency-first mode.
+                                                                 The number of initial REs to be discarded in the remaining
+                                                                 symbols after the first [SKIP_OFFSET1_NUM_SYM] symbols (including
+                                                                 tagged LLRs marked with the value 0x80).  The actual number of
+                                                                 LLRs that are discarded in each symbol is [DEINT_SKIP_OFFSET2] *
+                                                                 [MOD_ORDER]. */
+#endif /* Word 3 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
+        uint64_t num_rd_dma_wrds_per_sym : 16;/**< [319:304] Number of 128-bit words of DMA input per OFDM symbol.
+                                                                 This is the same as the number of words per thread.
+
+                                                                 Internal:
+                                                                 In frequency-first mode, this is the same as [NUM_RD_WRDS] / [TOTAL_NUM_SYM]. */
+        uint64_t num_wr1_wrds          : 16; /**< [303:288] Number of 64-bit words this task will output on write DMA port 1.
+                                                                 Note that port 1 is used for writing the reencoded output and this
+                                                                 field must be set to zero if [REENC_ENA] = 0. */
+        uint64_t num_wr0_wrds          : 16; /**< [287:272] Number of 64-bit words this task will output on write DMA port 0. */
+        uint64_t num_rd_wrds           : 16; /**< [271:256] Number of 128-bit words of DMA input for this task. */
+#else /* Word 4 - Little Endian */
+        uint64_t num_rd_wrds           : 16; /**< [271:256] Number of 128-bit words of DMA input for this task. */
+        uint64_t num_wr0_wrds          : 16; /**< [287:272] Number of 64-bit words this task will output on write DMA port 0. */
+        uint64_t num_wr1_wrds          : 16; /**< [303:288] Number of 64-bit words this task will output on write DMA port 1.
+                                                                 Note that port 1 is used for writing the reencoded output and this
+                                                                 field must be set to zero if [REENC_ENA] = 0. */
+        uint64_t num_rd_dma_wrds_per_sym : 16;/**< [319:304] Number of 128-bit words of DMA input per OFDM symbol.
+                                                                 This is the same as the number of words per thread.
+
+                                                                 Internal:
+                                                                 In frequency-first mode, this is the same as [NUM_RD_WRDS] / [TOTAL_NUM_SYM]. */
+#endif /* Word 4 - End */
+    } cnf95xxp2;
+    struct cavm_vdec_lte_task_cfg_s_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t num_llr               : 18; /**< [ 63: 46] The number of input LLRs, up to 0x2D900. When [BYPS_CIRC_EXT] = 1, this
                                                                  field is ignored and the number of encoded LLRs must be 3 x [DEC_OUT_SIZE]. */
         uint64_t byps_rm               : 1;  /**< [ 45: 45] When set, bypass rate dematching and subblock deinterleaving. */
@@ -964,7 +1328,7 @@ union cavm_vdec_lte_task_cfg_s
                                                                  Internal:
                                                                  In frequency-first mode, this is the same as [NUM_RD_WRDS] / [TOTAL_NUM_SYM]. */
 #endif /* Word 4 - End */
-    } cnf95xxp2;
+    } f95o;
     /* struct cavm_vdec_lte_task_cfg_s_cnf95xxp2 loki; */
 };
 
@@ -1005,6 +1369,8 @@ static inline uint64_t CAVM_VDECX_CONTROL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043700000ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043700000ll + 0x8000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043700000ll + 0x8000ll * ((a) & 0x1);
     __cavm_csr_fatal("VDECX_CONTROL", 1, a, 0, 0, 0, 0, 0);
@@ -1044,6 +1410,8 @@ static inline uint64_t CAVM_VDECX_ECO(uint64_t a) __attribute__ ((pure, always_i
 static inline uint64_t CAVM_VDECX_ECO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043700008ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043700008ll + 0x8000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043700008ll + 0x8000ll * ((a) & 0x1);
@@ -1087,6 +1455,8 @@ static inline uint64_t CAVM_VDECX_ERROR_ENABLE0(uint64_t a) __attribute__ ((pure
 static inline uint64_t CAVM_VDECX_ERROR_ENABLE0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043700040ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043700040ll + 0x8000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043700040ll + 0x8000ll * ((a) & 0x1);
@@ -1137,6 +1507,8 @@ static inline uint64_t CAVM_VDECX_ERROR_SOURCE0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043700030ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043700030ll + 0x8000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043700030ll + 0x8000ll * ((a) & 0x1);
     __cavm_csr_fatal("VDECX_ERROR_SOURCE0", 1, a, 0, 0, 0, 0, 0);
@@ -1173,6 +1545,8 @@ static inline uint64_t CAVM_VDECX_HAB_JCFG0_RAMX_DATA(uint64_t a, uint64_t b) __
 static inline uint64_t CAVM_VDECX_HAB_JCFG0_RAMX_DATA(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=255)))
+        return 0x87e043702000ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=255)))
         return 0x87e043702000ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=255)))
         return 0x87e043702000ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
@@ -1211,6 +1585,8 @@ static inline uint64_t CAVM_VDECX_HAB_JCFG1_RAMX_DATA(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=255)))
         return 0x87e043704000ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=255)))
+        return 0x87e043704000ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=255)))
         return 0x87e043704000ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
     __cavm_csr_fatal("VDECX_HAB_JCFG1_RAMX_DATA", 2, a, b, 0, 0, 0, 0);
@@ -1247,6 +1623,8 @@ static inline uint64_t CAVM_VDECX_HAB_JCFG2_RAMX_DATA(uint64_t a, uint64_t b) __
 static inline uint64_t CAVM_VDECX_HAB_JCFG2_RAMX_DATA(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=255)))
+        return 0x87e043706000ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=255)))
         return 0x87e043706000ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=255)))
         return 0x87e043706000ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
@@ -1285,6 +1663,8 @@ static inline uint64_t CAVM_VDECX_SCRATCH(uint64_t a) __attribute__ ((pure, alwa
 static inline uint64_t CAVM_VDECX_SCRATCH(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043700080ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043700080ll + 0x8000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043700080ll + 0x8000ll * ((a) & 0x1);
@@ -1331,6 +1711,8 @@ static inline uint64_t CAVM_VDECX_STATUS(uint64_t a) __attribute__ ((pure, alway
 static inline uint64_t CAVM_VDECX_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043700018ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043700018ll + 0x8000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043700018ll + 0x8000ll * ((a) & 0x1);
@@ -1512,6 +1894,7 @@ union cavm_vdecx_tc_config_err_flags_reg
         uint64_t reserved_23_63        : 41;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_vdecx_tc_config_err_flags_reg_cnf95xxp2 f95o; */
     /* struct cavm_vdecx_tc_config_err_flags_reg_cnf95xxp2 loki; */
 };
 typedef union cavm_vdecx_tc_config_err_flags_reg cavm_vdecx_tc_config_err_flags_reg_t;
@@ -1520,6 +1903,8 @@ static inline uint64_t CAVM_VDECX_TC_CONFIG_ERR_FLAGS_REG(uint64_t a) __attribut
 static inline uint64_t CAVM_VDECX_TC_CONFIG_ERR_FLAGS_REG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043701040ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043701040ll + 0x8000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043701040ll + 0x8000ll * ((a) & 0x1);
@@ -1558,6 +1943,8 @@ static inline uint64_t CAVM_VDECX_TC_CONFIG_REGX(uint64_t a, uint64_t b) __attri
 static inline uint64_t CAVM_VDECX_TC_CONFIG_REGX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=12)))
+        return 0x87e043701400ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=12)))
         return 0x87e043701400ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=12)))
         return 0x87e043701400ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0xf);
@@ -1657,6 +2044,7 @@ union cavm_vdecx_tc_control_reg
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_vdecx_tc_control_reg_cnf95xxp2 f95o; */
     /* struct cavm_vdecx_tc_control_reg_cnf95xxp2 loki; */
 };
 typedef union cavm_vdecx_tc_control_reg cavm_vdecx_tc_control_reg_t;
@@ -1665,6 +2053,8 @@ static inline uint64_t CAVM_VDECX_TC_CONTROL_REG(uint64_t a) __attribute__ ((pur
 static inline uint64_t CAVM_VDECX_TC_CONTROL_REG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043701010ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043701010ll + 0x8000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043701010ll + 0x8000ll * ((a) & 0x1);
@@ -1706,6 +2096,8 @@ static inline uint64_t CAVM_VDECX_TC_ERROR_MASK_REG(uint64_t a) __attribute__ ((
 static inline uint64_t CAVM_VDECX_TC_ERROR_MASK_REG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043701030ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043701030ll + 0x8000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043701030ll + 0x8000ll * ((a) & 0x1);
@@ -1773,6 +2165,7 @@ union cavm_vdecx_tc_error_reg
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_vdecx_tc_error_reg_cnf95xxp2 f95o; */
     /* struct cavm_vdecx_tc_error_reg_cnf95xxp2 loki; */
 };
 typedef union cavm_vdecx_tc_error_reg cavm_vdecx_tc_error_reg_t;
@@ -1781,6 +2174,8 @@ static inline uint64_t CAVM_VDECX_TC_ERROR_REG(uint64_t a) __attribute__ ((pure,
 static inline uint64_t CAVM_VDECX_TC_ERROR_REG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043701038ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043701038ll + 0x8000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043701038ll + 0x8000ll * ((a) & 0x1);
@@ -1819,6 +2214,8 @@ static inline uint64_t CAVM_VDECX_TC_MAIN_RESET_REG(uint64_t a) __attribute__ ((
 static inline uint64_t CAVM_VDECX_TC_MAIN_RESET_REG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043701000ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043701000ll + 0x8000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043701000ll + 0x8000ll * ((a) & 0x1);
@@ -1859,6 +2256,8 @@ static inline uint64_t CAVM_VDECX_TC_MAIN_START_REG(uint64_t a) __attribute__ ((
 static inline uint64_t CAVM_VDECX_TC_MAIN_START_REG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043701008ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043701008ll + 0x8000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043701008ll + 0x8000ll * ((a) & 0x1);
@@ -1901,6 +2300,7 @@ union cavm_vdecx_tc_mon_regx
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_vdecx_tc_mon_regx_cnf95xxp2 f95o; */
     /* struct cavm_vdecx_tc_mon_regx_cnf95xxp2 loki; */
 };
 typedef union cavm_vdecx_tc_mon_regx cavm_vdecx_tc_mon_regx_t;
@@ -1909,6 +2309,8 @@ static inline uint64_t CAVM_VDECX_TC_MON_REGX(uint64_t a, uint64_t b) __attribut
 static inline uint64_t CAVM_VDECX_TC_MON_REGX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
+        return 0x87e043701300ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043701300ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043701300ll + 0x8000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
@@ -1964,6 +2366,7 @@ union cavm_vdecx_tc_status0_reg
                                                                  Undocumented, core-dependent status bits. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_vdecx_tc_status0_reg_cnf95xxp2 f95o; */
     /* struct cavm_vdecx_tc_status0_reg_cnf95xxp2 loki; */
 };
 typedef union cavm_vdecx_tc_status0_reg cavm_vdecx_tc_status0_reg_t;
@@ -1972,6 +2375,8 @@ static inline uint64_t CAVM_VDECX_TC_STATUS0_REG(uint64_t a) __attribute__ ((pur
 static inline uint64_t CAVM_VDECX_TC_STATUS0_REG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043701020ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043701020ll + 0x8000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043701020ll + 0x8000ll * ((a) & 0x1);
@@ -2014,6 +2419,8 @@ static inline uint64_t CAVM_VDECX_TC_STATUS1_REG(uint64_t a) __attribute__ ((pur
 static inline uint64_t CAVM_VDECX_TC_STATUS1_REG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043701028ll + 0x8000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043701028ll + 0x8000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043701028ll + 0x8000ll * ((a) & 0x1);

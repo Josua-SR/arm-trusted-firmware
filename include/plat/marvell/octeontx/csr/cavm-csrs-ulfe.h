@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -339,7 +339,7 @@ union cavm_ulfe_normal_job_s
 #endif /* Word 30 - End */
     } s;
     /* struct cavm_ulfe_normal_job_s_s cn9; */
-    struct cavm_ulfe_normal_job_s_cnf95xx
+    struct cavm_ulfe_normal_job_s_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t config_type           : 1;  /**< [ 63: 63] Job configuration type. Must be 0x1 for normal symbol jobs. */
@@ -910,7 +910,579 @@ union cavm_ulfe_normal_job_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 30 - Big Endian */
 #else /* Word 30 - Little Endian */
 #endif /* Word 30 - End */
-    } cnf95xx;
+    } cnf95xxp1;
+    struct cavm_ulfe_normal_job_s_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t config_type           : 1;  /**< [ 63: 63] Job configuration type. Must be 0x1 for normal symbol jobs. */
+        uint64_t ant_idx               : 6;  /**< [ 62: 57] Antenna index. Valid range is [0,47]. */
+        uint64_t trch_fe_enable        : 1;  /**< [ 56: 56] Traffic channel frontend processing control:
+                                                                 0x0 = Disable traffic channel processing.
+                                                                 0x1 = Enable traffic channel processing. */
+        uint64_t fft_size_idx          : 2;  /**< [ 55: 54] FFT size index.
+                                                                 0x0 = 512 point FFT.
+                                                                 0x1 = 1024 point FFT.
+                                                                 0x2 = 2048 point FFT.
+                                                                 0x3 = 4096 point FFT. */
+        uint64_t scs                   : 3;  /**< [ 53: 51] Subcarrier spacing:
+                                                                 0x0 = 15 kHz.
+                                                                 0x1 = 30 kHz.
+                                                                 0x2 = 60 kHz.
+                                                                 0x3 = 120 kHz.
+                                                                 0x4 = 240 kHz.
+                                                                 0x5-0x7 = Reserved. */
+        uint64_t cp_size               : 9;  /**< [ 50: 42] Cyclic prefix size. The cyclic prefix is 4 x [CP_SIZE] samples. Valid
+                                                                 range of [CP_SIZE] is [0,256]. */
+        uint64_t num_rb                : 9;  /**< [ 41: 33] Number of RBs. Valid range is [6,275]. */
+        uint64_t dcrm_enable           : 1;  /**< [ 32: 32] Enable DC removal:
+                                                                 0x0 = Disable (bypass) DC removal filter.
+                                                                 0x1 = Enable DC removal filter. */
+        uint64_t dcrm_mode             : 1;  /**< [ 31: 31] DC removal mode:
+                                                                 0x0 = Filter mode.
+                                                                 0x1 = Block average mode. */
+        uint64_t dcrm_coef             : 4;  /**< [ 30: 27] DC removal filter coefficient. See [DCRM_COEF_EXP]. */
+        uint64_t dcrm_coef_exp         : 5;  /**< [ 26: 22] DC removal filter coefficient exponent. The DC removal filter coefficient is
+                                                                 [DCRM_COEF] x 2^(-[DCRM_COEF_EXP]). Valid range is [4,20]. */
+        uint64_t dcrm_block_size       : 2;  /**< [ 21: 20] Block size in DC removal mode.
+                                                                 0x0 = 30720.
+                                                                 0x1 = 30720 x 2.
+                                                                 0x2 = 30720 x 4.
+                                                                 0x3 = 30720 x 8. */
+        uint64_t freq_shift_enable     : 1;  /**< [ 19: 19] Enables frequency shift when set. */
+        uint64_t trch_hf_downshift     : 1;  /**< [ 18: 18] Half-tone down shift for traffic channels.
+                                                                 0x0 = Disable half tone down shift.
+                                                                 0x1 = Enable half tone down shift. */
+        uint64_t freq_shift            : 18; /**< [ 17:  0] Frequency shift, in units of 100 Hz. This is a two's-complement signed value,
+                                                                 with a valid range of [-131072,131071]. */
+#else /* Word 0 - Little Endian */
+        uint64_t freq_shift            : 18; /**< [ 17:  0] Frequency shift, in units of 100 Hz. This is a two's-complement signed value,
+                                                                 with a valid range of [-131072,131071]. */
+        uint64_t trch_hf_downshift     : 1;  /**< [ 18: 18] Half-tone down shift for traffic channels.
+                                                                 0x0 = Disable half tone down shift.
+                                                                 0x1 = Enable half tone down shift. */
+        uint64_t freq_shift_enable     : 1;  /**< [ 19: 19] Enables frequency shift when set. */
+        uint64_t dcrm_block_size       : 2;  /**< [ 21: 20] Block size in DC removal mode.
+                                                                 0x0 = 30720.
+                                                                 0x1 = 30720 x 2.
+                                                                 0x2 = 30720 x 4.
+                                                                 0x3 = 30720 x 8. */
+        uint64_t dcrm_coef_exp         : 5;  /**< [ 26: 22] DC removal filter coefficient exponent. The DC removal filter coefficient is
+                                                                 [DCRM_COEF] x 2^(-[DCRM_COEF_EXP]). Valid range is [4,20]. */
+        uint64_t dcrm_coef             : 4;  /**< [ 30: 27] DC removal filter coefficient. See [DCRM_COEF_EXP]. */
+        uint64_t dcrm_mode             : 1;  /**< [ 31: 31] DC removal mode:
+                                                                 0x0 = Filter mode.
+                                                                 0x1 = Block average mode. */
+        uint64_t dcrm_enable           : 1;  /**< [ 32: 32] Enable DC removal:
+                                                                 0x0 = Disable (bypass) DC removal filter.
+                                                                 0x1 = Enable DC removal filter. */
+        uint64_t num_rb                : 9;  /**< [ 41: 33] Number of RBs. Valid range is [6,275]. */
+        uint64_t cp_size               : 9;  /**< [ 50: 42] Cyclic prefix size. The cyclic prefix is 4 x [CP_SIZE] samples. Valid
+                                                                 range of [CP_SIZE] is [0,256]. */
+        uint64_t scs                   : 3;  /**< [ 53: 51] Subcarrier spacing:
+                                                                 0x0 = 15 kHz.
+                                                                 0x1 = 30 kHz.
+                                                                 0x2 = 60 kHz.
+                                                                 0x3 = 120 kHz.
+                                                                 0x4 = 240 kHz.
+                                                                 0x5-0x7 = Reserved. */
+        uint64_t fft_size_idx          : 2;  /**< [ 55: 54] FFT size index.
+                                                                 0x0 = 512 point FFT.
+                                                                 0x1 = 1024 point FFT.
+                                                                 0x2 = 2048 point FFT.
+                                                                 0x3 = 4096 point FFT. */
+        uint64_t trch_fe_enable        : 1;  /**< [ 56: 56] Traffic channel frontend processing control:
+                                                                 0x0 = Disable traffic channel processing.
+                                                                 0x1 = Enable traffic channel processing. */
+        uint64_t ant_idx               : 6;  /**< [ 62: 57] Antenna index. Valid range is [0,47]. */
+        uint64_t config_type           : 1;  /**< [ 63: 63] Job configuration type. Must be 0x1 for normal symbol jobs. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t cprm_mode             : 1;  /**< [127:127] CP removal mode.
+                                                                 0x0 = N_FFT samples.
+                                                                 0x1 = [CPRM_OFFSET1] samples and then zeros.
+
+                                                                 Note that CP removal block is bypassed during the second pass. */
+        uint64_t user_def_phase        : 12; /**< [126:115] User defined phase rotation. Rotated phase is \pi x [USER_DEF_PHASE]/2048. Two's
+                                                                 complement value in the range [-2048,2047]. */
+        uint64_t iss_enable            : 1;  /**< [114:114] Input signal scaler control.
+                                                                 0x0 = Disable (bypass) ISS.
+                                                                 0x1 = Enable ISS. */
+        uint64_t iss_mode              : 2;  /**< [113:112] Input signal scaler mode:
+                                                                 0x0 = Gain hold.
+                                                                 0x1 = Gain update.
+                                                                 0x2 = Fixed gain.
+                                                                 0x3 = Reserved. */
+        uint64_t iss_target_level      : 6;  /**< [111:106] Input signal scaler target level. Target level for [ISS_MODE] = 0x1. Fixed gain
+                                                                 for [ISS_MODE] = 0x2. */
+        uint64_t iss_gain_limit        : 6;  /**< [105:100] Input signal scaler gain limit. ISS gain is limited to this value only when
+                                                                 [ISS_MODE] = 0x1. Valid range is [-32,31]. */
+        uint64_t cprm_offset0          : 11; /**< [ 99: 89] CP removal offset for first process. Valid range is [0,1024]. */
+        uint64_t cprm_offset1          : 11; /**< [ 88: 78] CP removal offset for second process. Valid range is [0,1024]. */
+        uint64_t fft_enable            : 1;  /**< [ 77: 77] Enable FFT. */
+        uint64_t dcrm_reset            : 1;  /**< [ 76: 76] DC removal reset control.
+                                                                 0x0 = Do nothing.
+                                                                 0x1 = Reset the DC removal state variables (i.e., sample count, block
+                                                                 sum, and DC estimate). */
+        uint64_t reserved_64_75        : 12;
+#else /* Word 1 - Little Endian */
+        uint64_t reserved_64_75        : 12;
+        uint64_t dcrm_reset            : 1;  /**< [ 76: 76] DC removal reset control.
+                                                                 0x0 = Do nothing.
+                                                                 0x1 = Reset the DC removal state variables (i.e., sample count, block
+                                                                 sum, and DC estimate). */
+        uint64_t fft_enable            : 1;  /**< [ 77: 77] Enable FFT. */
+        uint64_t cprm_offset1          : 11; /**< [ 88: 78] CP removal offset for second process. Valid range is [0,1024]. */
+        uint64_t cprm_offset0          : 11; /**< [ 99: 89] CP removal offset for first process. Valid range is [0,1024]. */
+        uint64_t iss_gain_limit        : 6;  /**< [105:100] Input signal scaler gain limit. ISS gain is limited to this value only when
+                                                                 [ISS_MODE] = 0x1. Valid range is [-32,31]. */
+        uint64_t iss_target_level      : 6;  /**< [111:106] Input signal scaler target level. Target level for [ISS_MODE] = 0x1. Fixed gain
+                                                                 for [ISS_MODE] = 0x2. */
+        uint64_t iss_mode              : 2;  /**< [113:112] Input signal scaler mode:
+                                                                 0x0 = Gain hold.
+                                                                 0x1 = Gain update.
+                                                                 0x2 = Fixed gain.
+                                                                 0x3 = Reserved. */
+        uint64_t iss_enable            : 1;  /**< [114:114] Input signal scaler control.
+                                                                 0x0 = Disable (bypass) ISS.
+                                                                 0x1 = Enable ISS. */
+        uint64_t user_def_phase        : 12; /**< [126:115] User defined phase rotation. Rotated phase is \pi x [USER_DEF_PHASE]/2048. Two's
+                                                                 complement value in the range [-2048,2047]. */
+        uint64_t cprm_mode             : 1;  /**< [127:127] CP removal mode.
+                                                                 0x0 = N_FFT samples.
+                                                                 0x1 = [CPRM_OFFSET1] samples and then zeros.
+
+                                                                 Note that CP removal block is bypassed during the second pass. */
+#endif /* Word 1 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
+        uint64_t cyclic_time_shift_enable : 1;/**< [191:191] Enable cyclic time shift for both passes. */
+        uint64_t cyclic_time_shift0    : 13; /**< [190:178] Cyclic time shift for the first pass. Two's complement value in the range [-4096,4095]. */
+        uint64_t cyclic_time_shift1    : 13; /**< [177:165] Cyclic time shift for the second pass. Two's complement value in the range [-4096,4095]. */
+        uint64_t k0                    : 2;  /**< [164:163] Subcarrier offset (i.e., parameter k0):
+                                                                 0x0 = -6.
+                                                                 0x1 = 0.
+                                                                 0x2 = 6.
+                                                                 0x3 = Reserved. */
+        uint64_t signal_level_normalize : 1; /**< [162:162] Enable signal level normalization. */
+        uint64_t calibration_enable    : 1;  /**< [161:161] Enable antenna calibration. */
+        uint64_t second_pass_out       : 1;  /**< [160:160] Second pass output control.
+                                                                 0x0 = Do not send the second pass output.
+                                                                 0x1 = Send the second pass output. */
+        uint64_t measurement_reset     : 3;  /**< [159:157] Reset measurement values. Each bit, when set, resets the
+                                                                 accumulated of values for a given measurement:
+                                                                 * bit\<0\> = TD-RSSI.
+                                                                 * bit\<1\> = FD-RSSI.
+                                                                 * bit\<2\> = FD-XCORR. */
+        uint64_t measurement_trigger   : 3;  /**< [156:154] Trigger measurement accumulation. Each bit, when set, triggers the
+                                                                 accumulation of a measured value for the current symbol:
+                                                                 * bit\<0\> = TD-RSSI.
+                                                                 * bit\<1\> = FD-RSSI.
+                                                                 * bit\<2\> = FD-XCORR.
+
+                                                                 Accumulated values can be reported via DMA by setting
+                                                                 [MEASUREMENT_REPORT] for this job or on a subsequent symbol job. */
+        uint64_t measurement_report    : 3;  /**< [153:151] Enable measurement report outputs. Each bit, when set, enables the
+                                                                 DMA output of a given measurement report:
+                                                                 * bit\<0\> = TD-RSSI report.
+                                                                 * bit\<1\> = FD-RSSI report.
+                                                                 * bit\<2\> = FD-XCORR report. */
+        uint64_t rach_config_update    : 1;  /**< [150:150] RACH configuration update:
+                                                                 0x0 = No update.
+                                                                 0x1 = Update RACH FE configuration according to job config. */
+        uint64_t bwp_map_update        : 1;  /**< [149:149] BWP map update control:
+                                                                 0x0 = No update.
+                                                                 0x1 = Update BWP map according to job config. */
+        uint64_t reserved_128_148      : 21;
+#else /* Word 2 - Little Endian */
+        uint64_t reserved_128_148      : 21;
+        uint64_t bwp_map_update        : 1;  /**< [149:149] BWP map update control:
+                                                                 0x0 = No update.
+                                                                 0x1 = Update BWP map according to job config. */
+        uint64_t rach_config_update    : 1;  /**< [150:150] RACH configuration update:
+                                                                 0x0 = No update.
+                                                                 0x1 = Update RACH FE configuration according to job config. */
+        uint64_t measurement_report    : 3;  /**< [153:151] Enable measurement report outputs. Each bit, when set, enables the
+                                                                 DMA output of a given measurement report:
+                                                                 * bit\<0\> = TD-RSSI report.
+                                                                 * bit\<1\> = FD-RSSI report.
+                                                                 * bit\<2\> = FD-XCORR report. */
+        uint64_t measurement_trigger   : 3;  /**< [156:154] Trigger measurement accumulation. Each bit, when set, triggers the
+                                                                 accumulation of a measured value for the current symbol:
+                                                                 * bit\<0\> = TD-RSSI.
+                                                                 * bit\<1\> = FD-RSSI.
+                                                                 * bit\<2\> = FD-XCORR.
+
+                                                                 Accumulated values can be reported via DMA by setting
+                                                                 [MEASUREMENT_REPORT] for this job or on a subsequent symbol job. */
+        uint64_t measurement_reset     : 3;  /**< [159:157] Reset measurement values. Each bit, when set, resets the
+                                                                 accumulated of values for a given measurement:
+                                                                 * bit\<0\> = TD-RSSI.
+                                                                 * bit\<1\> = FD-RSSI.
+                                                                 * bit\<2\> = FD-XCORR. */
+        uint64_t second_pass_out       : 1;  /**< [160:160] Second pass output control.
+                                                                 0x0 = Do not send the second pass output.
+                                                                 0x1 = Send the second pass output. */
+        uint64_t calibration_enable    : 1;  /**< [161:161] Enable antenna calibration. */
+        uint64_t signal_level_normalize : 1; /**< [162:162] Enable signal level normalization. */
+        uint64_t k0                    : 2;  /**< [164:163] Subcarrier offset (i.e., parameter k0):
+                                                                 0x0 = -6.
+                                                                 0x1 = 0.
+                                                                 0x2 = 6.
+                                                                 0x3 = Reserved. */
+        uint64_t cyclic_time_shift1    : 13; /**< [177:165] Cyclic time shift for the second pass. Two's complement value in the range [-4096,4095]. */
+        uint64_t cyclic_time_shift0    : 13; /**< [190:178] Cyclic time shift for the first pass. Two's complement value in the range [-4096,4095]. */
+        uint64_t cyclic_time_shift_enable : 1;/**< [191:191] Enable cyclic time shift for both passes. */
+#endif /* Word 2 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
+        uint64_t bwp_weight1           : 32; /**< [255:224] Complex weight for BWP 1 with the following bit map, [imag real(LSB)]. */
+        uint64_t bwp_weight2           : 32; /**< [223:192] Complex weight for BWP 2 with the following bit map, [imag real(LSB)]. */
+#else /* Word 3 - Little Endian */
+        uint64_t bwp_weight2           : 32; /**< [223:192] Complex weight for BWP 2 with the following bit map, [imag real(LSB)]. */
+        uint64_t bwp_weight1           : 32; /**< [255:224] Complex weight for BWP 1 with the following bit map, [imag real(LSB)]. */
+#endif /* Word 3 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
+        uint64_t bwp_weight3           : 32; /**< [319:288] Complex weight for BWP 3 with the following bit map, [imag real(LSB)]. */
+        uint64_t bwp_weight4           : 32; /**< [287:256] Complex weight for BWP 4 with the following bit map, [imag real(LSB)]. */
+#else /* Word 4 - Little Endian */
+        uint64_t bwp_weight4           : 32; /**< [287:256] Complex weight for BWP 4 with the following bit map, [imag real(LSB)]. */
+        uint64_t bwp_weight3           : 32; /**< [319:288] Complex weight for BWP 3 with the following bit map, [imag real(LSB)]. */
+#endif /* Word 4 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
+        uint64_t bwp_weight5           : 32; /**< [383:352] Complex weight for BWP 5 with the following bit map, [imag real(LSB)]. */
+        uint64_t bwp_weight_exp        : 4;  /**< [351:348] Block exponent for BWP weights. Valid range is [0,15]. */
+        uint64_t td_rssi_db_adj        : 12; /**< [347:336] TD-RSSI dB adjustment value. The adjustment value added to dB value converted
+                                                                 from the TD-RSSI measurement. Valid range is [-2048,2047] which is equivalent to
+                                                                 [-204.8, 204.7] dB in dB unit. */
+        uint64_t reserved_320_335      : 16;
+#else /* Word 5 - Little Endian */
+        uint64_t reserved_320_335      : 16;
+        uint64_t td_rssi_db_adj        : 12; /**< [347:336] TD-RSSI dB adjustment value. The adjustment value added to dB value converted
+                                                                 from the TD-RSSI measurement. Valid range is [-2048,2047] which is equivalent to
+                                                                 [-204.8, 204.7] dB in dB unit. */
+        uint64_t bwp_weight_exp        : 4;  /**< [351:348] Block exponent for BWP weights. Valid range is [0,15]. */
+        uint64_t bwp_weight5           : 32; /**< [383:352] Complex weight for BWP 5 with the following bit map, [imag real(LSB)]. */
+#endif /* Word 5 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 6 - Big Endian */
+        uint64_t rach_fe_enable0       : 1;  /**< [447:447] Enable RACH front-end 0. */
+        uint64_t rach_freq_shift0      : 15; /**< [446:432] Frequency shift in RACH FE0. The frequency shift will be
+                                                                 (-[RACH_FREQ_SHIFT0]*7.5) kHz regardless of SCS.
+                                                                 Note that the frequency of the input signal is shifted in the negative direction. */
+        uint64_t oversample_ratio0     : 2;  /**< [431:430] Oversampling ratio for RACH FE0:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t decim_ratio0          : 6;  /**< [429:424] CIC decimation ratio for RACH FE0:
+                                                                 0x0, 0x1 =  Bypass.
+                                                                 0x2-0x30 =  [DECIM_RATIO0]-1 input samples of every [DECIM_RATIO0] samples. */
+        uint64_t output_level_atten0   : 5;  /**< [423:419] Output level attenuation for RACH FE0. Valid range is [0,26] which is equivalent
+                                                                 to [0,-156] dB attenuation with 6 dB step. */
+        uint64_t state_reset0          : 1;  /**< [418:418] RACH FE0 sample rate converter/TD-RSSI reset.
+                                                                 0x0 = Hold.
+                                                                 0x1 = Reset (set to 0). */
+        uint64_t rach_wr_offset0       : 2;  /**< [417:416] Write offset for RACH FE0. */
+        uint64_t rach_fe_enable1       : 1;  /**< [415:415] Enable RACH front-end 1. */
+        uint64_t rach_freq_shift1      : 15; /**< [414:400] Frequency shift in RACH FE1. See [RACH_FREQ_SHIFT0]. */
+        uint64_t oversample_ratio1     : 2;  /**< [399:398] Oversampling ratio for RACH FE1:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t decim_ratio1          : 6;  /**< [397:392] CIC decimation ratio for RACH FE1:
+
+                                                                 _ 0x0, 0x1 = Bypass.
+
+                                                                 _ 0x2-0x30 = Decimate [DECIM_RATIO1]-1 input samples of every [DECIM_RATIO1] samples. */
+        uint64_t output_level_atten1   : 5;  /**< [391:387] Output level attenuation for RACH FE1. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t state_reset1          : 1;  /**< [386:386] RACH FE1 sample rate converter/TD-RSSI reset.
+                                                                 0x0 =  Hold.
+                                                                 0x1 =  Reset (set to 0). */
+        uint64_t rach_wr_offset1       : 2;  /**< [385:384] Write offset for RACH FE 1. */
+#else /* Word 6 - Little Endian */
+        uint64_t rach_wr_offset1       : 2;  /**< [385:384] Write offset for RACH FE 1. */
+        uint64_t state_reset1          : 1;  /**< [386:386] RACH FE1 sample rate converter/TD-RSSI reset.
+                                                                 0x0 =  Hold.
+                                                                 0x1 =  Reset (set to 0). */
+        uint64_t output_level_atten1   : 5;  /**< [391:387] Output level attenuation for RACH FE1. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t decim_ratio1          : 6;  /**< [397:392] CIC decimation ratio for RACH FE1:
+
+                                                                 _ 0x0, 0x1 = Bypass.
+
+                                                                 _ 0x2-0x30 = Decimate [DECIM_RATIO1]-1 input samples of every [DECIM_RATIO1] samples. */
+        uint64_t oversample_ratio1     : 2;  /**< [399:398] Oversampling ratio for RACH FE1:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t rach_freq_shift1      : 15; /**< [414:400] Frequency shift in RACH FE1. See [RACH_FREQ_SHIFT0]. */
+        uint64_t rach_fe_enable1       : 1;  /**< [415:415] Enable RACH front-end 1. */
+        uint64_t rach_wr_offset0       : 2;  /**< [417:416] Write offset for RACH FE0. */
+        uint64_t state_reset0          : 1;  /**< [418:418] RACH FE0 sample rate converter/TD-RSSI reset.
+                                                                 0x0 = Hold.
+                                                                 0x1 = Reset (set to 0). */
+        uint64_t output_level_atten0   : 5;  /**< [423:419] Output level attenuation for RACH FE0. Valid range is [0,26] which is equivalent
+                                                                 to [0,-156] dB attenuation with 6 dB step. */
+        uint64_t decim_ratio0          : 6;  /**< [429:424] CIC decimation ratio for RACH FE0:
+                                                                 0x0, 0x1 =  Bypass.
+                                                                 0x2-0x30 =  [DECIM_RATIO0]-1 input samples of every [DECIM_RATIO0] samples. */
+        uint64_t oversample_ratio0     : 2;  /**< [431:430] Oversampling ratio for RACH FE0:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t rach_freq_shift0      : 15; /**< [446:432] Frequency shift in RACH FE0. The frequency shift will be
+                                                                 (-[RACH_FREQ_SHIFT0]*7.5) kHz regardless of SCS.
+                                                                 Note that the frequency of the input signal is shifted in the negative direction. */
+        uint64_t rach_fe_enable0       : 1;  /**< [447:447] Enable RACH front-end 0. */
+#endif /* Word 6 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 7 - Big Endian */
+        uint64_t rach_fe_enable2       : 1;  /**< [511:511] Enable RACH front-end 2. */
+        uint64_t rach_freq_shift2      : 15; /**< [510:496] Frequency shift in RACH FE2. See [RACH_FREQ_SHIFT0]. */
+        uint64_t oversample_ratio2     : 2;  /**< [495:494] Oversampling ratio for RACH FE2:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t decim_ratio2          : 6;  /**< [493:488] CIC decimation ratio for RACH FE2:
+                                                                 0x0, 0x1 =  Bypass.
+                                                                 0x2-0x30 =  Decimate [DECIM_RATIO2]-1 input samples of every [DECIM_RATIO2] samples. */
+        uint64_t output_level_atten2   : 5;  /**< [487:483] Output level attenuation for RACH FE2. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t state_reset2          : 1;  /**< [482:482] RACH FE2 sample rate converter/TD-RSSI reset.
+                                                                 0x0 = Hold.
+                                                                 0x1 = Reset (set to 0). */
+        uint64_t rach_wr_offset2       : 2;  /**< [481:480] Write offset for RACH FE2. */
+        uint64_t rach_fe_enable3       : 1;  /**< [479:479] Enable RACH front-end 3. */
+        uint64_t rach_freq_shift3      : 15; /**< [478:464] Frequency shift in RACH FE3. See [RACH_FREQ_SHIFT0]. */
+        uint64_t oversample_ratio3     : 2;  /**< [463:462] Oversampling ratio for RACH FE3:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t decim_ratio3          : 6;  /**< [461:456] CIC decimation ratio for RACH FE3:
+                                                                 0x0, 0x1 = Bypass.
+                                                                 0x2-0x30 = Decimate [DECIM_RATIO3]-1 input samples of every [DECIM_RATIO3] samples. */
+        uint64_t output_level_atten3   : 5;  /**< [455:451] Output level attenuation for RACH FE3. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t state_reset3          : 1;  /**< [450:450] RACH FE3 sample rate converter/TD-RSSI reset.
+                                                                 0x0 =  Hold.
+                                                                 0x1 =  Reset (set to 0). */
+        uint64_t rach_wr_offset3       : 2;  /**< [449:448] Write offset for RACH FE 3. */
+#else /* Word 7 - Little Endian */
+        uint64_t rach_wr_offset3       : 2;  /**< [449:448] Write offset for RACH FE 3. */
+        uint64_t state_reset3          : 1;  /**< [450:450] RACH FE3 sample rate converter/TD-RSSI reset.
+                                                                 0x0 =  Hold.
+                                                                 0x1 =  Reset (set to 0). */
+        uint64_t output_level_atten3   : 5;  /**< [455:451] Output level attenuation for RACH FE3. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t decim_ratio3          : 6;  /**< [461:456] CIC decimation ratio for RACH FE3:
+                                                                 0x0, 0x1 = Bypass.
+                                                                 0x2-0x30 = Decimate [DECIM_RATIO3]-1 input samples of every [DECIM_RATIO3] samples. */
+        uint64_t oversample_ratio3     : 2;  /**< [463:462] Oversampling ratio for RACH FE3:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t rach_freq_shift3      : 15; /**< [478:464] Frequency shift in RACH FE3. See [RACH_FREQ_SHIFT0]. */
+        uint64_t rach_fe_enable3       : 1;  /**< [479:479] Enable RACH front-end 3. */
+        uint64_t rach_wr_offset2       : 2;  /**< [481:480] Write offset for RACH FE2. */
+        uint64_t state_reset2          : 1;  /**< [482:482] RACH FE2 sample rate converter/TD-RSSI reset.
+                                                                 0x0 = Hold.
+                                                                 0x1 = Reset (set to 0). */
+        uint64_t output_level_atten2   : 5;  /**< [487:483] Output level attenuation for RACH FE2. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t decim_ratio2          : 6;  /**< [493:488] CIC decimation ratio for RACH FE2:
+                                                                 0x0, 0x1 =  Bypass.
+                                                                 0x2-0x30 =  Decimate [DECIM_RATIO2]-1 input samples of every [DECIM_RATIO2] samples. */
+        uint64_t oversample_ratio2     : 2;  /**< [495:494] Oversampling ratio for RACH FE2:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling.
+                                                                 0x3 = Reserved. */
+        uint64_t rach_freq_shift2      : 15; /**< [510:496] Frequency shift in RACH FE2. See [RACH_FREQ_SHIFT0]. */
+        uint64_t rach_fe_enable2       : 1;  /**< [511:511] Enable RACH front-end 2. */
+#endif /* Word 7 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 8 - Big Endian */
+        uint64_t rach_fe_enable4       : 1;  /**< [575:575] Enable RACH front-end 4. */
+        uint64_t rach_freq_shift4      : 15; /**< [574:560] Frequency shift in RACH FE4. See [RACH_FREQ_SHIFT0]. */
+        uint64_t oversample_ratio4     : 2;  /**< [559:558] Oversampling ratio for RACH FE4:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling. */
+        uint64_t decim_ratio4          : 6;  /**< [557:552] CIC decimation ratio for RACH FE4:
+                                                                 0x0, 0x1 = Bypass.
+                                                                 0x2-0x30 = Decimate [DECIM_RATIO4]-1 input samples of every [DECIM_RATIO4] samples. */
+        uint64_t output_level_atten4   : 5;  /**< [551:547] Output level attenuation for RACH FE4. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t state_reset4          : 1;  /**< [546:546] RACH FE4 sample rate converter/TD-RSSI reset.
+                                                                 0x0 = Hold.
+                                                                 0x1 = Reset (set to 0). */
+        uint64_t rach_wr_offset4       : 2;  /**< [545:544] Write offset for RACH FE4. */
+        uint64_t reserved_512_543      : 32;
+#else /* Word 8 - Little Endian */
+        uint64_t reserved_512_543      : 32;
+        uint64_t rach_wr_offset4       : 2;  /**< [545:544] Write offset for RACH FE4. */
+        uint64_t state_reset4          : 1;  /**< [546:546] RACH FE4 sample rate converter/TD-RSSI reset.
+                                                                 0x0 = Hold.
+                                                                 0x1 = Reset (set to 0). */
+        uint64_t output_level_atten4   : 5;  /**< [551:547] Output level attenuation for RACH FE4. See [OUTPUT_LEVEL_ATTEN0]. */
+        uint64_t decim_ratio4          : 6;  /**< [557:552] CIC decimation ratio for RACH FE4:
+                                                                 0x0, 0x1 = Bypass.
+                                                                 0x2-0x30 = Decimate [DECIM_RATIO4]-1 input samples of every [DECIM_RATIO4] samples. */
+        uint64_t oversample_ratio4     : 2;  /**< [559:558] Oversampling ratio for RACH FE4:
+                                                                 0x0 = Bypass.
+                                                                 0x1 = 2x oversampling.
+                                                                 0x2 = 4x oversampling. */
+        uint64_t rach_freq_shift4      : 15; /**< [574:560] Frequency shift in RACH FE4. See [RACH_FREQ_SHIFT0]. */
+        uint64_t rach_fe_enable4       : 1;  /**< [575:575] Enable RACH front-end 4. */
+#endif /* Word 8 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 9 - Big Endian */
+        uint64_t bwp_weight_map0       : 64; /**< [639:576] "Bandwidth part (BWP) weight map for RB0 to RB15. Contains a four-bit
+                                                                 BWP index for each RB to select one of BWP #1 to BWP #5, or 0 for no
+                                                                 BWP." */
+#else /* Word 9 - Little Endian */
+        uint64_t bwp_weight_map0       : 64; /**< [639:576] "Bandwidth part (BWP) weight map for RB0 to RB15. Contains a four-bit
+                                                                 BWP index for each RB to select one of BWP #1 to BWP #5, or 0 for no
+                                                                 BWP." */
+#endif /* Word 9 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 10 - Big Endian */
+        uint64_t bwp_weight_map1       : 64; /**< [703:640] Bandwidth part (BWP) weight map for RB16 to RB31. */
+#else /* Word 10 - Little Endian */
+        uint64_t bwp_weight_map1       : 64; /**< [703:640] Bandwidth part (BWP) weight map for RB16 to RB31. */
+#endif /* Word 10 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 11 - Big Endian */
+        uint64_t bwp_weight_map2       : 64; /**< [767:704] Bandwidth part (BWP) weight map for RB32 to RB47. */
+#else /* Word 11 - Little Endian */
+        uint64_t bwp_weight_map2       : 64; /**< [767:704] Bandwidth part (BWP) weight map for RB32 to RB47. */
+#endif /* Word 11 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 12 - Big Endian */
+        uint64_t bwp_weight_map3       : 64; /**< [831:768] Bandwidth part (BWP) weight map for RB48 to RB63. */
+#else /* Word 12 - Little Endian */
+        uint64_t bwp_weight_map3       : 64; /**< [831:768] Bandwidth part (BWP) weight map for RB48 to RB63. */
+#endif /* Word 12 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 13 - Big Endian */
+        uint64_t bwp_weight_map4       : 64; /**< [895:832] Bandwidth part (BWP) weight map for RB64 to RB79. */
+#else /* Word 13 - Little Endian */
+        uint64_t bwp_weight_map4       : 64; /**< [895:832] Bandwidth part (BWP) weight map for RB64 to RB79. */
+#endif /* Word 13 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 14 - Big Endian */
+        uint64_t bwp_weight_map5       : 64; /**< [959:896] Bandwidth part (BWP) weight map for RB80 to RB95. */
+#else /* Word 14 - Little Endian */
+        uint64_t bwp_weight_map5       : 64; /**< [959:896] Bandwidth part (BWP) weight map for RB80 to RB95. */
+#endif /* Word 14 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 15 - Big Endian */
+        uint64_t bwp_weight_map6       : 64; /**< [1023:960] Bandwidth part (BWP) weight map for RB96 to RB111. */
+#else /* Word 15 - Little Endian */
+        uint64_t bwp_weight_map6       : 64; /**< [1023:960] Bandwidth part (BWP) weight map for RB96 to RB111. */
+#endif /* Word 15 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 16 - Big Endian */
+        uint64_t bwp_weight_map7       : 64; /**< [1087:1024] Bandwidth part (BWP) weight map for RB112 to RB127. */
+#else /* Word 16 - Little Endian */
+        uint64_t bwp_weight_map7       : 64; /**< [1087:1024] Bandwidth part (BWP) weight map for RB112 to RB127. */
+#endif /* Word 16 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 17 - Big Endian */
+        uint64_t bwp_weight_map8       : 64; /**< [1151:1088] Bandwidth part (BWP) weight map for RB128 to RB143. */
+#else /* Word 17 - Little Endian */
+        uint64_t bwp_weight_map8       : 64; /**< [1151:1088] Bandwidth part (BWP) weight map for RB128 to RB143. */
+#endif /* Word 17 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 18 - Big Endian */
+        uint64_t bwp_weight_map9       : 64; /**< [1215:1152] Bandwidth part (BWP) weight map for RB144 to RB159. */
+#else /* Word 18 - Little Endian */
+        uint64_t bwp_weight_map9       : 64; /**< [1215:1152] Bandwidth part (BWP) weight map for RB144 to RB159. */
+#endif /* Word 18 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 19 - Big Endian */
+        uint64_t bwp_weight_map10      : 64; /**< [1279:1216] Bandwidth part (BWP) weight map for RB160 to RB175. */
+#else /* Word 19 - Little Endian */
+        uint64_t bwp_weight_map10      : 64; /**< [1279:1216] Bandwidth part (BWP) weight map for RB160 to RB175. */
+#endif /* Word 19 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 20 - Big Endian */
+        uint64_t bwp_weight_map11      : 64; /**< [1343:1280] Bandwidth part (BWP) weight map for RB176 to RB191. */
+#else /* Word 20 - Little Endian */
+        uint64_t bwp_weight_map11      : 64; /**< [1343:1280] Bandwidth part (BWP) weight map for RB176 to RB191. */
+#endif /* Word 20 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 21 - Big Endian */
+        uint64_t bwp_weight_map12      : 64; /**< [1407:1344] Bandwidth part (BWP) weight map for RB192 to RB207. */
+#else /* Word 21 - Little Endian */
+        uint64_t bwp_weight_map12      : 64; /**< [1407:1344] Bandwidth part (BWP) weight map for RB192 to RB207. */
+#endif /* Word 21 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 22 - Big Endian */
+        uint64_t bwp_weight_map13      : 64; /**< [1471:1408] Bandwidth part (BWP) weight map for RB208 to RB223. */
+#else /* Word 22 - Little Endian */
+        uint64_t bwp_weight_map13      : 64; /**< [1471:1408] Bandwidth part (BWP) weight map for RB208 to RB223. */
+#endif /* Word 22 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 23 - Big Endian */
+        uint64_t bwp_weight_map14      : 64; /**< [1535:1472] Bandwidth part (BWP) weight map for RB224 to RB239. */
+#else /* Word 23 - Little Endian */
+        uint64_t bwp_weight_map14      : 64; /**< [1535:1472] Bandwidth part (BWP) weight map for RB224 to RB239. */
+#endif /* Word 23 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 24 - Big Endian */
+        uint64_t bwp_weight_map15      : 64; /**< [1599:1536] Bandwidth part (BWP) weight map for RB240 to RB255. */
+#else /* Word 24 - Little Endian */
+        uint64_t bwp_weight_map15      : 64; /**< [1599:1536] Bandwidth part (BWP) weight map for RB240 to RB255. */
+#endif /* Word 24 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 25 - Big Endian */
+        uint64_t bwp_weight_map16      : 64; /**< [1663:1600] Bandwidth part (BWP) weight map for RB256 to RB271. */
+#else /* Word 25 - Little Endian */
+        uint64_t bwp_weight_map16      : 64; /**< [1663:1600] Bandwidth part (BWP) weight map for RB256 to RB271. */
+#endif /* Word 25 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 26 - Big Endian */
+        uint64_t bwp_weight_map17      : 6;  /**< [1727:1722] Bandwidth part (BWP) weight map for RB272 to RB274. */
+        uint64_t reserved_1664_1721    : 58;
+#else /* Word 26 - Little Endian */
+        uint64_t reserved_1664_1721    : 58;
+        uint64_t bwp_weight_map17      : 6;  /**< [1727:1722] Bandwidth part (BWP) weight map for RB272 to RB274. */
+#endif /* Word 26 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 27 - Big Endian */
+        uint64_t sc_att_scidx0         : 12; /**< [1791:1780] Subcarrier index 0 for subcarrier-wise attenuation. All 6 subcarrier indexes
+                                                                 must be listed in the ascending order (lower index first). Valid range is
+                                                                 [3329,0]. Subcarrier index larger than 3329 is disregarded. */
+        uint64_t sc_att_scidx1         : 12; /**< [1779:1768] Subcarrier index 1 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_scidx2         : 12; /**< [1767:1756] Subcarrier index 2 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_scidx3         : 12; /**< [1755:1744] Subcarrier index 3 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_scidx4         : 12; /**< [1743:1732] Subcarrier index 4 for subcarrier-wise attenuation. See [SC_ATT_SCIDX0]. */
+        uint64_t reserved_1728_1731    : 4;
+#else /* Word 27 - Little Endian */
+        uint64_t reserved_1728_1731    : 4;
+        uint64_t sc_att_scidx4         : 12; /**< [1743:1732] Subcarrier index 4 for subcarrier-wise attenuation. See [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_scidx3         : 12; /**< [1755:1744] Subcarrier index 3 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_scidx2         : 12; /**< [1767:1756] Subcarrier index 2 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_scidx1         : 12; /**< [1779:1768] Subcarrier index 1 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_scidx0         : 12; /**< [1791:1780] Subcarrier index 0 for subcarrier-wise attenuation. All 6 subcarrier indexes
+                                                                 must be listed in the ascending order (lower index first). Valid range is
+                                                                 [3329,0]. Subcarrier index larger than 3329 is disregarded. */
+#endif /* Word 27 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 28 - Big Endian */
+        uint64_t sc_att_scidx5         : 12; /**< [1855:1844] Subcarrier index 5 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+        uint64_t sc_att_bitmap         : 12; /**< [1843:1832] Subcarrier attenuation bitmap for six subcarriers with 2-bit switches for the
+                                                                 attenuation of each subcarrier. Switches for 6 subcarriers are mapped in-order
+                                                                 with subcarrier 0 in the most-signficant bits, and subcarrier 5 in the least
+                                                                 significant bits. Each 2-bit switch specifies the attenuation as:
+                                                                 0x0 = No scaling.
+                                                                 0x1 = -6 dB attenuation.
+                                                                 0x2 = -12 dB attenuation.
+                                                                 0x3 = zeroing (set the selected subcarrier to 0). */
+        uint64_t reserved_1792_1831    : 40;
+#else /* Word 28 - Little Endian */
+        uint64_t reserved_1792_1831    : 40;
+        uint64_t sc_att_bitmap         : 12; /**< [1843:1832] Subcarrier attenuation bitmap for six subcarriers with 2-bit switches for the
+                                                                 attenuation of each subcarrier. Switches for 6 subcarriers are mapped in-order
+                                                                 with subcarrier 0 in the most-signficant bits, and subcarrier 5 in the least
+                                                                 significant bits. Each 2-bit switch specifies the attenuation as:
+                                                                 0x0 = No scaling.
+                                                                 0x1 = -6 dB attenuation.
+                                                                 0x2 = -12 dB attenuation.
+                                                                 0x3 = zeroing (set the selected subcarrier to 0). */
+        uint64_t sc_att_scidx5         : 12; /**< [1855:1844] Subcarrier index 5 for subcarrier-wise attenuation. See
+                                                                 [SC_ATT_SCIDX0]. */
+#endif /* Word 28 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 29 - Big Endian */
+#else /* Word 29 - Little Endian */
+#endif /* Word 29 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 30 - Big Endian */
+#else /* Word 30 - Little Endian */
+#endif /* Word 30 - End */
+    } cnf95xxp2;
     struct cavm_ulfe_normal_job_s_f95mm
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -1064,12 +1636,12 @@ union cavm_ulfe_normal_job_s
         uint64_t second_pass_out       : 1;  /**< [150:150] Second pass output control.
                                                                  0x0 = Do not send the second pass output.
                                                                  0x1 = Send the second pass output. */
-        uint64_t measurement_reset     : 3;  /**< [149:147] Reset meausrement values. Each bit, when set, resets the
+        uint64_t measurement_reset     : 3;  /**< [149:147] Reset measurement values. Each bit, when set, resets the
                                                                  accumulated of values for a given measurement:
                                                                  * bit\<0\> = TD-RSSI.
                                                                  * bit\<1\> = FD-RSSI.
                                                                  * bit\<2\> = FD-XCORR. */
-        uint64_t measurement_trigger   : 3;  /**< [146:144] Trigger meausrement accumulation. Each bit, when set, triggers the
+        uint64_t measurement_trigger   : 3;  /**< [146:144] Trigger measurement accumulation. Each bit, when set, triggers the
                                                                  accumulation of a measured value for the current symbol:
                                                                  * bit\<0\> = TD-RSSI.
                                                                  * bit\<1\> = FD-RSSI.
@@ -1077,7 +1649,7 @@ union cavm_ulfe_normal_job_s
 
                                                                  Accumulated values can be reported via DMA by setting
                                                                  [MEASUREMENT_REPORT] for this job or on a subsequent symbol job. */
-        uint64_t measurement_report    : 3;  /**< [143:141] Enable meausrement report outputs. Each bit, when set, enables the
+        uint64_t measurement_report    : 3;  /**< [143:141] Enable measurement report outputs. Each bit, when set, enables the
                                                                  DMA output of a given measurement report:
                                                                  * bit\<0\> = TD-RSSI report.
                                                                  * bit\<1\> = FD-RSSI report.
@@ -1097,12 +1669,12 @@ union cavm_ulfe_normal_job_s
         uint64_t rach_config_update    : 1;  /**< [140:140] RACH configuration update:
                                                                  0x0 = No update.
                                                                  0x1 = Update RACH FE configuration according to job config. */
-        uint64_t measurement_report    : 3;  /**< [143:141] Enable meausrement report outputs. Each bit, when set, enables the
+        uint64_t measurement_report    : 3;  /**< [143:141] Enable measurement report outputs. Each bit, when set, enables the
                                                                  DMA output of a given measurement report:
                                                                  * bit\<0\> = TD-RSSI report.
                                                                  * bit\<1\> = FD-RSSI report.
                                                                  * bit\<2\> = FD-XCORR report. */
-        uint64_t measurement_trigger   : 3;  /**< [146:144] Trigger meausrement accumulation. Each bit, when set, triggers the
+        uint64_t measurement_trigger   : 3;  /**< [146:144] Trigger measurement accumulation. Each bit, when set, triggers the
                                                                  accumulation of a measured value for the current symbol:
                                                                  * bit\<0\> = TD-RSSI.
                                                                  * bit\<1\> = FD-RSSI.
@@ -1110,7 +1682,7 @@ union cavm_ulfe_normal_job_s
 
                                                                  Accumulated values can be reported via DMA by setting
                                                                  [MEASUREMENT_REPORT] for this job or on a subsequent symbol job. */
-        uint64_t measurement_reset     : 3;  /**< [149:147] Reset meausrement values. Each bit, when set, resets the
+        uint64_t measurement_reset     : 3;  /**< [149:147] Reset measurement values. Each bit, when set, resets the
                                                                  accumulated of values for a given measurement:
                                                                  * bit\<0\> = TD-RSSI.
                                                                  * bit\<1\> = FD-RSSI.
@@ -1158,7 +1730,7 @@ union cavm_ulfe_normal_job_s
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 6 - Big Endian */
         uint64_t rach_fe_enable0       : 1;  /**< [447:447] Enable RACH front-end 0. */
         uint64_t rach_freq_shift0      : 27; /**< [446:420] Frequency shift in RACH FE0. The frequency shift will be
-                                                                 (-[RACH_FREQ_SHIFT0]*7.5) kHz regardless of SCS.
+                                                                 (-[RACH_FREQ_SHIFT0]*1.831) Hz regardless of SCS.
                                                                  Note that the frequency of the input signal is shifted in the negative direction. */
         uint64_t oversample_ratio0     : 2;  /**< [419:418] Oversampling ratio for RACH FE0:
                                                                  0x0 = Bypass.
@@ -1192,7 +1764,7 @@ union cavm_ulfe_normal_job_s
                                                                  0x2 = 4x oversampling.
                                                                  0x3 = Reserved. */
         uint64_t rach_freq_shift0      : 27; /**< [446:420] Frequency shift in RACH FE0. The frequency shift will be
-                                                                 (-[RACH_FREQ_SHIFT0]*7.5) kHz regardless of SCS.
+                                                                 (-[RACH_FREQ_SHIFT0]*1.831) Hz regardless of SCS.
                                                                  Note that the frequency of the input signal is shifted in the negative direction. */
         uint64_t rach_fe_enable0       : 1;  /**< [447:447] Enable RACH front-end 0. */
 #endif /* Word 6 - End */
@@ -1801,7 +2373,7 @@ static inline uint64_t CAVM_ULFEX_ERROR_ENABLE0(uint64_t a)
  * Register (RSL) ulfe#_error_enable1
  *
  * ULFE Error Enable Register 1
- * This register enables report particular HAB errors
+ * This register enables report particular HAB errors.
  */
 union cavm_ulfex_error_enable1
 {
@@ -1939,7 +2511,7 @@ static inline uint64_t CAVM_ULFEX_ERROR_SOURCE0(uint64_t a)
  * Register (RSL) ulfe#_error_source1
  *
  * ULFE Error Source Register 1
- * This register reports the source of HAB specific errors
+ * This register reports the source of HAB specific errors.
  */
 union cavm_ulfex_error_source1
 {
@@ -2357,7 +2929,7 @@ static inline uint64_t CAVM_ULFE_ERROR_ENABLE0_FUNC(void)
  * Register (RSL) ulfe_error_enable1
  *
  * ULFE Error Enable Register 1
- * This register enables report particular HAB errors
+ * This register enables report particular HAB errors.
  */
 union cavm_ulfe_error_enable1
 {
@@ -2497,7 +3069,7 @@ static inline uint64_t CAVM_ULFE_ERROR_SOURCE0_FUNC(void)
  * Register (RSL) ulfe_error_source1
  *
  * ULFE Error Source Register 1
- * This register reports the source of HAB specific errors
+ * This register reports the source of HAB specific errors.
  */
 union cavm_ulfe_error_source1
 {

@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -256,6 +256,92 @@ union cavm_tim_mem_bucket_s
         uint64_t pad                   : 64; /**< [255:192] Padding, not used by hardware. */
 #endif /* Word 3 - End */
     } cn9;
+    /* struct cavm_tim_mem_bucket_s_cn9 cn96xxp1; */
+    struct cavm_tim_mem_bucket_s_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t first_chunk           : 64; /**< [ 63:  0] Pointer to first chunk memory. \<63:49,6:0\> must be zero. Updated by software when a first
+                                                                 chunk is added. Read by timer hardware. */
+#else /* Word 0 - Little Endian */
+        uint64_t first_chunk           : 64; /**< [ 63:  0] Pointer to first chunk memory. \<63:49,6:0\> must be zero. Updated by software when a first
+                                                                 chunk is added. Read by timer hardware. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t chunk_remainder       : 16; /**< [127:112] Number of remaining entries for software to enter in the list. This number should always
+                                                                 be smaller than chunk size. This field is decremented by software whenever software adds
+                                                                 an entry. If [NUM_ENTRIES] is nonzero, written to zeros by hardware when hardware
+                                                                 processes the entry unless TIM_AF_RING()_CTL1[ENA_PRD] is set.
+
+                                                                 Internal:
+                                                                 Field must include bit w1\<63\> as it may underflow negative. */
+        uint64_t lock                  : 8;  /**< [111:104] Count of how many outstanding software threads are working on the bucket.
+                                                                 The field must be atomically incremented and decremented by software.
+                                                                 Note that this allows up to 256 threads doing parallel operations.
+
+                                                                 Hardware never writes this byte.
+
+                                                                 Internal:
+                                                                 Cannot overflow/underflow. MSB msut be on 8/16/32/64-bit boundary. */
+        uint64_t reserved_99_103       : 5;
+        uint64_t bsk                   : 1;  /**< [ 98: 98] Bucket skip indicator. Set by hardware to indicate to software that hardware has
+                                                                 skipped processing the bucket because it was unable to gain the bucket lock.
+
+                                                                 Cleared by the entity that traverses the bucket (either software or hardware). */
+        uint64_t hbt                   : 1;  /**< [ 97: 97] Hardware bucket traversal indicator.
+                                                                 Indicates that hardware is currently attempting to traverse the bucket. */
+        uint64_t sbt                   : 1;  /**< [ 96: 96] Software bucket traversal indicator.
+                                                                 Indicates that software is currently attempting to traverse the bucket. */
+        uint64_t num_entries           : 32; /**< [ 95: 64] Number of entries that software added to the list. Incremented whenever software adds an
+                                                                 entry. Written to zeros by hardware when hardware processes the list unless
+                                                                 TIM_AF_RING()_CTL1[ENA_PRD] is set. */
+#else /* Word 1 - Little Endian */
+        uint64_t num_entries           : 32; /**< [ 95: 64] Number of entries that software added to the list. Incremented whenever software adds an
+                                                                 entry. Written to zeros by hardware when hardware processes the list unless
+                                                                 TIM_AF_RING()_CTL1[ENA_PRD] is set. */
+        uint64_t sbt                   : 1;  /**< [ 96: 96] Software bucket traversal indicator.
+                                                                 Indicates that software is currently attempting to traverse the bucket. */
+        uint64_t hbt                   : 1;  /**< [ 97: 97] Hardware bucket traversal indicator.
+                                                                 Indicates that hardware is currently attempting to traverse the bucket. */
+        uint64_t bsk                   : 1;  /**< [ 98: 98] Bucket skip indicator. Set by hardware to indicate to software that hardware has
+                                                                 skipped processing the bucket because it was unable to gain the bucket lock.
+
+                                                                 Cleared by the entity that traverses the bucket (either software or hardware). */
+        uint64_t reserved_99_103       : 5;
+        uint64_t lock                  : 8;  /**< [111:104] Count of how many outstanding software threads are working on the bucket.
+                                                                 The field must be atomically incremented and decremented by software.
+                                                                 Note that this allows up to 256 threads doing parallel operations.
+
+                                                                 Hardware never writes this byte.
+
+                                                                 Internal:
+                                                                 Cannot overflow/underflow. MSB msut be on 8/16/32/64-bit boundary. */
+        uint64_t chunk_remainder       : 16; /**< [127:112] Number of remaining entries for software to enter in the list. This number should always
+                                                                 be smaller than chunk size. This field is decremented by software whenever software adds
+                                                                 an entry. If [NUM_ENTRIES] is nonzero, written to zeros by hardware when hardware
+                                                                 processes the entry unless TIM_AF_RING()_CTL1[ENA_PRD] is set.
+
+                                                                 Internal:
+                                                                 Field must include bit w1\<63\> as it may underflow negative. */
+#endif /* Word 1 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
+        uint64_t current_chunk         : 64; /**< [191:128] Not used by timer hardware. Points to the last chunk in the list and is updated by
+                                                                 software whenever chunk is added to the list. */
+#else /* Word 2 - Little Endian */
+        uint64_t current_chunk         : 64; /**< [191:128] Not used by timer hardware. Points to the last chunk in the list and is updated by
+                                                                 software whenever chunk is added to the list. */
+#endif /* Word 2 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
+        uint64_t pad                   : 64; /**< [255:192] Padding, not used by hardware. */
+#else /* Word 3 - Little Endian */
+        uint64_t pad                   : 64; /**< [255:192] Padding, not used by hardware. */
+#endif /* Word 3 - End */
+    } cn96xxp3;
+    /* struct cavm_tim_mem_bucket_s_cn96xxp3 cn98xx; */
+    /* struct cavm_tim_mem_bucket_s_cn9 cnf95xxp1; */
+    /* struct cavm_tim_mem_bucket_s_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_tim_mem_bucket_s_cn96xxp3 f95mm; */
+    /* struct cavm_tim_mem_bucket_s_cn9 f95o; */
+    /* struct cavm_tim_mem_bucket_s_cn96xxp3 loki; */
 };
 
 /**
@@ -738,7 +824,60 @@ union cavm_tim_af_bp_testx
                                                                  BP_TEST(1..8).\<60\> = NCBI NP path to STA interface(0..7). */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_tim_af_bp_testx_s cn; */
+    /* struct cavm_tim_af_bp_testx_s cn9; */
+    /* struct cavm_tim_af_bp_testx_s cn96xxp1; */
+    struct cavm_tim_af_bp_testx_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
+                                                                 Internal:
+                                                                 Once a bit is set, random backpressure is generated
+                                                                 at the corresponding point to allow for more frequent backpressure.
+                                                                 BP_TEST(0).\<63\> = Reserved.
+                                                                 BP_TEST(0).\<62\> = NCBI CR path to NCBO request interface.
+                                                                 BP_TEST(0).\<61\> = NPA FIFO.
+                                                                 BP_TEST(0).\<60\> = WQE FIFO.
+                                                                 BP_TEST(1..8).\<63\> = Reserved.
+                                                                 BP_TEST(1..8).\<62\> = Reserved.
+                                                                 BP_TEST(1..8).\<61\> = NCBI P path to STA interface(0..7).
+                                                                 BP_TEST(1..8).\<60\> = NCBI NP path to STA interface(0..7). */
+        uint64_t reserved_24_59        : 36;
+        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
+                                                                 Internal:
+                                                                 There are 2 backpressure configuration bits per enable, with the two bits
+                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
+                                                                 0x3=25% of the time. */
+        uint64_t reserved_12_15        : 4;
+        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
+#else /* Word 0 - Little Endian */
+        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
+        uint64_t reserved_12_15        : 4;
+        uint64_t bp_cfg                : 8;  /**< [ 23: 16](R/W) Backpressure weight. For diagnostic use only.
+                                                                 Internal:
+                                                                 There are 2 backpressure configuration bits per enable, with the two bits
+                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
+                                                                 0x3=25% of the time. */
+        uint64_t reserved_24_59        : 36;
+        uint64_t enable                : 4;  /**< [ 63: 60](R/W) Enable test mode. For diagnostic use only.
+                                                                 Internal:
+                                                                 Once a bit is set, random backpressure is generated
+                                                                 at the corresponding point to allow for more frequent backpressure.
+                                                                 BP_TEST(0).\<63\> = Reserved.
+                                                                 BP_TEST(0).\<62\> = NCBI CR path to NCBO request interface.
+                                                                 BP_TEST(0).\<61\> = NPA FIFO.
+                                                                 BP_TEST(0).\<60\> = WQE FIFO.
+                                                                 BP_TEST(1..8).\<63\> = Reserved.
+                                                                 BP_TEST(1..8).\<62\> = Reserved.
+                                                                 BP_TEST(1..8).\<61\> = NCBI P path to STA interface(0..7).
+                                                                 BP_TEST(1..8).\<60\> = NCBI NP path to STA interface(0..7). */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_tim_af_bp_testx_cn96xxp3 cn98xx; */
+    /* struct cavm_tim_af_bp_testx_s cnf95xxp1; */
+    /* struct cavm_tim_af_bp_testx_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_tim_af_bp_testx_cn96xxp3 f95mm; */
+    /* struct cavm_tim_af_bp_testx_s f95o; */
+    /* struct cavm_tim_af_bp_testx_cn96xxp3 loki; */
 };
 typedef union cavm_tim_af_bp_testx cavm_tim_af_bp_testx_t;
 
@@ -1544,6 +1683,7 @@ union cavm_tim_af_ringx_ctl0
     /* struct cavm_tim_af_ringx_ctl0_s cnf95xxp1; */
     /* struct cavm_tim_af_ringx_ctl0_cn96xxp3 cnf95xxp2; */
     /* struct cavm_tim_af_ringx_ctl0_cn96xxp3 f95mm; */
+    /* struct cavm_tim_af_ringx_ctl0_cn96xxp3 f95o; */
     /* struct cavm_tim_af_ringx_ctl0_cn96xxp3 loki; */
 };
 typedef union cavm_tim_af_ringx_ctl0 cavm_tim_af_ringx_ctl0_t;
@@ -1925,6 +2065,7 @@ union cavm_tim_af_rvu_int
     /* struct cavm_tim_af_rvu_int_cn96xxp3 cn98xx; */
     /* struct cavm_tim_af_rvu_int_cn96xxp3 cnf95xx; */
     /* struct cavm_tim_af_rvu_int_cn96xxp3 f95mm; */
+    /* struct cavm_tim_af_rvu_int_cn96xxp3 f95o; */
     /* struct cavm_tim_af_rvu_int_cn96xxp3 loki; */
 };
 typedef union cavm_tim_af_rvu_int cavm_tim_af_rvu_int_t;
@@ -1983,6 +2124,7 @@ union cavm_tim_af_rvu_int_ena_w1c
     /* struct cavm_tim_af_rvu_int_ena_w1c_cn96xxp3 cn98xx; */
     /* struct cavm_tim_af_rvu_int_ena_w1c_cn96xxp3 cnf95xx; */
     /* struct cavm_tim_af_rvu_int_ena_w1c_cn96xxp3 f95mm; */
+    /* struct cavm_tim_af_rvu_int_ena_w1c_cn96xxp3 f95o; */
     /* struct cavm_tim_af_rvu_int_ena_w1c_cn96xxp3 loki; */
 };
 typedef union cavm_tim_af_rvu_int_ena_w1c cavm_tim_af_rvu_int_ena_w1c_t;
@@ -2041,6 +2183,7 @@ union cavm_tim_af_rvu_int_ena_w1s
     /* struct cavm_tim_af_rvu_int_ena_w1s_cn96xxp3 cn98xx; */
     /* struct cavm_tim_af_rvu_int_ena_w1s_cn96xxp3 cnf95xx; */
     /* struct cavm_tim_af_rvu_int_ena_w1s_cn96xxp3 f95mm; */
+    /* struct cavm_tim_af_rvu_int_ena_w1s_cn96xxp3 f95o; */
     /* struct cavm_tim_af_rvu_int_ena_w1s_cn96xxp3 loki; */
 };
 typedef union cavm_tim_af_rvu_int_ena_w1s cavm_tim_af_rvu_int_ena_w1s_t;
@@ -2099,6 +2242,7 @@ union cavm_tim_af_rvu_int_w1s
     /* struct cavm_tim_af_rvu_int_w1s_cn96xxp3 cn98xx; */
     /* struct cavm_tim_af_rvu_int_w1s_cn96xxp3 cnf95xx; */
     /* struct cavm_tim_af_rvu_int_w1s_cn96xxp3 f95mm; */
+    /* struct cavm_tim_af_rvu_int_w1s_cn96xxp3 f95o; */
     /* struct cavm_tim_af_rvu_int_w1s_cn96xxp3 loki; */
 };
 typedef union cavm_tim_af_rvu_int_w1s cavm_tim_af_rvu_int_w1s_t;
@@ -4063,6 +4207,7 @@ union cavm_tim_lf_ring_rel
     /* struct cavm_tim_lf_ring_rel_cn96xxp3 cn98xx; */
     /* struct cavm_tim_lf_ring_rel_cn96xxp3 cnf95xx; */
     /* struct cavm_tim_lf_ring_rel_cn96xxp3 f95mm; */
+    /* struct cavm_tim_lf_ring_rel_cn96xxp3 f95o; */
     /* struct cavm_tim_lf_ring_rel_cn96xxp3 loki; */
 };
 typedef union cavm_tim_lf_ring_rel cavm_tim_lf_ring_rel_t;

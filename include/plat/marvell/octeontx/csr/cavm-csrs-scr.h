@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -897,6 +897,7 @@ union cavm_scr_write32_s
 #endif /* Word 1 - End */
     } cnf95xxp2;
     /* struct cavm_scr_write32_s_cnf95xxp2 f95mm; */
+    /* struct cavm_scr_write32_s_cn96xxp3 f95o; */
     /* struct cavm_scr_write32_s_cn96xxp3 loki; */
 };
 

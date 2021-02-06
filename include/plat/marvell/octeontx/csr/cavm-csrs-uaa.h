@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -788,6 +788,7 @@ union cavm_uaax_io_ctl
     /* struct cavm_uaax_io_ctl_s cnf95xxp1; */
     /* struct cavm_uaax_io_ctl_cn96xxp3 cnf95xxp2; */
     /* struct cavm_uaax_io_ctl_cn96xxp3 f95mm; */
+    /* struct cavm_uaax_io_ctl_cn96xxp3 f95o; */
     /* struct cavm_uaax_io_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_uaax_io_ctl cavm_uaax_io_ctl_t;
@@ -1134,6 +1135,7 @@ union cavm_uaax_msix_vecx_addr
     /* struct cavm_uaax_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_uaax_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_uaax_msix_vecx_addr_cn96xxp3 f95mm; */
+    /* struct cavm_uaax_msix_vecx_addr_cn96xxp3 f95o; */
     /* struct cavm_uaax_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_uaax_msix_vecx_addr cavm_uaax_msix_vecx_addr_t;
@@ -1245,6 +1247,7 @@ union cavm_uaax_pidr0
     /* struct cavm_uaax_pidr0_s cn98xx; */
     /* struct cavm_uaax_pidr0_s cnf95xx; */
     /* struct cavm_uaax_pidr0_s f95mm; */
+    /* struct cavm_uaax_pidr0_s f95o; */
     /* struct cavm_uaax_pidr0_s loki; */
 };
 typedef union cavm_uaax_pidr0 cavm_uaax_pidr0_t;
@@ -1304,6 +1307,7 @@ union cavm_uaax_pidr1
     /* struct cavm_uaax_pidr1_s cn98xx; */
     /* struct cavm_uaax_pidr1_s cnf95xx; */
     /* struct cavm_uaax_pidr1_s f95mm; */
+    /* struct cavm_uaax_pidr1_s f95o; */
     /* struct cavm_uaax_pidr1_s loki; */
 };
 typedef union cavm_uaax_pidr1 cavm_uaax_pidr1_t;
@@ -1371,6 +1375,7 @@ union cavm_uaax_pidr2
     /* struct cavm_uaax_pidr2_s cn98xx; */
     /* struct cavm_uaax_pidr2_s cnf95xx; */
     /* struct cavm_uaax_pidr2_s f95mm; */
+    /* struct cavm_uaax_pidr2_s f95o; */
     /* struct cavm_uaax_pidr2_s loki; */
 };
 typedef union cavm_uaax_pidr2 cavm_uaax_pidr2_t;

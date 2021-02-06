@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -66,44 +66,52 @@
 #define CAVM_SSO_OP_E_ADDWQ_CN98XX (7)
 #define CAVM_SSO_OP_E_ADDWQ_CNF95XX (8)
 #define CAVM_SSO_OP_E_ADDWQ_F95MM (8)
+#define CAVM_SSO_OP_E_ADDWQ_F95O (8)
 #define CAVM_SSO_OP_E_ADDWQ_LOKI (8)
 #define CAVM_SSO_OP_E_ALLOC_WE_CN96XX (0xc)
 #define CAVM_SSO_OP_E_ALLOC_WE_CN98XX (0xa)
 #define CAVM_SSO_OP_E_ALLOC_WE_CNF95XX (0xc)
 #define CAVM_SSO_OP_E_ALLOC_WE_F95MM (0xc)
+#define CAVM_SSO_OP_E_ALLOC_WE_F95O (0xc)
 #define CAVM_SSO_OP_E_ALLOC_WE_LOKI (0xc)
 #define CAVM_SSO_OP_E_CLR_NSCHED_CN8 (7)
 #define CAVM_SSO_OP_E_CLR_NSCHED_CN96XX (0xa)
 #define CAVM_SSO_OP_E_CLR_NSCHED_CN98XX (0xb)
 #define CAVM_SSO_OP_E_CLR_NSCHED_CNF95XX (0xa)
 #define CAVM_SSO_OP_E_CLR_NSCHED_F95MM (0xa)
+#define CAVM_SSO_OP_E_CLR_NSCHED_F95O (0xa)
 #define CAVM_SSO_OP_E_CLR_NSCHED_LOKI (0xa)
 #define CAVM_SSO_OP_E_DESCH_CN8 (3)
 #define CAVM_SSO_OP_E_DESCH_CN96XX (6)
 #define CAVM_SSO_OP_E_DESCH_CN98XX (8)
 #define CAVM_SSO_OP_E_DESCH_CNF95XX (6)
 #define CAVM_SSO_OP_E_DESCH_F95MM (6)
+#define CAVM_SSO_OP_E_DESCH_F95O (6)
 #define CAVM_SSO_OP_E_DESCH_LOKI (6)
 #define CAVM_SSO_OP_E_GET_WORK_CN96XX (0xb)
 #define CAVM_SSO_OP_E_GET_WORK_CN98XX (0xc)
 #define CAVM_SSO_OP_E_GET_WORK_CNF95XX (0xb)
 #define CAVM_SSO_OP_E_GET_WORK_F95MM (0xb)
+#define CAVM_SSO_OP_E_GET_WORK_F95O (0xb)
 #define CAVM_SSO_OP_E_GET_WORK_LOKI (0xb)
 #define CAVM_SSO_OP_E_GWC_INVAL_CN96XX (0xd)
 #define CAVM_SSO_OP_E_GWC_INVAL_CN98XX (0x11)
 #define CAVM_SSO_OP_E_GWC_INVAL_CNF95XX (0xd)
 #define CAVM_SSO_OP_E_GWC_INVAL_F95MM (0xd)
+#define CAVM_SSO_OP_E_GWC_INVAL_F95O (0xd)
 #define CAVM_SSO_OP_E_GWC_INVAL_LOKI (0xd)
 #define CAVM_SSO_OP_E_NOP_CN8 (0xf)
 #define CAVM_SSO_OP_E_NOP_CN96XX (0x13)
 #define CAVM_SSO_OP_E_NOP_CN98XX (0)
 #define CAVM_SSO_OP_E_NOP_CNF95XX (0x13)
 #define CAVM_SSO_OP_E_NOP_F95MM (0x13)
+#define CAVM_SSO_OP_E_NOP_F95O (0x13)
 #define CAVM_SSO_OP_E_NOP_LOKI (0x13)
 #define CAVM_SSO_OP_E_NOSCH_CN96XX (7)
 #define CAVM_SSO_OP_E_NOSCH_CN98XX (9)
 #define CAVM_SSO_OP_E_NOSCH_CNF95XX (7)
 #define CAVM_SSO_OP_E_NOSCH_F95MM (7)
+#define CAVM_SSO_OP_E_NOSCH_F95O (7)
 #define CAVM_SSO_OP_E_NOSCH_LOKI (7)
 #define CAVM_SSO_OP_E_RST (0x10)
 #define CAVM_SSO_OP_E_SWTAG_CN8 (0)
@@ -111,59 +119,70 @@
 #define CAVM_SSO_OP_E_SWTAG_CN98XX (1)
 #define CAVM_SSO_OP_E_SWTAG_CNF95XX (0)
 #define CAVM_SSO_OP_E_SWTAG_F95MM (0)
+#define CAVM_SSO_OP_E_SWTAG_F95O (0)
 #define CAVM_SSO_OP_E_SWTAG_LOKI (0)
 #define CAVM_SSO_OP_E_SWTAG_DESCH_CN8 (2)
 #define CAVM_SSO_OP_E_SWTAG_DESCH_CN96XX (3)
 #define CAVM_SSO_OP_E_SWTAG_DESCH_CN98XX (4)
 #define CAVM_SSO_OP_E_SWTAG_DESCH_CNF95XX (3)
 #define CAVM_SSO_OP_E_SWTAG_DESCH_F95MM (3)
+#define CAVM_SSO_OP_E_SWTAG_DESCH_F95O (3)
 #define CAVM_SSO_OP_E_SWTAG_DESCH_LOKI (3)
 #define CAVM_SSO_OP_E_SWTAG_FLUSH_CN96XX (2)
 #define CAVM_SSO_OP_E_SWTAG_FLUSH_CN98XX (3)
 #define CAVM_SSO_OP_E_SWTAG_FLUSH_CNF95XX (2)
 #define CAVM_SSO_OP_E_SWTAG_FLUSH_F95MM (2)
+#define CAVM_SSO_OP_E_SWTAG_FLUSH_F95O (2)
 #define CAVM_SSO_OP_E_SWTAG_FLUSH_LOKI (2)
 #define CAVM_SSO_OP_E_SWTAG_FULL_CN8 (1)
 #define CAVM_SSO_OP_E_SWTAG_FULL_CN96XX (1)
 #define CAVM_SSO_OP_E_SWTAG_FULL_CN98XX (2)
 #define CAVM_SSO_OP_E_SWTAG_FULL_CNF95XX (1)
 #define CAVM_SSO_OP_E_SWTAG_FULL_F95MM (1)
+#define CAVM_SSO_OP_E_SWTAG_FULL_F95O (1)
 #define CAVM_SSO_OP_E_SWTAG_FULL_LOKI (1)
 #define CAVM_SSO_OP_E_SWTAG_NOSCH_CN96XX (4)
 #define CAVM_SSO_OP_E_SWTAG_NOSCH_CN98XX (5)
 #define CAVM_SSO_OP_E_SWTAG_NOSCH_CNF95XX (4)
 #define CAVM_SSO_OP_E_SWTAG_NOSCH_F95MM (4)
+#define CAVM_SSO_OP_E_SWTAG_NOSCH_F95O (4)
 #define CAVM_SSO_OP_E_SWTAG_NOSCH_LOKI (4)
 #define CAVM_SSO_OP_E_SWTAG_UNTAG_CN96XX (5)
 #define CAVM_SSO_OP_E_SWTAG_UNTAG_CN98XX (6)
 #define CAVM_SSO_OP_E_SWTAG_UNTAG_CNF95XX (5)
 #define CAVM_SSO_OP_E_SWTAG_UNTAG_F95MM (5)
+#define CAVM_SSO_OP_E_SWTAG_UNTAG_F95O (5)
 #define CAVM_SSO_OP_E_SWTAG_UNTAG_LOKI (5)
 #define CAVM_SSO_OP_E_SWTP_CLR_CN96XX (0xe)
 #define CAVM_SSO_OP_E_SWTP_CLR_CN98XX (0x12)
 #define CAVM_SSO_OP_E_SWTP_CLR_CNF95XX (0xe)
 #define CAVM_SSO_OP_E_SWTP_CLR_F95MM (0xe)
+#define CAVM_SSO_OP_E_SWTP_CLR_F95O (0xe)
 #define CAVM_SSO_OP_E_SWTP_CLR_LOKI (0xe)
 #define CAVM_SSO_OP_E_SWTP_SET_CN96XX (0xf)
 #define CAVM_SSO_OP_E_SWTP_SET_CN98XX (0x13)
 #define CAVM_SSO_OP_E_SWTP_SET_CNF95XX (0xf)
 #define CAVM_SSO_OP_E_SWTP_SET_F95MM (0xf)
+#define CAVM_SSO_OP_E_SWTP_SET_F95O (0xf)
 #define CAVM_SSO_OP_E_SWTP_SET_LOKI (0xf)
 #define CAVM_SSO_OP_E_UPD_GRP_CN96XX (0x11)
 #define CAVM_SSO_OP_E_UPD_GRP_CN98XX (0xd)
 #define CAVM_SSO_OP_E_UPD_GRP_CNF95XX (0x11)
 #define CAVM_SSO_OP_E_UPD_GRP_F95MM (0x11)
+#define CAVM_SSO_OP_E_UPD_GRP_F95O (0x11)
 #define CAVM_SSO_OP_E_UPD_GRP_LOKI (0x11)
 #define CAVM_SSO_OP_E_UPD_WQP_CN96XX (0x12)
 #define CAVM_SSO_OP_E_UPD_WQP_CN98XX (0xe)
 #define CAVM_SSO_OP_E_UPD_WQP_CNF95XX (0x12)
 #define CAVM_SSO_OP_E_UPD_WQP_F95MM (0x12)
+#define CAVM_SSO_OP_E_UPD_WQP_F95O (0x12)
 #define CAVM_SSO_OP_E_UPD_WQP_LOKI (0x12)
 #define CAVM_SSO_OP_E_UPD_WQP_GRP_CN8 (5)
 #define CAVM_SSO_OP_E_UPD_WQP_GRP_CN96XX (9)
 #define CAVM_SSO_OP_E_UPD_WQP_GRP_CN98XX (0xf)
 #define CAVM_SSO_OP_E_UPD_WQP_GRP_CNF95XX (9)
 #define CAVM_SSO_OP_E_UPD_WQP_GRP_F95MM (9)
+#define CAVM_SSO_OP_E_UPD_WQP_GRP_F95O (9)
 #define CAVM_SSO_OP_E_UPD_WQP_GRP_LOKI (9)
 
 /**
@@ -581,6 +600,7 @@ union cavm_sso_af_aw_cfg
     /* struct cavm_sso_af_aw_cfg_cn96xxp1 cnf95xxp1; */
     /* struct cavm_sso_af_aw_cfg_cn96xxp3 cnf95xxp2; */
     /* struct cavm_sso_af_aw_cfg_cn96xxp3 f95mm; */
+    /* struct cavm_sso_af_aw_cfg_cn96xxp3 f95o; */
     /* struct cavm_sso_af_aw_cfg_cn96xxp3 loki; */
 };
 typedef union cavm_sso_af_aw_cfg cavm_sso_af_aw_cfg_t;
@@ -751,6 +771,7 @@ union cavm_sso_af_aw_inp_ctl
     /* struct cavm_sso_af_aw_inp_ctl_s cn98xx; */
     /* struct cavm_sso_af_aw_inp_ctl_cn96xx cnf95xx; */
     /* struct cavm_sso_af_aw_inp_ctl_cn96xx f95mm; */
+    /* struct cavm_sso_af_aw_inp_ctl_cn96xx f95o; */
     /* struct cavm_sso_af_aw_inp_ctl_cn96xx loki; */
 };
 typedef union cavm_sso_af_aw_inp_ctl cavm_sso_af_aw_inp_ctl_t;
@@ -884,6 +905,7 @@ union cavm_sso_af_aw_read_arb
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_sso_af_aw_read_arb_cnf95xx f95mm; */
+    /* struct cavm_sso_af_aw_read_arb_cnf95xx f95o; */
     /* struct cavm_sso_af_aw_read_arb_cnf95xx loki; */
 };
 typedef union cavm_sso_af_aw_read_arb cavm_sso_af_aw_read_arb_t;
@@ -974,6 +996,7 @@ union cavm_sso_af_aw_we
     } cn98xx;
     /* struct cavm_sso_af_aw_we_s cnf95xx; */
     /* struct cavm_sso_af_aw_we_s f95mm; */
+    /* struct cavm_sso_af_aw_we_s f95o; */
     /* struct cavm_sso_af_aw_we_s loki; */
 };
 typedef union cavm_sso_af_aw_we cavm_sso_af_aw_we_t;
@@ -1566,7 +1589,76 @@ union cavm_sso_af_bp_test2
                                                                  \<56\> = Starve the NCBO fifo of credits, forcing it to fill. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_af_bp_test2_s cn; */
+    /* struct cavm_sso_af_bp_test2_s cn9; */
+    /* struct cavm_sso_af_bp_test2_s cn96xxp1; */
+    struct cavm_sso_af_bp_test2_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t enable                : 8;  /**< [ 63: 56](R/W) Enable test mode. For diagnostic use only.
+                                                                 Internal:
+                                                                 Once a bit is set, random backpressure is generated
+                                                                 at the corresponding point to allow for more frequent backpressure.
+                                                                 \<63\> = Reserved.
+                                                                 \<62\> = SAI bus stall.
+                                                                 \<61\> = GWMGR unit, GET_WORK request stall.
+                                                                 \<60\> = Issue unit, pipeline issue stall.
+                                                                 \<59\> = ACDQ unit; cq dq stall.
+                                                                 \<58\> = ACDQ unit; addwork stall.
+                                                                 \<57\> = Reduce the rate at which NCB/RSL requests are dispatched.
+                                                                 \<56\> = Starve the NCBO fifo of credits, forcing it to fill. */
+        uint64_t reserved_32_55        : 24;
+        uint64_t bp_cfg                : 16; /**< [ 31: 16](R/W) Backpressure weight. For diagnostic use only.
+                                                                 Internal:
+                                                                 There are 2 backpressure configuration bits per enable, with the two bits
+                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
+                                                                 0x3=25% of the time.
+                                                                   \<31:30\> = Config 7.
+                                                                   \<29:28\> = Config 6.
+                                                                   \<27:26\> = Config 5.
+                                                                   \<25:24\> = Config 4.
+                                                                   \<23:22\> = Config 3.
+                                                                   \<21:20\> = Config 2.
+                                                                   \<19:18\> = Config 1 (NCB/RSL).
+                                                                   \<17:16\> = Config 0 (NCBO). */
+        uint64_t reserved_12_15        : 4;
+        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
+#else /* Word 0 - Little Endian */
+        uint64_t lfsr_freq             : 12; /**< [ 11:  0](R/W) Test LFSR update frequency in coprocessor-clocks minus one. */
+        uint64_t reserved_12_15        : 4;
+        uint64_t bp_cfg                : 16; /**< [ 31: 16](R/W) Backpressure weight. For diagnostic use only.
+                                                                 Internal:
+                                                                 There are 2 backpressure configuration bits per enable, with the two bits
+                                                                 defined as 0x0=100% of the time, 0x1=75% of the time, 0x2=50% of the time,
+                                                                 0x3=25% of the time.
+                                                                   \<31:30\> = Config 7.
+                                                                   \<29:28\> = Config 6.
+                                                                   \<27:26\> = Config 5.
+                                                                   \<25:24\> = Config 4.
+                                                                   \<23:22\> = Config 3.
+                                                                   \<21:20\> = Config 2.
+                                                                   \<19:18\> = Config 1 (NCB/RSL).
+                                                                   \<17:16\> = Config 0 (NCBO). */
+        uint64_t reserved_32_55        : 24;
+        uint64_t enable                : 8;  /**< [ 63: 56](R/W) Enable test mode. For diagnostic use only.
+                                                                 Internal:
+                                                                 Once a bit is set, random backpressure is generated
+                                                                 at the corresponding point to allow for more frequent backpressure.
+                                                                 \<63\> = Reserved.
+                                                                 \<62\> = SAI bus stall.
+                                                                 \<61\> = GWMGR unit, GET_WORK request stall.
+                                                                 \<60\> = Issue unit, pipeline issue stall.
+                                                                 \<59\> = ACDQ unit; cq dq stall.
+                                                                 \<58\> = ACDQ unit; addwork stall.
+                                                                 \<57\> = Reduce the rate at which NCB/RSL requests are dispatched.
+                                                                 \<56\> = Starve the NCBO fifo of credits, forcing it to fill. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_sso_af_bp_test2_cn96xxp3 cn98xx; */
+    /* struct cavm_sso_af_bp_test2_s cnf95xxp1; */
+    /* struct cavm_sso_af_bp_test2_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_sso_af_bp_test2_cn96xxp3 f95mm; */
+    /* struct cavm_sso_af_bp_test2_s f95o; */
+    /* struct cavm_sso_af_bp_test2_cn96xxp3 loki; */
 };
 typedef union cavm_sso_af_bp_test2 cavm_sso_af_bp_test2_t;
 
@@ -1643,6 +1735,7 @@ union cavm_sso_af_const
     } cn98xx;
     /* struct cavm_sso_af_const_s cnf95xx; */
     /* struct cavm_sso_af_const_s f95mm; */
+    /* struct cavm_sso_af_const_s f95o; */
     /* struct cavm_sso_af_const_s loki; */
 };
 typedef union cavm_sso_af_const cavm_sso_af_const_t;
@@ -1703,6 +1796,7 @@ union cavm_sso_af_const1
     /* struct cavm_sso_af_const1_s cn98xx; */
     /* struct cavm_sso_af_const1_cn96xxp1 cnf95xx; */
     /* struct cavm_sso_af_const1_cn96xxp1 f95mm; */
+    /* struct cavm_sso_af_const1_cn96xxp1 f95o; */
     /* struct cavm_sso_af_const1_cn96xxp1 loki; */
 };
 typedef union cavm_sso_af_const1 cavm_sso_af_const1_t;
@@ -1836,7 +1930,118 @@ union cavm_sso_af_err0
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_sso_af_err0_s cn; */
+    /* struct cavm_sso_af_err0_s cn9; */
+    /* struct cavm_sso_af_err0_s cn96xxp1; */
+    struct cavm_sso_af_err0_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_16_63        : 48;
+        uint64_t bfpp                  : 1;  /**< [ 15: 15](R/W1C/H) Bad-fill-packet NCB error. NCB detected poison on fill data.  Any
+                                                                 groups that experience this error are reported in SSO_AF_POISON(). */
+        uint64_t flr_aq_cnt            : 1;  /**< [ 14: 14](R/W1C/H) An FLR was initiated, but SSO_LF_GGRP_AQ_CNT[AQ_CNT] != 0.  Any groups
+                                                                 reporting this error are indicated in SSO_AF_FLR_AQ_DIGEST(). */
+        uint64_t addwq_dropped_xaqen   : 1;  /**< [ 13: 13](R/W1C/H) Add work dropped due to XAQ pointers not yet initialized.  Any groups
+                                                                 reporting this error are indicated in SSO_AF_XAQDIS_DIGEST(). */
+        uint64_t ggrp_multi            : 1;  /**< [ 12: 12](R/W1C/H) PF_FUNC map had double-hit error. Set when a load or store accesses an
+                                                                 SSO LF register in BAR2 and SSO_PRIV_LF()_HWGRP_CFG has a double hit.
+                                                                 When a request thus dropped, even if this bit is already set,
+                                                                 SSO_AF_UNMAP_INFO is loaded. */
+        uint64_t ggrp_unmap            : 1;  /**< [ 11: 11](R/W1C/H) PF_FUNC mapping not found error. Set when a load or store accesses an
+                                                                 SSO LF register in BAR2 and SSO_PRIV_LF()_HWGRP_CFG does not have any
+                                                                 matching entry.  When a request thus dropped, even if this bit is
+                                                                 already set, SSO_AF_UNMAP_INFO is loaded. */
+        uint64_t aw_multi              : 1;  /**< [ 10: 10](R/W1C/H) PF_FUNC map had double-hit error. Set when a coprocessor add-work is
+                                                                 dropped due to SSO_PRIV_LF()_HWGRP_CFG having a double hit.
+                                                                 When a request thus dropped, even if this bit is already set,
+                                                                 SSO_AF_UNMAP_INFO is loaded. */
+        uint64_t aw_unmap              : 1;  /**< [  9:  9](R/W1C/H) PF_FUNC mapping not found error. Set when a coprocessor add-work is
+                                                                 dropped due to SSO_PRIV_LF()_HWGRP_CFG not having any matching mapping.
+                                                                 When a request thus dropped, even if this bit is already set,
+                                                                 SSO_AF_UNMAP_INFO is loaded. */
+        uint64_t addwq_dropped_qctldis : 1;  /**< [  8:  8](R/W1C/H) Add work dropped due to QTL being disabled, 0x0.  Any groups that
+                                                                 experience this error are reported in SSO_AF_QCTLDIS_DIGEST(). */
+        uint64_t addwq_dropped_wqp0    : 1;  /**< [  7:  7](R/W1C/H) Add work dropped due to WQP being 0x0.  Any groups that experience
+                                                                 this error are reported in SSO_AF_WQP0_DIGEST(). */
+        uint64_t addwq_dropped         : 1;  /**< [  6:  6](R/W1C/H) Add work dropped due to 64 bit write to SSO_LF_GGRP_OP_ADD_WORK0. */
+        uint64_t awempty               : 1;  /**< [  5:  5](R/W1C/H) Set when received add work with tag type is specified as EMPTY, or when
+                                                                 SSO_AF_AW_INP_CTL[WA_DIS] is set and work is added from disabled coprocessor. */
+        uint64_t grpdis                : 1;  /**< [  4:  4](R/W1C/H) Add work to disabled hardware group. An ADDWQ was received and dropped
+                                                                 to a hardware group with SSO_AF_HWGRP()_IAQ_THR[RSVD_THR] = 0.  Any
+                                                                 groups that experience this error are reported in
+                                                                 SSO_AF_GRPDIS_DIGEST(). */
+        uint64_t bfpn                  : 1;  /**< [  3:  3](R/W1C/H) Bad-fill-packet NCB error. NCB detected error on fill or spill data.
+                                                                 Any groups that experience this error are reported in
+                                                                 SSO_AF_BFPN_DIGEST(). */
+        uint64_t bfp                   : 1;  /**< [  2:  2](R/W1C/H) Bad-fill-packet error. The WAE CRC field was incorrect, or the XAQ
+                                                                 next address was zero.  Any groups that experience this error are
+                                                                 reported in SSO_AF_BFP_DIGEST(). */
+        uint64_t npa                   : 1;  /**< [  1:  1](R/W1C/H) The NPA returned an error indication.  Any groups that experience this
+                                                                 error are reported in SSO_AF_NPA_DIGEST().
+                                                                 During the initialization phase, failure will be reported when receiving
+                                                                 more than 3 null pointer errors for the same group,
+                                                                 see SSO_AF_HWGRP()_AW_STATUS[INIT_FAIL]. Once initialization has
+                                                                 completed, any subsequent NPA errors will be reported immediately,
+                                                                 with no retries.  XAQ operation for the errored group will be disabled
+                                                                 after NPA failures, see SSO_AF_HWGRP()_AW_CFG[RWEN]. */
+        uint64_t reserved_0            : 1;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0            : 1;
+        uint64_t npa                   : 1;  /**< [  1:  1](R/W1C/H) The NPA returned an error indication.  Any groups that experience this
+                                                                 error are reported in SSO_AF_NPA_DIGEST().
+                                                                 During the initialization phase, failure will be reported when receiving
+                                                                 more than 3 null pointer errors for the same group,
+                                                                 see SSO_AF_HWGRP()_AW_STATUS[INIT_FAIL]. Once initialization has
+                                                                 completed, any subsequent NPA errors will be reported immediately,
+                                                                 with no retries.  XAQ operation for the errored group will be disabled
+                                                                 after NPA failures, see SSO_AF_HWGRP()_AW_CFG[RWEN]. */
+        uint64_t bfp                   : 1;  /**< [  2:  2](R/W1C/H) Bad-fill-packet error. The WAE CRC field was incorrect, or the XAQ
+                                                                 next address was zero.  Any groups that experience this error are
+                                                                 reported in SSO_AF_BFP_DIGEST(). */
+        uint64_t bfpn                  : 1;  /**< [  3:  3](R/W1C/H) Bad-fill-packet NCB error. NCB detected error on fill or spill data.
+                                                                 Any groups that experience this error are reported in
+                                                                 SSO_AF_BFPN_DIGEST(). */
+        uint64_t grpdis                : 1;  /**< [  4:  4](R/W1C/H) Add work to disabled hardware group. An ADDWQ was received and dropped
+                                                                 to a hardware group with SSO_AF_HWGRP()_IAQ_THR[RSVD_THR] = 0.  Any
+                                                                 groups that experience this error are reported in
+                                                                 SSO_AF_GRPDIS_DIGEST(). */
+        uint64_t awempty               : 1;  /**< [  5:  5](R/W1C/H) Set when received add work with tag type is specified as EMPTY, or when
+                                                                 SSO_AF_AW_INP_CTL[WA_DIS] is set and work is added from disabled coprocessor. */
+        uint64_t addwq_dropped         : 1;  /**< [  6:  6](R/W1C/H) Add work dropped due to 64 bit write to SSO_LF_GGRP_OP_ADD_WORK0. */
+        uint64_t addwq_dropped_wqp0    : 1;  /**< [  7:  7](R/W1C/H) Add work dropped due to WQP being 0x0.  Any groups that experience
+                                                                 this error are reported in SSO_AF_WQP0_DIGEST(). */
+        uint64_t addwq_dropped_qctldis : 1;  /**< [  8:  8](R/W1C/H) Add work dropped due to QTL being disabled, 0x0.  Any groups that
+                                                                 experience this error are reported in SSO_AF_QCTLDIS_DIGEST(). */
+        uint64_t aw_unmap              : 1;  /**< [  9:  9](R/W1C/H) PF_FUNC mapping not found error. Set when a coprocessor add-work is
+                                                                 dropped due to SSO_PRIV_LF()_HWGRP_CFG not having any matching mapping.
+                                                                 When a request thus dropped, even if this bit is already set,
+                                                                 SSO_AF_UNMAP_INFO is loaded. */
+        uint64_t aw_multi              : 1;  /**< [ 10: 10](R/W1C/H) PF_FUNC map had double-hit error. Set when a coprocessor add-work is
+                                                                 dropped due to SSO_PRIV_LF()_HWGRP_CFG having a double hit.
+                                                                 When a request thus dropped, even if this bit is already set,
+                                                                 SSO_AF_UNMAP_INFO is loaded. */
+        uint64_t ggrp_unmap            : 1;  /**< [ 11: 11](R/W1C/H) PF_FUNC mapping not found error. Set when a load or store accesses an
+                                                                 SSO LF register in BAR2 and SSO_PRIV_LF()_HWGRP_CFG does not have any
+                                                                 matching entry.  When a request thus dropped, even if this bit is
+                                                                 already set, SSO_AF_UNMAP_INFO is loaded. */
+        uint64_t ggrp_multi            : 1;  /**< [ 12: 12](R/W1C/H) PF_FUNC map had double-hit error. Set when a load or store accesses an
+                                                                 SSO LF register in BAR2 and SSO_PRIV_LF()_HWGRP_CFG has a double hit.
+                                                                 When a request thus dropped, even if this bit is already set,
+                                                                 SSO_AF_UNMAP_INFO is loaded. */
+        uint64_t addwq_dropped_xaqen   : 1;  /**< [ 13: 13](R/W1C/H) Add work dropped due to XAQ pointers not yet initialized.  Any groups
+                                                                 reporting this error are indicated in SSO_AF_XAQDIS_DIGEST(). */
+        uint64_t flr_aq_cnt            : 1;  /**< [ 14: 14](R/W1C/H) An FLR was initiated, but SSO_LF_GGRP_AQ_CNT[AQ_CNT] != 0.  Any groups
+                                                                 reporting this error are indicated in SSO_AF_FLR_AQ_DIGEST(). */
+        uint64_t bfpp                  : 1;  /**< [ 15: 15](R/W1C/H) Bad-fill-packet NCB error. NCB detected poison on fill data.  Any
+                                                                 groups that experience this error are reported in SSO_AF_POISON(). */
+        uint64_t reserved_16_63        : 48;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_sso_af_err0_cn96xxp3 cn98xx; */
+    /* struct cavm_sso_af_err0_s cnf95xxp1; */
+    /* struct cavm_sso_af_err0_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_sso_af_err0_cn96xxp3 f95mm; */
+    /* struct cavm_sso_af_err0_s f95o; */
+    /* struct cavm_sso_af_err0_cn96xxp3 loki; */
 };
 typedef union cavm_sso_af_err0 cavm_sso_af_err0_t;
 
@@ -2708,6 +2913,8 @@ static inline uint64_t CAVM_SSO_AF_GWS_INV_FUNC(void)
         return 0x840070001060ll;
     if (cavm_is_model(OCTEONTX_F95MM))
         return 0x840070001060ll;
+    if (cavm_is_model(OCTEONTX_F95O))
+        return 0x840070001060ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x840070001060ll;
     __cavm_csr_fatal("SSO_AF_GWS_INV", 0, 0, 0, 0, 0, 0, 0);
@@ -2820,6 +3027,7 @@ union cavm_sso_af_hwgrpx_aw_cfg
     /* struct cavm_sso_af_hwgrpx_aw_cfg_s cn98xx; */
     /* struct cavm_sso_af_hwgrpx_aw_cfg_cn96xxp1 cnf95xx; */
     /* struct cavm_sso_af_hwgrpx_aw_cfg_cn96xxp1 f95mm; */
+    /* struct cavm_sso_af_hwgrpx_aw_cfg_cn96xxp1 f95o; */
     /* struct cavm_sso_af_hwgrpx_aw_cfg_cn96xxp1 loki; */
 };
 typedef union cavm_sso_af_hwgrpx_aw_cfg cavm_sso_af_hwgrpx_aw_cfg_t;
@@ -3243,6 +3451,7 @@ union cavm_sso_af_hwgrpx_iaq_thr
     } cn98xx;
     /* struct cavm_sso_af_hwgrpx_iaq_thr_s cnf95xx; */
     /* struct cavm_sso_af_hwgrpx_iaq_thr_s f95mm; */
+    /* struct cavm_sso_af_hwgrpx_iaq_thr_s f95o; */
     /* struct cavm_sso_af_hwgrpx_iaq_thr_s loki; */
 };
 typedef union cavm_sso_af_hwgrpx_iaq_thr cavm_sso_af_hwgrpx_iaq_thr_t;
@@ -3737,6 +3946,8 @@ static inline uint64_t CAVM_SSO_AF_HWSX_ARB(uint64_t a)
         return 0x840070400100ll + 0x1000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=51))
         return 0x840070400100ll + 0x1000ll * ((a) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=51))
+        return 0x840070400100ll + 0x1000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=51))
         return 0x840070400100ll + 0x1000ll * ((a) & 0x3f);
     __cavm_csr_fatal("SSO_AF_HWSX_ARB", 1, a, 0, 0, 0, 0, 0);
@@ -3816,6 +4027,8 @@ static inline uint64_t CAVM_SSO_AF_HWSX_GMCTL(uint64_t a)
         return 0x840070400200ll + 0x1000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=51))
         return 0x840070400200ll + 0x1000ll * ((a) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=51))
+        return 0x840070400200ll + 0x1000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=51))
         return 0x840070400200ll + 0x1000ll * ((a) & 0x3f);
     __cavm_csr_fatal("SSO_AF_HWSX_GMCTL", 1, a, 0, 0, 0, 0, 0);
@@ -3862,6 +4075,8 @@ static inline uint64_t CAVM_SSO_AF_HWSX_INV(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=51))
         return 0x840070400180ll + 0x1000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=51))
+        return 0x840070400180ll + 0x1000ll * ((a) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=51))
         return 0x840070400180ll + 0x1000ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=51))
         return 0x840070400180ll + 0x1000ll * ((a) & 0x3f);
@@ -3955,6 +4170,7 @@ union cavm_sso_af_hwsx_sx_grpmskx
     } cn98xx;
     /* struct cavm_sso_af_hwsx_sx_grpmskx_s cnf95xx; */
     /* struct cavm_sso_af_hwsx_sx_grpmskx_s f95mm; */
+    /* struct cavm_sso_af_hwsx_sx_grpmskx_s f95o; */
     /* struct cavm_sso_af_hwsx_sx_grpmskx_s loki; */
 };
 typedef union cavm_sso_af_hwsx_sx_grpmskx cavm_sso_af_hwsx_sx_grpmskx_t;
@@ -3969,6 +4185,8 @@ static inline uint64_t CAVM_SSO_AF_HWSX_SX_GRPMSKX(uint64_t a, uint64_t b, uint6
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=51) && (b<=1) && (c<=3)))
         return 0x840070400400ll + 0x1000ll * ((a) & 0x3f) + 0x20ll * ((b) & 0x1) + 8ll * ((c) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=51) && (b<=1) && (c<=3)))
+        return 0x840070400400ll + 0x1000ll * ((a) & 0x3f) + 0x20ll * ((b) & 0x1) + 8ll * ((c) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=51) && (b<=1) && (c<=3)))
         return 0x840070400400ll + 0x1000ll * ((a) & 0x3f) + 0x20ll * ((b) & 0x1) + 8ll * ((c) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=51) && (b<=1) && (c<=3)))
         return 0x840070400400ll + 0x1000ll * ((a) & 0x3f) + 0x20ll * ((b) & 0x1) + 8ll * ((c) & 0x3);
@@ -4101,6 +4319,7 @@ union cavm_sso_af_ientx_links
     } cn98xx;
     /* struct cavm_sso_af_ientx_links_s cnf95xx; */
     /* struct cavm_sso_af_ientx_links_s f95mm; */
+    /* struct cavm_sso_af_ientx_links_s f95o; */
     /* struct cavm_sso_af_ientx_links_s loki; */
 };
 typedef union cavm_sso_af_ientx_links cavm_sso_af_ientx_links_t;
@@ -4203,6 +4422,7 @@ union cavm_sso_af_ientx_qlinks
     } cn98xx;
     /* struct cavm_sso_af_ientx_qlinks_s cnf95xx; */
     /* struct cavm_sso_af_ientx_qlinks_s f95mm; */
+    /* struct cavm_sso_af_ientx_qlinks_s f95o; */
     /* struct cavm_sso_af_ientx_qlinks_s loki; */
 };
 typedef union cavm_sso_af_ientx_qlinks cavm_sso_af_ientx_qlinks_t;
@@ -4366,6 +4586,7 @@ union cavm_sso_af_ipl_confx
     } cn98xx;
     /* struct cavm_sso_af_ipl_confx_s cnf95xx; */
     /* struct cavm_sso_af_ipl_confx_s f95mm; */
+    /* struct cavm_sso_af_ipl_confx_s f95o; */
     /* struct cavm_sso_af_ipl_confx_s loki; */
 };
 typedef union cavm_sso_af_ipl_confx cavm_sso_af_ipl_confx_t;
@@ -4439,6 +4660,7 @@ union cavm_sso_af_ipl_deschedx
     } cn98xx;
     /* struct cavm_sso_af_ipl_deschedx_s cnf95xx; */
     /* struct cavm_sso_af_ipl_deschedx_s f95mm; */
+    /* struct cavm_sso_af_ipl_deschedx_s f95o; */
     /* struct cavm_sso_af_ipl_deschedx_s loki; */
 };
 typedef union cavm_sso_af_ipl_deschedx cavm_sso_af_ipl_deschedx_t;
@@ -4527,6 +4749,7 @@ union cavm_sso_af_ipl_freex
     } cn98xx;
     /* struct cavm_sso_af_ipl_freex_s cnf95xx; */
     /* struct cavm_sso_af_ipl_freex_s f95mm; */
+    /* struct cavm_sso_af_ipl_freex_s f95o; */
     /* struct cavm_sso_af_ipl_freex_s loki; */
 };
 typedef union cavm_sso_af_ipl_freex cavm_sso_af_ipl_freex_t;
@@ -4599,6 +4822,7 @@ union cavm_sso_af_ipl_iaqx
     } cn98xx;
     /* struct cavm_sso_af_ipl_iaqx_s cnf95xx; */
     /* struct cavm_sso_af_ipl_iaqx_s f95mm; */
+    /* struct cavm_sso_af_ipl_iaqx_s f95o; */
     /* struct cavm_sso_af_ipl_iaqx_s loki; */
 };
 typedef union cavm_sso_af_ipl_iaqx cavm_sso_af_ipl_iaqx_t;
@@ -4805,6 +5029,7 @@ union cavm_sso_af_nos_cnt
     } cn98xx;
     /* struct cavm_sso_af_nos_cnt_s cnf95xx; */
     /* struct cavm_sso_af_nos_cnt_s f95mm; */
+    /* struct cavm_sso_af_nos_cnt_s f95o; */
     /* struct cavm_sso_af_nos_cnt_s loki; */
 };
 typedef union cavm_sso_af_nos_cnt cavm_sso_af_nos_cnt_t;
@@ -5922,6 +6147,7 @@ union cavm_sso_af_unmap_info
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_sso_af_unmap_info_cnf95xx f95mm; */
+    /* struct cavm_sso_af_unmap_info_cnf95xx f95o; */
     /* struct cavm_sso_af_unmap_info_cnf95xx loki; */
 };
 typedef union cavm_sso_af_unmap_info cavm_sso_af_unmap_info_t;
@@ -6120,6 +6346,7 @@ union cavm_sso_af_unmap_info3
     } cn98xx;
     /* struct cavm_sso_af_unmap_info3_s cnf95xx; */
     /* struct cavm_sso_af_unmap_info3_s f95mm; */
+    /* struct cavm_sso_af_unmap_info3_s f95o; */
     /* struct cavm_sso_af_unmap_info3_s loki; */
 };
 typedef union cavm_sso_af_unmap_info3 cavm_sso_af_unmap_info3_t;
@@ -6292,6 +6519,7 @@ union cavm_sso_af_ws_awe_digestx
     /* struct cavm_sso_af_ws_awe_digestx_s cn98xx; */
     /* struct cavm_sso_af_ws_awe_digestx_cn96xx cnf95xx; */
     /* struct cavm_sso_af_ws_awe_digestx_cn96xx f95mm; */
+    /* struct cavm_sso_af_ws_awe_digestx_cn96xx f95o; */
     /* struct cavm_sso_af_ws_awe_digestx_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_awe_digestx cavm_sso_af_ws_awe_digestx_t;
@@ -6306,6 +6534,8 @@ static inline uint64_t CAVM_SSO_AF_WS_AWE_DIGESTX(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
         return 0x840070902400ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x840070902400ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a==0))
         return 0x840070902400ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902400ll + 8ll * ((a) & 0x0);
@@ -6357,6 +6587,7 @@ union cavm_sso_af_ws_awe_digestx_w1s
     } cn98xx;
     /* struct cavm_sso_af_ws_awe_digestx_w1s_cn96xx cnf95xx; */
     /* struct cavm_sso_af_ws_awe_digestx_w1s_cn96xx f95mm; */
+    /* struct cavm_sso_af_ws_awe_digestx_w1s_cn96xx f95o; */
     /* struct cavm_sso_af_ws_awe_digestx_w1s_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_awe_digestx_w1s cavm_sso_af_ws_awe_digestx_w1s_t;
@@ -6371,6 +6602,8 @@ static inline uint64_t CAVM_SSO_AF_WS_AWE_DIGESTX_W1S(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
         return 0x840070902500ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x840070902500ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a==0))
         return 0x840070902500ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902500ll + 8ll * ((a) & 0x0);
@@ -6506,9 +6739,9 @@ union cavm_sso_af_ws_cfg
         uint64_t issue_step_en         : 1;  /**< [  3:  3](R/W) Enable single-stepping issue unit, 1 command at a time. For diagnostic use only. */
         uint64_t ncbo_step_en          : 1;  /**< [  2:  2](R/W) Enable single-stepping commands from NCBO, once per 32 clocks. For diagnostic use only. */
         uint64_t soc_ccam_dis          : 1;  /**< [  1:  1](R/W) Disable power saving SOC conditional CAM. */
-        uint64_t sso_cclk_dis          : 1;  /**< [  0:  0](R/W) Disable power saving SSO conditional clocking, */
+        uint64_t sso_cclk_dis          : 1;  /**< [  0:  0](R/W) Disable power saving SSO conditional clocking. */
 #else /* Word 0 - Little Endian */
-        uint64_t sso_cclk_dis          : 1;  /**< [  0:  0](R/W) Disable power saving SSO conditional clocking, */
+        uint64_t sso_cclk_dis          : 1;  /**< [  0:  0](R/W) Disable power saving SSO conditional clocking. */
         uint64_t soc_ccam_dis          : 1;  /**< [  1:  1](R/W) Disable power saving SOC conditional CAM. */
         uint64_t ncbo_step_en          : 1;  /**< [  2:  2](R/W) Enable single-stepping commands from NCBO, once per 32 clocks. For diagnostic use only. */
         uint64_t issue_step_en         : 1;  /**< [  3:  3](R/W) Enable single-stepping issue unit, 1 command at a time. For diagnostic use only. */
@@ -6549,6 +6782,82 @@ union cavm_sso_af_ws_cfg
     /* struct cavm_sso_af_ws_cfg_s cnf95xxp1; */
     /* struct cavm_sso_af_ws_cfg_cn96xxp3 cnf95xxp2; */
     /* struct cavm_sso_af_ws_cfg_cn96xxp3 f95mm; */
+    struct cavm_sso_af_ws_cfg_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_56_63        : 8;
+        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Reserved.
+                                                                 Internal:
+                                                                 Enable OCLA backpressure stalls. For diagnostic use only.
+                                                                 \<55\> = NCBB input fifo stall (ncbo).
+                                                                 \<54\> = Work-slot response. (arbrsp).
+                                                                 \<53\> = Reserved.
+                                                                 \<52\> = Work-slot SWTAG response. (arbs).
+                                                                 \<51\> = Work-slot access to get-work engine. (arbgw).
+                                                                 \<50\> = Reserved.
+                                                                 \<49\> = Reserved.
+                                                                 \<48\> = Work-slot pushes to AQ, CQ, DQ. (arbq). */
+        uint64_t reserved_31_47        : 17;
+        uint64_t bp_interval           : 3;  /**< [ 30: 28](R/W) Coprocessor-clock cycles between each 16 cycle interval of HWS backpressure.
+                                                                 For diagnostic use only.
+                                                                 0x0 = Disable this backpressure mechanism.
+                                                                 0x1 =   64 cycles.
+                                                                 0x2 =  128 cycles.
+                                                                 0x3 =  256 cycles.
+                                                                 0x4 =  512 cycles.
+                                                                 0x5 = 1024 cycles.
+                                                                 0x6 = 2048 cycles.
+                                                                 0x7 = 4096 cycles. */
+        uint64_t reserved_10_27        : 18;
+        uint64_t dq_opt_ena            : 1;  /**< [  9:  9](R/W) Enable early DQ push optimization. */
+        uint64_t force_ncbi_clk_en     : 1;  /**< [  8:  8](R/W) Force NCBI conditional clocks on. For diagnostic use only. */
+        uint64_t sai_flush             : 1;  /**< [  7:  7](R/W1) When written with one, send a pulse to invalidate the GW cache
+                                                                 inside the cores.  Reads as zero. For diagnostic use only. */
+        uint64_t aw_clk_dis            : 1;  /**< [  6:  6](R/W) Reserved. */
+        uint64_t gw_clk_dis            : 1;  /**< [  5:  5](R/W) Reserved. */
+        uint64_t disable_pw            : 1;  /**< [  4:  4](R/W) Reserved. */
+        uint64_t issue_step_en         : 1;  /**< [  3:  3](R/W) Enable single-stepping issue unit, 1 command at a time. For diagnostic use only. */
+        uint64_t ncbo_step_en          : 1;  /**< [  2:  2](R/W) Enable single-stepping commands from NCBO, once per 32 clocks. For diagnostic use only. */
+        uint64_t soc_ccam_dis          : 1;  /**< [  1:  1](R/W) Disable power saving SOC conditional CAM. */
+        uint64_t sso_cclk_dis          : 1;  /**< [  0:  0](R/W) Disable power saving SSO conditional clocking, */
+#else /* Word 0 - Little Endian */
+        uint64_t sso_cclk_dis          : 1;  /**< [  0:  0](R/W) Disable power saving SSO conditional clocking, */
+        uint64_t soc_ccam_dis          : 1;  /**< [  1:  1](R/W) Disable power saving SOC conditional CAM. */
+        uint64_t ncbo_step_en          : 1;  /**< [  2:  2](R/W) Enable single-stepping commands from NCBO, once per 32 clocks. For diagnostic use only. */
+        uint64_t issue_step_en         : 1;  /**< [  3:  3](R/W) Enable single-stepping issue unit, 1 command at a time. For diagnostic use only. */
+        uint64_t disable_pw            : 1;  /**< [  4:  4](R/W) Reserved. */
+        uint64_t gw_clk_dis            : 1;  /**< [  5:  5](R/W) Reserved. */
+        uint64_t aw_clk_dis            : 1;  /**< [  6:  6](R/W) Reserved. */
+        uint64_t sai_flush             : 1;  /**< [  7:  7](R/W1) When written with one, send a pulse to invalidate the GW cache
+                                                                 inside the cores.  Reads as zero. For diagnostic use only. */
+        uint64_t force_ncbi_clk_en     : 1;  /**< [  8:  8](R/W) Force NCBI conditional clocks on. For diagnostic use only. */
+        uint64_t dq_opt_ena            : 1;  /**< [  9:  9](R/W) Enable early DQ push optimization. */
+        uint64_t reserved_10_27        : 18;
+        uint64_t bp_interval           : 3;  /**< [ 30: 28](R/W) Coprocessor-clock cycles between each 16 cycle interval of HWS backpressure.
+                                                                 For diagnostic use only.
+                                                                 0x0 = Disable this backpressure mechanism.
+                                                                 0x1 =   64 cycles.
+                                                                 0x2 =  128 cycles.
+                                                                 0x3 =  256 cycles.
+                                                                 0x4 =  512 cycles.
+                                                                 0x5 = 1024 cycles.
+                                                                 0x6 = 2048 cycles.
+                                                                 0x7 = 4096 cycles. */
+        uint64_t reserved_31_47        : 17;
+        uint64_t ocla_bp               : 8;  /**< [ 55: 48](R/W) Reserved.
+                                                                 Internal:
+                                                                 Enable OCLA backpressure stalls. For diagnostic use only.
+                                                                 \<55\> = NCBB input fifo stall (ncbo).
+                                                                 \<54\> = Work-slot response. (arbrsp).
+                                                                 \<53\> = Reserved.
+                                                                 \<52\> = Work-slot SWTAG response. (arbs).
+                                                                 \<51\> = Work-slot access to get-work engine. (arbgw).
+                                                                 \<50\> = Reserved.
+                                                                 \<49\> = Reserved.
+                                                                 \<48\> = Work-slot pushes to AQ, CQ, DQ. (arbq). */
+        uint64_t reserved_56_63        : 8;
+#endif /* Word 0 - End */
+    } f95o;
     /* struct cavm_sso_af_ws_cfg_cn96xxp3 loki; */
 };
 typedef union cavm_sso_af_ws_cfg cavm_sso_af_ws_cfg_t;
@@ -6638,6 +6947,7 @@ union cavm_sso_af_ws_gmulti_digestx
     /* struct cavm_sso_af_ws_gmulti_digestx_s cn98xx; */
     /* struct cavm_sso_af_ws_gmulti_digestx_cn96xx cnf95xx; */
     /* struct cavm_sso_af_ws_gmulti_digestx_cn96xx f95mm; */
+    /* struct cavm_sso_af_ws_gmulti_digestx_cn96xx f95o; */
     /* struct cavm_sso_af_ws_gmulti_digestx_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_gmulti_digestx cavm_sso_af_ws_gmulti_digestx_t;
@@ -6652,6 +6962,8 @@ static inline uint64_t CAVM_SSO_AF_WS_GMULTI_DIGESTX(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
         return 0x840070902000ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x840070902000ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a==0))
         return 0x840070902000ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902000ll + 8ll * ((a) & 0x0);
@@ -6703,6 +7015,7 @@ union cavm_sso_af_ws_gmulti_digestx_w1s
     } cn98xx;
     /* struct cavm_sso_af_ws_gmulti_digestx_w1s_cn96xx cnf95xx; */
     /* struct cavm_sso_af_ws_gmulti_digestx_w1s_cn96xx f95mm; */
+    /* struct cavm_sso_af_ws_gmulti_digestx_w1s_cn96xx f95o; */
     /* struct cavm_sso_af_ws_gmulti_digestx_w1s_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_gmulti_digestx_w1s cavm_sso_af_ws_gmulti_digestx_w1s_t;
@@ -6717,6 +7030,8 @@ static inline uint64_t CAVM_SSO_AF_WS_GMULTI_DIGESTX_W1S(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
         return 0x840070902100ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x840070902100ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a==0))
         return 0x840070902100ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902100ll + 8ll * ((a) & 0x0);
@@ -6761,6 +7076,7 @@ union cavm_sso_af_ws_gunmap_digestx
     /* struct cavm_sso_af_ws_gunmap_digestx_s cn98xx; */
     /* struct cavm_sso_af_ws_gunmap_digestx_cn96xx cnf95xx; */
     /* struct cavm_sso_af_ws_gunmap_digestx_cn96xx f95mm; */
+    /* struct cavm_sso_af_ws_gunmap_digestx_cn96xx f95o; */
     /* struct cavm_sso_af_ws_gunmap_digestx_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_gunmap_digestx cavm_sso_af_ws_gunmap_digestx_t;
@@ -6775,6 +7091,8 @@ static inline uint64_t CAVM_SSO_AF_WS_GUNMAP_DIGESTX(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
         return 0x840070902200ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x840070902200ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a==0))
         return 0x840070902200ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902200ll + 8ll * ((a) & 0x0);
@@ -6826,6 +7144,7 @@ union cavm_sso_af_ws_gunmap_digestx_w1s
     } cn98xx;
     /* struct cavm_sso_af_ws_gunmap_digestx_w1s_cn96xx cnf95xx; */
     /* struct cavm_sso_af_ws_gunmap_digestx_w1s_cn96xx f95mm; */
+    /* struct cavm_sso_af_ws_gunmap_digestx_w1s_cn96xx f95o; */
     /* struct cavm_sso_af_ws_gunmap_digestx_w1s_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_gunmap_digestx_w1s cavm_sso_af_ws_gunmap_digestx_w1s_t;
@@ -6840,6 +7159,8 @@ static inline uint64_t CAVM_SSO_AF_WS_GUNMAP_DIGESTX_W1S(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
         return 0x840070902300ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x840070902300ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a==0))
         return 0x840070902300ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902300ll + 8ll * ((a) & 0x0);
@@ -6884,6 +7205,7 @@ union cavm_sso_af_ws_gwi_digestx
     /* struct cavm_sso_af_ws_gwi_digestx_s cn98xx; */
     /* struct cavm_sso_af_ws_gwi_digestx_cn96xx cnf95xx; */
     /* struct cavm_sso_af_ws_gwi_digestx_cn96xx f95mm; */
+    /* struct cavm_sso_af_ws_gwi_digestx_cn96xx f95o; */
     /* struct cavm_sso_af_ws_gwi_digestx_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_gwi_digestx cavm_sso_af_ws_gwi_digestx_t;
@@ -6898,6 +7220,8 @@ static inline uint64_t CAVM_SSO_AF_WS_GWI_DIGESTX(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
         return 0x840070902600ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x840070902600ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a==0))
         return 0x840070902600ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902600ll + 8ll * ((a) & 0x0);
@@ -6949,6 +7273,7 @@ union cavm_sso_af_ws_gwi_digestx_w1s
     } cn98xx;
     /* struct cavm_sso_af_ws_gwi_digestx_w1s_cn96xx cnf95xx; */
     /* struct cavm_sso_af_ws_gwi_digestx_w1s_cn96xx f95mm; */
+    /* struct cavm_sso_af_ws_gwi_digestx_w1s_cn96xx f95o; */
     /* struct cavm_sso_af_ws_gwi_digestx_w1s_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_gwi_digestx_w1s cavm_sso_af_ws_gwi_digestx_w1s_t;
@@ -6963,6 +7288,8 @@ static inline uint64_t CAVM_SSO_AF_WS_GWI_DIGESTX_W1S(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
         return 0x840070902700ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x840070902700ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a==0))
         return 0x840070902700ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902700ll + 8ll * ((a) & 0x0);
@@ -7007,6 +7334,7 @@ union cavm_sso_af_ws_ne_digestx
     /* struct cavm_sso_af_ws_ne_digestx_s cn98xx; */
     /* struct cavm_sso_af_ws_ne_digestx_cn96xx cnf95xx; */
     /* struct cavm_sso_af_ws_ne_digestx_cn96xx f95mm; */
+    /* struct cavm_sso_af_ws_ne_digestx_cn96xx f95o; */
     /* struct cavm_sso_af_ws_ne_digestx_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_ne_digestx cavm_sso_af_ws_ne_digestx_t;
@@ -7021,6 +7349,8 @@ static inline uint64_t CAVM_SSO_AF_WS_NE_DIGESTX(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
         return 0x840070902800ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x840070902800ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a==0))
         return 0x840070902800ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902800ll + 8ll * ((a) & 0x0);
@@ -7072,6 +7402,7 @@ union cavm_sso_af_ws_ne_digestx_w1s
     } cn98xx;
     /* struct cavm_sso_af_ws_ne_digestx_w1s_cn96xx cnf95xx; */
     /* struct cavm_sso_af_ws_ne_digestx_w1s_cn96xx f95mm; */
+    /* struct cavm_sso_af_ws_ne_digestx_w1s_cn96xx f95o; */
     /* struct cavm_sso_af_ws_ne_digestx_w1s_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_ne_digestx_w1s cavm_sso_af_ws_ne_digestx_w1s_t;
@@ -7086,6 +7417,8 @@ static inline uint64_t CAVM_SSO_AF_WS_NE_DIGESTX_W1S(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
         return 0x840070902900ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x840070902900ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a==0))
         return 0x840070902900ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070902900ll + 8ll * ((a) & 0x0);
@@ -7130,6 +7463,7 @@ union cavm_sso_af_ws_ni_digestx
     /* struct cavm_sso_af_ws_ni_digestx_s cn98xx; */
     /* struct cavm_sso_af_ws_ni_digestx_cn96xx cnf95xx; */
     /* struct cavm_sso_af_ws_ni_digestx_cn96xx f95mm; */
+    /* struct cavm_sso_af_ws_ni_digestx_cn96xx f95o; */
     /* struct cavm_sso_af_ws_ni_digestx_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_ni_digestx cavm_sso_af_ws_ni_digestx_t;
@@ -7144,6 +7478,8 @@ static inline uint64_t CAVM_SSO_AF_WS_NI_DIGESTX(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
         return 0x840070903000ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x840070903000ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a==0))
         return 0x840070903000ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070903000ll + 8ll * ((a) & 0x0);
@@ -7195,6 +7531,7 @@ union cavm_sso_af_ws_ni_digestx_w1s
     } cn98xx;
     /* struct cavm_sso_af_ws_ni_digestx_w1s_cn96xx cnf95xx; */
     /* struct cavm_sso_af_ws_ni_digestx_w1s_cn96xx f95mm; */
+    /* struct cavm_sso_af_ws_ni_digestx_w1s_cn96xx f95o; */
     /* struct cavm_sso_af_ws_ni_digestx_w1s_cn96xx loki; */
 };
 typedef union cavm_sso_af_ws_ni_digestx_w1s cavm_sso_af_ws_ni_digestx_w1s_t;
@@ -7209,6 +7546,8 @@ static inline uint64_t CAVM_SSO_AF_WS_NI_DIGESTX_W1S(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a==0))
         return 0x840070903100ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
+        return 0x840070903100ll + 8ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a==0))
         return 0x840070903100ll + 8ll * ((a) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (a==0))
         return 0x840070903100ll + 8ll * ((a) & 0x0);
@@ -11487,6 +11826,7 @@ union cavm_sso_lf_ggrp_int_cnt
     } cn98xx;
     /* struct cavm_sso_lf_ggrp_int_cnt_s cnf95xx; */
     /* struct cavm_sso_lf_ggrp_int_cnt_s f95mm; */
+    /* struct cavm_sso_lf_ggrp_int_cnt_s f95o; */
     /* struct cavm_sso_lf_ggrp_int_cnt_s loki; */
 };
 typedef union cavm_sso_lf_ggrp_int_cnt cavm_sso_lf_ggrp_int_cnt_t;
@@ -11715,6 +12055,7 @@ union cavm_sso_lf_ggrp_int_thr
     } cn98xx;
     /* struct cavm_sso_lf_ggrp_int_thr_s cnf95xx; */
     /* struct cavm_sso_lf_ggrp_int_thr_s f95mm; */
+    /* struct cavm_sso_lf_ggrp_int_thr_s f95o; */
     /* struct cavm_sso_lf_ggrp_int_thr_s loki; */
 };
 typedef union cavm_sso_lf_ggrp_int_thr cavm_sso_lf_ggrp_int_thr_t;
@@ -11814,6 +12155,7 @@ union cavm_sso_lf_ggrp_misc_cnt
     } cn98xx;
     /* struct cavm_sso_lf_ggrp_misc_cnt_s cnf95xx; */
     /* struct cavm_sso_lf_ggrp_misc_cnt_s f95mm; */
+    /* struct cavm_sso_lf_ggrp_misc_cnt_s f95o; */
     /* struct cavm_sso_lf_ggrp_misc_cnt_s loki; */
 };
 typedef union cavm_sso_lf_ggrp_misc_cnt cavm_sso_lf_ggrp_misc_cnt_t;

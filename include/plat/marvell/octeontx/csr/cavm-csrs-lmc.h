@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -125,6 +125,8 @@ static inline uint64_t CAVM_LMCX_ADR_SCRAMBLE(uint64_t a)
         return 0x87e088000328ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000328ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000328ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000328ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_ADR_SCRAMBLE", 1, a, 0, 0, 0, 0, 0);
@@ -192,6 +194,8 @@ static inline uint64_t CAVM_LMCX_BANK_CONFLICT1(uint64_t a)
         return 0x87e088000360ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000360ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000360ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000360ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_BANK_CONFLICT1", 1, a, 0, 0, 0, 0, 0);
@@ -258,6 +262,8 @@ static inline uint64_t CAVM_LMCX_BANK_CONFLICT2(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000368ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000368ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000368ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000368ll + 0x1000000ll * ((a) & 0x3);
@@ -392,6 +398,8 @@ static inline uint64_t CAVM_LMCX_BP_TEST(uint64_t a)
         return 0x87e088000400ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000400ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000400ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000400ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_BP_TEST", 1, a, 0, 0, 0, 0, 0);
@@ -436,6 +444,8 @@ static inline uint64_t CAVM_LMCX_CDCLK_ACTIVE_PC(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000020ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000020ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000020ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000020ll + 0x1000000ll * ((a) & 0x3);
@@ -598,6 +608,8 @@ static inline uint64_t CAVM_LMCX_CHAR_CTL(uint64_t a)
         return 0x87e088000220ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000220ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000220ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000220ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_CHAR_CTL", 1, a, 0, 0, 0, 0, 0);
@@ -647,6 +659,8 @@ static inline uint64_t CAVM_LMCX_CHAR_DQ_ERR_COUNT(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000040ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000040ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000040ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000040ll + 0x1000000ll * ((a) & 0x3);
@@ -704,6 +718,8 @@ static inline uint64_t CAVM_LMCX_CHAR_MASK0(uint64_t a)
         return 0x87e088000228ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000228ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000228ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000228ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_CHAR_MASK0", 1, a, 0, 0, 0, 0, 0);
@@ -754,6 +770,8 @@ static inline uint64_t CAVM_LMCX_CHAR_MASK1(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000230ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000230ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000230ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000230ll + 0x1000000ll * ((a) & 0x3);
@@ -810,6 +828,8 @@ static inline uint64_t CAVM_LMCX_CHAR_MASK2(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000238ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000238ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000238ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000238ll + 0x1000000ll * ((a) & 0x3);
@@ -885,6 +905,8 @@ static inline uint64_t CAVM_LMCX_CHAR_MASK3(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000240ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000240ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000240ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000240ll + 0x1000000ll * ((a) & 0x3);
@@ -1156,6 +1178,7 @@ union cavm_lmcx_char_mask4
     } cn98xx;
     /* struct cavm_lmcx_char_mask4_cn9 cnf95xx; */
     /* struct cavm_lmcx_char_mask4_cn9 f95mm; */
+    /* struct cavm_lmcx_char_mask4_cn9 f95o; */
     /* struct cavm_lmcx_char_mask4_cn9 loki; */
 };
 typedef union cavm_lmcx_char_mask4 cavm_lmcx_char_mask4_t;
@@ -1174,6 +1197,8 @@ static inline uint64_t CAVM_LMCX_CHAR_MASK4(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000318ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000318ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000318ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000318ll + 0x1000000ll * ((a) & 0x3);
@@ -2082,15 +2107,44 @@ union cavm_lmcx_comp_ctl2
         uint64_t reserved_56_63        : 8;
 #endif /* Word 0 - End */
     } cn9;
-    /* struct cavm_lmcx_comp_ctl2_cn9 cn96xx; */
-    struct cavm_lmcx_comp_ctl2_cn98xx
+    /* struct cavm_lmcx_comp_ctl2_cn9 cn96xxp1; */
+    struct cavm_lmcx_comp_ctl2_cn96xxp3
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_56_63        : 8;
         uint64_t sclk_obsv_en          : 1;  /**< [ 55: 55](R/W) Reserved.
                                                                  Internal:
                                                                  Coprocessor clock observability enable bit. For diagnostic use only. */
-        uint64_t cmd_odt_ctl           : 4;  /**< [ 54: 51](R/W) CMD ODT CTL impedance control bits. This field controls ODT values during a memory read.
+        uint64_t cmd_odt_ctl           : 4;  /**< [ 54: 51](R/W) Reserved.
+                                                                 Internal:
+                                                                 MDS DIMM only. CMD ODT CTL impedance control bits.
+                                                                   0x0 = No ODT.
+                                                                   0x1 = 34 ohm.
+                                                                   0x2 = 40 ohm.
+                                                                   0x3 = 50 ohm.
+                                                                   0x4 = 67 ohm.
+                                                                   0x5 = 100 ohm.
+                                                                   0x6 = 200 ohm.
+                                                                   _ else = Reserved. */
+        uint64_t rclk_char_mode        : 1;  /**< [ 50: 50](R/W) Reserved.
+                                                                 Internal:
+                                                                 Select core clock characterization mode. */
+        uint64_t ddr__ptune            : 5;  /**< [ 49: 45](RO/H) DDR PCTL from compensation circuit. The encoded value provides debug information for the
+                                                                 compensation impedance on P-pullup. */
+        uint64_t ddr__ntune            : 5;  /**< [ 44: 40](RO/H) DDR NCTL from compensation circuit. The encoded value provides debug information for the
+                                                                 compensation impedance on N-pulldown. */
+        uint64_t ptune_offset          : 4;  /**< [ 39: 36](R/W) Ptune offset value. This is a signed value where the MSB is a sign bit, with zero
+                                                                 indicating addition and one indicating subtraction. */
+        uint64_t ntune_offset          : 4;  /**< [ 35: 32](R/W) Ntune offset value. This is a signed value where the MSB is a sign bit, with zero
+                                                                 indicating addition and one indicating subtraction. */
+        uint64_t m180                  : 1;  /**< [ 31: 31](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 Cap impedance at 180 ohm, instead of 240 ohm. */
+        uint64_t byp                   : 1;  /**< [ 30: 30](R/W) Bypass mode. When set, [PTUNE],[NTUNE] are the compensation setting. When clear,
+                                                                 [DDR__PTUNE],[DDR__NTUNE] are the compensation setting. */
+        uint64_t ptune                 : 5;  /**< [ 29: 25](R/W) PCTL impedance control in bypass mode. */
+        uint64_t ntune                 : 5;  /**< [ 24: 20](R/W) NCTL impedance control in bypass mode. */
+        uint64_t rodt_ctl              : 4;  /**< [ 19: 16](R/W) RODT CTL impedance control bits. This field controls ODT values during a memory read.
                                                                    0x0 = No ODT.
                                                                    0x1 = 34 ohm.
                                                                    0x2 = 40 ohm.
@@ -2101,6 +2155,151 @@ union cavm_lmcx_comp_ctl2
 
                                                                  Internal:
                                                                  0x6 = 200 ohm. */
+        uint64_t control_ctl           : 4;  /**< [ 15: 12](R/W) Drive strength control for DDR_DIMMx_CS*_L/DDR_DIMMx_ODT_* /DDR_DIMMx_CKE* drivers.
+
+                                                                   0x0 = Reserved.
+                                                                   0x1 = 21 ohm.
+                                                                   0x2 = 24 ohm.
+                                                                   0x3 = 27 ohm.
+                                                                   0x4 = 30 ohm.
+                                                                   0x5 = 36 ohm.
+                                                                   0x6 = 44 ohm.
+                                                                   _ else = Reserved. */
+        uint64_t cmd_ctl               : 4;  /**< [ 11:  8](R/W) Drive strength control for DDR_RAS_L_A\<16\>/DDR_CAS_L_A\<15\>/DDR_WE_L_A\<14\>/DDR_A\<13:0\>/
+                                                                 DDR_A\<15\>_BG1/DDR_A\<14\>_BG0/DDR_BA* /DDR_BA2_TEN/DDR_PAR/DDR_RESET_L drivers.
+
+                                                                   0x0 = Reserved.
+                                                                   0x1 = 21 ohm.
+                                                                   0x2 = 24 ohm.
+                                                                   0x3 = 27 ohm.
+                                                                   0x4 = 30 ohm.
+                                                                   0x5 = 36 ohm.
+                                                                   0x6 = 44 ohm.
+                                                                   _ else = Reserved. */
+        uint64_t ck_ctl                : 4;  /**< [  7:  4](R/W) Drive strength control for DDR_DIMM*_CK_*_P/N drivers.
+
+                                                                   0x0 = Reserved.
+                                                                   0x1 = 21 ohm.
+                                                                   0x2 = 24 ohm.
+                                                                   0x3 = 27 ohm.
+                                                                   0x4 = 30 ohm.
+                                                                   0x5 = 36 ohm.
+                                                                   0x6 = 44 ohm.
+                                                                   _ else = Reserved. */
+        uint64_t dqx_ctl               : 4;  /**< [  3:  0](R/W) Drive strength control for DDR_DQ* /DDR_CB* /DDR_DQS_*_P/N drivers.
+                                                                   0x1 = 20 ohm.
+                                                                   0x2 = 22 ohm.
+                                                                   0x3 = 25 ohm.
+                                                                   0x4 = 29 ohm.
+                                                                   0x5 = 34 ohm.
+                                                                   0x6 = 40 ohm.
+                                                                   0x7 = 50 ohm.
+                                                                   _ else = Reserved. */
+#else /* Word 0 - Little Endian */
+        uint64_t dqx_ctl               : 4;  /**< [  3:  0](R/W) Drive strength control for DDR_DQ* /DDR_CB* /DDR_DQS_*_P/N drivers.
+                                                                   0x1 = 20 ohm.
+                                                                   0x2 = 22 ohm.
+                                                                   0x3 = 25 ohm.
+                                                                   0x4 = 29 ohm.
+                                                                   0x5 = 34 ohm.
+                                                                   0x6 = 40 ohm.
+                                                                   0x7 = 50 ohm.
+                                                                   _ else = Reserved. */
+        uint64_t ck_ctl                : 4;  /**< [  7:  4](R/W) Drive strength control for DDR_DIMM*_CK_*_P/N drivers.
+
+                                                                   0x0 = Reserved.
+                                                                   0x1 = 21 ohm.
+                                                                   0x2 = 24 ohm.
+                                                                   0x3 = 27 ohm.
+                                                                   0x4 = 30 ohm.
+                                                                   0x5 = 36 ohm.
+                                                                   0x6 = 44 ohm.
+                                                                   _ else = Reserved. */
+        uint64_t cmd_ctl               : 4;  /**< [ 11:  8](R/W) Drive strength control for DDR_RAS_L_A\<16\>/DDR_CAS_L_A\<15\>/DDR_WE_L_A\<14\>/DDR_A\<13:0\>/
+                                                                 DDR_A\<15\>_BG1/DDR_A\<14\>_BG0/DDR_BA* /DDR_BA2_TEN/DDR_PAR/DDR_RESET_L drivers.
+
+                                                                   0x0 = Reserved.
+                                                                   0x1 = 21 ohm.
+                                                                   0x2 = 24 ohm.
+                                                                   0x3 = 27 ohm.
+                                                                   0x4 = 30 ohm.
+                                                                   0x5 = 36 ohm.
+                                                                   0x6 = 44 ohm.
+                                                                   _ else = Reserved. */
+        uint64_t control_ctl           : 4;  /**< [ 15: 12](R/W) Drive strength control for DDR_DIMMx_CS*_L/DDR_DIMMx_ODT_* /DDR_DIMMx_CKE* drivers.
+
+                                                                   0x0 = Reserved.
+                                                                   0x1 = 21 ohm.
+                                                                   0x2 = 24 ohm.
+                                                                   0x3 = 27 ohm.
+                                                                   0x4 = 30 ohm.
+                                                                   0x5 = 36 ohm.
+                                                                   0x6 = 44 ohm.
+                                                                   _ else = Reserved. */
+        uint64_t rodt_ctl              : 4;  /**< [ 19: 16](R/W) RODT CTL impedance control bits. This field controls ODT values during a memory read.
+                                                                   0x0 = No ODT.
+                                                                   0x1 = 34 ohm.
+                                                                   0x2 = 40 ohm.
+                                                                   0x3 = 50 ohm.
+                                                                   0x4 = 67 ohm.
+                                                                   0x5 = 100 ohm.
+                                                                   _ else = Reserved.
+
+                                                                 Internal:
+                                                                 0x6 = 200 ohm. */
+        uint64_t ntune                 : 5;  /**< [ 24: 20](R/W) NCTL impedance control in bypass mode. */
+        uint64_t ptune                 : 5;  /**< [ 29: 25](R/W) PCTL impedance control in bypass mode. */
+        uint64_t byp                   : 1;  /**< [ 30: 30](R/W) Bypass mode. When set, [PTUNE],[NTUNE] are the compensation setting. When clear,
+                                                                 [DDR__PTUNE],[DDR__NTUNE] are the compensation setting. */
+        uint64_t m180                  : 1;  /**< [ 31: 31](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 Cap impedance at 180 ohm, instead of 240 ohm. */
+        uint64_t ntune_offset          : 4;  /**< [ 35: 32](R/W) Ntune offset value. This is a signed value where the MSB is a sign bit, with zero
+                                                                 indicating addition and one indicating subtraction. */
+        uint64_t ptune_offset          : 4;  /**< [ 39: 36](R/W) Ptune offset value. This is a signed value where the MSB is a sign bit, with zero
+                                                                 indicating addition and one indicating subtraction. */
+        uint64_t ddr__ntune            : 5;  /**< [ 44: 40](RO/H) DDR NCTL from compensation circuit. The encoded value provides debug information for the
+                                                                 compensation impedance on N-pulldown. */
+        uint64_t ddr__ptune            : 5;  /**< [ 49: 45](RO/H) DDR PCTL from compensation circuit. The encoded value provides debug information for the
+                                                                 compensation impedance on P-pullup. */
+        uint64_t rclk_char_mode        : 1;  /**< [ 50: 50](R/W) Reserved.
+                                                                 Internal:
+                                                                 Select core clock characterization mode. */
+        uint64_t cmd_odt_ctl           : 4;  /**< [ 54: 51](R/W) Reserved.
+                                                                 Internal:
+                                                                 MDS DIMM only. CMD ODT CTL impedance control bits.
+                                                                   0x0 = No ODT.
+                                                                   0x1 = 34 ohm.
+                                                                   0x2 = 40 ohm.
+                                                                   0x3 = 50 ohm.
+                                                                   0x4 = 67 ohm.
+                                                                   0x5 = 100 ohm.
+                                                                   0x6 = 200 ohm.
+                                                                   _ else = Reserved. */
+        uint64_t sclk_obsv_en          : 1;  /**< [ 55: 55](R/W) Reserved.
+                                                                 Internal:
+                                                                 Coprocessor clock observability enable bit. For diagnostic use only. */
+        uint64_t reserved_56_63        : 8;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    struct cavm_lmcx_comp_ctl2_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_56_63        : 8;
+        uint64_t sclk_obsv_en          : 1;  /**< [ 55: 55](R/W) Reserved.
+                                                                 Internal:
+                                                                 Coprocessor clock observability enable bit. For diagnostic use only. */
+        uint64_t cmd_odt_ctl           : 4;  /**< [ 54: 51](R/W) Reserved.
+                                                                 Internal:
+                                                                 MDS DIMM only. CMD ODT CTL impedance control bits.
+                                                                   0x0 = No ODT.
+                                                                   0x1 = 34 ohm.
+                                                                   0x2 = 40 ohm.
+                                                                   0x3 = 50 ohm.
+                                                                   0x4 = 67 ohm.
+                                                                   0x5 = 100 ohm.
+                                                                   0x6 = 200 ohm.
+                                                                   _ else = Reserved. */
         uint64_t rclk_char_mode        : 1;  /**< [ 50: 50](R/W) Reserved.
                                                                  Internal:
                                                                  Select core clock characterization mode. */
@@ -2240,26 +2439,28 @@ union cavm_lmcx_comp_ctl2
         uint64_t rclk_char_mode        : 1;  /**< [ 50: 50](R/W) Reserved.
                                                                  Internal:
                                                                  Select core clock characterization mode. */
-        uint64_t cmd_odt_ctl           : 4;  /**< [ 54: 51](R/W) CMD ODT CTL impedance control bits. This field controls ODT values during a memory read.
+        uint64_t cmd_odt_ctl           : 4;  /**< [ 54: 51](R/W) Reserved.
+                                                                 Internal:
+                                                                 MDS DIMM only. CMD ODT CTL impedance control bits.
                                                                    0x0 = No ODT.
                                                                    0x1 = 34 ohm.
                                                                    0x2 = 40 ohm.
                                                                    0x3 = 50 ohm.
                                                                    0x4 = 67 ohm.
                                                                    0x5 = 100 ohm.
-                                                                   _ else = Reserved.
-
-                                                                 Internal:
-                                                                 0x6 = 200 ohm. */
+                                                                   0x6 = 200 ohm.
+                                                                   _ else = Reserved. */
         uint64_t sclk_obsv_en          : 1;  /**< [ 55: 55](R/W) Reserved.
                                                                  Internal:
                                                                  Coprocessor clock observability enable bit. For diagnostic use only. */
         uint64_t reserved_56_63        : 8;
 #endif /* Word 0 - End */
     } cn98xx;
-    /* struct cavm_lmcx_comp_ctl2_cn9 cnf95xx; */
-    /* struct cavm_lmcx_comp_ctl2_cn9 f95mm; */
-    /* struct cavm_lmcx_comp_ctl2_cn9 loki; */
+    /* struct cavm_lmcx_comp_ctl2_cn9 cnf95xxp1; */
+    /* struct cavm_lmcx_comp_ctl2_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_lmcx_comp_ctl2_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_comp_ctl2_cn9 f95o; */
+    /* struct cavm_lmcx_comp_ctl2_cn96xxp3 loki; */
 };
 typedef union cavm_lmcx_comp_ctl2 cavm_lmcx_comp_ctl2_t;
 
@@ -2277,6 +2478,8 @@ static inline uint64_t CAVM_LMCX_COMP_CTL2(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880001b8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880001b8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880001b8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880001b8ll + 0x1000000ll * ((a) & 0x3);
@@ -4370,6 +4573,7 @@ union cavm_lmcx_config
     } cn98xx;
     /* struct cavm_lmcx_config_cn9 cnf95xx; */
     /* struct cavm_lmcx_config_cn9 f95mm; */
+    /* struct cavm_lmcx_config_cn9 f95o; */
     /* struct cavm_lmcx_config_cn9 loki; */
 };
 typedef union cavm_lmcx_config cavm_lmcx_config_t;
@@ -4388,6 +4592,8 @@ static inline uint64_t CAVM_LMCX_CONFIG(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000188ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000188ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000188ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000188ll + 0x1000000ll * ((a) & 0x3);
@@ -4928,6 +5134,7 @@ union cavm_lmcx_control
     } cn98xx;
     /* struct cavm_lmcx_control_cn9 cnf95xx; */
     /* struct cavm_lmcx_control_cn9 f95mm; */
+    /* struct cavm_lmcx_control_cn9 f95o; */
     /* struct cavm_lmcx_control_cn9 loki; */
 };
 typedef union cavm_lmcx_control cavm_lmcx_control_t;
@@ -4946,6 +5153,8 @@ static inline uint64_t CAVM_LMCX_CONTROL(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000190ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000190ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000190ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000190ll + 0x1000000ll * ((a) & 0x3);
@@ -5133,6 +5342,8 @@ static inline uint64_t CAVM_LMCX_CTL(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880001c0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880001c0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880001c0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880001c0ll + 0x1000000ll * ((a) & 0x3);
@@ -5694,6 +5905,7 @@ union cavm_lmcx_dbtrain_ctl
     } cn98xx;
     /* struct cavm_lmcx_dbtrain_ctl_cn9 cnf95xx; */
     /* struct cavm_lmcx_dbtrain_ctl_cn9 f95mm; */
+    /* struct cavm_lmcx_dbtrain_ctl_cn9 f95o; */
     /* struct cavm_lmcx_dbtrain_ctl_cn9 loki; */
 };
 typedef union cavm_lmcx_dbtrain_ctl cavm_lmcx_dbtrain_ctl_t;
@@ -5712,6 +5924,8 @@ static inline uint64_t CAVM_LMCX_DBTRAIN_CTL(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880003f8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880003f8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880003f8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880003f8ll + 0x1000000ll * ((a) & 0x3);
@@ -5759,6 +5973,8 @@ static inline uint64_t CAVM_LMCX_DCLK_CNT(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880001e0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880001e0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880001e0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880001e0ll + 0x1000000ll * ((a) & 0x3);
@@ -6049,6 +6265,7 @@ union cavm_lmcx_ddr4_dimm_ctl
     } cn98xx;
     /* struct cavm_lmcx_ddr4_dimm_ctl_cn9 cnf95xx; */
     /* struct cavm_lmcx_ddr4_dimm_ctl_cn9 f95mm; */
+    /* struct cavm_lmcx_ddr4_dimm_ctl_cn9 f95o; */
     /* struct cavm_lmcx_ddr4_dimm_ctl_cn9 loki; */
 };
 typedef union cavm_lmcx_ddr4_dimm_ctl cavm_lmcx_ddr4_dimm_ctl_t;
@@ -6067,6 +6284,8 @@ static inline uint64_t CAVM_LMCX_DDR4_DIMM_CTL(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880003f0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880003f0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880003f0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880003f0ll + 0x1000000ll * ((a) & 0x3);
@@ -6632,6 +6851,7 @@ union cavm_lmcx_ddr_pll_ctl
     /* struct cavm_lmcx_ddr_pll_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_lmcx_ddr_pll_ctl_cn96xxp3 cnf95xx; */
     /* struct cavm_lmcx_ddr_pll_ctl_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_ddr_pll_ctl_cn96xxp3 f95o; */
     /* struct cavm_lmcx_ddr_pll_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_lmcx_ddr_pll_ctl cavm_lmcx_ddr_pll_ctl_t;
@@ -6650,6 +6870,8 @@ static inline uint64_t CAVM_LMCX_DDR_PLL_CTL(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000258ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000258ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000258ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000258ll + 0x1000000ll * ((a) & 0x3);
@@ -6736,6 +6958,8 @@ static inline uint64_t CAVM_LMCX_DIMMX_DDR4_PARAMS0(uint64_t a, uint64_t b)
         return 0x87e0880000f0ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (((a==0) || (a==2)) && (b<=1)))
         return 0x87e0880000f0ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (((a==0) || (a==2)) && (b<=1)))
+        return 0x87e0880000f0ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (((a==0) || (a==2)) && (b<=1)))
         return 0x87e0880000f0ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("LMCX_DIMMX_DDR4_PARAMS0", 2, a, b, 0, 0, 0, 0);
@@ -6804,6 +7028,8 @@ static inline uint64_t CAVM_LMCX_DIMMX_DDR4_PARAMS1(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (((a==0) || (a==2)) && (b<=1)))
         return 0x87e088000140ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (((a==0) || (a==2)) && (b<=1)))
+        return 0x87e088000140ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (((a==0) || (a==2)) && (b<=1)))
         return 0x87e088000140ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (((a==0) || (a==2)) && (b<=1)))
         return 0x87e088000140ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
@@ -6924,6 +7150,8 @@ static inline uint64_t CAVM_LMCX_DIMMX_PARAMS(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (((a==0) || (a==2)) && (b<=1)))
         return 0x87e088000270ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (((a==0) || (a==2)) && (b<=1)))
+        return 0x87e088000270ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (((a==0) || (a==2)) && (b<=1)))
         return 0x87e088000270ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (((a==0) || (a==2)) && (b<=1)))
         return 0x87e088000270ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
@@ -7153,6 +7381,7 @@ union cavm_lmcx_dimm_ctl
     } cn98xx;
     /* struct cavm_lmcx_dimm_ctl_cn9 cnf95xx; */
     /* struct cavm_lmcx_dimm_ctl_cn9 f95mm; */
+    /* struct cavm_lmcx_dimm_ctl_cn9 f95o; */
     /* struct cavm_lmcx_dimm_ctl_cn9 loki; */
 };
 typedef union cavm_lmcx_dimm_ctl cavm_lmcx_dimm_ctl_t;
@@ -7171,6 +7400,8 @@ static inline uint64_t CAVM_LMCX_DIMM_CTL(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000310ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000310ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000310ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000310ll + 0x1000000ll * ((a) & 0x3);
@@ -7453,6 +7684,7 @@ union cavm_lmcx_dll_ctl2
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_lmcx_dll_ctl2_cnf95xx f95mm; */
+    /* struct cavm_lmcx_dll_ctl2_cnf95xx f95o; */
     /* struct cavm_lmcx_dll_ctl2_cnf95xx loki; */
 };
 typedef union cavm_lmcx_dll_ctl2 cavm_lmcx_dll_ctl2_t;
@@ -7471,6 +7703,8 @@ static inline uint64_t CAVM_LMCX_DLL_CTL2(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880001c8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880001c8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880001c8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880001c8ll + 0x1000000ll * ((a) & 0x3);
@@ -8688,6 +8922,7 @@ union cavm_lmcx_dll_ctl3
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_lmcx_dll_ctl3_cnf95xx f95mm; */
+    /* struct cavm_lmcx_dll_ctl3_cnf95xx f95o; */
     /* struct cavm_lmcx_dll_ctl3_cnf95xx loki; */
 };
 typedef union cavm_lmcx_dll_ctl3 cavm_lmcx_dll_ctl3_t;
@@ -8706,6 +8941,8 @@ static inline uint64_t CAVM_LMCX_DLL_CTL3(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000218ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000218ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000218ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000218ll + 0x1000000ll * ((a) & 0x3);
@@ -8782,6 +9019,8 @@ static inline uint64_t CAVM_LMCX_DUAL_MEMCFG(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000098ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000098ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000098ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000098ll + 0x1000000ll * ((a) & 0x3);
@@ -8891,6 +9130,8 @@ static inline uint64_t CAVM_LMCX_ECC_PARITY_TEST(uint64_t a)
         return 0x87e088000108ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000108ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000108ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000108ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_ECC_PARITY_TEST", 1, a, 0, 0, 0, 0, 0);
@@ -8989,6 +9230,8 @@ static inline uint64_t CAVM_LMCX_ECO_DCLK(uint64_t a)
         return 0x87e088000410ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000410ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000410ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000410ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_ECO_DCLK", 1, a, 0, 0, 0, 0, 0);
@@ -9033,6 +9276,8 @@ static inline uint64_t CAVM_LMCX_ECO_RCLK(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000408ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000408ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000408ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000408ll + 0x1000000ll * ((a) & 0x3);
@@ -9119,8 +9364,8 @@ union cavm_lmcx_ext_config
         uint64_t reserved_46_47        : 2;
         uint64_t error_alert_n_sample  : 1;  /**< [ 45: 45](RO) Read to get a sample of the DDR*_ERROR_ALERT_L signal. */
         uint64_t ea_int_polarity       : 1;  /**< [ 44: 44](R/W) Set to invert the DDR*_ERROR_ALERT_L interrupt polarity. When clear, interrupt is
-                                                                 signalled on
-                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signalled on the falling
+                                                                 signaled on
+                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signaled on the falling
                                                                  edge of DDR*_ERROR_ALERT_L. */
         uint64_t sref_seq_stop_clock   : 1;  /**< [ 43: 43](R/W) When enabled, LMC disables all clock output pins to the DIMM at the end of
                                                                  LMC_SEQ_SEL_E::SREF_ENTRY
@@ -9280,8 +9525,8 @@ union cavm_lmcx_ext_config
                                                                  * LMC_SEQ_SEL_E::MPSM_ENTRY = All clock outputs are shut off at the end of the sequence.
                                                                  * LMC_SEQ_SEL_E::MPSM_EXIT  = All clock outputs are enabled at the start of the sequence. */
         uint64_t ea_int_polarity       : 1;  /**< [ 44: 44](R/W) Set to invert the DDR*_ERROR_ALERT_L interrupt polarity. When clear, interrupt is
-                                                                 signalled on
-                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signalled on the falling
+                                                                 signaled on
+                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signaled on the falling
                                                                  edge of DDR*_ERROR_ALERT_L. */
         uint64_t error_alert_n_sample  : 1;  /**< [ 45: 45](RO) Read to get a sample of the DDR*_ERROR_ALERT_L signal. */
         uint64_t reserved_46_47        : 2;
@@ -9419,8 +9664,8 @@ union cavm_lmcx_ext_config
         uint64_t reserved_46_47        : 2;
         uint64_t error_alert_n_sample  : 1;  /**< [ 45: 45](RO) Read to get a sample of the DDR*_ERROR_ALERT_L signal. */
         uint64_t ea_int_polarity       : 1;  /**< [ 44: 44](R/W) Set to invert the DDR*_ERROR_ALERT_L interrupt polarity. When clear, interrupt is
-                                                                 signalled on
-                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signalled on the falling
+                                                                 signaled on
+                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signaled on the falling
                                                                  edge of DDR*_ERROR_ALERT_L. */
         uint64_t reserved_43           : 1;
         uint64_t par_addr_mask         : 3;  /**< [ 42: 40](R/W) Mask applied to parity for address bits \<14:12\>. Clear to exclude these address
@@ -9564,8 +9809,8 @@ union cavm_lmcx_ext_config
                                                                  bits from the parity calculation, necessary if the DRAM device does not have these pins. */
         uint64_t reserved_43           : 1;
         uint64_t ea_int_polarity       : 1;  /**< [ 44: 44](R/W) Set to invert the DDR*_ERROR_ALERT_L interrupt polarity. When clear, interrupt is
-                                                                 signalled on
-                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signalled on the falling
+                                                                 signaled on
+                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signaled on the falling
                                                                  edge of DDR*_ERROR_ALERT_L. */
         uint64_t error_alert_n_sample  : 1;  /**< [ 45: 45](RO) Read to get a sample of the DDR*_ERROR_ALERT_L signal. */
         uint64_t reserved_46_47        : 2;
@@ -9712,8 +9957,8 @@ union cavm_lmcx_ext_config
         uint64_t reserved_46_47        : 2;
         uint64_t error_alert_n_sample  : 1;  /**< [ 45: 45](RO) Read to get a sample of the DDR*_ERROR_ALERT_L signal. */
         uint64_t ea_int_polarity       : 1;  /**< [ 44: 44](R/W) Set to invert the DDR*_ERROR_ALERT_L interrupt polarity. When clear, interrupt is
-                                                                 signalled on
-                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signalled on the falling
+                                                                 signaled on
+                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signaled on the falling
                                                                  edge of DDR*_ERROR_ALERT_L. */
         uint64_t reserved_43           : 1;
         uint64_t par_addr_mask         : 3;  /**< [ 42: 40](R/W) Mask applied to parity for address bits \<14:12\>. Clear to exclude these address
@@ -9857,8 +10102,8 @@ union cavm_lmcx_ext_config
                                                                  bits from the parity calculation, necessary if the DRAM device does not have these pins. */
         uint64_t reserved_43           : 1;
         uint64_t ea_int_polarity       : 1;  /**< [ 44: 44](R/W) Set to invert the DDR*_ERROR_ALERT_L interrupt polarity. When clear, interrupt is
-                                                                 signalled on
-                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signalled on the falling
+                                                                 signaled on
+                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signaled on the falling
                                                                  edge of DDR*_ERROR_ALERT_L. */
         uint64_t error_alert_n_sample  : 1;  /**< [ 45: 45](RO) Read to get a sample of the DDR*_ERROR_ALERT_L signal. */
         uint64_t reserved_46_47        : 2;
@@ -10192,8 +10437,8 @@ union cavm_lmcx_ext_config
         uint64_t reserved_60_63        : 4;
 #endif /* Word 0 - End */
     } cn9;
-    /* struct cavm_lmcx_ext_config_cn9 cn96xx; */
-    struct cavm_lmcx_ext_config_cn98xx
+    /* struct cavm_lmcx_ext_config_cn9 cn96xxp1; */
+    struct cavm_lmcx_ext_config_cn96xxp3
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_60_63        : 4;
@@ -10221,35 +10466,22 @@ union cavm_lmcx_ext_config
                                                                  When set, make sure that the RCD's control word
                                                                  RC00 DA[0] = 1 so that the output inversion is disabled in
                                                                  the DDR4 RCD. */
-        uint64_t dimm_sel_invert_off   : 1;  /**< [ 55: 55](R/W) Reserved.
-                                                                 Internal:
-                                                                 CNXXXX only supports 1 DIMM. This field needs to be 0.
-                                                                 During coalesce_address_mode, the default logic would be to invert
+        uint64_t dimm_sel_invert_off   : 1;  /**< [ 55: 55](R/W) During coalesce_address_mode, the default logic would be to invert
                                                                  the pbank bit whenever LMC()_NXM[MEM_MSB_D1_R0] \> LMC()_NXM[MEM_MSB_D0_R0].
                                                                  When this bit is set to one, it disables this default behavior.
                                                                  This configuration has lower priority compared to
                                                                  [DIMM_SEL_FORCE_INVERT]. */
-        uint64_t dimm_sel_force_invert : 1;  /**< [ 54: 54](R/W) Reserved.
-                                                                 Internal:
-                                                                 CNXXXX only supports 1 DIMM. This field needs to be 0.
-                                                                 When set to one, this bit forces the pbank bit to be inverted
+        uint64_t dimm_sel_force_invert : 1;  /**< [ 54: 54](R/W) When set to one, this bit forces the pbank bit to be inverted
                                                                  when in coalesce_address_mode. That is, pbank value of zero selects
                                                                  DIMM1 instead of DIMM0.
                                                                  Intended to be used for the case of DIMM1 having bigger rank/s
                                                                  than DIMM0. This bit has priority over [DIMM_SEL_INVERT_OFF]. */
-        uint64_t coalesce_address_mode : 1;  /**< [ 53: 53](R/W) Reserved.
-                                                                 Internal:
-                                                                 CNXXXX only supports 1 DIMM. This field needs to be 0.
-                                                                 [COALESCE_ADDRESS_MODE] feature is intended for different sized DIMMs application.
-                                                                 It does not support different size ranks within the same DIMM.
-
-                                                                 When set to one, LMC coalesces the LLC+LMC internal address mapping
+        uint64_t coalesce_address_mode : 1;  /**< [ 53: 53](R/W) When set to one, LMC coalesces the LLC+LMC internal address mapping
                                                                  to create a uniform memory space that is free from holes in
                                                                  between ranks. When different size DIMMs are used, the DIMM with
                                                                  the higher capacity is mapped to the lower address space. */
         uint64_t dimm1_cid             : 2;  /**< [ 52: 51](R/W) Reserved.
                                                                  Internal:
-                                                                 CNXXXX only supports 1 DIMM. This field is not used.
                                                                  DIMM1 configuration bits that represent the number of the chip
                                                                  ID of the DRAM. This value is use for decoding the address
                                                                  as well as routing Chip IDs to the appropriate output
@@ -10276,8 +10508,8 @@ union cavm_lmcx_ext_config
         uint64_t reserved_46_47        : 2;
         uint64_t error_alert_n_sample  : 1;  /**< [ 45: 45](RO) Read to get a sample of the DDR*_ERROR_ALERT_L signal. */
         uint64_t ea_int_polarity       : 1;  /**< [ 44: 44](R/W) Set to invert the DDR*_ERROR_ALERT_L interrupt polarity. When clear, interrupt is
-                                                                 signalled on
-                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signalled on the falling
+                                                                 signaled on
+                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signaled on the falling
                                                                  edge of DDR*_ERROR_ALERT_L. */
         uint64_t sref_seq_stop_clock   : 1;  /**< [ 43: 43](R/W) When enabled, LMC disables all clock output pins to the DIMM at the end of
                                                                  LMC_SEQ_SEL_E::SREF_ENTRY
@@ -10397,8 +10629,283 @@ union cavm_lmcx_ext_config
                                                                  * LMC_SEQ_SEL_E::MPSM_ENTRY = All clock outputs are shut off at the end of the sequence.
                                                                  * LMC_SEQ_SEL_E::MPSM_EXIT  = All clock outputs are enabled at the start of the sequence. */
         uint64_t ea_int_polarity       : 1;  /**< [ 44: 44](R/W) Set to invert the DDR*_ERROR_ALERT_L interrupt polarity. When clear, interrupt is
-                                                                 signalled on
-                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signalled on the falling
+                                                                 signaled on
+                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signaled on the falling
+                                                                 edge of DDR*_ERROR_ALERT_L. */
+        uint64_t error_alert_n_sample  : 1;  /**< [ 45: 45](RO) Read to get a sample of the DDR*_ERROR_ALERT_L signal. */
+        uint64_t reserved_46_47        : 2;
+        uint64_t rcd_parity_check      : 1;  /**< [ 48: 48](R/W) Enables the one cycle delay of the CA parity output. This MUST be set to one
+                                                                 when using DDR4 RDIMM AND parity checking in RCD is enabled (RC0E DA0 = 1). Set
+                                                                 this to zero otherwise. To enable the parity checking in RCD, set this bit first
+                                                                 BEFORE issuing the RCW write F0RC0F = 0, 1, 2 or 3.
+                                                                 Ensure that this field is cleared to 0 when RCD's F0RC0F = 4. */
+        uint64_t dimm0_cid             : 2;  /**< [ 50: 49](R/W) Reserved.
+                                                                 Internal:
+                                                                 DIMM0 configuration bits that represent the number of the chip
+                                                                 ID of the DRAM. This value is use for decoding the address
+                                                                 as well as routing Chip IDs to the appropriate output
+                                                                 pins.
+                                                                 0x0 = 0 Chip ID  (Mono-Die stack).
+                                                                 0x1 = 1 Chip ID  (2H 3DS).
+                                                                 0x2 = 2 Chip IDs (4H 3DS).
+                                                                 0x3 = 3 Chip IDs (8H 3DS). */
+        uint64_t dimm1_cid             : 2;  /**< [ 52: 51](R/W) Reserved.
+                                                                 Internal:
+                                                                 DIMM1 configuration bits that represent the number of the chip
+                                                                 ID of the DRAM. This value is use for decoding the address
+                                                                 as well as routing Chip IDs to the appropriate output
+                                                                 pins.
+                                                                 0x0 = 0 Chip ID  (Mono-Die stack).
+                                                                 0x1 = 1 Chip ID  (2H 3DS).
+                                                                 0x2 = 2 Chip IDs (4H 3DS).
+                                                                 0x3 = 3 Chip IDs (8H 3DS). */
+        uint64_t coalesce_address_mode : 1;  /**< [ 53: 53](R/W) When set to one, LMC coalesces the LLC+LMC internal address mapping
+                                                                 to create a uniform memory space that is free from holes in
+                                                                 between ranks. When different size DIMMs are used, the DIMM with
+                                                                 the higher capacity is mapped to the lower address space. */
+        uint64_t dimm_sel_force_invert : 1;  /**< [ 54: 54](R/W) When set to one, this bit forces the pbank bit to be inverted
+                                                                 when in coalesce_address_mode. That is, pbank value of zero selects
+                                                                 DIMM1 instead of DIMM0.
+                                                                 Intended to be used for the case of DIMM1 having bigger rank/s
+                                                                 than DIMM0. This bit has priority over [DIMM_SEL_INVERT_OFF]. */
+        uint64_t dimm_sel_invert_off   : 1;  /**< [ 55: 55](R/W) During coalesce_address_mode, the default logic would be to invert
+                                                                 the pbank bit whenever LMC()_NXM[MEM_MSB_D1_R0] \> LMC()_NXM[MEM_MSB_D0_R0].
+                                                                 When this bit is set to one, it disables this default behavior.
+                                                                 This configuration has lower priority compared to
+                                                                 [DIMM_SEL_FORCE_INVERT]. */
+        uint64_t mrs_bside_invert_disable : 1;/**< [ 56: 56](R/W) When set, the command decoder cancels the auto inversion of
+                                                                 A3-A9, A11, A13, A17, BA0, BA1 and BG0 during MRS/MRS_PDA
+                                                                 command to the B side of the RDIMM.
+                                                                 When set, make sure that the RCD's control word
+                                                                 RC00 DA[0] = 1 so that the output inversion is disabled in
+                                                                 the DDR4 RCD. */
+        uint64_t mrs_one_side          : 1;  /**< [ 57: 57](R/W) Only applies to DDR4 RDIMM.
+                                                                 When set, MRS commands are directed to either the A or B
+                                                                 side of the RCD.
+
+                                                                 PDA operation is NOT allowed when this bit is set. In
+                                                                 other words, LMC()_MR_MPR_CTL[MR_WR_PDA_ENABLE]
+                                                                 must be cleared before running MRW sequence with this
+                                                                 bit turned on. */
+        uint64_t mrs_side              : 1;  /**< [ 58: 58](R/W) Specifies the RDIMM side. Only applies when [MRS_ONE_SIDE] is set.
+                                                                 0 = MRS command is sent to the A side of an RDIMM.
+                                                                 1 = MRS command is sent to the B side of an RDIMM. */
+        uint64_t bc4_dqs_ena           : 1;  /**< [ 59: 59](R/W) Reserved.
+                                                                 Internal:
+                                                                 For diagnostic use only.
+                                                                   0 = LMC produces the full bursts of DQS transitions,
+                                                                   even for BC4 Write ops.
+                                                                   1 = LMC produces only three cycles of DQS transitions
+                                                                   every time it sends out a BC4 Write operation. */
+        uint64_t reserved_60_63        : 4;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    struct cavm_lmcx_ext_config_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_60_63        : 4;
+        uint64_t bc4_dqs_ena           : 1;  /**< [ 59: 59](R/W) Reserved.
+                                                                 Internal:
+                                                                 For diagnostic use only.
+                                                                   0 = LMC produces the full bursts of DQS transitions,
+                                                                   even for BC4 Write ops.
+                                                                   1 = LMC produces only three cycles of DQS transitions
+                                                                   every time it sends out a BC4 Write operation. */
+        uint64_t mrs_side              : 1;  /**< [ 58: 58](R/W) Specifies the RDIMM side. Only applies when [MRS_ONE_SIDE] is set.
+                                                                 0 = MRS command is sent to the A side of an RDIMM.
+                                                                 1 = MRS command is sent to the B side of an RDIMM. */
+        uint64_t mrs_one_side          : 1;  /**< [ 57: 57](R/W) Only applies to DDR4 RDIMM.
+                                                                 When set, MRS commands are directed to either the A or B
+                                                                 side of the RCD.
+
+                                                                 PDA operation is NOT allowed when this bit is set. In
+                                                                 other words, LMC()_MR_MPR_CTL[MR_WR_PDA_ENABLE]
+                                                                 must be cleared before running MRW sequence with this
+                                                                 bit turned on. */
+        uint64_t mrs_bside_invert_disable : 1;/**< [ 56: 56](R/W) When set, the command decoder cancels the auto inversion of
+                                                                 A3-A9, A11, A13, A17, BA0, BA1 and BG0 during MRS/MRS_PDA
+                                                                 command to the B side of the RDIMM.
+                                                                 When set, make sure that the RCD's control word
+                                                                 RC00 DA[0] = 1 so that the output inversion is disabled in
+                                                                 the DDR4 RCD. */
+        uint64_t dimm_sel_invert_off   : 1;  /**< [ 55: 55](R/W) Reserved.
+                                                                 Internal:
+                                                                 CNXXXX only supports 1 DIMM. This field needs to be 0.
+                                                                 During coalesce_address_mode, the default logic would be to invert
+                                                                 the pbank bit whenever LMC()_NXM[MEM_MSB_D1_R0] \> LMC()_NXM[MEM_MSB_D0_R0].
+                                                                 When this bit is set to one, it disables this default behavior.
+                                                                 This configuration has lower priority compared to
+                                                                 [DIMM_SEL_FORCE_INVERT]. */
+        uint64_t dimm_sel_force_invert : 1;  /**< [ 54: 54](R/W) Reserved.
+                                                                 Internal:
+                                                                 CNXXXX only supports 1 DIMM. This field needs to be 0.
+                                                                 When set to one, this bit forces the pbank bit to be inverted
+                                                                 when in coalesce_address_mode. That is, pbank value of zero selects
+                                                                 DIMM1 instead of DIMM0.
+                                                                 Intended to be used for the case of DIMM1 having bigger rank/s
+                                                                 than DIMM0. This bit has priority over [DIMM_SEL_INVERT_OFF]. */
+        uint64_t coalesce_address_mode : 1;  /**< [ 53: 53](R/W) Reserved.
+                                                                 Internal:
+                                                                 CNXXXX only supports 1 DIMM. This field needs to be 0.
+                                                                 [COALESCE_ADDRESS_MODE] feature is intended for different sized DIMMs application.
+                                                                 It does not support different size ranks within the same DIMM.
+
+                                                                 When set to one, LMC coalesces the LLC+LMC internal address mapping
+                                                                 to create a uniform memory space that is free from holes in
+                                                                 between ranks. When different size DIMMs are used, the DIMM with
+                                                                 the higher capacity is mapped to the lower address space. */
+        uint64_t dimm1_cid             : 2;  /**< [ 52: 51](R/W) Reserved.
+                                                                 Internal:
+                                                                 CNXXXX only supports 1 DIMM. This field is not used.
+                                                                 DIMM1 configuration bits that represent the number of the chip
+                                                                 ID of the DRAM. This value is use for decoding the address
+                                                                 as well as routing Chip IDs to the appropriate output
+                                                                 pins.
+                                                                 0x0 = 0 Chip ID  (Mono-Die stack).
+                                                                 0x1 = 1 Chip ID  (2H 3DS).
+                                                                 0x2 = 2 Chip IDs (4H 3DS).
+                                                                 0x3 = 3 Chip IDs (8H 3DS). */
+        uint64_t dimm0_cid             : 2;  /**< [ 50: 49](R/W) Reserved.
+                                                                 Internal:
+                                                                 DIMM0 configuration bits that represent the number of the chip
+                                                                 ID of the DRAM. This value is use for decoding the address
+                                                                 as well as routing Chip IDs to the appropriate output
+                                                                 pins.
+                                                                 0x0 = 0 Chip ID  (Mono-Die stack).
+                                                                 0x1 = 1 Chip ID  (2H 3DS).
+                                                                 0x2 = 2 Chip IDs (4H 3DS).
+                                                                 0x3 = 3 Chip IDs (8H 3DS). */
+        uint64_t rcd_parity_check      : 1;  /**< [ 48: 48](R/W) Enables the one cycle delay of the CA parity output. This MUST be set to one
+                                                                 when using DDR4 RDIMM AND parity checking in RCD is enabled (RC0E DA0 = 1). Set
+                                                                 this to zero otherwise. To enable the parity checking in RCD, set this bit first
+                                                                 BEFORE issuing the RCW write F0RC0F = 0, 1, 2 or 3.
+                                                                 Ensure that this field is cleared to 0 when RCD's F0RC0F = 4. */
+        uint64_t reserved_46_47        : 2;
+        uint64_t error_alert_n_sample  : 1;  /**< [ 45: 45](RO) Read to get a sample of the DDR*_ERROR_ALERT_L signal. */
+        uint64_t ea_int_polarity       : 1;  /**< [ 44: 44](R/W) Set to invert the DDR*_ERROR_ALERT_L interrupt polarity. When clear, interrupt is
+                                                                 signaled on
+                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signaled on the falling
+                                                                 edge of DDR*_ERROR_ALERT_L. */
+        uint64_t sref_seq_stop_clock   : 1;  /**< [ 43: 43](R/W) When enabled, LMC disables all clock output pins to the DIMM at the end of
+                                                                 LMC_SEQ_SEL_E::SREF_ENTRY
+                                                                 sequence. In RDIMM applications, this implies that the RCD will be programmed into Clock
+                                                                 Stop Power Down mode at the end of the LMC_SEQ_SEL_E::SREF_ENTRY sequence.
+                                                                 Note that this field is also used in the following sequences:
+                                                                 * LMC_SEQ_SEL_E::SREF_ENTRY = All clock outputs are shut off at the end of the sequence.
+                                                                 * LMC_SEQ_SEL_E::SREF_EXIT  = All clock outputs are enabled at the start of the sequence.
+                                                                 * LMC_SEQ_SEL_E::MPSM_ENTRY = All clock outputs are shut off at the end of the sequence.
+                                                                 * LMC_SEQ_SEL_E::MPSM_EXIT  = All clock outputs are enabled at the start of the sequence. */
+        uint64_t par_addr_mask         : 3;  /**< [ 42: 40](R/W) Mask applied to parity for address bits \<14:12\>. Clear to exclude these address
+                                                                 bits from the parity calculation, necessary if the DRAM device does not have these pins. */
+        uint64_t reserved_38_39        : 2;
+        uint64_t mrs_cmd_override      : 1;  /**< [ 37: 37](R/W) Set to override the behavior of MRS and RCW operations.
+                                                                 If this bit is set, the override behavior is governed by the control field
+                                                                 [MRS_CMD_SELECT]. See LMC()_EXT_CONFIG[MRS_CMD_SELECT] for detail.
+
+                                                                 If this bit is cleared, select operation where signals other than CS are active before
+                                                                 and after the DDR_CS_L active cycle. */
+        uint64_t mrs_cmd_select        : 1;  /**< [ 36: 36](R/W) When [MRS_CMD_OVERRIDE] is set, use this bit to select which style of operation for MRS
+                                                                 and RCW commands.
+
+                                                                 When this bit is clear, select operation where signals other than CS are active before and
+                                                                 after the DDR_CS_L active cycle.
+
+                                                                 When this bit is set, select the operation where the other command signals (DDR*_RAS_L,
+                                                                 DDR*_CAS_L, DDR*_WE_L, DDR*_A\<15:0\>, etc.) all are active only during the cycle where the
+                                                                 DDR_CS_L is also active. */
+        uint64_t reserved_33_35        : 3;
+        uint64_t invert_data           : 1;  /**< [ 32: 32](R/W) Set this bit to cause all data to be inverted before writing or reading to/from DRAM. May
+                                                                 be useful if data inversion will result in lower power. */
+        uint64_t reserved_30_31        : 2;
+        uint64_t cmd_rti               : 1;  /**< [ 29: 29](R/W) Set this bit to change the behavior of the LMC to return to a completely idle command (no
+                                                                 CS active, no command pins active, and address/bank address/bank group all low) on the
+                                                                 interface after an active command, rather than only forcing the CS inactive between
+                                                                 commands. */
+        uint64_t cal_ena               : 1;  /**< [ 28: 28](R/W) Set to cause LMC to operate in CAL mode. First set LMC()_MODEREG_PARAMS3[CAL], then
+                                                                 set [CAL_ENA]. */
+        uint64_t reserved_27           : 1;
+        uint64_t par_include_a17       : 1;  /**< [ 26: 26](R/W) If set, include A17 in parity calculations in DDR4 mode. */
+        uint64_t par_include_bg1       : 1;  /**< [ 25: 25](R/W) If set, include BG1 in parity calculations in DDR4 mode. */
+        uint64_t gen_par               : 1;  /**< [ 24: 24](R/W) Enable parity generation in the DRAM commands; must be set prior to enabling parity in
+                                                                 register or DRAM devices. */
+        uint64_t reserved_21_23        : 3;
+        uint64_t vrefint_seq_deskew    : 1;  /**< [ 20: 20](R/W) Personality bit to change the operation of what is normally the internal Vref training
+                                                                 sequence into the deskew training sequence. */
+        uint64_t read_ena_bprch        : 1;  /**< [ 19: 19](R/W) Enable pad receiver one cycle longer than normal during read operations. */
+        uint64_t read_ena_fprch        : 1;  /**< [ 18: 18](R/W) Enable pad receiver starting one cycle earlier than normal during read operations. */
+        uint64_t slot_ctl_reset_force  : 1;  /**< [ 17: 17](WO) Write 1 to reset the slot-control override for all slot-control registers. After writing a
+                                                                 1 to this bit, slot-control registers will update with changes made to other timing-
+                                                                 control registers. This is a one-shot operation; it automatically returns to 0 after a
+                                                                 write to 1. */
+        uint64_t ref_int_lsbs          : 9;  /**< [ 16:  8](R/W) The refresh interval value least significant bits. The default is 0x0.
+                                                                 Refresh interval is represented in number of 512 CK cycle increments and is controlled by
+                                                                 LMC()_CONFIG[REF_ZQCS_INT]. More precise refresh interval however (in number of
+                                                                 one CK cycle) can be achieved by setting this field to a nonzero value. */
+        uint64_t drive_ena_bprch       : 1;  /**< [  7:  7](R/W) Drive DQx for one cycle longer than normal during write operations. */
+        uint64_t drive_ena_fprch       : 1;  /**< [  6:  6](R/W) Drive DQx starting one cycle earlier than normal during write operations. */
+        uint64_t reserved_0_5          : 6;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0_5          : 6;
+        uint64_t drive_ena_fprch       : 1;  /**< [  6:  6](R/W) Drive DQx starting one cycle earlier than normal during write operations. */
+        uint64_t drive_ena_bprch       : 1;  /**< [  7:  7](R/W) Drive DQx for one cycle longer than normal during write operations. */
+        uint64_t ref_int_lsbs          : 9;  /**< [ 16:  8](R/W) The refresh interval value least significant bits. The default is 0x0.
+                                                                 Refresh interval is represented in number of 512 CK cycle increments and is controlled by
+                                                                 LMC()_CONFIG[REF_ZQCS_INT]. More precise refresh interval however (in number of
+                                                                 one CK cycle) can be achieved by setting this field to a nonzero value. */
+        uint64_t slot_ctl_reset_force  : 1;  /**< [ 17: 17](WO) Write 1 to reset the slot-control override for all slot-control registers. After writing a
+                                                                 1 to this bit, slot-control registers will update with changes made to other timing-
+                                                                 control registers. This is a one-shot operation; it automatically returns to 0 after a
+                                                                 write to 1. */
+        uint64_t read_ena_fprch        : 1;  /**< [ 18: 18](R/W) Enable pad receiver starting one cycle earlier than normal during read operations. */
+        uint64_t read_ena_bprch        : 1;  /**< [ 19: 19](R/W) Enable pad receiver one cycle longer than normal during read operations. */
+        uint64_t vrefint_seq_deskew    : 1;  /**< [ 20: 20](R/W) Personality bit to change the operation of what is normally the internal Vref training
+                                                                 sequence into the deskew training sequence. */
+        uint64_t reserved_21_23        : 3;
+        uint64_t gen_par               : 1;  /**< [ 24: 24](R/W) Enable parity generation in the DRAM commands; must be set prior to enabling parity in
+                                                                 register or DRAM devices. */
+        uint64_t par_include_bg1       : 1;  /**< [ 25: 25](R/W) If set, include BG1 in parity calculations in DDR4 mode. */
+        uint64_t par_include_a17       : 1;  /**< [ 26: 26](R/W) If set, include A17 in parity calculations in DDR4 mode. */
+        uint64_t reserved_27           : 1;
+        uint64_t cal_ena               : 1;  /**< [ 28: 28](R/W) Set to cause LMC to operate in CAL mode. First set LMC()_MODEREG_PARAMS3[CAL], then
+                                                                 set [CAL_ENA]. */
+        uint64_t cmd_rti               : 1;  /**< [ 29: 29](R/W) Set this bit to change the behavior of the LMC to return to a completely idle command (no
+                                                                 CS active, no command pins active, and address/bank address/bank group all low) on the
+                                                                 interface after an active command, rather than only forcing the CS inactive between
+                                                                 commands. */
+        uint64_t reserved_30_31        : 2;
+        uint64_t invert_data           : 1;  /**< [ 32: 32](R/W) Set this bit to cause all data to be inverted before writing or reading to/from DRAM. May
+                                                                 be useful if data inversion will result in lower power. */
+        uint64_t reserved_33_35        : 3;
+        uint64_t mrs_cmd_select        : 1;  /**< [ 36: 36](R/W) When [MRS_CMD_OVERRIDE] is set, use this bit to select which style of operation for MRS
+                                                                 and RCW commands.
+
+                                                                 When this bit is clear, select operation where signals other than CS are active before and
+                                                                 after the DDR_CS_L active cycle.
+
+                                                                 When this bit is set, select the operation where the other command signals (DDR*_RAS_L,
+                                                                 DDR*_CAS_L, DDR*_WE_L, DDR*_A\<15:0\>, etc.) all are active only during the cycle where the
+                                                                 DDR_CS_L is also active. */
+        uint64_t mrs_cmd_override      : 1;  /**< [ 37: 37](R/W) Set to override the behavior of MRS and RCW operations.
+                                                                 If this bit is set, the override behavior is governed by the control field
+                                                                 [MRS_CMD_SELECT]. See LMC()_EXT_CONFIG[MRS_CMD_SELECT] for detail.
+
+                                                                 If this bit is cleared, select operation where signals other than CS are active before
+                                                                 and after the DDR_CS_L active cycle. */
+        uint64_t reserved_38_39        : 2;
+        uint64_t par_addr_mask         : 3;  /**< [ 42: 40](R/W) Mask applied to parity for address bits \<14:12\>. Clear to exclude these address
+                                                                 bits from the parity calculation, necessary if the DRAM device does not have these pins. */
+        uint64_t sref_seq_stop_clock   : 1;  /**< [ 43: 43](R/W) When enabled, LMC disables all clock output pins to the DIMM at the end of
+                                                                 LMC_SEQ_SEL_E::SREF_ENTRY
+                                                                 sequence. In RDIMM applications, this implies that the RCD will be programmed into Clock
+                                                                 Stop Power Down mode at the end of the LMC_SEQ_SEL_E::SREF_ENTRY sequence.
+                                                                 Note that this field is also used in the following sequences:
+                                                                 * LMC_SEQ_SEL_E::SREF_ENTRY = All clock outputs are shut off at the end of the sequence.
+                                                                 * LMC_SEQ_SEL_E::SREF_EXIT  = All clock outputs are enabled at the start of the sequence.
+                                                                 * LMC_SEQ_SEL_E::MPSM_ENTRY = All clock outputs are shut off at the end of the sequence.
+                                                                 * LMC_SEQ_SEL_E::MPSM_EXIT  = All clock outputs are enabled at the start of the sequence. */
+        uint64_t ea_int_polarity       : 1;  /**< [ 44: 44](R/W) Set to invert the DDR*_ERROR_ALERT_L interrupt polarity. When clear, interrupt is
+                                                                 signaled on
+                                                                 the rising edge of DDR*_ERROR_ALERT_L. When set, interrupt is signaled on the falling
                                                                  edge of DDR*_ERROR_ALERT_L. */
         uint64_t error_alert_n_sample  : 1;  /**< [ 45: 45](RO) Read to get a sample of the DDR*_ERROR_ALERT_L signal. */
         uint64_t reserved_46_47        : 2;
@@ -10481,9 +10988,11 @@ union cavm_lmcx_ext_config
         uint64_t reserved_60_63        : 4;
 #endif /* Word 0 - End */
     } cn98xx;
-    /* struct cavm_lmcx_ext_config_cn9 cnf95xx; */
-    /* struct cavm_lmcx_ext_config_cn9 f95mm; */
-    /* struct cavm_lmcx_ext_config_cn9 loki; */
+    /* struct cavm_lmcx_ext_config_cn9 cnf95xxp1; */
+    /* struct cavm_lmcx_ext_config_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_lmcx_ext_config_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_ext_config_cn9 f95o; */
+    /* struct cavm_lmcx_ext_config_cn96xxp3 loki; */
 };
 typedef union cavm_lmcx_ext_config cavm_lmcx_ext_config_t;
 
@@ -10501,6 +11010,8 @@ static inline uint64_t CAVM_LMCX_EXT_CONFIG(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000030ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000030ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000030ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000030ll + 0x1000000ll * ((a) & 0x3);
@@ -10996,6 +11507,7 @@ union cavm_lmcx_ext_config2
     } cn98xx;
     /* struct cavm_lmcx_ext_config2_cn9 cnf95xx; */
     /* struct cavm_lmcx_ext_config2_cn9 f95mm; */
+    /* struct cavm_lmcx_ext_config2_cn9 f95o; */
     /* struct cavm_lmcx_ext_config2_cn9 loki; */
 };
 typedef union cavm_lmcx_ext_config2 cavm_lmcx_ext_config2_t;
@@ -11014,6 +11526,8 @@ static inline uint64_t CAVM_LMCX_EXT_CONFIG2(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000090ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000090ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000090ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000090ll + 0x1000000ll * ((a) & 0x3);
@@ -11069,6 +11583,8 @@ static inline uint64_t CAVM_LMCX_EXT_CONFIG3(uint64_t a)
         return 0x87e088000120ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000120ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000120ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000120ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_EXT_CONFIG3", 1, a, 0, 0, 0, 0, 0);
@@ -11118,6 +11634,8 @@ static inline uint64_t CAVM_LMCX_EXT_CONFIG4(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000128ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000128ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000128ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000128ll + 0x1000000ll * ((a) & 0x3);
@@ -11170,6 +11688,8 @@ static inline uint64_t CAVM_LMCX_EXT_CONFIG5(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000130ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000130ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000130ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000130ll + 0x1000000ll * ((a) & 0x3);
@@ -11362,6 +11882,8 @@ static inline uint64_t CAVM_LMCX_FFE_CTLE_CTL(uint64_t a)
         return 0x87e0880002f0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e0880002f0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e0880002f0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880002f0ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_FFE_CTLE_CTL", 1, a, 0, 0, 0, 0, 0);
@@ -11441,6 +11963,8 @@ static inline uint64_t CAVM_LMCX_FFE_CTLE_SETTINGS(uint64_t a)
         return 0x87e0880002e0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e0880002e0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e0880002e0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880002e0ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_FFE_CTLE_SETTINGS", 1, a, 0, 0, 0, 0, 0);
@@ -11502,6 +12026,8 @@ static inline uint64_t CAVM_LMCX_GENERAL_PURPOSE0(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000340ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000340ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000340ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000340ll + 0x1000000ll * ((a) & 0x3);
@@ -11565,6 +12091,8 @@ static inline uint64_t CAVM_LMCX_GENERAL_PURPOSE1(uint64_t a)
         return 0x87e088000348ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000348ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000348ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000348ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_GENERAL_PURPOSE1", 1, a, 0, 0, 0, 0, 0);
@@ -11625,6 +12153,8 @@ static inline uint64_t CAVM_LMCX_GENERAL_PURPOSE2(uint64_t a)
         return 0x87e088000350ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000350ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000350ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000350ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_GENERAL_PURPOSE2", 1, a, 0, 0, 0, 0, 0);
@@ -11673,6 +12203,8 @@ static inline uint64_t CAVM_LMCX_IFB_CNT(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880001d0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880001d0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880001d0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880001d0ll + 0x1000000ll * ((a) & 0x3);
@@ -11993,6 +12525,8 @@ static inline uint64_t CAVM_LMCX_INT(uint64_t a)
         return 0x87e0880001f0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e0880001f0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e0880001f0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880001f0ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_INT", 1, a, 0, 0, 0, 0, 0);
@@ -12135,6 +12669,7 @@ union cavm_lmcx_int_ena_w1c
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_lmcx_int_ena_w1c_cnf95xx f95mm; */
+    /* struct cavm_lmcx_int_ena_w1c_cnf95xx f95o; */
     /* struct cavm_lmcx_int_ena_w1c_cnf95xx loki; */
 };
 typedef union cavm_lmcx_int_ena_w1c cavm_lmcx_int_ena_w1c_t;
@@ -12153,6 +12688,8 @@ static inline uint64_t CAVM_LMCX_INT_ENA_W1C(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000158ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000158ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000158ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000158ll + 0x1000000ll * ((a) & 0x3);
@@ -12296,6 +12833,7 @@ union cavm_lmcx_int_ena_w1s
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_lmcx_int_ena_w1s_cnf95xx f95mm; */
+    /* struct cavm_lmcx_int_ena_w1s_cnf95xx f95o; */
     /* struct cavm_lmcx_int_ena_w1s_cnf95xx loki; */
 };
 typedef union cavm_lmcx_int_ena_w1s cavm_lmcx_int_ena_w1s_t;
@@ -12314,6 +12852,8 @@ static inline uint64_t CAVM_LMCX_INT_ENA_W1S(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000160ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000160ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000160ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000160ll + 0x1000000ll * ((a) & 0x3);
@@ -12457,6 +12997,7 @@ union cavm_lmcx_int_w1s
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_lmcx_int_w1s_cnf95xx f95mm; */
+    /* struct cavm_lmcx_int_w1s_cnf95xx f95o; */
     /* struct cavm_lmcx_int_w1s_cnf95xx loki; */
 };
 typedef union cavm_lmcx_int_w1s cavm_lmcx_int_w1s_t;
@@ -12475,6 +13016,8 @@ static inline uint64_t CAVM_LMCX_INT_W1S(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000150ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000150ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000150ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000150ll + 0x1000000ll * ((a) & 0x3);
@@ -12560,6 +13103,8 @@ static inline uint64_t CAVM_LMCX_LANEX_CRC_SWIZ(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (((a==0) || (a==2)) && (b<=8)))
         return 0x87e088000380ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_F95MM) && (((a==0) || (a==2)) && (b<=8)))
+        return 0x87e088000380ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && (((a==0) || (a==2)) && (b<=8)))
         return 0x87e088000380ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && (((a==0) || (a==2)) && (b<=8)))
         return 0x87e088000380ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
@@ -13524,6 +14069,397 @@ union cavm_lmcx_modereg_params0
         uint64_t reserved_28_63        : 36;
 #endif /* Word 0 - End */
     } cn9;
+    /* struct cavm_lmcx_modereg_params0_cn9 cn96xxp1; */
+    struct cavm_lmcx_modereg_params0_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_28_63        : 36;
+        uint64_t ppd                   : 1;  /**< [ 27: 27](R/W) DLL control for precharge powerdown.
+                                                                 0 = Slow exit (DLL off).
+                                                                 1 = Fast exit (DLL on).
+
+                                                                 LMC writes this value to MR0[PPD] in the selected DDR4 parts during power-up/init and, if
+                                                                 LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh exit instruction sequences. See
+                                                                 LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and LMC()_CONFIG[RANKMASK]. This value must
+                                                                 equal the MR0[PPD] value in all the DDR4 parts attached to all ranks during normal
+                                                                 operation. */
+        uint64_t wrp                   : 4;  /**< [ 26: 23](R/W) Write recovery for auto precharge. Should be programmed to be equal to or greater than
+                                                                 RNDUP[TWR(ns) / Tcyc(ns)].
+
+                                                                 0x0 = 10.
+                                                                 0x1 = 12.
+                                                                 0x2 = 14.
+                                                                 0x3 = 16.
+                                                                 0x4 = 18.
+                                                                 0x5 = 20.
+                                                                 0x6 = 24.
+                                                                 0x7 = 22.
+                                                                 0x8 = 26.
+                                                                 0x9-0xf = Reserved.
+
+                                                                 In DDR4 MDS mode (see LMC()_EXT_CONFIG2[MDS_EN]):
+
+                                                                 0x0 = 36.
+                                                                 0x1 = 38.
+                                                                 0x2 = 40.
+                                                                 0x3 = 42.
+                                                                 0x4 = 44.
+                                                                 0x5 = 46.
+                                                                 0x6 = 48.
+                                                                 0x7 = 50.
+                                                                 0x8 = 52.
+                                                                 0x9 = 54.
+                                                                 0xA = 56.
+                                                                 0xB = 58.
+                                                                 0xC = 60.
+                                                                 0xD = 64.
+                                                                 0xE = 68.
+                                                                 0xF = 72.
+
+                                                                 LMC writes this value to MR0[WR] in the selected DDR4 parts during power-up/init and, if
+                                                                 LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh exit instruction sequences.
+                                                                 See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and LMC()_CONFIG[RANKMASK].
+                                                                 This value must equal the MR0[WR] value in all the DDR4 parts attached to all ranks during
+                                                                 normal operation.
+                                                                 This field needs to be set correctly in conjunction with
+                                                                 LMC()_TIMING_PARAMS2[TWR] and LMC()_TIMING_PARAMS2[TRTP]. */
+        uint64_t dllr                  : 1;  /**< [ 22: 22](R/W) DLL reset. LMC writes this value to MR0[DLL Reset] in the selected DDR4 parts during power-
+                                                                 up/init and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh exit instruction
+                                                                 sequences.
+                                                                 See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and LMC()_CONFIG[RANKMASK].
+                                                                 The MR0[DLL Reset] value must be zero in all the DDR4 parts attached to all ranks during normal
+                                                                 operation. */
+        uint64_t tm                    : 1;  /**< [ 21: 21](R/W) Test mode. LMC writes this value to MR0[TM] in the selected DDR4 parts during power-
+                                                                 up/init and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh exit instruction
+                                                                 sequences.
+                                                                 See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and LMC()_CONFIG[RANKMASK].
+                                                                 The MR0[TM] value must be zero in all the DDR4 parts attached to all ranks during normal
+                                                                 operation. */
+        uint64_t rbt                   : 1;  /**< [ 20: 20](RO) Read burst. Type 1 = interleaved (fixed). LMC writes this value to MR0[RBT] in the
+                                                                 selected DDR4 parts during power-up/init and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-
+                                                                 refresh exit instruction sequences. See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START],
+                                                                 LMC()_CONFIG[RANKMASK]. The MR0[RBT] value must be one in all the DDR4 parts attached to all ranks
+                                                                 during normal operation. */
+        uint64_t cl                    : 5;  /**< [ 19: 15](R/W) CAS latency.
+
+                                                                 0x0 =  9. 0x1 = 10.
+                                                                 0x2 = 11. 0x3 = 12.
+                                                                 0x4 = 13. 0x5 = 14.
+                                                                 0x6 = 15. 0x7 = 16.
+                                                                 0x8 = 18. 0x9 = 20.
+                                                                 0xA = 22. 0xB = 24.
+                                                                 0xC = 23. 0xD = 17.
+                                                                 0xE = 19. 0xF = 21.
+                                                                 0x10 = 25. 0x11 = 26.
+                                                                 0x12 = 27. 0x13 = 28.
+                                                                 0x14 = 29. 0x15 = 30.
+                                                                 0x16 = 31. 0x17 = 32.
+                                                                 0x18-0x1F = Reserved.
+
+                                                                 In DDR4 MDS mode (see LMC()_EXT_CONFIG2[MDS_EN]):
+
+                                                                 0x00 = 169. 0x01 = 170.
+                                                                 0x02 = 171. 0x03 = 172.
+                                                                 0x04 = 173. 0x05 = 174.
+                                                                 0x06 = 175. 0x07 = 176.
+                                                                 0x08 = 178. 0x09 = 180.
+                                                                 0x0A = 182. 0x0B = 184.
+                                                                 0x0C = 183. 0x0D = 177.
+                                                                 0x0E = 179. 0x0F = 181.
+                                                                 0x10 = 185. 0x11 = 186.
+                                                                 0x12 = 187. 0x13 = 188.
+                                                                 0x14 = 189. 0x15 = 190.
+                                                                 0x16 = 191. 0x17 = 192.
+                                                                 0x18-0x1F = Reserved.
+
+                                                                 LMC writes this value to MR0[CAS Latency / CL] in the selected DDR4 parts during power-
+                                                                 up/init and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh exit instruction
+                                                                 sequences. See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START],
+                                                                 LMC()_CONFIG[RANKMASK]. This value must equal the
+                                                                 MR0[CAS Latency / CL] value in all the DDR4 parts attached to all ranks during normal
+                                                                 operation.
+
+                                                                 tCL must be programmed to greater than or equal to tCWL for proper LMC operation. */
+        uint64_t bl                    : 2;  /**< [ 14: 13](R/W) Burst length.
+                                                                 0x0 = 8 (fixed).
+                                                                 0x1 = 4 or 8 (on-the-fly).
+
+                                                                 LMC writes this value to MR0[BL] in the selected DDR4 parts during power-up/init and, if
+                                                                 LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh exit instruction sequences. See
+                                                                 LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and LMC()_CONFIG[RANKMASK]. The MR0[BL] value
+                                                                 must be one in all the DDR4 parts attached to all ranks during normal operation. */
+        uint64_t qoff                  : 1;  /**< [ 12: 12](R/W) Qoff enable. 0 = enable; 1 = disable.
+                                                                 LMC writes this value to MR1[Qoff] in the DDR4 parts in the selected ranks during power
+                                                                 up/init, write leveling, and if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh entry
+                                                                 and exit instruction sequences. See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and
+                                                                 LMC()_CONFIG[RANKMASK], LMC()_CONFIG[INIT_STATUS] and LMC()_RESET_CTL[DDR4PDOMAIN]. The
+                                                                 MR1[Qoff] value must be zero in all the DDR4 parts attached to all ranks during normal
+                                                                 operation. */
+        uint64_t tdqs                  : 1;  /**< [ 11: 11](R/W) TDQS enable. 0 = disable. LMC writes this value to MR1[TDQS] in the DDR4 parts in the
+                                                                 selected ranks during power-up/init, write leveling, and, if
+                                                                 LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh entry and exit instruction sequences.
+                                                                 See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START], LMC()_CONFIG[RANKMASK],
+                                                                 LMC()_CONFIG[INIT_STATUS] and LMC()_RESET_CTL[DDR4PDOMAIN]. */
+        uint64_t wlev                  : 1;  /**< [ 10: 10](RO) Write leveling enable. 0 = disable. LMC writes MR1[Level]=0 in the DDR4 parts in the
+                                                                 selected ranks during power-up/init, write leveling, and, if
+                                                                 LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh entry and exit sequences. (Write
+                                                                 leveling can only be initiated via the write leveling instruction sequence.) See
+                                                                 LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START], LMC()_CONFIG[RANKMASK],
+                                                                 LMC()_CONFIG[INIT_STATUS] and LMC()_RESET_CTL[DDR4PDOMAIN]. */
+        uint64_t al                    : 3;  /**< [  9:  7](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 Additive latency:
+                                                                 0x0 = Disabled.
+                                                                 0x1 = CL - 1.
+                                                                 0x2 = CL - 2.
+                                                                 0x3 = CL - 3.
+                                                                 0x4-0x7 = Reserved.
+
+                                                                 LMC writes this value to MR1[AL] in the selected DDR4 parts during power-up/init, write
+                                                                 leveling, and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh entry and exit
+                                                                 instruction sequences.
+                                                                 See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START], LMC()_CONFIG[RANKMASK] and
+                                                                 LMC()_RESET_CTL[DDR4PDOMAIN]. This value must equal the MR1[AL] value in all the DDR4
+                                                                 parts attached to all ranks during normal operation. See also LMC()_CONTROL[POCAS]. */
+        uint64_t dll                   : 1;  /**< [  6:  6](R/W) DLL Enable. 1 = enable; 0 = disable. LMC writes this value to MR1[DLL] in the selected
+                                                                 DDR4
+                                                                 parts during power-up/init, write leveling, and, if LMC()_CONFIG[SREF_WITH_DLL] is
+                                                                 set, self-refresh entry and exit instruction sequences.
+                                                                 See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START], LMC()_CONFIG[RANKMASK] and
+                                                                 LMC()_RESET_CTL[DDR4PDOMAIN].
+                                                                 This value must equal the MR1[DLL] value in all the DDR4 parts attached to all ranks
+                                                                 during normal operation. In DLL-off mode, CL/CWL must be programmed equal to 6/6,
+                                                                 respectively, as per the JEDEC DDR4 specifications. */
+        uint64_t mpr                   : 1;  /**< [  5:  5](R/W) MPR. LMC writes this value to MR3[MPR] in the selected DDR4 parts during power-up/init,
+                                                                 read leveling, and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh exit
+                                                                 instruction sequences. (LMC also writes MR3[MPR] = 1 at the beginning of the read leveling
+                                                                 instruction sequence. Read leveling should only be initiated via the read leveling
+                                                                 instruction sequence.) See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and
+                                                                 LMC()_CONFIG[RANKMASK].
+                                                                 The MR3[MPR] value must be zero in all the DDR4 parts attached to all ranks during normal
+                                                                 operation. */
+        uint64_t mprloc                : 2;  /**< [  4:  3](R/W) MPR location. LMC writes this value to MR3[MPRLoc] in the selected DDR4 parts during
+                                                                 power-up/init, read leveling, and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh
+                                                                 exit instruction sequences. (LMC also writes MR3[MPRLoc] = 0 at the beginning of the read-
+                                                                 leveling instruction sequence.) See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and
+                                                                 LMC()_CONFIG[RANKMASK]. The MR3[MPRLoc] value must be zero in all the DDR4 parts attached
+                                                                 to all ranks during normal operation. */
+        uint64_t cwl                   : 3;  /**< [  2:  0](R/W) CAS write latency.
+
+                                                                 0x0 = 9.
+                                                                 0x1 = 10.
+                                                                 0x2 = 11.
+                                                                 0x3 = 12.
+                                                                 0x4 = 14.
+                                                                 0x5 = 16.
+                                                                 0x6 = 18.
+                                                                 0x7 = 20.
+
+                                                                 LMC writes this value to MR2[CWL] in the selected DDR4 parts during power-up/init, write
+                                                                 leveling, and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh entry and exit
+                                                                 instruction sequences. See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START],
+                                                                 LMC()_CONFIG[RANKMASK] and
+                                                                 LMC()_RESET_CTL[DDR4PDOMAIN]. This value must equal the MR2[CWL] value in
+                                                                 all the DDR4 parts attached to all ranks during normal operation.
+                                                                 tCWL must be programmed to less than or equal to tCL for proper LMC operation. */
+#else /* Word 0 - Little Endian */
+        uint64_t cwl                   : 3;  /**< [  2:  0](R/W) CAS write latency.
+
+                                                                 0x0 = 9.
+                                                                 0x1 = 10.
+                                                                 0x2 = 11.
+                                                                 0x3 = 12.
+                                                                 0x4 = 14.
+                                                                 0x5 = 16.
+                                                                 0x6 = 18.
+                                                                 0x7 = 20.
+
+                                                                 LMC writes this value to MR2[CWL] in the selected DDR4 parts during power-up/init, write
+                                                                 leveling, and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh entry and exit
+                                                                 instruction sequences. See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START],
+                                                                 LMC()_CONFIG[RANKMASK] and
+                                                                 LMC()_RESET_CTL[DDR4PDOMAIN]. This value must equal the MR2[CWL] value in
+                                                                 all the DDR4 parts attached to all ranks during normal operation.
+                                                                 tCWL must be programmed to less than or equal to tCL for proper LMC operation. */
+        uint64_t mprloc                : 2;  /**< [  4:  3](R/W) MPR location. LMC writes this value to MR3[MPRLoc] in the selected DDR4 parts during
+                                                                 power-up/init, read leveling, and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh
+                                                                 exit instruction sequences. (LMC also writes MR3[MPRLoc] = 0 at the beginning of the read-
+                                                                 leveling instruction sequence.) See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and
+                                                                 LMC()_CONFIG[RANKMASK]. The MR3[MPRLoc] value must be zero in all the DDR4 parts attached
+                                                                 to all ranks during normal operation. */
+        uint64_t mpr                   : 1;  /**< [  5:  5](R/W) MPR. LMC writes this value to MR3[MPR] in the selected DDR4 parts during power-up/init,
+                                                                 read leveling, and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh exit
+                                                                 instruction sequences. (LMC also writes MR3[MPR] = 1 at the beginning of the read leveling
+                                                                 instruction sequence. Read leveling should only be initiated via the read leveling
+                                                                 instruction sequence.) See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and
+                                                                 LMC()_CONFIG[RANKMASK].
+                                                                 The MR3[MPR] value must be zero in all the DDR4 parts attached to all ranks during normal
+                                                                 operation. */
+        uint64_t dll                   : 1;  /**< [  6:  6](R/W) DLL Enable. 1 = enable; 0 = disable. LMC writes this value to MR1[DLL] in the selected
+                                                                 DDR4
+                                                                 parts during power-up/init, write leveling, and, if LMC()_CONFIG[SREF_WITH_DLL] is
+                                                                 set, self-refresh entry and exit instruction sequences.
+                                                                 See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START], LMC()_CONFIG[RANKMASK] and
+                                                                 LMC()_RESET_CTL[DDR4PDOMAIN].
+                                                                 This value must equal the MR1[DLL] value in all the DDR4 parts attached to all ranks
+                                                                 during normal operation. In DLL-off mode, CL/CWL must be programmed equal to 6/6,
+                                                                 respectively, as per the JEDEC DDR4 specifications. */
+        uint64_t al                    : 3;  /**< [  9:  7](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 Additive latency:
+                                                                 0x0 = Disabled.
+                                                                 0x1 = CL - 1.
+                                                                 0x2 = CL - 2.
+                                                                 0x3 = CL - 3.
+                                                                 0x4-0x7 = Reserved.
+
+                                                                 LMC writes this value to MR1[AL] in the selected DDR4 parts during power-up/init, write
+                                                                 leveling, and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh entry and exit
+                                                                 instruction sequences.
+                                                                 See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START], LMC()_CONFIG[RANKMASK] and
+                                                                 LMC()_RESET_CTL[DDR4PDOMAIN]. This value must equal the MR1[AL] value in all the DDR4
+                                                                 parts attached to all ranks during normal operation. See also LMC()_CONTROL[POCAS]. */
+        uint64_t wlev                  : 1;  /**< [ 10: 10](RO) Write leveling enable. 0 = disable. LMC writes MR1[Level]=0 in the DDR4 parts in the
+                                                                 selected ranks during power-up/init, write leveling, and, if
+                                                                 LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh entry and exit sequences. (Write
+                                                                 leveling can only be initiated via the write leveling instruction sequence.) See
+                                                                 LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START], LMC()_CONFIG[RANKMASK],
+                                                                 LMC()_CONFIG[INIT_STATUS] and LMC()_RESET_CTL[DDR4PDOMAIN]. */
+        uint64_t tdqs                  : 1;  /**< [ 11: 11](R/W) TDQS enable. 0 = disable. LMC writes this value to MR1[TDQS] in the DDR4 parts in the
+                                                                 selected ranks during power-up/init, write leveling, and, if
+                                                                 LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh entry and exit instruction sequences.
+                                                                 See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START], LMC()_CONFIG[RANKMASK],
+                                                                 LMC()_CONFIG[INIT_STATUS] and LMC()_RESET_CTL[DDR4PDOMAIN]. */
+        uint64_t qoff                  : 1;  /**< [ 12: 12](R/W) Qoff enable. 0 = enable; 1 = disable.
+                                                                 LMC writes this value to MR1[Qoff] in the DDR4 parts in the selected ranks during power
+                                                                 up/init, write leveling, and if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh entry
+                                                                 and exit instruction sequences. See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and
+                                                                 LMC()_CONFIG[RANKMASK], LMC()_CONFIG[INIT_STATUS] and LMC()_RESET_CTL[DDR4PDOMAIN]. The
+                                                                 MR1[Qoff] value must be zero in all the DDR4 parts attached to all ranks during normal
+                                                                 operation. */
+        uint64_t bl                    : 2;  /**< [ 14: 13](R/W) Burst length.
+                                                                 0x0 = 8 (fixed).
+                                                                 0x1 = 4 or 8 (on-the-fly).
+
+                                                                 LMC writes this value to MR0[BL] in the selected DDR4 parts during power-up/init and, if
+                                                                 LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh exit instruction sequences. See
+                                                                 LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and LMC()_CONFIG[RANKMASK]. The MR0[BL] value
+                                                                 must be one in all the DDR4 parts attached to all ranks during normal operation. */
+        uint64_t cl                    : 5;  /**< [ 19: 15](R/W) CAS latency.
+
+                                                                 0x0 =  9. 0x1 = 10.
+                                                                 0x2 = 11. 0x3 = 12.
+                                                                 0x4 = 13. 0x5 = 14.
+                                                                 0x6 = 15. 0x7 = 16.
+                                                                 0x8 = 18. 0x9 = 20.
+                                                                 0xA = 22. 0xB = 24.
+                                                                 0xC = 23. 0xD = 17.
+                                                                 0xE = 19. 0xF = 21.
+                                                                 0x10 = 25. 0x11 = 26.
+                                                                 0x12 = 27. 0x13 = 28.
+                                                                 0x14 = 29. 0x15 = 30.
+                                                                 0x16 = 31. 0x17 = 32.
+                                                                 0x18-0x1F = Reserved.
+
+                                                                 In DDR4 MDS mode (see LMC()_EXT_CONFIG2[MDS_EN]):
+
+                                                                 0x00 = 169. 0x01 = 170.
+                                                                 0x02 = 171. 0x03 = 172.
+                                                                 0x04 = 173. 0x05 = 174.
+                                                                 0x06 = 175. 0x07 = 176.
+                                                                 0x08 = 178. 0x09 = 180.
+                                                                 0x0A = 182. 0x0B = 184.
+                                                                 0x0C = 183. 0x0D = 177.
+                                                                 0x0E = 179. 0x0F = 181.
+                                                                 0x10 = 185. 0x11 = 186.
+                                                                 0x12 = 187. 0x13 = 188.
+                                                                 0x14 = 189. 0x15 = 190.
+                                                                 0x16 = 191. 0x17 = 192.
+                                                                 0x18-0x1F = Reserved.
+
+                                                                 LMC writes this value to MR0[CAS Latency / CL] in the selected DDR4 parts during power-
+                                                                 up/init and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh exit instruction
+                                                                 sequences. See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START],
+                                                                 LMC()_CONFIG[RANKMASK]. This value must equal the
+                                                                 MR0[CAS Latency / CL] value in all the DDR4 parts attached to all ranks during normal
+                                                                 operation.
+
+                                                                 tCL must be programmed to greater than or equal to tCWL for proper LMC operation. */
+        uint64_t rbt                   : 1;  /**< [ 20: 20](RO) Read burst. Type 1 = interleaved (fixed). LMC writes this value to MR0[RBT] in the
+                                                                 selected DDR4 parts during power-up/init and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-
+                                                                 refresh exit instruction sequences. See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START],
+                                                                 LMC()_CONFIG[RANKMASK]. The MR0[RBT] value must be one in all the DDR4 parts attached to all ranks
+                                                                 during normal operation. */
+        uint64_t tm                    : 1;  /**< [ 21: 21](R/W) Test mode. LMC writes this value to MR0[TM] in the selected DDR4 parts during power-
+                                                                 up/init and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh exit instruction
+                                                                 sequences.
+                                                                 See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and LMC()_CONFIG[RANKMASK].
+                                                                 The MR0[TM] value must be zero in all the DDR4 parts attached to all ranks during normal
+                                                                 operation. */
+        uint64_t dllr                  : 1;  /**< [ 22: 22](R/W) DLL reset. LMC writes this value to MR0[DLL Reset] in the selected DDR4 parts during power-
+                                                                 up/init and, if LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh exit instruction
+                                                                 sequences.
+                                                                 See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and LMC()_CONFIG[RANKMASK].
+                                                                 The MR0[DLL Reset] value must be zero in all the DDR4 parts attached to all ranks during normal
+                                                                 operation. */
+        uint64_t wrp                   : 4;  /**< [ 26: 23](R/W) Write recovery for auto precharge. Should be programmed to be equal to or greater than
+                                                                 RNDUP[TWR(ns) / Tcyc(ns)].
+
+                                                                 0x0 = 10.
+                                                                 0x1 = 12.
+                                                                 0x2 = 14.
+                                                                 0x3 = 16.
+                                                                 0x4 = 18.
+                                                                 0x5 = 20.
+                                                                 0x6 = 24.
+                                                                 0x7 = 22.
+                                                                 0x8 = 26.
+                                                                 0x9-0xf = Reserved.
+
+                                                                 In DDR4 MDS mode (see LMC()_EXT_CONFIG2[MDS_EN]):
+
+                                                                 0x0 = 36.
+                                                                 0x1 = 38.
+                                                                 0x2 = 40.
+                                                                 0x3 = 42.
+                                                                 0x4 = 44.
+                                                                 0x5 = 46.
+                                                                 0x6 = 48.
+                                                                 0x7 = 50.
+                                                                 0x8 = 52.
+                                                                 0x9 = 54.
+                                                                 0xA = 56.
+                                                                 0xB = 58.
+                                                                 0xC = 60.
+                                                                 0xD = 64.
+                                                                 0xE = 68.
+                                                                 0xF = 72.
+
+                                                                 LMC writes this value to MR0[WR] in the selected DDR4 parts during power-up/init and, if
+                                                                 LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh exit instruction sequences.
+                                                                 See LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and LMC()_CONFIG[RANKMASK].
+                                                                 This value must equal the MR0[WR] value in all the DDR4 parts attached to all ranks during
+                                                                 normal operation.
+                                                                 This field needs to be set correctly in conjunction with
+                                                                 LMC()_TIMING_PARAMS2[TWR] and LMC()_TIMING_PARAMS2[TRTP]. */
+        uint64_t ppd                   : 1;  /**< [ 27: 27](R/W) DLL control for precharge powerdown.
+                                                                 0 = Slow exit (DLL off).
+                                                                 1 = Fast exit (DLL on).
+
+                                                                 LMC writes this value to MR0[PPD] in the selected DDR4 parts during power-up/init and, if
+                                                                 LMC()_CONFIG[SREF_WITH_DLL] is set, self-refresh exit instruction sequences. See
+                                                                 LMC()_SEQ_CTL[SEQ_SEL], LMC()_SEQ_CTL[INIT_START] and LMC()_CONFIG[RANKMASK]. This value must
+                                                                 equal the MR0[PPD] value in all the DDR4 parts attached to all ranks during normal
+                                                                 operation. */
+        uint64_t reserved_28_63        : 36;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_lmcx_modereg_params0_cn96xxp3 cn98xx; */
+    /* struct cavm_lmcx_modereg_params0_cn9 cnf95xxp1; */
+    /* struct cavm_lmcx_modereg_params0_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_lmcx_modereg_params0_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_modereg_params0_cn9 f95o; */
+    /* struct cavm_lmcx_modereg_params0_cn96xxp3 loki; */
 };
 typedef union cavm_lmcx_modereg_params0 cavm_lmcx_modereg_params0_t;
 
@@ -13541,6 +14477,8 @@ static inline uint64_t CAVM_LMCX_MODEREG_PARAMS0(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880001a8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880001a8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880001a8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880001a8ll + 0x1000000ll * ((a) & 0x3);
@@ -14819,6 +15757,7 @@ union cavm_lmcx_modereg_params1
     } cn98xx;
     /* struct cavm_lmcx_modereg_params1_cn9 cnf95xx; */
     /* struct cavm_lmcx_modereg_params1_cn9 f95mm; */
+    /* struct cavm_lmcx_modereg_params1_cn9 f95o; */
     /* struct cavm_lmcx_modereg_params1_cn9 loki; */
 };
 typedef union cavm_lmcx_modereg_params1 cavm_lmcx_modereg_params1_t;
@@ -14837,6 +15776,8 @@ static inline uint64_t CAVM_LMCX_MODEREG_PARAMS1(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000260ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000260ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000260ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000260ll + 0x1000000ll * ((a) & 0x3);
@@ -14911,6 +15852,8 @@ static inline uint64_t CAVM_LMCX_MODEREG_PARAMS2(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000050ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000050ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000050ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000050ll + 0x1000000ll * ((a) & 0x3);
@@ -15231,6 +16174,8 @@ static inline uint64_t CAVM_LMCX_MODEREG_PARAMS3(uint64_t a)
         return 0x87e088000058ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000058ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000058ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000058ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_MODEREG_PARAMS3", 1, a, 0, 0, 0, 0, 0);
@@ -15296,6 +16241,8 @@ static inline uint64_t CAVM_LMCX_MPR_DATA0(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000070ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000070ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000070ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000070ll + 0x1000000ll * ((a) & 0x3);
@@ -15365,6 +16312,8 @@ static inline uint64_t CAVM_LMCX_MPR_DATA1(uint64_t a)
         return 0x87e088000078ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000078ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000078ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000078ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_MPR_DATA1", 1, a, 0, 0, 0, 0, 0);
@@ -15430,6 +16379,8 @@ static inline uint64_t CAVM_LMCX_MPR_DATA2(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000080ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000080ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000080ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000080ll + 0x1000000ll * ((a) & 0x3);
@@ -15681,6 +16632,8 @@ static inline uint64_t CAVM_LMCX_MR_MPR_CTL(uint64_t a)
         return 0x87e088000068ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000068ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000068ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000068ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_MR_MPR_CTL", 1, a, 0, 0, 0, 0, 0);
@@ -15730,6 +16683,8 @@ static inline uint64_t CAVM_LMCX_MSIX_PBAX(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (((a==0) || (a==2)) && (b==0)))
         return 0x87e088ff0000ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x0);
     if (cavm_is_model(OCTEONTX_F95MM) && (((a==0) || (a==2)) && (b==0)))
+        return 0x87e088ff0000ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (((a==0) || (a==2)) && (b==0)))
         return 0x87e088ff0000ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && (((a==0) || (a==2)) && (b==0)))
         return 0x87e088ff0000ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x0);
@@ -15851,6 +16806,7 @@ union cavm_lmcx_msix_vecx_addr
     /* struct cavm_lmcx_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_lmcx_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_lmcx_msix_vecx_addr_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_msix_vecx_addr_cn96xxp3 f95o; */
     /* struct cavm_lmcx_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_lmcx_msix_vecx_addr cavm_lmcx_msix_vecx_addr_t;
@@ -15869,6 +16825,8 @@ static inline uint64_t CAVM_LMCX_MSIX_VECX_ADDR(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (((a==0) || (a==2)) && (b<=1)))
         return 0x87e088f00000ll + 0x1000000ll * ((a) & 0x3) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (((a==0) || (a==2)) && (b<=1)))
+        return 0x87e088f00000ll + 0x1000000ll * ((a) & 0x3) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (((a==0) || (a==2)) && (b<=1)))
         return 0x87e088f00000ll + 0x1000000ll * ((a) & 0x3) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (((a==0) || (a==2)) && (b<=1)))
         return 0x87e088f00000ll + 0x1000000ll * ((a) & 0x3) + 0x10ll * ((b) & 0x1);
@@ -15935,6 +16893,8 @@ static inline uint64_t CAVM_LMCX_MSIX_VECX_CTL(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (((a==0) || (a==2)) && (b<=1)))
         return 0x87e088f00008ll + 0x1000000ll * ((a) & 0x3) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (((a==0) || (a==2)) && (b<=1)))
+        return 0x87e088f00008ll + 0x1000000ll * ((a) & 0x3) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (((a==0) || (a==2)) && (b<=1)))
         return 0x87e088f00008ll + 0x1000000ll * ((a) & 0x3) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (((a==0) || (a==2)) && (b<=1)))
         return 0x87e088f00008ll + 0x1000000ll * ((a) & 0x3) + 0x10ll * ((b) & 0x1);
@@ -16218,6 +17178,7 @@ union cavm_lmcx_nxm
     } cn98xx;
     /* struct cavm_lmcx_nxm_cn83xx cnf95xx; */
     /* struct cavm_lmcx_nxm_cn83xx f95mm; */
+    /* struct cavm_lmcx_nxm_cn83xx f95o; */
     /* struct cavm_lmcx_nxm_cn83xx loki; */
 };
 typedef union cavm_lmcx_nxm cavm_lmcx_nxm_t;
@@ -16236,6 +17197,8 @@ static inline uint64_t CAVM_LMCX_NXM(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880000d0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880000d0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880000d0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880000d0ll + 0x1000000ll * ((a) & 0x3);
@@ -16357,6 +17320,8 @@ static inline uint64_t CAVM_LMCX_OPS_CNT(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880001d8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880001d8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880001d8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880001d8ll + 0x1000000ll * ((a) & 0x3);
@@ -17967,7 +18932,8 @@ union cavm_lmcx_phy_ctl
                                                                  The same as [LOOPBACK] except DQS1 is loopbacked through DQS0. */
         uint64_t ck_tune1              : 1;  /**< [ 12: 12](R/W) Reserved; must be zero.
                                                                  Internal:
-                                                                 Clock tune. */
+                                                                 When set, delays both clocks associated with the DIMM1 connector are delayed
+                                                                 by an additional 45 degrees. */
         uint64_t ck_dlyout1            : 4;  /**< [ 11:  8](R/W) Reserved; must be zero.
                                                                  Internal:
                                                                  Clock delay out.
@@ -17975,7 +18941,8 @@ union cavm_lmcx_phy_ctl
                                                                  CNXXXX uses only bits \<10:8\>. */
         uint64_t ck_tune0              : 1;  /**< [  7:  7](R/W) Reserved; must be zero.
                                                                  Internal:
-                                                                 Clock tune. */
+                                                                 When set, delays both clocks associated with the DIMM0 connector are delayed
+                                                                 by an additional 45 degrees. */
         uint64_t ck_dlyout0            : 4;  /**< [  6:  3](R/W) Reserved; must be zero.
                                                                  Internal:
                                                                  Clock delay out.
@@ -18029,7 +18996,8 @@ union cavm_lmcx_phy_ctl
                                                                  CNXXXX uses only bits \<5:3\>. */
         uint64_t ck_tune0              : 1;  /**< [  7:  7](R/W) Reserved; must be zero.
                                                                  Internal:
-                                                                 Clock tune. */
+                                                                 When set, delays both clocks associated with the DIMM0 connector are delayed
+                                                                 by an additional 45 degrees. */
         uint64_t ck_dlyout1            : 4;  /**< [ 11:  8](R/W) Reserved; must be zero.
                                                                  Internal:
                                                                  Clock delay out.
@@ -18037,7 +19005,8 @@ union cavm_lmcx_phy_ctl
                                                                  CNXXXX uses only bits \<10:8\>. */
         uint64_t ck_tune1              : 1;  /**< [ 12: 12](R/W) Reserved; must be zero.
                                                                  Internal:
-                                                                 Clock tune. */
+                                                                 When set, delays both clocks associated with the DIMM1 connector are delayed
+                                                                 by an additional 45 degrees. */
         uint64_t dqs1_loopback         : 1;  /**< [ 13: 13](R/W) Reserved; must be zero.
                                                                  Internal:
                                                                  The same as [LOOPBACK] except DQS1 is loopbacked through DQS0. */
@@ -18389,13 +19358,15 @@ union cavm_lmcx_phy_ctl
                                                                  The same as [LOOPBACK] except DQS1 is loopbacked through DQS0. */
         uint64_t ck_tune1              : 1;  /**< [ 12: 12](R/W) Reserved; must be zero.
                                                                  Internal:
-                                                                 Clock tune. */
+                                                                 When set, delays both clocks associated with the DIMM1 connector are delayed
+                                                                 by an additional 45 degrees. */
         uint64_t ck_dlyout1            : 4;  /**< [ 11:  8](R/W) Reserved; must be zero.
                                                                  Internal:
                                                                  Clock delay out. */
         uint64_t ck_tune0              : 1;  /**< [  7:  7](R/W) Reserved; must be zero.
                                                                  Internal:
-                                                                 Clock tune. */
+                                                                 When set, delays both clocks associated with the DIMM0 connector are delayed
+                                                                 by an additional 45 degrees. */
         uint64_t ck_dlyout0            : 4;  /**< [  6:  3](R/W) Reserved; must be zero.
                                                                  Internal:
                                                                  Clock delay out. */
@@ -18445,13 +19416,15 @@ union cavm_lmcx_phy_ctl
                                                                  Clock delay out. */
         uint64_t ck_tune0              : 1;  /**< [  7:  7](R/W) Reserved; must be zero.
                                                                  Internal:
-                                                                 Clock tune. */
+                                                                 When set, delays both clocks associated with the DIMM0 connector are delayed
+                                                                 by an additional 45 degrees. */
         uint64_t ck_dlyout1            : 4;  /**< [ 11:  8](R/W) Reserved; must be zero.
                                                                  Internal:
                                                                  Clock delay out. */
         uint64_t ck_tune1              : 1;  /**< [ 12: 12](R/W) Reserved; must be zero.
                                                                  Internal:
-                                                                 Clock tune. */
+                                                                 When set, delays both clocks associated with the DIMM1 connector are delayed
+                                                                 by an additional 45 degrees. */
         uint64_t dqs1_loopback         : 1;  /**< [ 13: 13](R/W) Reserved; must be zero.
                                                                  Internal:
                                                                  The same as [LOOPBACK] except DQS1 is loopbacked through DQS0. */
@@ -18630,7 +19603,7 @@ union cavm_lmcx_phy_ctl
                                                                  average of two as the final Vref training result. */
 #endif /* Word 0 - End */
     } cn98xx;
-    struct cavm_lmcx_phy_ctl_cnf95xx
+    struct cavm_lmcx_phy_ctl_cnf95xxp1
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t rx_vref_sel           : 1;  /**< [ 63: 63](R/W) Run Vref training twice, sampling from DQ3 and DQ4 sequentially, then use the
@@ -19045,9 +20018,430 @@ union cavm_lmcx_phy_ctl
         uint64_t rx_vref_sel           : 1;  /**< [ 63: 63](R/W) Run Vref training twice, sampling from DQ3 and DQ4 sequentially, then use the
                                                                  average of two as the final Vref training result. */
 #endif /* Word 0 - End */
-    } cnf95xx;
-    /* struct cavm_lmcx_phy_ctl_cnf95xx f95mm; */
-    /* struct cavm_lmcx_phy_ctl_cnf95xx loki; */
+    } cnf95xxp1;
+    struct cavm_lmcx_phy_ctl_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t rx_vref_sel           : 1;  /**< [ 63: 63](R/W) Run Vref training twice, sampling from DQ3 and DQ4 sequentially, then use the
+                                                                 average of two as the final Vref training result. */
+        uint64_t double_vref_training  : 1;  /**< [ 62: 62](R/W) Vref longer training.
+                                                                 0 = Normal training period.
+                                                                 1 = Double training period. */
+        uint64_t phy_dsk_lock_en       : 1;  /**< [ 61: 61](R/W) When set, the PHY attempts to lock all DQ/DBI bit deskew settings once alignment is
+                                                                 achieved.
+
+                                                                 When clear, LMC disengages the PHY bit deskew lock control mechanism. This
+                                                                 causes the PHY to continuously perform and/or adjust the read deskew training on
+                                                                 all DQ/DBI bits during any read operations.
+
+                                                                 This field is only reset on cold reset.
+
+                                                                 Internal:
+                                                                 "PHY_DSK_LOCK_EN=0 ("Live tracking mode") should be considered a debug/aid
+                                                                 feature. It has the following limitation:
+                                                                 1. It can only track timing for single-rank.
+                                                                 2. Deskew settings can be altered in the event of a fault (Parity/CRC) on a returned DQS from DRAM.
+                                                                 See Bug #35079 for more detail." */
+        uint64_t dsk_dbg_load_dis      : 1;  /**< [ 60: 60](R/W) Reserved.
+                                                                 Internal:
+                                                                 When set, LMC prevents PHY from loading the deskew shift
+                                                                 registers with its internal settings. When Read Deskew sequence is kicked off
+                                                                 by setting [DSK_DBG_START] = 1 and [DSK_DBG_WR_MODE] = 0, this field determines
+                                                                 whether or not to load the shift register with PHY's internal settings before
+                                                                 the shifting process. */
+        uint64_t dsk_dbg_overwrt_ena   : 1;  /**< [ 59: 59](R/W) Reserved.
+                                                                 Internal:
+                                                                 When set high, PHY selects all of the preloaded data
+                                                                 when configuring the read deskew settings. */
+        uint64_t dsk_dbg_wr_mode       : 1;  /**< [ 58: 58](R/W) Reserved.
+                                                                 Internal:
+                                                                 When set high along with [DSK_DBG_START], LMC kicks off Deskew
+                                                                 Overwrite sequence to shift out one whole byte worth of deskew settings.
+                                                                 Note that there are a total of 9 bytes and the chain structure are split into two
+                                                                 halves such that the top chain covers byte 7,6,5,4 and bottom chain cover byte
+                                                                 ECC,3,2,1,0.
+                                                                 Each byte has 10 DQs (DQ7,DQ6,DQ5,DQ4,DBI,DAC,DQ3,DQ2,DQ1,DQ0) and that each
+                                                                 DQ has 10-bits deskew setting.
+                                                                 The CSR LMC()_GENERAL_PURPOSE0[DATA] is used to store a byte worth of deskew
+                                                                 settings. Before running Deskew Overwrite sequence, the CSR needs to be program
+                                                                 as follows:
+                                                                 DATA\<6:0\>   = DQ0 deskew setting.
+                                                                 DATA\<13:7\>  = DQ1 deskew setting.
+                                                                 DATA\<20:14\> = DQ2 deskew setting.
+                                                                 DATA\<27:21\> = DQ3 deskew setting.
+                                                                 DATA\<34:28\> = DQ4 deskew setting.
+                                                                 DATA\<41:35\> = DQ5 deskew setting.
+                                                                 DATA\<48:42\> = DQ6 deskew setting.
+                                                                 DATA\<55:49\> = DQ7 deskew setting.
+                                                                 DATA\<62:56\> = DBI deskew setting. */
+        uint64_t data_rate_loopback    : 1;  /**< [ 57: 57](R/W) Reserved.
+                                                                 Internal:
+                                                                 DQ data rate loopback, working in conjunction with LOOPBACK assertion.
+                                                                 When asserted, incoming PRBS at even DQ can be set at data rate, and the data is loop
+                                                                 backed out through odd DQ at the same rate.
+                                                                 When de-asserted, LOOPBACK assertion is working along with [LOOPBACK_POS] to check on even
+                                                                 DQ against each DQS edge seperately. This is done at the clock rate. */
+        uint64_t dq_shallow_loopback   : 1;  /**< [ 56: 56](R/W) Reserved.
+                                                                 Internal:
+                                                                 DQ shallow loopback, working in conjunction with LOOPBACK assertion.
+                                                                 When asserted, even DQ inputs can be loop-backed out through its adjacent odd DQ outputs
+                                                                 without being flop'd by DQS. Need to make sure LMC()_PHY_CTL[PHY_DSK_BYP] is set and
+                                                                 LMC()_PHY_CTL[INT_PHY_LOOPBACK_ENA] is unset. */
+        uint64_t dm_disable            : 1;  /**< [ 55: 55](R/W) Write to one to disable the DRAM data mask feature by having LMC driving a constant value
+                                                                 on
+                                                                 the DDR_DQS\<17:9\>_P pins of the chip during write operations. LMC drives a constant one.
+                                                                 Note that setting this field high is NOT allowed when LMC has the write DBI feature turned
+                                                                 on (LMC()_MODEREG_PARAMS3[WR_DBI]=1). */
+        uint64_t cke1_odt1_dis         : 1;  /**< [ 54: 54](R/W) Reserved.
+                                                                 Internal:
+                                                                 Used for NVDIMM-P. When one, LMC disables both DIMM's CKE1 and ODT1 pins
+                                                                 and uses them as inputs instead. */
+        uint64_t c1_cs3_switch         : 1;  /**< [ 53: 53](R/W) 0 = Routes C1 data to the C1 output pin, and
+                                                                     routes CS3 data to the CS3 output pin.
+
+                                                                 1 = Routes C1 data to the CS3 output pin, and
+                                                                     routes CS3 data to the C1 output pin. */
+        uint64_t c0_cs2_switch         : 1;  /**< [ 52: 52](R/W) 0 = Routes C0/TEN data to the C0/TEN output pin, and routes CS2 data to the CS2 output pin.
+                                                                 1 = Routes C0/TEN data to the CS2 output pin, and routes CS2 data to the C0/TEN output pin. */
+        uint64_t ten_sel               : 1;  /**< [ 51: 51](R/W) DDR PHY test enable select signal. When asserted, LMC drives C0/TEN pin with the value set
+                                                                 in LMC()_PHY_CTL[TEN] as part of any commands being sent out. */
+        uint64_t phy_reset             : 1;  /**< [ 50: 50](WO) Reserved.
+                                                                 Internal:
+                                                                 Write to one to reset the PHY, one-shot operation, will automatically
+                                                                 clear to value of zero. */
+        uint64_t dsk_dbg_rd_complete   : 1;  /**< [ 49: 49](RO/H) Reserved.
+                                                                 Internal:
+                                                                 Indicates completion of a read operation, will clear to zero when a read
+                                                                 operation is started, then set to one when operation is complete. */
+        uint64_t dsk_dbg_rd_data       : 10; /**< [ 48: 39](RO/H) Reserved.
+                                                                 Internal:
+                                                                 Data from a deskew read operation. Only valid when the
+                                                                 LMC()_PHY_CTL[DSK_DBG_RD_COMPLETE] bit is set. */
+        uint64_t dsk_dbg_start         : 1;  /**< [ 38: 38](WO/H) Reserved.
+                                                                 Internal:
+                                                                 Write one to start deskew data read/write operation, will automatically clear
+                                                                 to zero. Write to one will also clear the complete bit. */
+        uint64_t dsk_dbg_clk_scaler    : 2;  /**< [ 37: 36](R/W) Reserved.
+                                                                 Internal:
+                                                                 Adjust clock toggle rate for reading deskew debug information:
+                                                                 0x0 = Deskew read clock toggles every 4 DCLKs.
+                                                                 0x1 = Deskew read clock toggles every 8 DCLKs.
+                                                                 0x2 = Deskew read clock toggles every 12 DCLKs.
+                                                                 0x3 = Deskew read clock toggles every 16 DCLKs. */
+        uint64_t dsk_dbg_offset        : 2;  /**< [ 35: 34](R/W) Reserved.
+                                                                 Internal:
+                                                                 Offset to change delay of deskew debug data return time to LMC from
+                                                                 DDR PHY. */
+        uint64_t dsk_dbg_byte_rd       : 1;  /**< [ 33: 33](R/W) Reserved.
+                                                                 Internal:
+                                                                 Personality bit to tell deskew sequence read a byte worth of deskew settings.
+                                                                 Note that [DSK_DBG_BYTE_SEL] must be set to 0 when sequentially reading from
+                                                                 byte0, byte1, byte2, byte3 and ECC. [DSK_DBG_LOAD_DIS] needs to be cleared to 0
+                                                                 in the first run of reading byte0 and set to 1 there after.
+                                                                 Likewise, [DSK_DBG_BYTE_SEL] must be set to 4 when sequentially reading from
+                                                                 byte4, byte5, byte6 and byte 7. [DSK_DBG_LOAD_DIS] needs to be cleared to 0 in
+                                                                 the first run of reading byte4 and set to 1 there after.
+                                                                 After each deskew sequence run, the byte's deskew settings are stored in LMC()_GENERAL_PURPOSE0 and
+                                                                 LMC()_GENERAL_PURPOSE1 registers. */
+        uint64_t dsk_dbg_byte_sel      : 4;  /**< [ 32: 29](R/W) Reserved.
+                                                                 Internal:
+                                                                 Deskew debug byte select for read operation. Values 0-3 correspond to
+                                                                 byte lanes 0-3, 4 is for ECC, 5-8 are byte lanes 4-7. */
+        uint64_t dsk_dbg_bit_sel       : 4;  /**< [ 28: 25](R/W) Reserved.
+                                                                 Internal:
+                                                                 Deskew debug bit select for dsk read operation.
+                                                                 0x0 = DQ0.
+                                                                 0x1 = DQ1.
+                                                                 0x2 = DQ2.
+                                                                 0x3 = DQ3.
+                                                                 0x4 = DAC.
+                                                                 0x5 = DBI/DQS1.
+                                                                 0x6 = DQ4.
+                                                                 0x7 = DQ5.
+                                                                 0x8 = DQ6.
+                                                                 0x9 = DQ7. */
+        uint64_t dbi_mode_ena          : 1;  /**< [ 24: 24](R/W) Enable DBI mode for PHY. */
+        uint64_t ddr_error_n_ena       : 1;  /**< [ 23: 23](R/W) Enable error_alert_n signal for PHY. */
+        uint64_t ref_pin_on            : 1;  /**< [ 22: 22](R/W) Reserved.
+                                                                 Internal:
+                                                                 Voltage reference pin enabled. */
+        uint64_t dac_on                : 1;  /**< [ 21: 21](R/W) Reserved.
+                                                                 Internal:
+                                                                 PHY DAC on. */
+        uint64_t int_pad_loopback_ena  : 1;  /**< [ 20: 20](R/W) Reserved.
+                                                                 Internal:
+                                                                 DDR pad loopback enable.  Also must set LMC()_PHY_CTL[PHY_DSK_BYP]
+                                                                 when loopback is enabled. */
+        uint64_t int_phy_loopback_ena  : 1;  /**< [ 19: 19](R/W) Reserved.
+                                                                 Internal:
+                                                                 PHY loopback enable. */
+        uint64_t phy_dsk_reset         : 1;  /**< [ 18: 18](R/W) PHY deskew reset. When set, the deskew reset signal goes active if the Vrefint/deskew
+                                                                 training sequence is in the idle state.
+
+                                                                 This field is only reset on cold reset. */
+        uint64_t phy_dsk_byp           : 1;  /**< [ 17: 17](R/W) PHY deskew bypass. */
+        uint64_t phy_pwr_save_disable  : 1;  /**< [ 16: 16](R/W) DDR PHY power save disable. */
+        uint64_t ten                   : 1;  /**< [ 15: 15](R/W) DDR PHY test enable pin. */
+        uint64_t rx_always_on          : 1;  /**< [ 14: 14](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 Set to force read_enable to PHY active all the time.
+                                                                 This bit MUST not be set when LMC initialization is in progress. Internal VREF and
+                                                                 Deskew training requires normal operation on the dqx/s read_enable signals.
+                                                                 If set to 1, software needs to ensure that it is set after the DCC training steps are completed. */
+        uint64_t dqs1_loopback         : 1;  /**< [ 13: 13](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 The same as [LOOPBACK] except DQS1 is loopbacked through DQS0. */
+        uint64_t ck_tune1              : 1;  /**< [ 12: 12](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 When set, delays both clocks associated with the DIMM1 connector are delayed
+                                                                 by an additional 45 degrees. */
+        uint64_t ck_dlyout1            : 4;  /**< [ 11:  8](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 Clock delay out.
+
+                                                                 CNXXXX uses only bits \<10:8\>. */
+        uint64_t ck_tune0              : 1;  /**< [  7:  7](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 When set, delays both clocks associated with the DIMM0 connector are delayed
+                                                                 by an additional 45 degrees. */
+        uint64_t ck_dlyout0            : 4;  /**< [  6:  3](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 Clock delay out.
+
+                                                                 CNXXXX uses only bits \<5:3\>. */
+        uint64_t loopback              : 1;  /**< [  2:  2](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 external loopback enable. when asserted, Rx is on at DQS0 and data at even DQ
+                                                                 bits
+                                                                 are loop-backed out through odd DQ bits. For DQS, when LMC()_PHY_CTL[PHY_DSK_BYP] and
+                                                                 LMC()_CONFIG[MODE_X4DEV] are asserted along with LOOPBACK, DQS0 input of a given byte
+                                                                 can be loop-backed out through DQS1 of the same byte. For DQ, when
+                                                                 LMC()_PHY_CTL[DQ_SHALLOW_LOOPBACK] is asserted, DQ bits are loop-backed out without being
+                                                                 flop'd by incoming DQS. When LMC()_PHY_CTL[DQ_SHALLOW_LOOPBACK] is deasserted, DQ bits are
+                                                                 loop-backed out after being flop'd by incoming DQS. */
+        uint64_t loopback_pos          : 1;  /**< [  1:  1](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 Loopback pos mode. This works in conjunction with
+                                                                 LMC()_PHY_CTL[LOOPBACK] mentioned above. */
+        uint64_t ts_stagger            : 1;  /**< [  0:  0](R/W) TS stagger mode. This mode configures output drivers with two-stage drive strength to
+                                                                 avoid undershoot issues on the bus when strong drivers are suddenly turned on. When this
+                                                                 mode is asserted, CNXXXX will configure output drivers to be weak drivers (60 ohm output
+                                                                 impedance) at the first CK cycle, and change drivers to the designated drive strengths
+                                                                 specified in LMC()_COMP_CTL2[CMD_CTL], LMC()_COMP_CTL2[CK_CTL],
+                                                                 LMC()_COMP_CTL2[DQX_CTL] starting at the following cycle. */
+#else /* Word 0 - Little Endian */
+        uint64_t ts_stagger            : 1;  /**< [  0:  0](R/W) TS stagger mode. This mode configures output drivers with two-stage drive strength to
+                                                                 avoid undershoot issues on the bus when strong drivers are suddenly turned on. When this
+                                                                 mode is asserted, CNXXXX will configure output drivers to be weak drivers (60 ohm output
+                                                                 impedance) at the first CK cycle, and change drivers to the designated drive strengths
+                                                                 specified in LMC()_COMP_CTL2[CMD_CTL], LMC()_COMP_CTL2[CK_CTL],
+                                                                 LMC()_COMP_CTL2[DQX_CTL] starting at the following cycle. */
+        uint64_t loopback_pos          : 1;  /**< [  1:  1](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 Loopback pos mode. This works in conjunction with
+                                                                 LMC()_PHY_CTL[LOOPBACK] mentioned above. */
+        uint64_t loopback              : 1;  /**< [  2:  2](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 external loopback enable. when asserted, Rx is on at DQS0 and data at even DQ
+                                                                 bits
+                                                                 are loop-backed out through odd DQ bits. For DQS, when LMC()_PHY_CTL[PHY_DSK_BYP] and
+                                                                 LMC()_CONFIG[MODE_X4DEV] are asserted along with LOOPBACK, DQS0 input of a given byte
+                                                                 can be loop-backed out through DQS1 of the same byte. For DQ, when
+                                                                 LMC()_PHY_CTL[DQ_SHALLOW_LOOPBACK] is asserted, DQ bits are loop-backed out without being
+                                                                 flop'd by incoming DQS. When LMC()_PHY_CTL[DQ_SHALLOW_LOOPBACK] is deasserted, DQ bits are
+                                                                 loop-backed out after being flop'd by incoming DQS. */
+        uint64_t ck_dlyout0            : 4;  /**< [  6:  3](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 Clock delay out.
+
+                                                                 CNXXXX uses only bits \<5:3\>. */
+        uint64_t ck_tune0              : 1;  /**< [  7:  7](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 When set, delays both clocks associated with the DIMM0 connector are delayed
+                                                                 by an additional 45 degrees. */
+        uint64_t ck_dlyout1            : 4;  /**< [ 11:  8](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 Clock delay out.
+
+                                                                 CNXXXX uses only bits \<10:8\>. */
+        uint64_t ck_tune1              : 1;  /**< [ 12: 12](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 When set, delays both clocks associated with the DIMM1 connector are delayed
+                                                                 by an additional 45 degrees. */
+        uint64_t dqs1_loopback         : 1;  /**< [ 13: 13](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 The same as [LOOPBACK] except DQS1 is loopbacked through DQS0. */
+        uint64_t rx_always_on          : 1;  /**< [ 14: 14](R/W) Reserved; must be zero.
+                                                                 Internal:
+                                                                 Set to force read_enable to PHY active all the time.
+                                                                 This bit MUST not be set when LMC initialization is in progress. Internal VREF and
+                                                                 Deskew training requires normal operation on the dqx/s read_enable signals.
+                                                                 If set to 1, software needs to ensure that it is set after the DCC training steps are completed. */
+        uint64_t ten                   : 1;  /**< [ 15: 15](R/W) DDR PHY test enable pin. */
+        uint64_t phy_pwr_save_disable  : 1;  /**< [ 16: 16](R/W) DDR PHY power save disable. */
+        uint64_t phy_dsk_byp           : 1;  /**< [ 17: 17](R/W) PHY deskew bypass. */
+        uint64_t phy_dsk_reset         : 1;  /**< [ 18: 18](R/W) PHY deskew reset. When set, the deskew reset signal goes active if the Vrefint/deskew
+                                                                 training sequence is in the idle state.
+
+                                                                 This field is only reset on cold reset. */
+        uint64_t int_phy_loopback_ena  : 1;  /**< [ 19: 19](R/W) Reserved.
+                                                                 Internal:
+                                                                 PHY loopback enable. */
+        uint64_t int_pad_loopback_ena  : 1;  /**< [ 20: 20](R/W) Reserved.
+                                                                 Internal:
+                                                                 DDR pad loopback enable.  Also must set LMC()_PHY_CTL[PHY_DSK_BYP]
+                                                                 when loopback is enabled. */
+        uint64_t dac_on                : 1;  /**< [ 21: 21](R/W) Reserved.
+                                                                 Internal:
+                                                                 PHY DAC on. */
+        uint64_t ref_pin_on            : 1;  /**< [ 22: 22](R/W) Reserved.
+                                                                 Internal:
+                                                                 Voltage reference pin enabled. */
+        uint64_t ddr_error_n_ena       : 1;  /**< [ 23: 23](R/W) Enable error_alert_n signal for PHY. */
+        uint64_t dbi_mode_ena          : 1;  /**< [ 24: 24](R/W) Enable DBI mode for PHY. */
+        uint64_t dsk_dbg_bit_sel       : 4;  /**< [ 28: 25](R/W) Reserved.
+                                                                 Internal:
+                                                                 Deskew debug bit select for dsk read operation.
+                                                                 0x0 = DQ0.
+                                                                 0x1 = DQ1.
+                                                                 0x2 = DQ2.
+                                                                 0x3 = DQ3.
+                                                                 0x4 = DAC.
+                                                                 0x5 = DBI/DQS1.
+                                                                 0x6 = DQ4.
+                                                                 0x7 = DQ5.
+                                                                 0x8 = DQ6.
+                                                                 0x9 = DQ7. */
+        uint64_t dsk_dbg_byte_sel      : 4;  /**< [ 32: 29](R/W) Reserved.
+                                                                 Internal:
+                                                                 Deskew debug byte select for read operation. Values 0-3 correspond to
+                                                                 byte lanes 0-3, 4 is for ECC, 5-8 are byte lanes 4-7. */
+        uint64_t dsk_dbg_byte_rd       : 1;  /**< [ 33: 33](R/W) Reserved.
+                                                                 Internal:
+                                                                 Personality bit to tell deskew sequence read a byte worth of deskew settings.
+                                                                 Note that [DSK_DBG_BYTE_SEL] must be set to 0 when sequentially reading from
+                                                                 byte0, byte1, byte2, byte3 and ECC. [DSK_DBG_LOAD_DIS] needs to be cleared to 0
+                                                                 in the first run of reading byte0 and set to 1 there after.
+                                                                 Likewise, [DSK_DBG_BYTE_SEL] must be set to 4 when sequentially reading from
+                                                                 byte4, byte5, byte6 and byte 7. [DSK_DBG_LOAD_DIS] needs to be cleared to 0 in
+                                                                 the first run of reading byte4 and set to 1 there after.
+                                                                 After each deskew sequence run, the byte's deskew settings are stored in LMC()_GENERAL_PURPOSE0 and
+                                                                 LMC()_GENERAL_PURPOSE1 registers. */
+        uint64_t dsk_dbg_offset        : 2;  /**< [ 35: 34](R/W) Reserved.
+                                                                 Internal:
+                                                                 Offset to change delay of deskew debug data return time to LMC from
+                                                                 DDR PHY. */
+        uint64_t dsk_dbg_clk_scaler    : 2;  /**< [ 37: 36](R/W) Reserved.
+                                                                 Internal:
+                                                                 Adjust clock toggle rate for reading deskew debug information:
+                                                                 0x0 = Deskew read clock toggles every 4 DCLKs.
+                                                                 0x1 = Deskew read clock toggles every 8 DCLKs.
+                                                                 0x2 = Deskew read clock toggles every 12 DCLKs.
+                                                                 0x3 = Deskew read clock toggles every 16 DCLKs. */
+        uint64_t dsk_dbg_start         : 1;  /**< [ 38: 38](WO/H) Reserved.
+                                                                 Internal:
+                                                                 Write one to start deskew data read/write operation, will automatically clear
+                                                                 to zero. Write to one will also clear the complete bit. */
+        uint64_t dsk_dbg_rd_data       : 10; /**< [ 48: 39](RO/H) Reserved.
+                                                                 Internal:
+                                                                 Data from a deskew read operation. Only valid when the
+                                                                 LMC()_PHY_CTL[DSK_DBG_RD_COMPLETE] bit is set. */
+        uint64_t dsk_dbg_rd_complete   : 1;  /**< [ 49: 49](RO/H) Reserved.
+                                                                 Internal:
+                                                                 Indicates completion of a read operation, will clear to zero when a read
+                                                                 operation is started, then set to one when operation is complete. */
+        uint64_t phy_reset             : 1;  /**< [ 50: 50](WO) Reserved.
+                                                                 Internal:
+                                                                 Write to one to reset the PHY, one-shot operation, will automatically
+                                                                 clear to value of zero. */
+        uint64_t ten_sel               : 1;  /**< [ 51: 51](R/W) DDR PHY test enable select signal. When asserted, LMC drives C0/TEN pin with the value set
+                                                                 in LMC()_PHY_CTL[TEN] as part of any commands being sent out. */
+        uint64_t c0_cs2_switch         : 1;  /**< [ 52: 52](R/W) 0 = Routes C0/TEN data to the C0/TEN output pin, and routes CS2 data to the CS2 output pin.
+                                                                 1 = Routes C0/TEN data to the CS2 output pin, and routes CS2 data to the C0/TEN output pin. */
+        uint64_t c1_cs3_switch         : 1;  /**< [ 53: 53](R/W) 0 = Routes C1 data to the C1 output pin, and
+                                                                     routes CS3 data to the CS3 output pin.
+
+                                                                 1 = Routes C1 data to the CS3 output pin, and
+                                                                     routes CS3 data to the C1 output pin. */
+        uint64_t cke1_odt1_dis         : 1;  /**< [ 54: 54](R/W) Reserved.
+                                                                 Internal:
+                                                                 Used for NVDIMM-P. When one, LMC disables both DIMM's CKE1 and ODT1 pins
+                                                                 and uses them as inputs instead. */
+        uint64_t dm_disable            : 1;  /**< [ 55: 55](R/W) Write to one to disable the DRAM data mask feature by having LMC driving a constant value
+                                                                 on
+                                                                 the DDR_DQS\<17:9\>_P pins of the chip during write operations. LMC drives a constant one.
+                                                                 Note that setting this field high is NOT allowed when LMC has the write DBI feature turned
+                                                                 on (LMC()_MODEREG_PARAMS3[WR_DBI]=1). */
+        uint64_t dq_shallow_loopback   : 1;  /**< [ 56: 56](R/W) Reserved.
+                                                                 Internal:
+                                                                 DQ shallow loopback, working in conjunction with LOOPBACK assertion.
+                                                                 When asserted, even DQ inputs can be loop-backed out through its adjacent odd DQ outputs
+                                                                 without being flop'd by DQS. Need to make sure LMC()_PHY_CTL[PHY_DSK_BYP] is set and
+                                                                 LMC()_PHY_CTL[INT_PHY_LOOPBACK_ENA] is unset. */
+        uint64_t data_rate_loopback    : 1;  /**< [ 57: 57](R/W) Reserved.
+                                                                 Internal:
+                                                                 DQ data rate loopback, working in conjunction with LOOPBACK assertion.
+                                                                 When asserted, incoming PRBS at even DQ can be set at data rate, and the data is loop
+                                                                 backed out through odd DQ at the same rate.
+                                                                 When de-asserted, LOOPBACK assertion is working along with [LOOPBACK_POS] to check on even
+                                                                 DQ against each DQS edge seperately. This is done at the clock rate. */
+        uint64_t dsk_dbg_wr_mode       : 1;  /**< [ 58: 58](R/W) Reserved.
+                                                                 Internal:
+                                                                 When set high along with [DSK_DBG_START], LMC kicks off Deskew
+                                                                 Overwrite sequence to shift out one whole byte worth of deskew settings.
+                                                                 Note that there are a total of 9 bytes and the chain structure are split into two
+                                                                 halves such that the top chain covers byte 7,6,5,4 and bottom chain cover byte
+                                                                 ECC,3,2,1,0.
+                                                                 Each byte has 10 DQs (DQ7,DQ6,DQ5,DQ4,DBI,DAC,DQ3,DQ2,DQ1,DQ0) and that each
+                                                                 DQ has 10-bits deskew setting.
+                                                                 The CSR LMC()_GENERAL_PURPOSE0[DATA] is used to store a byte worth of deskew
+                                                                 settings. Before running Deskew Overwrite sequence, the CSR needs to be program
+                                                                 as follows:
+                                                                 DATA\<6:0\>   = DQ0 deskew setting.
+                                                                 DATA\<13:7\>  = DQ1 deskew setting.
+                                                                 DATA\<20:14\> = DQ2 deskew setting.
+                                                                 DATA\<27:21\> = DQ3 deskew setting.
+                                                                 DATA\<34:28\> = DQ4 deskew setting.
+                                                                 DATA\<41:35\> = DQ5 deskew setting.
+                                                                 DATA\<48:42\> = DQ6 deskew setting.
+                                                                 DATA\<55:49\> = DQ7 deskew setting.
+                                                                 DATA\<62:56\> = DBI deskew setting. */
+        uint64_t dsk_dbg_overwrt_ena   : 1;  /**< [ 59: 59](R/W) Reserved.
+                                                                 Internal:
+                                                                 When set high, PHY selects all of the preloaded data
+                                                                 when configuring the read deskew settings. */
+        uint64_t dsk_dbg_load_dis      : 1;  /**< [ 60: 60](R/W) Reserved.
+                                                                 Internal:
+                                                                 When set, LMC prevents PHY from loading the deskew shift
+                                                                 registers with its internal settings. When Read Deskew sequence is kicked off
+                                                                 by setting [DSK_DBG_START] = 1 and [DSK_DBG_WR_MODE] = 0, this field determines
+                                                                 whether or not to load the shift register with PHY's internal settings before
+                                                                 the shifting process. */
+        uint64_t phy_dsk_lock_en       : 1;  /**< [ 61: 61](R/W) When set, the PHY attempts to lock all DQ/DBI bit deskew settings once alignment is
+                                                                 achieved.
+
+                                                                 When clear, LMC disengages the PHY bit deskew lock control mechanism. This
+                                                                 causes the PHY to continuously perform and/or adjust the read deskew training on
+                                                                 all DQ/DBI bits during any read operations.
+
+                                                                 This field is only reset on cold reset.
+
+                                                                 Internal:
+                                                                 "PHY_DSK_LOCK_EN=0 ("Live tracking mode") should be considered a debug/aid
+                                                                 feature. It has the following limitation:
+                                                                 1. It can only track timing for single-rank.
+                                                                 2. Deskew settings can be altered in the event of a fault (Parity/CRC) on a returned DQS from DRAM.
+                                                                 See Bug #35079 for more detail." */
+        uint64_t double_vref_training  : 1;  /**< [ 62: 62](R/W) Vref longer training.
+                                                                 0 = Normal training period.
+                                                                 1 = Double training period. */
+        uint64_t rx_vref_sel           : 1;  /**< [ 63: 63](R/W) Run Vref training twice, sampling from DQ3 and DQ4 sequentially, then use the
+                                                                 average of two as the final Vref training result. */
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_lmcx_phy_ctl_cnf95xxp2 f95mm; */
+    /* struct cavm_lmcx_phy_ctl_cnf95xxp1 f95o; */
+    /* struct cavm_lmcx_phy_ctl_cnf95xxp2 loki; */
 };
 typedef union cavm_lmcx_phy_ctl cavm_lmcx_phy_ctl_t;
 
@@ -19065,6 +20459,8 @@ static inline uint64_t CAVM_LMCX_PHY_CTL(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000210ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000210ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000210ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000210ll + 0x1000000ll * ((a) & 0x3);
@@ -19229,6 +20625,8 @@ static inline uint64_t CAVM_LMCX_PHY_CTL2(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000250ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000250ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000250ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000250ll + 0x1000000ll * ((a) & 0x3);
@@ -19502,6 +20900,7 @@ union cavm_lmcx_phy_ctl3
     } cn98xx;
     /* struct cavm_lmcx_phy_ctl3_s cnf95xx; */
     /* struct cavm_lmcx_phy_ctl3_s f95mm; */
+    /* struct cavm_lmcx_phy_ctl3_s f95o; */
     /* struct cavm_lmcx_phy_ctl3_s loki; */
 };
 typedef union cavm_lmcx_phy_ctl3 cavm_lmcx_phy_ctl3_t;
@@ -19516,6 +20915,8 @@ static inline uint64_t CAVM_LMCX_PHY_CTL3(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880002f8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880002f8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880002f8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880002f8ll + 0x1000000ll * ((a) & 0x3);
@@ -19588,6 +20989,8 @@ static inline uint64_t CAVM_LMCX_POW_MPR_CTL(uint64_t a)
         return 0x87e0880000b0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e0880000b0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e0880000b0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880000b0ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_POW_MPR_CTL", 1, a, 0, 0, 0, 0, 0);
@@ -19635,6 +21038,8 @@ static inline uint64_t CAVM_LMCX_POW_MPR_DATA0(uint64_t a)
         return 0x87e0880000b8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e0880000b8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e0880000b8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880000b8ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_POW_MPR_DATA0", 1, a, 0, 0, 0, 0, 0);
@@ -19681,6 +21086,8 @@ static inline uint64_t CAVM_LMCX_POW_MPR_DATA1(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880000c0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880000c0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880000c0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880000c0ll + 0x1000000ll * ((a) & 0x3);
@@ -19730,6 +21137,8 @@ static inline uint64_t CAVM_LMCX_POW_MPR_DATA2(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880000c8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880000c8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880000c8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880000c8ll + 0x1000000ll * ((a) & 0x3);
@@ -19960,6 +21369,8 @@ static inline uint64_t CAVM_LMCX_PPR_CTL(uint64_t a)
         return 0x87e0880003e0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e0880003e0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e0880003e0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880003e0ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_PPR_CTL", 1, a, 0, 0, 0, 0, 0);
@@ -20039,6 +21450,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERR00ADDR(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001018ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001018ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001018ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001018ll + 0x1000000ll * ((a) & 0x3);
@@ -20225,6 +21638,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERR00CTLR(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001008ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001008ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001008ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001008ll + 0x1000000ll * ((a) & 0x3);
@@ -20594,6 +22009,7 @@ union cavm_lmcx_ras_err00fr
     /* struct cavm_lmcx_ras_err00fr_cn96xxp3 cn98xx; */
     /* struct cavm_lmcx_ras_err00fr_cn96xxp3 cnf95xx; */
     /* struct cavm_lmcx_ras_err00fr_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_ras_err00fr_cn96xxp3 f95o; */
     /* struct cavm_lmcx_ras_err00fr_cn96xxp3 loki; */
 };
 typedef union cavm_lmcx_ras_err00fr cavm_lmcx_ras_err00fr_t;
@@ -20608,6 +22024,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERR00FR(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001000ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001000ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001000ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001000ll + 0x1000000ll * ((a) & 0x3);
@@ -20664,7 +22082,44 @@ union cavm_lmcx_ras_err00misc0
         uint64_t reserved_48_63        : 16;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_lmcx_ras_err00misc0_s cn; */
+    /* struct cavm_lmcx_ras_err00misc0_s cn9; */
+    /* struct cavm_lmcx_ras_err00misc0_s cn96xxp1; */
+    struct cavm_lmcx_ras_err00misc0_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_48_63        : 16;
+        uint64_t of                    : 1;  /**< [ 47: 47](R/W/H) Sticky overflow bit.
+                                                                 0 = Counter has not overflowed.
+                                                                 1 = Counter has overflowed.
+
+                                                                 The fault handling interrupt is generated when the corrected fault handling interrupt is
+                                                                 enabled and the
+                                                                 overflow bit is set to 1.
+
+                                                                 LMC()_RETRY_CONFIG[RETRY_ENABLE] must be set for CRC/Parity errors to be counted as correctable. */
+        uint64_t cec                   : 15; /**< [ 46: 32](R/W/H) Corrected error count. */
+        uint64_t reserved_0_31         : 32;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0_31         : 32;
+        uint64_t cec                   : 15; /**< [ 46: 32](R/W/H) Corrected error count. */
+        uint64_t of                    : 1;  /**< [ 47: 47](R/W/H) Sticky overflow bit.
+                                                                 0 = Counter has not overflowed.
+                                                                 1 = Counter has overflowed.
+
+                                                                 The fault handling interrupt is generated when the corrected fault handling interrupt is
+                                                                 enabled and the
+                                                                 overflow bit is set to 1.
+
+                                                                 LMC()_RETRY_CONFIG[RETRY_ENABLE] must be set for CRC/Parity errors to be counted as correctable. */
+        uint64_t reserved_48_63        : 16;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_lmcx_ras_err00misc0_cn96xxp3 cn98xx; */
+    /* struct cavm_lmcx_ras_err00misc0_s cnf95xxp1; */
+    /* struct cavm_lmcx_ras_err00misc0_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_lmcx_ras_err00misc0_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_ras_err00misc0_s f95o; */
+    /* struct cavm_lmcx_ras_err00misc0_cn96xxp3 loki; */
 };
 typedef union cavm_lmcx_ras_err00misc0 cavm_lmcx_ras_err00misc0_t;
 
@@ -20678,6 +22133,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERR00MISC0(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001020ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001020ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001020ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001020ll + 0x1000000ll * ((a) & 0x3);
@@ -20726,6 +22183,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERR00MISC1(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001028ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001028ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001028ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001028ll + 0x1000000ll * ((a) & 0x3);
@@ -21107,6 +22566,7 @@ union cavm_lmcx_ras_err00status
     /* struct cavm_lmcx_ras_err00status_cn96xxp3 cn98xx; */
     /* struct cavm_lmcx_ras_err00status_cn96xxp3 cnf95xx; */
     /* struct cavm_lmcx_ras_err00status_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_ras_err00status_cn96xxp3 f95o; */
     /* struct cavm_lmcx_ras_err00status_cn96xxp3 loki; */
 };
 typedef union cavm_lmcx_ras_err00status cavm_lmcx_ras_err00status_t;
@@ -21121,6 +22581,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERR00STATUS(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001010ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001010ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001010ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001010ll + 0x1000000ll * ((a) & 0x3);
@@ -21167,6 +22629,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRCIDR0(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001ff0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001ff0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001ff0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001ff0ll + 0x1000000ll * ((a) & 0x3);
@@ -21216,6 +22680,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRCIDR1(uint64_t a)
         return 0x87e088001ff4ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088001ff4ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088001ff4ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001ff4ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_RAS_ERRCIDR1", 1, a, 0, 0, 0, 0, 0);
@@ -21262,6 +22728,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRCIDR2(uint64_t a)
         return 0x87e088001ff8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088001ff8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088001ff8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001ff8ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_RAS_ERRCIDR2", 1, a, 0, 0, 0, 0, 0);
@@ -21307,6 +22775,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRCIDR3(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001ffcll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001ffcll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001ffcll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001ffcll + 0x1000000ll * ((a) & 0x3);
@@ -21370,6 +22840,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRDEVAFF(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001fa8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001fa8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001fa8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001fa8ll + 0x1000000ll * ((a) & 0x3);
@@ -21441,6 +22913,7 @@ union cavm_lmcx_ras_errdevarch
     /* struct cavm_lmcx_ras_errdevarch_cn96xxp3 cn98xx; */
     /* struct cavm_lmcx_ras_errdevarch_cn96xxp3 cnf95xx; */
     /* struct cavm_lmcx_ras_errdevarch_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_ras_errdevarch_cn96xxp3 f95o; */
     /* struct cavm_lmcx_ras_errdevarch_cn96xxp3 loki; */
 };
 typedef union cavm_lmcx_ras_errdevarch cavm_lmcx_ras_errdevarch_t;
@@ -21455,6 +22928,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRDEVARCH(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001fbcll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001fbcll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001fbcll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001fbcll + 0x1000000ll * ((a) & 0x3);
@@ -21502,6 +22977,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRDEVID(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001fc8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001fc8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001fc8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001fc8ll + 0x1000000ll * ((a) & 0x3);
@@ -21561,6 +23038,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRGSR0(uint64_t a)
         return 0x87e088001e00ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088001e00ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088001e00ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001e00ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_RAS_ERRGSR0", 1, a, 0, 0, 0, 0, 0);
@@ -21610,6 +23089,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRIRQCR0(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001e80ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001e80ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001e80ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001e80ll + 0x1000000ll * ((a) & 0x3);
@@ -21661,6 +23142,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRIRQCR1(uint64_t a)
         return 0x87e088001e88ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088001e88ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088001e88ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001e88ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_RAS_ERRIRQCR1", 1, a, 0, 0, 0, 0, 0);
@@ -21705,6 +23188,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRIRQCR2(uint64_t a)
         return 0x87e088001e90ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088001e90ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088001e90ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001e90ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_RAS_ERRIRQCR2", 1, a, 0, 0, 0, 0, 0);
@@ -21748,6 +23233,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRIRQCR3(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001e98ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001e98ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001e98ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001e98ll + 0x1000000ll * ((a) & 0x3);
@@ -21849,6 +23336,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRIRQSR(uint64_t a)
         return 0x87e088001ef8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088001ef8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088001ef8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001ef8ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_RAS_ERRIRQSR", 1, a, 0, 0, 0, 0, 0);
@@ -21894,6 +23383,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRPIDR0(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001fe0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001fe0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001fe0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001fe0ll + 0x1000000ll * ((a) & 0x3);
@@ -21945,6 +23436,7 @@ union cavm_lmcx_ras_errpidr1
     /* struct cavm_lmcx_ras_errpidr1_cn96xxp3 cn98xx; */
     /* struct cavm_lmcx_ras_errpidr1_cn96xxp3 cnf95xx; */
     /* struct cavm_lmcx_ras_errpidr1_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_ras_errpidr1_cn96xxp3 f95o; */
     /* struct cavm_lmcx_ras_errpidr1_cn96xxp3 loki; */
 };
 typedef union cavm_lmcx_ras_errpidr1 cavm_lmcx_ras_errpidr1_t;
@@ -21959,6 +23451,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRPIDR1(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001fe4ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001fe4ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001fe4ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001fe4ll + 0x1000000ll * ((a) & 0x3);
@@ -22015,6 +23509,7 @@ union cavm_lmcx_ras_errpidr2
     /* struct cavm_lmcx_ras_errpidr2_s cnf95xxp1; */
     /* struct cavm_lmcx_ras_errpidr2_cn96xxp3 cnf95xxp2; */
     /* struct cavm_lmcx_ras_errpidr2_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_ras_errpidr2_s f95o; */
     /* struct cavm_lmcx_ras_errpidr2_cn96xxp3 loki; */
 };
 typedef union cavm_lmcx_ras_errpidr2 cavm_lmcx_ras_errpidr2_t;
@@ -22029,6 +23524,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRPIDR2(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001fe8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001fe8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001fe8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001fe8ll + 0x1000000ll * ((a) & 0x3);
@@ -22079,6 +23576,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRPIDR3(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001fecll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001fecll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001fecll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001fecll + 0x1000000ll * ((a) & 0x3);
@@ -22135,6 +23634,7 @@ union cavm_lmcx_ras_errpidr4
     /* struct cavm_lmcx_ras_errpidr4_s cnf95xxp1; */
     /* struct cavm_lmcx_ras_errpidr4_cn96xxp3 cnf95xxp2; */
     /* struct cavm_lmcx_ras_errpidr4_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_ras_errpidr4_s f95o; */
     /* struct cavm_lmcx_ras_errpidr4_cn96xxp3 loki; */
 };
 typedef union cavm_lmcx_ras_errpidr4 cavm_lmcx_ras_errpidr4_t;
@@ -22149,6 +23649,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRPIDR4(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001fd0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001fd0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001fd0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001fd0ll + 0x1000000ll * ((a) & 0x3);
@@ -22194,6 +23696,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRPIDR5(uint64_t a)
         return 0x87e088001fd4ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088001fd4ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088001fd4ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001fd4ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_RAS_ERRPIDR5", 1, a, 0, 0, 0, 0, 0);
@@ -22238,6 +23742,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRPIDR6(uint64_t a)
         return 0x87e088001fd8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088001fd8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088001fd8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001fd8ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_RAS_ERRPIDR6", 1, a, 0, 0, 0, 0, 0);
@@ -22281,6 +23787,8 @@ static inline uint64_t CAVM_LMCX_RAS_ERRPIDR7(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088001fdcll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088001fdcll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088001fdcll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088001fdcll + 0x1000000ll * ((a) & 0x3);
@@ -22331,6 +23839,8 @@ static inline uint64_t CAVM_LMCX_RAS_INT(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000418ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000418ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000418ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000418ll + 0x1000000ll * ((a) & 0x3);
@@ -22386,6 +23896,7 @@ union cavm_lmcx_ras_int_ena_w1c
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_lmcx_ras_int_ena_w1c_cnf95xx f95mm; */
+    /* struct cavm_lmcx_ras_int_ena_w1c_cnf95xx f95o; */
     /* struct cavm_lmcx_ras_int_ena_w1c_cnf95xx loki; */
 };
 typedef union cavm_lmcx_ras_int_ena_w1c cavm_lmcx_ras_int_ena_w1c_t;
@@ -22400,6 +23911,8 @@ static inline uint64_t CAVM_LMCX_RAS_INT_ENA_W1C(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000428ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000428ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000428ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000428ll + 0x1000000ll * ((a) & 0x3);
@@ -22455,6 +23968,7 @@ union cavm_lmcx_ras_int_ena_w1s
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_lmcx_ras_int_ena_w1s_cnf95xx f95mm; */
+    /* struct cavm_lmcx_ras_int_ena_w1s_cnf95xx f95o; */
     /* struct cavm_lmcx_ras_int_ena_w1s_cnf95xx loki; */
 };
 typedef union cavm_lmcx_ras_int_ena_w1s cavm_lmcx_ras_int_ena_w1s_t;
@@ -22469,6 +23983,8 @@ static inline uint64_t CAVM_LMCX_RAS_INT_ENA_W1S(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000430ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000430ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000430ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000430ll + 0x1000000ll * ((a) & 0x3);
@@ -22524,6 +24040,7 @@ union cavm_lmcx_ras_int_w1s
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_lmcx_ras_int_w1s_cnf95xx f95mm; */
+    /* struct cavm_lmcx_ras_int_w1s_cnf95xx f95o; */
     /* struct cavm_lmcx_ras_int_w1s_cnf95xx loki; */
 };
 typedef union cavm_lmcx_ras_int_w1s cavm_lmcx_ras_int_w1s_t;
@@ -22538,6 +24055,8 @@ static inline uint64_t CAVM_LMCX_RAS_INT_W1S(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000420ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000420ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000420ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000420ll + 0x1000000ll * ((a) & 0x3);
@@ -23094,6 +24613,7 @@ union cavm_lmcx_ref_config
     } cn98xx;
     /* struct cavm_lmcx_ref_config_cn96xxp1 cnf95xx; */
     /* struct cavm_lmcx_ref_config_cn96xxp1 f95mm; */
+    /* struct cavm_lmcx_ref_config_cn96xxp1 f95o; */
     /* struct cavm_lmcx_ref_config_cn96xxp1 loki; */
 };
 typedef union cavm_lmcx_ref_config cavm_lmcx_ref_config_t;
@@ -23108,6 +24628,8 @@ static inline uint64_t CAVM_LMCX_REF_CONFIG(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880000a0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880000a0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880000a0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880000a0ll + 0x1000000ll * ((a) & 0x3);
@@ -23261,6 +24783,8 @@ static inline uint64_t CAVM_LMCX_REF_STATUS(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880000a8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880000a8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880000a8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880000a8ll + 0x1000000ll * ((a) & 0x3);
@@ -23479,6 +25003,87 @@ union cavm_lmcx_reset_ctl
         uint64_t reserved_4_63         : 60;
 #endif /* Word 0 - End */
     } cn9;
+    /* struct cavm_lmcx_reset_ctl_cn9 cn96xxp1; */
+    struct cavm_lmcx_reset_ctl_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_4_63         : 60;
+        uint64_t training_completed    : 1;  /**< [  3:  3](R/W) Software can set this field to 1 after all of initialization training sequences
+                                                                 (e.g., write/read leveling) have completed. This field gets reset by cold reset
+                                                                 only. When software comes back from domain/chip reset, it can use the state of
+                                                                 this field to determine whether initialization training sequences are needed to
+                                                                 be performed. */
+        uint64_t ddr4psv               : 1;  /**< [  2:  2](R/W/H) Memory reset. 1 = DDR contents preserved.
+
+                                                                 May be useful for system software to determine when the DDR4 contents have
+                                                                 been preserved.
+
+                                                                 Cleared by hardware during a cold reset. Never cleared by
+                                                                 hardware during a core domain reset. Set by hardware during a core domain reset
+                                                                 if the hardware automatically put the DDR4 DRAM into self-refresh during the
+                                                                 reset sequence.  Can also be written by software (to any value). */
+        uint64_t ddr4pdomain           : 1;  /**< [  1:  1](R/W/H) Memory reset. 1 = Enable preserve mode during core domain reset.
+
+                                                                 Enables preserve mode during a core domain reset. When set, the memory controller hardware
+                                                                 automatically puts the attached DDR4 DRAM parts into self-refresh at the beginning of a
+                                                                 core domain reset sequence (see LMC()_SEQ_CTL[SEQ_SEL]), provided that the controller is
+                                                                 up. When clear, the controller hardware does not put the attached DDR4 DRAM parts into
+                                                                 self-refresh during a core domain reset sequence.
+
+                                                                 Cleared on a cold reset. Core domain resets do not affect [DDR4PDOMAIN]. Outside
+                                                                 of cold reset, only software CSR write operations change [DDR4PDOMAIN]. */
+        uint64_t ddr4rst               : 1;  /**< [  0:  0](R/W/H) "Memory reset. 0 = Reset asserted; 1 = Reset deasserted.
+
+                                                                 DDR4 DRAM parts have a RESET# pin. The DDR4RST CSR field controls the assertion of
+                                                                 the new CNXXXX pin that attaches to RESET#.
+                                                                 When DDR4RST is set, CNXXXX deasserts RESET#.
+                                                                 When DDR4RST is clear, CNXXXX asserts RESET#.
+
+                                                                 Cleared on a cold reset. Core domain resets do not affect [DDR4RST] value.
+                                                                 Outside of cold reset, only software CSR write operations change [DDR4RST]." */
+#else /* Word 0 - Little Endian */
+        uint64_t ddr4rst               : 1;  /**< [  0:  0](R/W/H) "Memory reset. 0 = Reset asserted; 1 = Reset deasserted.
+
+                                                                 DDR4 DRAM parts have a RESET# pin. The DDR4RST CSR field controls the assertion of
+                                                                 the new CNXXXX pin that attaches to RESET#.
+                                                                 When DDR4RST is set, CNXXXX deasserts RESET#.
+                                                                 When DDR4RST is clear, CNXXXX asserts RESET#.
+
+                                                                 Cleared on a cold reset. Core domain resets do not affect [DDR4RST] value.
+                                                                 Outside of cold reset, only software CSR write operations change [DDR4RST]." */
+        uint64_t ddr4pdomain           : 1;  /**< [  1:  1](R/W/H) Memory reset. 1 = Enable preserve mode during core domain reset.
+
+                                                                 Enables preserve mode during a core domain reset. When set, the memory controller hardware
+                                                                 automatically puts the attached DDR4 DRAM parts into self-refresh at the beginning of a
+                                                                 core domain reset sequence (see LMC()_SEQ_CTL[SEQ_SEL]), provided that the controller is
+                                                                 up. When clear, the controller hardware does not put the attached DDR4 DRAM parts into
+                                                                 self-refresh during a core domain reset sequence.
+
+                                                                 Cleared on a cold reset. Core domain resets do not affect [DDR4PDOMAIN]. Outside
+                                                                 of cold reset, only software CSR write operations change [DDR4PDOMAIN]. */
+        uint64_t ddr4psv               : 1;  /**< [  2:  2](R/W/H) Memory reset. 1 = DDR contents preserved.
+
+                                                                 May be useful for system software to determine when the DDR4 contents have
+                                                                 been preserved.
+
+                                                                 Cleared by hardware during a cold reset. Never cleared by
+                                                                 hardware during a core domain reset. Set by hardware during a core domain reset
+                                                                 if the hardware automatically put the DDR4 DRAM into self-refresh during the
+                                                                 reset sequence.  Can also be written by software (to any value). */
+        uint64_t training_completed    : 1;  /**< [  3:  3](R/W) Software can set this field to 1 after all of initialization training sequences
+                                                                 (e.g., write/read leveling) have completed. This field gets reset by cold reset
+                                                                 only. When software comes back from domain/chip reset, it can use the state of
+                                                                 this field to determine whether initialization training sequences are needed to
+                                                                 be performed. */
+        uint64_t reserved_4_63         : 60;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_lmcx_reset_ctl_cn96xxp3 cn98xx; */
+    /* struct cavm_lmcx_reset_ctl_cn9 cnf95xxp1; */
+    /* struct cavm_lmcx_reset_ctl_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_lmcx_reset_ctl_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_reset_ctl_cn9 f95o; */
+    /* struct cavm_lmcx_reset_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_lmcx_reset_ctl cavm_lmcx_reset_ctl_t;
 
@@ -23496,6 +25101,8 @@ static inline uint64_t CAVM_LMCX_RESET_CTL(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000180ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000180ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000180ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000180ll + 0x1000000ll * ((a) & 0x3);
@@ -23623,6 +25230,8 @@ static inline uint64_t CAVM_LMCX_RETRY_CONFIG(uint64_t a)
         return 0x87e088000110ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000110ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000110ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000110ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_RETRY_CONFIG", 1, a, 0, 0, 0, 0, 0);
@@ -23743,6 +25352,71 @@ union cavm_lmcx_retry_status
         uint64_t reserved_63           : 1;
 #endif /* Word 0 - End */
     } cn9;
+    /* struct cavm_lmcx_retry_status_cn9 cn96xxp1; */
+    struct cavm_lmcx_retry_status_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_63           : 1;
+        uint64_t clear_error_pulse_count : 1;/**< [ 62: 62](WO) Clear the error count, one shot operation. */
+        uint64_t reserved_57_61        : 5;
+        uint64_t error_pulse_count_valid : 1;/**< [ 56: 56](RO/H) Asserts when a full alert_n transition is complete. Indicating that
+                                                                 error count and saturation value are stable and valid.
+
+                                                                 This field is cleared either by clearing the interrupt or writing a one
+                                                                 to the pulse count clear bit. */
+        uint64_t error_pulse_count_sat : 1;  /**< [ 55: 55](RO/H) When set and the count is valid, indicates that the counter has saturated,
+                                                                 which effectively indicates that a command error has occurred and not a CRC
+                                                                 error.
+
+                                                                 This field is cleared either by clearing the interrupt or writing a one
+                                                                 to the pulse count clear bit. */
+        uint64_t reserved_52_54        : 3;
+        uint64_t error_pulse_count     : 4;  /**< [ 51: 48](RO/H) Count of cycles in last error pulse since clear.  This count will be cleared
+                                                                 either by clearing the interrupt or writing a one to the pulse count clear bit. */
+        uint64_t reserved_45_47        : 3;
+        uint64_t error_sequence        : 5;  /**< [ 44: 40](RO/H) Sequence number for sequence that was running when error occurred. */
+        uint64_t reserved_33_39        : 7;
+        uint64_t error_type            : 1;  /**< [ 32: 32](RO/H) Error type:
+                                                                 0 = Error during a sequence run.
+                                                                 1 = Error during normal operation, which means a read or write operation. Effectively this
+                                                                 means a command error for a read or write operation, or a CRC error for a write data
+                                                                 operation. */
+        uint64_t reserved_0_31         : 32;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0_31         : 32;
+        uint64_t error_type            : 1;  /**< [ 32: 32](RO/H) Error type:
+                                                                 0 = Error during a sequence run.
+                                                                 1 = Error during normal operation, which means a read or write operation. Effectively this
+                                                                 means a command error for a read or write operation, or a CRC error for a write data
+                                                                 operation. */
+        uint64_t reserved_33_39        : 7;
+        uint64_t error_sequence        : 5;  /**< [ 44: 40](RO/H) Sequence number for sequence that was running when error occurred. */
+        uint64_t reserved_45_47        : 3;
+        uint64_t error_pulse_count     : 4;  /**< [ 51: 48](RO/H) Count of cycles in last error pulse since clear.  This count will be cleared
+                                                                 either by clearing the interrupt or writing a one to the pulse count clear bit. */
+        uint64_t reserved_52_54        : 3;
+        uint64_t error_pulse_count_sat : 1;  /**< [ 55: 55](RO/H) When set and the count is valid, indicates that the counter has saturated,
+                                                                 which effectively indicates that a command error has occurred and not a CRC
+                                                                 error.
+
+                                                                 This field is cleared either by clearing the interrupt or writing a one
+                                                                 to the pulse count clear bit. */
+        uint64_t error_pulse_count_valid : 1;/**< [ 56: 56](RO/H) Asserts when a full alert_n transition is complete. Indicating that
+                                                                 error count and saturation value are stable and valid.
+
+                                                                 This field is cleared either by clearing the interrupt or writing a one
+                                                                 to the pulse count clear bit. */
+        uint64_t reserved_57_61        : 5;
+        uint64_t clear_error_pulse_count : 1;/**< [ 62: 62](WO) Clear the error count, one shot operation. */
+        uint64_t reserved_63           : 1;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_lmcx_retry_status_cn96xxp3 cn98xx; */
+    /* struct cavm_lmcx_retry_status_cn9 cnf95xxp1; */
+    /* struct cavm_lmcx_retry_status_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_lmcx_retry_status_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_retry_status_cn9 f95o; */
+    /* struct cavm_lmcx_retry_status_cn96xxp3 loki; */
 };
 typedef union cavm_lmcx_retry_status cavm_lmcx_retry_status_t;
 
@@ -23760,6 +25434,8 @@ static inline uint64_t CAVM_LMCX_RETRY_STATUS(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000118ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000118ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000118ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000118ll + 0x1000000ll * ((a) & 0x3);
@@ -24040,6 +25716,8 @@ static inline uint64_t CAVM_LMCX_RLEVEL_CTL(uint64_t a)
         return 0x87e0880002a0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e0880002a0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e0880002a0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880002a0ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_RLEVEL_CTL", 1, a, 0, 0, 0, 0, 0);
@@ -24106,6 +25784,8 @@ static inline uint64_t CAVM_LMCX_RLEVEL_DBG(uint64_t a)
         return 0x87e0880002a8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e0880002a8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e0880002a8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880002a8ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_RLEVEL_DBG", 1, a, 0, 0, 0, 0, 0);
@@ -24157,6 +25837,8 @@ static inline uint64_t CAVM_LMCX_RLEVEL_DBG2(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880002b0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880002b0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880002b0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880002b0ll + 0x1000000ll * ((a) & 0x3);
@@ -24373,6 +26055,8 @@ static inline uint64_t CAVM_LMCX_RLEVEL_RANKX(uint64_t a, uint64_t b)
         return 0x87e088000280ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && (((a==0) || (a==2)) && (b<=3)))
         return 0x87e088000280ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && (((a==0) || (a==2)) && (b<=3)))
+        return 0x87e088000280ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (((a==0) || (a==2)) && (b<=3)))
         return 0x87e088000280ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("LMCX_RLEVEL_RANKX", 2, a, b, 0, 0, 0, 0);
@@ -24556,6 +26240,7 @@ union cavm_lmcx_rodt_mask
     } cn98xx;
     /* struct cavm_lmcx_rodt_mask_cn83xx cnf95xx; */
     /* struct cavm_lmcx_rodt_mask_cn83xx f95mm; */
+    /* struct cavm_lmcx_rodt_mask_cn83xx f95o; */
     /* struct cavm_lmcx_rodt_mask_cn83xx loki; */
 };
 typedef union cavm_lmcx_rodt_mask cavm_lmcx_rodt_mask_t;
@@ -24574,6 +26259,8 @@ static inline uint64_t CAVM_LMCX_RODT_MASK(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000268ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000268ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000268ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000268ll + 0x1000000ll * ((a) & 0x3);
@@ -25005,6 +26692,8 @@ static inline uint64_t CAVM_LMCX_SEQ_CTL(uint64_t a)
         return 0x87e088000048ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000048ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000048ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000048ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_SEQ_CTL", 1, a, 0, 0, 0, 0, 0);
@@ -25024,21 +26713,11 @@ static inline uint64_t CAVM_LMCX_SEQ_CTL(uint64_t a)
  * This register is an assortment of control fields needed by the memory controller. If software
  * has not previously written to this register (since the last DRESET), hardware updates the
  * fields in this register to the minimum allowed value when any of LMC()_RLEVEL_RANK(),
- * LMC()_WLEVEL_RANK(), LMC()_CONTROL, and LMC()_MODEREG_PARAMS0 registers
- * change. Ideally, only read this register after LMC has been initialized and
+ * LMC()_WLEVEL_RANK(), LMC()_CONTROL, and LMC()_MODEREG_PARAMS0 change.
+ * Ideally, only read this register after LMC has been initialized and
  * LMC()_RLEVEL_RANK(), LMC()_WLEVEL_RANK() have valid data.
  *
- * The interpretation of the fields in this register depends on LMC()_CONTROL[DDR2T]:
- *
- * * If LMC()_CONTROL[DDR2T]=1, (FieldValue + 4) is the minimum CK cycles between when
- * the DRAM part registers CAS commands of the first and second types from different cache
- * blocks.
- *
- * If LMC()_CONTROL[DDR2T]=0, (FieldValue + 3) is the minimum CK cycles between when the DRAM
- * part registers CAS commands of the first and second types from different cache blocks.
- * FieldValue = 0 is always illegal in this case.
- * The hardware-calculated minimums for these fields are shown in LMC()_SLOT_CTL0 Hardware-
- * Calculated Minimums.
+ * The hardware-calculated minimums for these fields appear below.
  */
 union cavm_lmcx_slot_ctl0
 {
@@ -25233,6 +26912,7 @@ union cavm_lmcx_slot_ctl0
     } cn98xx;
     /* struct cavm_lmcx_slot_ctl0_cn9 cnf95xx; */
     /* struct cavm_lmcx_slot_ctl0_cn9 f95mm; */
+    /* struct cavm_lmcx_slot_ctl0_cn9 f95o; */
     /* struct cavm_lmcx_slot_ctl0_cn9 loki; */
 };
 typedef union cavm_lmcx_slot_ctl0 cavm_lmcx_slot_ctl0_t;
@@ -25251,6 +26931,8 @@ static inline uint64_t CAVM_LMCX_SLOT_CTL0(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880001f8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880001f8ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880001f8ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880001f8ll + 0x1000000ll * ((a) & 0x3);
@@ -25271,21 +26953,11 @@ static inline uint64_t CAVM_LMCX_SLOT_CTL0(uint64_t a)
  * This register is an assortment of control fields needed by the memory controller. If software
  * has not previously written to this register (since the last DRESET), hardware updates the
  * fields in this register to the minimum allowed value when any of LMC()_RLEVEL_RANK(),
- * LMC()_WLEVEL_RANK(), LMC()_CONTROL and LMC()_MODEREG_PARAMS0 change.
+ * LMC()_WLEVEL_RANK(), LMC()_CONTROL, and LMC()_MODEREG_PARAMS0 change.
  * Ideally, only read this register after LMC has been initialized and
  * LMC()_RLEVEL_RANK(), LMC()_WLEVEL_RANK() have valid data.
  *
- * The interpretation of the fields in this CSR depends on LMC()_CONTROL[DDR2T]:
- *
- * * If LMC()_CONTROL[DDR2T]=1, (FieldValue + 4) is the minimum CK cycles between when the
- * DRAM part registers CAS commands of the first and second types from different cache blocks.
- *
- * * If LMC()_CONTROL[DDR2T]=0, (FieldValue + 3) is the minimum CK cycles between when the DRAM
- * part registers CAS commands of the first and second types from different cache blocks.
- * FieldValue = 0 is always illegal in this case.
- *
- * The hardware calculated minimums for these fields are shown in LMC()_SLOT_CTL1 hardware
- * calculated minimums.
+ * The hardware-calculated minimums for these fields appear below.
  */
 union cavm_lmcx_slot_ctl1
 {
@@ -25368,6 +27040,8 @@ static inline uint64_t CAVM_LMCX_SLOT_CTL1(uint64_t a)
         return 0x87e088000200ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000200ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000200ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000200ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_SLOT_CTL1", 1, a, 0, 0, 0, 0, 0);
@@ -25387,20 +27061,11 @@ static inline uint64_t CAVM_LMCX_SLOT_CTL1(uint64_t a)
  * This register is an assortment of control fields needed by the memory controller. If software
  * has not previously written to this register (since the last DRESET), hardware updates the
  * fields in this register to the minimum allowed value when any of LMC()_RLEVEL_RANK(),
- * LMC()_WLEVEL_RANK(), LMC()_CONTROL and LMC()_MODEREG_PARAMS0 change.
+ * LMC()_WLEVEL_RANK(), LMC()_CONTROL, and LMC()_MODEREG_PARAMS0 change.
  * Ideally, only read this register after LMC has been initialized and
  * LMC()_RLEVEL_RANK(), LMC()_WLEVEL_RANK() have valid data.
  *
- * The interpretation of the fields in this CSR depends on LMC()_CONTROL[DDR2T]:
- *
- * * If LMC()_CONTROL[DDR2T] = 1, (FieldValue + 4) is the minimum CK cycles between when the
- * DRAM part registers CAS commands of the first and second types from different cache blocks.
- *
- * * If LMC()_CONTROL[DDR2T] = 0, (FieldValue + 3) is the minimum CK cycles between when the
- * DRAM part registers CAS commands of the first and second types from different cache blocks.
- * FieldValue = 0 is always illegal in this case.
- *
- * The hardware-calculated minimums for these fields are shown in LMC Registers.
+ * The hardware-calculated minimums for these fields appear below.
  */
 union cavm_lmcx_slot_ctl2
 {
@@ -25516,6 +27181,7 @@ union cavm_lmcx_slot_ctl2
     } cn98xx;
     /* struct cavm_lmcx_slot_ctl2_cn9 cnf95xx; */
     /* struct cavm_lmcx_slot_ctl2_cn9 f95mm; */
+    /* struct cavm_lmcx_slot_ctl2_cn9 f95o; */
     /* struct cavm_lmcx_slot_ctl2_cn9 loki; */
 };
 typedef union cavm_lmcx_slot_ctl2 cavm_lmcx_slot_ctl2_t;
@@ -25534,6 +27200,8 @@ static inline uint64_t CAVM_LMCX_SLOT_CTL2(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000208ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000208ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000208ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000208ll + 0x1000000ll * ((a) & 0x3);
@@ -25554,20 +27222,11 @@ static inline uint64_t CAVM_LMCX_SLOT_CTL2(uint64_t a)
  * This register is an assortment of control fields needed by the memory controller. If software
  * has not previously written to this register (since the last DRESET), hardware updates the
  * fields in this register to the minimum allowed value when any of LMC()_RLEVEL_RANK(),
- * LMC()_WLEVEL_RANK(), LMC()_CONTROL and LMC()_MODEREG_PARAMS0 change.
+ * LMC()_WLEVEL_RANK(), LMC()_CONTROL, and LMC()_MODEREG_PARAMS0 change.
  * Ideally, only read this register after LMC has been initialized and
  * LMC()_RLEVEL_RANK(), LMC()_WLEVEL_RANK() have valid data.
  *
- * The interpretation of the fields in this CSR depends on LMC()_CONTROL[DDR2T]:
- *
- * * If LMC()_CONTROL[DDR2T] = 1, (FieldValue + 4) is the minimum CK cycles between when the
- * DRAM part registers CAS commands of the first and second types from different cache blocks.
- *
- * * If LMC()_CONTROL[DDR2T] = 0, (FieldValue + 3) is the minimum CK cycles between when the
- * DRAM part registers CAS commands of the first and second types from different cache blocks.
- * FieldValue = 0 is always illegal in this case.
- *
- * The hardware-calculated minimums for these fields are shown in LMC Registers.
+ * The hardware-calculated minimums for these fields appear below.
  */
 union cavm_lmcx_slot_ctl3
 {
@@ -25691,6 +27350,8 @@ static inline uint64_t CAVM_LMCX_SLOT_CTL3(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000248ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000248ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000248ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000248ll + 0x1000000ll * ((a) & 0x3);
@@ -26127,6 +27788,8 @@ static inline uint64_t CAVM_LMCX_TIMING_PARAMS0(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000198ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000198ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000198ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000198ll + 0x1000000ll * ((a) & 0x3);
@@ -27159,6 +28822,7 @@ union cavm_lmcx_timing_params1
     /* struct cavm_lmcx_timing_params1_cn9 cnf95xxp1; */
     /* struct cavm_lmcx_timing_params1_cn96xxp3 cnf95xxp2; */
     /* struct cavm_lmcx_timing_params1_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_timing_params1_cn96xxp3 f95o; */
     /* struct cavm_lmcx_timing_params1_cn96xxp3 loki; */
 };
 typedef union cavm_lmcx_timing_params1 cavm_lmcx_timing_params1_t;
@@ -27177,6 +28841,8 @@ static inline uint64_t CAVM_LMCX_TIMING_PARAMS1(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880001a0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880001a0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880001a0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880001a0ll + 0x1000000ll * ((a) & 0x3);
@@ -27533,6 +29199,8 @@ static inline uint64_t CAVM_LMCX_TIMING_PARAMS2(uint64_t a)
         return 0x87e088000060ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000060ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000060ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000060ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_TIMING_PARAMS2", 1, a, 0, 0, 0, 0, 0);
@@ -27664,6 +29332,8 @@ static inline uint64_t CAVM_LMCX_WLEVEL_CTL(uint64_t a)
         return 0x87e088000300ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
         return 0x87e088000300ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
+        return 0x87e088000300ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000300ll + 0x1000000ll * ((a) & 0x3);
     __cavm_csr_fatal("LMCX_WLEVEL_CTL", 1, a, 0, 0, 0, 0, 0);
@@ -27769,6 +29439,8 @@ static inline uint64_t CAVM_LMCX_WLEVEL_DBG(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e088000308ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e088000308ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e088000308ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e088000308ll + 0x1000000ll * ((a) & 0x3);
@@ -27990,6 +29662,8 @@ static inline uint64_t CAVM_LMCX_WLEVEL_RANKX(uint64_t a, uint64_t b)
         return 0x87e0880002c0ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && (((a==0) || (a==2)) && (b<=3)))
         return 0x87e0880002c0ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && (((a==0) || (a==2)) && (b<=3)))
+        return 0x87e0880002c0ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (((a==0) || (a==2)) && (b<=3)))
         return 0x87e0880002c0ll + 0x1000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("LMCX_WLEVEL_RANKX", 2, a, b, 0, 0, 0, 0);
@@ -28145,6 +29819,7 @@ union cavm_lmcx_wodt_mask
     } cn98xx;
     /* struct cavm_lmcx_wodt_mask_cn83xx cnf95xx; */
     /* struct cavm_lmcx_wodt_mask_cn83xx f95mm; */
+    /* struct cavm_lmcx_wodt_mask_cn83xx f95o; */
     /* struct cavm_lmcx_wodt_mask_cn83xx loki; */
 };
 typedef union cavm_lmcx_wodt_mask cavm_lmcx_wodt_mask_t;
@@ -28163,6 +29838,8 @@ static inline uint64_t CAVM_LMCX_WODT_MASK(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a==0) || (a==2)))
         return 0x87e0880001b0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) || (a==2)))
+        return 0x87e0880001b0ll + 0x1000000ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) || (a==2)))
         return 0x87e0880001b0ll + 0x1000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) || (a==2)))
         return 0x87e0880001b0ll + 0x1000000ll * ((a) & 0x3);

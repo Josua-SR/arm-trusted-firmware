@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -37,6 +37,132 @@
  * Enumerates the MSI-X interrupt vectors.
  */
 #define CAVM_L2C_MCI_INT_VEC_E_INTS (0)
+
+/**
+ * Register (RSL) l2c_mci#_bist_status
+ *
+ * Level 2 MCI BIST Status (DCLK) Registers
+ * If clear BIST is desired, [CLEAR_BIST] must be written to 1 before [START_BIST] is
+ * written to 1 using a separate CSR write operation. [CLEAR_BIST] must not be changed
+ * after writing [START_BIST] to 1 until the BIST operation completes (indicated by
+ * [START_BIST] returning to 0) or operation is undefined.
+ */
+union cavm_l2c_mcix_bist_status
+{
+    uint64_t u;
+    struct cavm_l2c_mcix_bist_status_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t start_bist            : 1;  /**< [ 63: 63](R/W/H) When written to 1, starts BIST. Remains 1 until BIST is complete. */
+        uint64_t clear_bist            : 1;  /**< [ 62: 62](R/W) When BIST is triggered, run clear BIST. */
+        uint64_t reserved_2_61         : 60;
+        uint64_t vbffl                 : 2;  /**< [  1:  0](RO/H) BIST failure status for VBF0-1. */
+#else /* Word 0 - Little Endian */
+        uint64_t vbffl                 : 2;  /**< [  1:  0](RO/H) BIST failure status for VBF0-1. */
+        uint64_t reserved_2_61         : 60;
+        uint64_t clear_bist            : 1;  /**< [ 62: 62](R/W) When BIST is triggered, run clear BIST. */
+        uint64_t start_bist            : 1;  /**< [ 63: 63](R/W/H) When written to 1, starts BIST. Remains 1 until BIST is complete. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_l2c_mcix_bist_status_s cn; */
+};
+typedef union cavm_l2c_mcix_bist_status cavm_l2c_mcix_bist_status_t;
+
+static inline uint64_t CAVM_L2C_MCIX_BIST_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_L2C_MCIX_BIST_STATUS(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
+        return 0x87e05c020000ll + 0x1000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=2))
+        return 0x87e05c020000ll + 0x1000000ll * ((a) & 0x3);
+    __cavm_csr_fatal("L2C_MCIX_BIST_STATUS", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_L2C_MCIX_BIST_STATUS(a) cavm_l2c_mcix_bist_status_t
+#define bustype_CAVM_L2C_MCIX_BIST_STATUS(a) CSR_TYPE_RSL
+#define basename_CAVM_L2C_MCIX_BIST_STATUS(a) "L2C_MCIX_BIST_STATUS"
+#define device_bar_CAVM_L2C_MCIX_BIST_STATUS(a) 0x0 /* PF_BAR0 */
+#define busnum_CAVM_L2C_MCIX_BIST_STATUS(a) (a)
+#define arguments_CAVM_L2C_MCIX_BIST_STATUS(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) l2c_mci#_err
+ *
+ * L2C MCI Error Information Registers
+ * This register records error information for all MCI errors.
+ * An error locks [VBF4], [INDEX], [SYN0] and [SYN1] and sets the bit corresponding to the error
+ * received. VBFDBE errors take priority and will overwrite an earlier logged VBFSBE error. The
+ * information from exactly one VBF read is present at any given time and serves to document
+ * which error(s) were present in the read with the highest priority error.
+ * The syndrome is recorded for DBE errors.
+ */
+union cavm_l2c_mcix_err
+{
+    uint64_t u;
+    struct cavm_l2c_mcix_err_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t vbfdbe1               : 1;  /**< [ 63: 63](RO/H) INDEX/SYN1 corresponds to a double-bit VBF ECC error. */
+        uint64_t vbfdbe0               : 1;  /**< [ 62: 62](RO/H) INDEX/SYN0 corresponds to a double-bit VBF ECC error. */
+        uint64_t vbfsbe1               : 1;  /**< [ 61: 61](RO/H) INDEX/SYN1 corresponds to a single-bit VBF ECC error. */
+        uint64_t vbfsbe0               : 1;  /**< [ 60: 60](RO/H) INDEX/SYN0 corresponds to a single-bit VBF ECC error. */
+        uint64_t reserved_48_59        : 12;
+        uint64_t syn1                  : 8;  /**< [ 47: 40](RO/H) Error syndrome for QW1 ([127:64]).
+                                                                 Records only on single bit errors.
+
+                                                                 Internal:
+                                                                 See bug26334. */
+        uint64_t syn0                  : 8;  /**< [ 39: 32](RO/H) Error syndrome for QW0 ([63:0]).
+                                                                 Records only on single bit errors.
+
+                                                                 Internal:
+                                                                 See bug26334. */
+        uint64_t reserved_12_31        : 20;
+        uint64_t vbf4                  : 1;  /**< [ 11: 11](RO/H) When 1, errors were from VBF (4+a), when 0, from VBF (0+a). */
+        uint64_t index                 : 7;  /**< [ 10:  4](RO/H) VBF index which was read and had the error(s). */
+        uint64_t reserved_0_3          : 4;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0_3          : 4;
+        uint64_t index                 : 7;  /**< [ 10:  4](RO/H) VBF index which was read and had the error(s). */
+        uint64_t vbf4                  : 1;  /**< [ 11: 11](RO/H) When 1, errors were from VBF (4+a), when 0, from VBF (0+a). */
+        uint64_t reserved_12_31        : 20;
+        uint64_t syn0                  : 8;  /**< [ 39: 32](RO/H) Error syndrome for QW0 ([63:0]).
+                                                                 Records only on single bit errors.
+
+                                                                 Internal:
+                                                                 See bug26334. */
+        uint64_t syn1                  : 8;  /**< [ 47: 40](RO/H) Error syndrome for QW1 ([127:64]).
+                                                                 Records only on single bit errors.
+
+                                                                 Internal:
+                                                                 See bug26334. */
+        uint64_t reserved_48_59        : 12;
+        uint64_t vbfsbe0               : 1;  /**< [ 60: 60](RO/H) INDEX/SYN0 corresponds to a single-bit VBF ECC error. */
+        uint64_t vbfsbe1               : 1;  /**< [ 61: 61](RO/H) INDEX/SYN1 corresponds to a single-bit VBF ECC error. */
+        uint64_t vbfdbe0               : 1;  /**< [ 62: 62](RO/H) INDEX/SYN0 corresponds to a double-bit VBF ECC error. */
+        uint64_t vbfdbe1               : 1;  /**< [ 63: 63](RO/H) INDEX/SYN1 corresponds to a double-bit VBF ECC error. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_l2c_mcix_err_s cn; */
+};
+typedef union cavm_l2c_mcix_err cavm_l2c_mcix_err_t;
+
+static inline uint64_t CAVM_L2C_MCIX_ERR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_L2C_MCIX_ERR(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
+        return 0x87e05c010000ll + 0x1000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=2))
+        return 0x87e05c010000ll + 0x1000000ll * ((a) & 0x3);
+    __cavm_csr_fatal("L2C_MCIX_ERR", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_L2C_MCIX_ERR(a) cavm_l2c_mcix_err_t
+#define bustype_CAVM_L2C_MCIX_ERR(a) CSR_TYPE_RSL
+#define basename_CAVM_L2C_MCIX_ERR(a) "L2C_MCIX_ERR"
+#define device_bar_CAVM_L2C_MCIX_ERR(a) 0x0 /* PF_BAR0 */
+#define busnum_CAVM_L2C_MCIX_ERR(a) (a)
+#define arguments_CAVM_L2C_MCIX_ERR(a) (a),-1,-1,-1
 
 /**
  * Register (RSL) l2c_mci#_int_ena_w1c

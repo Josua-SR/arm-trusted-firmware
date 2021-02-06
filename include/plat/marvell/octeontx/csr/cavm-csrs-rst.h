@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -39,7 +39,8 @@
  *
  * RST Boot Failure Code Enumeration
  * Enumerates the reasons for boot failure, returned to post-boot code
- * in argument register 0 and blinked on GPIO\<11\>.
+ * in argument register 0 and pulsed on the GPIO\<11\>/FAIL_CODE output ball.
+ * The blink pulses on GPIO\<11\>/FAIL_CODE only occur for failure codes 0x2 - 0xB, not for 0x1 (GOOD).
  */
 #define CAVM_RST_BOOT_FAIL_E_AUTH (6)
 #define CAVM_RST_BOOT_FAIL_E_BUS_ERROR (0xb)
@@ -100,6 +101,7 @@
 #define CAVM_RST_DEV_E_PEMX(a) (0x28 + (a))
 #define CAVM_RST_DEV_E_RFIFX_CNF95XX(a) (0x26 + (a))
 #define CAVM_RST_DEV_E_RFIFX_F95MM(a) (0x26 + (a))
+#define CAVM_RST_DEV_E_RFIFX_F95O(a) (0x21 + (a))
 #define CAVM_RST_DEV_E_RFIFX_LOKI(a) (0x21 + (a))
 #define CAVM_RST_DEV_E_ROC_OCLA (0x18)
 #define CAVM_RST_DEV_E_SGPIO (0x17)
@@ -107,6 +109,7 @@
 #define CAVM_RST_DEV_E_SMI_CN98XX (0x1a)
 #define CAVM_RST_DEV_E_SMI_CNF95XX (0x16)
 #define CAVM_RST_DEV_E_SMI_F95MM (0x16)
+#define CAVM_RST_DEV_E_SMI_F95O (0x16)
 #define CAVM_RST_DEV_E_SMI_LOKI (0x16)
 #define CAVM_RST_DEV_E_TWSX(a) (4 + (a))
 #define CAVM_RST_DEV_E_UAAX(a) (0xa + (a))
@@ -334,6 +337,8 @@ static inline uint64_t CAVM_RST_APX_AFFINITY_CONST(uint64_t a)
         return 0x87e006001000ll + 8ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87e006001000ll + 8ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87e006001000ll + 8ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87e006001000ll + 8ll * ((a) & 0x7);
     __cavm_csr_fatal("RST_APX_AFFINITY_CONST", 1, a, 0, 0, 0, 0, 0);
@@ -400,6 +405,8 @@ typedef union cavm_rst_bcn_pll cavm_rst_bcn_pll_t;
 static inline uint64_t CAVM_RST_BCN_PLL_FUNC(void) __attribute__ ((pure, always_inline));
 static inline uint64_t CAVM_RST_BCN_PLL_FUNC(void)
 {
+    if (cavm_is_model(OCTEONTX_F95O))
+        return 0x87e00a001800ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x87e00a001800ll;
     __cavm_csr_fatal("RST_BCN_PLL", 0, 0, 0, 0, 0, 0, 0);
@@ -667,9 +674,94 @@ union cavm_rst_bist_active
 #endif /* Word 0 - End */
     } cn96xxp3;
     /* struct cavm_rst_bist_active_cn96xxp3 cn98xx; */
-    /* struct cavm_rst_bist_active_s cnf95xx; */
-    /* struct cavm_rst_bist_active_s f95mm; */
-    /* struct cavm_rst_bist_active_s loki; */
+    /* struct cavm_rst_bist_active_s cnf95xxp1; */
+    struct cavm_rst_bist_active_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_7_63         : 57;
+        uint64_t bphy                  : 1;  /**< [  6:  6](RO/H) BPHY domain BIST in progress.  When set, memories associated with
+                                                                 the BPHY domain are being tested. */
+        uint64_t ap                    : 1;  /**< [  5:  5](RO/H) BIST in progress due to AP cores being put into reset.  When set, memories
+                                                                 associated with this group are being tested.
+
+                                                                 This field is reinitialized on a cold domain reset.
+
+                                                                 Internal:
+                                                                 This field is reinitialized on the falling edge of dcok. */
+        uint64_t csr                   : 1;  /**< [  4:  4](RO/H) BIST in progress due to access to RST_DEV_MAP().  When set, memories
+                                                                 associated with this access are being tested.
+
+                                                                 This field is reinitialized on a cold domain reset.
+
+                                                                 Internal:
+                                                                 This field is reinitialized on the falling edge of dcok. */
+        uint64_t scp                   : 1;  /**< [  3:  3](RO/H) SCP domain BIST in progress.  When set, memories associated with
+                                                                 the SCP domain are being tested.
+
+                                                                 This field is reinitialized on a cold domain reset.
+
+                                                                 Internal:
+                                                                 This field is reinitialized on the falling edge of dcok. */
+        uint64_t mcp                   : 1;  /**< [  2:  2](RO/H) MCP domain BIST in progress.  When set, memories associated with
+                                                                 the MCP domain are being tested.
+
+                                                                 This field is reinitialized on a cold domain reset.
+
+                                                                 Internal:
+                                                                 This field is reinitialized on the falling edge of dcok. */
+        uint64_t core                  : 1;  /**< [  1:  1](RO/H) Core domain BIST in progress.  When set, memories associated with
+                                                                 the core domain are being tested.
+
+                                                                 This field is reinitialized on a cold domain reset.
+
+                                                                 Internal:
+                                                                 This field is reinitialized on the falling edge of dcok. */
+        uint64_t chip                  : 1;  /**< [  0:  0](RO/H) Chip BIST in progress.  Always reads 0. */
+#else /* Word 0 - Little Endian */
+        uint64_t chip                  : 1;  /**< [  0:  0](RO/H) Chip BIST in progress.  Always reads 0. */
+        uint64_t core                  : 1;  /**< [  1:  1](RO/H) Core domain BIST in progress.  When set, memories associated with
+                                                                 the core domain are being tested.
+
+                                                                 This field is reinitialized on a cold domain reset.
+
+                                                                 Internal:
+                                                                 This field is reinitialized on the falling edge of dcok. */
+        uint64_t mcp                   : 1;  /**< [  2:  2](RO/H) MCP domain BIST in progress.  When set, memories associated with
+                                                                 the MCP domain are being tested.
+
+                                                                 This field is reinitialized on a cold domain reset.
+
+                                                                 Internal:
+                                                                 This field is reinitialized on the falling edge of dcok. */
+        uint64_t scp                   : 1;  /**< [  3:  3](RO/H) SCP domain BIST in progress.  When set, memories associated with
+                                                                 the SCP domain are being tested.
+
+                                                                 This field is reinitialized on a cold domain reset.
+
+                                                                 Internal:
+                                                                 This field is reinitialized on the falling edge of dcok. */
+        uint64_t csr                   : 1;  /**< [  4:  4](RO/H) BIST in progress due to access to RST_DEV_MAP().  When set, memories
+                                                                 associated with this access are being tested.
+
+                                                                 This field is reinitialized on a cold domain reset.
+
+                                                                 Internal:
+                                                                 This field is reinitialized on the falling edge of dcok. */
+        uint64_t ap                    : 1;  /**< [  5:  5](RO/H) BIST in progress due to AP cores being put into reset.  When set, memories
+                                                                 associated with this group are being tested.
+
+                                                                 This field is reinitialized on a cold domain reset.
+
+                                                                 Internal:
+                                                                 This field is reinitialized on the falling edge of dcok. */
+        uint64_t bphy                  : 1;  /**< [  6:  6](RO/H) BPHY domain BIST in progress.  When set, memories associated with
+                                                                 the BPHY domain are being tested. */
+        uint64_t reserved_7_63         : 57;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    /* struct cavm_rst_bist_active_cnf95xxp2 f95mm; */
+    /* struct cavm_rst_bist_active_s f95o; */
+    /* struct cavm_rst_bist_active_cnf95xxp2 loki; */
 };
 typedef union cavm_rst_bist_active cavm_rst_bist_active_t;
 
@@ -2056,6 +2148,7 @@ union cavm_rst_boot
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_rst_boot_cnf95xxp2 f95mm; */
+    /* struct cavm_rst_boot_cnf95xxp2 f95o; */
     /* struct cavm_rst_boot_cnf95xxp2 loki; */
 };
 typedef union cavm_rst_boot cavm_rst_boot_t;
@@ -2197,6 +2290,7 @@ union cavm_rst_bphy_domain_w1c
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_rst_bphy_domain_w1c_cnf95xxp2 f95mm; */
+    /* struct cavm_rst_bphy_domain_w1c_cnf95xxp2 f95o; */
     /* struct cavm_rst_bphy_domain_w1c_cnf95xxp2 loki; */
 };
 typedef union cavm_rst_bphy_domain_w1c cavm_rst_bphy_domain_w1c_t;
@@ -2208,6 +2302,8 @@ static inline uint64_t CAVM_RST_BPHY_DOMAIN_W1C_FUNC(void)
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e006001858ll;
     if (cavm_is_model(OCTEONTX_F95MM))
+        return 0x87e006001858ll;
+    if (cavm_is_model(OCTEONTX_F95O))
         return 0x87e006001858ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x87e006001858ll;
@@ -2273,6 +2369,7 @@ union cavm_rst_bphy_domain_w1s
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_rst_bphy_domain_w1s_cnf95xxp2 f95mm; */
+    /* struct cavm_rst_bphy_domain_w1s_cnf95xxp2 f95o; */
     /* struct cavm_rst_bphy_domain_w1s_cnf95xxp2 loki; */
 };
 typedef union cavm_rst_bphy_domain_w1s cavm_rst_bphy_domain_w1s_t;
@@ -2284,6 +2381,8 @@ static inline uint64_t CAVM_RST_BPHY_DOMAIN_W1S_FUNC(void)
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e006001850ll;
     if (cavm_is_model(OCTEONTX_F95MM))
+        return 0x87e006001850ll;
+    if (cavm_is_model(OCTEONTX_F95O))
         return 0x87e006001850ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x87e006001850ll;
@@ -2545,6 +2644,7 @@ union cavm_rst_bphy_pll
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_rst_bphy_pll_cnf95xxp2 f95mm; */
+    /* struct cavm_rst_bphy_pll_cnf95xxp2 f95o; */
     /* struct cavm_rst_bphy_pll_cnf95xxp2 loki; */
 };
 typedef union cavm_rst_bphy_pll cavm_rst_bphy_pll_t;
@@ -2556,6 +2656,8 @@ static inline uint64_t CAVM_RST_BPHY_PLL_FUNC(void)
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e00a001768ll;
     if (cavm_is_model(OCTEONTX_F95MM))
+        return 0x87e00a001768ll;
+    if (cavm_is_model(OCTEONTX_F95O))
         return 0x87e00a001768ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x87e00a001768ll;
@@ -2898,7 +3000,7 @@ union cavm_rst_const
     /* struct cavm_rst_const_cn96xxp3 cn98xx; */
     /* struct cavm_rst_const_s cnf95xx; */
     /* struct cavm_rst_const_s f95mm; */
-    struct cavm_rst_const_loki
+    struct cavm_rst_const_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_16_63        : 48;
@@ -2909,7 +3011,8 @@ union cavm_rst_const
         uint64_t rst_devs              : 8;  /**< [ 15:  8](RO) Number of RST_DEV_E enumeration values supported, and size of RST_DEV_MAP(). */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rst_const_f95o loki; */
 };
 typedef union cavm_rst_const cavm_rst_const_t;
 
@@ -3397,6 +3500,7 @@ union cavm_rst_core_pll
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_rst_core_pll_cnf95xx f95mm; */
+    /* struct cavm_rst_core_pll_cnf95xx f95o; */
     /* struct cavm_rst_core_pll_cnf95xx loki; */
 };
 typedef union cavm_rst_core_pll cavm_rst_core_pll_t;
@@ -5685,7 +5789,7 @@ union cavm_rst_debug
         uint64_t reserved_6_63         : 58;
 #endif /* Word 0 - End */
     } f95mm;
-    struct cavm_rst_debug_loki
+    struct cavm_rst_debug_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_6_63         : 58;
@@ -5762,7 +5866,8 @@ union cavm_rst_debug
                                                                  This field is always reinitialized on a cold domain reset. */
         uint64_t reserved_6_63         : 58;
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rst_debug_f95o loki; */
 };
 typedef union cavm_rst_debug cavm_rst_debug_t;
 
@@ -5871,6 +5976,7 @@ union cavm_rst_delay
     /* struct cavm_rst_delay_cn96xxp3 cn98xx; */
     /* struct cavm_rst_delay_cn96xxp3 cnf95xx; */
     /* struct cavm_rst_delay_cn96xxp3 f95mm; */
+    /* struct cavm_rst_delay_cn96xxp3 f95o; */
     /* struct cavm_rst_delay_cn96xxp3 loki; */
 };
 typedef union cavm_rst_delay cavm_rst_delay_t;
@@ -6218,6 +6324,7 @@ union cavm_rst_dsp_pll
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_rst_dsp_pll_cnf95xxp2 f95mm; */
+    /* struct cavm_rst_dsp_pll_cnf95xxp2 f95o; */
     /* struct cavm_rst_dsp_pll_cnf95xxp2 loki; */
 };
 typedef union cavm_rst_dsp_pll cavm_rst_dsp_pll_t;
@@ -6229,6 +6336,8 @@ static inline uint64_t CAVM_RST_DSP_PLL_FUNC(void)
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e00a001770ll;
     if (cavm_is_model(OCTEONTX_F95MM))
+        return 0x87e00a001770ll;
+    if (cavm_is_model(OCTEONTX_F95O))
         return 0x87e00a001770ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x87e00a001770ll;
@@ -6343,7 +6452,7 @@ union cavm_rst_gclk_pll
     /* struct cavm_rst_gclk_pll_s cn98xx; */
     /* struct cavm_rst_gclk_pll_s cnf95xx; */
     /* struct cavm_rst_gclk_pll_s f95mm; */
-    struct cavm_rst_gclk_pll_loki
+    struct cavm_rst_gclk_pll_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_16_63        : 48;
@@ -6378,7 +6487,8 @@ union cavm_rst_gclk_pll
                                                                  while GSERR logic is in reset. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rst_gclk_pll_f95o loki; */
 };
 typedef union cavm_rst_gclk_pll cavm_rst_gclk_pll_t;
 
@@ -6393,6 +6503,8 @@ static inline uint64_t CAVM_RST_GCLK_PLL_FUNC(void)
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS2_X))
         return 0x87e00a0017f8ll;
     if (cavm_is_model(OCTEONTX_F95MM))
+        return 0x87e00a0017f8ll;
+    if (cavm_is_model(OCTEONTX_F95O))
         return 0x87e00a0017f8ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x87e00a0017f8ll;
@@ -6654,7 +6766,7 @@ union cavm_rst_int
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_rst_int_cnf95xx f95mm; */
-    struct cavm_rst_int_loki
+    struct cavm_rst_int_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_52_63        : 12;
@@ -6679,7 +6791,8 @@ union cavm_rst_int
                                                                  This field is reinitialized with a chip domain reset. */
         uint64_t reserved_52_63        : 12;
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rst_int_f95o loki; */
 };
 typedef union cavm_rst_int cavm_rst_int_t;
 
@@ -6859,7 +6972,7 @@ union cavm_rst_int_ena_w1c
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_rst_int_ena_w1c_cnf95xx f95mm; */
-    struct cavm_rst_int_ena_w1c_loki
+    struct cavm_rst_int_ena_w1c_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_52_63        : 12;
@@ -6876,7 +6989,8 @@ union cavm_rst_int_ena_w1c
         uint64_t bphy_reset            : 1;  /**< [ 51: 51](R/W1C/H) Reads or clears enable for RST_INT[BPHY_RESET]. */
         uint64_t reserved_52_63        : 12;
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rst_int_ena_w1c_f95o loki; */
 };
 typedef union cavm_rst_int_ena_w1c cavm_rst_int_ena_w1c_t;
 
@@ -7056,7 +7170,7 @@ union cavm_rst_int_ena_w1s
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_rst_int_ena_w1s_cnf95xx f95mm; */
-    struct cavm_rst_int_ena_w1s_loki
+    struct cavm_rst_int_ena_w1s_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_52_63        : 12;
@@ -7073,7 +7187,8 @@ union cavm_rst_int_ena_w1s
         uint64_t bphy_reset            : 1;  /**< [ 51: 51](R/W1S/H) Reads or sets enable for RST_INT[BPHY_RESET]. */
         uint64_t reserved_52_63        : 12;
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rst_int_ena_w1s_f95o loki; */
 };
 typedef union cavm_rst_int_ena_w1s cavm_rst_int_ena_w1s_t;
 
@@ -7253,7 +7368,7 @@ union cavm_rst_int_w1s
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_rst_int_w1s_cnf95xx f95mm; */
-    struct cavm_rst_int_w1s_loki
+    struct cavm_rst_int_w1s_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_52_63        : 12;
@@ -7270,7 +7385,8 @@ union cavm_rst_int_w1s
         uint64_t bphy_reset            : 1;  /**< [ 51: 51](R/W1S/H) Reads or sets RST_INT[BPHY_RESET]. */
         uint64_t reserved_52_63        : 12;
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rst_int_w1s_f95o loki; */
 };
 typedef union cavm_rst_int_w1s cavm_rst_int_w1s_t;
 
@@ -7456,6 +7572,7 @@ union cavm_rst_lboot
     } cn98xx;
     /* struct cavm_rst_lboot_s cnf95xx; */
     /* struct cavm_rst_lboot_s f95mm; */
+    /* struct cavm_rst_lboot_s f95o; */
     /* struct cavm_rst_lboot_s loki; */
 };
 typedef union cavm_rst_lboot cavm_rst_lboot_t;
@@ -7802,6 +7919,7 @@ union cavm_rst_msix_vecx_addr
     /* struct cavm_rst_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_rst_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_rst_msix_vecx_addr_cn96xxp3 f95mm; */
+    /* struct cavm_rst_msix_vecx_addr_cn96xxp3 f95o; */
     /* struct cavm_rst_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_rst_msix_vecx_addr cavm_rst_msix_vecx_addr_t;
@@ -8210,6 +8328,7 @@ union cavm_rst_out_ctl
     /* struct cavm_rst_out_ctl_cn96xx cn98xx; */
     /* struct cavm_rst_out_ctl_cn9 cnf95xx; */
     /* struct cavm_rst_out_ctl_cn9 f95mm; */
+    /* struct cavm_rst_out_ctl_cn9 f95o; */
     /* struct cavm_rst_out_ctl_cn9 loki; */
 };
 typedef union cavm_rst_out_ctl cavm_rst_out_ctl_t;
@@ -8512,6 +8631,7 @@ union cavm_rst_pll_limit
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_rst_pll_limit_cnf95xx f95mm; */
+    /* struct cavm_rst_pll_limit_cnf95xx f95o; */
     /* struct cavm_rst_pll_limit_cnf95xx loki; */
 };
 typedef union cavm_rst_pll_limit cavm_rst_pll_limit_t;
@@ -8910,6 +9030,7 @@ union cavm_rst_pnr_pll
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_rst_pnr_pll_cnf95xx f95mm; */
+    /* struct cavm_rst_pnr_pll_cnf95xx f95o; */
     /* struct cavm_rst_pnr_pll_cnf95xx loki; */
 };
 typedef union cavm_rst_pnr_pll cavm_rst_pnr_pll_t;
@@ -9026,6 +9147,7 @@ union cavm_rst_pp_available
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_rst_pp_available_cnf95xx f95mm; */
+    /* struct cavm_rst_pp_available_cnf95xx f95o; */
     /* struct cavm_rst_pp_available_cnf95xx loki; */
 };
 typedef union cavm_rst_pp_available cavm_rst_pp_available_t;
@@ -9196,6 +9318,7 @@ union cavm_rst_pp_pending
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_rst_pp_pending_cnf95xx f95mm; */
+    /* struct cavm_rst_pp_pending_cnf95xx f95o; */
     /* struct cavm_rst_pp_pending_cnf95xx loki; */
 };
 typedef union cavm_rst_pp_pending cavm_rst_pp_pending_t;
@@ -9406,6 +9529,7 @@ union cavm_rst_pp_power
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_rst_pp_power_cnf95xx f95mm; */
+    /* struct cavm_rst_pp_power_cnf95xx f95o; */
     /* struct cavm_rst_pp_power_cnf95xx loki; */
 };
 typedef union cavm_rst_pp_power cavm_rst_pp_power_t;
@@ -9604,6 +9728,7 @@ union cavm_rst_pp_power_stat
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_rst_pp_power_stat_cnf95xx f95mm; */
+    /* struct cavm_rst_pp_power_stat_cnf95xx f95o; */
     /* struct cavm_rst_pp_power_stat_cnf95xx loki; */
 };
 typedef union cavm_rst_pp_power_stat cavm_rst_pp_power_stat_t;
@@ -9742,6 +9867,7 @@ union cavm_rst_pp_reset
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_rst_pp_reset_cnf95xx f95mm; */
+    /* struct cavm_rst_pp_reset_cnf95xx f95o; */
     /* struct cavm_rst_pp_reset_cnf95xx loki; */
 };
 typedef union cavm_rst_pp_reset cavm_rst_pp_reset_t;
@@ -10079,7 +10205,52 @@ union cavm_rst_refc_ctl
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } cn96xxp3;
-    /* struct cavm_rst_refc_ctl_cn96xxp3 cn98xx; */
+    struct cavm_rst_refc_ctl_cn98xx
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_9_63         : 55;
+        uint64_t cclk2_sel             : 2;  /**< [  8:  7](R/W) Reserved.  See GSERR()_COMMON_PHY_CTRL_BCFG[REFCLK_HIZ_ENA]. */
+        uint64_t cclk2_pwdn            : 1;  /**< [  6:  6](R/W) Reserved.  See GSERR()_COMMON_PHY_CTRL_BCFG[REFCLK_PAD_ENA]. */
+        uint64_t cclk1_sel             : 2;  /**< [  5:  4](R/W) Reserved.  See GSERP()_COMMON_PHY_CTRL_BCFG[REFCLK_HIZ_ENA]. */
+        uint64_t cclk1_pwdn            : 1;  /**< [  3:  3](R/W) Common clock 1 receiver power down.
+                                                                 When set, receiver is powered down.
+                                                                 The field is initialized on a cold domain reset.
+
+                                                                 Internal:
+                                                                 The receiver is also forced into powerdown when jtg__rst_pll.iddq_mode is set. */
+        uint64_t cclk0_sel             : 2;  /**< [  2:  1](RO/H) Common clock 0 termination select determined by hardware.
+                                                                 0x0 = No termination.
+                                                                 0x1 = LVPECL termination.
+                                                                 0x2 = Reserved.
+                                                                 0x3 = HCSL termination.
+
+                                                                 The value is determined at DC_OK assertion from the straps
+                                                                 GPIO_STRAP_PIN_E::GSER_CLK0_TERM_SEL0 and 1. */
+        uint64_t cclk0_pwdn            : 1;  /**< [  0:  0](RAZ) Common clock 0 receiver power down.
+                                                                 Never powered down.  Reads as zero. */
+#else /* Word 0 - Little Endian */
+        uint64_t cclk0_pwdn            : 1;  /**< [  0:  0](RAZ) Common clock 0 receiver power down.
+                                                                 Never powered down.  Reads as zero. */
+        uint64_t cclk0_sel             : 2;  /**< [  2:  1](RO/H) Common clock 0 termination select determined by hardware.
+                                                                 0x0 = No termination.
+                                                                 0x1 = LVPECL termination.
+                                                                 0x2 = Reserved.
+                                                                 0x3 = HCSL termination.
+
+                                                                 The value is determined at DC_OK assertion from the straps
+                                                                 GPIO_STRAP_PIN_E::GSER_CLK0_TERM_SEL0 and 1. */
+        uint64_t cclk1_pwdn            : 1;  /**< [  3:  3](R/W) Common clock 1 receiver power down.
+                                                                 When set, receiver is powered down.
+                                                                 The field is initialized on a cold domain reset.
+
+                                                                 Internal:
+                                                                 The receiver is also forced into powerdown when jtg__rst_pll.iddq_mode is set. */
+        uint64_t cclk1_sel             : 2;  /**< [  5:  4](R/W) Reserved.  See GSERP()_COMMON_PHY_CTRL_BCFG[REFCLK_HIZ_ENA]. */
+        uint64_t cclk2_pwdn            : 1;  /**< [  6:  6](R/W) Reserved.  See GSERR()_COMMON_PHY_CTRL_BCFG[REFCLK_PAD_ENA]. */
+        uint64_t cclk2_sel             : 2;  /**< [  8:  7](R/W) Reserved.  See GSERR()_COMMON_PHY_CTRL_BCFG[REFCLK_HIZ_ENA]. */
+        uint64_t reserved_9_63         : 55;
+#endif /* Word 0 - End */
+    } cn98xx;
     /* struct cavm_rst_refc_ctl_s cnf95xxp1; */
     struct cavm_rst_refc_ctl_cnf95xxp2
     {
@@ -10093,7 +10264,7 @@ union cavm_rst_refc_ctl
                                                                  0x0 = No termination.
                                                                  0x1 = LVPECL termination.
                                                                  0x2 = Reserved.
-                                                                 0x3 = Reserved.
+                                                                 0x3 = HCSL termination.
 
                                                                  The value is determined at DC_OK assertion from the straps
                                                                  GPIO_STRAP_PIN_E::GSER_CLK0_TERM_SEL0 and 1. */
@@ -10106,7 +10277,7 @@ union cavm_rst_refc_ctl
                                                                  0x0 = No termination.
                                                                  0x1 = LVPECL termination.
                                                                  0x2 = Reserved.
-                                                                 0x3 = Reserved.
+                                                                 0x3 = HCSL termination.
 
                                                                  The value is determined at DC_OK assertion from the straps
                                                                  GPIO_STRAP_PIN_E::GSER_CLK0_TERM_SEL0 and 1. */
@@ -10118,7 +10289,7 @@ union cavm_rst_refc_ctl
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_rst_refc_ctl_cnf95xxp2 f95mm; */
-    struct cavm_rst_refc_ctl_loki
+    struct cavm_rst_refc_ctl_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_9_63         : 55;
@@ -10153,7 +10324,8 @@ union cavm_rst_refc_ctl
         uint64_t cclk2_sel             : 2;  /**< [  8:  7](R/W) Reserved.  See GSERR/GSERC()_COMMON_PHY_CTRL_BCFG[REFCLK_HIZ_ENA]. */
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rst_refc_ctl_f95o loki; */
 };
 typedef union cavm_rst_refc_ctl cavm_rst_refc_ctl_t;
 
@@ -10256,6 +10428,7 @@ union cavm_rst_reset_active
     /* struct cavm_rst_reset_active_cn96xxp3 cn98xx; */
     /* struct cavm_rst_reset_active_s cnf95xx; */
     /* struct cavm_rst_reset_active_s f95mm; */
+    /* struct cavm_rst_reset_active_s f95o; */
     /* struct cavm_rst_reset_active_s loki; */
 };
 typedef union cavm_rst_reset_active cavm_rst_reset_active_t;
@@ -11049,6 +11222,7 @@ union cavm_rst_src_map
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_rst_src_map_cnf95xx f95mm; */
+    /* struct cavm_rst_src_map_cnf95xx f95o; */
     /* struct cavm_rst_src_map_cnf95xx loki; */
 };
 typedef union cavm_rst_src_map cavm_rst_src_map_t;

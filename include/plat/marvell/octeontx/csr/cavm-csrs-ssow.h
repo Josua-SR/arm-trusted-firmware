@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -723,6 +723,7 @@ union cavm_ssow_lf_gws_int
     /* struct cavm_ssow_lf_gws_int_s cn98xx; */
     /* struct cavm_ssow_lf_gws_int_cn96xxp1 cnf95xx; */
     /* struct cavm_ssow_lf_gws_int_cn96xxp1 f95mm; */
+    /* struct cavm_ssow_lf_gws_int_cn96xxp1 f95o; */
     /* struct cavm_ssow_lf_gws_int_cn96xxp1 loki; */
 };
 typedef union cavm_ssow_lf_gws_int cavm_ssow_lf_gws_int_t;
@@ -819,6 +820,7 @@ union cavm_ssow_lf_gws_int_ena_w1c
     /* struct cavm_ssow_lf_gws_int_ena_w1c_s cn98xx; */
     /* struct cavm_ssow_lf_gws_int_ena_w1c_cn96xxp1 cnf95xx; */
     /* struct cavm_ssow_lf_gws_int_ena_w1c_cn96xxp1 f95mm; */
+    /* struct cavm_ssow_lf_gws_int_ena_w1c_cn96xxp1 f95o; */
     /* struct cavm_ssow_lf_gws_int_ena_w1c_cn96xxp1 loki; */
 };
 typedef union cavm_ssow_lf_gws_int_ena_w1c cavm_ssow_lf_gws_int_ena_w1c_t;
@@ -915,6 +917,7 @@ union cavm_ssow_lf_gws_int_ena_w1s
     /* struct cavm_ssow_lf_gws_int_ena_w1s_s cn98xx; */
     /* struct cavm_ssow_lf_gws_int_ena_w1s_cn96xxp1 cnf95xx; */
     /* struct cavm_ssow_lf_gws_int_ena_w1s_cn96xxp1 f95mm; */
+    /* struct cavm_ssow_lf_gws_int_ena_w1s_cn96xxp1 f95o; */
     /* struct cavm_ssow_lf_gws_int_ena_w1s_cn96xxp1 loki; */
 };
 typedef union cavm_ssow_lf_gws_int_ena_w1s cavm_ssow_lf_gws_int_ena_w1s_t;
@@ -1011,6 +1014,7 @@ union cavm_ssow_lf_gws_int_w1s
     /* struct cavm_ssow_lf_gws_int_w1s_s cn98xx; */
     /* struct cavm_ssow_lf_gws_int_w1s_cn96xxp1 cnf95xx; */
     /* struct cavm_ssow_lf_gws_int_w1s_cn96xxp1 f95mm; */
+    /* struct cavm_ssow_lf_gws_int_w1s_cn96xxp1 f95o; */
     /* struct cavm_ssow_lf_gws_int_w1s_cn96xxp1 loki; */
 };
 typedef union cavm_ssow_lf_gws_int_w1s cavm_ssow_lf_gws_int_w1s_t;
@@ -2023,6 +2027,7 @@ union cavm_ssow_lf_gws_pendstate
     /* struct cavm_ssow_lf_gws_pendstate_s cn98xx; */
     /* struct cavm_ssow_lf_gws_pendstate_cn96xxp1 cnf95xx; */
     /* struct cavm_ssow_lf_gws_pendstate_cn96xxp1 f95mm; */
+    /* struct cavm_ssow_lf_gws_pendstate_cn96xxp1 f95o; */
     /* struct cavm_ssow_lf_gws_pendstate_cn96xxp1 loki; */
 };
 typedef union cavm_ssow_lf_gws_pendstate cavm_ssow_lf_gws_pendstate_t;
@@ -2332,6 +2337,8 @@ static inline uint64_t CAVM_SSOW_PRIV_LFX_HWS_CFG(uint64_t a)
         return 0x840080001000ll + 8ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=51))
         return 0x840080001000ll + 8ll * ((a) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=51))
+        return 0x840080001000ll + 8ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=51))
         return 0x840080001000ll + 8ll * ((a) & 0x3f);
     __cavm_csr_fatal("SSOW_PRIV_LFX_HWS_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -2390,6 +2397,8 @@ static inline uint64_t CAVM_SSOW_PRIV_LFX_HWS_INT_CFG(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=51))
         return 0x840080002000ll + 8ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=51))
+        return 0x840080002000ll + 8ll * ((a) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=51))
         return 0x840080002000ll + 8ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=51))
         return 0x840080002000ll + 8ll * ((a) & 0x3f);

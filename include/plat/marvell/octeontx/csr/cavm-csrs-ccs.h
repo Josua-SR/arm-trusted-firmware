@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -395,6 +395,7 @@ union cavm_ccs_adr_tdsx
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_ccs_adr_tdsx_cnf95xx f95mm; */
+    /* struct cavm_ccs_adr_tdsx_cnf95xx f95o; */
     /* struct cavm_ccs_adr_tdsx_cnf95xx loki; */
 };
 typedef union cavm_ccs_adr_tdsx cavm_ccs_adr_tdsx_t;
@@ -409,6 +410,8 @@ static inline uint64_t CAVM_CCS_ADR_TDSX(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e087104000ll + 8ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
+        return 0x87e087104000ll + 8ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e087104000ll + 8ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e087104000ll + 8ll * ((a) & 0x1);
@@ -541,6 +544,7 @@ union cavm_ccs_asc_regionx_attr
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_ccs_asc_regionx_attr_cnf95xx f95mm; */
+    /* struct cavm_ccs_asc_regionx_attr_cnf95xx f95o; */
     /* struct cavm_ccs_asc_regionx_attr_cnf95xx loki; */
 };
 typedef union cavm_ccs_asc_regionx_attr cavm_ccs_asc_regionx_attr_t;
@@ -749,6 +753,7 @@ union cavm_ccs_bcst_rsp
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_ccs_bcst_rsp_cnf95xx f95mm; */
+    /* struct cavm_ccs_bcst_rsp_cnf95xx f95o; */
     /* struct cavm_ccs_bcst_rsp_cnf95xx loki; */
 };
 typedef union cavm_ccs_bcst_rsp cavm_ccs_bcst_rsp_t;

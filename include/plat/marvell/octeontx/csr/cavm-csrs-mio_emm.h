@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -248,6 +248,7 @@ union cavm_mio_emm_calb
     /* struct cavm_mio_emm_calb_cn96xxp3 cn98xx; */
     /* struct cavm_mio_emm_calb_cn96xxp3 cnf95xx; */
     /* struct cavm_mio_emm_calb_cn96xxp3 f95mm; */
+    /* struct cavm_mio_emm_calb_cn96xxp3 f95o; */
     /* struct cavm_mio_emm_calb_cn96xxp3 loki; */
 };
 typedef union cavm_mio_emm_calb cavm_mio_emm_calb_t;
@@ -584,6 +585,7 @@ union cavm_mio_emm_debug
         uint64_t reserved_22_63        : 42;
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_mio_emm_debug_s f95o; */
     /* struct cavm_mio_emm_debug_s loki; */
 };
 typedef union cavm_mio_emm_debug cavm_mio_emm_debug_t;
@@ -1021,6 +1023,7 @@ union cavm_mio_emm_dma_arg
     /* struct cavm_mio_emm_dma_arg_cn96xxp3 cn98xx; */
     /* struct cavm_mio_emm_dma_arg_s cnf95xx; */
     /* struct cavm_mio_emm_dma_arg_s f95mm; */
+    /* struct cavm_mio_emm_dma_arg_cn96xxp3 f95o; */
     /* struct cavm_mio_emm_dma_arg_cn96xxp3 loki; */
 };
 typedef union cavm_mio_emm_dma_arg cavm_mio_emm_dma_arg_t;
@@ -1841,6 +1844,7 @@ union cavm_mio_emm_io_ctl
     /* struct cavm_mio_emm_io_ctl_s cnf95xxp1; */
     /* struct cavm_mio_emm_io_ctl_cn96xxp3 cnf95xxp2; */
     /* struct cavm_mio_emm_io_ctl_cn96xxp3 f95mm; */
+    /* struct cavm_mio_emm_io_ctl_cn96xxp3 f95o; */
     /* struct cavm_mio_emm_io_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_mio_emm_io_ctl cavm_mio_emm_io_ctl_t;
@@ -2054,6 +2058,7 @@ union cavm_mio_emm_modex
     /* struct cavm_mio_emm_modex_s cn98xx; */
     /* struct cavm_mio_emm_modex_s cnf95xx; */
     /* struct cavm_mio_emm_modex_s f95mm; */
+    /* struct cavm_mio_emm_modex_s f95o; */
     /* struct cavm_mio_emm_modex_s loki; */
 };
 typedef union cavm_mio_emm_modex cavm_mio_emm_modex_t;
@@ -2244,6 +2249,7 @@ union cavm_mio_emm_msix_vecx_addr
     /* struct cavm_mio_emm_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_mio_emm_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_mio_emm_msix_vecx_addr_cn96xxp3 f95mm; */
+    /* struct cavm_mio_emm_msix_vecx_addr_cn96xxp3 f95o; */
     /* struct cavm_mio_emm_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_mio_emm_msix_vecx_addr cavm_mio_emm_msix_vecx_addr_t;
@@ -3068,6 +3074,7 @@ union cavm_mio_emm_switch
     /* struct cavm_mio_emm_switch_cn96xxp3 cn98xx; */
     /* struct cavm_mio_emm_switch_cn96xxp3 cnf95xx; */
     /* struct cavm_mio_emm_switch_cn96xxp3 f95mm; */
+    /* struct cavm_mio_emm_switch_cn96xxp3 f95o; */
     /* struct cavm_mio_emm_switch_cn96xxp3 loki; */
 };
 typedef union cavm_mio_emm_switch cavm_mio_emm_switch_t;

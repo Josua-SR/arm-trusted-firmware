@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -593,9 +593,9 @@ union cavm_gserjx_cm0_feature_spare_cfg5_rsvd
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint32_t reserved_8_31         : 24;
-        uint32_t data                  : 8;  /**< [  7:  0](R/W/H) Reserved. */
+        uint32_t data                  : 8;  /**< [  7:  0](R/W/H) Data. */
 #else /* Word 0 - Little Endian */
-        uint32_t data                  : 8;  /**< [  7:  0](R/W/H) Reserved. */
+        uint32_t data                  : 8;  /**< [  7:  0](R/W/H) Data. */
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } s;

@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -2558,7 +2558,7 @@ static inline uint64_t CAVM_PSM_NONJOB_RSRCX(uint64_t a)
  * empty state.
  *
  * Also, note that at reset, all queues are effectively uninitialized, and
- * PSM_QUEUE()_SPACE will return 0. Queues must be initialized by writing to
+ * PSM_QUEUE()_SPACE will return 0x0. Queues must be initialized by writing to
  * PSM_QUEUE()_CFG before they can be used. This is true even in the case of
  * a single-entry queue that starts and ends at entry 0.
  */
@@ -2587,7 +2587,30 @@ union cavm_psm_queuex_cfg
         uint64_t reserved_34_63        : 30;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_psm_queuex_cfg_s cn; */
+    /* struct cavm_psm_queuex_cfg_s cn9; */
+    /* struct cavm_psm_queuex_cfg_s cnf95xxp1; */
+    struct cavm_psm_queuex_cfg_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_34_63        : 30;
+        uint64_t prio                  : 2;  /**< [ 33: 32](R/W) Queue priority. 0x0 is the highest priority and 0x3 is the lowest. */
+        uint64_t reserved_30_31        : 2;
+        uint64_t top                   : 14; /**< [ 29: 16](R/W) Indicates the highest queue RAM address allocated for the
+                                                                 queue. Must be greater than or equal to the [BASE] address pointer. */
+        uint64_t reserved_14_15        : 2;
+        uint64_t base                  : 14; /**< [ 13:  0](R/W) Indicates the lowest queue RAM address allocated for the
+                                                                 queue. Must be less than or equal to the [TOP] address pointer. */
+#else /* Word 0 - Little Endian */
+        uint64_t base                  : 14; /**< [ 13:  0](R/W) Indicates the lowest queue RAM address allocated for the
+                                                                 queue. Must be less than or equal to the [TOP] address pointer. */
+        uint64_t reserved_14_15        : 2;
+        uint64_t top                   : 14; /**< [ 29: 16](R/W) Indicates the highest queue RAM address allocated for the
+                                                                 queue. Must be greater than or equal to the [BASE] address pointer. */
+        uint64_t reserved_30_31        : 2;
+        uint64_t prio                  : 2;  /**< [ 33: 32](R/W) Queue priority. 0x0 is the highest priority and 0x3 is the lowest. */
+        uint64_t reserved_34_63        : 30;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
 };
 typedef union cavm_psm_queuex_cfg cavm_psm_queuex_cfg_t;
 

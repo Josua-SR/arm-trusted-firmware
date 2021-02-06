@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -37,6 +37,105 @@
  * Enumerates the MSI-X interrupt vectors.
  */
 #define CAVM_L2C_CBC_INT_VEC_E_INTS (0)
+
+/**
+ * Register (RSL) l2c_cbc#_bist_status
+ *
+ * L2C CBC BIST Status Registers
+ */
+union cavm_l2c_cbcx_bist_status
+{
+    uint64_t u;
+    struct cavm_l2c_cbcx_bist_status_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_37_63        : 27;
+        uint64_t mibfl                 : 5;  /**< [ 36: 32](RO/H) BIST failure status for various MIB memories. ({XMD, IPM, IRM, MXD, MXN}) */
+        uint64_t rsdfl                 : 32; /**< [ 31:  0](RO/H) BIST failure status for RSDQW0-31. */
+#else /* Word 0 - Little Endian */
+        uint64_t rsdfl                 : 32; /**< [ 31:  0](RO/H) BIST failure status for RSDQW0-31. */
+        uint64_t mibfl                 : 5;  /**< [ 36: 32](RO/H) BIST failure status for various MIB memories. ({XMD, IPM, IRM, MXD, MXN}) */
+        uint64_t reserved_37_63        : 27;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_l2c_cbcx_bist_status_s cn; */
+};
+typedef union cavm_l2c_cbcx_bist_status cavm_l2c_cbcx_bist_status_t;
+
+static inline uint64_t CAVM_L2C_CBCX_BIST_STATUS(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_L2C_CBCX_BIST_STATUS(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
+        return 0x87e0580a0000ll + 0x1000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
+        return 0x87e0580a0000ll + 0x1000000ll * ((a) & 0x1);
+    __cavm_csr_fatal("L2C_CBCX_BIST_STATUS", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_L2C_CBCX_BIST_STATUS(a) cavm_l2c_cbcx_bist_status_t
+#define bustype_CAVM_L2C_CBCX_BIST_STATUS(a) CSR_TYPE_RSL
+#define basename_CAVM_L2C_CBCX_BIST_STATUS(a) "L2C_CBCX_BIST_STATUS"
+#define device_bar_CAVM_L2C_CBCX_BIST_STATUS(a) 0x0 /* PF_BAR0 */
+#define busnum_CAVM_L2C_CBCX_BIST_STATUS(a) (a)
+#define arguments_CAVM_L2C_CBCX_BIST_STATUS(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) l2c_cbc#_dll
+ *
+ * L2C CBC DLL Observability Register
+ * Register for DLL observability.
+ */
+union cavm_l2c_cbcx_dll
+{
+    uint64_t u;
+    struct cavm_l2c_cbcx_dll_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_60_63        : 4;
+        uint64_t max_dll_setting       : 12; /**< [ 59: 48](RO/H) Max reported DLL setting. */
+        uint64_t min_dll_setting       : 12; /**< [ 47: 36](RO/H) Min reported DLL setting. */
+        uint64_t pd_pos_rclk_refclk    : 1;  /**< [ 35: 35](RO/H) Phase detector output. */
+        uint64_t pdl_rclk_refclk       : 1;  /**< [ 34: 34](RO/H) Phase detector output. */
+        uint64_t pdr_rclk_refclk       : 1;  /**< [ 33: 33](RO/H) Phase detector output. */
+        uint64_t reserved_32           : 1;
+        uint64_t dly_elem_enable       : 16; /**< [ 31: 16](RO/H) Delay element enable. */
+        uint64_t dll_setting           : 12; /**< [ 15:  4](RO/H) DLL setting. */
+        uint64_t reserved_1_3          : 3;
+        uint64_t dll_lock              : 1;  /**< [  0:  0](RO/H) DLL locked. */
+#else /* Word 0 - Little Endian */
+        uint64_t dll_lock              : 1;  /**< [  0:  0](RO/H) DLL locked. */
+        uint64_t reserved_1_3          : 3;
+        uint64_t dll_setting           : 12; /**< [ 15:  4](RO/H) DLL setting. */
+        uint64_t dly_elem_enable       : 16; /**< [ 31: 16](RO/H) Delay element enable. */
+        uint64_t reserved_32           : 1;
+        uint64_t pdr_rclk_refclk       : 1;  /**< [ 33: 33](RO/H) Phase detector output. */
+        uint64_t pdl_rclk_refclk       : 1;  /**< [ 34: 34](RO/H) Phase detector output. */
+        uint64_t pd_pos_rclk_refclk    : 1;  /**< [ 35: 35](RO/H) Phase detector output. */
+        uint64_t min_dll_setting       : 12; /**< [ 47: 36](RO/H) Min reported DLL setting. */
+        uint64_t max_dll_setting       : 12; /**< [ 59: 48](RO/H) Max reported DLL setting. */
+        uint64_t reserved_60_63        : 4;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_l2c_cbcx_dll_s cn; */
+};
+typedef union cavm_l2c_cbcx_dll cavm_l2c_cbcx_dll_t;
+
+static inline uint64_t CAVM_L2C_CBCX_DLL(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_L2C_CBCX_DLL(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
+        return 0x87e058040000ll + 0x1000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
+        return 0x87e058040000ll + 0x1000000ll * ((a) & 0x1);
+    __cavm_csr_fatal("L2C_CBCX_DLL", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_L2C_CBCX_DLL(a) cavm_l2c_cbcx_dll_t
+#define bustype_CAVM_L2C_CBCX_DLL(a) CSR_TYPE_RSL
+#define basename_CAVM_L2C_CBCX_DLL(a) "L2C_CBCX_DLL"
+#define device_bar_CAVM_L2C_CBCX_DLL(a) 0x0 /* PF_BAR0 */
+#define busnum_CAVM_L2C_CBCX_DLL(a) (a)
+#define arguments_CAVM_L2C_CBCX_DLL(a) (a),-1,-1,-1
 
 /**
  * Register (RSL) l2c_cbc#_int_ena_w1c
@@ -462,6 +561,105 @@ static inline uint64_t CAVM_L2C_CBCX_IOCX_PFC(uint64_t a, uint64_t b)
 #define arguments_CAVM_L2C_CBCX_IOCX_PFC(a,b) (a),(b),-1,-1
 
 /**
+ * Register (RSL) l2c_cbc#_iocerr
+ *
+ * L2C CBC Error Information Registers
+ * Reserved.
+ */
+union cavm_l2c_cbcx_iocerr
+{
+    uint64_t u;
+    struct cavm_l2c_cbcx_iocerr_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_0_63         : 64;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0_63         : 64;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_l2c_cbcx_iocerr_s cn; */
+};
+typedef union cavm_l2c_cbcx_iocerr cavm_l2c_cbcx_iocerr_t;
+
+static inline uint64_t CAVM_L2C_CBCX_IOCERR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_L2C_CBCX_IOCERR(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
+        return 0x87e058080010ll + 0x1000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
+        return 0x87e058080010ll + 0x1000000ll * ((a) & 0x1);
+    __cavm_csr_fatal("L2C_CBCX_IOCERR", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_L2C_CBCX_IOCERR(a) cavm_l2c_cbcx_iocerr_t
+#define bustype_CAVM_L2C_CBCX_IOCERR(a) CSR_TYPE_RSL
+#define basename_CAVM_L2C_CBCX_IOCERR(a) "L2C_CBCX_IOCERR"
+#define device_bar_CAVM_L2C_CBCX_IOCERR(a) 0x0 /* PF_BAR0 */
+#define busnum_CAVM_L2C_CBCX_IOCERR(a) (a)
+#define arguments_CAVM_L2C_CBCX_IOCERR(a) (a),-1,-1,-1
+
+/**
+ * Register (RSL) l2c_cbc#_iodisocierr
+ *
+ * L2C CBC IODISOCI Error Information Registers
+ * This register records error information associated with IORDDISOCI/IOWRDISOCI interrupts.
+ * IOWRDISOCI events take priority over previously captured IORDDISOCI events. Of the available
+ * I/O transactions, some commands will either set [IORDDISOCI], set [IOWRDISOCI], or set both
+ * [IORDDISOCI] and [IOWRDISOCI]. See L2C_CBC()_INT_W1C for information about which I/O
+ * transactions
+ * may result in IORDDISOCI/IOWRDISOCI interrupts.
+ */
+union cavm_l2c_cbcx_iodisocierr
+{
+    uint64_t u;
+    struct cavm_l2c_cbcx_iodisocierr_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t iorddisoci            : 1;  /**< [ 63: 63](RO/H) Logged information is for a IORDDISOCI error. */
+        uint64_t iowrdisoci            : 1;  /**< [ 62: 62](RO/H) Logged information is for a IOWRDISOCI error. */
+        uint64_t reserved_59_61        : 3;
+        uint64_t cmd                   : 7;  /**< [ 58: 52](RO/H) Encoding of XMC command.
+                                                                 Internal:
+                                                                 Enumerated by XMC_CMD_E. */
+        uint64_t ppvid                 : 6;  /**< [ 51: 46](RO/H) CMB source PPVID. */
+        uint64_t node                  : 2;  /**< [ 45: 44](RO/H) Destination node ID. */
+        uint64_t did                   : 8;  /**< [ 43: 36](RO/H) Destination device ID. */
+        uint64_t addr                  : 36; /**< [ 35:  0](RO/H) I/O address. */
+#else /* Word 0 - Little Endian */
+        uint64_t addr                  : 36; /**< [ 35:  0](RO/H) I/O address. */
+        uint64_t did                   : 8;  /**< [ 43: 36](RO/H) Destination device ID. */
+        uint64_t node                  : 2;  /**< [ 45: 44](RO/H) Destination node ID. */
+        uint64_t ppvid                 : 6;  /**< [ 51: 46](RO/H) CMB source PPVID. */
+        uint64_t cmd                   : 7;  /**< [ 58: 52](RO/H) Encoding of XMC command.
+                                                                 Internal:
+                                                                 Enumerated by XMC_CMD_E. */
+        uint64_t reserved_59_61        : 3;
+        uint64_t iowrdisoci            : 1;  /**< [ 62: 62](RO/H) Logged information is for a IOWRDISOCI error. */
+        uint64_t iorddisoci            : 1;  /**< [ 63: 63](RO/H) Logged information is for a IORDDISOCI error. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_l2c_cbcx_iodisocierr_s cn; */
+};
+typedef union cavm_l2c_cbcx_iodisocierr cavm_l2c_cbcx_iodisocierr_t;
+
+static inline uint64_t CAVM_L2C_CBCX_IODISOCIERR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_L2C_CBCX_IODISOCIERR(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
+        return 0x87e058080008ll + 0x1000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
+        return 0x87e058080008ll + 0x1000000ll * ((a) & 0x1);
+    __cavm_csr_fatal("L2C_CBCX_IODISOCIERR", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_L2C_CBCX_IODISOCIERR(a) cavm_l2c_cbcx_iodisocierr_t
+#define bustype_CAVM_L2C_CBCX_IODISOCIERR(a) CSR_TYPE_RSL
+#define basename_CAVM_L2C_CBCX_IODISOCIERR(a) "L2C_CBCX_IODISOCIERR"
+#define device_bar_CAVM_L2C_CBCX_IODISOCIERR(a) 0x0 /* PF_BAR0 */
+#define busnum_CAVM_L2C_CBCX_IODISOCIERR(a) (a)
+#define arguments_CAVM_L2C_CBCX_IODISOCIERR(a) (a),-1,-1,-1
+
+/**
  * Register (RSL) l2c_cbc#_ior#_pfc
  *
  * L2C CBC IOR Performance Counter Register
@@ -497,6 +695,69 @@ static inline uint64_t CAVM_L2C_CBCX_IORX_PFC(uint64_t a, uint64_t b)
 #define device_bar_CAVM_L2C_CBCX_IORX_PFC(a,b) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_L2C_CBCX_IORX_PFC(a,b) (a)
 #define arguments_CAVM_L2C_CBCX_IORX_PFC(a,b) (a),(b),-1,-1
+
+/**
+ * Register (RSL) l2c_cbc#_miberr
+ *
+ * L2C CBC MIB Error Information Registers
+ * This register records error information for all CBC MIB errors. An error locks the INDEX and
+ * [SYN] fields and set the bit corresponding to the error received. MIBDBE errors take priority
+ * and overwrite an earlier logged MIBSBE error. Only one of [MIBSBE]/[MIBDBE] is set at any
+ * given
+ * time and serves to document which error the INDEX/[SYN] is associated with. The syndrome is
+ * recorded for DBE errors, though the utility of the value is not clear.
+ */
+union cavm_l2c_cbcx_miberr
+{
+    uint64_t u;
+    struct cavm_l2c_cbcx_miberr_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t mibdbe                : 1;  /**< [ 63: 63](RO/H) INDEX/SYN corresponds to a double-bit MIB ECC error. */
+        uint64_t mibsbe                : 1;  /**< [ 62: 62](RO/H) INDEX/SYN corresponds to a single-bit MIB ECC error. */
+        uint64_t reserved_40_61        : 22;
+        uint64_t syn                   : 8;  /**< [ 39: 32](RO/H) Error syndrome. */
+        uint64_t reserved_3_31         : 29;
+        uint64_t memid                 : 2;  /**< [  2:  1](RO/H) Indicates the memory that had the error.
+                                                                 0x0 = Error from MXB_VC_MRN, MXB_VC_MFN, MXB_VC_MPN VCs.
+                                                                 0x1 = Error from MXB_VC_MRD, MXB_VC_MPD VCs.
+                                                                 0x2 = Error from MXB_VC_IRM VC.
+                                                                 0x3 = Error from MXB_VC_IPM VC. */
+        uint64_t mibnum                : 1;  /**< [  0:  0](RO/H) Indicates the MIB bus that had the error. */
+#else /* Word 0 - Little Endian */
+        uint64_t mibnum                : 1;  /**< [  0:  0](RO/H) Indicates the MIB bus that had the error. */
+        uint64_t memid                 : 2;  /**< [  2:  1](RO/H) Indicates the memory that had the error.
+                                                                 0x0 = Error from MXB_VC_MRN, MXB_VC_MFN, MXB_VC_MPN VCs.
+                                                                 0x1 = Error from MXB_VC_MRD, MXB_VC_MPD VCs.
+                                                                 0x2 = Error from MXB_VC_IRM VC.
+                                                                 0x3 = Error from MXB_VC_IPM VC. */
+        uint64_t reserved_3_31         : 29;
+        uint64_t syn                   : 8;  /**< [ 39: 32](RO/H) Error syndrome. */
+        uint64_t reserved_40_61        : 22;
+        uint64_t mibsbe                : 1;  /**< [ 62: 62](RO/H) INDEX/SYN corresponds to a single-bit MIB ECC error. */
+        uint64_t mibdbe                : 1;  /**< [ 63: 63](RO/H) INDEX/SYN corresponds to a double-bit MIB ECC error. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_l2c_cbcx_miberr_s cn; */
+};
+typedef union cavm_l2c_cbcx_miberr cavm_l2c_cbcx_miberr_t;
+
+static inline uint64_t CAVM_L2C_CBCX_MIBERR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_L2C_CBCX_MIBERR(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
+        return 0x87e058080020ll + 0x1000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
+        return 0x87e058080020ll + 0x1000000ll * ((a) & 0x1);
+    __cavm_csr_fatal("L2C_CBCX_MIBERR", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_L2C_CBCX_MIBERR(a) cavm_l2c_cbcx_miberr_t
+#define bustype_CAVM_L2C_CBCX_MIBERR(a) CSR_TYPE_RSL
+#define basename_CAVM_L2C_CBCX_MIBERR(a) "L2C_CBCX_MIBERR"
+#define device_bar_CAVM_L2C_CBCX_MIBERR(a) 0x0 /* PF_BAR0 */
+#define busnum_CAVM_L2C_CBCX_MIBERR(a) (a)
+#define arguments_CAVM_L2C_CBCX_MIBERR(a) (a),-1,-1,-1
 
 /**
  * Register (RSL) l2c_cbc#_msix_pba#
@@ -718,6 +979,64 @@ static inline uint64_t CAVM_L2C_CBCX_RSDX_PFC(uint64_t a, uint64_t b)
 #define device_bar_CAVM_L2C_CBCX_RSDX_PFC(a,b) 0x0 /* PF_BAR0 */
 #define busnum_CAVM_L2C_CBCX_RSDX_PFC(a,b) (a)
 #define arguments_CAVM_L2C_CBCX_RSDX_PFC(a,b) (a),(b),-1,-1
+
+/**
+ * Register (RSL) l2c_cbc#_rsderr
+ *
+ * L2C CBC RSD Error Information Registers
+ * This register records error information for all CBC RSD errors.
+ * An error locks the INDEX and [SYN] fields and set the bit corresponding to the error received.
+ * RSDDBE errors take priority and overwrite an earlier logged RSDSBE error. Only one of
+ * [RSDSBE]/[RSDDBE] is set at any given time and serves to document which error the INDEX/[SYN]
+ * is
+ * associated with.
+ * The syndrome is recorded for DBE errors, though the utility of the value is not clear.
+ */
+union cavm_l2c_cbcx_rsderr
+{
+    uint64_t u;
+    struct cavm_l2c_cbcx_rsderr_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t rsddbe                : 1;  /**< [ 63: 63](RO/H) INDEX/SYN corresponds to a double-bit RSD ECC error. */
+        uint64_t rsdsbe                : 1;  /**< [ 62: 62](RO/H) INDEX/SYN corresponds to a single-bit RSD ECC error. */
+        uint64_t reserved_40_61        : 22;
+        uint64_t syn                   : 8;  /**< [ 39: 32](RO/H) Error syndrome. */
+        uint64_t reserved_9_31         : 23;
+        uint64_t tadnum                : 3;  /**< [  8:  6](RO/H) Indicates the TAD FIFO containing the error. */
+        uint64_t qwnum                 : 2;  /**< [  5:  4](RO/H) Indicates the QW containing the error. */
+        uint64_t rsdnum                : 4;  /**< [  3:  0](RO/H) Indicates the RSD that had the error. */
+#else /* Word 0 - Little Endian */
+        uint64_t rsdnum                : 4;  /**< [  3:  0](RO/H) Indicates the RSD that had the error. */
+        uint64_t qwnum                 : 2;  /**< [  5:  4](RO/H) Indicates the QW containing the error. */
+        uint64_t tadnum                : 3;  /**< [  8:  6](RO/H) Indicates the TAD FIFO containing the error. */
+        uint64_t reserved_9_31         : 23;
+        uint64_t syn                   : 8;  /**< [ 39: 32](RO/H) Error syndrome. */
+        uint64_t reserved_40_61        : 22;
+        uint64_t rsdsbe                : 1;  /**< [ 62: 62](RO/H) INDEX/SYN corresponds to a single-bit RSD ECC error. */
+        uint64_t rsddbe                : 1;  /**< [ 63: 63](RO/H) INDEX/SYN corresponds to a double-bit RSD ECC error. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_l2c_cbcx_rsderr_s cn; */
+};
+typedef union cavm_l2c_cbcx_rsderr cavm_l2c_cbcx_rsderr_t;
+
+static inline uint64_t CAVM_L2C_CBCX_RSDERR(uint64_t a) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_L2C_CBCX_RSDERR(uint64_t a)
+{
+    if (cavm_is_model(OCTEONTX_CN81XX) && (a==0))
+        return 0x87e058080018ll + 0x1000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_CN83XX) && (a<=1))
+        return 0x87e058080018ll + 0x1000000ll * ((a) & 0x1);
+    __cavm_csr_fatal("L2C_CBCX_RSDERR", 1, a, 0, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_L2C_CBCX_RSDERR(a) cavm_l2c_cbcx_rsderr_t
+#define bustype_CAVM_L2C_CBCX_RSDERR(a) CSR_TYPE_RSL
+#define basename_CAVM_L2C_CBCX_RSDERR(a) "L2C_CBCX_RSDERR"
+#define device_bar_CAVM_L2C_CBCX_RSDERR(a) 0x0 /* PF_BAR0 */
+#define busnum_CAVM_L2C_CBCX_RSDERR(a) (a)
+#define arguments_CAVM_L2C_CBCX_RSDERR(a) (a),-1,-1,-1
 
 /**
  * Register (RSL) l2c_cbc#_scratch

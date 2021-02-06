@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -763,7 +763,7 @@ static inline uint64_t CAVM_ECAMX_DOMX_DEVX_PERMIT(uint64_t a, uint64_t b, uint6
 /**
  * Register (RSL) ecam#_dom#_rsl#_permit
  *
- * ECAM Domain Device Permit Registers
+ * ECAM Domain RSL Permit Registers
  * This register sets the permissions for an ECAM access to an RSL device. This
  * register is used when the domain and bus point to RSL; i.e. address's
  * ECAM_CFG_ADDR_S[DOMAIN]=PCC_DEV_CON_E::MRML\<21:16\>, and ECAM_CFG_ADDR_S[BUS] =

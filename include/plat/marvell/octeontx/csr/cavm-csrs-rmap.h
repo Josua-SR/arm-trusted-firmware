@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -443,7 +443,425 @@ union cavm_rmap_lte_mode_s
         uint64_t reserved_251_255      : 5;
 #endif /* Word 3 - End */
     } s;
-    /* struct cavm_rmap_lte_mode_s_s cn; */
+    /* struct cavm_rmap_lte_mode_s_s cn9; */
+    /* struct cavm_rmap_lte_mode_s_s cnf95xxp1; */
+    struct cavm_rmap_lte_mode_s_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t phy_mode              : 1;  /**< [ 63: 63] This flag sets mode of operation. Must be set to 0 to indicate LTE mode. */
+        uint64_t reserved_62           : 1;
+        uint64_t tti_mode              : 2;  /**< [ 61: 60] TTI Mode:
+                                                                 0x0 = normal 1ms TTI.
+                                                                 0x1 = 7-OS sTTI.
+                                                                 0x2 = 2/3-OS sTTI.
+                                                                 0x3 = Flexible Symbol with no UCI. */
+        uint64_t bypass_scrambler      : 1;  /**< [ 59: 59] If set to 1, bypass scrambling. */
+        uint64_t bypass_modulator      : 1;  /**< [ 58: 58] If set to 1, bypass modulator/RS insertion and DFT. */
+        uint64_t bypass_dft            : 1;  /**< [ 57: 57] If set to 1, bypass DFT. */
+        uint64_t dft_standalone_flag   : 1;  /**< [ 56: 56] When set to 1, this flag sets the DFT engine as a standalone module. In this
+                                                                 mode, both the functions before and after DFT/IDFT engine are bypassed.
+                                                                 The DFT/IDFT result is DMAed directly to the output as in the one layer, no
+                                                                 frequency hopping, allocation type 0 case.
+                                                                 0x0 = used as non-standalone module in the RMAP chain.
+                                                                 0x1 = used as standalone DFT/IDFT engine. */
+        uint64_t bypass_data_uci_mux   : 1;  /**< [ 55: 55] If set to 1, Data_UCI multiplexer is bypassed. */
+        uint64_t reserved_53_54        : 2;
+        uint64_t num_rb                : 9;  /**< [ 52: 44] The total number of RBs in a subframe.
+                                                                 If [RES_ALLC_TYPE] = 1, this is the sum of number of RBs for Set 0 and Set 1.
+                                                                 For LTE, valid range is [1:108]. */
+        uint64_t reserved_43           : 1;
+        uint64_t num_layers            : 3;  /**< [ 42: 40] Number of layers for PUSCH channel:
+                                                                 0x1 = 1 Layer.
+                                                                 0x2 = 2 Layers. */
+        uint64_t mod_order             : 4;  /**< [ 39: 36] Modulation order:
+                                                                 0x2 = QPSK.
+                                                                 0x4 = 16-QAM.
+                                                                 0x6 = 64-QAM.
+                                                                 0x8 = 256-QAM. */
+        uint64_t num_scalar_qam        : 4;  /**< [ 35: 32] The number of bits the floating point modulation values are left shifted to produce
+                                                                 the fixed point complex values. Valid range is [1,15]. */
+        uint64_t dft_idft_flag         : 1;  /**< [ 31: 31] In DFT-only mode ([DFT_STANDALONE_FLAG] = 1), this flag sets the DFT or IDFT function:
+                                                                   0x0 = DFT.
+                                                                   0x1 = IDFT.
+                                                                 When [DFT_STANDALONE_FLAG] = 0, [DFT_IDFT_FLAG] must be 0. */
+        uint64_t reserved_30           : 1;
+        uint64_t ndft_indx             : 6;  /**< [ 29: 24] Index to the NDFTs that are defined in the list of supported NDFTs.
+                                                                 Valid range is [0,34].
+                                                                   0x0 = NDFT = 12.
+                                                                   0x1 = NDFT = 24.
+                                                                   ....
+                                                                   0x21 = NDFT = 1200.
+                                                                   0x22 = NDFT = 1296.
+                                                                   0x23 = NDFT = 1200.
+                                                                   0x24 = NDFT = 1296. */
+        uint64_t reserved_21_23        : 3;
+        uint64_t rs_bits_last          : 5;  /**< [ 20: 16] This parameter controls the output scaling at the last stage of the DFT/IDFT.
+                                                                 The DFT/IDFT output is right shifted by [RS_BITS_LAST]. Valid range is [15,19]. */
+        uint64_t reserved_14_15        : 2;
+        uint64_t g_prime               : 14; /**< [ 13:  0] Total number of coded symbols in the transport block.
+                                                                 Total number of coded bits is [G_PRIME]*[NUM_LAYERS]*[MOD_ORDER].
+                                                                 Valid range is [0, 15552] with the following condition:
+                                                                 [G_PRIME] \<= [NUM_SYMB_PUSCH]*12*[NUM_RB]. */
+#else /* Word 0 - Little Endian */
+        uint64_t g_prime               : 14; /**< [ 13:  0] Total number of coded symbols in the transport block.
+                                                                 Total number of coded bits is [G_PRIME]*[NUM_LAYERS]*[MOD_ORDER].
+                                                                 Valid range is [0, 15552] with the following condition:
+                                                                 [G_PRIME] \<= [NUM_SYMB_PUSCH]*12*[NUM_RB]. */
+        uint64_t reserved_14_15        : 2;
+        uint64_t rs_bits_last          : 5;  /**< [ 20: 16] This parameter controls the output scaling at the last stage of the DFT/IDFT.
+                                                                 The DFT/IDFT output is right shifted by [RS_BITS_LAST]. Valid range is [15,19]. */
+        uint64_t reserved_21_23        : 3;
+        uint64_t ndft_indx             : 6;  /**< [ 29: 24] Index to the NDFTs that are defined in the list of supported NDFTs.
+                                                                 Valid range is [0,34].
+                                                                   0x0 = NDFT = 12.
+                                                                   0x1 = NDFT = 24.
+                                                                   ....
+                                                                   0x21 = NDFT = 1200.
+                                                                   0x22 = NDFT = 1296.
+                                                                   0x23 = NDFT = 1200.
+                                                                   0x24 = NDFT = 1296. */
+        uint64_t reserved_30           : 1;
+        uint64_t dft_idft_flag         : 1;  /**< [ 31: 31] In DFT-only mode ([DFT_STANDALONE_FLAG] = 1), this flag sets the DFT or IDFT function:
+                                                                   0x0 = DFT.
+                                                                   0x1 = IDFT.
+                                                                 When [DFT_STANDALONE_FLAG] = 0, [DFT_IDFT_FLAG] must be 0. */
+        uint64_t num_scalar_qam        : 4;  /**< [ 35: 32] The number of bits the floating point modulation values are left shifted to produce
+                                                                 the fixed point complex values. Valid range is [1,15]. */
+        uint64_t mod_order             : 4;  /**< [ 39: 36] Modulation order:
+                                                                 0x2 = QPSK.
+                                                                 0x4 = 16-QAM.
+                                                                 0x6 = 64-QAM.
+                                                                 0x8 = 256-QAM. */
+        uint64_t num_layers            : 3;  /**< [ 42: 40] Number of layers for PUSCH channel:
+                                                                 0x1 = 1 Layer.
+                                                                 0x2 = 2 Layers. */
+        uint64_t reserved_43           : 1;
+        uint64_t num_rb                : 9;  /**< [ 52: 44] The total number of RBs in a subframe.
+                                                                 If [RES_ALLC_TYPE] = 1, this is the sum of number of RBs for Set 0 and Set 1.
+                                                                 For LTE, valid range is [1:108]. */
+        uint64_t reserved_53_54        : 2;
+        uint64_t bypass_data_uci_mux   : 1;  /**< [ 55: 55] If set to 1, Data_UCI multiplexer is bypassed. */
+        uint64_t dft_standalone_flag   : 1;  /**< [ 56: 56] When set to 1, this flag sets the DFT engine as a standalone module. In this
+                                                                 mode, both the functions before and after DFT/IDFT engine are bypassed.
+                                                                 The DFT/IDFT result is DMAed directly to the output as in the one layer, no
+                                                                 frequency hopping, allocation type 0 case.
+                                                                 0x0 = used as non-standalone module in the RMAP chain.
+                                                                 0x1 = used as standalone DFT/IDFT engine. */
+        uint64_t bypass_dft            : 1;  /**< [ 57: 57] If set to 1, bypass DFT. */
+        uint64_t bypass_modulator      : 1;  /**< [ 58: 58] If set to 1, bypass modulator/RS insertion and DFT. */
+        uint64_t bypass_scrambler      : 1;  /**< [ 59: 59] If set to 1, bypass scrambling. */
+        uint64_t tti_mode              : 2;  /**< [ 61: 60] TTI Mode:
+                                                                 0x0 = normal 1ms TTI.
+                                                                 0x1 = 7-OS sTTI.
+                                                                 0x2 = 2/3-OS sTTI.
+                                                                 0x3 = Flexible Symbol with no UCI. */
+        uint64_t reserved_62           : 1;
+        uint64_t phy_mode              : 1;  /**< [ 63: 63] This flag sets mode of operation. Must be set to 0 to indicate LTE mode. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t reserved_125_127      : 3;
+        uint64_t stti_2os_ack_pos      : 1;  /**< [124:124] The symbol index for the ACK mapping in the case of two data symbols for
+                                                                 [TTI_MODE] = 0x2 (2/3-OS sTTI):
+                                                                 0x0 = ACK on symbol 0 and RI on symbol 1.
+                                                                 0x1 = ACK on symbol l and RI on symbol 0.
+
+                                                                 This field is ignored for [TTI_MODE] = 0x0,0x1,0x3. */
+        uint64_t reserved_123          : 1;
+        uint64_t ack_enc_cat           : 3;  /**< [122:120] ACK encoding category:
+                                                                 0x0 = No ACK or if [TTI_MODE] = 0x3, number of input bits = 0.
+                                                                 0x1 = O^ACK = 0x1, number of input bits = 1.
+                                                                 0x2 = O^ACK = 0x1, ACK bundling with number of input bits = 1.
+                                                                 0x3 = O^ACK = 0x2, number of input bits = 2.
+                                                                 0x4 = O^ACK = 0x2, ACK bundling with number of input bits = 2.
+                                                                 0x5 = 3 \<= O^ACK \<= 11, number of input bits = 32.
+                                                                 0x6 = 11 \< O^ACK \<= 22, number of input bits = 64.
+                                                                 0x7 = O^ACK \> 22, (encoder and repetition are bypassed). */
+        uint64_t reserved_119          : 1;
+        uint64_t ri_enc_cat            : 3;  /**< [118:116] RI encoding category:
+                                                                 0x0 = no RI or if [TTI_MODE] = 0x3.
+                                                                 0x1 = O^RI = 1.
+                                                                 0x2 = O^RI = 2.
+                                                                 0x3 = 3 \<= O^RI \<= 11.
+                                                                 0x4 = 11 \< O^RI \<= 22.
+                                                                 0x5 = O^RI \> 22 (encoder and repetition are bypassed).
+                                                                 0x6-07 = Reserved. */
+        uint64_t reserved_104_115      : 12;
+        uint64_t num_symb_pusch        : 4;  /**< [103:100] Number of SC-FDMA symbols carrying PUSCH in a TTI. Used for UL-SCH channel interleaving.
+
+                                                                 _ When [TTI_MODE] = 0x0 (1ms TTI) and [CP_MODE] = 1, valid range is [9,10].
+
+                                                                 _ When [TTI_MODE] = 0x0 (1ms TTI) and [CP_MODE] = 0, valid range is [11,12].
+
+                                                                 _ When [TTI_MODE] = 0x1 (7-OS TTI), valid range is [5,6].
+
+                                                                 _ When [TTI_MODE] = 0x2 (2/3-OS sTTI), valid range is [1,2].
+
+                                                                 _ When [TTI_MODE] = 0x3 (Flexible symbol), valid range is [1,12]. */
+        uint64_t reserved_99           : 1;
+        uint64_t cp_mode               : 1;  /**< [ 98: 98] CP type for normal TTI ([TTI_MODE] = 0x0).
+                                                                 0x0 = Normal CP.
+                                                                 0x1 = Extended CP.
+
+                                                                 When [TTI_MODE] = 0x1,0x2,0x3, this field is set to 0. */
+        uint64_t reserved_97           : 1;
+        uint64_t symb_byte_aligned     : 1;  /**< [ 96: 96] If set to 1, each [MOD_ORDER] bits are mapped to one byte. */
+        uint64_t reserved_95           : 1;
+        uint64_t scrambling_cinit      : 31; /**< [ 94: 64] Initial value of the second m-sequence of the scrambler. Valid range is [0, 2^31-1]. */
+#else /* Word 1 - Little Endian */
+        uint64_t scrambling_cinit      : 31; /**< [ 94: 64] Initial value of the second m-sequence of the scrambler. Valid range is [0, 2^31-1]. */
+        uint64_t reserved_95           : 1;
+        uint64_t symb_byte_aligned     : 1;  /**< [ 96: 96] If set to 1, each [MOD_ORDER] bits are mapped to one byte. */
+        uint64_t reserved_97           : 1;
+        uint64_t cp_mode               : 1;  /**< [ 98: 98] CP type for normal TTI ([TTI_MODE] = 0x0).
+                                                                 0x0 = Normal CP.
+                                                                 0x1 = Extended CP.
+
+                                                                 When [TTI_MODE] = 0x1,0x2,0x3, this field is set to 0. */
+        uint64_t reserved_99           : 1;
+        uint64_t num_symb_pusch        : 4;  /**< [103:100] Number of SC-FDMA symbols carrying PUSCH in a TTI. Used for UL-SCH channel interleaving.
+
+                                                                 _ When [TTI_MODE] = 0x0 (1ms TTI) and [CP_MODE] = 1, valid range is [9,10].
+
+                                                                 _ When [TTI_MODE] = 0x0 (1ms TTI) and [CP_MODE] = 0, valid range is [11,12].
+
+                                                                 _ When [TTI_MODE] = 0x1 (7-OS TTI), valid range is [5,6].
+
+                                                                 _ When [TTI_MODE] = 0x2 (2/3-OS sTTI), valid range is [1,2].
+
+                                                                 _ When [TTI_MODE] = 0x3 (Flexible symbol), valid range is [1,12]. */
+        uint64_t reserved_104_115      : 12;
+        uint64_t ri_enc_cat            : 3;  /**< [118:116] RI encoding category:
+                                                                 0x0 = no RI or if [TTI_MODE] = 0x3.
+                                                                 0x1 = O^RI = 1.
+                                                                 0x2 = O^RI = 2.
+                                                                 0x3 = 3 \<= O^RI \<= 11.
+                                                                 0x4 = 11 \< O^RI \<= 22.
+                                                                 0x5 = O^RI \> 22 (encoder and repetition are bypassed).
+                                                                 0x6-07 = Reserved. */
+        uint64_t reserved_119          : 1;
+        uint64_t ack_enc_cat           : 3;  /**< [122:120] ACK encoding category:
+                                                                 0x0 = No ACK or if [TTI_MODE] = 0x3, number of input bits = 0.
+                                                                 0x1 = O^ACK = 0x1, number of input bits = 1.
+                                                                 0x2 = O^ACK = 0x1, ACK bundling with number of input bits = 1.
+                                                                 0x3 = O^ACK = 0x2, number of input bits = 2.
+                                                                 0x4 = O^ACK = 0x2, ACK bundling with number of input bits = 2.
+                                                                 0x5 = 3 \<= O^ACK \<= 11, number of input bits = 32.
+                                                                 0x6 = 11 \< O^ACK \<= 22, number of input bits = 64.
+                                                                 0x7 = O^ACK \> 22, (encoder and repetition are bypassed). */
+        uint64_t reserved_123          : 1;
+        uint64_t stti_2os_ack_pos      : 1;  /**< [124:124] The symbol index for the ACK mapping in the case of two data symbols for
+                                                                 [TTI_MODE] = 0x2 (2/3-OS sTTI):
+                                                                 0x0 = ACK on symbol 0 and RI on symbol 1.
+                                                                 0x1 = ACK on symbol l and RI on symbol 0.
+
+                                                                 This field is ignored for [TTI_MODE] = 0x0,0x1,0x3. */
+        uint64_t reserved_125_127      : 3;
+#endif /* Word 1 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
+        uint64_t reserved_190_191      : 2;
+        uint64_t num_cqi_re            : 14; /**< [189:176] Number of CQI REs per layer. Valid range is [0,15552] with the condition that
+                                                                 [NUM_CQI_RE] \<= [NM_SYMB_PUSCH] * [NUM_RB] * 12. */
+        uint64_t reserved_173_175      : 3;
+        uint64_t num_ri_re             : 13; /**< [172:160] Number of RI REs per layer (Q'RI). If Q'RI = 0, no RI bits are received. Valid
+                                                                 range is [0, 5184] with the following constraints:
+
+                                                                 _ When [RI_ENC_CAT] = 0x0 or [TTI_MODE] = 0x3, valid range is 0.
+
+                                                                 _ When [RI_ENC_CAT] \>= 0x1 and [TTI_MODE] = 0x0, valid range is [1,48*[NUM_RB]].
+
+                                                                 _ When [RI_ENC_CAT] \>= 0x1 and [TTI_MODE] = 0x1, valid range is [1,24*[NUM_RB]].
+
+                                                                 _ When [RI_ENC_CAT] \>= 0x1 and [TTI_MODE] = 0x2, valid range is [1,12*[NUM_RB]]. */
+        uint64_t reserved_157_159      : 3;
+        uint64_t num_ack_re            : 13; /**< [156:144] Number of ACK REs per layer (Q'ACK). Valid range is [0,5184] with the following conditions:
+
+                                                                 _ When Q_ACK = 0 no ACK bits are received.
+
+                                                                 _ When [ACK_ENC_CAT] = 0 or [TTI_MODE] = 0x3, must be 0x0.
+
+                                                                 _ When [ACK_ENC_CAT] \>= 0x1 and [TTI_MODE] = 0x0, valid range is [1,48*[NUM_RB]].
+
+                                                                 _ When [ACK_ENC_CAT] \>= 0x1 and [TTI_MODE] = 0x1, valid range is [1,24*[NUM_RB]].
+
+                                                                 _ When [ACK_ENC_CAT] \>= 0x1, [NMU_SYMB_PUSCH] = 0x2 and [TTI_MODE] = 0x2, valid
+                                                                 range is [1,12*[NUM_RB]].
+
+                                                                 _ When [ACK_ENC_CAT] \>= 0x1, [NMU_SYMB_PUSCH] = 0x1 and [TTI_MODE] = 0x2, valid
+                                                                 range is [1, 12*[NUM_RB] - [NUM_RI_RE]]. */
+        uint64_t reserved_139_143      : 5;
+        uint64_t r_prime_mux           : 11; /**< [138:128] Size R'mux of the channel interleaver matrix. Valid range is [0,1296] with the
+                                                                 condition that [R_PRIME_MUX] = 12 * [NUM_RB]. */
+#else /* Word 2 - Little Endian */
+        uint64_t r_prime_mux           : 11; /**< [138:128] Size R'mux of the channel interleaver matrix. Valid range is [0,1296] with the
+                                                                 condition that [R_PRIME_MUX] = 12 * [NUM_RB]. */
+        uint64_t reserved_139_143      : 5;
+        uint64_t num_ack_re            : 13; /**< [156:144] Number of ACK REs per layer (Q'ACK). Valid range is [0,5184] with the following conditions:
+
+                                                                 _ When Q_ACK = 0 no ACK bits are received.
+
+                                                                 _ When [ACK_ENC_CAT] = 0 or [TTI_MODE] = 0x3, must be 0x0.
+
+                                                                 _ When [ACK_ENC_CAT] \>= 0x1 and [TTI_MODE] = 0x0, valid range is [1,48*[NUM_RB]].
+
+                                                                 _ When [ACK_ENC_CAT] \>= 0x1 and [TTI_MODE] = 0x1, valid range is [1,24*[NUM_RB]].
+
+                                                                 _ When [ACK_ENC_CAT] \>= 0x1, [NMU_SYMB_PUSCH] = 0x2 and [TTI_MODE] = 0x2, valid
+                                                                 range is [1,12*[NUM_RB]].
+
+                                                                 _ When [ACK_ENC_CAT] \>= 0x1, [NMU_SYMB_PUSCH] = 0x1 and [TTI_MODE] = 0x2, valid
+                                                                 range is [1, 12*[NUM_RB] - [NUM_RI_RE]]. */
+        uint64_t reserved_157_159      : 3;
+        uint64_t num_ri_re             : 13; /**< [172:160] Number of RI REs per layer (Q'RI). If Q'RI = 0, no RI bits are received. Valid
+                                                                 range is [0, 5184] with the following constraints:
+
+                                                                 _ When [RI_ENC_CAT] = 0x0 or [TTI_MODE] = 0x3, valid range is 0.
+
+                                                                 _ When [RI_ENC_CAT] \>= 0x1 and [TTI_MODE] = 0x0, valid range is [1,48*[NUM_RB]].
+
+                                                                 _ When [RI_ENC_CAT] \>= 0x1 and [TTI_MODE] = 0x1, valid range is [1,24*[NUM_RB]].
+
+                                                                 _ When [RI_ENC_CAT] \>= 0x1 and [TTI_MODE] = 0x2, valid range is [1,12*[NUM_RB]]. */
+        uint64_t reserved_173_175      : 3;
+        uint64_t num_cqi_re            : 14; /**< [189:176] Number of CQI REs per layer. Valid range is [0,15552] with the condition that
+                                                                 [NUM_CQI_RE] \<= [NM_SYMB_PUSCH] * [NUM_RB] * 12. */
+        uint64_t reserved_190_191      : 2;
+#endif /* Word 2 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
+        uint64_t reserved_251_255      : 5;
+        uint64_t data_bit_order        : 1;  /**< [250:250] This field selects bit order for data input.
+                                                                 0x0 = MSB first within a byte.
+                                                                 0x1 = LSB first within a byte. */
+        uint64_t data_byte_order       : 2;  /**< [249:248] This field selects byte order for data input.
+                                                                 0x0 = Little endian, byte 0 is bits 7..0.
+                                                                 0x1 = Byte swapping within 64 bit words from little endian.
+                                                                 0x2 = Byte swapping within 32 bit words from little endian.
+                                                                 0x3 = Reserved. */
+        uint64_t reserved_247          : 1;
+        uint64_t cqi_bit_order         : 1;  /**< [246:246] This field selects bit order for CQI input.
+                                                                 0x0 = MSB first within a byte.
+                                                                 0x1 = LSB first within a byte. */
+        uint64_t cqi_byte_order        : 2;  /**< [245:244] This field selects byte order for CQI input.
+                                                                 0x0 = Little endian, byte 0 is bits 7..0.
+                                                                 0x1 = Byte swapping within 64 bit words from little endian.
+                                                                 0x2 = Byte swapping within 32 bit words from little endian.
+                                                                 0x3 = Reserved. */
+        uint64_t reserved_243          : 1;
+        uint64_t ri_bit_order          : 1;  /**< [242:242] This field selects bit order for RI input.
+                                                                 0x0 = MSB first within a byte.
+                                                                 0x1 = LSB first within a byte. */
+        uint64_t ri_byte_order         : 2;  /**< [241:240] This field selects byte order for RI input.
+                                                                 0x0 = Little endian, byte 0 is bits 7..0.
+                                                                 0x1 = Byte swapping within 64-bit words from little endian.
+                                                                 0x2 = Byte swapping within 32-bit words from little endian.
+                                                                 0x3 = Reserved. */
+        uint64_t reserved_239          : 1;
+        uint64_t ack_bit_order         : 1;  /**< [238:238] This field selects bit order for ACK input.
+                                                                 0x0 = MSB first within a byte.
+                                                                 0x1 = LSB first within a byte. */
+        uint64_t ack_byte_order        : 2;  /**< [237:236] This field specifies byte order for ACK input.
+                                                                 0x0 = Little endian, byte 0 is bits 7..0.
+                                                                 0x1 = Byte swapping within 64-bit words from little endian.
+                                                                 0x2 = Byte swapping within 32-bit words from little endian.
+                                                                 0x3 = Reserved. */
+        uint64_t reserved_234_235      : 2;
+        uint64_t num_encoded_cqi_bits  : 18; /**< [233:216] The number of encoded CQI bits. When CQI is RM coded, this field must be 64.
+                                                                 For convolutional code case, the recoded CQI bits can be fully rate-matched this
+                                                                 field must be [NUM_LAYERS] * QCQI.
+
+                                                                 _ When [NUM_CQI_RE] \> 0, valid range is [1, [NUM_CQI_RE] * [MOD_ORDER] *
+                                                                 [NUM_LAYERS]] where [NUM_CQI_RE] * [MOD_ORDER] * [NUM_LAYERS] \<= 248832.
+
+                                                                 _ When [NUM_CQI_RE] = 0, this field must be zero. */
+        uint64_t reserved_214_215      : 2;
+        uint64_t num_bundled_i         : 2;  /**< [213:212] Index to the scrambling sequence table for ACK bundling.
+                                                                 [NUM_BUNDLED_I] = (N_bundled - 1) mod 4, where N_bundled is determined as
+                                                                 described in Section 7.3 of R[3]. */
+        uint64_t reserved_210_211      : 2;
+        uint64_t res_alloc_type        : 1;  /**< [209:209] The resource allocation type:
+                                                                 0x0 = Type 0.
+                                                                 0x1 = Type 1. */
+        uint64_t freq_hop_type         : 1;  /**< [208:208] Intra-subframe frequency hopping flag:
+                                                                 0x0 = No intra-subframe frequency hopping.
+                                                                 0x1 = Intra-subframe frequency hopping.
+                                                                 When [RES_ALLOC_TYPE] = 1, this field must be zero. */
+        uint64_t reserved_207          : 1;
+        uint64_t length_rb_set0        : 7;  /**< [206:200] The length in terms of contiguously allocated resource blocks (L_CRBs_3_1) for set0.
+                                                                 Valid range is [1, 108]. */
+        uint64_t reserved_199          : 1;
+        uint64_t length_rb_set1        : 7;  /**< [198:192] The length in terms of contiguously allocated resource blocks (L_CRBs_3_1) for set1.
+                                                                 When [RES_ALLOC_TYPE] = 0x1, its valid range is [1, 108] with the condition that
+                                                                 [LENGTH_RB_SET1] = [NUM_RB] - [LENGTH_RB_SET0].
+                                                                 When [RES_ALLOC_TYPE] = 0x0, this field is ignored. */
+#else /* Word 3 - Little Endian */
+        uint64_t length_rb_set1        : 7;  /**< [198:192] The length in terms of contiguously allocated resource blocks (L_CRBs_3_1) for set1.
+                                                                 When [RES_ALLOC_TYPE] = 0x1, its valid range is [1, 108] with the condition that
+                                                                 [LENGTH_RB_SET1] = [NUM_RB] - [LENGTH_RB_SET0].
+                                                                 When [RES_ALLOC_TYPE] = 0x0, this field is ignored. */
+        uint64_t reserved_199          : 1;
+        uint64_t length_rb_set0        : 7;  /**< [206:200] The length in terms of contiguously allocated resource blocks (L_CRBs_3_1) for set0.
+                                                                 Valid range is [1, 108]. */
+        uint64_t reserved_207          : 1;
+        uint64_t freq_hop_type         : 1;  /**< [208:208] Intra-subframe frequency hopping flag:
+                                                                 0x0 = No intra-subframe frequency hopping.
+                                                                 0x1 = Intra-subframe frequency hopping.
+                                                                 When [RES_ALLOC_TYPE] = 1, this field must be zero. */
+        uint64_t res_alloc_type        : 1;  /**< [209:209] The resource allocation type:
+                                                                 0x0 = Type 0.
+                                                                 0x1 = Type 1. */
+        uint64_t reserved_210_211      : 2;
+        uint64_t num_bundled_i         : 2;  /**< [213:212] Index to the scrambling sequence table for ACK bundling.
+                                                                 [NUM_BUNDLED_I] = (N_bundled - 1) mod 4, where N_bundled is determined as
+                                                                 described in Section 7.3 of R[3]. */
+        uint64_t reserved_214_215      : 2;
+        uint64_t num_encoded_cqi_bits  : 18; /**< [233:216] The number of encoded CQI bits. When CQI is RM coded, this field must be 64.
+                                                                 For convolutional code case, the recoded CQI bits can be fully rate-matched this
+                                                                 field must be [NUM_LAYERS] * QCQI.
+
+                                                                 _ When [NUM_CQI_RE] \> 0, valid range is [1, [NUM_CQI_RE] * [MOD_ORDER] *
+                                                                 [NUM_LAYERS]] where [NUM_CQI_RE] * [MOD_ORDER] * [NUM_LAYERS] \<= 248832.
+
+                                                                 _ When [NUM_CQI_RE] = 0, this field must be zero. */
+        uint64_t reserved_234_235      : 2;
+        uint64_t ack_byte_order        : 2;  /**< [237:236] This field specifies byte order for ACK input.
+                                                                 0x0 = Little endian, byte 0 is bits 7..0.
+                                                                 0x1 = Byte swapping within 64-bit words from little endian.
+                                                                 0x2 = Byte swapping within 32-bit words from little endian.
+                                                                 0x3 = Reserved. */
+        uint64_t ack_bit_order         : 1;  /**< [238:238] This field selects bit order for ACK input.
+                                                                 0x0 = MSB first within a byte.
+                                                                 0x1 = LSB first within a byte. */
+        uint64_t reserved_239          : 1;
+        uint64_t ri_byte_order         : 2;  /**< [241:240] This field selects byte order for RI input.
+                                                                 0x0 = Little endian, byte 0 is bits 7..0.
+                                                                 0x1 = Byte swapping within 64-bit words from little endian.
+                                                                 0x2 = Byte swapping within 32-bit words from little endian.
+                                                                 0x3 = Reserved. */
+        uint64_t ri_bit_order          : 1;  /**< [242:242] This field selects bit order for RI input.
+                                                                 0x0 = MSB first within a byte.
+                                                                 0x1 = LSB first within a byte. */
+        uint64_t reserved_243          : 1;
+        uint64_t cqi_byte_order        : 2;  /**< [245:244] This field selects byte order for CQI input.
+                                                                 0x0 = Little endian, byte 0 is bits 7..0.
+                                                                 0x1 = Byte swapping within 64 bit words from little endian.
+                                                                 0x2 = Byte swapping within 32 bit words from little endian.
+                                                                 0x3 = Reserved. */
+        uint64_t cqi_bit_order         : 1;  /**< [246:246] This field selects bit order for CQI input.
+                                                                 0x0 = MSB first within a byte.
+                                                                 0x1 = LSB first within a byte. */
+        uint64_t reserved_247          : 1;
+        uint64_t data_byte_order       : 2;  /**< [249:248] This field selects byte order for data input.
+                                                                 0x0 = Little endian, byte 0 is bits 7..0.
+                                                                 0x1 = Byte swapping within 64 bit words from little endian.
+                                                                 0x2 = Byte swapping within 32 bit words from little endian.
+                                                                 0x3 = Reserved. */
+        uint64_t data_bit_order        : 1;  /**< [250:250] This field selects bit order for data input.
+                                                                 0x0 = MSB first within a byte.
+                                                                 0x1 = LSB first within a byte. */
+        uint64_t reserved_251_255      : 5;
+#endif /* Word 3 - End */
+    } cnf95xxp2;
+    /* struct cavm_rmap_lte_mode_s_s f95o; */
+    /* struct cavm_rmap_lte_mode_s_cnf95xxp2 loki; */
 };
 
 /**
@@ -966,7 +1384,520 @@ union cavm_rmap_nr_mode_s
         uint64_t reserved_444_447      : 4;
 #endif /* Word 6 - End */
     } s;
-    /* struct cavm_rmap_nr_mode_s_s cn; */
+    /* struct cavm_rmap_nr_mode_s_s cn9; */
+    /* struct cavm_rmap_nr_mode_s_s cnf95xxp1; */
+    struct cavm_rmap_nr_mode_s_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t phy_mode              : 1;  /**< [ 63: 63] This flag sets mode of operation. It must be set to 1 to indicate NR mode. */
+        uint64_t reserved_60_62        : 3;
+        uint64_t bypass_scrambler      : 1;  /**< [ 59: 59] If set to 1, bypass scrambling. */
+        uint64_t bypass_modulator      : 1;  /**< [ 58: 58] If set to 1, modulator/RS insertion and DFT are bypassed. When
+                                                                 [BYPASS_MODULATOR] = 1, [RS_INSERTION_ENABLE] must be  0 and [BYPASS_DFT] must
+                                                                 be 1. */
+        uint64_t bypass_dft            : 1;  /**< [ 57: 57] DFT bypass.  If set to 1, DFT is bypassed.
+                                                                 This field must be set to 0 for DFT-s-OFDM and it must be 1 for CP-OFDM. */
+        uint64_t dft_standalone_flag   : 1;  /**< [ 56: 56] When set to 1, this flag sets the DFT engine as a standalone module. In this mode, both the
+                                                                 functions before and after DFT/IDFT engine are bypassed.
+                                                                 The DFT/IDFT result is DMAed directly to the output as in the one layer, no
+                                                                 frequency hopping, allocation type 0 case.
+                                                                 0x0 = used as non-standalone module in the RMAP chain.
+                                                                 0x1 = used as standalone DFT/IDFT engine. */
+        uint64_t reserved_53_55        : 3;
+        uint64_t num_rb                : 9;  /**< [ 52: 44] The total number of RBs in a subframe. Valid range is [1,275]. */
+        uint64_t reserved_43           : 1;
+        uint64_t num_layers            : 3;  /**< [ 42: 40] Number of layers for PUSCH channel.
+                                                                 0x1 = 1 Layer (DFT-s-OFDM and CP-OFDM).
+                                                                 0x2 = 2 Layers (CP-OFDM only).
+                                                                 0x4 = 3 Layers (CP-OFDM only).
+                                                                 0x6 = 4 Layers (CP-OFDM only).
+                                                                 Other values = Reserved. */
+        uint64_t mod_order             : 4;  /**< [ 39: 36] Modulation order:
+                                                                 0x1 = {pi}/2 BPSK (5G-NR DFT-s-OFDM only).
+                                                                 0x2 = QPSK.
+                                                                 0x4 = 16-QAM.
+                                                                 0x6 = 64-QAM.
+                                                                 0x8 = 256-QAM. */
+        uint64_t num_scalar_qam        : 4;  /**< [ 35: 32] The number of bits the floating point modulation values are left shifted to produce
+                                                                 the fixed point complex values. Valid range is [1,14]. */
+        uint64_t dft_idft_flag         : 1;  /**< [ 31: 31] In DFT-only mode ([DFT_STANDALONE_FLAG] = 1), this flag sets the DFT or IDFT function
+                                                                 0x0 = DFT.
+                                                                 0x1 = IDFT.
+
+                                                                 When [DFT_STANDALONE_FLAG] = 0, [DFT_IDFT_FLAG] must be zero. */
+        uint64_t reserved_30           : 1;
+        uint64_t ndft_indx             : 6;  /**< [ 29: 24] Index for the NDFT as defined in the list of supported NDFTs.
+                                                                 Valid range is [0, 52]:
+                                                                 0x0: NDFT = 12.
+                                                                 0x1: NDFT = 24.
+                                                                 ...
+                                                                 0x21: NDFT = 1200.
+                                                                 0x22: NDFT = 1296.
+                                                                 0x23: NDFT = 1440.
+                                                                 ...
+                                                                 0x34: NDFT = 3240. */
+        uint64_t reserved_21_23        : 3;
+        uint64_t rs_bits_last          : 5;  /**< [ 20: 16] This parameter controls the output scaling at the last stage of the DFT/IDFT.
+                                                                 The DFT/IDFT output is right shifted by [RS_BITS_LAST].
+                                                                 Valid range is [15,19]. */
+        uint64_t reserved_0_15         : 16;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0_15         : 16;
+        uint64_t rs_bits_last          : 5;  /**< [ 20: 16] This parameter controls the output scaling at the last stage of the DFT/IDFT.
+                                                                 The DFT/IDFT output is right shifted by [RS_BITS_LAST].
+                                                                 Valid range is [15,19]. */
+        uint64_t reserved_21_23        : 3;
+        uint64_t ndft_indx             : 6;  /**< [ 29: 24] Index for the NDFT as defined in the list of supported NDFTs.
+                                                                 Valid range is [0, 52]:
+                                                                 0x0: NDFT = 12.
+                                                                 0x1: NDFT = 24.
+                                                                 ...
+                                                                 0x21: NDFT = 1200.
+                                                                 0x22: NDFT = 1296.
+                                                                 0x23: NDFT = 1440.
+                                                                 ...
+                                                                 0x34: NDFT = 3240. */
+        uint64_t reserved_30           : 1;
+        uint64_t dft_idft_flag         : 1;  /**< [ 31: 31] In DFT-only mode ([DFT_STANDALONE_FLAG] = 1), this flag sets the DFT or IDFT function
+                                                                 0x0 = DFT.
+                                                                 0x1 = IDFT.
+
+                                                                 When [DFT_STANDALONE_FLAG] = 0, [DFT_IDFT_FLAG] must be zero. */
+        uint64_t num_scalar_qam        : 4;  /**< [ 35: 32] The number of bits the floating point modulation values are left shifted to produce
+                                                                 the fixed point complex values. Valid range is [1,14]. */
+        uint64_t mod_order             : 4;  /**< [ 39: 36] Modulation order:
+                                                                 0x1 = {pi}/2 BPSK (5G-NR DFT-s-OFDM only).
+                                                                 0x2 = QPSK.
+                                                                 0x4 = 16-QAM.
+                                                                 0x6 = 64-QAM.
+                                                                 0x8 = 256-QAM. */
+        uint64_t num_layers            : 3;  /**< [ 42: 40] Number of layers for PUSCH channel.
+                                                                 0x1 = 1 Layer (DFT-s-OFDM and CP-OFDM).
+                                                                 0x2 = 2 Layers (CP-OFDM only).
+                                                                 0x4 = 3 Layers (CP-OFDM only).
+                                                                 0x6 = 4 Layers (CP-OFDM only).
+                                                                 Other values = Reserved. */
+        uint64_t reserved_43           : 1;
+        uint64_t num_rb                : 9;  /**< [ 52: 44] The total number of RBs in a subframe. Valid range is [1,275]. */
+        uint64_t reserved_53_55        : 3;
+        uint64_t dft_standalone_flag   : 1;  /**< [ 56: 56] When set to 1, this flag sets the DFT engine as a standalone module. In this mode, both the
+                                                                 functions before and after DFT/IDFT engine are bypassed.
+                                                                 The DFT/IDFT result is DMAed directly to the output as in the one layer, no
+                                                                 frequency hopping, allocation type 0 case.
+                                                                 0x0 = used as non-standalone module in the RMAP chain.
+                                                                 0x1 = used as standalone DFT/IDFT engine. */
+        uint64_t bypass_dft            : 1;  /**< [ 57: 57] DFT bypass.  If set to 1, DFT is bypassed.
+                                                                 This field must be set to 0 for DFT-s-OFDM and it must be 1 for CP-OFDM. */
+        uint64_t bypass_modulator      : 1;  /**< [ 58: 58] If set to 1, modulator/RS insertion and DFT are bypassed. When
+                                                                 [BYPASS_MODULATOR] = 1, [RS_INSERTION_ENABLE] must be  0 and [BYPASS_DFT] must
+                                                                 be 1. */
+        uint64_t bypass_scrambler      : 1;  /**< [ 59: 59] If set to 1, bypass scrambling. */
+        uint64_t reserved_60_62        : 3;
+        uint64_t phy_mode              : 1;  /**< [ 63: 63] This flag sets mode of operation. It must be set to 1 to indicate NR mode. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t reserved_115_127      : 13;
+        uint64_t ack_enc_cat           : 3;  /**< [114:112] ACK encoding category:
+                                                                 0x0: No ACK or if  [RS_CAT] = 2 (DMRS).
+                                                                 0x1: number of ACK bits = 1.
+                                                                 0x2: number of ACK bits = 2.
+                                                                 0x3: number of ACK bits = [3,11].
+                                                                 0x4: number of ACK bits \>= 12. */
+        uint64_t reserved_107_111      : 5;
+        uint64_t csi1_enc_cat          : 3;  /**< [106:104] The type of CSI1 bits :
+                                                                 0x0: no CSI1 or if  [RS_CAT] = 2 (DMRS).
+                                                                 0x1: number of CSI1 bits = 1.
+                                                                 0x2: number of CSI1 bits = 2.
+                                                                 0x3: number of CSI1 bits = [3,11].
+                                                                 0x4: number of CSI1 bits \>= 12. */
+        uint64_t reserved_99_103       : 5;
+        uint64_t csi2_enc_cat          : 3;  /**< [ 98: 96] The type of CSI2 bits:
+                                                                 0x0: no CSI2 or if  [RS_CAT] = 2 (DMRS).
+                                                                 0x1: number of CSI2 bits = 1.
+                                                                 0x2: number of CSI2 bits = 2.
+                                                                 0x3: number of CSI2 bits = [3,11].
+                                                                 0x4: number of CSI2 bits \>= 12. */
+        uint64_t reserved_91_95        : 5;
+        uint64_t ack_rsv_d_re          : 11; /**< [ 90: 80] The step size for the ACK reserved REs in the case of [ACK_ENC_CAT]  = 1 or 2. */
+        uint64_t reserved_76_79        : 4;
+        uint64_t ack_rsv_m_re          : 12; /**< [ 75: 64] The number of REs reserved for ACK bits in the case of [ACK_ENC_CAT] = 1 or 2. */
+#else /* Word 1 - Little Endian */
+        uint64_t ack_rsv_m_re          : 12; /**< [ 75: 64] The number of REs reserved for ACK bits in the case of [ACK_ENC_CAT] = 1 or 2. */
+        uint64_t reserved_76_79        : 4;
+        uint64_t ack_rsv_d_re          : 11; /**< [ 90: 80] The step size for the ACK reserved REs in the case of [ACK_ENC_CAT]  = 1 or 2. */
+        uint64_t reserved_91_95        : 5;
+        uint64_t csi2_enc_cat          : 3;  /**< [ 98: 96] The type of CSI2 bits:
+                                                                 0x0: no CSI2 or if  [RS_CAT] = 2 (DMRS).
+                                                                 0x1: number of CSI2 bits = 1.
+                                                                 0x2: number of CSI2 bits = 2.
+                                                                 0x3: number of CSI2 bits = [3,11].
+                                                                 0x4: number of CSI2 bits \>= 12. */
+        uint64_t reserved_99_103       : 5;
+        uint64_t csi1_enc_cat          : 3;  /**< [106:104] The type of CSI1 bits :
+                                                                 0x0: no CSI1 or if  [RS_CAT] = 2 (DMRS).
+                                                                 0x1: number of CSI1 bits = 1.
+                                                                 0x2: number of CSI1 bits = 2.
+                                                                 0x3: number of CSI1 bits = [3,11].
+                                                                 0x4: number of CSI1 bits \>= 12. */
+        uint64_t reserved_107_111      : 5;
+        uint64_t ack_enc_cat           : 3;  /**< [114:112] ACK encoding category:
+                                                                 0x0: No ACK or if  [RS_CAT] = 2 (DMRS).
+                                                                 0x1: number of ACK bits = 1.
+                                                                 0x2: number of ACK bits = 2.
+                                                                 0x3: number of ACK bits = [3,11].
+                                                                 0x4: number of ACK bits \>= 12. */
+        uint64_t reserved_115_127      : 13;
+#endif /* Word 1 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 2 - Big Endian */
+        uint64_t reserved_191          : 1;
+        uint64_t ack_d_re              : 11; /**< [190:180] The symbol-wise step size in RE for the ACK bits. */
+        uint64_t ack_m_re              : 12; /**< [179:168] The symbol-wise number of REs for the ACK bits. When [ACK_ENC_CAT] = 0, this field must be 0. */
+        uint64_t reserved_167          : 1;
+        uint64_t ack_bit_offset        : 7;  /**< [166:160] Start bit offset in the first 128-bit word after input bit processing block of
+                                                                 Section 2.5.2.1.
+
+                                                                 _ When [ACK_ENC_CAT] = 0x1, valid range is {0}.
+
+                                                                 _ When [ACK_ENC_CAT] = 0x2, valid range is {0, [MOD_ORDER], 2*[MOD_ORDER]}.
+
+                                                                 _ When [ACK_ENC_CAT] = 0x3, valid range is [0,31].
+
+                                                                 _ When [ACK_ENC_CAT] = 0x4, valid range is [0,127].
+
+                                                                 _ When [ACK_ENC_CAT] = 0 or [ACK_M_RE] = 0, this field is ignored. */
+        uint64_t reserved_159          : 1;
+        uint64_t csi1_d_re             : 11; /**< [158:148] The symbol-wise step size in RE for the CSI1 bits. */
+        uint64_t csi1_m_re             : 12; /**< [147:136] The symbol-wise number of REs for the CSI1 bits. When [CSI1_ENC_CAT] = 0, this field must be 0. */
+        uint64_t reserved_135          : 1;
+        uint64_t csi1_bit_offset       : 7;  /**< [134:128] Start bit offset in the first 128-bit word after input bit processing block of Section 2.5.2.1.
+
+                                                                 _ When [CSI1_ENC_CAT] = 0x1, valid range is {0}.
+
+                                                                 _ When [CSI1_ENC_CAT] = 0x2, valid range is {0, [MOD_ORDER], 2*[MOD_ORDER]}.
+
+                                                                 _ When [CSI1_ENC_CAT] = 0x3, valid range is [0,31].
+
+                                                                 _ When [CSI1_ENC_CAT] = 0x4, valid range is [0,127].
+
+                                                                 _ When [CSI1_ENC_CAT] = 0 or [CSI1_M_RE] = 0, this field is ignored. */
+#else /* Word 2 - Little Endian */
+        uint64_t csi1_bit_offset       : 7;  /**< [134:128] Start bit offset in the first 128-bit word after input bit processing block of Section 2.5.2.1.
+
+                                                                 _ When [CSI1_ENC_CAT] = 0x1, valid range is {0}.
+
+                                                                 _ When [CSI1_ENC_CAT] = 0x2, valid range is {0, [MOD_ORDER], 2*[MOD_ORDER]}.
+
+                                                                 _ When [CSI1_ENC_CAT] = 0x3, valid range is [0,31].
+
+                                                                 _ When [CSI1_ENC_CAT] = 0x4, valid range is [0,127].
+
+                                                                 _ When [CSI1_ENC_CAT] = 0 or [CSI1_M_RE] = 0, this field is ignored. */
+        uint64_t reserved_135          : 1;
+        uint64_t csi1_m_re             : 12; /**< [147:136] The symbol-wise number of REs for the CSI1 bits. When [CSI1_ENC_CAT] = 0, this field must be 0. */
+        uint64_t csi1_d_re             : 11; /**< [158:148] The symbol-wise step size in RE for the CSI1 bits. */
+        uint64_t reserved_159          : 1;
+        uint64_t ack_bit_offset        : 7;  /**< [166:160] Start bit offset in the first 128-bit word after input bit processing block of
+                                                                 Section 2.5.2.1.
+
+                                                                 _ When [ACK_ENC_CAT] = 0x1, valid range is {0}.
+
+                                                                 _ When [ACK_ENC_CAT] = 0x2, valid range is {0, [MOD_ORDER], 2*[MOD_ORDER]}.
+
+                                                                 _ When [ACK_ENC_CAT] = 0x3, valid range is [0,31].
+
+                                                                 _ When [ACK_ENC_CAT] = 0x4, valid range is [0,127].
+
+                                                                 _ When [ACK_ENC_CAT] = 0 or [ACK_M_RE] = 0, this field is ignored. */
+        uint64_t reserved_167          : 1;
+        uint64_t ack_m_re              : 12; /**< [179:168] The symbol-wise number of REs for the ACK bits. When [ACK_ENC_CAT] = 0, this field must be 0. */
+        uint64_t ack_d_re              : 11; /**< [190:180] The symbol-wise step size in RE for the ACK bits. */
+        uint64_t reserved_191          : 1;
+#endif /* Word 2 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 3 - Big Endian */
+        uint64_t reserved_255          : 1;
+        uint64_t csi2_d_re             : 11; /**< [254:244] The symbol-wise step size in RE for the CSI2 bits. */
+        uint64_t csi2_m_re             : 12; /**< [243:232] The symbol-wise number of REs for the CSI2 bits. When [CSI2_ENC_CAT] = 0, this field must be 0. */
+        uint64_t reserved_231          : 1;
+        uint64_t csi2_bit_offset       : 7;  /**< [230:224] Start bit offset in the first 128-bit word after input bit processing block.
+
+                                                                 _ When [CSI2_ENC_CAT] = 0x1, valid range is {0}.
+
+                                                                 _ When [CSI2_ENC_CAT] = 0x2, valid range is {0, [MOD_ORDER], 2*[MOD_ORDER]}.
+
+                                                                 _ When [CSI2_ENC_CAT] = 0x3, valid range is [0,31].
+
+                                                                 _ When [CSI2_ENC_CAT] = 0x4, valid range is [0,127].
+
+                                                                 _ When [CSI2_ENC_CAT] = 0 or [CSI2_M_RE] = 0, this field is ignored. */
+        uint64_t reserved_223          : 1;
+        uint64_t ack_crc               : 1;  /**< [222:222] CRC value for ACK RE when [ACK_ENC_CAT] = [0,3] or  when [ACK_ENC_CAT] = 4 and
+                                                                 [ACK_REENC_MODE] = 0. */
+        uint64_t csi1_crc              : 1;  /**< [221:221] CRC value for CSI1 RE when [CSI1_ENC_CAT] = [0,3] or when [CSI1_ENC_CAT] = 4 and
+                                                                 [CSI1_REENC_MODE] = 0. */
+        uint64_t csi2_crc              : 1;  /**< [220:220] CRC value for CSI2 RE when [CSI2_ENC_CAT] = [0,3] or  when[CSI1_ENC_CAT] = 4 and
+                                                                 [CSI1_REENC_MODE] = 0. */
+        uint64_t ack_reenc_mode        : 1;  /**< [219:219] Bit packing mode for the reencoded ACK bits:
+                                                                 0x0 = plain bit stream of reencoded data bits packed one-by-one.
+                                                                 0x1 = CRC tagged in each [MOD_ORDER] with tagged CRC of 0 (CRC OK) or 1 (CRC NOK).
+
+                                                                 This field is valid only when [ACK_ENC_CAT] = 4 and is ignored otherwise. */
+        uint64_t csi1_reenc_mode       : 1;  /**< [218:218] Bit packing mode for the reencoded CSI1 bits:
+                                                                 0x0 = plain bit stream of reencoded data bits packed one-by-one.
+                                                                 0x1 = CRC tagged in each [MOD_ORDER] with tagged CRC of 0 (CRC OK) or 1 (CRC NOK).
+
+                                                                 This field is valid only when [CSI1_ENC_CAT] = 4 and is ignored otherwise. */
+        uint64_t csi2_reenc_mode       : 1;  /**< [217:217] Bit packing mode for the reencoded CSI2 bits:
+                                                                 0x0 = plain bit stream of reencoded data bits packed one-by-one.
+                                                                 0x1 = CRC tagged in each [MOD_ORDER] with tagged CRC of 0 (CRC OK) or 1 (CRC NOK).
+
+                                                                 This field is valid only when [CSI2_ENC_CAT] = 4 and is ignored otherwise. */
+        uint64_t data_reenc_mode       : 1;  /**< [216:216] Bit packing mode for the reencoded data bits:
+                                                                 0x0 = plain bit stream of reencoded data bits packed one-by-one.
+                                                                 0x1 = CRC tagged in each [MOD_ORDER] with tagged CRC of 0 (CRC OK) or 1 (CRC NOK). */
+        uint64_t reserved_212_215      : 4;
+        uint64_t data_m_re             : 12; /**< [211:200] The symbol-wise number of REs for the data bits. */
+        uint64_t reserved_199          : 1;
+        uint64_t data_bit_offset       : 7;  /**< [198:192] Start bit offset in the first 128-bit word of data bits. Valid range is [0,127].
+                                                                 This field is ignored when [DATA_M_RE] = 0. */
+#else /* Word 3 - Little Endian */
+        uint64_t data_bit_offset       : 7;  /**< [198:192] Start bit offset in the first 128-bit word of data bits. Valid range is [0,127].
+                                                                 This field is ignored when [DATA_M_RE] = 0. */
+        uint64_t reserved_199          : 1;
+        uint64_t data_m_re             : 12; /**< [211:200] The symbol-wise number of REs for the data bits. */
+        uint64_t reserved_212_215      : 4;
+        uint64_t data_reenc_mode       : 1;  /**< [216:216] Bit packing mode for the reencoded data bits:
+                                                                 0x0 = plain bit stream of reencoded data bits packed one-by-one.
+                                                                 0x1 = CRC tagged in each [MOD_ORDER] with tagged CRC of 0 (CRC OK) or 1 (CRC NOK). */
+        uint64_t csi2_reenc_mode       : 1;  /**< [217:217] Bit packing mode for the reencoded CSI2 bits:
+                                                                 0x0 = plain bit stream of reencoded data bits packed one-by-one.
+                                                                 0x1 = CRC tagged in each [MOD_ORDER] with tagged CRC of 0 (CRC OK) or 1 (CRC NOK).
+
+                                                                 This field is valid only when [CSI2_ENC_CAT] = 4 and is ignored otherwise. */
+        uint64_t csi1_reenc_mode       : 1;  /**< [218:218] Bit packing mode for the reencoded CSI1 bits:
+                                                                 0x0 = plain bit stream of reencoded data bits packed one-by-one.
+                                                                 0x1 = CRC tagged in each [MOD_ORDER] with tagged CRC of 0 (CRC OK) or 1 (CRC NOK).
+
+                                                                 This field is valid only when [CSI1_ENC_CAT] = 4 and is ignored otherwise. */
+        uint64_t ack_reenc_mode        : 1;  /**< [219:219] Bit packing mode for the reencoded ACK bits:
+                                                                 0x0 = plain bit stream of reencoded data bits packed one-by-one.
+                                                                 0x1 = CRC tagged in each [MOD_ORDER] with tagged CRC of 0 (CRC OK) or 1 (CRC NOK).
+
+                                                                 This field is valid only when [ACK_ENC_CAT] = 4 and is ignored otherwise. */
+        uint64_t csi2_crc              : 1;  /**< [220:220] CRC value for CSI2 RE when [CSI2_ENC_CAT] = [0,3] or  when[CSI1_ENC_CAT] = 4 and
+                                                                 [CSI1_REENC_MODE] = 0. */
+        uint64_t csi1_crc              : 1;  /**< [221:221] CRC value for CSI1 RE when [CSI1_ENC_CAT] = [0,3] or when [CSI1_ENC_CAT] = 4 and
+                                                                 [CSI1_REENC_MODE] = 0. */
+        uint64_t ack_crc               : 1;  /**< [222:222] CRC value for ACK RE when [ACK_ENC_CAT] = [0,3] or  when [ACK_ENC_CAT] = 4 and
+                                                                 [ACK_REENC_MODE] = 0. */
+        uint64_t reserved_223          : 1;
+        uint64_t csi2_bit_offset       : 7;  /**< [230:224] Start bit offset in the first 128-bit word after input bit processing block.
+
+                                                                 _ When [CSI2_ENC_CAT] = 0x1, valid range is {0}.
+
+                                                                 _ When [CSI2_ENC_CAT] = 0x2, valid range is {0, [MOD_ORDER], 2*[MOD_ORDER]}.
+
+                                                                 _ When [CSI2_ENC_CAT] = 0x3, valid range is [0,31].
+
+                                                                 _ When [CSI2_ENC_CAT] = 0x4, valid range is [0,127].
+
+                                                                 _ When [CSI2_ENC_CAT] = 0 or [CSI2_M_RE] = 0, this field is ignored. */
+        uint64_t reserved_231          : 1;
+        uint64_t csi2_m_re             : 12; /**< [243:232] The symbol-wise number of REs for the CSI2 bits. When [CSI2_ENC_CAT] = 0, this field must be 0. */
+        uint64_t csi2_d_re             : 11; /**< [254:244] The symbol-wise step size in RE for the CSI2 bits. */
+        uint64_t reserved_255          : 1;
+#endif /* Word 3 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 4 - Big Endian */
+        uint64_t reserved_312_319      : 8;
+        uint64_t scrambling_offset     : 24; /**< [311:288] Starting bit location of scrambling sequences in number of bits beyond the
+                                                                 initial 1600 bits from the sequence generator.
+                                                                 Scrambling sequence is applied starting from (1600+[SCRAMBLING_OFFSET])-th bit.
+                                                                 e.g. the first symbol job must set this value as 0 while the second symbol job
+                                                                 must set this value as
+                                                                 [MOD_ORDER]*[NUM_LAYERS]*(number of non-RS symbols in symbol 0). */
+        uint64_t reserved_287          : 1;
+        uint64_t scrambling_cinit      : 31; /**< [286:256] Initial value of the second m-sequence of the scrambler. See section 7.2 of [R1].
+                                                                 Valid range is [0, 2^31-1]. */
+#else /* Word 4 - Little Endian */
+        uint64_t scrambling_cinit      : 31; /**< [286:256] Initial value of the second m-sequence of the scrambler. See section 7.2 of [R1].
+                                                                 Valid range is [0, 2^31-1]. */
+        uint64_t reserved_287          : 1;
+        uint64_t scrambling_offset     : 24; /**< [311:288] Starting bit location of scrambling sequences in number of bits beyond the
+                                                                 initial 1600 bits from the sequence generator.
+                                                                 Scrambling sequence is applied starting from (1600+[SCRAMBLING_OFFSET])-th bit.
+                                                                 e.g. the first symbol job must set this value as 0 while the second symbol job
+                                                                 must set this value as
+                                                                 [MOD_ORDER]*[NUM_LAYERS]*(number of non-RS symbols in symbol 0). */
+        uint64_t reserved_312_319      : 8;
+#endif /* Word 4 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 5 - Big Endian */
+        uint64_t rs_insertion_enable   : 1;  /**< [383:383] This flag controls RS insertion:
+                                                                 0x0 = Disable (all RS insertion related parameters are ignored).
+                                                                 0x1 = Enable RS Insertion. */
+        uint64_t reserved_382          : 1;
+        uint64_t rs_cat                : 2;  /**< [381:380] Category type for the reference symbols (RS):
+                                                                 0x0 = PTRS for CP-OFDM.
+                                                                 0x1 = PTRS for DFT-s-OFDM.
+                                                                 0x2 = DMRS for CP-OFDM.
+                                                                 0x3 = Reserved. */
+        uint64_t reserved_379          : 1;
+        uint64_t rs_mapping_type       : 3;  /**< [378:376] Mapping type for each RS category.
+
+                                                                 When [RS_CAT] = 0 (PTRS for CP-OFDM):
+                                                                 0x0 for distributed PTRS in PRB.
+                                                                 0x1 for distributed PTRS in VRB.
+                                                                 0x2 for localized PTRS.
+
+                                                                 When [RS_CAT] = 1 (PTRS for DFT-s-OFDM):
+                                                                 _ Valid range is [0,4] when [MODE_ORDER] = 1.
+                                                                 _ Valid range is [0,5] when [MODE_ORDER] \>=2.
+
+                                                                 When [RS_CAT] = 2 (DMRS for CP-OFDM), valid range is [0,7]. */
+        uint64_t ptrs_dfts_ofdm_delta  : 1;  /**< [375:375] Delta {0,1} of the PTRS allocation for the DFT-s-OFDM case when [RS_CAT] = 1 and
+                                                                 [RS_MAPPING_TYPE] = 5. */
+        uint64_t reserved_373_374      : 2;
+        uint64_t ptrs_dist_start_rb_idx : 9; /**< [372:364] The start RB index of PUSCH allocation. Valid range is [0,274]. */
+        uint64_t reserved_362_363      : 2;
+        uint64_t ptrs_dist_rb_offset_0 : 2;  /**< [361:360] RB offset of the PTRS allocation for the CP-OFDM case. Valid range
+                                                                 is [0, [PTRS_DIST_RB_STEP]-1]. */
+        uint64_t reserved_358_359      : 2;
+        uint64_t ptrs_dist_rb_offset_1 : 2;  /**< [357:356] RB offset of the PTRS allocation for the CP-OFDM case. This field is valid only
+                                                                 when [RS_CAT] = 0 and [RS_MAPPING_TYPE] = 1. Valid range is [0, [PTRS_DIST_RB_STEP]-1]. */
+        uint64_t reserved_355          : 1;
+        uint64_t ptrs_dist_rb_step     : 3;  /**< [354:352] RB step of PTRS allocation for CP-OFDM case. Valid range is {2,4}. */
+        uint64_t reserved_351          : 1;
+        uint64_t ptrs_dist_vrb_bundle_size : 3;/**< [350:348] L, VRB bundle size. Valid range is {2,4}. */
+        uint64_t reserved_347          : 1;
+        uint64_t ptrs_dist_num_ports   : 3;  /**< [346:344] The total number of antenna ports in the CP-OFDM case. It is only valid for CP-OFDM.
+                                                                 Valid range is [1,4]. */
+        uint64_t ptrs_dist_re_offset_0 : 4;  /**< [343:340] RE offset of the PTRS for CP-OFDM case for antenna port 0. This field is set
+                                                                 according to Table 6.4.1.2.2.1-1 of [R6].
+
+                                                                 _ k_ref^RE[i] in {0,...,11} valid for i = 0,1,...,[PTRS_DIST_NUM_PORTS]-1.
+
+                                                                 _ k_ref^RE[i] \< k_ref^RE[i+1] for i=0,1,...,[PTRS_DIST_NUM_PORTS]-2. */
+        uint64_t ptrs_dist_re_offset_1 : 4;  /**< [339:336] RE offset of the PTRS for CP-OFDM case for antenna port 1. See
+                                                                 [PTRS_DIST_RE_OFFSET_0]. */
+        uint64_t ptrs_dist_re_offset_2 : 4;  /**< [335:332] RE offset of the PTRS for CP-OFDM case for antenna port 2. See
+                                                                 [PTRS_DIST_RE_OFFSET_0]. */
+        uint64_t ptrs_dist_re_offset_3 : 4;  /**< [331:328] RE offset of the PTRS for CP-OFDM case for antenna port 3. See
+                                                                 [PTRS_DIST_RE_OFFSET_0]. */
+        uint64_t ptrs_dist_re_offset_4 : 4;  /**< [327:324] RE offset of the PTRS for CP-OFDM case for antenna port 4. See
+                                                                 [PTRS_DIST_RE_OFFSET_0]. */
+        uint64_t ptrs_dist_re_offset_5 : 4;  /**< [323:320] RE offset of the PTRS for CP-OFDM case for antenna port 5. See
+                                                                 [PTRS_DIST_RE_OFFSET_0]. */
+#else /* Word 5 - Little Endian */
+        uint64_t ptrs_dist_re_offset_5 : 4;  /**< [323:320] RE offset of the PTRS for CP-OFDM case for antenna port 5. See
+                                                                 [PTRS_DIST_RE_OFFSET_0]. */
+        uint64_t ptrs_dist_re_offset_4 : 4;  /**< [327:324] RE offset of the PTRS for CP-OFDM case for antenna port 4. See
+                                                                 [PTRS_DIST_RE_OFFSET_0]. */
+        uint64_t ptrs_dist_re_offset_3 : 4;  /**< [331:328] RE offset of the PTRS for CP-OFDM case for antenna port 3. See
+                                                                 [PTRS_DIST_RE_OFFSET_0]. */
+        uint64_t ptrs_dist_re_offset_2 : 4;  /**< [335:332] RE offset of the PTRS for CP-OFDM case for antenna port 2. See
+                                                                 [PTRS_DIST_RE_OFFSET_0]. */
+        uint64_t ptrs_dist_re_offset_1 : 4;  /**< [339:336] RE offset of the PTRS for CP-OFDM case for antenna port 1. See
+                                                                 [PTRS_DIST_RE_OFFSET_0]. */
+        uint64_t ptrs_dist_re_offset_0 : 4;  /**< [343:340] RE offset of the PTRS for CP-OFDM case for antenna port 0. This field is set
+                                                                 according to Table 6.4.1.2.2.1-1 of [R6].
+
+                                                                 _ k_ref^RE[i] in {0,...,11} valid for i = 0,1,...,[PTRS_DIST_NUM_PORTS]-1.
+
+                                                                 _ k_ref^RE[i] \< k_ref^RE[i+1] for i=0,1,...,[PTRS_DIST_NUM_PORTS]-2. */
+        uint64_t ptrs_dist_num_ports   : 3;  /**< [346:344] The total number of antenna ports in the CP-OFDM case. It is only valid for CP-OFDM.
+                                                                 Valid range is [1,4]. */
+        uint64_t reserved_347          : 1;
+        uint64_t ptrs_dist_vrb_bundle_size : 3;/**< [350:348] L, VRB bundle size. Valid range is {2,4}. */
+        uint64_t reserved_351          : 1;
+        uint64_t ptrs_dist_rb_step     : 3;  /**< [354:352] RB step of PTRS allocation for CP-OFDM case. Valid range is {2,4}. */
+        uint64_t reserved_355          : 1;
+        uint64_t ptrs_dist_rb_offset_1 : 2;  /**< [357:356] RB offset of the PTRS allocation for the CP-OFDM case. This field is valid only
+                                                                 when [RS_CAT] = 0 and [RS_MAPPING_TYPE] = 1. Valid range is [0, [PTRS_DIST_RB_STEP]-1]. */
+        uint64_t reserved_358_359      : 2;
+        uint64_t ptrs_dist_rb_offset_0 : 2;  /**< [361:360] RB offset of the PTRS allocation for the CP-OFDM case. Valid range
+                                                                 is [0, [PTRS_DIST_RB_STEP]-1]. */
+        uint64_t reserved_362_363      : 2;
+        uint64_t ptrs_dist_start_rb_idx : 9; /**< [372:364] The start RB index of PUSCH allocation. Valid range is [0,274]. */
+        uint64_t reserved_373_374      : 2;
+        uint64_t ptrs_dfts_ofdm_delta  : 1;  /**< [375:375] Delta {0,1} of the PTRS allocation for the DFT-s-OFDM case when [RS_CAT] = 1 and
+                                                                 [RS_MAPPING_TYPE] = 5. */
+        uint64_t rs_mapping_type       : 3;  /**< [378:376] Mapping type for each RS category.
+
+                                                                 When [RS_CAT] = 0 (PTRS for CP-OFDM):
+                                                                 0x0 for distributed PTRS in PRB.
+                                                                 0x1 for distributed PTRS in VRB.
+                                                                 0x2 for localized PTRS.
+
+                                                                 When [RS_CAT] = 1 (PTRS for DFT-s-OFDM):
+                                                                 _ Valid range is [0,4] when [MODE_ORDER] = 1.
+                                                                 _ Valid range is [0,5] when [MODE_ORDER] \>=2.
+
+                                                                 When [RS_CAT] = 2 (DMRS for CP-OFDM), valid range is [0,7]. */
+        uint64_t reserved_379          : 1;
+        uint64_t rs_cat                : 2;  /**< [381:380] Category type for the reference symbols (RS):
+                                                                 0x0 = PTRS for CP-OFDM.
+                                                                 0x1 = PTRS for DFT-s-OFDM.
+                                                                 0x2 = DMRS for CP-OFDM.
+                                                                 0x3 = Reserved. */
+        uint64_t reserved_382          : 1;
+        uint64_t rs_insertion_enable   : 1;  /**< [383:383] This flag controls RS insertion:
+                                                                 0x0 = Disable (all RS insertion related parameters are ignored).
+                                                                 0x1 = Enable RS Insertion. */
+#endif /* Word 5 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 6 - Big Endian */
+        uint64_t reserved_444_447      : 4;
+        uint64_t ptrs_loc_re_offset_0  : 12; /**< [443:432] Offset of REs for each group of PTRS insertion in the case of
+                                                                 localized allocation. This field is only valid for R16 of CP-OFDM.
+
+                                                                 Valid range is [0,3299] and the following condition must be satisfied:
+
+                                                                 _ If ([PTRS_LOC_RE_LENGTH_1] \> 0) [PTRS_LOC_RE_OFFSET_1] \> [PTRS_LOC_RE_OFFSET_0]. */
+        uint64_t reserved_428_431      : 4;
+        uint64_t ptrs_loc_re_offset_1  : 12; /**< [427:416] Offset of REs for each group of PTRS insertion in the case of localized
+                                                                 allocation. This field is only valid for R16 of CP-OFDM.
+                                                                 Valid range is [0,3299].
+
+                                                                 If ([PTRS_LOC_RE_LENGTH_1] \> 0) [PTRS_LOC_RE_OFFSET_1] \> [PTRS_LOC_RE_OFFSET_0]. */
+        uint64_t reserved_409_415      : 7;
+        uint64_t ptrs_loc_re_length_0  : 9;  /**< [408:400] RE Length in each burst of PTRS for localized PTRS allocation in CP-OFDM.
+                                                                 Valid range is [1,511] with the following conditions:
+
+                                                                 "   [PTRS_LOC_RE_OFFSET_0] + [PTRS_LOC_RE_LENGTH_0] \<= 12 * [NUM_RB].
+                                                                    If ([PTRS_LOC_RE_OFFSET_1] \> 0)
+                                                                       [PTRS_LOC_RE_OFFSET_0] + [PTRS_LOC_RE_LENGTH_0] \<= [PTRS_LOC_RE_OFFSET_1]." */
+        uint64_t reserved_393_399      : 7;
+        uint64_t ptrs_loc_re_length_1  : 9;  /**< [392:384] RE Length in each burst of PTRS for localized PTRS allocation in CP-OFDM.
+                                                                 Valid range is [0,511] with the following condition
+
+                                                                 _ [PTRS_LOC_RE_OFFSET_1] + [PTRS_LOC_RE_LENGTH_1] \<= 12 * [NUM_RB]. */
+#else /* Word 6 - Little Endian */
+        uint64_t ptrs_loc_re_length_1  : 9;  /**< [392:384] RE Length in each burst of PTRS for localized PTRS allocation in CP-OFDM.
+                                                                 Valid range is [0,511] with the following condition
+
+                                                                 _ [PTRS_LOC_RE_OFFSET_1] + [PTRS_LOC_RE_LENGTH_1] \<= 12 * [NUM_RB]. */
+        uint64_t reserved_393_399      : 7;
+        uint64_t ptrs_loc_re_length_0  : 9;  /**< [408:400] RE Length in each burst of PTRS for localized PTRS allocation in CP-OFDM.
+                                                                 Valid range is [1,511] with the following conditions:
+
+                                                                 "   [PTRS_LOC_RE_OFFSET_0] + [PTRS_LOC_RE_LENGTH_0] \<= 12 * [NUM_RB].
+                                                                    If ([PTRS_LOC_RE_OFFSET_1] \> 0)
+                                                                       [PTRS_LOC_RE_OFFSET_0] + [PTRS_LOC_RE_LENGTH_0] \<= [PTRS_LOC_RE_OFFSET_1]." */
+        uint64_t reserved_409_415      : 7;
+        uint64_t ptrs_loc_re_offset_1  : 12; /**< [427:416] Offset of REs for each group of PTRS insertion in the case of localized
+                                                                 allocation. This field is only valid for R16 of CP-OFDM.
+                                                                 Valid range is [0,3299].
+
+                                                                 If ([PTRS_LOC_RE_LENGTH_1] \> 0) [PTRS_LOC_RE_OFFSET_1] \> [PTRS_LOC_RE_OFFSET_0]. */
+        uint64_t reserved_428_431      : 4;
+        uint64_t ptrs_loc_re_offset_0  : 12; /**< [443:432] Offset of REs for each group of PTRS insertion in the case of
+                                                                 localized allocation. This field is only valid for R16 of CP-OFDM.
+
+                                                                 Valid range is [0,3299] and the following condition must be satisfied:
+
+                                                                 _ If ([PTRS_LOC_RE_LENGTH_1] \> 0) [PTRS_LOC_RE_OFFSET_1] \> [PTRS_LOC_RE_OFFSET_0]. */
+        uint64_t reserved_444_447      : 4;
+#endif /* Word 6 - End */
+    } cnf95xxp2;
+    /* struct cavm_rmap_nr_mode_s_s f95o; */
+    /* struct cavm_rmap_nr_mode_s_cnf95xxp2 loki; */
 };
 
 /**
@@ -1177,6 +2108,8 @@ static inline uint64_t CAVM_RMAPX_CONTROL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043380000ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043380000ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043380000ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_CONTROL", 1, a, 0, 0, 0, 0, 0);
@@ -1216,6 +2149,8 @@ static inline uint64_t CAVM_RMAPX_ECO(uint64_t a) __attribute__ ((pure, always_i
 static inline uint64_t CAVM_RMAPX_ECO(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043380008ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043380008ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043380008ll + 0x180000ll * ((a) & 0x1);
@@ -1263,6 +2198,8 @@ static inline uint64_t CAVM_RMAPX_ERROR_ENABLE0(uint64_t a) __attribute__ ((pure
 static inline uint64_t CAVM_RMAPX_ERROR_ENABLE0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043380040ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043380040ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043380040ll + 0x180000ll * ((a) & 0x1);
@@ -1345,6 +2282,8 @@ static inline uint64_t CAVM_RMAPX_ERROR_ENABLE1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043380048ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043380048ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043380048ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_ERROR_ENABLE1", 1, a, 0, 0, 0, 0, 0);
@@ -1395,6 +2334,8 @@ static inline uint64_t CAVM_RMAPX_ERROR_SOURCE0(uint64_t a) __attribute__ ((pure
 static inline uint64_t CAVM_RMAPX_ERROR_SOURCE0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043380030ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043380030ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043380030ll + 0x180000ll * ((a) & 0x1);
@@ -1501,6 +2442,8 @@ static inline uint64_t CAVM_RMAPX_ERROR_SOURCE1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043380038ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043380038ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043380038ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_ERROR_SOURCE1", 1, a, 0, 0, 0, 0, 0);
@@ -1540,6 +2483,8 @@ static inline uint64_t CAVM_RMAPX_JD0_CFG0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043382000ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043382000ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043382000ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_JD0_CFG0", 1, a, 0, 0, 0, 0, 0);
@@ -1576,6 +2521,8 @@ static inline uint64_t CAVM_RMAPX_JD0_CFG1(uint64_t a) __attribute__ ((pure, alw
 static inline uint64_t CAVM_RMAPX_JD0_CFG1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043382008ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043382008ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043382008ll + 0x180000ll * ((a) & 0x1);
@@ -1614,6 +2561,8 @@ static inline uint64_t CAVM_RMAPX_JD0_CFG2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043382010ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043382010ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043382010ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_JD0_CFG2", 1, a, 0, 0, 0, 0, 0);
@@ -1650,6 +2599,8 @@ static inline uint64_t CAVM_RMAPX_JD0_CFG3(uint64_t a) __attribute__ ((pure, alw
 static inline uint64_t CAVM_RMAPX_JD0_CFG3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043382018ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043382018ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043382018ll + 0x180000ll * ((a) & 0x1);
@@ -1688,6 +2639,8 @@ static inline uint64_t CAVM_RMAPX_JD0_CFG4(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043382020ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043382020ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043382020ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_JD0_CFG4", 1, a, 0, 0, 0, 0, 0);
@@ -1725,6 +2678,8 @@ static inline uint64_t CAVM_RMAPX_JD0_CFG5(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043382028ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043382028ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043382028ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_JD0_CFG5", 1, a, 0, 0, 0, 0, 0);
@@ -1761,6 +2716,8 @@ static inline uint64_t CAVM_RMAPX_JD0_CFG6(uint64_t a) __attribute__ ((pure, alw
 static inline uint64_t CAVM_RMAPX_JD0_CFG6(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043382030ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043382030ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043382030ll + 0x180000ll * ((a) & 0x1);
@@ -1801,6 +2758,8 @@ static inline uint64_t CAVM_RMAPX_JD1_CFG0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043384000ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043384000ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043384000ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_JD1_CFG0", 1, a, 0, 0, 0, 0, 0);
@@ -1837,6 +2796,8 @@ static inline uint64_t CAVM_RMAPX_JD1_CFG1(uint64_t a) __attribute__ ((pure, alw
 static inline uint64_t CAVM_RMAPX_JD1_CFG1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043384008ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043384008ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043384008ll + 0x180000ll * ((a) & 0x1);
@@ -1875,6 +2836,8 @@ static inline uint64_t CAVM_RMAPX_JD1_CFG2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043384010ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043384010ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043384010ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_JD1_CFG2", 1, a, 0, 0, 0, 0, 0);
@@ -1911,6 +2874,8 @@ static inline uint64_t CAVM_RMAPX_JD1_CFG3(uint64_t a) __attribute__ ((pure, alw
 static inline uint64_t CAVM_RMAPX_JD1_CFG3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043384018ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043384018ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043384018ll + 0x180000ll * ((a) & 0x1);
@@ -1949,6 +2914,8 @@ static inline uint64_t CAVM_RMAPX_JD1_CFG4(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043384020ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043384020ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043384020ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_JD1_CFG4", 1, a, 0, 0, 0, 0, 0);
@@ -1986,6 +2953,8 @@ static inline uint64_t CAVM_RMAPX_JD1_CFG5(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043384028ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043384028ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043384028ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_JD1_CFG5", 1, a, 0, 0, 0, 0, 0);
@@ -2022,6 +2991,8 @@ static inline uint64_t CAVM_RMAPX_JD1_CFG6(uint64_t a) __attribute__ ((pure, alw
 static inline uint64_t CAVM_RMAPX_JD1_CFG6(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043384030ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043384030ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043384030ll + 0x180000ll * ((a) & 0x1);
@@ -2062,6 +3033,8 @@ static inline uint64_t CAVM_RMAPX_JD2_CFG0(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043386000ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043386000ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043386000ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_JD2_CFG0", 1, a, 0, 0, 0, 0, 0);
@@ -2098,6 +3071,8 @@ static inline uint64_t CAVM_RMAPX_JD2_CFG1(uint64_t a) __attribute__ ((pure, alw
 static inline uint64_t CAVM_RMAPX_JD2_CFG1(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043386008ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043386008ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043386008ll + 0x180000ll * ((a) & 0x1);
@@ -2136,6 +3111,8 @@ static inline uint64_t CAVM_RMAPX_JD2_CFG2(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043386010ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043386010ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043386010ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_JD2_CFG2", 1, a, 0, 0, 0, 0, 0);
@@ -2172,6 +3149,8 @@ static inline uint64_t CAVM_RMAPX_JD2_CFG3(uint64_t a) __attribute__ ((pure, alw
 static inline uint64_t CAVM_RMAPX_JD2_CFG3(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043386018ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043386018ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043386018ll + 0x180000ll * ((a) & 0x1);
@@ -2210,6 +3189,8 @@ static inline uint64_t CAVM_RMAPX_JD2_CFG4(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043386020ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043386020ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043386020ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_JD2_CFG4", 1, a, 0, 0, 0, 0, 0);
@@ -2246,6 +3227,8 @@ static inline uint64_t CAVM_RMAPX_JD2_CFG5(uint64_t a) __attribute__ ((pure, alw
 static inline uint64_t CAVM_RMAPX_JD2_CFG5(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043386028ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043386028ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043386028ll + 0x180000ll * ((a) & 0x1);
@@ -2284,6 +3267,8 @@ static inline uint64_t CAVM_RMAPX_JD2_CFG6(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043386030ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043386030ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043386030ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_JD2_CFG6", 1, a, 0, 0, 0, 0, 0);
@@ -2319,6 +3304,8 @@ static inline uint64_t CAVM_RMAPX_SCRATCH(uint64_t a) __attribute__ ((pure, alwa
 static inline uint64_t CAVM_RMAPX_SCRATCH(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043380080ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043380080ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043380080ll + 0x180000ll * ((a) & 0x1);
@@ -2378,6 +3365,8 @@ static inline uint64_t CAVM_RMAPX_STATUS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043380018ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043380018ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043380018ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_STATUS", 1, a, 0, 0, 0, 0, 0);
@@ -2413,6 +3402,8 @@ static inline uint64_t CAVM_RMAPX_TC_CONFIG_ERR_FLAGS(uint64_t a) __attribute__ 
 static inline uint64_t CAVM_RMAPX_TC_CONFIG_ERR_FLAGS(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043381040ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043381040ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043381040ll + 0x180000ll * ((a) & 0x1);
@@ -2464,6 +3455,8 @@ static inline uint64_t CAVM_RMAPX_TC_ERROR(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043381038ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043381038ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043381038ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_TC_ERROR", 1, a, 0, 0, 0, 0, 0);
@@ -2505,6 +3498,8 @@ static inline uint64_t CAVM_RMAPX_TC_ERROR_MASK(uint64_t a) __attribute__ ((pure
 static inline uint64_t CAVM_RMAPX_TC_ERROR_MASK(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
+        return 0x87e043381030ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x87e043381030ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043381030ll + 0x180000ll * ((a) & 0x1);
@@ -2593,6 +3588,8 @@ static inline uint64_t CAVM_RMAPX_TC_MAIN_CONTROL(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043381010ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043381010ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043381010ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_TC_MAIN_CONTROL", 1, a, 0, 0, 0, 0, 0);
@@ -2643,6 +3640,8 @@ static inline uint64_t CAVM_RMAPX_TC_MAIN_RESET(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043381000ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043381000ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043381000ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_TC_MAIN_RESET", 1, a, 0, 0, 0, 0, 0);
@@ -2689,6 +3688,8 @@ static inline uint64_t CAVM_RMAPX_TC_MAIN_START(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x87e043381008ll + 0x180000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x87e043381008ll + 0x180000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x87e043381008ll + 0x180000ll * ((a) & 0x1);
     __cavm_csr_fatal("RMAPX_TC_MAIN_START", 1, a, 0, 0, 0, 0, 0);
@@ -2726,6 +3727,8 @@ static inline uint64_t CAVM_RMAPX_TC_STATUSX(uint64_t a, uint64_t b) __attribute
 static inline uint64_t CAVM_RMAPX_TC_STATUSX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
+        return 0x87e043381020ll + 0x180000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043381020ll + 0x180000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043381020ll + 0x180000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);

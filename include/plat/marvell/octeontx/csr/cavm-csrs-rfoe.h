@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -97,6 +97,14 @@
 #define CAVM_RFOE_RX_PKT_ERR_E_RE_RX_CTL (0xb)
 #define CAVM_RFOE_RX_PKT_ERR_E_RE_SKIP (0xc)
 #define CAVM_RFOE_RX_PKT_ERR_E_RE_TERMINATE (9)
+
+/**
+ * Enumeration rfoe_rx_pkt_logger_idx_e
+ *
+ * RFOE Packet Logger Index Enumeration
+ */
+#define CAVM_RFOE_RX_PKT_LOGGER_IDX_E_RX_PKT (0)
+#define CAVM_RFOE_RX_PKT_LOGGER_IDX_E_TX_PKT (1)
 
 /**
  * Enumeration rfoe_rx_pswt_e
@@ -357,7 +365,7 @@ union cavm_rfoe_ecpri_psw1_s
     } s;
     /* struct cavm_rfoe_ecpri_psw1_s_s cn9; */
     /* struct cavm_rfoe_ecpri_psw1_s_s f95mm; */
-    struct cavm_rfoe_ecpri_psw1_s_loki
+    struct cavm_rfoe_ecpri_psw1_s_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t ptp_timestamp         : 64; /**< [ 63:  0] PTP timestamp from CGX when the LMAC's RFOE()_RX_CTRL[RX_PTP_MODE] bit is
@@ -389,7 +397,8 @@ union cavm_rfoe_ecpri_psw1_s
         uint64_t ptype                 : 4;  /**< [123:120] Type of processing applied to packet, as defined by  RFOE_RX_DIR_CTL_PKT_TYPE_E. */
         uint64_t reserved_124_127      : 4;
 #endif /* Word 1 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rfoe_ecpri_psw1_s_f95o loki; */
 };
 
 /**
@@ -628,6 +637,7 @@ union cavm_rfoe_fd_cstm_hdr_s
                                                                  RX - Unused from packet unless header is written. */
 #endif /* Word 1 - End */
     } f95mm;
+    /* struct cavm_rfoe_fd_cstm_hdr_s_f95mm f95o; */
     /* struct cavm_rfoe_fd_cstm_hdr_s_f95mm loki; */
 };
 
@@ -1250,6 +1260,1605 @@ union cavm_rfoe_tx_pkt_log_s
 };
 
 /**
+ * Register (RSL) rfoe#_ab#_control
+ *
+ * RFOE AB Control Register
+ */
+union cavm_rfoex_abx_control
+{
+    uint64_t u;
+    struct cavm_rfoex_abx_control_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t jobid2                : 16; /**< [ 63: 48](R/W/H) Job ID for slot 2. */
+        uint64_t jobid1                : 16; /**< [ 47: 32](R/W/H) Job ID for slot 1. */
+        uint64_t jobid0                : 16; /**< [ 31: 16](R/W/H) Job ID for slot 0. */
+        uint64_t reserved_3_15         : 13;
+        uint64_t start2                : 1;  /**< [  2:  2](R/W/H) Start processing job in slot 2. */
+        uint64_t start1                : 1;  /**< [  1:  1](R/W/H) Start processing job in slot 1. */
+        uint64_t start0                : 1;  /**< [  0:  0](R/W/H) Start processing job in slot 0. */
+#else /* Word 0 - Little Endian */
+        uint64_t start0                : 1;  /**< [  0:  0](R/W/H) Start processing job in slot 0. */
+        uint64_t start1                : 1;  /**< [  1:  1](R/W/H) Start processing job in slot 1. */
+        uint64_t start2                : 1;  /**< [  2:  2](R/W/H) Start processing job in slot 2. */
+        uint64_t reserved_3_15         : 13;
+        uint64_t jobid0                : 16; /**< [ 31: 16](R/W/H) Job ID for slot 0. */
+        uint64_t jobid1                : 16; /**< [ 47: 32](R/W/H) Job ID for slot 1. */
+        uint64_t jobid2                : 16; /**< [ 63: 48](R/W/H) Job ID for slot 2. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_abx_control_s cn; */
+};
+typedef union cavm_rfoex_abx_control cavm_rfoex_abx_control_t;
+
+static inline uint64_t CAVM_RFOEX_ABX_CONTROL(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_ABX_CONTROL(uint64_t a, uint64_t b)
+{
+    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
+        return 0x87e043d00000ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1)))
+        return 0x87e043d00000ll + 0x80000ll * ((a) & 0x0) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1)))
+        return 0x87e043d00000ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1)))
+        return 0x87e043d00000ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1);
+    __cavm_csr_fatal("RFOEX_ABX_CONTROL", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_RFOEX_ABX_CONTROL(a,b) cavm_rfoex_abx_control_t
+#define bustype_CAVM_RFOEX_ABX_CONTROL(a,b) CSR_TYPE_RSL
+#define basename_CAVM_RFOEX_ABX_CONTROL(a,b) "RFOEX_ABX_CONTROL"
+#define busnum_CAVM_RFOEX_ABX_CONTROL(a,b) (a)
+#define arguments_CAVM_RFOEX_ABX_CONTROL(a,b) (a),(b),-1,-1
+
+/**
+ * Register (RSL) rfoe#_ab#_scratch
+ *
+ * INTERNAL: Scratch Register
+ *
+ * Scratch register.
+ */
+union cavm_rfoex_abx_scratch
+{
+    uint64_t u;
+    struct cavm_rfoex_abx_scratch_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data. */
+#else /* Word 0 - Little Endian */
+        uint64_t data                  : 64; /**< [ 63:  0](R/W) Scratch data. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_abx_scratch_s cn; */
+};
+typedef union cavm_rfoex_abx_scratch cavm_rfoex_abx_scratch_t;
+
+static inline uint64_t CAVM_RFOEX_ABX_SCRATCH(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_ABX_SCRATCH(uint64_t a, uint64_t b)
+{
+    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
+        return 0x87e043d00080ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1)))
+        return 0x87e043d00080ll + 0x80000ll * ((a) & 0x0) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1)))
+        return 0x87e043d00080ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1)))
+        return 0x87e043d00080ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1);
+    __cavm_csr_fatal("RFOEX_ABX_SCRATCH", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_RFOEX_ABX_SCRATCH(a,b) cavm_rfoex_abx_scratch_t
+#define bustype_CAVM_RFOEX_ABX_SCRATCH(a,b) CSR_TYPE_RSL
+#define basename_CAVM_RFOEX_ABX_SCRATCH(a,b) "RFOEX_ABX_SCRATCH"
+#define busnum_CAVM_RFOEX_ABX_SCRATCH(a,b) (a)
+#define arguments_CAVM_RFOEX_ABX_SCRATCH(a,b) (a),(b),-1,-1
+
+/**
+ * Register (RSL) rfoe#_ab#_slot#_configuration
+ *
+ * RFOE AB Job Configuration Register
+ * This register space contains the RFOE job configuration data.
+ *
+ * Software should not write this register directly, but instead use this
+ * format when writing the job configuration section of the job descriptor.
+ */
+union cavm_rfoex_abx_slotx_configuration
+{
+    uint64_t u;
+    struct cavm_rfoex_abx_slotx_configuration_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t rfoe_mode             : 1;  /**< [ 63: 63](R/W) RFOE mode of opeartion. Indicates the current packet type being processed: eCPRI or RoE:
+                                                                 0 = current packet type is RoE.
+                                                                 1 = current packet type is eCPRI. */
+        uint64_t custom_timestamp_insert : 1;/**< [ 62: 62](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2,
+                                                                 when set to 1, for 0xFD subtype,
+                                                                 TX inserts custom timestamp into custom header field. */
+        uint64_t orderinfo_insert      : 1;  /**< [ 61: 61](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2,
+                                                                 when set to 1, for all subtypes,
+                                                                 TX inserts seqnum/timestamp into orderInfo field. */
+        uint64_t eos                   : 1;  /**< [ 60: 60](R/W) End of symbol flag. Indicates last packet for current symbol. This field is
+                                                                 inserted into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t sos                   : 1;  /**< [ 59: 59](R/W) Start of symbol flag. Indicates first packet for current symbol. This field is
+                                                                 inserted into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t symbol                : 8;  /**< [ 58: 51](R/W) Symbol number to insert into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t antenna               : 8;  /**< [ 50: 43](R/W) Antenna number to insert into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t orderinfooffset       : 5;  /**< [ 42: 38](R/W) Byte offset of RoE orderInfo field within header. Used when [PKT_MODE] = 2 to
+                                                                 allow RFOE to replace orderInfo field. */
+        uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE P1914.3/D3.0 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
+                                                                 0 = indicates seqNum is used.
+                                                                 1 = indicates timeStamp is used. */
+        uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
+                                                                 0 = Perform symmetric saturation to [SAMPLE_WIDTH].
+                                                                 1 = Bypass saturation.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, use the [SAMPLE_WIDTH] most significant
+                                                                 bits of the input sample.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, the rounded value is truncated instead
+                                                                 of saturating.
+
+                                                                 Internal:
+                                                                 Same as rfif_dl_sample_width.v definition. */
+        uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
+                                                                 0: Y = SATn(X).
+                                                                 1: Y = SATn(ROUND(X)).
+
+                                                                 SATn(X) is saturation to the range [-2^(n-1)+1, 2^(n-1)-1].
+
+                                                                 ROUND(X) is symmetric rounding, defined as:
+                                                                 _ ROUND(X) = (X + 2^(m-1)) \>\> m, if X \>= 0.
+                                                                 _ ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
+                                                                 _ where m = 16 - n, and when m=0, 2^(0-1) = 0.
+
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
+
+                                                                 Note that the saturation operation can be bypassed by setting
+                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1.
+
+                                                                 Internal:
+                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+        uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) For SAMPLE_MODE=1, width in bits of I/Q samples in transmitted RoE
+                                                                 packet. Samples read from memory are always assume to have 16-bit I
+                                                                 and 16-bit Q components. */
+        uint64_t sample_mode           : 1;  /**< [ 29: 29](R/W) Enable sample mode. When set to 1, I/Q samples in the packet are
+                                                                 read as 16-bit I/Q values, and converted to [SAMPLE_WIDTH] bits, as
+                                                                 per [SAMPLE_WIDTH_OPTION]. Otherwise, samples are written to memory
+                                                                 with no conversions. */
+        uint64_t lmacid                : 2;  /**< [ 28: 27](R/W) LMAC destination ID. Must select an enabled LMAC on which to send the
+                                                                 packet. */
+        uint64_t subtype               : 8;  /**< [ 26: 19](R/W) RoE subtype. */
+        uint64_t flowid                : 8;  /**< [ 18: 11](R/W) FLOWID for the FLOWID field in the RoE packet header. */
+        uint64_t etype_sel             : 3;  /**< [ 10:  8](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_ETHERTYPE() register
+                                                                 provides the Ethertype field to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t sa_sel                : 3;  /**< [  7:  5](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_SA() register
+                                                                 provides the source DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t da_sel                : 3;  /**< [  4:  2](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_DA() register
+                                                                 provides the destination DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t pkt_mode              : 2;  /**< [  1:  0](R/W) Packet mode.
+                                                                 0x0 = Transparent mode (1 pointer in job descriptor).
+                                                                       This mode is used for control packet transmit.
+                                                                       Hardware does not access the Sequence Number configuration table.
+                                                                 0x1 = Packet DMA with Ethernet header built from RFOE()_TX_HDR_*
+                                                                       registers. This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x2 = First DMA contains Ethernet, RoE header, Custom header and rbMap.
+                                                                       Second DMA contains sample data.
+                                                                       This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x3 = Reserved. */
+#else /* Word 0 - Little Endian */
+        uint64_t pkt_mode              : 2;  /**< [  1:  0](R/W) Packet mode.
+                                                                 0x0 = Transparent mode (1 pointer in job descriptor).
+                                                                       This mode is used for control packet transmit.
+                                                                       Hardware does not access the Sequence Number configuration table.
+                                                                 0x1 = Packet DMA with Ethernet header built from RFOE()_TX_HDR_*
+                                                                       registers. This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x2 = First DMA contains Ethernet, RoE header, Custom header and rbMap.
+                                                                       Second DMA contains sample data.
+                                                                       This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x3 = Reserved. */
+        uint64_t da_sel                : 3;  /**< [  4:  2](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_DA() register
+                                                                 provides the destination DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t sa_sel                : 3;  /**< [  7:  5](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_SA() register
+                                                                 provides the source DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t etype_sel             : 3;  /**< [ 10:  8](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_ETHERTYPE() register
+                                                                 provides the Ethertype field to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t flowid                : 8;  /**< [ 18: 11](R/W) FLOWID for the FLOWID field in the RoE packet header. */
+        uint64_t subtype               : 8;  /**< [ 26: 19](R/W) RoE subtype. */
+        uint64_t lmacid                : 2;  /**< [ 28: 27](R/W) LMAC destination ID. Must select an enabled LMAC on which to send the
+                                                                 packet. */
+        uint64_t sample_mode           : 1;  /**< [ 29: 29](R/W) Enable sample mode. When set to 1, I/Q samples in the packet are
+                                                                 read as 16-bit I/Q values, and converted to [SAMPLE_WIDTH] bits, as
+                                                                 per [SAMPLE_WIDTH_OPTION]. Otherwise, samples are written to memory
+                                                                 with no conversions. */
+        uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) For SAMPLE_MODE=1, width in bits of I/Q samples in transmitted RoE
+                                                                 packet. Samples read from memory are always assume to have 16-bit I
+                                                                 and 16-bit Q components. */
+        uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
+                                                                 0: Y = SATn(X).
+                                                                 1: Y = SATn(ROUND(X)).
+
+                                                                 SATn(X) is saturation to the range [-2^(n-1)+1, 2^(n-1)-1].
+
+                                                                 ROUND(X) is symmetric rounding, defined as:
+                                                                 _ ROUND(X) = (X + 2^(m-1)) \>\> m, if X \>= 0.
+                                                                 _ ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
+                                                                 _ where m = 16 - n, and when m=0, 2^(0-1) = 0.
+
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
+
+                                                                 Note that the saturation operation can be bypassed by setting
+                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1.
+
+                                                                 Internal:
+                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+        uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
+                                                                 0 = Perform symmetric saturation to [SAMPLE_WIDTH].
+                                                                 1 = Bypass saturation.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, use the [SAMPLE_WIDTH] most significant
+                                                                 bits of the input sample.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, the rounded value is truncated instead
+                                                                 of saturating.
+
+                                                                 Internal:
+                                                                 Same as rfif_dl_sample_width.v definition. */
+        uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE P1914.3/D3.0 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
+                                                                 0 = indicates seqNum is used.
+                                                                 1 = indicates timeStamp is used. */
+        uint64_t orderinfooffset       : 5;  /**< [ 42: 38](R/W) Byte offset of RoE orderInfo field within header. Used when [PKT_MODE] = 2 to
+                                                                 allow RFOE to replace orderInfo field. */
+        uint64_t antenna               : 8;  /**< [ 50: 43](R/W) Antenna number to insert into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t symbol                : 8;  /**< [ 58: 51](R/W) Symbol number to insert into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t sos                   : 1;  /**< [ 59: 59](R/W) Start of symbol flag. Indicates first packet for current symbol. This field is
+                                                                 inserted into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t eos                   : 1;  /**< [ 60: 60](R/W) End of symbol flag. Indicates last packet for current symbol. This field is
+                                                                 inserted into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t orderinfo_insert      : 1;  /**< [ 61: 61](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2,
+                                                                 when set to 1, for all subtypes,
+                                                                 TX inserts seqnum/timestamp into orderInfo field. */
+        uint64_t custom_timestamp_insert : 1;/**< [ 62: 62](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2,
+                                                                 when set to 1, for 0xFD subtype,
+                                                                 TX inserts custom timestamp into custom header field. */
+        uint64_t rfoe_mode             : 1;  /**< [ 63: 63](R/W) RFOE mode of opeartion. Indicates the current packet type being processed: eCPRI or RoE:
+                                                                 0 = current packet type is RoE.
+                                                                 1 = current packet type is eCPRI. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_abx_slotx_configuration_s cn9; */
+    struct cavm_rfoex_abx_slotx_configuration_cnf95xxp1
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_63           : 1;
+        uint64_t custom_timestamp_insert : 1;/**< [ 62: 62](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2,
+                                                                 when set to 1, for 0xFD subtype,
+                                                                 TX inserts custom timestamp into custom header field. */
+        uint64_t orderinfo_insert      : 1;  /**< [ 61: 61](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2,
+                                                                 when set to 1, for all subtypes,
+                                                                 TX inserts seqnum/timestamp into orderInfo field. */
+        uint64_t eos                   : 1;  /**< [ 60: 60](R/W) End of symbol flag. Indicates last packet for current symbol. This field is
+                                                                 inserted into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t sos                   : 1;  /**< [ 59: 59](R/W) Start of symbol flag. Indicates first packet for current symbol. This field is
+                                                                 inserted into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t symbol                : 8;  /**< [ 58: 51](R/W) Symbol number to insert into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t antenna               : 8;  /**< [ 50: 43](R/W) Antenna number to insert into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t orderinfooffset       : 5;  /**< [ 42: 38](R/W) Byte offset of RoE orderInfo field within header. Used when [PKT_MODE] = 2 to
+                                                                 allow RFOE to replace orderInfo field. */
+        uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE P1914.3/D3.0 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
+                                                                 0 = indicates seqNum is used.
+                                                                 1 = indicates timeStamp is used. */
+        uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
+                                                                 0 = Perform symmetric saturation to [SAMPLE_WIDTH].
+                                                                 1 = Bypass saturation.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, use the [SAMPLE_WIDTH] most significant
+                                                                 bits of the input sample.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, the rounded value is truncated instead
+                                                                 of saturating.
+
+                                                                 Internal:
+                                                                 Same as rfif_dl_sample_width.v definition. */
+        uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
+                                                                 0: Y = SATn(X).
+                                                                 1: Y = SATn(ROUND(X)).
+
+                                                                 SATn(X) is saturation to the range [-2^(n-1)+1, 2^(n-1)-1].
+
+                                                                 ROUND(X) is symmetric rounding, defined as:
+                                                                 _ ROUND(X) = (X + 2^(m-1)) \>\> m, if X \>= 0.
+                                                                 _ ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
+                                                                 _ where m = 16 - n, and when m=0, 2^(0-1) = 0.
+
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
+
+                                                                 Note that the saturation operation can be bypassed by setting
+                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1.
+
+                                                                 Internal:
+                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+        uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) For SAMPLE_MODE=1, width in bits of I/Q samples in transmitted RoE
+                                                                 packet. Samples read from memory are always assume to have 16-bit I
+                                                                 and 16-bit Q components. */
+        uint64_t sample_mode           : 1;  /**< [ 29: 29](R/W) Enable sample mode. When set to 1, I/Q samples in the packet are
+                                                                 read as 16-bit I/Q values, and converted to [SAMPLE_WIDTH] bits, as
+                                                                 per [SAMPLE_WIDTH_OPTION]. Otherwise, samples are written to memory
+                                                                 with no conversions. */
+        uint64_t lmacid                : 2;  /**< [ 28: 27](R/W) LMAC destination ID. Must select an enabled LMAC on which to send the
+                                                                 packet. */
+        uint64_t subtype               : 8;  /**< [ 26: 19](R/W) RoE subtype. */
+        uint64_t flowid                : 8;  /**< [ 18: 11](R/W) FLOWID for the FLOWID field in the RoE packet header. */
+        uint64_t etype_sel             : 3;  /**< [ 10:  8](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_ETHERTYPE() register
+                                                                 provides the Ethertype field to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t sa_sel                : 3;  /**< [  7:  5](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_SA() register
+                                                                 provides the source DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t da_sel                : 3;  /**< [  4:  2](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_DA() register
+                                                                 provides the destination DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t pkt_mode              : 2;  /**< [  1:  0](R/W) Packet mode.
+                                                                 0x0 = Transparent mode (1 pointer in job descriptor).
+                                                                       This mode is used for control packet transmit.
+                                                                       Hardware does not access the Sequence Number configuration table.
+                                                                 0x1 = Packet DMA with Ethernet header built from RFOE()_TX_HDR_*
+                                                                       registers. This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x2 = First DMA contains Ethernet, RoE header, Custom header and rbMap.
+                                                                       Second DMA contains sample data.
+                                                                       This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x3 = Reserved. */
+#else /* Word 0 - Little Endian */
+        uint64_t pkt_mode              : 2;  /**< [  1:  0](R/W) Packet mode.
+                                                                 0x0 = Transparent mode (1 pointer in job descriptor).
+                                                                       This mode is used for control packet transmit.
+                                                                       Hardware does not access the Sequence Number configuration table.
+                                                                 0x1 = Packet DMA with Ethernet header built from RFOE()_TX_HDR_*
+                                                                       registers. This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x2 = First DMA contains Ethernet, RoE header, Custom header and rbMap.
+                                                                       Second DMA contains sample data.
+                                                                       This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x3 = Reserved. */
+        uint64_t da_sel                : 3;  /**< [  4:  2](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_DA() register
+                                                                 provides the destination DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t sa_sel                : 3;  /**< [  7:  5](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_SA() register
+                                                                 provides the source DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t etype_sel             : 3;  /**< [ 10:  8](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_ETHERTYPE() register
+                                                                 provides the Ethertype field to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t flowid                : 8;  /**< [ 18: 11](R/W) FLOWID for the FLOWID field in the RoE packet header. */
+        uint64_t subtype               : 8;  /**< [ 26: 19](R/W) RoE subtype. */
+        uint64_t lmacid                : 2;  /**< [ 28: 27](R/W) LMAC destination ID. Must select an enabled LMAC on which to send the
+                                                                 packet. */
+        uint64_t sample_mode           : 1;  /**< [ 29: 29](R/W) Enable sample mode. When set to 1, I/Q samples in the packet are
+                                                                 read as 16-bit I/Q values, and converted to [SAMPLE_WIDTH] bits, as
+                                                                 per [SAMPLE_WIDTH_OPTION]. Otherwise, samples are written to memory
+                                                                 with no conversions. */
+        uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) For SAMPLE_MODE=1, width in bits of I/Q samples in transmitted RoE
+                                                                 packet. Samples read from memory are always assume to have 16-bit I
+                                                                 and 16-bit Q components. */
+        uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
+                                                                 0: Y = SATn(X).
+                                                                 1: Y = SATn(ROUND(X)).
+
+                                                                 SATn(X) is saturation to the range [-2^(n-1)+1, 2^(n-1)-1].
+
+                                                                 ROUND(X) is symmetric rounding, defined as:
+                                                                 _ ROUND(X) = (X + 2^(m-1)) \>\> m, if X \>= 0.
+                                                                 _ ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
+                                                                 _ where m = 16 - n, and when m=0, 2^(0-1) = 0.
+
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
+
+                                                                 Note that the saturation operation can be bypassed by setting
+                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1.
+
+                                                                 Internal:
+                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+        uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
+                                                                 0 = Perform symmetric saturation to [SAMPLE_WIDTH].
+                                                                 1 = Bypass saturation.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, use the [SAMPLE_WIDTH] most significant
+                                                                 bits of the input sample.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, the rounded value is truncated instead
+                                                                 of saturating.
+
+                                                                 Internal:
+                                                                 Same as rfif_dl_sample_width.v definition. */
+        uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE P1914.3/D3.0 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
+                                                                 0 = indicates seqNum is used.
+                                                                 1 = indicates timeStamp is used. */
+        uint64_t orderinfooffset       : 5;  /**< [ 42: 38](R/W) Byte offset of RoE orderInfo field within header. Used when [PKT_MODE] = 2 to
+                                                                 allow RFOE to replace orderInfo field. */
+        uint64_t antenna               : 8;  /**< [ 50: 43](R/W) Antenna number to insert into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t symbol                : 8;  /**< [ 58: 51](R/W) Symbol number to insert into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t sos                   : 1;  /**< [ 59: 59](R/W) Start of symbol flag. Indicates first packet for current symbol. This field is
+                                                                 inserted into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t eos                   : 1;  /**< [ 60: 60](R/W) End of symbol flag. Indicates last packet for current symbol. This field is
+                                                                 inserted into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t orderinfo_insert      : 1;  /**< [ 61: 61](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2,
+                                                                 when set to 1, for all subtypes,
+                                                                 TX inserts seqnum/timestamp into orderInfo field. */
+        uint64_t custom_timestamp_insert : 1;/**< [ 62: 62](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2,
+                                                                 when set to 1, for 0xFD subtype,
+                                                                 TX inserts custom timestamp into custom header field. */
+        uint64_t reserved_63           : 1;
+#endif /* Word 0 - End */
+    } cnf95xxp1;
+    struct cavm_rfoex_abx_slotx_configuration_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_63           : 1;
+        uint64_t custom_timestamp_insert : 1;/**< [ 62: 62](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2,
+                                                                 when set to 1, for 0xFD subtype,
+                                                                 TX inserts custom timestamp into custom header field. */
+        uint64_t orderinfo_insert      : 1;  /**< [ 61: 61](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2,
+                                                                 when set to 1, for all subtypes,
+                                                                 TX inserts seqnum/timestamp into orderInfo field. */
+        uint64_t eos                   : 1;  /**< [ 60: 60](R/W) End of symbol flag. Indicates last packet for current symbol. This field is
+                                                                 inserted into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t sos                   : 1;  /**< [ 59: 59](R/W) Start of symbol flag. Indicates first packet for current symbol. This field is
+                                                                 inserted into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t symbol                : 8;  /**< [ 58: 51](R/W) Symbol number to insert into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t antenna               : 8;  /**< [ 50: 43](R/W) Antenna number to insert into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t orderinfooffset       : 5;  /**< [ 42: 38](R/W) Byte offset of RoE orderInfo field within header. Used when [PKT_MODE] = 2 to
+                                                                 allow RFOE to replace orderInfo field. */
+        uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE P1914.3/D3.0 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
+                                                                 0 = indicates seqNum is used.
+                                                                 1 = indicates timeStamp is used. */
+        uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
+                                                                 0 = Perform symmetric saturation to [SAMPLE_WIDTH].
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, Y = SATn(X).
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, Y = SATn(ROUND(X)).
+                                                                 1 = Bypass saturation.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, Reserved (not supported)
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, Y = ROUND(X).
+
+                                                                 SATn(X) is saturation to the range [-2^(n-1)+1, 2^(n-1)-1].
+                                                                 ROUND(X) is symmetric rounding, defined as:
+
+                                                                 _ ROUND(X) = (X + 2^(m-1)) \>\> m, if X \>= 0.
+
+                                                                 _ ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
+
+                                                                 where m = 16 - n, and when m=0, 2^(0-1) = 0.
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
+
+                                                                 Internal:
+                                                                 Same as rfif_dl_sample_width.v definition. */
+        uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
+
+                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS].
+
+                                                                 Internal:
+                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+        uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) For SAMPLE_MODE=1, width in bits of I/Q samples in transmitted RoE
+                                                                 packet. Samples read from memory are always assume to have 16-bit I
+                                                                 and 16-bit Q components. */
+        uint64_t sample_mode           : 1;  /**< [ 29: 29](R/W) Enable sample mode. When set to 1, I/Q samples in the packet are
+                                                                 read as 16-bit I/Q values, and converted to [SAMPLE_WIDTH] bits, as
+                                                                 per [SAMPLE_WIDTH_OPTION]. Otherwise, samples are written to memory
+                                                                 with no conversions. */
+        uint64_t lmacid                : 2;  /**< [ 28: 27](R/W) LMAC destination ID. Must select an enabled LMAC on which to send the
+                                                                 packet. */
+        uint64_t subtype               : 8;  /**< [ 26: 19](R/W) RoE subtype. */
+        uint64_t flowid                : 8;  /**< [ 18: 11](R/W) FLOWID for the FLOWID field in the RoE packet header. */
+        uint64_t etype_sel             : 3;  /**< [ 10:  8](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_ETHERTYPE() register
+                                                                 provides the Ethertype field to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t sa_sel                : 3;  /**< [  7:  5](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_SA() register
+                                                                 provides the source DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t da_sel                : 3;  /**< [  4:  2](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_DA() register
+                                                                 provides the destination DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t pkt_mode              : 2;  /**< [  1:  0](R/W) Packet mode.
+                                                                 0x0 = Transparent mode (1 pointer in job descriptor).
+                                                                       This mode is used for control packet transmit.
+                                                                       Hardware does not access the Sequence Number configuration table.
+                                                                 0x1 = Packet DMA with Ethernet header built from RFOE()_TX_HDR_*
+                                                                       registers. This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x2 = First DMA contains Ethernet, RoE header, Custom header and rbMap.
+                                                                       Second DMA contains sample data.
+                                                                       This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x3 = Reserved. */
+#else /* Word 0 - Little Endian */
+        uint64_t pkt_mode              : 2;  /**< [  1:  0](R/W) Packet mode.
+                                                                 0x0 = Transparent mode (1 pointer in job descriptor).
+                                                                       This mode is used for control packet transmit.
+                                                                       Hardware does not access the Sequence Number configuration table.
+                                                                 0x1 = Packet DMA with Ethernet header built from RFOE()_TX_HDR_*
+                                                                       registers. This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x2 = First DMA contains Ethernet, RoE header, Custom header and rbMap.
+                                                                       Second DMA contains sample data.
+                                                                       This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x3 = Reserved. */
+        uint64_t da_sel                : 3;  /**< [  4:  2](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_DA() register
+                                                                 provides the destination DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t sa_sel                : 3;  /**< [  7:  5](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_SA() register
+                                                                 provides the source DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t etype_sel             : 3;  /**< [ 10:  8](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_ETHERTYPE() register
+                                                                 provides the Ethertype field to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t flowid                : 8;  /**< [ 18: 11](R/W) FLOWID for the FLOWID field in the RoE packet header. */
+        uint64_t subtype               : 8;  /**< [ 26: 19](R/W) RoE subtype. */
+        uint64_t lmacid                : 2;  /**< [ 28: 27](R/W) LMAC destination ID. Must select an enabled LMAC on which to send the
+                                                                 packet. */
+        uint64_t sample_mode           : 1;  /**< [ 29: 29](R/W) Enable sample mode. When set to 1, I/Q samples in the packet are
+                                                                 read as 16-bit I/Q values, and converted to [SAMPLE_WIDTH] bits, as
+                                                                 per [SAMPLE_WIDTH_OPTION]. Otherwise, samples are written to memory
+                                                                 with no conversions. */
+        uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) For SAMPLE_MODE=1, width in bits of I/Q samples in transmitted RoE
+                                                                 packet. Samples read from memory are always assume to have 16-bit I
+                                                                 and 16-bit Q components. */
+        uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
+
+                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS].
+
+                                                                 Internal:
+                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+        uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
+                                                                 0 = Perform symmetric saturation to [SAMPLE_WIDTH].
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, Y = SATn(X).
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, Y = SATn(ROUND(X)).
+                                                                 1 = Bypass saturation.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, Reserved (not supported)
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, Y = ROUND(X).
+
+                                                                 SATn(X) is saturation to the range [-2^(n-1)+1, 2^(n-1)-1].
+                                                                 ROUND(X) is symmetric rounding, defined as:
+
+                                                                 _ ROUND(X) = (X + 2^(m-1)) \>\> m, if X \>= 0.
+
+                                                                 _ ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
+
+                                                                 where m = 16 - n, and when m=0, 2^(0-1) = 0.
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
+
+                                                                 Internal:
+                                                                 Same as rfif_dl_sample_width.v definition. */
+        uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE P1914.3/D3.0 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
+                                                                 0 = indicates seqNum is used.
+                                                                 1 = indicates timeStamp is used. */
+        uint64_t orderinfooffset       : 5;  /**< [ 42: 38](R/W) Byte offset of RoE orderInfo field within header. Used when [PKT_MODE] = 2 to
+                                                                 allow RFOE to replace orderInfo field. */
+        uint64_t antenna               : 8;  /**< [ 50: 43](R/W) Antenna number to insert into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t symbol                : 8;  /**< [ 58: 51](R/W) Symbol number to insert into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t sos                   : 1;  /**< [ 59: 59](R/W) Start of symbol flag. Indicates first packet for current symbol. This field is
+                                                                 inserted into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t eos                   : 1;  /**< [ 60: 60](R/W) End of symbol flag. Indicates last packet for current symbol. This field is
+                                                                 inserted into RoE header for subtype=0xFD and when
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2. */
+        uint64_t orderinfo_insert      : 1;  /**< [ 61: 61](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2,
+                                                                 when set to 1, for all subtypes,
+                                                                 TX inserts seqnum/timestamp into orderInfo field. */
+        uint64_t custom_timestamp_insert : 1;/**< [ 62: 62](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 2,
+                                                                 when set to 1, for 0xFD subtype,
+                                                                 TX inserts custom timestamp into custom header field. */
+        uint64_t reserved_63           : 1;
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    struct cavm_rfoex_abx_slotx_configuration_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t rfoe_mode             : 1;  /**< [ 63: 63](R/W) RFOE mode of opeartion. Indicates the current packet type being processed: eCPRI or RoE:
+                                                                 0 = current packet type is RoE.
+                                                                 1 = current packet type is eCPRI. */
+        uint64_t custom_timestamp_insert : 1;/**< [ 62: 62](R/W) When set to 1 and when [PKT_MODE] = 2, [RFOE_MODE] = 0, and [SUBTYPE]=0xFD,
+                                                                 TX inserts custom timestamp into custom header field. */
+        uint64_t orderinfo_insert      : 1;  /**< [ 61: 61](R/W) When [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0,
+                                                                 when set to 1, for all RoE subtypes,
+                                                                 TX inserts seqnum/timestamp into orderInfo field. */
+        uint64_t eos                   : 1;  /**< [ 60: 60](R/W) End of symbol flag. Indicates last packet for current symbol. This field is
+                                                                 inserted into custom header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t sos                   : 1;  /**< [ 59: 59](R/W) Start of symbol flag. Indicates first packet for current symbol. This field is
+                                                                 inserted into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t symbol                : 8;  /**< [ 58: 51](R/W) Symbol number to insert into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t antenna               : 8;  /**< [ 50: 43](R/W) Antenna number to insert into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t orderinfooffset       : 5;  /**< [ 42: 38](R/W) Byte offset of RoE orderInfo field within header. Used when [PKT_MODE] = 2 to
+                                                                 allow RFOE to replace orderInfo field,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE 1914.3-2018 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
+                                                                 Used when [RFOE_MODE] = 0. */
+        uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
+                                                                 Used when [RFOE_MODE] = 0.
+                                                                 0 = Perform symmetric saturation to [SAMPLE_WIDTH].
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, Y = SATn(X).
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, Y = SATn(ROUND(X)).
+                                                                 1 = Bypass saturation.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, Reserved (not supported)
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, Y = ROUND(X).
+
+                                                                 SATn(X) is saturation to the range [-2^(n-1)+1, 2^(n-1)-1].
+                                                                 ROUND(X) is symmetric rounding, defined as:
+                                                                 ROUND(X) = (X + 2^(m-1)) \>\> m, if X \>= 0.
+                                                                 ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
+                                                                 where m = 16 - n, and when m=0, 2^(0-1) = 0.
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
+
+                                                                 Internal:
+                                                                 Same as rfif_dl_sample_width.v definition. */
+        uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
+                                                                 Used when [RFOE_MODE] = 0.
+
+                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS].
+
+                                                                 Internal:
+                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+        uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) Used when [RFOE_MODE] = 0.
+                                                                 For SAMPLE_MODE=1, width in bits of I/Q samples in transmitted RoE
+                                                                 packet. Samples read from memory are always assume to have 16-bit I
+                                                                 and 16-bit Q components. */
+        uint64_t sample_mode           : 1;  /**< [ 29: 29](R/W) Used when [RFOE_MODE] = 0.
+                                                                 Enable sample mode. When set to 1, I/Q samples in the packet are
+                                                                 read as 16-bit I/Q values, and converted to [SAMPLE_WIDTH] bits, as
+                                                                 per [SAMPLE_WIDTH_OPTION]. Otherwise, samples are written to memory
+                                                                 with no conversions. */
+        uint64_t lmacid                : 2;  /**< [ 28: 27](R/W) LMAC destination ID. Must select an enabled LMAC on which to send the
+                                                                 packet. */
+        uint64_t subtype               : 8;  /**< [ 26: 19](R/W) RoE subtype. Used when [RFOE_MODE] = 0. */
+        uint64_t flowid                : 8;  /**< [ 18: 11](R/W) FLOWID for the FLOWID field in the RoE packet header.
+                                                                 Used when [RFOE_MODE] = 0. */
+        uint64_t etype_sel             : 3;  /**< [ 10:  8](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_ETHERTYPE() register
+                                                                 provides the EtherType field to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t sa_sel                : 3;  /**< [  7:  5](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_SA() register
+                                                                 provides the source DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t da_sel                : 3;  /**< [  4:  2](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_DA() register
+                                                                 provides the destination DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t pkt_mode              : 2;  /**< [  1:  0](R/W) Packet mode.
+                                                                 0x0 = Transparent mode (1 pointer in job descriptor).
+                                                                       This mode is used for control packet transmit.
+                                                                       Hardware does not access the Sequence Number configuration table.
+                                                                 0x1 = Packet DMA with Ethernet header built from RFOE()_TX_HDR_*
+                                                                       registers. This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x2 = First DMA contains Ethernet, RoE header, Custom header and rbMap.
+                                                                       Second DMA contains sample data.
+                                                                       This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x3 = Reserved. */
+#else /* Word 0 - Little Endian */
+        uint64_t pkt_mode              : 2;  /**< [  1:  0](R/W) Packet mode.
+                                                                 0x0 = Transparent mode (1 pointer in job descriptor).
+                                                                       This mode is used for control packet transmit.
+                                                                       Hardware does not access the Sequence Number configuration table.
+                                                                 0x1 = Packet DMA with Ethernet header built from RFOE()_TX_HDR_*
+                                                                       registers. This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x2 = First DMA contains Ethernet, RoE header, Custom header and rbMap.
+                                                                       Second DMA contains sample data.
+                                                                       This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x3 = Reserved. */
+        uint64_t da_sel                : 3;  /**< [  4:  2](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_DA() register
+                                                                 provides the destination DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t sa_sel                : 3;  /**< [  7:  5](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_SA() register
+                                                                 provides the source DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t etype_sel             : 3;  /**< [ 10:  8](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_ETHERTYPE() register
+                                                                 provides the EtherType field to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t flowid                : 8;  /**< [ 18: 11](R/W) FLOWID for the FLOWID field in the RoE packet header.
+                                                                 Used when [RFOE_MODE] = 0. */
+        uint64_t subtype               : 8;  /**< [ 26: 19](R/W) RoE subtype. Used when [RFOE_MODE] = 0. */
+        uint64_t lmacid                : 2;  /**< [ 28: 27](R/W) LMAC destination ID. Must select an enabled LMAC on which to send the
+                                                                 packet. */
+        uint64_t sample_mode           : 1;  /**< [ 29: 29](R/W) Used when [RFOE_MODE] = 0.
+                                                                 Enable sample mode. When set to 1, I/Q samples in the packet are
+                                                                 read as 16-bit I/Q values, and converted to [SAMPLE_WIDTH] bits, as
+                                                                 per [SAMPLE_WIDTH_OPTION]. Otherwise, samples are written to memory
+                                                                 with no conversions. */
+        uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) Used when [RFOE_MODE] = 0.
+                                                                 For SAMPLE_MODE=1, width in bits of I/Q samples in transmitted RoE
+                                                                 packet. Samples read from memory are always assume to have 16-bit I
+                                                                 and 16-bit Q components. */
+        uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
+                                                                 Used when [RFOE_MODE] = 0.
+
+                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS].
+
+                                                                 Internal:
+                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+        uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
+                                                                 Used when [RFOE_MODE] = 0.
+                                                                 0 = Perform symmetric saturation to [SAMPLE_WIDTH].
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, Y = SATn(X).
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, Y = SATn(ROUND(X)).
+                                                                 1 = Bypass saturation.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, Reserved (not supported)
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, Y = ROUND(X).
+
+                                                                 SATn(X) is saturation to the range [-2^(n-1)+1, 2^(n-1)-1].
+                                                                 ROUND(X) is symmetric rounding, defined as:
+                                                                 ROUND(X) = (X + 2^(m-1)) \>\> m, if X \>= 0.
+                                                                 ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
+                                                                 where m = 16 - n, and when m=0, 2^(0-1) = 0.
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
+
+                                                                 Internal:
+                                                                 Same as rfif_dl_sample_width.v definition. */
+        uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE 1914.3-2018 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
+                                                                 Used when [RFOE_MODE] = 0. */
+        uint64_t orderinfooffset       : 5;  /**< [ 42: 38](R/W) Byte offset of RoE orderInfo field within header. Used when [PKT_MODE] = 2 to
+                                                                 allow RFOE to replace orderInfo field,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t antenna               : 8;  /**< [ 50: 43](R/W) Antenna number to insert into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t symbol                : 8;  /**< [ 58: 51](R/W) Symbol number to insert into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t sos                   : 1;  /**< [ 59: 59](R/W) Start of symbol flag. Indicates first packet for current symbol. This field is
+                                                                 inserted into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t eos                   : 1;  /**< [ 60: 60](R/W) End of symbol flag. Indicates last packet for current symbol. This field is
+                                                                 inserted into custom header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t orderinfo_insert      : 1;  /**< [ 61: 61](R/W) When [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0,
+                                                                 when set to 1, for all RoE subtypes,
+                                                                 TX inserts seqnum/timestamp into orderInfo field. */
+        uint64_t custom_timestamp_insert : 1;/**< [ 62: 62](R/W) When set to 1 and when [PKT_MODE] = 2, [RFOE_MODE] = 0, and [SUBTYPE]=0xFD,
+                                                                 TX inserts custom timestamp into custom header field. */
+        uint64_t rfoe_mode             : 1;  /**< [ 63: 63](R/W) RFOE mode of opeartion. Indicates the current packet type being processed: eCPRI or RoE:
+                                                                 0 = current packet type is RoE.
+                                                                 1 = current packet type is eCPRI. */
+#endif /* Word 0 - End */
+    } f95mm;
+    struct cavm_rfoex_abx_slotx_configuration_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t rfoe_mode             : 1;  /**< [ 63: 63](R/W) RFOE mode of opeartion. Indicates the current packet type being processed: eCPRI or RoE:
+                                                                 0 = current packet type is RoE.
+                                                                 1 = current packet type is eCPRI. */
+        uint64_t custom_timestamp_insert : 1;/**< [ 62: 62](R/W) When set to 1 and when [PKT_MODE] = 2, [RFOE_MODE] = 0, and [SUBTYPE]=0xFD,
+                                                                 TX inserts custom timestamp into custom header field. */
+        uint64_t orderinfo_insert      : 1;  /**< [ 61: 61](R/W) When [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0,
+                                                                 when set to 1, for all RoE subtypes,
+                                                                 TX inserts seqnum/timestamp into orderInfo field. */
+        uint64_t eos                   : 1;  /**< [ 60: 60](R/W) End of symbol flag. Indicates last packet for current symbol. This field is
+                                                                 inserted into custom header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t sos                   : 1;  /**< [ 59: 59](R/W) Start of symbol flag. Indicates first packet for current symbol. This field is
+                                                                 inserted into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t symbol                : 8;  /**< [ 58: 51](R/W) Symbol number to insert into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t antenna               : 8;  /**< [ 50: 43](R/W) Antenna number to insert into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t orderinfooffset       : 5;  /**< [ 42: 38](R/W) Byte offset of RoE orderInfo field within header. Used when [PKT_MODE] = 2 to
+                                                                 allow RFOE to replace orderInfo field,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE 1914.3-2018 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
+                                                                 Used when [RFOE_MODE] = 0. */
+        uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
+                                                                 Used when [RFOE_MODE] = 0.
+                                                                 0 = Perform symmetric saturation to [SAMPLE_WIDTH].
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, use the [SAMPLE_WIDTH] to perform
+                                                                 symmetric saturation to [SAMPLE_WIDTH].
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, Reserved, not supported option.
+                                                                 1 = Bypass saturation.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, use the [SAMPLE_WIDTH] most significant
+                                                                 bits of the input sample.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, the rounded value is truncated instead
+                                                                 of saturating.
+
+                                                                 Internal:
+                                                                 Same as rfif_dl_sample_width.v definition. */
+        uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
+                                                                 Used when [RFOE_MODE] = 0.
+                                                                 0: Y = SATn(X).
+                                                                 1: Y = SATn(ROUND(X)).
+
+                                                                 SATn(X) is saturation to the range [-2^(n-1)+1, 2^(n-1)-1].
+
+                                                                 ROUND(X) is symmetric rounding, defined as:
+                                                                 _ ROUND(X) = (X + 2^(m-1)) \>\> m, if X \>= 0.
+                                                                 _ ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
+                                                                 _ where m = 16 - n, and when m=0, 2^(0-1) = 0.
+
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
+
+                                                                 Note that the saturation operation can be bypassed by setting
+                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1.
+
+                                                                 Internal:
+                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+        uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) Used when [RFOE_MODE] = 0.
+                                                                 For [SAMPLE_MODE]=1, width in bits of I/Q samples in transmitted RoE
+                                                                 packet. Samples read from memory are always assume to have 16-bit I
+                                                                 and 16-bit Q components. */
+        uint64_t sample_mode           : 1;  /**< [ 29: 29](R/W) Used when [RFOE_MODE] = 0.
+                                                                 Enable sample mode. When set to 1, I/Q samples in the packet are
+                                                                 read as 16-bit I/Q values, and converted to [SAMPLE_WIDTH] bits, as
+                                                                 per [SAMPLE_WIDTH_OPTION]. Otherwise, samples are written to memory
+                                                                 with no conversions. */
+        uint64_t lmacid                : 2;  /**< [ 28: 27](R/W) LMAC destination ID. Must select an enabled LMAC on which to send the
+                                                                 packet. */
+        uint64_t subtype               : 8;  /**< [ 26: 19](R/W) RoE subtype. Used when [RFOE_MODE] = 0. */
+        uint64_t flowid                : 8;  /**< [ 18: 11](R/W) FLOWID for the FLOWID field in the RoE packet header.
+                                                                 Used when [RFOE_MODE] = 0. */
+        uint64_t etype_sel             : 3;  /**< [ 10:  8](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_ETHERTYPE() register
+                                                                 provides the EtherType field to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t sa_sel                : 3;  /**< [  7:  5](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_SA() register
+                                                                 provides the source DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t da_sel                : 3;  /**< [  4:  2](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_DA() register
+                                                                 provides the destination DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t pkt_mode              : 2;  /**< [  1:  0](R/W) Packet mode.
+                                                                 0x0 = Transparent mode (1 pointer in job descriptor).
+                                                                       This mode is used for control packet transmit.
+                                                                       Hardware does not access the Sequence Number configuration table.
+                                                                 0x1 = Packet DMA with Ethernet header built from RFOE()_TX_HDR_*
+                                                                       registers. This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x2 = First DMA contains Ethernet, RoE header, Custom header and rbMap.
+                                                                       Second DMA contains sample data.
+                                                                       This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x3 = Reserved. */
+#else /* Word 0 - Little Endian */
+        uint64_t pkt_mode              : 2;  /**< [  1:  0](R/W) Packet mode.
+                                                                 0x0 = Transparent mode (1 pointer in job descriptor).
+                                                                       This mode is used for control packet transmit.
+                                                                       Hardware does not access the Sequence Number configuration table.
+                                                                 0x1 = Packet DMA with Ethernet header built from RFOE()_TX_HDR_*
+                                                                       registers. This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x2 = First DMA contains Ethernet, RoE header, Custom header and rbMap.
+                                                                       Second DMA contains sample data.
+                                                                       This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x3 = Reserved. */
+        uint64_t da_sel                : 3;  /**< [  4:  2](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_DA() register
+                                                                 provides the destination DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t sa_sel                : 3;  /**< [  7:  5](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_SA() register
+                                                                 provides the source DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t etype_sel             : 3;  /**< [ 10:  8](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_ETHERTYPE() register
+                                                                 provides the EtherType field to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t flowid                : 8;  /**< [ 18: 11](R/W) FLOWID for the FLOWID field in the RoE packet header.
+                                                                 Used when [RFOE_MODE] = 0. */
+        uint64_t subtype               : 8;  /**< [ 26: 19](R/W) RoE subtype. Used when [RFOE_MODE] = 0. */
+        uint64_t lmacid                : 2;  /**< [ 28: 27](R/W) LMAC destination ID. Must select an enabled LMAC on which to send the
+                                                                 packet. */
+        uint64_t sample_mode           : 1;  /**< [ 29: 29](R/W) Used when [RFOE_MODE] = 0.
+                                                                 Enable sample mode. When set to 1, I/Q samples in the packet are
+                                                                 read as 16-bit I/Q values, and converted to [SAMPLE_WIDTH] bits, as
+                                                                 per [SAMPLE_WIDTH_OPTION]. Otherwise, samples are written to memory
+                                                                 with no conversions. */
+        uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) Used when [RFOE_MODE] = 0.
+                                                                 For [SAMPLE_MODE]=1, width in bits of I/Q samples in transmitted RoE
+                                                                 packet. Samples read from memory are always assume to have 16-bit I
+                                                                 and 16-bit Q components. */
+        uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
+                                                                 Used when [RFOE_MODE] = 0.
+                                                                 0: Y = SATn(X).
+                                                                 1: Y = SATn(ROUND(X)).
+
+                                                                 SATn(X) is saturation to the range [-2^(n-1)+1, 2^(n-1)-1].
+
+                                                                 ROUND(X) is symmetric rounding, defined as:
+                                                                 _ ROUND(X) = (X + 2^(m-1)) \>\> m, if X \>= 0.
+                                                                 _ ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
+                                                                 _ where m = 16 - n, and when m=0, 2^(0-1) = 0.
+
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
+
+                                                                 Note that the saturation operation can be bypassed by setting
+                                                                 [SAMPLE_WIDTH_SAT_BYPASS]=1.
+
+                                                                 Internal:
+                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+        uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
+                                                                 Used when [RFOE_MODE] = 0.
+                                                                 0 = Perform symmetric saturation to [SAMPLE_WIDTH].
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, use the [SAMPLE_WIDTH] to perform
+                                                                 symmetric saturation to [SAMPLE_WIDTH].
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, Reserved, not supported option.
+                                                                 1 = Bypass saturation.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, use the [SAMPLE_WIDTH] most significant
+                                                                 bits of the input sample.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, the rounded value is truncated instead
+                                                                 of saturating.
+
+                                                                 Internal:
+                                                                 Same as rfif_dl_sample_width.v definition. */
+        uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE 1914.3-2018 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
+                                                                 Used when [RFOE_MODE] = 0. */
+        uint64_t orderinfooffset       : 5;  /**< [ 42: 38](R/W) Byte offset of RoE orderInfo field within header. Used when [PKT_MODE] = 2 to
+                                                                 allow RFOE to replace orderInfo field,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t antenna               : 8;  /**< [ 50: 43](R/W) Antenna number to insert into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t symbol                : 8;  /**< [ 58: 51](R/W) Symbol number to insert into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t sos                   : 1;  /**< [ 59: 59](R/W) Start of symbol flag. Indicates first packet for current symbol. This field is
+                                                                 inserted into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t eos                   : 1;  /**< [ 60: 60](R/W) End of symbol flag. Indicates last packet for current symbol. This field is
+                                                                 inserted into custom header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t orderinfo_insert      : 1;  /**< [ 61: 61](R/W) When [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0,
+                                                                 when set to 1, for all RoE subtypes,
+                                                                 TX inserts seqnum/timestamp into orderInfo field. */
+        uint64_t custom_timestamp_insert : 1;/**< [ 62: 62](R/W) When set to 1 and when [PKT_MODE] = 2, [RFOE_MODE] = 0, and [SUBTYPE]=0xFD,
+                                                                 TX inserts custom timestamp into custom header field. */
+        uint64_t rfoe_mode             : 1;  /**< [ 63: 63](R/W) RFOE mode of opeartion. Indicates the current packet type being processed: eCPRI or RoE:
+                                                                 0 = current packet type is RoE.
+                                                                 1 = current packet type is eCPRI. */
+#endif /* Word 0 - End */
+    } f95o;
+    struct cavm_rfoex_abx_slotx_configuration_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t rfoe_mode             : 1;  /**< [ 63: 63](R/W) RFOE mode of opeartion. Indicates the current packet type being processed: eCPRI or RoE:
+                                                                 0 = current packet type is RoE.
+                                                                 1 = current packet type is eCPRI. */
+        uint64_t custom_timestamp_insert : 1;/**< [ 62: 62](R/W) When set to 1 and when [PKT_MODE] = 2, [RFOE_MODE] = 0, and [SUBTYPE]=0xFD,
+                                                                 TX inserts custom timestamp into custom header field. */
+        uint64_t orderinfo_insert      : 1;  /**< [ 61: 61](R/W) When [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0,
+                                                                 when set to 1, for all RoE subtypes,
+                                                                 TX inserts seqnum/timestamp into orderInfo field. */
+        uint64_t eos                   : 1;  /**< [ 60: 60](R/W) End of symbol flag. Indicates last packet for current symbol. This field is
+                                                                 inserted into custom header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t sos                   : 1;  /**< [ 59: 59](R/W) Start of symbol flag. Indicates first packet for current symbol. This field is
+                                                                 inserted into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t symbol                : 8;  /**< [ 58: 51](R/W) Symbol number to insert into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t antenna               : 8;  /**< [ 50: 43](R/W) Antenna number to insert into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t orderinfooffset       : 5;  /**< [ 42: 38](R/W) Byte offset of RoE orderInfo field within header. Used when [PKT_MODE] = 2 to
+                                                                 allow RFOE to replace orderInfo field,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE 1914.3-2018 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
+                                                                 Used when [RFOE_MODE] = 0. */
+        uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
+                                                                 Used when [RFOE_MODE] = 0.
+                                                                 0 = Perform symmetric saturation to [SAMPLE_WIDTH].
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, Y = SATn(X).
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, Y = SATn(ROUND(X)).
+                                                                 1 = Bypass saturation.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, Reserved (not supported)
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, Y = ROUND(X).
+
+                                                                 SATn(X) is saturation to the range [-2^(n-1)+1, 2^(n-1)-1].
+                                                                 ROUND(X) is symmetric rounding, defined as:
+
+                                                                 _ ROUND(X) = (X + 2^(m-1)) \>\> m, if X \>= 0.
+
+                                                                 _ ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
+
+                                                                 where m = 16 - n, and when m=0, 2^(0-1) = 0.
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
+
+                                                                 Internal:
+                                                                 Same as rfif_dl_sample_width.v definition. */
+        uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
+                                                                 Used when [RFOE_MODE] = 0.
+
+                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS].
+
+                                                                 Internal:
+                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+        uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) Used when [RFOE_MODE] = 0.
+                                                                 For [SAMPLE_MODE]=1, width in bits of I/Q samples in transmitted RoE
+                                                                 packet. Samples read from memory are always assume to have 16-bit I
+                                                                 and 16-bit Q components. */
+        uint64_t sample_mode           : 1;  /**< [ 29: 29](R/W) Used when [RFOE_MODE] = 0.
+                                                                 Enable sample mode. When set to 1, I/Q samples in the packet are
+                                                                 read as 16-bit I/Q values, and converted to [SAMPLE_WIDTH] bits, as
+                                                                 per [SAMPLE_WIDTH_OPTION]. Otherwise, samples are written to memory
+                                                                 with no conversions. */
+        uint64_t lmacid                : 2;  /**< [ 28: 27](R/W) LMAC destination ID. Must select an enabled LMAC on which to send the
+                                                                 packet. */
+        uint64_t subtype               : 8;  /**< [ 26: 19](R/W) RoE subtype. Used when [RFOE_MODE] = 0. */
+        uint64_t flowid                : 8;  /**< [ 18: 11](R/W) FLOWID for the FLOWID field in the RoE packet header.
+                                                                 Used when [RFOE_MODE] = 0. */
+        uint64_t etype_sel             : 3;  /**< [ 10:  8](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_ETHERTYPE() register
+                                                                 provides the EtherType field to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t sa_sel                : 3;  /**< [  7:  5](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_SA() register
+                                                                 provides the source DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t da_sel                : 3;  /**< [  4:  2](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_DA() register
+                                                                 provides the destination DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t pkt_mode              : 2;  /**< [  1:  0](R/W) Packet mode.
+                                                                 0x0 = Transparent mode (1 pointer in job descriptor).
+                                                                       This mode is used for control packet transmit.
+                                                                       Hardware does not access the Sequence Number configuration table.
+                                                                 0x1 = Packet DMA with Ethernet header built from RFOE()_TX_HDR_*
+                                                                       registers. This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x2 = First DMA contains Ethernet, RoE header, Custom header and rbMap.
+                                                                       Second DMA contains sample data.
+                                                                       This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x3 = Reserved. */
+#else /* Word 0 - Little Endian */
+        uint64_t pkt_mode              : 2;  /**< [  1:  0](R/W) Packet mode.
+                                                                 0x0 = Transparent mode (1 pointer in job descriptor).
+                                                                       This mode is used for control packet transmit.
+                                                                       Hardware does not access the Sequence Number configuration table.
+                                                                 0x1 = Packet DMA with Ethernet header built from RFOE()_TX_HDR_*
+                                                                       registers. This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x2 = First DMA contains Ethernet, RoE header, Custom header and rbMap.
+                                                                       Second DMA contains sample data.
+                                                                       This mode is used for Antenna symbol data transmit.
+                                                                       Hardware updates the Sequence Number configuration table accordingly.
+                                                                 0x3 = Reserved. */
+        uint64_t da_sel                : 3;  /**< [  4:  2](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_DA() register
+                                                                 provides the destination DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t sa_sel                : 3;  /**< [  7:  5](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_SA() register
+                                                                 provides the source DMAC address to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t etype_sel             : 3;  /**< [ 10:  8](R/W) When [PKT_MODE]=1, selects which RFOE()_TX_HDR_ETHERTYPE() register
+                                                                 provides the EtherType field to insert in the Ethernet header. Ignored
+                                                                 when [PKT_MODE] != 1. */
+        uint64_t flowid                : 8;  /**< [ 18: 11](R/W) FLOWID for the FLOWID field in the RoE packet header.
+                                                                 Used when [RFOE_MODE] = 0. */
+        uint64_t subtype               : 8;  /**< [ 26: 19](R/W) RoE subtype. Used when [RFOE_MODE] = 0. */
+        uint64_t lmacid                : 2;  /**< [ 28: 27](R/W) LMAC destination ID. Must select an enabled LMAC on which to send the
+                                                                 packet. */
+        uint64_t sample_mode           : 1;  /**< [ 29: 29](R/W) Used when [RFOE_MODE] = 0.
+                                                                 Enable sample mode. When set to 1, I/Q samples in the packet are
+                                                                 read as 16-bit I/Q values, and converted to [SAMPLE_WIDTH] bits, as
+                                                                 per [SAMPLE_WIDTH_OPTION]. Otherwise, samples are written to memory
+                                                                 with no conversions. */
+        uint64_t sample_width          : 5;  /**< [ 34: 30](R/W) Used when [RFOE_MODE] = 0.
+                                                                 For [SAMPLE_MODE]=1, width in bits of I/Q samples in transmitted RoE
+                                                                 packet. Samples read from memory are always assume to have 16-bit I
+                                                                 and 16-bit Q components. */
+        uint64_t sample_width_option   : 1;  /**< [ 35: 35](R/W) Sample width conversion mode:
+                                                                 Used when [RFOE_MODE] = 0.
+
+                                                                 Refer to [SAMPLE_WIDTH_SAT_BYPASS].
+
+                                                                 Internal:
+                                                                 Select sample conversion mode.  Same as rfif_dl_sample_width.v definition */
+        uint64_t sample_width_sat_bypass : 1;/**< [ 36: 36](R/W) Bypass sample saturation.
+                                                                 Used when [RFOE_MODE] = 0.
+                                                                 0 = Perform symmetric saturation to [SAMPLE_WIDTH].
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, Y = SATn(X).
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, Y = SATn(ROUND(X)).
+                                                                 1 = Bypass saturation.
+                                                                 o If [SAMPLE_WIDTH_OPTION]=0, Reserved (not supported)
+                                                                 o If [SAMPLE_WIDTH_OPTION]=1, Y = ROUND(X).
+
+                                                                 SATn(X) is saturation to the range [-2^(n-1)+1, 2^(n-1)-1].
+                                                                 ROUND(X) is symmetric rounding, defined as:
+
+                                                                 _ ROUND(X) = (X + 2^(m-1)) \>\> m, if X \>= 0.
+
+                                                                 _ ROUND(X) = -((-X + 2^(m-1)) \>\> m), if X \< 0.
+
+                                                                 where m = 16 - n, and when m=0, 2^(0-1) = 0.
+                                                                 n is the sample bit width specified by [SAMPLE_WIDTH].
+
+                                                                 Internal:
+                                                                 Same as rfif_dl_sample_width.v definition. */
+        uint64_t orderinfotype         : 1;  /**< [ 37: 37](R/W) Format for IEEE 1914.3-2018 orderInfo enumerated by RFOE_ORDER_INFO_TYPE_E.
+                                                                 Used when [RFOE_MODE] = 0. */
+        uint64_t orderinfooffset       : 5;  /**< [ 42: 38](R/W) Byte offset of RoE orderInfo field within header. Used when [PKT_MODE] = 2 to
+                                                                 allow RFOE to replace orderInfo field,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t antenna               : 8;  /**< [ 50: 43](R/W) Antenna number to insert into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t symbol                : 8;  /**< [ 58: 51](R/W) Symbol number to insert into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t sos                   : 1;  /**< [ 59: 59](R/W) Start of symbol flag. Indicates first packet for current symbol. This field is
+                                                                 inserted into RoE header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t eos                   : 1;  /**< [ 60: 60](R/W) End of symbol flag. Indicates last packet for current symbol. This field is
+                                                                 inserted into custom header for [SUBTYPE]=0xFD and when
+                                                                 [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0. */
+        uint64_t orderinfo_insert      : 1;  /**< [ 61: 61](R/W) When [PKT_MODE] = 2,
+                                                                 and [RFOE_MODE] = 0,
+                                                                 when set to 1, for all RoE subtypes,
+                                                                 TX inserts seqnum/timestamp into orderInfo field. */
+        uint64_t custom_timestamp_insert : 1;/**< [ 62: 62](R/W) When set to 1 and when [PKT_MODE] = 2, [RFOE_MODE] = 0, and [SUBTYPE]=0xFD,
+                                                                 TX inserts custom timestamp into custom header field. */
+        uint64_t rfoe_mode             : 1;  /**< [ 63: 63](R/W) RFOE mode of opeartion. Indicates the current packet type being processed: eCPRI or RoE:
+                                                                 0 = current packet type is RoE.
+                                                                 1 = current packet type is eCPRI. */
+#endif /* Word 0 - End */
+    } loki;
+};
+typedef union cavm_rfoex_abx_slotx_configuration cavm_rfoex_abx_slotx_configuration_t;
+
+static inline uint64_t CAVM_RFOEX_ABX_SLOTX_CONFIGURATION(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_ABX_SLOTX_CONFIGURATION(uint64_t a, uint64_t b, uint64_t c)
+{
+    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1) && (c<=2)))
+        return 0x87e043d02000ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1) && (c<=2)))
+        return 0x87e043d02000ll + 0x80000ll * ((a) & 0x0) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1) && (c<=2)))
+        return 0x87e043d02000ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1) && (c<=2)))
+        return 0x87e043d02000ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
+    __cavm_csr_fatal("RFOEX_ABX_SLOTX_CONFIGURATION", 3, a, b, c, 0, 0, 0);
+}
+
+#define typedef_CAVM_RFOEX_ABX_SLOTX_CONFIGURATION(a,b,c) cavm_rfoex_abx_slotx_configuration_t
+#define bustype_CAVM_RFOEX_ABX_SLOTX_CONFIGURATION(a,b,c) CSR_TYPE_RSL
+#define basename_CAVM_RFOEX_ABX_SLOTX_CONFIGURATION(a,b,c) "RFOEX_ABX_SLOTX_CONFIGURATION"
+#define busnum_CAVM_RFOEX_ABX_SLOTX_CONFIGURATION(a,b,c) (a)
+#define arguments_CAVM_RFOEX_ABX_SLOTX_CONFIGURATION(a,b,c) (a),(b),(c),-1
+
+/**
+ * Register (RSL) rfoe#_ab#_slot#_configuration1
+ *
+ * RFOE AB Job Configuration Register
+ * This register space contains the RFOE job configuration data.
+ *
+ * Software should not write this register directly, but instead use this
+ * format when writing the job configuration section of the job descriptor.
+ */
+union cavm_rfoex_abx_slotx_configuration1
+{
+    uint64_t u;
+    struct cavm_rfoex_abx_slotx_configuration1_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t sof_mode              : 2;  /**< [ 63: 62](R/W) SOF bit setting in the Orderinfo Timestamp.
+                                                                 This is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1 and
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFO_INSERT]=1.
+                                                                 0x0 = Sample SoF from the timer bus from PSM.
+                                                                 0x1 = Sets SoF=0 in the orderInfo timestamp field.
+                                                                 0x2 = Reserved.
+                                                                 0x3 = Sets SoF=1 in the orderInfo timestamp field. */
+        uint64_t reserved_61           : 1;
+        uint64_t presentation_time_offset : 29;/**< [ 60: 32](R/W) Presentation time offset is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1.
+                                                                 Presentation time offset is added to value of current timebus.tod and the resultant value
+                                                                 sent out in the RoE header.
+
+                                                                 _ Bits [60:37] indicate integer nanoseconds.
+
+                                                                 _ Bits [36:32] indicate fractional nanoseconds.
+
+                                                                 See IEEE P1914.3/D3. */
+        uint64_t hdr_len               : 8;  /**< [ 31: 24](R/W) Header length in number of bytes. When [PKT_MODE]=0x2, indicates the number of header bytes
+                                                                 contained in the read DMA data. */
+        uint64_t pkt_len               : 16; /**< [ 23:  8](R/W) The packet length.
+                                                                 * When [PKT_MODE]=0x0, the number of bytes to read from the memory.
+
+                                                                 * When [PKT_MODE]=0x1 or 0x2, the number of samples to read from
+                                                                 memory. Samples in memory are always 32 bits, with 16-bit I and
+                                                                 16-bit Q components. In this case, [PKT_LEN] must be a multiple of 4. */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) Reserved.
+                                                                 Internal:
+                                                                 When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE]=1, interpret the
+                                                                 first [RBMAP_BYTES] as an RoE rbMap. The bytes will be byte-swapped,
+                                                                 and the [RBMAP_BYTES] will be zero-padded.
+
+                                                                 Feature not implemented in a meaningful way for t95 pass 1, so making
+                                                                 this reserved. */
+#else /* Word 0 - Little Endian */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) Reserved.
+                                                                 Internal:
+                                                                 When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE]=1, interpret the
+                                                                 first [RBMAP_BYTES] as an RoE rbMap. The bytes will be byte-swapped,
+                                                                 and the [RBMAP_BYTES] will be zero-padded.
+
+                                                                 Feature not implemented in a meaningful way for t95 pass 1, so making
+                                                                 this reserved. */
+        uint64_t pkt_len               : 16; /**< [ 23:  8](R/W) The packet length.
+                                                                 * When [PKT_MODE]=0x0, the number of bytes to read from the memory.
+
+                                                                 * When [PKT_MODE]=0x1 or 0x2, the number of samples to read from
+                                                                 memory. Samples in memory are always 32 bits, with 16-bit I and
+                                                                 16-bit Q components. In this case, [PKT_LEN] must be a multiple of 4. */
+        uint64_t hdr_len               : 8;  /**< [ 31: 24](R/W) Header length in number of bytes. When [PKT_MODE]=0x2, indicates the number of header bytes
+                                                                 contained in the read DMA data. */
+        uint64_t presentation_time_offset : 29;/**< [ 60: 32](R/W) Presentation time offset is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1.
+                                                                 Presentation time offset is added to value of current timebus.tod and the resultant value
+                                                                 sent out in the RoE header.
+
+                                                                 _ Bits [60:37] indicate integer nanoseconds.
+
+                                                                 _ Bits [36:32] indicate fractional nanoseconds.
+
+                                                                 See IEEE P1914.3/D3. */
+        uint64_t reserved_61           : 1;
+        uint64_t sof_mode              : 2;  /**< [ 63: 62](R/W) SOF bit setting in the Orderinfo Timestamp.
+                                                                 This is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1 and
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFO_INSERT]=1.
+                                                                 0x0 = Sample SoF from the timer bus from PSM.
+                                                                 0x1 = Sets SoF=0 in the orderInfo timestamp field.
+                                                                 0x2 = Reserved.
+                                                                 0x3 = Sets SoF=1 in the orderInfo timestamp field. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_abx_slotx_configuration1_s cn9; */
+    struct cavm_rfoex_abx_slotx_configuration1_cnf95xxp1
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_61_63        : 3;
+        uint64_t presentation_time_offset : 29;/**< [ 60: 32](R/W) Presentation time offset is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1.
+                                                                 Presentation time offset is added to value of current timebus.tod and the resultant value
+                                                                 sent out in the RoE header.
+
+                                                                 _ Bits [60:37] indicate integer nanoseconds.
+
+                                                                 _ Bits [36:32] indicate fractional nanoseconds.
+
+                                                                 See IEEE P1914.3/D3. */
+        uint64_t hdr_len               : 8;  /**< [ 31: 24](R/W) Header length in number of bytes. When [PKT_MODE]=0x2, indicates the number of header bytes
+                                                                 contained in the read DMA data. */
+        uint64_t pkt_len               : 16; /**< [ 23:  8](R/W) The packet length.
+                                                                 * When [PKT_MODE]=0x0, the number of bytes to read from the memory.
+
+                                                                 * When [PKT_MODE]=0x1 or 0x2, the number of samples to read from
+                                                                 memory. Samples in memory are always 32 bits, with 16-bit I and
+                                                                 16-bit Q components. In this case, [PKT_LEN] must be a multiple of 4. */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) Reserved.
+                                                                 Internal:
+                                                                 When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE]=1, interpret the
+                                                                 first [RBMAP_BYTES] as an RoE rbMap. The bytes will be byte-swapped,
+                                                                 and the [RBMAP_BYTES] will be zero-padded.
+
+                                                                 Feature not implemented in a meaningful way for t95 pass 1, so making
+                                                                 this reserved. */
+#else /* Word 0 - Little Endian */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) Reserved.
+                                                                 Internal:
+                                                                 When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE]=1, interpret the
+                                                                 first [RBMAP_BYTES] as an RoE rbMap. The bytes will be byte-swapped,
+                                                                 and the [RBMAP_BYTES] will be zero-padded.
+
+                                                                 Feature not implemented in a meaningful way for t95 pass 1, so making
+                                                                 this reserved. */
+        uint64_t pkt_len               : 16; /**< [ 23:  8](R/W) The packet length.
+                                                                 * When [PKT_MODE]=0x0, the number of bytes to read from the memory.
+
+                                                                 * When [PKT_MODE]=0x1 or 0x2, the number of samples to read from
+                                                                 memory. Samples in memory are always 32 bits, with 16-bit I and
+                                                                 16-bit Q components. In this case, [PKT_LEN] must be a multiple of 4. */
+        uint64_t hdr_len               : 8;  /**< [ 31: 24](R/W) Header length in number of bytes. When [PKT_MODE]=0x2, indicates the number of header bytes
+                                                                 contained in the read DMA data. */
+        uint64_t presentation_time_offset : 29;/**< [ 60: 32](R/W) Presentation time offset is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1.
+                                                                 Presentation time offset is added to value of current timebus.tod and the resultant value
+                                                                 sent out in the RoE header.
+
+                                                                 _ Bits [60:37] indicate integer nanoseconds.
+
+                                                                 _ Bits [36:32] indicate fractional nanoseconds.
+
+                                                                 See IEEE P1914.3/D3. */
+        uint64_t reserved_61_63        : 3;
+#endif /* Word 0 - End */
+    } cnf95xxp1;
+    struct cavm_rfoex_abx_slotx_configuration1_cnf95xxp2
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t sof_mode              : 2;  /**< [ 63: 62](R/W) SOF bit setting in the Orderinfo Timestamp.
+                                                                 This is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1 and
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFO_INSERT]=1.
+                                                                 0x0 = Sample SoF from the timer bus from PSM.
+                                                                 0x1 = Sets SoF=0 in the orderInfo timestamp field.
+                                                                 0x2 = Reserved.
+                                                                 0x3 = Sets SoF=1 in the orderInfo timestamp field. */
+        uint64_t reserved_61           : 1;
+        uint64_t presentation_time_offset : 29;/**< [ 60: 32](R/W) Presentation time offset is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1.
+                                                                 Presentation time offset is added to value of current timebus.tod and the resultant value
+                                                                 sent out in the RoE header.
+
+                                                                 _ Bits [60:37] indicate integer nanoseconds.
+
+                                                                 _ Bits [36:32] indicate fractional nanoseconds.
+
+                                                                 See IEEE P1914.3/D3. */
+        uint64_t hdr_len               : 8;  /**< [ 31: 24](R/W) Header length in number of bytes. When [PKT_MODE]=0x2, indicates the number of header bytes
+                                                                 contained in the read DMA data. */
+        uint64_t pkt_len               : 16; /**< [ 23:  8](R/W) The packet length.
+                                                                 * When [PKT_MODE]=0x0, the number of bytes to read from the memory.
+
+                                                                 * When [PKT_MODE]=0x1 or 0x2, the number of samples to read from
+                                                                 memory. Samples in memory are always 32 bits, with 16-bit I and
+                                                                 16-bit Q components. In this case, [PKT_LEN] must be a multiple of 4. */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE]=1, read the
+                                                                 [RBMAP_BYTES] from the read DMA, and insert as-is, and then
+                                                                 read sample data at the next 128-bit boundary. */
+#else /* Word 0 - Little Endian */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE]=1, read the
+                                                                 [RBMAP_BYTES] from the read DMA, and insert as-is, and then
+                                                                 read sample data at the next 128-bit boundary. */
+        uint64_t pkt_len               : 16; /**< [ 23:  8](R/W) The packet length.
+                                                                 * When [PKT_MODE]=0x0, the number of bytes to read from the memory.
+
+                                                                 * When [PKT_MODE]=0x1 or 0x2, the number of samples to read from
+                                                                 memory. Samples in memory are always 32 bits, with 16-bit I and
+                                                                 16-bit Q components. In this case, [PKT_LEN] must be a multiple of 4. */
+        uint64_t hdr_len               : 8;  /**< [ 31: 24](R/W) Header length in number of bytes. When [PKT_MODE]=0x2, indicates the number of header bytes
+                                                                 contained in the read DMA data. */
+        uint64_t presentation_time_offset : 29;/**< [ 60: 32](R/W) Presentation time offset is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1.
+                                                                 Presentation time offset is added to value of current timebus.tod and the resultant value
+                                                                 sent out in the RoE header.
+
+                                                                 _ Bits [60:37] indicate integer nanoseconds.
+
+                                                                 _ Bits [36:32] indicate fractional nanoseconds.
+
+                                                                 See IEEE P1914.3/D3. */
+        uint64_t reserved_61           : 1;
+        uint64_t sof_mode              : 2;  /**< [ 63: 62](R/W) SOF bit setting in the Orderinfo Timestamp.
+                                                                 This is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1 and
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFO_INSERT]=1.
+                                                                 0x0 = Sample SoF from the timer bus from PSM.
+                                                                 0x1 = Sets SoF=0 in the orderInfo timestamp field.
+                                                                 0x2 = Reserved.
+                                                                 0x3 = Sets SoF=1 in the orderInfo timestamp field. */
+#endif /* Word 0 - End */
+    } cnf95xxp2;
+    struct cavm_rfoex_abx_slotx_configuration1_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t sof_mode              : 2;  /**< [ 63: 62](R/W) SOF bit setting in the Orderinfo Timestamp.
+                                                                 This is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1 and
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFO_INSERT]=1,
+                                                                 and RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0.
+                                                                 when [SOF_MODE] = 0: Sample SoF from the Timer bus from PSM
+                                                                 when [SOF_MODE] = 1: Sets SoF=0 in the orderInfo Timestamp field
+                                                                 when [SOF_MODE] = 2: Reserved
+                                                                 when [SOF_MODE] = 3: Sets SoF=1 in the orderInfo Timestamp field */
+        uint64_t reserved_61           : 1;
+        uint64_t presentation_time_offset : 29;/**< [ 60: 32](R/W) Presentation time offset is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1,
+                                                                 and RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0.
+                                                                 Presentation time offset is added to value of current timebus.tod and the resultant value
+                                                                 sent out in the RoE header.
+
+                                                                 _ Bits [60:37] indicate integer nanoseconds.
+
+                                                                 _ Bits [36:32] indicate fractional nanoseconds.
+
+                                                                 See IEEE 1914.3-2018. */
+        uint64_t hdr_len               : 8;  /**< [ 31: 24](R/W) Header length in number of bytes. When [PKT_MODE]=0x2, indicates the number of header bytes
+                                                                 contained in the read DMA data. */
+        uint64_t pkt_len               : 16; /**< [ 23:  8](R/W) The packet length.
+                                                                 * When [PKT_MODE]=0x0, the number of bytes to read from the memory.
+
+                                                                 * When RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0,
+                                                                  and [PKT_MODE]=0x1 or 0x2, the number of samples to read from
+                                                                 memory. Samples in memory are always 32 bits, with 16-bit I and
+                                                                 16-bit Q components. In this case, [PKT_LEN] must be a multiple of 4.
+
+                                                                 * When RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 1,
+                                                                  and [PKT_MODE]=0x1 or 0x2, the number of bytes to read from
+                                                                 memory. */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE]=1,
+                                                                 and RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0.
+                                                                 read the [RBMAP_BYTES] from the read DMA, and insert as-is, and then
+                                                                 read sample data at the next 128-bit boundary. */
+#else /* Word 0 - Little Endian */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE]=1,
+                                                                 and RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0.
+                                                                 read the [RBMAP_BYTES] from the read DMA, and insert as-is, and then
+                                                                 read sample data at the next 128-bit boundary. */
+        uint64_t pkt_len               : 16; /**< [ 23:  8](R/W) The packet length.
+                                                                 * When [PKT_MODE]=0x0, the number of bytes to read from the memory.
+
+                                                                 * When RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0,
+                                                                  and [PKT_MODE]=0x1 or 0x2, the number of samples to read from
+                                                                 memory. Samples in memory are always 32 bits, with 16-bit I and
+                                                                 16-bit Q components. In this case, [PKT_LEN] must be a multiple of 4.
+
+                                                                 * When RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 1,
+                                                                  and [PKT_MODE]=0x1 or 0x2, the number of bytes to read from
+                                                                 memory. */
+        uint64_t hdr_len               : 8;  /**< [ 31: 24](R/W) Header length in number of bytes. When [PKT_MODE]=0x2, indicates the number of header bytes
+                                                                 contained in the read DMA data. */
+        uint64_t presentation_time_offset : 29;/**< [ 60: 32](R/W) Presentation time offset is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1,
+                                                                 and RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0.
+                                                                 Presentation time offset is added to value of current timebus.tod and the resultant value
+                                                                 sent out in the RoE header.
+
+                                                                 _ Bits [60:37] indicate integer nanoseconds.
+
+                                                                 _ Bits [36:32] indicate fractional nanoseconds.
+
+                                                                 See IEEE 1914.3-2018. */
+        uint64_t reserved_61           : 1;
+        uint64_t sof_mode              : 2;  /**< [ 63: 62](R/W) SOF bit setting in the Orderinfo Timestamp.
+                                                                 This is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1 and
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFO_INSERT]=1,
+                                                                 and RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0.
+                                                                 when [SOF_MODE] = 0: Sample SoF from the Timer bus from PSM
+                                                                 when [SOF_MODE] = 1: Sets SoF=0 in the orderInfo Timestamp field
+                                                                 when [SOF_MODE] = 2: Reserved
+                                                                 when [SOF_MODE] = 3: Sets SoF=1 in the orderInfo Timestamp field */
+#endif /* Word 0 - End */
+    } f95mm;
+    struct cavm_rfoex_abx_slotx_configuration1_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t sof_mode              : 2;  /**< [ 63: 62](R/W) SOF bit setting in the Orderinfo Timestamp.
+                                                                 This is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1 and
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFO_INSERT]=1,
+                                                                 and RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0.
+                                                                 when [SOF_MODE] = 0: Sample SoF from the Timer bus from PSM
+                                                                 when [SOF_MODE] = 1: Sets SoF=0 in the orderInfo Timestamp field
+                                                                 when [SOF_MODE] = 2: Reserved
+                                                                 when [SOF_MODE] = 3: Sets SoF=1 in the orderInfo Timestamp field */
+        uint64_t reserved_61           : 1;
+        uint64_t presentation_time_offset : 29;/**< [ 60: 32](R/W) Presentation time offset is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1,
+                                                                 and RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0.
+                                                                 Presentation time offset is added to value of current timebus.tod and the resultant value
+                                                                 sent out in the RoE header.
+
+                                                                 _ Bits [60:37] indicate integer nanoseconds.
+
+                                                                 _ Bits [36:32] indicate fractional nanoseconds.
+
+                                                                 See IEEE 1914.3-2018. */
+        uint64_t hdr_len               : 8;  /**< [ 31: 24](R/W) Header length in number of bytes. When
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE]=0x2, indicates the number of
+                                                                 header bytes contained in the read DMA data. */
+        uint64_t pkt_len               : 16; /**< [ 23:  8](R/W) The packet length.
+                                                                 * When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 0x0, the number of bytes
+                                                                 to read from the memory.
+
+                                                                 * When RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0, and
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 0x1 or 0x2, the number of
+                                                                 samples to read from memory. Samples in memory are always 32 bits, with
+                                                                 16-bit I and 16-bit Q components. In this case, [PKT_LEN] must be a
+                                                                 multiple of 4.
+
+                                                                 * When RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 1, and
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 0x1 or 0x2, the number of
+                                                                 bytes to read from memory. */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 0x1
+                                                                 and RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0,
+                                                                 read the [RBMAP_BYTES] from the read DMA, and insert as-is, and then
+                                                                 read sample data at the next 128-bit boundary. */
+#else /* Word 0 - Little Endian */
+        uint64_t rbmap_bytes           : 8;  /**< [  7:  0](R/W) When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 0x1
+                                                                 and RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0,
+                                                                 read the [RBMAP_BYTES] from the read DMA, and insert as-is, and then
+                                                                 read sample data at the next 128-bit boundary. */
+        uint64_t pkt_len               : 16; /**< [ 23:  8](R/W) The packet length.
+                                                                 * When RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 0x0, the number of bytes
+                                                                 to read from the memory.
+
+                                                                 * When RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0, and
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 0x1 or 0x2, the number of
+                                                                 samples to read from memory. Samples in memory are always 32 bits, with
+                                                                 16-bit I and 16-bit Q components. In this case, [PKT_LEN] must be a
+                                                                 multiple of 4.
+
+                                                                 * When RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 1, and
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE] = 0x1 or 0x2, the number of
+                                                                 bytes to read from memory. */
+        uint64_t hdr_len               : 8;  /**< [ 31: 24](R/W) Header length in number of bytes. When
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[PKT_MODE]=0x2, indicates the number of
+                                                                 header bytes contained in the read DMA data. */
+        uint64_t presentation_time_offset : 29;/**< [ 60: 32](R/W) Presentation time offset is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1,
+                                                                 and RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0.
+                                                                 Presentation time offset is added to value of current timebus.tod and the resultant value
+                                                                 sent out in the RoE header.
+
+                                                                 _ Bits [60:37] indicate integer nanoseconds.
+
+                                                                 _ Bits [36:32] indicate fractional nanoseconds.
+
+                                                                 See IEEE 1914.3-2018. */
+        uint64_t reserved_61           : 1;
+        uint64_t sof_mode              : 2;  /**< [ 63: 62](R/W) SOF bit setting in the Orderinfo Timestamp.
+                                                                 This is used when RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFOTYPE]=1 and
+                                                                 RFOE()_AB()_SLOT()_CONFIGURATION[ORDERINFO_INSERT]=1,
+                                                                 and RFOE()_AB()_SLOT()_CONFIGURATION[RFOE_MODE] = 0.
+                                                                 when [SOF_MODE] = 0: Sample SoF from the Timer bus from PSM
+                                                                 when [SOF_MODE] = 1: Sets SoF=0 in the orderInfo Timestamp field
+                                                                 when [SOF_MODE] = 2: Reserved
+                                                                 when [SOF_MODE] = 3: Sets SoF=1 in the orderInfo Timestamp field */
+#endif /* Word 0 - End */
+    } f95o;
+    /* struct cavm_rfoex_abx_slotx_configuration1_f95o loki; */
+};
+typedef union cavm_rfoex_abx_slotx_configuration1 cavm_rfoex_abx_slotx_configuration1_t;
+
+static inline uint64_t CAVM_RFOEX_ABX_SLOTX_CONFIGURATION1(uint64_t a, uint64_t b, uint64_t c) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_ABX_SLOTX_CONFIGURATION1(uint64_t a, uint64_t b, uint64_t c)
+{
+    if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1) && (c<=2)))
+        return 0x87e043d02008ll + 0x80000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1) && (c<=2)))
+        return 0x87e043d02008ll + 0x80000ll * ((a) & 0x0) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1) && (c<=2)))
+        return 0x87e043d02008ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
+    if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1) && (c<=2)))
+        return 0x87e043d02008ll + 0x80000ll * ((a) & 0x3) + 0x8000ll * ((b) & 0x1) + 0x2000ll * ((c) & 0x3);
+    __cavm_csr_fatal("RFOEX_ABX_SLOTX_CONFIGURATION1", 3, a, b, c, 0, 0, 0);
+}
+
+#define typedef_CAVM_RFOEX_ABX_SLOTX_CONFIGURATION1(a,b,c) cavm_rfoex_abx_slotx_configuration1_t
+#define bustype_CAVM_RFOEX_ABX_SLOTX_CONFIGURATION1(a,b,c) CSR_TYPE_RSL
+#define basename_CAVM_RFOEX_ABX_SLOTX_CONFIGURATION1(a,b,c) "RFOEX_ABX_SLOTX_CONFIGURATION1"
+#define busnum_CAVM_RFOEX_ABX_SLOTX_CONFIGURATION1(a,b,c) (a)
+#define arguments_CAVM_RFOEX_ABX_SLOTX_CONFIGURATION1(a,b,c) (a),(b),(c),-1
+
+/**
  * Register (NCB) rfoe#_active_pc
  *
  * RFOE Active PC  Register
@@ -1277,6 +2886,8 @@ static inline uint64_t CAVM_RFOEX_ACTIVE_PC(uint64_t a)
         return 0x87e043d01100ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001068ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001068ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001068ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_ACTIVE_PC", 1, a, 0, 0, 0, 0, 0);
@@ -1319,6 +2930,8 @@ static inline uint64_t CAVM_RFOEX_ECO(uint64_t a)
         return 0x87e043d008f0ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100000900ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100000900ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000900ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_ECO", 1, a, 0, 0, 0, 0, 0);
@@ -1580,6 +3193,8 @@ static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MAX(uint64_t a)
         return 0x87e043d01838ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001838ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001838ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001838ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_DDR_MAX", 1, a, 0, 0, 0, 0, 0);
@@ -1621,6 +3236,8 @@ static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MAX_ENA(uint64_t a)
         return 0x87e043d01858ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001858ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001858ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001858ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_DDR_MAX_ENA", 1, a, 0, 0, 0, 0, 0);
@@ -1668,6 +3285,8 @@ static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MIN(uint64_t a)
         return 0x87e043d01830ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001830ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001830ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001830ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_DDR_MIN", 1, a, 0, 0, 0, 0, 0);
@@ -1709,6 +3328,8 @@ static inline uint64_t CAVM_RFOEX_RX_APERT_DDR_MIN_ENA(uint64_t a)
         return 0x87e043d01850ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001850ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001850ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001850ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_DDR_MIN_ENA", 1, a, 0, 0, 0, 0, 0);
@@ -1756,6 +3377,8 @@ static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MAX(uint64_t a)
         return 0x87e043d01828ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001828ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001828ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001828ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_SMEM_MAX", 1, a, 0, 0, 0, 0, 0);
@@ -1797,6 +3420,8 @@ static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MAX_ENA(uint64_t a)
         return 0x87e043d01848ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001848ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001848ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001848ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_SMEM_MAX_ENA", 1, a, 0, 0, 0, 0, 0);
@@ -1844,6 +3469,8 @@ static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MIN(uint64_t a)
         return 0x87e043d01820ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001820ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001820ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001820ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_SMEM_MIN", 1, a, 0, 0, 0, 0, 0);
@@ -1885,6 +3512,8 @@ static inline uint64_t CAVM_RFOEX_RX_APERT_SMEM_MIN_ENA(uint64_t a)
         return 0x87e043d01840ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001840ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001840ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001840ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_APERT_SMEM_MIN_ENA", 1, a, 0, 0, 0, 0, 0);
@@ -1996,6 +3625,7 @@ union cavm_rfoex_rx_cfg
 #endif /* Word 0 - End */
     } cnf95xxp2;
     /* struct cavm_rfoex_rx_cfg_cnf95xxp2 f95mm; */
+    /* struct cavm_rfoex_rx_cfg_cnf95xxp2 f95o; */
     /* struct cavm_rfoex_rx_cfg_cnf95xxp2 loki; */
 };
 typedef union cavm_rfoex_rx_cfg cavm_rfoex_rx_cfg_t;
@@ -2007,6 +3637,8 @@ static inline uint64_t CAVM_RFOEX_RX_CFG(uint64_t a)
         return 0x87e043d01008ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001008ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001008ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001008ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -2060,6 +3692,8 @@ static inline uint64_t CAVM_RFOEX_RX_CGX_OCTS_STATX(uint64_t a, uint64_t b)
         return 0x87e043d01de0ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100001de0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100001de0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001de0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_CGX_OCTS_STATX", 2, a, b, 0, 0, 0, 0);
@@ -2111,6 +3745,8 @@ static inline uint64_t CAVM_RFOEX_RX_CGX_PKT_STATX(uint64_t a, uint64_t b)
         return 0x87e043d01dc0ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100001dc0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100001dc0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001dc0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_CGX_PKT_STATX", 2, a, b, 0, 0, 0, 0);
@@ -2192,6 +3828,8 @@ static inline uint64_t CAVM_RFOEX_RX_CGXIF_BP_TEST(uint64_t a)
         return 0x87e043d01f00ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001f00ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001f00ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001f00ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_CGXIF_BP_TEST", 1, a, 0, 0, 0, 0, 0);
@@ -2321,6 +3959,7 @@ union cavm_rfoex_rx_ctrl
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_rfoex_rx_ctrl_s f95mm; */
+    /* struct cavm_rfoex_rx_ctrl_s f95o; */
     /* struct cavm_rfoex_rx_ctrl_s loki; */
 };
 typedef union cavm_rfoex_rx_ctrl cavm_rfoex_rx_ctrl_t;
@@ -2332,6 +3971,8 @@ static inline uint64_t CAVM_RFOEX_RX_CTRL(uint64_t a)
         return 0x87e043d01018ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001018ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001018ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001018ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_CTRL", 1, a, 0, 0, 0, 0, 0);
@@ -2485,6 +4126,7 @@ union cavm_rfoex_rx_direction_ctlx
         uint64_t reserved_36_63        : 28;
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_rx_direction_ctlx_f95mm f95o; */
     /* struct cavm_rfoex_rx_direction_ctlx_f95mm loki; */
 };
 typedef union cavm_rfoex_rx_direction_ctlx cavm_rfoex_rx_direction_ctlx_t;
@@ -2496,6 +4138,8 @@ static inline uint64_t CAVM_RFOEX_RX_DIRECTION_CTLX(uint64_t a, uint64_t b)
         return 0x87e043d01800ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=7)))
         return 0x864100001780ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=7)))
+        return 0x864100001780ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=7)))
         return 0x864100001780ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     __cavm_csr_fatal("RFOEX_RX_DIRECTION_CTLX", 2, a, b, 0, 0, 0, 0);
@@ -2543,6 +4187,8 @@ static inline uint64_t CAVM_RFOEX_RX_DMA_COMPLETE_STATX(uint64_t a, uint64_t b)
         return 0x87e043d01da0ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100001da0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100001da0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001da0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_DMA_COMPLETE_STATX", 2, a, b, 0, 0, 0, 0);
@@ -2624,6 +4270,8 @@ static inline uint64_t CAVM_RFOEX_RX_DMA_JCA_BP_TEST(uint64_t a)
         return 0x87e043d01f08ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001f08ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001f08ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001f08ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_DMA_JCA_BP_TEST", 1, a, 0, 0, 0, 0, 0);
@@ -2669,6 +4317,8 @@ static inline uint64_t CAVM_RFOEX_RX_DMA_OCTS_STATX(uint64_t a, uint64_t b)
         return 0x87e043d01d80ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100001d80ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100001d80ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001d80ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_DMA_OCTS_STATX", 2, a, b, 0, 0, 0, 0);
@@ -2710,6 +4360,8 @@ static inline uint64_t CAVM_RFOEX_RX_DMA_PKT_STATX(uint64_t a, uint64_t b)
         return 0x87e043d01d60ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100001d60ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100001d60ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001d60ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_DMA_PKT_STATX", 2, a, b, 0, 0, 0, 0);
@@ -2795,6 +4447,8 @@ static inline uint64_t CAVM_RFOEX_RX_ECPRI_CFGX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x8641000018c0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x8641000018c0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x8641000018c0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ECPRI_CFGX", 2, a, b, 0, 0, 0, 0);
@@ -2841,6 +4495,8 @@ static inline uint64_t CAVM_RFOEX_RX_ECPRI_CHECK_ENAX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100001e60ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100001e60ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001e60ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ECPRI_CHECK_ENAX", 2, a, b, 0, 0, 0, 0);
@@ -2888,6 +4544,8 @@ static inline uint64_t CAVM_RFOEX_RX_ECPRI_ERR_DROP_STATX(uint64_t a, uint64_t b
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100001e00ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100001e00ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001e00ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ECPRI_ERR_DROP_STATX", 2, a, b, 0, 0, 0, 0);
@@ -2930,6 +4588,8 @@ static inline uint64_t CAVM_RFOEX_RX_ECPRI_PC_ID_APERTX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100001860ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100001860ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001860ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ECPRI_PC_ID_APERTX", 2, a, b, 0, 0, 0, 0);
@@ -3101,7 +4761,7 @@ union cavm_rfoex_rx_error_ena_w1c
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } f95mm;
-    struct cavm_rfoex_rx_error_ena_w1c_loki
+    struct cavm_rfoex_rx_error_ena_w1c_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_16_63        : 48;
@@ -3152,7 +4812,8 @@ union cavm_rfoex_rx_error_ena_w1c
         uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1C/H) Reads or clears enable for RFOE(0..2)_RX_ERROR_INT[VLAN_TPID]. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rfoex_rx_error_ena_w1c_f95o loki; */
 };
 typedef union cavm_rfoex_rx_error_ena_w1c cavm_rfoex_rx_error_ena_w1c_t;
 
@@ -3163,6 +4824,8 @@ static inline uint64_t CAVM_RFOEX_RX_ERROR_ENA_W1C(uint64_t a)
         return 0x87e043d01ea0ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001ea0ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001ea0ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001ea0ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ERROR_ENA_W1C", 1, a, 0, 0, 0, 0, 0);
@@ -3334,7 +4997,7 @@ union cavm_rfoex_rx_error_ena_w1s
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } f95mm;
-    struct cavm_rfoex_rx_error_ena_w1s_loki
+    struct cavm_rfoex_rx_error_ena_w1s_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_16_63        : 48;
@@ -3385,7 +5048,8 @@ union cavm_rfoex_rx_error_ena_w1s
         uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets enable for RFOE(0..2)_RX_ERROR_INT[VLAN_TPID]. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rfoex_rx_error_ena_w1s_f95o loki; */
 };
 typedef union cavm_rfoex_rx_error_ena_w1s cavm_rfoex_rx_error_ena_w1s_t;
 
@@ -3396,6 +5060,8 @@ static inline uint64_t CAVM_RFOEX_RX_ERROR_ENA_W1S(uint64_t a)
         return 0x87e043d01e98ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001e98ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001e98ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001e98ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ERROR_ENA_W1S", 1, a, 0, 0, 0, 0, 0);
@@ -3501,6 +5167,8 @@ static inline uint64_t CAVM_RFOEX_RX_ERROR_INFOX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
         return 0x864100001f80ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=15)))
+        return 0x864100001f80ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001f80ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_ERROR_INFOX", 2, a, b, 0, 0, 0, 0);
@@ -4079,6 +5747,7 @@ union cavm_rfoex_rx_error_int
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_rx_error_int_f95mm f95o; */
     /* struct cavm_rfoex_rx_error_int_f95mm loki; */
 };
 typedef union cavm_rfoex_rx_error_int cavm_rfoex_rx_error_int_t;
@@ -4090,6 +5759,8 @@ static inline uint64_t CAVM_RFOEX_RX_ERROR_INT(uint64_t a)
         return 0x87e043d01e90ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001e90ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001e90ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001e90ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ERROR_INT", 1, a, 0, 0, 0, 0, 0);
@@ -4261,7 +5932,7 @@ union cavm_rfoex_rx_error_int_w1s
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } f95mm;
-    struct cavm_rfoex_rx_error_int_w1s_loki
+    struct cavm_rfoex_rx_error_int_w1s_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_16_63        : 48;
@@ -4312,7 +5983,8 @@ union cavm_rfoex_rx_error_int_w1s
         uint64_t vlan_tpid             : 1;  /**< [ 15: 15](R/W1S/H) Reads or sets RFOE(0..2)_RX_ERROR_INT[VLAN_TPID]. */
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rfoex_rx_error_int_w1s_f95o loki; */
 };
 typedef union cavm_rfoex_rx_error_int_w1s cavm_rfoex_rx_error_int_w1s_t;
 
@@ -4323,6 +5995,8 @@ static inline uint64_t CAVM_RFOEX_RX_ERROR_INT_W1S(uint64_t a)
         return 0x87e043d01ea8ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001ea8ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001ea8ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001ea8ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ERROR_INT_W1S", 1, a, 0, 0, 0, 0, 0);
@@ -4362,6 +6036,8 @@ static inline uint64_t CAVM_RFOEX_RX_ERROR_PSM_MSG_W0(uint64_t a)
         return 0x87e043d01eb0ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001eb0ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001eb0ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001eb0ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ERROR_PSM_MSG_W0", 1, a, 0, 0, 0, 0, 0);
@@ -4401,6 +6077,8 @@ static inline uint64_t CAVM_RFOEX_RX_ERROR_PSM_MSG_W1(uint64_t a)
         return 0x87e043d01eb8ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001eb8ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001eb8ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001eb8ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ERROR_PSM_MSG_W1", 1, a, 0, 0, 0, 0, 0);
@@ -4441,6 +6119,8 @@ static inline uint64_t CAVM_RFOEX_RX_FC_PSM_OPCODE_ENA(uint64_t a)
         return 0x87e043d01880ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x8641000018a0ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x8641000018a0ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x8641000018a0ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_FC_PSM_OPCODE_ENA", 1, a, 0, 0, 0, 0, 0);
@@ -4540,6 +6220,8 @@ static inline uint64_t CAVM_RFOEX_RX_FD_RESETX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
         return 0x864100001300ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=15)))
+        return 0x864100001300ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001300ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_FD_RESETX", 2, a, b, 0, 0, 0, 0);
@@ -4584,6 +6266,8 @@ static inline uint64_t CAVM_RFOEX_RX_FD_SOS_DROP_STAT(uint64_t a)
         return 0x87e043d01d30ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001d30ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001d30ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001d30ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_FD_SOS_DROP_STAT", 1, a, 0, 0, 0, 0, 0);
@@ -4634,6 +6318,7 @@ union cavm_rfoex_rx_fd_statex
                                                                  _ Etc. */
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_rx_fd_statex_f95mm f95o; */
     /* struct cavm_rfoex_rx_fd_statex_f95mm loki; */
 };
 typedef union cavm_rfoex_rx_fd_statex cavm_rfoex_rx_fd_statex_t;
@@ -4645,6 +6330,8 @@ static inline uint64_t CAVM_RFOEX_RX_FD_STATEX(uint64_t a, uint64_t b)
         return 0x87e043d01760ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=31)))
         return 0x864100001200ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x1f);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=31)))
+        return 0x864100001200ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1f);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=31)))
         return 0x864100001200ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1f);
     __cavm_csr_fatal("RFOEX_RX_FD_STATEX", 2, a, b, 0, 0, 0, 0);
@@ -4689,6 +6376,8 @@ static inline uint64_t CAVM_RFOEX_RX_FT_ENABLE_DROP_STAT(uint64_t a)
         return 0x87e043d01d28ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001d28ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001d28ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001d28ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_FT_ENABLE_DROP_STAT", 1, a, 0, 0, 0, 0, 0);
@@ -4748,6 +6437,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_ECPRI_FT_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001cc0ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001cc0ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001cc0ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_ECPRI_FT_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -4814,6 +6505,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_ECPRI_HASH_CFG(uint64_t a)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001ce0ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001ce0ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001ce0ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_ECPRI_HASH_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -4924,6 +6617,7 @@ union cavm_rfoex_rx_ind_ftx_cfg
         uint64_t reserved_25_63        : 39;
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_rx_ind_ftx_cfg_f95mm f95o; */
     /* struct cavm_rfoex_rx_ind_ftx_cfg_f95mm loki; */
 };
 typedef union cavm_rfoex_rx_ind_ftx_cfg cavm_rfoex_rx_ind_ftx_cfg_t;
@@ -4935,6 +6629,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_FTX_CFG(uint64_t a, uint64_t b)
         return 0x87e043d01c00ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100001c00ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100001c00ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001c00ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_FTX_CFG", 2, a, b, 0, 0, 0, 0);
@@ -5377,6 +7073,7 @@ union cavm_rfoex_rx_ind_jdt_cfg0
                                                                   1 = LLC/DRAM. */
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_rx_ind_jdt_cfg0_f95mm f95o; */
     /* struct cavm_rfoex_rx_ind_jdt_cfg0_f95mm loki; */
 };
 typedef union cavm_rfoex_rx_ind_jdt_cfg0 cavm_rfoex_rx_ind_jdt_cfg0_t;
@@ -5388,6 +7085,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_JDT_CFG0(uint64_t a)
         return 0x87e043d01c40ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001c40ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001c40ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c40ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_CFG0", 1, a, 0, 0, 0, 0, 0);
@@ -5521,6 +7220,7 @@ union cavm_rfoex_rx_ind_jdt_cfg1
         uint64_t reserved_57_63        : 7;
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_rx_ind_jdt_cfg1_f95mm f95o; */
     /* struct cavm_rfoex_rx_ind_jdt_cfg1_f95mm loki; */
 };
 typedef union cavm_rfoex_rx_ind_jdt_cfg1 cavm_rfoex_rx_ind_jdt_cfg1_t;
@@ -5532,6 +7232,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_JDT_CFG1(uint64_t a)
         return 0x87e043d01c48ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001c48ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001c48ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c48ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_CFG1", 1, a, 0, 0, 0, 0, 0);
@@ -5601,6 +7303,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_JDT_PSM_W0(uint64_t a)
         return 0x87e043d01c58ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001c58ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001c58ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c58ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_PSM_W0", 1, a, 0, 0, 0, 0, 0);
@@ -5640,6 +7344,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_JDT_PSM_W1(uint64_t a)
         return 0x87e043d01c60ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001c60ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001c60ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c60ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_PSM_W1", 1, a, 0, 0, 0, 0, 0);
@@ -5695,6 +7401,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_JDT_PTR(uint64_t a)
         return 0x87e043d01c50ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001c50ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001c50ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c50ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_PTR", 1, a, 0, 0, 0, 0, 0);
@@ -5774,6 +7482,7 @@ union cavm_rfoex_rx_ind_jdt_seqnum_p_cfg
                                                                  The increment value must be less than RFOE()_TX_IND_SEQNUM_P_CFG[PMAX]. */
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_rx_ind_jdt_seqnum_p_cfg_f95mm f95o; */
     /* struct cavm_rfoex_rx_ind_jdt_seqnum_p_cfg_f95mm loki; */
 };
 typedef union cavm_rfoex_rx_ind_jdt_seqnum_p_cfg cavm_rfoex_rx_ind_jdt_seqnum_p_cfg_t;
@@ -5785,6 +7494,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_JDT_SEQNUM_P_CFG(uint64_t a)
         return 0x87e043d01c68ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001c68ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001c68ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c68ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_SEQNUM_P_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -5852,6 +7563,7 @@ union cavm_rfoex_rx_ind_jdt_seqnum_q_cfg
                                                                  The increment value must be less than [QMAX]. */
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_rx_ind_jdt_seqnum_q_cfg_f95mm f95o; */
     /* struct cavm_rfoex_rx_ind_jdt_seqnum_q_cfg_f95mm loki; */
 };
 typedef union cavm_rfoex_rx_ind_jdt_seqnum_q_cfg cavm_rfoex_rx_ind_jdt_seqnum_q_cfg_t;
@@ -5863,6 +7575,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_JDT_SEQNUM_Q_CFG(uint64_t a)
         return 0x87e043d01c70ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001c70ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001c70ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c70ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_SEQNUM_Q_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -5941,6 +7655,7 @@ union cavm_rfoex_rx_ind_jdt_seqnum_state
                                                                  The initial value must be less than or equal to RFOE()_RX_IND_JDT_SEQNUM_P_CFG[PMAX]. */
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_rx_ind_jdt_seqnum_state_f95mm f95o; */
     /* struct cavm_rfoex_rx_ind_jdt_seqnum_state_f95mm loki; */
 };
 typedef union cavm_rfoex_rx_ind_jdt_seqnum_state cavm_rfoex_rx_ind_jdt_seqnum_state_t;
@@ -5952,6 +7667,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_JDT_SEQNUM_STATE(uint64_t a)
         return 0x87e043d01c80ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001c80ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001c80ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c80ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_SEQNUM_STATE", 1, a, 0, 0, 0, 0, 0);
@@ -6005,6 +7722,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_JDT_STATE(uint64_t a)
         return 0x87e043d01c78ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001c78ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001c78ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c78ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_JDT_STATE", 1, a, 0, 0, 0, 0, 0);
@@ -6072,6 +7791,7 @@ union cavm_rfoex_rx_ind_mbt_addr
         uint64_t reserved_53_63        : 11;
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_rx_ind_mbt_addr_f95mm f95o; */
     /* struct cavm_rfoex_rx_ind_mbt_addr_f95mm loki; */
 };
 typedef union cavm_rfoex_rx_ind_mbt_addr cavm_rfoex_rx_ind_mbt_addr_t;
@@ -6083,6 +7803,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_MBT_ADDR(uint64_t a)
         return 0x87e043d01c28ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001c28ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001c28ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c28ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_MBT_ADDR", 1, a, 0, 0, 0, 0, 0);
@@ -6258,7 +7980,7 @@ union cavm_rfoex_rx_ind_mbt_cfg
                                                                  1 = LLC/DRAM. */
 #endif /* Word 0 - End */
     } f95mm;
-    struct cavm_rfoex_rx_ind_mbt_cfg_loki
+    struct cavm_rfoex_rx_ind_mbt_cfg_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t target_mem            : 1;  /**< [ 63: 63](R/W) Specifies the target memory for the address.
@@ -6327,7 +8049,8 @@ union cavm_rfoex_rx_ind_mbt_cfg
                                                                  0 = SMEM.
                                                                  1 = LLC/DRAM. */
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rfoex_rx_ind_mbt_cfg_f95o loki; */
 };
 typedef union cavm_rfoex_rx_ind_mbt_cfg cavm_rfoex_rx_ind_mbt_cfg_t;
 
@@ -6338,6 +8061,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_MBT_CFG(uint64_t a)
         return 0x87e043d01c20ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001c20ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001c20ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c20ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_MBT_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -6412,6 +8137,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_MBT_SEG_STATE(uint64_t a)
         return 0x87e043d01c30ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001c30ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001c30ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001c30ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_IND_MBT_SEG_STATE", 1, a, 0, 0, 0, 0, 0);
@@ -6463,6 +8190,8 @@ static inline uint64_t CAVM_RFOEX_RX_IND_VLANX_FWD(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1)))
         return 0x864100001cd0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1)))
+        return 0x864100001cd0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1)))
         return 0x864100001cd0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("RFOEX_RX_IND_VLANX_FWD", 2, a, b, 0, 0, 0, 0);
@@ -6504,6 +8233,8 @@ static inline uint64_t CAVM_RFOEX_RX_INDIRECT_INDEX(uint64_t a)
         return 0x87e043d01bf8ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001bf8ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001bf8ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001bf8ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_INDIRECT_INDEX", 1, a, 0, 0, 0, 0, 0);
@@ -6557,6 +8288,8 @@ static inline uint64_t CAVM_RFOEX_RX_JCA_ADDJOB_JOBTAG(uint64_t a)
         return 0x87e043d01030ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001060ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001060ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001060ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_JCA_ADDJOB_JOBTAG", 1, a, 0, 0, 0, 0, 0);
@@ -6599,6 +8332,8 @@ static inline uint64_t CAVM_RFOEX_RX_ORDERINFO_FAIL_STAT(uint64_t a)
         return 0x87e043d01d40ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001d40ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001d40ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001d40ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ORDERINFO_FAIL_STAT", 1, a, 0, 0, 0, 0, 0);
@@ -6637,14 +8372,15 @@ union cavm_rfoex_rx_ordinf_err_ena_w1cx
         uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1C/H) Reads or clears enable for RFOE(0)_RX_ORDINF_ERR_INT(0..15)[ORDERINFO_MISCOMPARE]. */
 #endif /* Word 0 - End */
     } f95mm;
-    struct cavm_rfoex_rx_ordinf_err_ena_w1cx_loki
+    struct cavm_rfoex_rx_ordinf_err_ena_w1cx_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1C/H) Reads or clears enable for RFOE(0..2)_RX_ORDINF_ERR_INT(0..15)[ORDERINFO_MISCOMPARE]. */
 #else /* Word 0 - Little Endian */
         uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1C/H) Reads or clears enable for RFOE(0..2)_RX_ORDINF_ERR_INT(0..15)[ORDERINFO_MISCOMPARE]. */
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rfoex_rx_ordinf_err_ena_w1cx_f95o loki; */
 };
 typedef union cavm_rfoex_rx_ordinf_err_ena_w1cx cavm_rfoex_rx_ordinf_err_ena_w1cx_t;
 
@@ -6655,6 +8391,8 @@ static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_ENA_W1CX(uint64_t a, uint64_t b)
         return 0x87e043d01e40ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
         return 0x864100001500ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=15)))
+        return 0x864100001500ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001500ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_ORDINF_ERR_ENA_W1CX", 2, a, b, 0, 0, 0, 0);
@@ -6693,14 +8431,15 @@ union cavm_rfoex_rx_ordinf_err_ena_w1sx
         uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1S/H) Reads or sets enable for RFOE(0)_RX_ORDINF_ERR_INT(0..15)[ORDERINFO_MISCOMPARE]. */
 #endif /* Word 0 - End */
     } f95mm;
-    struct cavm_rfoex_rx_ordinf_err_ena_w1sx_loki
+    struct cavm_rfoex_rx_ordinf_err_ena_w1sx_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1S/H) Reads or sets enable for RFOE(0..2)_RX_ORDINF_ERR_INT(0..15)[ORDERINFO_MISCOMPARE]. */
 #else /* Word 0 - Little Endian */
         uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1S/H) Reads or sets enable for RFOE(0..2)_RX_ORDINF_ERR_INT(0..15)[ORDERINFO_MISCOMPARE]. */
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rfoex_rx_ordinf_err_ena_w1sx_f95o loki; */
 };
 typedef union cavm_rfoex_rx_ordinf_err_ena_w1sx cavm_rfoex_rx_ordinf_err_ena_w1sx_t;
 
@@ -6711,6 +8450,8 @@ static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_ENA_W1SX(uint64_t a, uint64_t b)
         return 0x87e043d01e20ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
         return 0x864100001480ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=15)))
+        return 0x864100001480ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001480ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_ORDINF_ERR_ENA_W1SX", 2, a, b, 0, 0, 0, 0);
@@ -6759,6 +8500,7 @@ union cavm_rfoex_rx_ordinf_err_intx
                                                                  packet, or ECPRI_HDR_S[SEQ_ID] from incoming eCPRI packet. */
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_rx_ordinf_err_intx_f95mm f95o; */
     /* struct cavm_rfoex_rx_ordinf_err_intx_f95mm loki; */
 };
 typedef union cavm_rfoex_rx_ordinf_err_intx cavm_rfoex_rx_ordinf_err_intx_t;
@@ -6770,6 +8512,8 @@ static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_INTX(uint64_t a, uint64_t b)
         return 0x87e043d01e00ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
         return 0x864100001400ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=15)))
+        return 0x864100001400ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001400ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_ORDINF_ERR_INTX", 2, a, b, 0, 0, 0, 0);
@@ -6808,14 +8552,15 @@ union cavm_rfoex_rx_ordinf_err_int_w1sx
         uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1S/H) Reads or sets RFOE(0)_RX_ORDINF_ERR_INT(0..15)[ORDERINFO_MISCOMPARE]. */
 #endif /* Word 0 - End */
     } f95mm;
-    struct cavm_rfoex_rx_ordinf_err_int_w1sx_loki
+    struct cavm_rfoex_rx_ordinf_err_int_w1sx_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1S/H) Reads or sets RFOE(0..2)_RX_ORDINF_ERR_INT(0..15)[ORDERINFO_MISCOMPARE]. */
 #else /* Word 0 - Little Endian */
         uint64_t orderinfo_miscompare  : 64; /**< [ 63:  0](R/W1S/H) Reads or sets RFOE(0..2)_RX_ORDINF_ERR_INT(0..15)[ORDERINFO_MISCOMPARE]. */
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_rfoex_rx_ordinf_err_int_w1sx_f95o loki; */
 };
 typedef union cavm_rfoex_rx_ordinf_err_int_w1sx cavm_rfoex_rx_ordinf_err_int_w1sx_t;
 
@@ -6826,6 +8571,8 @@ static inline uint64_t CAVM_RFOEX_RX_ORDINF_ERR_INT_W1SX(uint64_t a, uint64_t b)
         return 0x87e043d01e60ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
         return 0x864100001580ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=15)))
+        return 0x864100001580ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001580ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_ORDINF_ERR_INT_W1SX", 2, a, b, 0, 0, 0, 0);
@@ -6865,6 +8612,8 @@ static inline uint64_t CAVM_RFOEX_RX_ORDINF_PSM_MSG_W0(uint64_t a)
         return 0x87e043d01e80ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001600ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001600ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001600ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ORDINF_PSM_MSG_W0", 1, a, 0, 0, 0, 0, 0);
@@ -6904,6 +8653,8 @@ static inline uint64_t CAVM_RFOEX_RX_ORDINF_PSM_MSG_W1(uint64_t a)
         return 0x87e043d01e88ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001608ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001608ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001608ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_ORDINF_PSM_MSG_W1", 1, a, 0, 0, 0, 0, 0);
@@ -6948,6 +8699,8 @@ static inline uint64_t CAVM_RFOEX_RX_PKT_ERR_DROP_STAT(uint64_t a)
         return 0x87e043d01d38ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001d38ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001d38ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001d38ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_PKT_ERR_DROP_STAT", 1, a, 0, 0, 0, 0, 0);
@@ -6998,6 +8751,8 @@ static inline uint64_t CAVM_RFOEX_RX_PKT_LEN_CFGX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100001880ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100001880ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100001880ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_PKT_LEN_CFGX", 2, a, b, 0, 0, 0, 0);
@@ -7008,6 +8763,216 @@ static inline uint64_t CAVM_RFOEX_RX_PKT_LEN_CFGX(uint64_t a, uint64_t b)
 #define basename_CAVM_RFOEX_RX_PKT_LEN_CFGX(a,b) "RFOEX_RX_PKT_LEN_CFGX"
 #define busnum_CAVM_RFOEX_RX_PKT_LEN_CFGX(a,b) (a)
 #define arguments_CAVM_RFOEX_RX_PKT_LEN_CFGX(a,b) (a),(b),-1,-1
+
+/**
+ * Register (NCB) rfoe#_rx_pkt_logger#_addr
+ *
+ * RFOE RX Packet Logger Buffer Address Register
+ * Defines start address for packet logger circular buffer.
+ * Index {b} enumerated by RFOE_RX_PKT_LOGGER_IDX_E
+ */
+union cavm_rfoex_rx_pkt_loggerx_addr
+{
+    uint64_t u;
+    struct cavm_rfoex_rx_pkt_loggerx_addr_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_53_63        : 11;
+        uint64_t start_addr            : 53; /**< [ 52:  0](R/W) Specifies the byte address of the start of the write DMA.
+                                                                 * If RFOE()_RX_PKT_LOGGER()_CFG[TARGET_MEM] = 0, the address  must be
+                                                                 128-bit aligned (i.e., bits[3:0] must be 0).
+                                                                 * If RFOE()_RX_PKT_LOGGER()_CFG[TARGET_MEM] = 1, the address  must be
+                                                                 128-byte aligned (i.e., bits[6:0] must be 0). */
+#else /* Word 0 - Little Endian */
+        uint64_t start_addr            : 53; /**< [ 52:  0](R/W) Specifies the byte address of the start of the write DMA.
+                                                                 * If RFOE()_RX_PKT_LOGGER()_CFG[TARGET_MEM] = 0, the address  must be
+                                                                 128-bit aligned (i.e., bits[3:0] must be 0).
+                                                                 * If RFOE()_RX_PKT_LOGGER()_CFG[TARGET_MEM] = 1, the address  must be
+                                                                 128-byte aligned (i.e., bits[6:0] must be 0). */
+        uint64_t reserved_53_63        : 11;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_rx_pkt_loggerx_addr_s cn; */
+};
+typedef union cavm_rfoex_rx_pkt_loggerx_addr cavm_rfoex_rx_pkt_loggerx_addr_t;
+
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(uint64_t a, uint64_t b)
+{
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1)))
+        return 0x864100001020ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
+    __cavm_csr_fatal("RFOEX_RX_PKT_LOGGERX_ADDR", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(a,b) cavm_rfoex_rx_pkt_loggerx_addr_t
+#define bustype_CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(a,b) CSR_TYPE_NCB
+#define basename_CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(a,b) "RFOEX_RX_PKT_LOGGERX_ADDR"
+#define busnum_CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(a,b) (a)
+#define arguments_CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(a,b) (a),(b),-1,-1
+
+/**
+ * Register (NCB) rfoe#_rx_pkt_logger#_cfg
+ *
+ * RFOE RX Packet Logger Buffer Configuration  Register
+ * Defines configuration for packet logger circular buffer.
+ * Index {b} enumerated by RFOE_RX_PKT_LOGGER_IDX_E
+ */
+union cavm_rfoex_rx_pkt_loggerx_cfg
+{
+    uint64_t u;
+    struct cavm_rfoex_rx_pkt_loggerx_cfg_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t target_mem            : 1;  /**< [ 63: 63](R/W) Specifies the target memory for the log buffer.
+                                                                 0 = SMEM.
+                                                                 1 = LLC/DRAM. */
+        uint64_t reserved_62           : 1;
+        uint64_t cmd_type              : 2;  /**< [ 61: 60](R/W) Command type for LLC/DRAM write, as enumerated by MHBW_PNB_WR_CMD_E.
+
+                                                                 Note:
+                                                                 * Writes to BPHY SMEM ignore this field.
+                                                                 * Unaligned or partial cacheline writes always use MHBW_PNB_WR_CMD_E::STP.
+
+                                                                 Internal:
+                                                                 Notes:
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for unaligned cache line
+                                                                 starts. All transfers for this burst will be STP.
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for the last transfer in a burst if unaligned. */
+        uint64_t reserved_59           : 1;
+        uint64_t dswap                 : 3;  /**< [ 58: 56](R/W) The byte swap mode for DMA to LLC/DRAM. Enumerated in MHBW_PNB_DSWAP_E.
+                                                                 DMA to BPHY SMEM ignores this field. */
+        uint64_t reserved_53_55        : 3;
+        uint64_t tail_idx              : 17; /**< [ 52: 36](RO/H) Index for the next logger status write, in units of 16 bytes.
+                                                                 * Newest logger entry is at ([TAIL_IDX]-1) mod [SIZE].
+                                                                 * Address in memory is RFOE()_RX_PKT_LOGGER()_ADDR +
+                                                                 (([TAIL_IDX]-1) mod [SIZE])*16 bytes.
+                                                                 * Newest is not valid after reset since nothing has been written to packet logger in memory. */
+        uint64_t reserved_35           : 1;
+        uint64_t flush_done            : 1;  /**< [ 34: 34](RO/H) Cleared on a write to[FLUSH]=1.  Set when the
+                                                                 packet logger buffer has been flushed to memory.
+                                                                 * Indicates that all logger write requests have been issued from RFOE.
+                                                                 * Does not guarantee return of all commits. */
+        uint64_t flush                 : 1;  /**< [ 33: 33](R/W/H) On a write with [FLUSH]=1, hardware flushes the internal packet log FIFO to
+                                                                 memory. Hardware clears when flush operation completes as indicated by
+                                                                 [FLUSH_DONE] == 1. */
+        uint64_t enable                : 1;  /**< [ 32: 32](R/W) Enable receive packet logging.
+                                                                 0 = Disabled.
+                                                                 1 = Enable packet logging.
+
+                                                                 When enabled, each RoE subtype 0xFD packet with EOS set generates a log
+                                                                 entry. All other packets generate a log entry for each packet.
+
+                                                                 Logger entries for packets already started will be completed and written
+                                                                 normally.  If a flush is desired,
+                                                                 write [FLUSH] = 1 to force all waiting entries to memory.
+
+                                                                 Software should only change logger configuration when logger is idle, logger
+                                                                 FIFO empty (ie. flushed) and [ENABLE] = 0.
+
+                                                                 Ignored for the TX packet logger ({b} = RFOE_RX_PKT_LOGGER_IDX_E::TX_PKT).
+                                                                 The TX packet logger is enabled by RFOE()_TX_LMAC_CFG()[TX_PKT_LOG_EN]. */
+        uint64_t ddr_wait_cycles       : 12; /**< [ 31: 20](R/W) Used when [TARGET_MEM]=1.  No action when [TARGET_MEM]=0.
+                                                                 Maximum time for coalescing log writes to LLC/DRAM. Up to 128 bytes of
+                                                                 log entries are coalesced before writing to LLC/DRAM. After
+                                                                 [DDR_WAIT_CYCLES]*16 cycles with no new log entries, any buffered
+                                                                 entries are written to memory.
+
+                                                                 The reset value of 0x80 results in a time of 2 us when BCLK is 1 GHz.
+
+                                                                 Setting [DDR_WAIT_CYCLES]=0 disables the timer, and the logger will
+                                                                 wait indefinitely to collect 128 bytes of log entries before writing
+                                                                 to LLC/DRAM.
+
+                                                                 Ignored when [TARGET_MEM]=0. */
+        uint64_t reserved_17_19        : 3;
+        uint64_t size                  : 17; /**< [ 16:  0](R/W) Total size of the log buffer in units of 128 bits. Must have [SIZE] \> 0.
+                                                                 If RFOE()_RX_PKT_LOGGER()_CFG[TARGET_MEM]=1, [SIZE] must be a multiple
+                                                                 of 8 (i.e., the size must be a multiple of 128 bytes). */
+#else /* Word 0 - Little Endian */
+        uint64_t size                  : 17; /**< [ 16:  0](R/W) Total size of the log buffer in units of 128 bits. Must have [SIZE] \> 0.
+                                                                 If RFOE()_RX_PKT_LOGGER()_CFG[TARGET_MEM]=1, [SIZE] must be a multiple
+                                                                 of 8 (i.e., the size must be a multiple of 128 bytes). */
+        uint64_t reserved_17_19        : 3;
+        uint64_t ddr_wait_cycles       : 12; /**< [ 31: 20](R/W) Used when [TARGET_MEM]=1.  No action when [TARGET_MEM]=0.
+                                                                 Maximum time for coalescing log writes to LLC/DRAM. Up to 128 bytes of
+                                                                 log entries are coalesced before writing to LLC/DRAM. After
+                                                                 [DDR_WAIT_CYCLES]*16 cycles with no new log entries, any buffered
+                                                                 entries are written to memory.
+
+                                                                 The reset value of 0x80 results in a time of 2 us when BCLK is 1 GHz.
+
+                                                                 Setting [DDR_WAIT_CYCLES]=0 disables the timer, and the logger will
+                                                                 wait indefinitely to collect 128 bytes of log entries before writing
+                                                                 to LLC/DRAM.
+
+                                                                 Ignored when [TARGET_MEM]=0. */
+        uint64_t enable                : 1;  /**< [ 32: 32](R/W) Enable receive packet logging.
+                                                                 0 = Disabled.
+                                                                 1 = Enable packet logging.
+
+                                                                 When enabled, each RoE subtype 0xFD packet with EOS set generates a log
+                                                                 entry. All other packets generate a log entry for each packet.
+
+                                                                 Logger entries for packets already started will be completed and written
+                                                                 normally.  If a flush is desired,
+                                                                 write [FLUSH] = 1 to force all waiting entries to memory.
+
+                                                                 Software should only change logger configuration when logger is idle, logger
+                                                                 FIFO empty (ie. flushed) and [ENABLE] = 0.
+
+                                                                 Ignored for the TX packet logger ({b} = RFOE_RX_PKT_LOGGER_IDX_E::TX_PKT).
+                                                                 The TX packet logger is enabled by RFOE()_TX_LMAC_CFG()[TX_PKT_LOG_EN]. */
+        uint64_t flush                 : 1;  /**< [ 33: 33](R/W/H) On a write with [FLUSH]=1, hardware flushes the internal packet log FIFO to
+                                                                 memory. Hardware clears when flush operation completes as indicated by
+                                                                 [FLUSH_DONE] == 1. */
+        uint64_t flush_done            : 1;  /**< [ 34: 34](RO/H) Cleared on a write to[FLUSH]=1.  Set when the
+                                                                 packet logger buffer has been flushed to memory.
+                                                                 * Indicates that all logger write requests have been issued from RFOE.
+                                                                 * Does not guarantee return of all commits. */
+        uint64_t reserved_35           : 1;
+        uint64_t tail_idx              : 17; /**< [ 52: 36](RO/H) Index for the next logger status write, in units of 16 bytes.
+                                                                 * Newest logger entry is at ([TAIL_IDX]-1) mod [SIZE].
+                                                                 * Address in memory is RFOE()_RX_PKT_LOGGER()_ADDR +
+                                                                 (([TAIL_IDX]-1) mod [SIZE])*16 bytes.
+                                                                 * Newest is not valid after reset since nothing has been written to packet logger in memory. */
+        uint64_t reserved_53_55        : 3;
+        uint64_t dswap                 : 3;  /**< [ 58: 56](R/W) The byte swap mode for DMA to LLC/DRAM. Enumerated in MHBW_PNB_DSWAP_E.
+                                                                 DMA to BPHY SMEM ignores this field. */
+        uint64_t reserved_59           : 1;
+        uint64_t cmd_type              : 2;  /**< [ 61: 60](R/W) Command type for LLC/DRAM write, as enumerated by MHBW_PNB_WR_CMD_E.
+
+                                                                 Note:
+                                                                 * Writes to BPHY SMEM ignore this field.
+                                                                 * Unaligned or partial cacheline writes always use MHBW_PNB_WR_CMD_E::STP.
+
+                                                                 Internal:
+                                                                 Notes:
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for unaligned cache line
+                                                                 starts. All transfers for this burst will be STP.
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for the last transfer in a burst if unaligned. */
+        uint64_t reserved_62           : 1;
+        uint64_t target_mem            : 1;  /**< [ 63: 63](R/W) Specifies the target memory for the log buffer.
+                                                                 0 = SMEM.
+                                                                 1 = LLC/DRAM. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_rx_pkt_loggerx_cfg_s cn; */
+};
+typedef union cavm_rfoex_rx_pkt_loggerx_cfg cavm_rfoex_rx_pkt_loggerx_cfg_t;
+
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_CFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_CFG(uint64_t a, uint64_t b)
+{
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1)))
+        return 0x864100001030ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
+    __cavm_csr_fatal("RFOEX_RX_PKT_LOGGERX_CFG", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_RFOEX_RX_PKT_LOGGERX_CFG(a,b) cavm_rfoex_rx_pkt_loggerx_cfg_t
+#define bustype_CAVM_RFOEX_RX_PKT_LOGGERX_CFG(a,b) CSR_TYPE_NCB
+#define basename_CAVM_RFOEX_RX_PKT_LOGGERX_CFG(a,b) "RFOEX_RX_PKT_LOGGERX_CFG"
+#define busnum_CAVM_RFOEX_RX_PKT_LOGGERX_CFG(a,b) (a)
+#define arguments_CAVM_RFOEX_RX_PKT_LOGGERX_CFG(a,b) (a),(b),-1,-1
 
 /**
  * Register (RSL) rfoe#_rx_pkt_logger_addr
@@ -7222,6 +9187,8 @@ static inline uint64_t CAVM_RFOEX_RX_SCRATCH(uint64_t a)
         return 0x87e043d01000ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001000ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001000ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001000ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_SCRATCH", 1, a, 0, 0, 0, 0, 0);
@@ -7424,6 +9391,7 @@ union cavm_rfoex_rx_status
         uint64_t reserved_32_63        : 32;
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_rx_status_f95mm f95o; */
     /* struct cavm_rfoex_rx_status_f95mm loki; */
 };
 typedef union cavm_rfoex_rx_status cavm_rfoex_rx_status_t;
@@ -7435,6 +9403,8 @@ static inline uint64_t CAVM_RFOEX_RX_STATUS(uint64_t a)
         return 0x87e043d01010ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001010ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001010ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001010ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_STATUS", 1, a, 0, 0, 0, 0, 0);
@@ -7474,6 +9444,8 @@ static inline uint64_t CAVM_RFOEX_RX_SYNC_DISCARD_COUNTER(uint64_t a)
         return 0x87e043d01d20ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100001d20ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100001d20ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100001d20ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_SYNC_DISCARD_COUNTER", 1, a, 0, 0, 0, 0, 0);
@@ -7520,6 +9492,8 @@ static inline uint64_t CAVM_RFOEX_RX_SYNC_FLOWX(uint64_t a, uint64_t b)
         return 0x87e043d01700ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
         return 0x864100001100ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=15)))
+        return 0x864100001100ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001100ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_SYNC_FLOWX", 2, a, b, 0, 0, 0, 0);
@@ -7573,6 +9547,8 @@ static inline uint64_t CAVM_RFOEX_RX_SYNC_STATEX(uint64_t a, uint64_t b)
         return 0x87e043d01740ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=15)))
         return 0x864100001180ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=15)))
+        return 0x864100001180ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=15)))
         return 0x864100001180ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0xf);
     __cavm_csr_fatal("RFOEX_RX_SYNC_STATEX", 2, a, b, 0, 0, 0, 0);
@@ -7618,6 +9594,8 @@ static inline uint64_t CAVM_RFOEX_RX_VLANX_CFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1)))
         return 0x864100001070ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1)))
+        return 0x864100001070ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1)))
         return 0x864100001070ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("RFOEX_RX_VLANX_CFG", 2, a, b, 0, 0, 0, 0);
@@ -7657,6 +9635,8 @@ static inline uint64_t CAVM_RFOEX_RX_VLAN_DROP_STATX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x8641000010a0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x8641000010a0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x8641000010a0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_VLAN_DROP_STATX", 2, a, b, 0, 0, 0, 0);
@@ -7696,6 +9676,8 @@ static inline uint64_t CAVM_RFOEX_RX_VLAN_FWD_STATX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x8641000010c0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x8641000010c0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x8641000010c0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_RX_VLAN_FWD_STATX", 2, a, b, 0, 0, 0, 0);
@@ -7844,6 +9826,7 @@ union cavm_rfoex_tx_ctrl
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_tx_ctrl_f95mm f95o; */
     /* struct cavm_rfoex_tx_ctrl_f95mm loki; */
 };
 typedef union cavm_rfoex_tx_ctrl cavm_rfoex_tx_ctrl_t;
@@ -7855,6 +9838,8 @@ static inline uint64_t CAVM_RFOEX_TX_CTRL(uint64_t a)
         return 0x87e043d00f08ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100000f08ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100000f08ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000f08ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_CTRL", 1, a, 0, 0, 0, 0, 0);
@@ -7916,6 +9901,7 @@ union cavm_rfoex_tx_hdr_dax
         uint64_t reserved_48_63        : 16;
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_tx_hdr_dax_f95mm f95o; */
     /* struct cavm_rfoex_tx_hdr_dax_f95mm loki; */
 };
 typedef union cavm_rfoex_tx_hdr_dax cavm_rfoex_tx_hdr_dax_t;
@@ -7927,6 +9913,8 @@ static inline uint64_t CAVM_RFOEX_TX_HDR_DAX(uint64_t a, uint64_t b)
         return 0x87e043d00800ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=7)))
         return 0x864100000800ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=7)))
+        return 0x864100000800ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=7)))
         return 0x864100000800ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     __cavm_csr_fatal("RFOEX_TX_HDR_DAX", 2, a, b, 0, 0, 0, 0);
@@ -7980,6 +9968,7 @@ union cavm_rfoex_tx_hdr_ethertypex
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_tx_hdr_ethertypex_f95mm f95o; */
     /* struct cavm_rfoex_tx_hdr_ethertypex_f95mm loki; */
 };
 typedef union cavm_rfoex_tx_hdr_ethertypex cavm_rfoex_tx_hdr_ethertypex_t;
@@ -7991,6 +9980,8 @@ static inline uint64_t CAVM_RFOEX_TX_HDR_ETHERTYPEX(uint64_t a, uint64_t b)
         return 0x87e043d00880ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=7)))
         return 0x864100000880ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=7)))
+        return 0x864100000880ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=7)))
         return 0x864100000880ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     __cavm_csr_fatal("RFOEX_TX_HDR_ETHERTYPEX", 2, a, b, 0, 0, 0, 0);
@@ -8052,6 +10043,7 @@ union cavm_rfoex_tx_hdr_sax
         uint64_t reserved_48_63        : 16;
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_tx_hdr_sax_f95mm f95o; */
     /* struct cavm_rfoex_tx_hdr_sax_f95mm loki; */
 };
 typedef union cavm_rfoex_tx_hdr_sax cavm_rfoex_tx_hdr_sax_t;
@@ -8063,6 +10055,8 @@ static inline uint64_t CAVM_RFOEX_TX_HDR_SAX(uint64_t a, uint64_t b)
         return 0x87e043d00840ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=7)))
         return 0x864100000840ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=7)))
+        return 0x864100000840ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=7)))
         return 0x864100000840ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     __cavm_csr_fatal("RFOEX_TX_HDR_SAX", 2, a, b, 0, 0, 0, 0);
@@ -8109,6 +10103,8 @@ static inline uint64_t CAVM_RFOEX_TX_HDR_VLANX(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=7)))
         return 0x8641000008c0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=7)))
+        return 0x8641000008c0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=7)))
         return 0x8641000008c0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x7);
     __cavm_csr_fatal("RFOEX_TX_HDR_VLANX", 2, a, b, 0, 0, 0, 0);
@@ -8181,6 +10177,7 @@ union cavm_rfoex_tx_ind_seqnum_p_cfg
                                                                  The increment value must be less than [PMAX]. */
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_tx_ind_seqnum_p_cfg_f95mm f95o; */
     /* struct cavm_rfoex_tx_ind_seqnum_p_cfg_f95mm loki; */
 };
 typedef union cavm_rfoex_tx_ind_seqnum_p_cfg cavm_rfoex_tx_ind_seqnum_p_cfg_t;
@@ -8192,6 +10189,8 @@ static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_P_CFG(uint64_t a)
         return 0x87e043d00c00ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100000c00ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100000c00ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000c00ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_IND_SEQNUM_P_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -8267,6 +10266,8 @@ static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_PROP_CFG(uint64_t a)
         return 0x87e043d00c10ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100000c10ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100000c10ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000c10ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_IND_SEQNUM_PROP_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -8323,6 +10324,7 @@ union cavm_rfoex_tx_ind_seqnum_q_cfg
                                                                  The increment value must be less than RFOE()_TX_IND_SEQNUM_Q_CFG[QMAX]. */
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_tx_ind_seqnum_q_cfg_f95mm f95o; */
     /* struct cavm_rfoex_tx_ind_seqnum_q_cfg_f95mm loki; */
 };
 typedef union cavm_rfoex_tx_ind_seqnum_q_cfg cavm_rfoex_tx_ind_seqnum_q_cfg_t;
@@ -8334,6 +10336,8 @@ static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_Q_CFG(uint64_t a)
         return 0x87e043d00c08ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100000c08ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100000c08ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000c08ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_IND_SEQNUM_Q_CFG", 1, a, 0, 0, 0, 0, 0);
@@ -8394,6 +10398,7 @@ union cavm_rfoex_tx_ind_seqnum_state
                                                                  The initial value must be less than RFOE()_TX_IND_SEQNUM_P_CFG[PMAX]. */
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_tx_ind_seqnum_state_f95mm f95o; */
     /* struct cavm_rfoex_tx_ind_seqnum_state_f95mm loki; */
 };
 typedef union cavm_rfoex_tx_ind_seqnum_state cavm_rfoex_tx_ind_seqnum_state_t;
@@ -8405,6 +10410,8 @@ static inline uint64_t CAVM_RFOEX_TX_IND_SEQNUM_STATE(uint64_t a)
         return 0x87e043d00c18ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100000c18ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100000c18ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000c18ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_IND_SEQNUM_STATE", 1, a, 0, 0, 0, 0, 0);
@@ -8446,6 +10453,8 @@ static inline uint64_t CAVM_RFOEX_TX_INDIRECT_INDEX(uint64_t a)
         return 0x87e043d00bf8ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100000bf8ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100000bf8ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000bf8ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_INDIRECT_INDEX", 1, a, 0, 0, 0, 0, 0);
@@ -8755,6 +10764,7 @@ union cavm_rfoex_tx_lmac_cfgx
         uint64_t reserved_57_63        : 7;
 #endif /* Word 0 - End */
     } f95mm;
+    /* struct cavm_rfoex_tx_lmac_cfgx_f95mm f95o; */
     /* struct cavm_rfoex_tx_lmac_cfgx_f95mm loki; */
 };
 typedef union cavm_rfoex_tx_lmac_cfgx cavm_rfoex_tx_lmac_cfgx_t;
@@ -8766,6 +10776,8 @@ static inline uint64_t CAVM_RFOEX_TX_LMAC_CFGX(uint64_t a, uint64_t b)
         return 0x87e043d00f80ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100000f80ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100000f80ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100000f80ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_LMAC_CFGX", 2, a, b, 0, 0, 0, 0);
@@ -8807,6 +10819,8 @@ static inline uint64_t CAVM_RFOEX_TX_OCTS_STATX(uint64_t a, uint64_t b)
         return 0x87e043d00f40ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100000f40ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100000f40ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100000f40ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_OCTS_STATX", 2, a, b, 0, 0, 0, 0);
@@ -8848,6 +10862,8 @@ static inline uint64_t CAVM_RFOEX_TX_PKT_DROP_STATX(uint64_t a, uint64_t b)
         return 0x87e043d00f60ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100000f60ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100000f60ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100000f60ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_PKT_DROP_STATX", 2, a, b, 0, 0, 0, 0);
@@ -8889,6 +10905,8 @@ static inline uint64_t CAVM_RFOEX_TX_PKT_STATX(uint64_t a, uint64_t b)
         return 0x87e043d00f20ll + 0x80000ll * ((a) & 0x1) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100000f20ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100000f20ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100000f20ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_PKT_STATX", 2, a, b, 0, 0, 0, 0);
@@ -8927,6 +10945,8 @@ static inline uint64_t CAVM_RFOEX_TX_PTP_TSTMP_W0X(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100000fa0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100000fa0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100000fa0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_PTP_TSTMP_W0X", 2, a, b, 0, 0, 0, 0);
@@ -8978,6 +10998,8 @@ static inline uint64_t CAVM_RFOEX_TX_PTP_TSTMP_W1X(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=3)))
         return 0x864100000fc0ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=3)))
+        return 0x864100000fc0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=3)))
         return 0x864100000fc0ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_PTP_TSTMP_W1X", 2, a, b, 0, 0, 0, 0);
@@ -9018,6 +11040,8 @@ static inline uint64_t CAVM_RFOEX_TX_SCRATCH(uint64_t a)
         return 0x87e043d00f00ll + 0x80000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a==0))
         return 0x864100000f00ll + 0x1000000000ll * ((a) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x864100000f00ll + 0x1000000000ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x864100000f00ll + 0x1000000000ll * ((a) & 0x3);
     __cavm_csr_fatal("RFOEX_TX_SCRATCH", 1, a, 0, 0, 0, 0, 0);

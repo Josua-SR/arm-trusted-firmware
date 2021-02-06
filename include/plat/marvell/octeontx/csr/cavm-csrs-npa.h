@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -1151,6 +1151,7 @@ union cavm_npa_aura_s
     /* struct cavm_npa_aura_s_s cnf95xxp1; */
     /* struct cavm_npa_aura_s_cn96xxp3 cnf95xxp2; */
     /* struct cavm_npa_aura_s_cn96xxp3 f95mm; */
+    /* struct cavm_npa_aura_s_cn96xxp3 f95o; */
     /* struct cavm_npa_aura_s_cn96xxp3 loki; */
 };
 
@@ -2822,6 +2823,7 @@ union cavm_npa_af_bp_test
     /* struct cavm_npa_af_bp_test_s cnf95xxp1; */
     /* struct cavm_npa_af_bp_test_cn96xxp3 cnf95xxp2; */
     /* struct cavm_npa_af_bp_test_cn96xxp3 f95mm; */
+    /* struct cavm_npa_af_bp_test_cn96xxp3 f95o; */
     /* struct cavm_npa_af_bp_test_cn96xxp3 loki; */
 };
 typedef union cavm_npa_af_bp_test cavm_npa_af_bp_test_t;
@@ -3358,6 +3360,7 @@ union cavm_npa_af_gen_cfg
     /* struct cavm_npa_af_gen_cfg_s cnf95xxp1; */
     /* struct cavm_npa_af_gen_cfg_cn96xxp3 cnf95xxp2; */
     /* struct cavm_npa_af_gen_cfg_cn96xxp3 f95mm; */
+    /* struct cavm_npa_af_gen_cfg_cn96xxp3 f95o; */
     /* struct cavm_npa_af_gen_cfg_cn96xxp3 loki; */
 };
 typedef union cavm_npa_af_gen_cfg cavm_npa_af_gen_cfg_t;
@@ -3941,6 +3944,7 @@ union cavm_npa_af_lfx_auras_cfg
     /* struct cavm_npa_af_lfx_auras_cfg_s cn98xx; */
     /* struct cavm_npa_af_lfx_auras_cfg_s cnf95xx; */
     /* struct cavm_npa_af_lfx_auras_cfg_s f95mm; */
+    /* struct cavm_npa_af_lfx_auras_cfg_s f95o; */
     /* struct cavm_npa_af_lfx_auras_cfg_s loki; */
 };
 typedef union cavm_npa_af_lfx_auras_cfg cavm_npa_af_lfx_auras_cfg_t;

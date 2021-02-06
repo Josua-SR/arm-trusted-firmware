@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -50,11 +50,13 @@
 #define CAVM_PSBM_SYS_CHAIN_E_DCPX_CN98XX(a) (6 + (a))
 #define CAVM_PSBM_SYS_CHAIN_E_DCPX_CNF95XX(a) (1 + (a))
 #define CAVM_PSBM_SYS_CHAIN_E_DCPX_F95MM(a) (1 + (a))
+#define CAVM_PSBM_SYS_CHAIN_E_DCPX_F95O(a) (1 + (a))
 #define CAVM_PSBM_SYS_CHAIN_E_DCPX_LOKI(a) (1 + (a))
 #define CAVM_PSBM_SYS_CHAIN_E_GSERX_CN96XX(a) (7 + (a))
 #define CAVM_PSBM_SYS_CHAIN_E_GSERX_CN98XX(a) (9 + (a))
 #define CAVM_PSBM_SYS_CHAIN_E_GSERX_CNF95XX(a) (3 + (a))
 #define CAVM_PSBM_SYS_CHAIN_E_GSERX_F95MM(a) (3 + (a))
+#define CAVM_PSBM_SYS_CHAIN_E_GSERX_F95O(a) (3 + (a))
 #define CAVM_PSBM_SYS_CHAIN_E_GSERX_LOKI(a) (3 + (a))
 #define CAVM_PSBM_SYS_CHAIN_E_IOB_CN96XX (6)
 #define CAVM_PSBM_SYS_CHAIN_E_IOB_CN98XX (8)
@@ -72,6 +74,7 @@
 #define CAVM_PSBM_SYS_MAP_E_GSERX_CN98XX(a) (9 + (a))
 #define CAVM_PSBM_SYS_MAP_E_GSERX_CNF95XX(a) (3 + (a))
 #define CAVM_PSBM_SYS_MAP_E_GSERX_F95MM(a) (3 + (a))
+#define CAVM_PSBM_SYS_MAP_E_GSERX_F95O(a) (3 + (a))
 #define CAVM_PSBM_SYS_MAP_E_GSERX_LOKI(a) (3 + (a))
 #define CAVM_PSBM_SYS_MAP_E_GSERRX_CN96XX(a) (0xa + (a))
 #define CAVM_PSBM_SYS_MAP_E_GSERRX_CN98XX(a) (0x12 + (a))
@@ -79,11 +82,13 @@
 #define CAVM_PSBM_SYS_MAP_E_IOBX_CN98XX(a) (6 + (a))
 #define CAVM_PSBM_SYS_MAP_E_IOBX_CNF95XX(a) (2 + (a))
 #define CAVM_PSBM_SYS_MAP_E_IOBX_F95MM(a) (2 + (a))
+#define CAVM_PSBM_SYS_MAP_E_IOBX_F95O(a) (2 + (a))
 #define CAVM_PSBM_SYS_MAP_E_IOBX_LOKI(a) (2 + (a))
 #define CAVM_PSBM_SYS_MAP_E_LMCX_CN96XX(a) (0 + (a))
 #define CAVM_PSBM_SYS_MAP_E_LMCX_CN98XX(a) (0 + (a))
 #define CAVM_PSBM_SYS_MAP_E_LMCX_CNF95XX(a) (0x00 | a>>1)
 #define CAVM_PSBM_SYS_MAP_E_LMCX_F95MM(a) (0x00 | a>>1)
+#define CAVM_PSBM_SYS_MAP_E_LMCX_F95O(a) (0x00 | a>>1)
 #define CAVM_PSBM_SYS_MAP_E_LMCX_LOKI(a) (0x00 | a>>1)
 #define CAVM_PSBM_SYS_MAP_E_RSVDX(a) (4 + (a))
 
@@ -141,6 +146,7 @@ union cavm_psbm_apx_datax
     /* struct cavm_psbm_apx_datax_cn96xxp3 cn98xx; */
     /* struct cavm_psbm_apx_datax_cn96xxp3 cnf95xx; */
     /* struct cavm_psbm_apx_datax_cn96xxp3 f95mm; */
+    /* struct cavm_psbm_apx_datax_cn96xxp3 f95o; */
     /* struct cavm_psbm_apx_datax_cn96xxp3 loki; */
 };
 typedef union cavm_psbm_apx_datax cavm_psbm_apx_datax_t;
@@ -155,6 +161,8 @@ static inline uint64_t CAVM_PSBM_APX_DATAX(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=5) && (b<=5)))
         return 0x87e0de010000ll + 0x100ll * ((a) & 0x7) + 0x10ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=5) && (b<=5)))
+        return 0x87e0de010000ll + 0x100ll * ((a) & 0x7) + 0x10ll * ((b) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=5) && (b<=5)))
         return 0x87e0de010000ll + 0x100ll * ((a) & 0x7) + 0x10ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=5) && (b<=5)))
         return 0x87e0de010000ll + 0x100ll * ((a) & 0x7) + 0x10ll * ((b) & 0x7);
@@ -206,6 +214,8 @@ static inline uint64_t CAVM_PSBM_APX_HDR(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87e0de018000ll + 0x10ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87e0de018000ll + 0x10ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87e0de018000ll + 0x10ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87e0de018000ll + 0x10ll * ((a) & 0x7);
@@ -278,6 +288,7 @@ union cavm_psbm_chain_dbg
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_psbm_chain_dbg_cnf95xx f95mm; */
+    /* struct cavm_psbm_chain_dbg_cnf95xx f95o; */
     /* struct cavm_psbm_chain_dbg_cnf95xx loki; */
 };
 typedef union cavm_psbm_chain_dbg cavm_psbm_chain_dbg_t;
@@ -647,6 +658,8 @@ static inline uint64_t CAVM_PSBM_SYSX_DATAX(uint64_t a, uint64_t b)
         return 0x87e0de020000ll + 0x100ll * ((a) & 0x7) + 0x10ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=4) && (b<=5)))
         return 0x87e0de020000ll + 0x100ll * ((a) & 0x7) + 0x10ll * ((b) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=4) && (b<=5)))
+        return 0x87e0de020000ll + 0x100ll * ((a) & 0x7) + 0x10ll * ((b) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=4) && (b<=5)))
         return 0x87e0de020000ll + 0x100ll * ((a) & 0x7) + 0x10ll * ((b) & 0x7);
     __cavm_csr_fatal("PSBM_SYSX_DATAX", 2, a, b, 0, 0, 0, 0);
@@ -697,6 +710,8 @@ static inline uint64_t CAVM_PSBM_SYSX_HDR(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=4))
         return 0x87e0de028000ll + 0x10ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=4))
+        return 0x87e0de028000ll + 0x10ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=4))
         return 0x87e0de028000ll + 0x10ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=4))
         return 0x87e0de028000ll + 0x10ll * ((a) & 0x7);

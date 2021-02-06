@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -553,6 +553,7 @@ union cavm_mio_twsx_io_ctl
     /* struct cavm_mio_twsx_io_ctl_s cnf95xxp1; */
     /* struct cavm_mio_twsx_io_ctl_cn96xxp3 cnf95xxp2; */
     /* struct cavm_mio_twsx_io_ctl_cn96xxp3 f95mm; */
+    /* struct cavm_mio_twsx_io_ctl_cn96xxp3 f95o; */
     /* struct cavm_mio_twsx_io_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_mio_twsx_io_ctl cavm_mio_twsx_io_ctl_t;
@@ -929,6 +930,7 @@ union cavm_mio_twsx_msix_vecx_addr
     /* struct cavm_mio_twsx_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_mio_twsx_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_mio_twsx_msix_vecx_addr_cn96xxp3 f95mm; */
+    /* struct cavm_mio_twsx_msix_vecx_addr_cn96xxp3 f95o; */
     /* struct cavm_mio_twsx_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_mio_twsx_msix_vecx_addr cavm_mio_twsx_msix_vecx_addr_t;
@@ -1530,6 +1532,7 @@ union cavm_mio_twsx_twsi_block_ctl
     /* struct cavm_mio_twsx_twsi_block_ctl_s cnf95xxp1; */
     /* struct cavm_mio_twsx_twsi_block_ctl_cn96xxp3 cnf95xxp2; */
     /* struct cavm_mio_twsx_twsi_block_ctl_cn96xxp3 f95mm; */
+    /* struct cavm_mio_twsx_twsi_block_ctl_cn96xxp3 f95o; */
     /* struct cavm_mio_twsx_twsi_block_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_mio_twsx_twsi_block_ctl cavm_mio_twsx_twsi_block_ctl_t;
@@ -1610,7 +1613,7 @@ static inline uint64_t CAVM_MIO_TWSX_TWSI_BLOCK_FIFO(uint64_t a)
 /**
  * Register (RSL) mio_tws#_twsi_block_sts
  *
- * TWSI Block Mode Stauts Register
+ * TWSI Block Mode Status Register
  * This register contains maintenance and status in block mode.
  */
 union cavm_mio_twsx_twsi_block_sts

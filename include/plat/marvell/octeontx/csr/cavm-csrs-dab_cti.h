@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -90,6 +90,8 @@ static inline uint64_t CAVM_CTIX_ASICCTL(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010144ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010144ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010144ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010144ll + 0x80000ll * ((a) & 0x7);
@@ -178,6 +180,8 @@ static inline uint64_t CAVM_CTIX_CLAIMCLR_EL1(uint64_t a)
         return 0x87a008010fa4ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87a008010fa4ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87a008010fa4ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fa4ll + 0x80000ll * ((a) & 0x7);
     __cavm_csr_fatal("CTIX_CLAIMCLR_EL1", 1, a, 0, 0, 0, 0, 0);
@@ -260,6 +264,8 @@ static inline uint64_t CAVM_CTIX_CLAIMSET_EL1(uint64_t a)
         return 0x87a008010fa0ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87a008010fa0ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87a008010fa0ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fa0ll + 0x80000ll * ((a) & 0x7);
     __cavm_csr_fatal("CTIX_CLAIMSET_EL1", 1, a, 0, 0, 0, 0, 0);
@@ -306,6 +312,8 @@ static inline uint64_t CAVM_CTIX_CTIAPPCLEAR(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010018ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010018ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010018ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010018ll + 0x80000ll * ((a) & 0x7);
@@ -369,6 +377,8 @@ static inline uint64_t CAVM_CTIX_CTIAPPPULSE(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a00801001cll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a00801001cll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a00801001cll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a00801001cll + 0x80000ll * ((a) & 0x7);
@@ -447,6 +457,8 @@ static inline uint64_t CAVM_CTIX_CTIAPPSET(uint64_t a)
         return 0x87a008010014ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87a008010014ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87a008010014ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010014ll + 0x80000ll * ((a) & 0x7);
     __cavm_csr_fatal("CTIX_CTIAPPSET", 1, a, 0, 0, 0, 0, 0);
@@ -511,6 +523,8 @@ static inline uint64_t CAVM_CTIX_CTIAUTHSTATUS(uint64_t a)
         return 0x87a008010fb8ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87a008010fb8ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87a008010fb8ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fb8ll + 0x80000ll * ((a) & 0x7);
     __cavm_csr_fatal("CTIX_CTIAUTHSTATUS", 1, a, 0, 0, 0, 0, 0);
@@ -571,6 +585,8 @@ static inline uint64_t CAVM_CTIX_CTICHINSTATUS(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010138ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010138ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010138ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010138ll + 0x80000ll * ((a) & 0x7);
@@ -633,6 +649,8 @@ static inline uint64_t CAVM_CTIX_CTICHOUTSTATUS(uint64_t a)
         return 0x87a00801013cll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87a00801013cll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87a00801013cll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a00801013cll + 0x80000ll * ((a) & 0x7);
     __cavm_csr_fatal("CTIX_CTICHOUTSTATUS", 1, a, 0, 0, 0, 0, 0);
@@ -681,6 +699,8 @@ static inline uint64_t CAVM_CTIX_CTICIDR0(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010ff0ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010ff0ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010ff0ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010ff0ll + 0x80000ll * ((a) & 0x7);
@@ -733,6 +753,8 @@ static inline uint64_t CAVM_CTIX_CTICIDR1(uint64_t a)
         return 0x87a008010ff4ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87a008010ff4ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87a008010ff4ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010ff4ll + 0x80000ll * ((a) & 0x7);
     __cavm_csr_fatal("CTIX_CTICIDR1", 1, a, 0, 0, 0, 0, 0);
@@ -782,6 +804,8 @@ static inline uint64_t CAVM_CTIX_CTICIDR2(uint64_t a)
         return 0x87a008010ff8ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87a008010ff8ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87a008010ff8ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010ff8ll + 0x80000ll * ((a) & 0x7);
     __cavm_csr_fatal("CTIX_CTICIDR2", 1, a, 0, 0, 0, 0, 0);
@@ -830,6 +854,8 @@ static inline uint64_t CAVM_CTIX_CTICIDR3(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010ffcll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010ffcll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010ffcll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010ffcll + 0x80000ll * ((a) & 0x7);
@@ -896,6 +922,8 @@ static inline uint64_t CAVM_CTIX_CTICONTROL(uint64_t a)
         return 0x87a008010000ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87a008010000ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87a008010000ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010000ll + 0x80000ll * ((a) & 0x7);
     __cavm_csr_fatal("CTIX_CTICONTROL", 1, a, 0, 0, 0, 0, 0);
@@ -947,6 +975,8 @@ static inline uint64_t CAVM_CTIX_CTIDEVAFF0(uint64_t a)
         return 0x87a008010fa8ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87a008010fa8ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87a008010fa8ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fa8ll + 0x80000ll * ((a) & 0x7);
     __cavm_csr_fatal("CTIX_CTIDEVAFF0", 1, a, 0, 0, 0, 0, 0);
@@ -997,6 +1027,8 @@ static inline uint64_t CAVM_CTIX_CTIDEVAFF1(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010facll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010facll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010facll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010facll + 0x80000ll * ((a) & 0x7);
@@ -1104,6 +1136,7 @@ union cavm_ctix_ctidevarch
     /* struct cavm_ctix_ctidevarch_s cn98xx; */
     /* struct cavm_ctix_ctidevarch_s cnf95xx; */
     /* struct cavm_ctix_ctidevarch_s f95mm; */
+    /* struct cavm_ctix_ctidevarch_s f95o; */
     /* struct cavm_ctix_ctidevarch_s loki; */
 };
 typedef union cavm_ctix_ctidevarch cavm_ctix_ctidevarch_t;
@@ -1122,6 +1155,8 @@ static inline uint64_t CAVM_CTIX_CTIDEVARCH(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010fbcll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010fbcll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010fbcll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fbcll + 0x80000ll * ((a) & 0x7);
@@ -1238,6 +1273,8 @@ static inline uint64_t CAVM_CTIX_CTIDEVID(uint64_t a)
         return 0x87a008010fc8ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87a008010fc8ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87a008010fc8ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fc8ll + 0x80000ll * ((a) & 0x7);
     __cavm_csr_fatal("CTIX_CTIDEVID", 1, a, 0, 0, 0, 0, 0);
@@ -1284,6 +1321,8 @@ static inline uint64_t CAVM_CTIX_CTIDEVID1(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010fc4ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010fc4ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010fc4ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fc4ll + 0x80000ll * ((a) & 0x7);
@@ -1332,6 +1371,8 @@ static inline uint64_t CAVM_CTIX_CTIDEVID2(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010fc0ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010fc0ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010fc0ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fc0ll + 0x80000ll * ((a) & 0x7);
@@ -1384,6 +1425,8 @@ static inline uint64_t CAVM_CTIX_CTIDEVTYPE(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010fccll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010fccll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010fccll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fccll + 0x80000ll * ((a) & 0x7);
@@ -1446,6 +1489,8 @@ static inline uint64_t CAVM_CTIX_CTIGATE(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010140ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010140ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010140ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010140ll + 0x80000ll * ((a) & 0x7);
@@ -1516,6 +1561,8 @@ static inline uint64_t CAVM_CTIX_CTIINENX(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=5) && (b<=9)))
         return 0x87a008010020ll + 0x80000ll * ((a) & 0x7) + 4ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=5) && (b<=9)))
+        return 0x87a008010020ll + 0x80000ll * ((a) & 0x7) + 4ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=5) && (b<=9)))
         return 0x87a008010020ll + 0x80000ll * ((a) & 0x7) + 4ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=5) && (b<=9)))
         return 0x87a008010020ll + 0x80000ll * ((a) & 0x7) + 4ll * ((b) & 0xf);
@@ -1604,6 +1651,8 @@ static inline uint64_t CAVM_CTIX_CTIINTACK(uint64_t a)
         return 0x87a008010010ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87a008010010ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87a008010010ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010010ll + 0x80000ll * ((a) & 0x7);
     __cavm_csr_fatal("CTIX_CTIINTACK", 1, a, 0, 0, 0, 0, 0);
@@ -1686,6 +1735,8 @@ static inline uint64_t CAVM_CTIX_CTIITCTRL(uint64_t a)
         return 0x87a008010f00ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87a008010f00ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87a008010f00ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010f00ll + 0x80000ll * ((a) & 0x7);
     __cavm_csr_fatal("CTIX_CTIITCTRL", 1, a, 0, 0, 0, 0, 0);
@@ -1737,6 +1788,8 @@ static inline uint64_t CAVM_CTIX_CTILAR(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010fb0ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010fb0ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010fb0ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fb0ll + 0x80000ll * ((a) & 0x7);
@@ -1818,6 +1871,8 @@ static inline uint64_t CAVM_CTIX_CTILSR(uint64_t a)
         return 0x87a008010fb4ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87a008010fb4ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87a008010fb4ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fb4ll + 0x80000ll * ((a) & 0x7);
     __cavm_csr_fatal("CTIX_CTILSR", 1, a, 0, 0, 0, 0, 0);
@@ -1887,6 +1942,8 @@ static inline uint64_t CAVM_CTIX_CTIOUTENX(uint64_t a, uint64_t b)
         return 0x87a0080100a0ll + 0x80000ll * ((a) & 0x7) + 4ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=5) && (b<=9)))
         return 0x87a0080100a0ll + 0x80000ll * ((a) & 0x7) + 4ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=5) && (b<=9)))
+        return 0x87a0080100a0ll + 0x80000ll * ((a) & 0x7) + 4ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=5) && (b<=9)))
         return 0x87a0080100a0ll + 0x80000ll * ((a) & 0x7) + 4ll * ((b) & 0xf);
     __cavm_csr_fatal("CTIX_CTIOUTENX", 2, a, b, 0, 0, 0, 0);
@@ -1935,6 +1992,8 @@ static inline uint64_t CAVM_CTIX_CTIPIDR0(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010fe0ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010fe0ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010fe0ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fe0ll + 0x80000ll * ((a) & 0x7);
@@ -1986,6 +2045,7 @@ union cavm_ctix_ctipidr1
     /* struct cavm_ctix_ctipidr1_cn96xxp3 cn98xx; */
     /* struct cavm_ctix_ctipidr1_cn96xxp3 cnf95xx; */
     /* struct cavm_ctix_ctipidr1_cn96xxp3 f95mm; */
+    /* struct cavm_ctix_ctipidr1_cn96xxp3 f95o; */
     /* struct cavm_ctix_ctipidr1_cn96xxp3 loki; */
 };
 typedef union cavm_ctix_ctipidr1 cavm_ctix_ctipidr1_t;
@@ -2004,6 +2064,8 @@ static inline uint64_t CAVM_CTIX_CTIPIDR1(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010fe4ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010fe4ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010fe4ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fe4ll + 0x80000ll * ((a) & 0x7);
@@ -2073,6 +2135,7 @@ union cavm_ctix_ctipidr2
     } cnf95xxp1;
     /* struct cavm_ctix_ctipidr2_s cnf95xxp2; */
     /* struct cavm_ctix_ctipidr2_s f95mm; */
+    /* struct cavm_ctix_ctipidr2_s f95o; */
     /* struct cavm_ctix_ctipidr2_s loki; */
 };
 typedef union cavm_ctix_ctipidr2 cavm_ctix_ctipidr2_t;
@@ -2091,6 +2154,8 @@ static inline uint64_t CAVM_CTIX_CTIPIDR2(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010fe8ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010fe8ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010fe8ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fe8ll + 0x80000ll * ((a) & 0x7);
@@ -2144,6 +2209,8 @@ static inline uint64_t CAVM_CTIX_CTIPIDR3(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010fecll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010fecll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010fecll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fecll + 0x80000ll * ((a) & 0x7);
@@ -2200,6 +2267,7 @@ union cavm_ctix_ctipidr4
     /* struct cavm_ctix_ctipidr4_cn9 cnf95xxp1; */
     /* struct cavm_ctix_ctipidr4_s cnf95xxp2; */
     /* struct cavm_ctix_ctipidr4_s f95mm; */
+    /* struct cavm_ctix_ctipidr4_s f95o; */
     /* struct cavm_ctix_ctipidr4_s loki; */
 };
 typedef union cavm_ctix_ctipidr4 cavm_ctix_ctipidr4_t;
@@ -2218,6 +2286,8 @@ static inline uint64_t CAVM_CTIX_CTIPIDR4(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010fd0ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010fd0ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010fd0ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fd0ll + 0x80000ll * ((a) & 0x7);
@@ -2266,6 +2336,8 @@ static inline uint64_t CAVM_CTIX_CTIPIDR5(uint64_t a)
         return 0x87a008010fd4ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87a008010fd4ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87a008010fd4ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fd4ll + 0x80000ll * ((a) & 0x7);
     __cavm_csr_fatal("CTIX_CTIPIDR5", 1, a, 0, 0, 0, 0, 0);
@@ -2313,6 +2385,8 @@ static inline uint64_t CAVM_CTIX_CTIPIDR6(uint64_t a)
         return 0x87a008010fd8ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
         return 0x87a008010fd8ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
+        return 0x87a008010fd8ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fd8ll + 0x80000ll * ((a) & 0x7);
     __cavm_csr_fatal("CTIX_CTIPIDR6", 1, a, 0, 0, 0, 0, 0);
@@ -2359,6 +2433,8 @@ static inline uint64_t CAVM_CTIX_CTIPIDR7(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010fdcll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010fdcll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010fdcll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010fdcll + 0x80000ll * ((a) & 0x7);
@@ -2422,6 +2498,8 @@ static inline uint64_t CAVM_CTIX_CTITRIGINSTATUS(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010130ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010130ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010130ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010130ll + 0x80000ll * ((a) & 0x7);
@@ -2491,6 +2569,8 @@ static inline uint64_t CAVM_CTIX_CTITRIGOUTSTATUS(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=5))
         return 0x87a008010134ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=5))
+        return 0x87a008010134ll + 0x80000ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=5))
         return 0x87a008010134ll + 0x80000ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=5))
         return 0x87a008010134ll + 0x80000ll * ((a) & 0x7);

@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -401,6 +401,7 @@ union cavm_fusf_ctl
     /* struct cavm_fusf_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_fusf_ctl_cn96xxp3 cnf95xx; */
     /* struct cavm_fusf_ctl_cn96xxp3 f95mm; */
+    /* struct cavm_fusf_ctl_cn96xxp3 f95o; */
     /* struct cavm_fusf_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_fusf_ctl cavm_fusf_ctl_t;

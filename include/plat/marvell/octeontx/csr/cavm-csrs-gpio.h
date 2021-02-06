@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -85,6 +85,7 @@
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CN98XX(a) (0x24 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CNF95XX(a) (6 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_F95MM(a) (6 + 2 * (a))
+#define CAVM_GPIO_INT_VEC_E_INTR_PINX_F95O(a) (6 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_LOKI(a) (6 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CLEAR_CN81XX(a) (5 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CLEAR_CN83XX(a) (0x19 + 2 * (a))
@@ -92,6 +93,7 @@
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CLEAR_CN98XX(a) (0x25 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CLEAR_CNF95XX(a) (7 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CLEAR_F95MM(a) (7 + 2 * (a))
+#define CAVM_GPIO_INT_VEC_E_INTR_PINX_CLEAR_F95O(a) (7 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_INTR_PINX_CLEAR_LOKI(a) (7 + 2 * (a))
 #define CAVM_GPIO_INT_VEC_E_MC_INTR_PPX(a) (0 + (a))
 
@@ -602,6 +604,8 @@ static inline uint64_t CAVM_GPIO_BIT_CFGX(uint64_t a)
         return 0x803000000400ll + 8ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=63))
         return 0x803000000400ll + 8ll * ((a) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=63))
+        return 0x803000000400ll + 8ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=63))
         return 0x803000000400ll + 8ll * ((a) & 0x3f);
     __cavm_csr_fatal("GPIO_BIT_CFGX", 1, a, 0, 0, 0, 0, 0);
@@ -663,6 +667,8 @@ static inline uint64_t CAVM_GPIO_BIT_PERMITX(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=63))
         return 0x803000002000ll + 8ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=63))
+        return 0x803000002000ll + 8ll * ((a) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=63))
         return 0x803000002000ll + 8ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=63))
         return 0x803000002000ll + 8ll * ((a) & 0x3f);
@@ -1238,7 +1244,7 @@ union cavm_gpio_clk_syncex
         uint64_t reserved_12_63        : 52;
 #endif /* Word 0 - End */
     } f95mm;
-    struct cavm_gpio_clk_syncex_loki
+    struct cavm_gpio_clk_syncex_f95o
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_12_63        : 52;
@@ -1271,7 +1277,8 @@ union cavm_gpio_clk_syncex
                                                                  1..5 = GSERC(0..4). */
         uint64_t reserved_12_63        : 52;
 #endif /* Word 0 - End */
-    } loki;
+    } f95o;
+    /* struct cavm_gpio_clk_syncex_f95o loki; */
 };
 typedef union cavm_gpio_clk_syncex cavm_gpio_clk_syncex_t;
 
@@ -1463,6 +1470,8 @@ static inline uint64_t CAVM_GPIO_INTRX(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=63))
         return 0x803000000800ll + 8ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=63))
+        return 0x803000000800ll + 8ll * ((a) & 0x3f);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=63))
         return 0x803000000800ll + 8ll * ((a) & 0x3f);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=63))
         return 0x803000000800ll + 8ll * ((a) & 0x3f);
@@ -1775,6 +1784,7 @@ union cavm_gpio_io_ctl
     /* struct cavm_gpio_io_ctl_cn96xxp1 cnf95xxp1; */
     /* struct cavm_gpio_io_ctl_cn96xxp3 cnf95xxp2; */
     /* struct cavm_gpio_io_ctl_cn96xxp3 f95mm; */
+    /* struct cavm_gpio_io_ctl_cn96xxp3 f95o; */
     /* struct cavm_gpio_io_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_gpio_io_ctl cavm_gpio_io_ctl_t;
@@ -1862,12 +1872,12 @@ union cavm_gpio_mc_intrx
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_24_63        : 40;
         uint64_t intr                  : 24; /**< [ 23:  0](R/W1C/H) GPIO interrupt for each core. When corresponding GPIO4-7 is edge-triggered and GPIO_MULTI_CAST[EN]
-                                                                 is enabled, a GPIO assertion will set all 24 bits. Each bit is expected to be routed to
+                                                                 is enabled, a GPIO assertion will set all the [INTR] bits. Each bit is expected to be routed to
                                                                  interrupt a different core using the GIC, and each core will then write one to clear its
                                                                  corresponding bit in this register. */
 #else /* Word 0 - Little Endian */
         uint64_t intr                  : 24; /**< [ 23:  0](R/W1C/H) GPIO interrupt for each core. When corresponding GPIO4-7 is edge-triggered and GPIO_MULTI_CAST[EN]
-                                                                 is enabled, a GPIO assertion will set all 24 bits. Each bit is expected to be routed to
+                                                                 is enabled, a GPIO assertion will set all the [INTR] bits. Each bit is expected to be routed to
                                                                  interrupt a different core using the GIC, and each core will then write one to clear its
                                                                  corresponding bit in this register. */
         uint64_t reserved_24_63        : 40;
@@ -1878,12 +1888,12 @@ union cavm_gpio_mc_intrx
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_36_63        : 28;
         uint64_t intr                  : 36; /**< [ 35:  0](R/W1C/H) GPIO interrupt for each core. When corresponding GPIO4-7 is edge-triggered and GPIO_MULTI_CAST[EN]
-                                                                 is enabled, a GPIO assertion will set all the INTR bits. Each bit is expected to be routed to
+                                                                 is enabled, a GPIO assertion will set all the [INTR] bits. Each bit is expected to be routed to
                                                                  interrupt a different core using the GIC, and each core will then write one to clear its
                                                                  corresponding bit in this register. */
 #else /* Word 0 - Little Endian */
         uint64_t intr                  : 36; /**< [ 35:  0](R/W1C/H) GPIO interrupt for each core. When corresponding GPIO4-7 is edge-triggered and GPIO_MULTI_CAST[EN]
-                                                                 is enabled, a GPIO assertion will set all the INTR bits. Each bit is expected to be routed to
+                                                                 is enabled, a GPIO assertion will set all the [INTR] bits. Each bit is expected to be routed to
                                                                  interrupt a different core using the GIC, and each core will then write one to clear its
                                                                  corresponding bit in this register. */
         uint64_t reserved_36_63        : 28;
@@ -1905,8 +1915,24 @@ union cavm_gpio_mc_intrx
         uint64_t reserved_6_63         : 58;
 #endif /* Word 0 - End */
     } cnf95xx;
-    /* struct cavm_gpio_mc_intrx_cnf95xx f95mm; */
-    /* struct cavm_gpio_mc_intrx_cnf95xx loki; */
+    struct cavm_gpio_mc_intrx_f95mm
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_6_63         : 58;
+        uint64_t intr                  : 6;  /**< [  5:  0](R/W1C/H) GPIO interrupt for each core. When corresponding GPIO4-7 is edge-triggered and GPIO_MULTI_CAST[EN]
+                                                                 is enabled, a GPIO assertion will set all the [INTR] bits. Each bit is expected to be routed to
+                                                                 interrupt a different core using the GIC, and each core will then write one to clear its
+                                                                 corresponding bit in this register. */
+#else /* Word 0 - Little Endian */
+        uint64_t intr                  : 6;  /**< [  5:  0](R/W1C/H) GPIO interrupt for each core. When corresponding GPIO4-7 is edge-triggered and GPIO_MULTI_CAST[EN]
+                                                                 is enabled, a GPIO assertion will set all the [INTR] bits. Each bit is expected to be routed to
+                                                                 interrupt a different core using the GIC, and each core will then write one to clear its
+                                                                 corresponding bit in this register. */
+        uint64_t reserved_6_63         : 58;
+#endif /* Word 0 - End */
+    } f95mm;
+    /* struct cavm_gpio_mc_intrx_cnf95xx f95o; */
+    /* struct cavm_gpio_mc_intrx_f95mm loki; */
 };
 typedef union cavm_gpio_mc_intrx cavm_gpio_mc_intrx_t;
 
@@ -1977,6 +2003,7 @@ union cavm_gpio_mc_intrx_ena_w1c
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_gpio_mc_intrx_ena_w1c_cnf95xx f95mm; */
+    /* struct cavm_gpio_mc_intrx_ena_w1c_cnf95xx f95o; */
     /* struct cavm_gpio_mc_intrx_ena_w1c_cnf95xx loki; */
 };
 typedef union cavm_gpio_mc_intrx_ena_w1c cavm_gpio_mc_intrx_ena_w1c_t;
@@ -2048,6 +2075,7 @@ union cavm_gpio_mc_intrx_ena_w1s
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_gpio_mc_intrx_ena_w1s_cnf95xx f95mm; */
+    /* struct cavm_gpio_mc_intrx_ena_w1s_cnf95xx f95o; */
     /* struct cavm_gpio_mc_intrx_ena_w1s_cnf95xx loki; */
 };
 typedef union cavm_gpio_mc_intrx_ena_w1s cavm_gpio_mc_intrx_ena_w1s_t;
@@ -2119,6 +2147,7 @@ union cavm_gpio_mc_intrx_w1s
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_gpio_mc_intrx_w1s_cnf95xx f95mm; */
+    /* struct cavm_gpio_mc_intrx_w1s_cnf95xx f95o; */
     /* struct cavm_gpio_mc_intrx_w1s_cnf95xx loki; */
 };
 typedef union cavm_gpio_mc_intrx_w1s cavm_gpio_mc_intrx_w1s_t;
@@ -2809,6 +2838,140 @@ union cavm_gpio_misc_supply
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_gpio_misc_supply_cnf95xx f95mm; */
+    struct cavm_gpio_misc_supply_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_24_63        : 40;
+        uint64_t vdet_scan             : 2;  /**< [ 23: 22](RO/H) Sensed I/O power supply setting for dedicated scan ports:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_avs              : 2;  /**< [ 21: 20](RO/H) Sensed I/O power supply setting for AVS bus:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved.
+
+                                                                 Internal:
+                                                                 Values echo VDET_TWS_AVS */
+        uint64_t vdet_emmc             : 2;  /**< [ 19: 18](RO/H) Sensed I/O power supply setting for EMMC bus:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_gpio0            : 2;  /**< [ 17: 16](RO/H) Sensed I/O power supply setting for GPIO0..23.
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_gpio24           : 2;  /**< [ 15: 14](RO/H) Sensed I/O power supply setting for GPIO24..47.
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_gpio48           : 2;  /**< [ 13: 12](RO/H) Sensed I/O power supply setting for GPIO48..63.
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_io_s             : 2;  /**< [ 11: 10](RO/H) Sensed I/O power supply setting for generic IO pins:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_io_n             : 2;  /**< [  9:  8](RO/H) Sensed I/O power supply setting for generic IO pins:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_pci              : 2;  /**< [  7:  6](RO/H) Sensed I/O power supply setting for PCI I/O pins:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_smi              : 2;  /**< [  5:  4](RO/H) Sensed I/O power supply setting for SMI bus:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_spi              : 2;  /**< [  3:  2](RO/H) Sensed I/O power supply setting for SPI0 bus:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_tws_avs          : 2;  /**< [  1:  0](RO/H) Sensed I/O power supply setting for TWSI and AVS:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+#else /* Word 0 - Little Endian */
+        uint64_t vdet_tws_avs          : 2;  /**< [  1:  0](RO/H) Sensed I/O power supply setting for TWSI and AVS:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_spi              : 2;  /**< [  3:  2](RO/H) Sensed I/O power supply setting for SPI0 bus:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_smi              : 2;  /**< [  5:  4](RO/H) Sensed I/O power supply setting for SMI bus:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_pci              : 2;  /**< [  7:  6](RO/H) Sensed I/O power supply setting for PCI I/O pins:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_io_n             : 2;  /**< [  9:  8](RO/H) Sensed I/O power supply setting for generic IO pins:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_io_s             : 2;  /**< [ 11: 10](RO/H) Sensed I/O power supply setting for generic IO pins:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_gpio48           : 2;  /**< [ 13: 12](RO/H) Sensed I/O power supply setting for GPIO48..63.
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_gpio24           : 2;  /**< [ 15: 14](RO/H) Sensed I/O power supply setting for GPIO24..47.
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_gpio0            : 2;  /**< [ 17: 16](RO/H) Sensed I/O power supply setting for GPIO0..23.
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_emmc             : 2;  /**< [ 19: 18](RO/H) Sensed I/O power supply setting for EMMC bus:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t vdet_avs              : 2;  /**< [ 21: 20](RO/H) Sensed I/O power supply setting for AVS bus:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved.
+
+                                                                 Internal:
+                                                                 Values echo VDET_TWS_AVS */
+        uint64_t vdet_scan             : 2;  /**< [ 23: 22](RO/H) Sensed I/O power supply setting for dedicated scan ports:
+                                                                 0x0 = 3.3 V.
+                                                                 0x1 = 2.5 V.
+                                                                 0x2/0x3 = 1.8 V.
+                                                                 _ All other values reserved. */
+        uint64_t reserved_24_63        : 40;
+#endif /* Word 0 - End */
+    } f95o;
     struct cavm_gpio_misc_supply_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -3004,6 +3167,8 @@ static inline uint64_t CAVM_GPIO_MSIX_PBAX(uint64_t a)
         return 0x803000ff0000ll + 8ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=2))
         return 0x803000ff0000ll + 8ll * ((a) & 0x3);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=2))
+        return 0x803000ff0000ll + 8ll * ((a) & 0x3);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=2))
         return 0x803000ff0000ll + 8ll * ((a) & 0x3);
     __cavm_csr_fatal("GPIO_MSIX_PBAX", 1, a, 0, 0, 0, 0, 0);
@@ -3144,6 +3309,7 @@ union cavm_gpio_msix_vecx_addr
     /* struct cavm_gpio_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_gpio_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_gpio_msix_vecx_addr_cn96xxp3 f95mm; */
+    /* struct cavm_gpio_msix_vecx_addr_cn96xxp3 f95o; */
     /* struct cavm_gpio_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_gpio_msix_vecx_addr cavm_gpio_msix_vecx_addr_t;
@@ -3162,6 +3328,8 @@ static inline uint64_t CAVM_GPIO_MSIX_VECX_ADDR(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=133))
         return 0x803000f00000ll + 0x10ll * ((a) & 0xff);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=133))
+        return 0x803000f00000ll + 0x10ll * ((a) & 0xff);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=133))
         return 0x803000f00000ll + 0x10ll * ((a) & 0xff);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=133))
         return 0x803000f00000ll + 0x10ll * ((a) & 0xff);
@@ -3230,6 +3398,8 @@ static inline uint64_t CAVM_GPIO_MSIX_VECX_CTL(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=133))
         return 0x803000f00008ll + 0x10ll * ((a) & 0xff);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=133))
+        return 0x803000f00008ll + 0x10ll * ((a) & 0xff);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=133))
         return 0x803000f00008ll + 0x10ll * ((a) & 0xff);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=133))
         return 0x803000f00008ll + 0x10ll * ((a) & 0xff);
@@ -3406,6 +3576,7 @@ union cavm_gpio_permit
 #endif /* Word 0 - End */
     } cnf95xx;
     /* struct cavm_gpio_permit_cnf95xx f95mm; */
+    /* struct cavm_gpio_permit_cnf95xx f95o; */
     /* struct cavm_gpio_permit_cnf95xx loki; */
 };
 typedef union cavm_gpio_permit cavm_gpio_permit_t;
@@ -3579,6 +3750,24 @@ union cavm_gpio_pkg_ver
         uint64_t reserved_3_63         : 61;
 #endif /* Word 0 - End */
     } f95mm;
+    struct cavm_gpio_pkg_ver_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_3_63         : 61;
+        uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
+                                                                 0x0 = SKU package A = for CNF95XXN.
+
+                                                                 Internal:
+                                                                 Architecturally defined, same encoding across same die. */
+#else /* Word 0 - Little Endian */
+        uint64_t pkg_ver               : 3;  /**< [  2:  0](RO/H) Reads the package version straps, which are set by the package.
+                                                                 0x0 = SKU package A = for CNF95XXN.
+
+                                                                 Internal:
+                                                                 Architecturally defined, same encoding across same die. */
+        uint64_t reserved_3_63         : 61;
+#endif /* Word 0 - End */
+    } f95o;
     struct cavm_gpio_pkg_ver_loki
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
@@ -3672,6 +3861,7 @@ union cavm_gpio_pspi_ctl
     /* struct cavm_gpio_pspi_ctl_cn96xxp3 cn98xx; */
     /* struct cavm_gpio_pspi_ctl_cn96xxp3 cnf95xx; */
     /* struct cavm_gpio_pspi_ctl_cn96xxp3 f95mm; */
+    /* struct cavm_gpio_pspi_ctl_cn96xxp3 f95o; */
     /* struct cavm_gpio_pspi_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_gpio_pspi_ctl cavm_gpio_pspi_ctl_t;
@@ -3932,6 +4122,7 @@ union cavm_gpio_strap1
     } cn98xx;
     /* struct cavm_gpio_strap1_cn9 cnf95xx; */
     /* struct cavm_gpio_strap1_cn9 f95mm; */
+    /* struct cavm_gpio_strap1_cn9 f95o; */
     /* struct cavm_gpio_strap1_cn9 loki; */
 };
 typedef union cavm_gpio_strap1 cavm_gpio_strap1_t;

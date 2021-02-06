@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -758,6 +758,7 @@ union cavm_mpix_cfg
     } cnf95xxp1;
     /* struct cavm_mpix_cfg_cn96xxp3 cnf95xxp2; */
     /* struct cavm_mpix_cfg_cn96xxp3 f95mm; */
+    /* struct cavm_mpix_cfg_cn96xxp3 f95o; */
     /* struct cavm_mpix_cfg_cn96xxp3 loki; */
 };
 typedef union cavm_mpix_cfg cavm_mpix_cfg_t;
@@ -836,6 +837,7 @@ union cavm_mpix_cfg2
     /* struct cavm_mpix_cfg2_cn96xxp3 cn98xx; */
     /* struct cavm_mpix_cfg2_cn96xxp3 cnf95xx; */
     /* struct cavm_mpix_cfg2_cn96xxp3 f95mm; */
+    /* struct cavm_mpix_cfg2_cn96xxp3 f95o; */
     /* struct cavm_mpix_cfg2_cn96xxp3 loki; */
 };
 typedef union cavm_mpix_cfg2 cavm_mpix_cfg2_t;
@@ -1019,6 +1021,7 @@ union cavm_mpix_const
     } cnf95xxp1;
     /* struct cavm_mpix_const_s cnf95xxp2; */
     /* struct cavm_mpix_const_s f95mm; */
+    /* struct cavm_mpix_const_s f95o; */
     /* struct cavm_mpix_const_s loki; */
 };
 typedef union cavm_mpix_const cavm_mpix_const_t;
@@ -1033,6 +1036,8 @@ static inline uint64_t CAVM_MPIX_CONST(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=1))
         return 0x804000000000ll + 0x1000000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
+        return 0x804000000000ll + 0x1000000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
         return 0x804000000000ll + 0x1000000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x804000000000ll + 0x1000000000ll * ((a) & 0x1);
@@ -1308,6 +1313,8 @@ static inline uint64_t CAVM_MPIX_FORCE_CS(uint64_t a)
         return 0x804000002088ll + 0x1000000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=1))
         return 0x804000002088ll + 0x1000000000ll * ((a) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=1))
+        return 0x804000002088ll + 0x1000000000ll * ((a) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=1))
         return 0x804000002088ll + 0x1000000000ll * ((a) & 0x1);
     __cavm_csr_fatal("MPIX_FORCE_CS", 1, a, 0, 0, 0, 0, 0);
@@ -1468,6 +1475,7 @@ union cavm_mpix_io_ctl
     /* struct cavm_mpix_io_ctl_s cnf95xxp1; */
     /* struct cavm_mpix_io_ctl_cn96xxp3 cnf95xxp2; */
     /* struct cavm_mpix_io_ctl_cn96xxp3 f95mm; */
+    /* struct cavm_mpix_io_ctl_cn96xxp3 f95o; */
     /* struct cavm_mpix_io_ctl_cn96xxp3 loki; */
 };
 typedef union cavm_mpix_io_ctl cavm_mpix_io_ctl_t;
@@ -1611,6 +1619,7 @@ union cavm_mpix_msix_vecx_addr
     /* struct cavm_mpix_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_mpix_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_mpix_msix_vecx_addr_cn96xxp3 f95mm; */
+    /* struct cavm_mpix_msix_vecx_addr_cn96xxp3 f95o; */
     /* struct cavm_mpix_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_mpix_msix_vecx_addr cavm_mpix_msix_vecx_addr_t;
@@ -1704,6 +1713,8 @@ static inline uint64_t CAVM_MPIX_RCVDX(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=143)))
         return 0x804000002800ll + 0x1000000000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=143)))
+        return 0x804000002800ll + 0x1000000000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=143)))
         return 0x804000002800ll + 0x1000000000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=143)))
         return 0x804000002800ll + 0x1000000000ll * ((a) & 0x1) + 8ll * ((b) & 0xff);
@@ -1800,6 +1811,7 @@ union cavm_mpix_sts
     /* struct cavm_mpix_sts_s cn98xx; */
     /* struct cavm_mpix_sts_s cnf95xx; */
     /* struct cavm_mpix_sts_s f95mm; */
+    /* struct cavm_mpix_sts_s f95o; */
     /* struct cavm_mpix_sts_s loki; */
 };
 typedef union cavm_mpix_sts cavm_mpix_sts_t;
@@ -1965,6 +1977,7 @@ union cavm_mpix_tx
     } cnf95xxp1;
     /* struct cavm_mpix_tx_s cnf95xxp2; */
     /* struct cavm_mpix_tx_s f95mm; */
+    /* struct cavm_mpix_tx_s f95o; */
     /* struct cavm_mpix_tx_s loki; */
 };
 typedef union cavm_mpix_tx cavm_mpix_tx_t;
@@ -2234,6 +2247,7 @@ union cavm_mpix_xmit
     } cnf95xxp1;
     /* struct cavm_mpix_xmit_cn96xxp3 cnf95xxp2; */
     /* struct cavm_mpix_xmit_cn96xxp3 f95mm; */
+    /* struct cavm_mpix_xmit_cn96xxp3 f95o; */
     /* struct cavm_mpix_xmit_cn96xxp3 loki; */
 };
 typedef union cavm_mpix_xmit cavm_mpix_xmit_t;

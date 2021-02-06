@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -84,6 +84,8 @@ static inline uint64_t CAVM_PEMRCX_MSIX_PBAX(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b==0)))
         return 0x8e0e000f0000ll + 0x1000000000ll * ((a) & 0x7) + 8ll * ((b) & 0x0);
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a==0) && (b==0)))
+        return 0x8e0e000f0000ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x0);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) && (b==0)))
         return 0x8e0e000f0000ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x0);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b==0)))
         return 0x8e0e000f0000ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x0);
@@ -288,6 +290,7 @@ union cavm_pemrcx_msix_vecx_addr
     } cn96xxp3;
     /* struct cavm_pemrcx_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_pemrcx_msix_vecx_addr_cn96xxp3 cnf95xx; */
+    /* struct cavm_pemrcx_msix_vecx_addr_cn96xxp3 f95o; */
     /* struct cavm_pemrcx_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_pemrcx_msix_vecx_addr cavm_pemrcx_msix_vecx_addr_t;
@@ -304,6 +307,8 @@ static inline uint64_t CAVM_PEMRCX_MSIX_VECX_ADDR(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=1)))
         return 0x8e0e00000000ll + 0x1000000000ll * ((a) & 0x7) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a==0) && (b<=1)))
+        return 0x8e0e00000000ll + 0x1000000000ll * ((a) & 0x0) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) && (b<=1)))
         return 0x8e0e00000000ll + 0x1000000000ll * ((a) & 0x0) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b<=1)))
         return 0x8e0e00000000ll + 0x1000000000ll * ((a) & 0x0) + 0x10ll * ((b) & 0x1);
@@ -368,6 +373,8 @@ static inline uint64_t CAVM_PEMRCX_MSIX_VECX_CTL(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CN98XX) && ((a<=4) && (b<=1)))
         return 0x8e0e00000008ll + 0x1000000000ll * ((a) & 0x7) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X) && ((a==0) && (b<=1)))
+        return 0x8e0e00000008ll + 0x1000000000ll * ((a) & 0x0) + 0x10ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a==0) && (b<=1)))
         return 0x8e0e00000008ll + 0x1000000000ll * ((a) & 0x0) + 0x10ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a==0) && (b<=1)))
         return 0x8e0e00000008ll + 0x1000000000ll * ((a) & 0x0) + 0x10ll * ((b) & 0x1);

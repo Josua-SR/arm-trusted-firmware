@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -231,6 +231,7 @@ union cavm_mdc_ras_entry_s
     /* struct cavm_mdc_ras_entry_s_cn96xxp3 cn98xx; */
     /* struct cavm_mdc_ras_entry_s_cn96xxp3 cnf95xx; */
     /* struct cavm_mdc_ras_entry_s_cn96xxp3 f95mm; */
+    /* struct cavm_mdc_ras_entry_s_cn96xxp3 f95o; */
     /* struct cavm_mdc_ras_entry_s_cn96xxp3 loki; */
 };
 
@@ -398,7 +399,134 @@ union cavm_mdc_bist_config
         uint64_t reserved_27_63        : 37;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_mdc_bist_config_s cn; */
+    /* struct cavm_mdc_bist_config_s cn9; */
+    /* struct cavm_mdc_bist_config_s cn96xxp1; */
+    struct cavm_mdc_bist_config_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_27_63        : 37;
+        uint64_t clock_gating_enable   : 1;  /**< [ 26: 26](R/W) When clear, force conditional clocks on. Clear for diagnostic use only.
+                                                                 Internal:
+                                                                 clock_forcer attribute not used as state is inverted versus other blocks. */
+        uint64_t mdc_broadcast         : 1;  /**< [ 25: 25](R/W) This field is used in conjunction with [MDH_START_RATIO], [MDN_START_RATIO],
+                                                                 and [STAGGER_PERIOD] to control BIST start staggering. The field
+                                                                 specifies whether or not a given BIST start command is transmitted to
+                                                                 all serial chains simultaneously or not.
+                                                                   0 = BIST start commands sent to one chain at a time.
+                                                                   1 = BIST start commands sent to all chains simultaneously. */
+        uint64_t mdh_start_ratio       : 3;  /**< [ 24: 22](R/W) This field is used in conjunction with [MDC_BROADCAST], [MDN_START_RATIO],
+                                                                 and [STAGGER_PERIOD] to control BIST start staggering.  The field effectively
+                                                                 specifies how many MDHs participates in a given BIST start command. Valid
+                                                                 values are 0 through 7.  The MDC programs MDN_BIST_ADDR_MASK[MDH_START_RATIO]
+                                                                 of all MDN's with this value prior to starting BIST.
+                                                                   0x0 = All MDHs participate - 1 hub loop.
+                                                                   0x1 = Every 2nd MDH participates - 2 hub loops.
+                                                                   0x2 = Every 4th MDH participates - 4 hub loops.
+                                                                   ...
+                                                                   0x7 = Every 128th MDH participates - 128 hub loops. */
+        uint64_t mdn_start_ratio       : 4;  /**< [ 21: 18](R/W) This field is used in conjunction with [MDC_BROADCAST], [MDH_START_RATIO],
+                                                                 and [STAGGER_PERIOD] to control BIST start staggering.  The field effectively
+                                                                 specifies how many MDNs participate in a given BIST start command.  The
+                                                                 value is formatted as the reciprocal of a base two exponent
+                                                                 (1/2^[MDN_START_RATIO]).  Valid values are 0 through 10.  The MDC programs
+                                                                 MDN_BIST_ADDR_MASK[MDN_START_RATIO] of all MDN's with this value prior
+                                                                 to starting BIST.
+                                                                   0x0 = All MDNs participate - 1 node loop.
+                                                                   0x1 = Every 2nd MDN participates - 2 node loops.
+                                                                   0x2 = Every 4th MDN participates - 4 node loops.
+                                                                   ...
+                                                                   0xA = Every 1024th MDN participates - 1024 node loops. */
+        uint64_t bisr_soft_disable_xor : 1;  /**< [ 17: 17](R/W) For diagnostic use only.
+                                                                 Internal:
+                                                                 This value is XORed with the FUS_FUSE_NUM_E::BISR_FUSED_ONLY fuse bit to
+                                                                 override its setting. When the FUS_FUSE_NUM_E::BISR_FUSED_ONLY fuse is blown,
+                                                                 only repairs that are blown into fuses are used and soft repairs are
+                                                                 disallowed. Overriding the fuse allows soft repairs to be used again. */
+        uint64_t stagger_disable       : 1;  /**< [ 16: 16](R/W) BIST stagger disable. Disables the BIST stagger period and starts BIST
+                                                                 via a broadcast write to all BIST state machines. For diagnostic use only. */
+        uint64_t stagger_period        : 16; /**< [ 15:  0](R/W) When BIST start staggering is enabled, a BIST start command is
+                                                                 periodically transmitted down 1 or more MDC serial chains through 1 or
+                                                                 more MDHs (hubs) to start BIST on 1 or more MDNs (nodes).  The total
+                                                                 number of start commands transmitted and the number of MDNs that start
+                                                                 BIST upon each command is a controlled by the settings of [MDC_BROADCAST],
+                                                                 [MDH_START_RATIO] and [MDN_START_RATIO].  At one extreme only a single BIST
+                                                                 start command is sent to start all MDNs simultaneously.  At the other
+                                                                 extreme a BIST start command is sent to each MDN individually to start
+                                                                 BIST sequentially.  The MDC root state machine loops upon chain (outer),
+                                                                 hub (middle) and node (inner) IDs when send the BIST start commands.
+
+                                                                 This field specifies the number of clocks between BIST start commands.
+                                                                 Increasing the value reduces the number of memories executing BIST
+                                                                 simultaneously thus reducing peak power consumption at the expense of
+                                                                 lengthening the overall time it takes to run BIST.  Decreasing the value
+                                                                 has the opposite effect of reducing the overall BIST run time while
+                                                                 increasing power consumption. */
+#else /* Word 0 - Little Endian */
+        uint64_t stagger_period        : 16; /**< [ 15:  0](R/W) When BIST start staggering is enabled, a BIST start command is
+                                                                 periodically transmitted down 1 or more MDC serial chains through 1 or
+                                                                 more MDHs (hubs) to start BIST on 1 or more MDNs (nodes).  The total
+                                                                 number of start commands transmitted and the number of MDNs that start
+                                                                 BIST upon each command is a controlled by the settings of [MDC_BROADCAST],
+                                                                 [MDH_START_RATIO] and [MDN_START_RATIO].  At one extreme only a single BIST
+                                                                 start command is sent to start all MDNs simultaneously.  At the other
+                                                                 extreme a BIST start command is sent to each MDN individually to start
+                                                                 BIST sequentially.  The MDC root state machine loops upon chain (outer),
+                                                                 hub (middle) and node (inner) IDs when send the BIST start commands.
+
+                                                                 This field specifies the number of clocks between BIST start commands.
+                                                                 Increasing the value reduces the number of memories executing BIST
+                                                                 simultaneously thus reducing peak power consumption at the expense of
+                                                                 lengthening the overall time it takes to run BIST.  Decreasing the value
+                                                                 has the opposite effect of reducing the overall BIST run time while
+                                                                 increasing power consumption. */
+        uint64_t stagger_disable       : 1;  /**< [ 16: 16](R/W) BIST stagger disable. Disables the BIST stagger period and starts BIST
+                                                                 via a broadcast write to all BIST state machines. For diagnostic use only. */
+        uint64_t bisr_soft_disable_xor : 1;  /**< [ 17: 17](R/W) For diagnostic use only.
+                                                                 Internal:
+                                                                 This value is XORed with the FUS_FUSE_NUM_E::BISR_FUSED_ONLY fuse bit to
+                                                                 override its setting. When the FUS_FUSE_NUM_E::BISR_FUSED_ONLY fuse is blown,
+                                                                 only repairs that are blown into fuses are used and soft repairs are
+                                                                 disallowed. Overriding the fuse allows soft repairs to be used again. */
+        uint64_t mdn_start_ratio       : 4;  /**< [ 21: 18](R/W) This field is used in conjunction with [MDC_BROADCAST], [MDH_START_RATIO],
+                                                                 and [STAGGER_PERIOD] to control BIST start staggering.  The field effectively
+                                                                 specifies how many MDNs participate in a given BIST start command.  The
+                                                                 value is formatted as the reciprocal of a base two exponent
+                                                                 (1/2^[MDN_START_RATIO]).  Valid values are 0 through 10.  The MDC programs
+                                                                 MDN_BIST_ADDR_MASK[MDN_START_RATIO] of all MDN's with this value prior
+                                                                 to starting BIST.
+                                                                   0x0 = All MDNs participate - 1 node loop.
+                                                                   0x1 = Every 2nd MDN participates - 2 node loops.
+                                                                   0x2 = Every 4th MDN participates - 4 node loops.
+                                                                   ...
+                                                                   0xA = Every 1024th MDN participates - 1024 node loops. */
+        uint64_t mdh_start_ratio       : 3;  /**< [ 24: 22](R/W) This field is used in conjunction with [MDC_BROADCAST], [MDN_START_RATIO],
+                                                                 and [STAGGER_PERIOD] to control BIST start staggering.  The field effectively
+                                                                 specifies how many MDHs participates in a given BIST start command. Valid
+                                                                 values are 0 through 7.  The MDC programs MDN_BIST_ADDR_MASK[MDH_START_RATIO]
+                                                                 of all MDN's with this value prior to starting BIST.
+                                                                   0x0 = All MDHs participate - 1 hub loop.
+                                                                   0x1 = Every 2nd MDH participates - 2 hub loops.
+                                                                   0x2 = Every 4th MDH participates - 4 hub loops.
+                                                                   ...
+                                                                   0x7 = Every 128th MDH participates - 128 hub loops. */
+        uint64_t mdc_broadcast         : 1;  /**< [ 25: 25](R/W) This field is used in conjunction with [MDH_START_RATIO], [MDN_START_RATIO],
+                                                                 and [STAGGER_PERIOD] to control BIST start staggering. The field
+                                                                 specifies whether or not a given BIST start command is transmitted to
+                                                                 all serial chains simultaneously or not.
+                                                                   0 = BIST start commands sent to one chain at a time.
+                                                                   1 = BIST start commands sent to all chains simultaneously. */
+        uint64_t clock_gating_enable   : 1;  /**< [ 26: 26](R/W) When clear, force conditional clocks on. Clear for diagnostic use only.
+                                                                 Internal:
+                                                                 clock_forcer attribute not used as state is inverted versus other blocks. */
+        uint64_t reserved_27_63        : 37;
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_mdc_bist_config_cn96xxp3 cn98xx; */
+    /* struct cavm_mdc_bist_config_s cnf95xxp1; */
+    /* struct cavm_mdc_bist_config_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_mdc_bist_config_cn96xxp3 f95mm; */
+    /* struct cavm_mdc_bist_config_s f95o; */
+    /* struct cavm_mdc_bist_config_cn96xxp3 loki; */
 };
 typedef union cavm_mdc_bist_config cavm_mdc_bist_config_t;
 
@@ -561,6 +689,7 @@ union cavm_mdc_bist_failx
     /* struct cavm_mdc_bist_failx_s cnf95xxp1; */
     /* struct cavm_mdc_bist_failx_cn96xxp3 cnf95xxp2; */
     /* struct cavm_mdc_bist_failx_cn96xxp3 f95mm; */
+    /* struct cavm_mdc_bist_failx_cn96xxp3 f95o; */
     /* struct cavm_mdc_bist_failx_cn96xxp3 loki; */
 };
 typedef union cavm_mdc_bist_failx cavm_mdc_bist_failx_t;
@@ -1130,6 +1259,7 @@ union cavm_mdc_pf_msix_vecx_addr
     /* struct cavm_mdc_pf_msix_vecx_addr_cn96xxp3 cn98xx; */
     /* struct cavm_mdc_pf_msix_vecx_addr_cn96xxp3 cnf95xx; */
     /* struct cavm_mdc_pf_msix_vecx_addr_cn96xxp3 f95mm; */
+    /* struct cavm_mdc_pf_msix_vecx_addr_cn96xxp3 f95o; */
     /* struct cavm_mdc_pf_msix_vecx_addr_cn96xxp3 loki; */
 };
 typedef union cavm_mdc_pf_msix_vecx_addr cavm_mdc_pf_msix_vecx_addr_t;
@@ -1249,6 +1379,8 @@ static inline uint64_t CAVM_MDC_RAS_ROMX(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=8191))
         return 0x87e010010000ll + 8ll * ((a) & 0x1fff);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=8191))
+        return 0x87e010010000ll + 8ll * ((a) & 0x1fff);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=8191))
         return 0x87e010010000ll + 8ll * ((a) & 0x1fff);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=8191))
         return 0x87e010010000ll + 8ll * ((a) & 0x1fff);

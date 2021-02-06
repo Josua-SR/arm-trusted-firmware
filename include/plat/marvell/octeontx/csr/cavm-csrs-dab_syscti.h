@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -894,6 +894,7 @@ union cavm_sysctix_ctidevarch
     /* struct cavm_sysctix_ctidevarch_s cn98xx; */
     /* struct cavm_sysctix_ctidevarch_s cnf95xx; */
     /* struct cavm_sysctix_ctidevarch_s f95mm; */
+    /* struct cavm_sysctix_ctidevarch_s f95o; */
     /* struct cavm_sysctix_ctidevarch_s loki; */
 };
 typedef union cavm_sysctix_ctidevarch cavm_sysctix_ctidevarch_t;
@@ -1624,6 +1625,7 @@ union cavm_sysctix_ctipidr1
     /* struct cavm_sysctix_ctipidr1_cn96xxp3 cn98xx; */
     /* struct cavm_sysctix_ctipidr1_cn96xxp3 cnf95xx; */
     /* struct cavm_sysctix_ctipidr1_cn96xxp3 f95mm; */
+    /* struct cavm_sysctix_ctipidr1_cn96xxp3 f95o; */
     /* struct cavm_sysctix_ctipidr1_cn96xxp3 loki; */
 };
 typedef union cavm_sysctix_ctipidr1 cavm_sysctix_ctipidr1_t;
@@ -1687,6 +1689,7 @@ union cavm_sysctix_ctipidr2
     /* struct cavm_sysctix_ctipidr2_s cn98xx; */
     /* struct cavm_sysctix_ctipidr2_s cnf95xx; */
     /* struct cavm_sysctix_ctipidr2_s f95mm; */
+    /* struct cavm_sysctix_ctipidr2_s f95o; */
     /* struct cavm_sysctix_ctipidr2_s loki; */
 };
 typedef union cavm_sysctix_ctipidr2 cavm_sysctix_ctipidr2_t;
@@ -1793,6 +1796,7 @@ union cavm_sysctix_ctipidr4
     /* struct cavm_sysctix_ctipidr4_s cn98xx; */
     /* struct cavm_sysctix_ctipidr4_s cnf95xx; */
     /* struct cavm_sysctix_ctipidr4_s f95mm; */
+    /* struct cavm_sysctix_ctipidr4_s f95o; */
     /* struct cavm_sysctix_ctipidr4_s loki; */
 };
 typedef union cavm_sysctix_ctipidr4 cavm_sysctix_ctipidr4_t;

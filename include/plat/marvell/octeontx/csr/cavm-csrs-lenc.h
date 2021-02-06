@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -244,6 +244,95 @@ union cavm_lenc_cb_cfg_s
                                                                  [CB_SKIP_FLAG] must be set to 0 for the last CB_CFG. */
         uint64_t prefix_bit_idx        : 6;  /**< [ 69: 64] The bit position of the first CB of the given CB_CFG in the first
                                                                  64-bit output.  This field is ignored if the given CB_CFG is not
+                                                                 the first CB_CFG of the task and LENC_CB_CFG_S[NEXT_CB_CFG_CONSECUTIVE]
+                                                                 of the previous CB_CFG = 1.
+                                                                 Valid range is [0x0, 0x3F].  Must be 0x0 for the first CB_CFG
+                                                                 when LENC_TASK_CFG_S[TB_CRC_FROM_CFG_FLAG] = 0. */
+#else /* Word 1 - Little Endian */
+        uint64_t prefix_bit_idx        : 6;  /**< [ 69: 64] The bit position of the first CB of the given CB_CFG in the first
+                                                                 64-bit output.  This field is ignored if the given CB_CFG is not
+                                                                 the first CB_CFG of the task and LENC_CB_CFG_S[NEXT_CB_CFG_CONSECUTIVE]
+                                                                 of the previous CB_CFG = 1.
+                                                                 Valid range is [0x0, 0x3F].  Must be 0x0 for the first CB_CFG
+                                                                 when LENC_TASK_CFG_S[TB_CRC_FROM_CFG_FLAG] = 0. */
+        uint64_t cb_skip_flag          : 1;  /**< [ 70: 70] CB skip flag:
+                                                                 0 = CBs belonging to this CB_CFG entry go through the whole processing chain.
+                                                                 1 = Only TB CRC is calculated for these CBs. All other operations are bypassed.
+                                                                 [CB_SKIP_FLAG] must be set to 0 for the last CB_CFG. */
+        uint64_t next_cb_cfg_consecutive : 1;/**< [ 71: 71] Consecutive CB_CFG indicator:
+
+                                                                 _ 0 = The next CB_CFG has its payload not contiguous with the current CB_CFG.
+                                                                 This implies trimming for the current CB_CFG and prefix trimming for the next
+                                                                 CB_CFG.
+
+                                                                 _ 1 = The next CB_CFG of the task has its payload contiguous with the current
+                                                                 CB_CFG. This implies no prefix/suffix trimming.
+
+                                                                 [NEXT_CB_CFG_CONSECUTIVE] must be set to 0 for the last CB_CFG. */
+        uint64_t reserved_72_127       : 56;
+#endif /* Word 1 - End */
+    } cnf95xxp2;
+    struct cavm_lenc_cb_cfg_s_f95o
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t rm_e                  : 21; /**< [ 63: 43] Rate matching size. Valid range is [ [CB_SIZE] / 0.95 , 0x166500 ].
+                                                                 * Must be \> 0x0.
+                                                                 * Must be an exact multiple of LENC_TASK_CFG_S[MOD_ORDER]. */
+        uint64_t nfiller               : 14; /**< [ 42: 29] The number of filler bits. */
+        uint64_t reserved_26_28        : 3;
+        uint64_t cb_size               : 14; /**< [ 25: 12] The code block size including CB CRC. It corresponds to 'K' in 38.212
+                                                                 and includes filler bits. K = 22*Z for BG1,  K = 10*Z for BG2.
+                                                                 The valid range is [0x28, 0x2100], where the minimum size is the
+                                                                 minimum LENC_TASK_CFG_S[TB_SIZE] of 24 bits plus the 16-bit TB CRC. */
+        uint64_t code_id               : 3;  /**< [ 11:  9] Reserved.
+                                                                 Internal:
+                                                                 Used only in DOCSIS.
+                                                                 0x3: UL traffic, Long (Z=360).
+                                                                 0x4: UL traffic, Medium (Z=180).
+                                                                 0x5: UL traffic, Short (Z=56).
+                                                                 0x6: Initial ranging.
+                                                                 0x7: Fine ranging.
+                                                                 0x0-0x2 : Reserved. */
+        uint64_t num_cb                : 9;  /**< [  8:  0] The number of consecutive code blocks with this CB configuration. Valid range is [0x1, 0x98]. */
+#else /* Word 0 - Little Endian */
+        uint64_t num_cb                : 9;  /**< [  8:  0] The number of consecutive code blocks with this CB configuration. Valid range is [0x1, 0x98]. */
+        uint64_t code_id               : 3;  /**< [ 11:  9] Reserved.
+                                                                 Internal:
+                                                                 Used only in DOCSIS.
+                                                                 0x3: UL traffic, Long (Z=360).
+                                                                 0x4: UL traffic, Medium (Z=180).
+                                                                 0x5: UL traffic, Short (Z=56).
+                                                                 0x6: Initial ranging.
+                                                                 0x7: Fine ranging.
+                                                                 0x0-0x2 : Reserved. */
+        uint64_t cb_size               : 14; /**< [ 25: 12] The code block size including CB CRC. It corresponds to 'K' in 38.212
+                                                                 and includes filler bits. K = 22*Z for BG1,  K = 10*Z for BG2.
+                                                                 The valid range is [0x28, 0x2100], where the minimum size is the
+                                                                 minimum LENC_TASK_CFG_S[TB_SIZE] of 24 bits plus the 16-bit TB CRC. */
+        uint64_t reserved_26_28        : 3;
+        uint64_t nfiller               : 14; /**< [ 42: 29] The number of filler bits. */
+        uint64_t rm_e                  : 21; /**< [ 63: 43] Rate matching size. Valid range is [ [CB_SIZE] / 0.95 , 0x166500 ].
+                                                                 * Must be \> 0x0.
+                                                                 * Must be an exact multiple of LENC_TASK_CFG_S[MOD_ORDER]. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t reserved_72_127       : 56;
+        uint64_t next_cb_cfg_consecutive : 1;/**< [ 71: 71] Consecutive CB_CFG indicator:
+
+                                                                 _ 0 = The next CB_CFG has its payload not contiguous with the current CB_CFG.
+                                                                 This implies trimming for the current CB_CFG and prefix trimming for the next
+                                                                 CB_CFG.
+
+                                                                 _ 1 = The next CB_CFG of the task has its payload contiguous with the current
+                                                                 CB_CFG. This implies no prefix/suffix trimming.
+
+                                                                 [NEXT_CB_CFG_CONSECUTIVE] must be set to 0 for the last CB_CFG. */
+        uint64_t cb_skip_flag          : 1;  /**< [ 70: 70] CB skip flag:
+                                                                 0 = CBs belonging to this CB_CFG entry go through the whole processing chain.
+                                                                 1 = Only TB CRC is calculated for these CBs. All other operations are bypassed.
+                                                                 [CB_SKIP_FLAG] must be set to 0 for the last CB_CFG. */
+        uint64_t prefix_bit_idx        : 6;  /**< [ 69: 64] The bit position of the first CB of the given CB_CFG in the first
+                                                                 64-bit output.  This field is ignored if the given CB_CFG is not
                                                                  the first CF_CFG of the task and LENC_CB_CFG_S[NEXT_CB_CFG_CONSECUTIVE]
                                                                  of the previous CB_CFG = 1.
                                                                  Valid range is [0x0, 0x3F].  Must be 0x0 for the first CB_CFG
@@ -271,7 +360,7 @@ union cavm_lenc_cb_cfg_s
                                                                  [NEXT_CB_CFG_CONSECUTIVE] must be set to 0 for the last CB_CFG. */
         uint64_t reserved_72_127       : 56;
 #endif /* Word 1 - End */
-    } cnf95xxp2;
+    } f95o;
     /* struct cavm_lenc_cb_cfg_s_cnf95xxp2 loki; */
 };
 
@@ -325,6 +414,7 @@ union cavm_lenc_common_cfg_s
         uint64_t reserved_6_63         : 58;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lenc_common_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_lenc_common_cfg_s_cnf95xxp2 loki; */
 };
 
@@ -1269,6 +1359,7 @@ union cavm_lenc_task_cfg_s
         uint64_t num_wr0_wrds          : 32; /**< [511:480] Number of words to write to write DMA port 0 for this task. Valid range is [0x1, 0x1D640]. */
 #endif /* Word 7 - End */
     } cnf95xxp2;
+    /* struct cavm_lenc_task_cfg_s_cnf95xxp2 f95o; */
     /* struct cavm_lenc_task_cfg_s_cnf95xxp2 loki; */
 };
 
@@ -1309,6 +1400,8 @@ static inline uint64_t CAVM_LENCX_ABX_CONTROL(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
         return 0x87e043300000ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
+        return 0x87e043300000ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043300000ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     __cavm_csr_fatal("LENCX_ABX_CONTROL", 2, a, b, 0, 0, 0, 0);
@@ -1348,6 +1441,8 @@ static inline uint64_t CAVM_LENCX_ABX_ECO(uint64_t a, uint64_t b) __attribute__ 
 static inline uint64_t CAVM_LENCX_ABX_ECO(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
+        return 0x87e043300008ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043300008ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043300008ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
@@ -1391,6 +1486,8 @@ static inline uint64_t CAVM_LENCX_ABX_ERROR_ENABLE0(uint64_t a, uint64_t b) __at
 static inline uint64_t CAVM_LENCX_ABX_ERROR_ENABLE0(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
+        return 0x87e043300040ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043300040ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043300040ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
@@ -1441,6 +1538,8 @@ static inline uint64_t CAVM_LENCX_ABX_ERROR_SOURCE0(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
         return 0x87e043300030ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
+        return 0x87e043300030ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043300030ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     __cavm_csr_fatal("LENCX_ABX_ERROR_SOURCE0", 2, a, b, 0, 0, 0, 0);
@@ -1479,6 +1578,7 @@ union cavm_lencx_abx_hab_jcfg0_ramx_data
         uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) JCFG0 RAM CSRs */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_hab_jcfg0_ramx_data_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_hab_jcfg0_ramx_data_cnf95xxp2 loki; */
 };
 typedef union cavm_lencx_abx_hab_jcfg0_ramx_data cavm_lencx_abx_hab_jcfg0_ramx_data_t;
@@ -1487,6 +1587,8 @@ static inline uint64_t CAVM_LENCX_ABX_HAB_JCFG0_RAMX_DATA(uint64_t a, uint64_t b
 static inline uint64_t CAVM_LENCX_ABX_HAB_JCFG0_RAMX_DATA(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1) && (c<=384)))
+        return 0x87e043302000ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 8ll * ((c) & 0x1ff);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1) && (c<=384)))
         return 0x87e043302000ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 8ll * ((c) & 0x1ff);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1) && (c<=384)))
         return 0x87e043302000ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 8ll * ((c) & 0x1ff);
@@ -1526,6 +1628,7 @@ union cavm_lencx_abx_hab_jcfg1_ramx_data
         uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) JCFG1 RAM CSRs */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_hab_jcfg1_ramx_data_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_hab_jcfg1_ramx_data_cnf95xxp2 loki; */
 };
 typedef union cavm_lencx_abx_hab_jcfg1_ramx_data cavm_lencx_abx_hab_jcfg1_ramx_data_t;
@@ -1534,6 +1637,8 @@ static inline uint64_t CAVM_LENCX_ABX_HAB_JCFG1_RAMX_DATA(uint64_t a, uint64_t b
 static inline uint64_t CAVM_LENCX_ABX_HAB_JCFG1_RAMX_DATA(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1) && (c<=384)))
+        return 0x87e043304000ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 8ll * ((c) & 0x1ff);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1) && (c<=384)))
         return 0x87e043304000ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 8ll * ((c) & 0x1ff);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1) && (c<=384)))
         return 0x87e043304000ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 8ll * ((c) & 0x1ff);
@@ -1573,6 +1678,7 @@ union cavm_lencx_abx_hab_jcfg2_ramx_data
         uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) JCFG2 RAM CSRs */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_hab_jcfg2_ramx_data_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_hab_jcfg2_ramx_data_cnf95xxp2 loki; */
 };
 typedef union cavm_lencx_abx_hab_jcfg2_ramx_data cavm_lencx_abx_hab_jcfg2_ramx_data_t;
@@ -1581,6 +1687,8 @@ static inline uint64_t CAVM_LENCX_ABX_HAB_JCFG2_RAMX_DATA(uint64_t a, uint64_t b
 static inline uint64_t CAVM_LENCX_ABX_HAB_JCFG2_RAMX_DATA(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1) && (c<=384)))
+        return 0x87e043306000ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 8ll * ((c) & 0x1ff);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1) && (c<=384)))
         return 0x87e043306000ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 8ll * ((c) & 0x1ff);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1) && (c<=384)))
         return 0x87e043306000ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 8ll * ((c) & 0x1ff);
@@ -1619,6 +1727,8 @@ static inline uint64_t CAVM_LENCX_ABX_SCRATCH(uint64_t a, uint64_t b) __attribut
 static inline uint64_t CAVM_LENCX_ABX_SCRATCH(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
+        return 0x87e043300080ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043300080ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043300080ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
@@ -1666,6 +1776,8 @@ static inline uint64_t CAVM_LENCX_ABX_STATUS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
         return 0x87e043300018ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
+        return 0x87e043300018ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043300018ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     __cavm_csr_fatal("LENCX_ABX_STATUS", 2, a, b, 0, 0, 0, 0);
@@ -1705,6 +1817,7 @@ union cavm_lencx_abx_tc_configx
         uint64_t entry                 : 64; /**< [ 63:  0](R/W/H) Config bits. */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_tc_configx_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_tc_configx_cnf95xxp2 loki; */
 };
 typedef union cavm_lencx_abx_tc_configx cavm_lencx_abx_tc_configx_t;
@@ -1713,6 +1826,8 @@ static inline uint64_t CAVM_LENCX_ABX_TC_CONFIGX(uint64_t a, uint64_t b, uint64_
 static inline uint64_t CAVM_LENCX_ABX_TC_CONFIGX(uint64_t a, uint64_t b, uint64_t c)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1) && (c<=7)))
+        return 0x87e043301400ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 8ll * ((c) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1) && (c<=7)))
         return 0x87e043301400ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 8ll * ((c) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1) && (c<=7)))
         return 0x87e043301400ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1) + 8ll * ((c) & 0x7);
@@ -1920,6 +2035,7 @@ union cavm_lencx_abx_tc_config_err_flags
         uint64_t reserved_19_63        : 45;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_tc_config_err_flags_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_tc_config_err_flags_cnf95xxp2 loki; */
 };
 typedef union cavm_lencx_abx_tc_config_err_flags cavm_lencx_abx_tc_config_err_flags_t;
@@ -1928,6 +2044,8 @@ static inline uint64_t CAVM_LENCX_ABX_TC_CONFIG_ERR_FLAGS(uint64_t a, uint64_t b
 static inline uint64_t CAVM_LENCX_ABX_TC_CONFIG_ERR_FLAGS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
+        return 0x87e043301040ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043301040ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043301040ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
@@ -2003,6 +2121,7 @@ union cavm_lencx_abx_tc_control
         uint64_t reserved_5_63         : 59;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_tc_control_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_tc_control_cnf95xxp2 loki; */
 };
 typedef union cavm_lencx_abx_tc_control cavm_lencx_abx_tc_control_t;
@@ -2011,6 +2130,8 @@ static inline uint64_t CAVM_LENCX_ABX_TC_CONTROL(uint64_t a, uint64_t b) __attri
 static inline uint64_t CAVM_LENCX_ABX_TC_CONTROL(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
+        return 0x87e043301010ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043301010ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043301010ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
@@ -2078,6 +2199,7 @@ union cavm_lencx_abx_tc_error
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_tc_error_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_tc_error_cnf95xxp2 loki; */
 };
 typedef union cavm_lencx_abx_tc_error cavm_lencx_abx_tc_error_t;
@@ -2086,6 +2208,8 @@ static inline uint64_t CAVM_LENCX_ABX_TC_ERROR(uint64_t a, uint64_t b) __attribu
 static inline uint64_t CAVM_LENCX_ABX_TC_ERROR(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
+        return 0x87e043301038ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043301038ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043301038ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
@@ -2127,6 +2251,8 @@ static inline uint64_t CAVM_LENCX_ABX_TC_ERROR_MASK(uint64_t a, uint64_t b) __at
 static inline uint64_t CAVM_LENCX_ABX_TC_ERROR_MASK(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
+        return 0x87e043301030ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043301030ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043301030ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
@@ -2170,6 +2296,7 @@ union cavm_lencx_abx_tc_main_reset
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_tc_main_reset_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_tc_main_reset_cnf95xxp2 loki; */
 };
 typedef union cavm_lencx_abx_tc_main_reset cavm_lencx_abx_tc_main_reset_t;
@@ -2178,6 +2305,8 @@ static inline uint64_t CAVM_LENCX_ABX_TC_MAIN_RESET(uint64_t a, uint64_t b) __at
 static inline uint64_t CAVM_LENCX_ABX_TC_MAIN_RESET(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
+        return 0x87e043301000ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043301000ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043301000ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
@@ -2222,6 +2351,7 @@ union cavm_lencx_abx_tc_main_start
         uint64_t reserved_1_63         : 63;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_tc_main_start_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_tc_main_start_cnf95xxp2 loki; */
 };
 typedef union cavm_lencx_abx_tc_main_start cavm_lencx_abx_tc_main_start_t;
@@ -2230,6 +2360,8 @@ static inline uint64_t CAVM_LENCX_ABX_TC_MAIN_START(uint64_t a, uint64_t b) __at
 static inline uint64_t CAVM_LENCX_ABX_TC_MAIN_START(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
+        return 0x87e043301008ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043301008ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043301008ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
@@ -2274,6 +2406,7 @@ union cavm_lencx_abx_tc_mon
         uint64_t reserved_16_63        : 48;
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_tc_mon_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_tc_mon_cnf95xxp2 loki; */
 };
 typedef union cavm_lencx_abx_tc_mon cavm_lencx_abx_tc_mon_t;
@@ -2282,6 +2415,8 @@ static inline uint64_t CAVM_LENCX_ABX_TC_MON(uint64_t a, uint64_t b) __attribute
 static inline uint64_t CAVM_LENCX_ABX_TC_MON(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
+        return 0x87e043301300ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043301300ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043301300ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
@@ -2329,6 +2464,7 @@ union cavm_lencx_abx_tc_status
         uint64_t monitor_bus           : 32; /**< [ 63: 32](RO/H) core dependent */
 #endif /* Word 0 - End */
     } cnf95xxp2;
+    /* struct cavm_lencx_abx_tc_status_cnf95xxp2 f95o; */
     /* struct cavm_lencx_abx_tc_status_cnf95xxp2 loki; */
 };
 typedef union cavm_lencx_abx_tc_status cavm_lencx_abx_tc_status_t;
@@ -2337,6 +2473,8 @@ static inline uint64_t CAVM_LENCX_ABX_TC_STATUS(uint64_t a, uint64_t b) __attrib
 static inline uint64_t CAVM_LENCX_ABX_TC_STATUS(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=1)))
+        return 0x87e043301020ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=1)))
         return 0x87e043301020ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=1)))
         return 0x87e043301020ll + 0x580000ll * ((a) & 0x1) + 0x8000ll * ((b) & 0x1);

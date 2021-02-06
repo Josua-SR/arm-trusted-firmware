@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2020 Marvell International Ltd.
+* Copyright (C) 2018-2021 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -89,6 +89,8 @@ static inline uint64_t CAVM_XSX_BP_TEST_FUNC(void)
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e045002140ll;
     if (cavm_is_model(OCTEONTX_F95MM))
+        return 0x87e045002140ll;
+    if (cavm_is_model(OCTEONTX_F95O))
         return 0x87e045002140ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x87e045002140ll;
@@ -189,6 +191,8 @@ static inline uint64_t CAVM_XSX_CONTROL_FUNC(void)
         return 0x87e045002000ll;
     if (cavm_is_model(OCTEONTX_F95MM))
         return 0x87e045002000ll;
+    if (cavm_is_model(OCTEONTX_F95O))
+        return 0x87e045002000ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x87e045002000ll;
     __cavm_csr_fatal("XSX_CONTROL", 0, 0, 0, 0, 0, 0, 0);
@@ -231,6 +235,8 @@ static inline uint64_t CAVM_XSX_ECO_FUNC(void)
     if (cavm_is_model(OCTEONTX_CNF95XX))
         return 0x87e045002010ll;
     if (cavm_is_model(OCTEONTX_F95MM))
+        return 0x87e045002010ll;
+    if (cavm_is_model(OCTEONTX_F95O))
         return 0x87e045002010ll;
     if (cavm_is_model(OCTEONTX_LOKI))
         return 0x87e045002010ll;
@@ -305,7 +311,72 @@ union cavm_xsx_smtx_arbpri
         uint64_t reserved_9_63         : 55;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_xsx_smtx_arbpri_s cn; */
+    /* struct cavm_xsx_smtx_arbpri_s cn9; */
+    /* struct cavm_xsx_smtx_arbpri_s cnf95xx; */
+    /* struct cavm_xsx_smtx_arbpri_s f95mm; */
+    /* struct cavm_xsx_smtx_arbpri_s f95o; */
+    struct cavm_xsx_smtx_arbpri_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_9_63         : 55;
+        uint64_t rotate                : 1;  /**< [  8:  8](R/W) Rotate bank arbitration read over write and port 0 over port 1 priority every cycle.
+                                                                   0 = Use static priority selected by [P0PRI] and [RDPRI].
+                                                                   1 = Change priority every cycle.
+
+                                                                 Internal:
+                                                                 Use [ROTATE]=0 to match o75 behavior. */
+        uint64_t reserved_6_7          : 2;
+        uint64_t hog_interval          : 2;  /**< [  5:  4](R/W) Static configuration that must only be changed during reset or system idle periods.
+                                                                 Defines interval to invert [RDPRI] setting.  Ignored when [HOGEN] = 0.
+                                                                   0 =  Every 8 cycles.
+                                                                   1 =  Every 16 cycles.
+                                                                   2 =  Every 32 cycles.
+                                                                   3 =  Every 64 cycles. */
+        uint64_t hog_mode              : 1;  /**< [  3:  3](R/W) Select hog target.
+                                                                   0 = Swap P0PRI on [HOG_INTERVAL] cycles.
+                                                                   1 = Invert HP vs. LP every [HOG_INTERVAL].  Allows LP to make forward progress
+
+                                                                 Internal:
+                                                                 The swap mode with [HOG_MODE]=0 is equivalent to the
+                                                                 behavior on o75. */
+        uint64_t hogen                 : 1;  /**< [  2:  2](R/W) Bus-hog limit enable. When set to 1 && [HOG_MODE] == 0, the [RDPRI] bit setting is inverted
+                                                                 every [HOG_INTERVAL] clock cycle to prevent starvation in the presence of
+                                                                 persistent conflicts. */
+        uint64_t rdpri                 : 1;  /**< [  1:  1](R/W) When set to 1, reads have priority over writes in bank conflicts. When
+                                                                 set to 0, writes have priority when resolving bank conflicts. */
+        uint64_t p0pri                 : 1;  /**< [  0:  0](R/W) When set to 1, XBAR 0 (mostly MHABs) requests have priority
+                                                                 over XBAR 1 (mostly MDABs) requests when resolving bank conflicts. */
+#else /* Word 0 - Little Endian */
+        uint64_t p0pri                 : 1;  /**< [  0:  0](R/W) When set to 1, XBAR 0 (mostly MHABs) requests have priority
+                                                                 over XBAR 1 (mostly MDABs) requests when resolving bank conflicts. */
+        uint64_t rdpri                 : 1;  /**< [  1:  1](R/W) When set to 1, reads have priority over writes in bank conflicts. When
+                                                                 set to 0, writes have priority when resolving bank conflicts. */
+        uint64_t hogen                 : 1;  /**< [  2:  2](R/W) Bus-hog limit enable. When set to 1 && [HOG_MODE] == 0, the [RDPRI] bit setting is inverted
+                                                                 every [HOG_INTERVAL] clock cycle to prevent starvation in the presence of
+                                                                 persistent conflicts. */
+        uint64_t hog_mode              : 1;  /**< [  3:  3](R/W) Select hog target.
+                                                                   0 = Swap P0PRI on [HOG_INTERVAL] cycles.
+                                                                   1 = Invert HP vs. LP every [HOG_INTERVAL].  Allows LP to make forward progress
+
+                                                                 Internal:
+                                                                 The swap mode with [HOG_MODE]=0 is equivalent to the
+                                                                 behavior on o75. */
+        uint64_t hog_interval          : 2;  /**< [  5:  4](R/W) Static configuration that must only be changed during reset or system idle periods.
+                                                                 Defines interval to invert [RDPRI] setting.  Ignored when [HOGEN] = 0.
+                                                                   0 =  Every 8 cycles.
+                                                                   1 =  Every 16 cycles.
+                                                                   2 =  Every 32 cycles.
+                                                                   3 =  Every 64 cycles. */
+        uint64_t reserved_6_7          : 2;
+        uint64_t rotate                : 1;  /**< [  8:  8](R/W) Rotate bank arbitration read over write and port 0 over port 1 priority every cycle.
+                                                                   0 = Use static priority selected by [P0PRI] and [RDPRI].
+                                                                   1 = Change priority every cycle.
+
+                                                                 Internal:
+                                                                 Use [ROTATE]=0 to match o75 behavior. */
+        uint64_t reserved_9_63         : 55;
+#endif /* Word 0 - End */
+    } loki;
 };
 typedef union cavm_xsx_smtx_arbpri cavm_xsx_smtx_arbpri_t;
 
@@ -315,6 +386,8 @@ static inline uint64_t CAVM_XSX_SMTX_ARBPRI(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=7))
         return 0x87e045000200ll + 0x400ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=7))
+        return 0x87e045000200ll + 0x400ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=7))
         return 0x87e045000200ll + 0x400ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=7))
         return 0x87e045000200ll + 0x400ll * ((a) & 0x7);
@@ -398,6 +471,8 @@ static inline uint64_t CAVM_XSX_SMTX_BP_TESTX(uint64_t a, uint64_t b)
         return 0x87e045000140ll + 0x400ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=7) && (b<=1)))
         return 0x87e045000140ll + 0x400ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=7) && (b<=1)))
+        return 0x87e045000140ll + 0x400ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=7) && (b<=1)))
         return 0x87e045000140ll + 0x400ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("XSX_SMTX_BP_TESTX", 2, a, b, 0, 0, 0, 0);
@@ -442,6 +517,8 @@ static inline uint64_t CAVM_XSX_SMTX_ERR(uint64_t a)
         return 0x87e045000100ll + 0x400ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=7))
         return 0x87e045000100ll + 0x400ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=7))
+        return 0x87e045000100ll + 0x400ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=7))
         return 0x87e045000100ll + 0x400ll * ((a) & 0x7);
     __cavm_csr_fatal("XSX_SMTX_ERR", 1, a, 0, 0, 0, 0, 0);
@@ -481,6 +558,8 @@ static inline uint64_t CAVM_XSX_SMTX_ERR_ECC_DISABLE(uint64_t a)
     if (cavm_is_model(OCTEONTX_CNF95XX) && (a<=7))
         return 0x87e045000120ll + 0x400ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=7))
+        return 0x87e045000120ll + 0x400ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=7))
         return 0x87e045000120ll + 0x400ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=7))
         return 0x87e045000120ll + 0x400ll * ((a) & 0x7);
@@ -534,6 +613,8 @@ static inline uint64_t CAVM_XSX_SMTX_ERR_ECC_FLIP(uint64_t a)
         return 0x87e045000128ll + 0x400ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=7))
         return 0x87e045000128ll + 0x400ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=7))
+        return 0x87e045000128ll + 0x400ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=7))
         return 0x87e045000128ll + 0x400ll * ((a) & 0x7);
     __cavm_csr_fatal("XSX_SMTX_ERR_ECC_FLIP", 1, a, 0, 0, 0, 0, 0);
@@ -553,9 +634,6 @@ static inline uint64_t CAVM_XSX_SMTX_ERR_ECC_FLIP(uint64_t a)
  * requests. Each input source is assigned an arbitration weight, and
  * weights are programmed separately for each of the eight memory tiles
  * (SMT(0..7)).
- *
- * The GHABs are connected via port 0 (P(0)). PNB0 is the highest source.
- * The GDABs are connected via port 1 (P(1)). PNB1 is the highest source.
  */
 union cavm_xsx_smtx_px_srcx_wrr
 {
@@ -584,6 +662,8 @@ static inline uint64_t CAVM_XSX_SMTX_PX_SRCX_WRR(uint64_t a, uint64_t b, uint64_
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=7) && (b<=1) && (c<=8)))
         return 0x87e045000000ll + 0x400ll * ((a) & 0x7) + 0x80ll * ((b) & 0x1) + 8ll * ((c) & 0xf);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=7) && (b<=1) && (c<=8)))
+        return 0x87e045000000ll + 0x400ll * ((a) & 0x7) + 0x80ll * ((b) & 0x1) + 8ll * ((c) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=7) && (b<=1) && (c<=8)))
         return 0x87e045000000ll + 0x400ll * ((a) & 0x7) + 0x80ll * ((b) & 0x1) + 8ll * ((c) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=7) && (b<=1) && (c<=8)))
         return 0x87e045000000ll + 0x400ll * ((a) & 0x7) + 0x80ll * ((b) & 0x1) + 8ll * ((c) & 0xf);
@@ -626,6 +706,8 @@ static inline uint64_t CAVM_XSX_SMTX_PORTX_RD_STAT(uint64_t a, uint64_t b)
         return 0x87e045000300ll + 0x400ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=7) && (b<=1)))
         return 0x87e045000300ll + 0x400ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=7) && (b<=1)))
+        return 0x87e045000300ll + 0x400ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=7) && (b<=1)))
         return 0x87e045000300ll + 0x400ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("XSX_SMTX_PORTX_RD_STAT", 2, a, b, 0, 0, 0, 0);
@@ -666,6 +748,8 @@ static inline uint64_t CAVM_XSX_SMTX_PORTX_WR_STAT(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=7) && (b<=1)))
         return 0x87e045000310ll + 0x400ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=7) && (b<=1)))
+        return 0x87e045000310ll + 0x400ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=7) && (b<=1)))
         return 0x87e045000310ll + 0x400ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=7) && (b<=1)))
         return 0x87e045000310ll + 0x400ll * ((a) & 0x7) + 8ll * ((b) & 0x1);
@@ -722,6 +806,8 @@ static inline uint64_t CAVM_XSX_SMTX_XARB_CTL(uint64_t a)
         return 0x87e045000210ll + 0x400ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_F95MM) && (a<=7))
         return 0x87e045000210ll + 0x400ll * ((a) & 0x7);
+    if (cavm_is_model(OCTEONTX_F95O) && (a<=7))
+        return 0x87e045000210ll + 0x400ll * ((a) & 0x7);
     if (cavm_is_model(OCTEONTX_LOKI) && (a<=7))
         return 0x87e045000210ll + 0x400ll * ((a) & 0x7);
     __cavm_csr_fatal("XSX_SMTX_XARB_CTL", 1, a, 0, 0, 0, 0, 0);
@@ -767,6 +853,8 @@ static inline uint64_t CAVM_XSX_XBARX_PORTX_RD_STAT(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=8)))
         return 0x87e045002300ll + 0x80ll * ((a) & 0x1) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=8)))
+        return 0x87e045002300ll + 0x80ll * ((a) & 0x1) + 8ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=8)))
         return 0x87e045002300ll + 0x80ll * ((a) & 0x1) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=8)))
         return 0x87e045002300ll + 0x80ll * ((a) & 0x1) + 8ll * ((b) & 0xf);
@@ -815,6 +903,8 @@ static inline uint64_t CAVM_XSX_XBARX_PORTX_WR_STAT(uint64_t a, uint64_t b)
     if (cavm_is_model(OCTEONTX_CNF95XX) && ((a<=1) && (b<=8)))
         return 0x87e045002400ll + 0x80ll * ((a) & 0x1) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=1) && (b<=8)))
+        return 0x87e045002400ll + 0x80ll * ((a) & 0x1) + 8ll * ((b) & 0xf);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=1) && (b<=8)))
         return 0x87e045002400ll + 0x80ll * ((a) & 0x1) + 8ll * ((b) & 0xf);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=1) && (b<=8)))
         return 0x87e045002400ll + 0x80ll * ((a) & 0x1) + 8ll * ((b) & 0xf);
