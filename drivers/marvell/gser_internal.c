@@ -157,11 +157,33 @@ static int gser_config_get_qlm_tuning(int prop, const char *mode, int baud_mhz,
 
 	snprintf(name, sizeof(name), "QLM-TUNING-TX-%s.%s.%d.N0.QLM%d.LANE%d",
 		type, mode, baud_mhz, qlm, lane);
-
 	buf = fdt_getprop(fdt, offset, name, &len);
 	if (!buf) {
-		debug_gser("No %s option is set in BDK DT\n", name);
-		return -1;
+		snprintf(name, sizeof(name), "QLM-TUNING-TX-%s.%s.%d.N0.QLM%d",
+			 type, mode, baud_mhz, qlm);
+		buf = fdt_getprop(fdt, offset, name, &len);
+		if (!buf) {
+			snprintf(name, sizeof(name), "QLM-TUNING-TX-%s.%s.%d.N0",
+				 type, mode, baud_mhz);
+			buf = fdt_getprop(fdt, offset, name, &len);
+			if (!buf) {
+				snprintf(name, sizeof(name), "QLM-TUNING-TX-%s.%s.%d",
+					 type, mode, baud_mhz);
+				buf = fdt_getprop(fdt, offset, name, &len);
+				if (!buf) {
+					snprintf(name, sizeof(name), "QLM-TUNING-TX-%s.%s",
+						 type, mode);
+					buf = fdt_getprop(fdt, offset, name, &len);
+					if (!buf) {
+						snprintf(name, sizeof(name), "QLM-TUNING-TX-%s",
+							 type);
+						buf = fdt_getprop(fdt, offset, name, &len);
+						debug_gser("No %s option is set in BDK DT\n", name);
+						return -1;
+					}
+				}
+			}
+		}
 	}
 	return strtol(buf, NULL, 16);
 }
