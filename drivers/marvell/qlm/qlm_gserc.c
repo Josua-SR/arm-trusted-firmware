@@ -191,7 +191,7 @@ static void qlm_gserc_update_dosc_cal_temp(int module)
 
 	/* Figure out which sensor to use */
 	if (gser_is_model(OCTEONTX_LOKI))
-		sensor = 2;  /* TSN2 is nearest to GSERC */
+		sensor = 6;  /* TSN6 is nearest to GSERC */
 	else
 	{
 		gser_error("GSERC: Unrecognized chip\n");
@@ -3988,7 +3988,7 @@ void qlm_gserc_init_reset()
 //
 //	/* Figure out which firmware file to use */
 //	if (gser_is_model(OCTEONTX_LOKI) || gser_is_model(OCTEONTX_F95O))
-//		sensor = 2;  /* TSN2 is nearest to GSERC */
+//		sensor = 6;  /* TSN6 is nearest to GSERC */
 //	else
 //	{
 //		gser_error("GSERC: Unrecognized chip\n");

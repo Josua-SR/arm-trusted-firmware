@@ -488,6 +488,8 @@ void plat_add_mmio(void)
 	 */
 	add_map_record(CAVM_TSN_BAR_E_TSNX_PF_BAR0(2),
 		       CAVM_TSN_BAR_E_TSNX_PF_BAR0_SIZE, attr);
+	add_map_record(CAVM_TSN_BAR_E_TSNX_PF_BAR0(6),
+		       CAVM_TSN_BAR_E_TSNX_PF_BAR0_SIZE, attr);
 }
 
 void plat_set_gpio_msix_vectors(int gpio_num, int irq_num, int enable)
