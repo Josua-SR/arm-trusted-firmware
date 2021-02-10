@@ -9,6 +9,7 @@
 #include <runtime_svc.h>
 #include <octeontx_svc.h>
 #include <platform_svc.h>
+#include <platform_irqs_def.h>
 #include <octeontx_common.h>
 #include <stdint.h>
 #include <tools_share/uuid.h>
@@ -34,6 +35,10 @@ uintptr_t otx2_svc_smc_handler(uint32_t smc_fid,
 	case PLAT_OCTEONTX_REMOVE_BPHY_PSM_ERRINT:
 		bphy_psm_clear_irq(x1);
 		SMC_RET1(handle, 0);
+		break;
+
+	case PLAT_OCTEONTX_GET_BPHY_PSM_MAX_IRQ:
+		SMC_RET1(handle, BPHY_PSM_IRQS_NUMBER);
 		break;
 
 	default:
