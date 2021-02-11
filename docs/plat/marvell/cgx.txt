@@ -1643,9 +1643,18 @@ listed above. In addition, MODE change from four-lane Ethernet (like 50G_4_C2C)
 to fewer-than-four-lane Ethernet (like 10G\_\*, 25G\_\*) and vice versa require that
 only LMAC0 is enabled for a given CGX; all other LMACs must remain disabled.
 
-Some of the valid use cases are listed here:
+The following are the valid standard mode changes.  Other chip/board specific mode
+changes are supported but not documented here.
 
 
-* MODE change between 1G\_X(1000 BASE-X)/10G\_\*/20G\_\*
-* MODE change between 50G\_4\*/25G\_2\*/10G\_KR
-* MODE change between 40G\_\*/80GAUI\*
+Single Lane Backplane/Chip-to-Chip Protocols
+* MODE change between SGMII / 1G_X(1000BASE-X) / XFI / 25GAUI_C2C / 25G_KR
+
+Single Lane Cable Protocols
+* MODE change between SGMII / 1G_X(1000BASE-X) / SFI / 25GAUI_C2M / 25G_CR
+
+Quad Lane Backplane/Chip-to-Chip Protocols
+* MODE change between XLAUI / CAUI_C2C / 100G_KR4
+
+Quad Lane Cable Protocols
+* MODE change between XLAUI_C2M / CAUI_C2M / 100G_CR4
