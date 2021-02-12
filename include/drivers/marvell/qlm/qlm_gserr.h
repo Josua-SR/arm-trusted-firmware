@@ -309,4 +309,14 @@ int qlm_gserr_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
  */
 int qlm_gserr_mode_chg_full_reset(int module, int baud_mhz);
 
+/**
+ * Completes a CMU reset sequence for a GSER* group.
+ * This results in a new calibration temp.
+ *
+ * @param module           Index into GSER* group
+ *
+ * @return Zero on success, negative on failure
+ */
+void qlm_gserr_cmu_reset(int module);
+
 #endif /* _QLM_GSERR_H_ */

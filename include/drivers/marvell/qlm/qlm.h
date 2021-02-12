@@ -327,6 +327,7 @@ typedef struct {
 	int (*qlm_nea_loopback)(int qlm, int lane, bool enable);
 	int (*qlm_fed_loopback)(int qlm, int lane, bool enable);
 	int (*qlm_mode_chg_full_reset)(int module, int baud_mhz);
+	void (*qlm_cmu_reset)(int module);
 } qlm_ops_t;
 
 /* QLM platform specific API */

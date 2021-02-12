@@ -294,4 +294,5 @@ const qlm_ops_t qlm_gserr_ops = {
 	.qlm_nea_loopback = qlm_gserr_nea_loopback,
 	.qlm_fed_loopback = qlm_gserr_fed_loopback,
 	.qlm_mode_chg_full_reset = qlm_gserr_mode_chg_full_reset,
+	.qlm_cmu_reset = qlm_gserr_cmu_reset,
 };
