@@ -5031,7 +5031,7 @@ static ap_802_3_adv_t qlm_gserc_ap_adv(int module, int lane, qlm_802_3ap_fec_t f
  *
  * @return Zero on success, negative on failure
  */
-void qlm_gserc_cmu_cfg(int module)
+static void qlm_gserc_cmu_cfg(int module)
 {
 	/* 1. Set tx/rx rate/width controls.  Completed in separate function */
 	/* 2. Bring all lanes to RESET power state. Completed in separate function */
@@ -5175,6 +5175,266 @@ int qlm_gserc_mode_chg_full_reset(int module, int baud_mhz)
 	}
 
 	return full_reset_req;
+}
+
+/**
+ * Completes a CMU reset sequence for a GSER* group.
+ * This results in a new calibration temp.
+ *
+ * @param module           Index into GSER* group
+ *
+ * @return Zero on success, negative on failure
+ */
+void qlm_gserc_cmu_reset(int module)
+{
+	int num_lanes = get_num_lanes(module);
+	uint64_t ln_an_cfg_orig[MAX_LANES];
+
+	/* Capture all lane an configurations. */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		GSER_CSR_INIT(bcfg, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane));
+		ln_an_cfg_orig[lane] = bcfg.s.ln_an_cfg;
+	}
+
+	/******* Start: Transition All AN enabled lanes to Reset Power State *******/
+	/* AN to Fixed Mode Step 3: Change AN slave lanes to fixed-rate mode.
+	 * AN slave lanes must be changed first.
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] == QLM_LANE_AN_SLAVE)
+		{
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_an_cfg = QLM_LANE_AN_DIS);
+			/* Delayed required between AN slave and AN master changes */
+			gser_wait_usec(1);
+		}
+	}
+
+	/* AN to Fixed Mode Step 4: Change AN master lanes to fixed-rate mode */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] == QLM_LANE_AN_MASTER)
+		{
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_an_cfg = QLM_LANE_AN_DIS);
+		}
+	}
+
+	/* AN to Fixed Mode Step 5: Wait for PHY firmware to release control of AN lane(s)
+	 * Wait for the “Lane State Change Ready” status bit to assert high
+	 * indicating the PHY firmware is releasing control of the lane
+	 * Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+	 * LN_STATE_CHNG_RDY = 1 PHY no longer controlling lane
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] != QLM_LANE_AN_DIS)
+		{
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+				gser_error("GSERC%d.%d: CHRDY1: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1\n", module, lane);
+		}
+	}
+	/******* End: Transition All AN enabled lanes to Reset Power State *******/
+
+	/******* Start: Transition All AN DISABLED lanes to Reset Power State *******/
+	/* 1. Bring all Fixed Mode lanes to RESET power state */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] == QLM_LANE_AN_DIS)
+		{
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_rst = 1);
+			GSER_TRACE(QLM, "GSERC%d.%d: Setting Lane Reset\n", module, lane);
+		}
+	}
+
+	/* 2. Wait for the PHY firmware to signal that the Lane is in the Reset
+		power state which is signaled by the lane Tx and Rx blocks negating
+		the Tx/Rx ready signals.
+		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+			LN_TX_RDY=0 Lane Tx is not ready
+			LN_RX_RDY=0 Lane Rx is not ready
+			LN_STATE_CHNG_RDY = 0 Lane is transitioning states */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] == QLM_LANE_AN_DIS)
+		{
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+			{
+				/* This is an interim step and happens fast, so sometimes we miss it */
+				//GSER_TRACE(QLM, "GSERC%d.%d: CHRDY2: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (change rate)\n", module, lane);
+			}
+		}
+	}
+
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] == QLM_LANE_AN_DIS)
+		{
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_TX_RDY, ==, 0, 500))
+				gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_tx_rdy]=0 (change rate)\n", module, lane);
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_RX_RDY, ==, 0, 500))
+				gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_rx_rdy]=0 (change rate)\n", module, lane);
+		}
+	}
+
+	/* 3. Wait for the “Lane State Change Ready” to signal that the lane has
+		transitioned to the “Reset” state.
+		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] == QLM_LANE_AN_DIS)
+		{
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+				gser_error("GSERC%d.%d: CHRDY3: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (change rate)\n", module, lane);
+		}
+	}
+	/******* End: Transition All AN DISABLED lanes to Reset Power State *******/
+
+	/* Complete cmu reset sequence */
+	qlm_gserc_cmu_cfg(module);
+
+	/******* Start: Transition All AN enabled lanes back to Active Power State *******/
+	/* AN to AN Extra Step 1
+	 * Switch the tx_clk_mux to the clock required for the new rate
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] != QLM_LANE_AN_DIS)
+		{
+			cavm_gsercx_lanex_control_bcfg_t lane_new = qlm_gserc_get_lane_mode(module, lane);
+
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.tx_clk_mux_sel = lane_new.s.tx_clk_mux_sel;
+					c.s.cgx_quad = lane_new.s.cgx_quad;
+					c.s.cgx_dual = lane_new.s.cgx_dual;
+					c.s.ln_link_stat = 0);
+		}
+	}
+
+	/* Restore original ln_an_cfg settings */
+	/* Set AN Slave lanes first */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] == QLM_LANE_AN_SLAVE)
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_an_cfg = ln_an_cfg_orig[lane]);
+	}
+
+	/* Delayed required between AN slave and AN master changes */
+	gser_wait_usec(1);
+
+	/* Set AN Master lanes */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] == QLM_LANE_AN_MASTER)
+		{
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_an_cfg = ln_an_cfg_orig[lane]);
+		}
+	}
+
+	/* For AN enabled lanes:
+	 * Wait for the “Lane State Change Ready” status bit to deassert
+	 * indicating the PHY firmware has taken control of lane
+	 * Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+	 * LN_STATE_CHNG_RDY = 0
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] != QLM_LANE_AN_DIS)
+		{
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+				gser_error("GSERC%d.%d: CHRDY4: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0\n", module, lane);
+		}
+	}
+	/******* End: Transition All AN enabled lanes back to Active Power State *******/
+
+	/******* Start: Transition All AN DISABLED lanes back to Active Power State *******/
+	/* Release all lanes in Fixed Rate mode from Reset
+	 * Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
+	 * LN_RST=0 Release the lane reset
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] == QLM_LANE_AN_DIS)
+		{
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.ln_rst = 0);
+		}
+	}
+
+	/* Fixed mode lanes Only: */
+	/* Wait for the “Lane State Change Ready” status bit to deassert
+	 * indicating the lane is transitioning to the “RESET” or "ACTIVE" state.
+	 * Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+	 * LN_STATE_CHNG_RDY = 0 Lane is transitioning power states
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] == QLM_LANE_AN_DIS)
+		{
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+			{
+				/* This is an interim step and happens fast, so sometimes we miss it */
+				//gser_error("GSERC%d.%d: CHRDY5: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0\n", module, lane);
+			}
+		}
+	}
+
+	/* Fixed mode lanes Only: */
+	/* Read/Poll for the GSERC to set the Lane State Change Ready flag and
+	 * drive the Lane Tx and Rx ready flags to signal that the lane as
+	 * returned to the ACTIVE state.
+	 * Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+	 * LN_TX_RDY=1 Lane Tx is ready
+	 * LN_RX_RDY=1 Lane Rx is ready
+	 * LN_STATE_CHNG_RDY = 1 Lane is in the “Active” power state
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] == QLM_LANE_AN_DIS)
+		{
+			GSER_TRACE(QLM, "GSERC%d.%d: Clearing Lane Reset\n", module, lane);
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_TX_RDY, ==, 1, 5000))
+				gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_tx_rdy]=1 (reset done)\n", module, lane);
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_RX_RDY, ==, 1, 5000))
+				gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_rx_rdy]=1 (reset done)\n", module, lane);
+		}
+	}
+
+	/* Fixed mode lanes Only: */
+	/* Wait for the PHY “Lane State Change Ready” to signal that the lane has
+	 * transitioned to the “RESET" or "ACTIVE" state.
+	 * Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+	 * LN_STATE_CHNG_RDY = 1 Lane is in the “RESET” or "ACTIVE" power state
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] == QLM_LANE_AN_DIS)
+		{
+			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+				gser_error("GSERC%d.%d: CHRDY6: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1\n", module, lane);
+		}
+	}
+
+	/* Fixed to Fixed Mode Step 15. Enable the Tx/Rx FIFOs between CGX and GSERC
+	 * Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
+	 * CFG_CGX = 1 Enable Tx and Rx Async FIFOs to CGX
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (ln_an_cfg_orig[lane] == QLM_LANE_AN_DIS)
+		{
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+					c.s.cfg_cgx = 1);
+			gser_wait_usec(1000);
+		}
+	}
+	/******* End: Transition All AN DISABLED lanes back to Active Power State *******/
 }
 
 /**
