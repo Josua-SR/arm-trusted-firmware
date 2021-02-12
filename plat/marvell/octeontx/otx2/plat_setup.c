@@ -160,7 +160,7 @@ unsigned int plat_configure_cpt_rid(void)
  * Program REVID for PCIe devices.
  * Bits 0..1: minor pass
  * Bits 3..2: major pass
- * Bits 7..4: midr id, 0:96, 1:95, 2:loki, 3:98, 4:f95mm 5:f95o f:unknown
+ * Bits 7..4: midr id, 0:96, 1:95, 2:loki, 3:98, 4:f95mm 14:f95o f:unknown
  */
 unsigned int plat_configure_rid(void)
 {
@@ -193,7 +193,7 @@ unsigned int plat_configure_rid(void)
 		break;
 
 	case F95OPARTNUM:
-		midr_id = 5;
+		midr_id = 14;
 		break;
 
 	default:
