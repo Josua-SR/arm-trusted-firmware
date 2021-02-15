@@ -112,6 +112,7 @@ enum cgx_cmd_id {
 	CGX_CMD_TUNE_SERDES,
 	CGX_CMD_LEQ_ADAPT_SERDES,
 	CGX_CMD_DFE_ADAPT_SERDES,		/* = 40 */
+	CGX_CMD_DO_CMU_RESET,
 };
 
 /* async event ids */
@@ -438,6 +439,13 @@ struct cgx_set_fec_args {
 	uint64_t reserved2:54;
 };
 
+/* command argument to be passed for cmd ID - CGX_CMD_SET_FEC */
+struct cgx_do_cmu_reset {
+	uint64_t reserved1:8;
+	uint64_t cgx:3;
+	uint64_t reserved2:53;
+};
+
 /* command argument to be passed for cmd ID - CGX_CMD_SET_PHY_MOD_TYPE */
 struct cgx_set_phy_mod_args {
 	uint64_t reserved1:8;
@@ -513,6 +521,7 @@ union cgx_cmd_s {
 	struct cgx_set_mode_args mode_args;
 	struct cgx_mode_change_args mode_change_args;
 	struct cgx_set_fec_args fec_args;
+	struct cgx_do_cmu_reset cmu_args;
 	struct cgx_set_phy_mod_args phy_mod_args;
 	struct cgx_set_flash_ignore_args persist_args;
 	struct cgx_mac_addr_args mac_args;

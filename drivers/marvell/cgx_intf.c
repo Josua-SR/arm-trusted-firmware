@@ -1520,6 +1520,112 @@ anlt_fec_fail:
 	return -1;
 }
 
+int cgx_do_cmu_reset(int cgx_id, int lmac_id, int cgx_to_reset)
+{
+	cgx_lmac_config_t *lmac_tmp;
+	cgx_lmac_config_t *lmac;
+	cgx_config_t *cgx;
+	cgx_config_t *cgx_temp;
+	int gserx_pre = -1; /* set to invalid gserx num */
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		return 0;
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
+	lmac = &cgx->lmac_cfg[lmac_id];
+
+	if (cgx_to_reset == -1) {
+		for (int cgx_idx = 0; cgx_idx < MAX_CGX; cgx_idx++) {
+			cgx_temp = &plat_octeontx_bcfg->cgx_cfg[cgx_idx];
+			/* Bring link down all CGX links */
+			for (int lmac_idx = 0; lmac_idx < MAX_LMAC_PER_CGX; lmac_idx++) {
+				lmac_tmp = &cgx_temp->lmac_cfg[lmac_idx];
+				/* Don't need to bring down CPRI links */
+				if (plat_octeontx_bcfg->qlm_cfg[lmac_tmp->gserx].is_cpri)
+					continue;
+				if (cgx_link_bringdown(cgx_idx, lmac_idx)) {
+					debug_cgx_intf("%s: CGX%d:%d Failed to bring link down\n",
+						       __func__, cgx_idx, lmac_idx);
+					goto mode_err;
+				}
+			}
+
+			for (int lmac_idx = 0; lmac_idx < MAX_LMAC_PER_CGX; lmac_idx++) {
+				lmac_tmp = &cgx_temp->lmac_cfg[lmac_idx];
+				/* Don't need to bring down CPRI links */
+				if (plat_octeontx_bcfg->qlm_cfg[lmac_tmp->gserx].is_cpri)
+					continue;
+				/* CMU reset only needs to be done 1 time per GSERX */
+				if (lmac_tmp->gserx != gserx_pre) {
+					/* Complete CMU reset */
+					cgx_temp->qlm_ops->qlm_cmu_reset(lmac_tmp->gserx);
+					gserx_pre = lmac_tmp->gserx;
+				}
+			}
+
+			/* Bring up all CGX links */
+			for (int lmac_idx = 0; lmac_idx < MAX_LMAC_PER_CGX; lmac_idx++) {
+				lmac_tmp = &cgx_temp->lmac_cfg[lmac_idx];
+				/* Don't need to bring down CPRI links */
+				if (plat_octeontx_bcfg->qlm_cfg[lmac_tmp->gserx].is_cpri)
+					continue;
+				/* Bring UP the CGX link */
+				cgx_lmac_init(cgx_id, lmac_idx);
+				cgx_link_bringup(cgx_id, lmac_idx);
+				/* Clear any errors set during LINK bring up as the mode
+				 * is changed now successfully and link may come up
+				 * later. In this case, still return SUCCESS for MODE
+				 * change command
+				 */
+				cgx_set_error_type(cgx_id, lmac_idx, 0);
+			}
+		}
+		printf("reset all qlms that are enabled\n");
+	} else {
+		/* Bring down all Links connected to the same
+		 * GSERx as the CGX LMAC
+		 */
+		for (int lmac_idx = 0; lmac_idx < MAX_LMAC_PER_CGX; lmac_idx++) {
+			lmac_tmp = &cgx->lmac_cfg[lmac_idx];
+			if (lmac_tmp->gserx == lmac->gserx) {
+				if (cgx_link_bringdown(cgx_id, lmac_idx)) {
+					debug_cgx_intf("%s: CGX%d:%d Failed to bring link down\n",
+						       __func__, cgx_id, lmac_idx);
+					goto mode_err;
+				}
+			}
+		}
+
+		cgx->qlm_ops->qlm_cmu_reset(lmac->gserx);
+
+		/* Bring back all Links connected to the same
+		 * GSERx as the CGX LMAC
+		 */
+		for (int lmac_idx = 0; lmac_idx < MAX_LMAC_PER_CGX; lmac_idx++) {
+			lmac_tmp = &cgx->lmac_cfg[lmac_idx];
+			if (lmac_tmp->gserx == lmac->gserx) {
+				cgx_lmac_init(cgx_id, lmac_idx);
+
+				/* Bring UP the CGX link */
+				cgx_link_bringup(cgx_id, lmac_idx);
+
+				/* Clear any errors set during LINK bring up as the mode
+				 * is changed now successfully and link may come up
+				 * later. In this case, still return SUCCESS for MODE
+				 * change command
+				 */
+				cgx_set_error_type(cgx_id, lmac_idx, 0);
+			}
+		}
+	}
+
+	return 0;
+
+mode_err:
+	return -1;
+}
+
 static int cgx_control_higig2(int cgx_id, int lmac_id, int enable)
 {
 	struct val {
@@ -1859,6 +1965,19 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 						"Flash update fec failed\n");
 				}
 			break;
+			case CGX_CMD_DO_CMU_RESET:
+			{
+				scratchx1.u = CSR_READ(CAVM_CGXX_CMRX_SCRATCHX(
+						       cgx_id, lmac_id, 1));
+				int cgx_to_reset = scratchx1.s.cmu_args.cgx;
+
+				debug_cgx_intf("%s: %d:%d requested CMU reset on %d\n",
+					       __func__,
+					       cgx_id, lmac_id, cgx_to_reset);
+				ret = cgx_do_cmu_reset(cgx_id, lmac_id,
+						       cgx_to_reset);
+				break;
+			}
 			case CGX_CMD_SET_PHY_MOD_TYPE:
 				phy_mod_type = scratchx1.s.phy_mod_args.mod;
 				ret = cgx_set_phy_mod_type(cgx_id, lmac_id,

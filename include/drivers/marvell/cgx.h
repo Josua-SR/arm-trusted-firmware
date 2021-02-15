@@ -335,7 +335,7 @@ void cgx_fw_intf_shutdown(void);
 
 int cgx_read_flash_fec(int cgx_id, int lmac_id, int *fec);
 int cgx_set_fec_type(int cgx_id, int lmac_id, int req_fec);
-
+int cgx_do_cmu_reset(int cgx_id, int lmac_id, int cgx_to_reset);
 int cgx_read_flash_ignore(int cgx_id, int lmac_id, int *ignore);
 int cgx_read_flash_mode_param(int cgx_id, int lmac_id, int *qlm_mode,
 			      int *lmac_mode);
