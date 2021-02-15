@@ -264,7 +264,6 @@ const qlm_ops_t qlm_gserr_ops = {
 	.type = QLM_GSERR_TYPE,
 	.qlm_get_state = qlm_gserr_get_state,
 	.qlm_set_state = qlm_gserr_set_state,
-	.qlm_set_mode = qlm_gserr_set_mode,
 	.qlm_cfg_mode = qlm_gserr_cfg_mode,
 	.qlm_measure_refclock = qlm_gserr_measure_refclock,
 	.qlm_reset = qlm_gserr_reset,
