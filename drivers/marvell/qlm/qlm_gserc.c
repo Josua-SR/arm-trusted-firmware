@@ -34,8 +34,8 @@
 
 static cavm_gsercx_common_phy_ctrl_bcfg_t qlm_gserc_get_clock_mode(int module);
 static cavm_gsercx_lanex_control_bcfg_t qlm_gserc_get_lane_mode(int module, int lane);
-static int qlm_gserc_change_lane_rate(int module, int lane);
-static int qlm_gserc_change_phy_rate(int module);
+//static int qlm_gserc_change_lane_rate(int module, int lane);
+//static int qlm_gserc_change_phy_rate(int module);
 static int mailbox_command(int qlm, uint8_t cmd, uint64_t args);
 static int mailbox_response(int qlm, uint64_t *arg0, uint64_t *arg1);
 static void qlm_gserc_lane_rst(int module, int lane, bool reset);
@@ -238,94 +238,94 @@ static void qlm_gserc_update_dosc_cal_temp(int module)
  *
  * @return Zero on success, negative on failure
  */
-int qlm_gserc_set_mode(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mode_flags_t flags)
-{
-	qlm_state_lane_t state = qlm_build_state(mode, baud_mhz, flags);
-	int num_lanes = get_num_lanes(qlm);
-
-	int start_lane = (lane == -1) ? 0 : lane;
-	int end_lane = (lane == -1) ? num_lanes - 1 : lane;
-
-	/* Loop through all lanes */
-	bool need_full_reset = false;
-	for (int l = start_lane; l <= end_lane; l++)
-	{
-		need_full_reset |= gserc_is_cpri(qlm, l);
-		GSER_CSR_WRITE(CAVM_GSERCX_SCRATCHX(qlm, l), state.u);
-	}
-
-	/* Return without changing the SERDES is the microcontroller isn't
-	   running. Setup will be completed when it is brought up.*/
-	GSER_CSR_INIT(gsercx_init_ctl, CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(0));
-	if (gsercx_init_ctl.s.cpu_reset || (mode == QLM_MODE_DISABLED))
-		return 0;
-
-	for (int l = start_lane; l <= end_lane; l++)
-	{
-		GSER_CSR_INIT(lane_old, CAVM_GSERCX_LANEX_CONTROL_BCFG(qlm, l));
-		need_full_reset |= lane_old.s.ln_an_cfg;
-	}
-
-	/* Check if clocking needs to change */
-	GSER_CSR_INIT(bcfg_old, CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(qlm));
-	cavm_gsercx_common_phy_ctrl_bcfg_t bcfg_new = qlm_gserc_get_clock_mode(qlm);
-	if (need_full_reset)
-		GSER_TRACE(QLM, "GSERC%d: PHY rates require a full reset\n", qlm);
-	else if (bcfg_old.u != bcfg_new.u)
-		qlm_gserc_change_phy_rate(qlm);
-	else
-		GSER_TRACE(QLM, "GSERC%d: PHY rates already correct\n", qlm);
-
-	gser_wait_usec(1000);
-
-	/* Check if lane speed needs to change */
-	for (int l = start_lane; l <= end_lane; l++)
-	{
-		GSER_CSR_INIT(lane_old, CAVM_GSERCX_LANEX_CONTROL_BCFG(qlm, l));
-		cavm_gsercx_lanex_control_bcfg_t lane_new = qlm_gserc_get_lane_mode(qlm, l);
-		bool need_change = (bcfg_old.u != bcfg_new.u) || (lane_old.u != lane_new.u);
-		if (need_change)
-		{
-			need_full_reset |= lane_new.s.ln_an_cfg;
-			gser_wait_usec(1000);
-#if 0
-			if (need_full_reset)
-			{
-				qlm_gserc_init_reset();
-				qlm_gserc_init();
-				break; /* Full reset finishes reconfig, so exit loop */
-			}
-			else
-#endif
-				qlm_gserc_change_lane_rate(qlm, l);
-			gser_wait_usec(1000);
-#if defined(PLAT_loki)
-			if (mode == QLM_MODE_CPRI) {
-				if ((flags >> 3) & 0x1) {
-extern void qlm_gserc_rx_dfe_adaptation(int qlm, int lane);
-					qlm_gserc_rx_dfe_adaptation(qlm, l);
-				}
-				if ((flags >> 2) & 0x1) {
-extern void qlm_gserc_rx_leq_adaptation(int qlm, int lane,
-	int leq_lfg_start, int leq_hfg_sql_start, int leq_mbf_start,
-	int leq_mbg_start, int gn_apg_start);
-					qlm_gserc_rx_leq_adaptation(qlm, l, 2, 8, 0, 8, 3);
-				}
-			}
-#endif
-	                apply_tuning(qlm, l);
-			/* Perform lane reset */
-			if (mode == QLM_MODE_CPRI) {
-				qlm_gserc_lane_rst(qlm, l, 1);
-				qlm_gserc_lane_rst(qlm, l, 0);
-			}
-		}
-		else
-			GSER_TRACE(QLM, "GSERC%d.%d: Lane mode already correct\n", qlm, l);
-	}
-
-	return 0;
-}
+//int qlm_gserc_set_mode(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mode_flags_t flags)
+//{
+//	qlm_state_lane_t state = qlm_build_state(mode, baud_mhz, flags);
+//	int num_lanes = get_num_lanes(qlm);
+//
+//	int start_lane = (lane == -1) ? 0 : lane;
+//	int end_lane = (lane == -1) ? num_lanes - 1 : lane;
+//
+//	/* Loop through all lanes */
+//	bool need_full_reset = false;
+//	for (int l = start_lane; l <= end_lane; l++)
+//	{
+//		need_full_reset |= gserc_is_cpri(qlm, l);
+//		GSER_CSR_WRITE(CAVM_GSERCX_SCRATCHX(qlm, l), state.u);
+//	}
+//
+//	/* Return without changing the SERDES is the microcontroller isn't
+//	   running. Setup will be completed when it is brought up.*/
+//	GSER_CSR_INIT(gsercx_init_ctl, CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(0));
+//	if (gsercx_init_ctl.s.cpu_reset || (mode == QLM_MODE_DISABLED))
+//		return 0;
+//
+//	for (int l = start_lane; l <= end_lane; l++)
+//	{
+//		GSER_CSR_INIT(lane_old, CAVM_GSERCX_LANEX_CONTROL_BCFG(qlm, l));
+//		need_full_reset |= lane_old.s.ln_an_cfg;
+//	}
+//
+//	/* Check if clocking needs to change */
+//	GSER_CSR_INIT(bcfg_old, CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(qlm));
+//	cavm_gsercx_common_phy_ctrl_bcfg_t bcfg_new = qlm_gserc_get_clock_mode(qlm);
+//	if (need_full_reset)
+//		GSER_TRACE(QLM, "GSERC%d: PHY rates require a full reset\n", qlm);
+//	else if (bcfg_old.u != bcfg_new.u)
+//		qlm_gserc_change_phy_rate(qlm);
+//	else
+//		GSER_TRACE(QLM, "GSERC%d: PHY rates already correct\n", qlm);
+//
+//	gser_wait_usec(1000);
+//
+//	/* Check if lane speed needs to change */
+//	for (int l = start_lane; l <= end_lane; l++)
+//	{
+//		GSER_CSR_INIT(lane_old, CAVM_GSERCX_LANEX_CONTROL_BCFG(qlm, l));
+//		cavm_gsercx_lanex_control_bcfg_t lane_new = qlm_gserc_get_lane_mode(qlm, l);
+//		bool need_change = (bcfg_old.u != bcfg_new.u) || (lane_old.u != lane_new.u);
+//		if (need_change)
+//		{
+//			need_full_reset |= lane_new.s.ln_an_cfg;
+//			gser_wait_usec(1000);
+//#if 0
+//			if (need_full_reset)
+//			{
+//				qlm_gserc_init_reset();
+//				qlm_gserc_init();
+//				break; /* Full reset finishes reconfig, so exit loop */
+//			}
+//			else
+//#endif
+//				qlm_gserc_change_lane_rate(qlm, l);
+//			gser_wait_usec(1000);
+//#if defined(PLAT_loki)
+//			if (mode == QLM_MODE_CPRI) {
+//				if ((flags >> 3) & 0x1) {
+//extern void qlm_gserc_rx_dfe_adaptation(int qlm, int lane);
+//					qlm_gserc_rx_dfe_adaptation(qlm, l);
+//				}
+//				if ((flags >> 2) & 0x1) {
+//extern void qlm_gserc_rx_leq_adaptation(int qlm, int lane,
+//	int leq_lfg_start, int leq_hfg_sql_start, int leq_mbf_start,
+//	int leq_mbg_start, int gn_apg_start);
+//					qlm_gserc_rx_leq_adaptation(qlm, l, 2, 8, 0, 8, 3);
+//				}
+//			}
+//#endif
+//	                apply_tuning(qlm, l);
+//			/* Perform lane reset */
+//			if (mode == QLM_MODE_CPRI) {
+//				qlm_gserc_lane_rst(qlm, l, 1);
+//				qlm_gserc_lane_rst(qlm, l, 0);
+//			}
+//		}
+//		else
+//			GSER_TRACE(QLM, "GSERC%d.%d: Lane mode already correct\n", qlm, l);
+//	}
+//
+//	return 0;
+//}
 
 /**
  * Measure the reference clock of a QLM
@@ -2819,216 +2819,216 @@ static cavm_gsercx_lanex_control_bcfg_t qlm_gserc_get_lane_mode(int module, int 
  *
  * @return Zero on success, negative on error
  */
-static int qlm_gserc_change_lane_rate(int module, int lane)
-{
-	GSER_TRACE(QLM, "GSERC%d.%d: Changing lane mode\n", module, lane);
-	/* Lane Rate Change Sequence
-		1. If the Lane is inactive, proceed to Step 5, else if the Lane is
-		already up and connected bring down the CGX LMAC {SPU or GMP}
-		connection to the lane and ensure CGX has asserted the CGX-to-GSERC
-		reset signal to place the GSERC Lane Tx/Rx async FIFOs in reset. This
-		is required to ensure the "credit" flow control signaling between the
-		GSERC lane async Tx/Rx FIFOs and the CGX LMAC cleanly enter the reset
-		state.
-		Refer to CGX(0..2)_SPU(0..3)_CONTROL1[RESET] //LMAC is SPU
-		Refer to CGX(0..2)_GMP_PCS_MR(0..3)_CONTROL[RESET] //LMAC is GMP */
-	// FIXME: CGX stop
-
-	/* 2. Disable the PHY transmitter driver and put the GSERC lane in reset by
-		writing
-		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
-			LN_CTRL_TX_EN=0 Disable the transmitter
-		Wait at least 100 nanoseconds to allow the Transmitter to turn off
-		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
-			LN_RST = 1 Put the PHY lane in Reset */
-	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-		c.s.ln_ctrl_tx_en = 0);
-	gser_wait_usec(1);
-	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-		c.s.ln_rst = 1);
-
-	/* 3. Wait for the PHY firmware to signal that the Lane is in the Reset
-		power state which is signaled by the lane Tx and Rx blocks negating
-		the Tx/Rx ready signals.
-		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-			LN_TX_RDY=0 Lane Tx is not ready
-			LN_RX_RDY=0 Lane Rx is not ready
-			LN_STATE_CHNG_RDY = 0 Lane is transitioning states */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_TX_RDY, ==, 0, 500))
-		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_tx_rdy]=0 (lane is reset)\n", module, lane);
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_RX_RDY, ==, 0, 500))
-		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_rx_rdy]=0 (lane is reset)\n", module, lane);
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
-	{
-		/* This happens fast, so sometimes we miss it */
-		//gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0\n (lane is reset)", module, lane);
-	}
-
-	/* 4. Wait for the “Lane State Change Ready” to signal that the lane has
-		transitioned to the “Reset” state.
-		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
-		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (lane is reset)\n", module, lane);
-
-	/* 5. Program the new Lane rate, data width, and transmitter clock parameters
-		using the values shown in Table 2
-		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
-			CFG_CGX=0 Hold the Tx/Rx Async FIFOs in reset
-			LN_CTRL_RX_WIDTH Table 2
-			LN_CTRL_TX_WIDTH Table 2
-			LN_CTRL_RX_RATE Table 2
-			LN_CTRL_TX_RATE Table 2
-			TX_CLK_MUX_SEL Table 2
-			LN_LINK_STAT Set to 0, no AN from the PHY
-			LN_AN_CFG Set to 0, no AN from thePHY
-		Wait one microsecond for the PHY firmware to receive the lane rate
-		change parameters and for the transmitter clock mux to switch to the
-		new Tx clock rate. */
-	cavm_gsercx_lanex_control_bcfg_t bcfg = qlm_gserc_get_lane_mode(module, lane);
-	GSER_CSR_WRITE(CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane), bcfg.u);
-	gser_wait_usec(1);
-	qlm_state_lane_t state = qlm_gserc_get_state(module, lane);
-	bool ena_8b10b;
-
-	if (gserc_is_cpri(module, lane))
-		ena_8b10b = (state.s.baud_mhz != 3072);
-	else
-		ena_8b10b = (state.s.baud_mhz <= 6250);
-
-	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_ADAPT_CFG0(module, lane),
-		c.s.ena_8b10b = ena_8b10b);
-
-	/* 6. Trigger the lane rate change by writing the LN_RATE_CHNG field to
-		load the *new* lane rate settings from Step 5 above.
-		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
-			LN_RATE_CHNG=1
-		Wait at least 200 nanoseconds for the PHY firmware to receive the lane
-		rate change request before moving to the next step. Note the
-		LN_STATE_CHNG_RDY will toggle from 1->0->1 when the LN_RATE_CHNG bit is
-		set above. */
-	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-		c.s.ln_rate_chng = 1);
-	gser_wait_usec(1);
-
-	/* 7. Wait for the “Lane State Change Ready” status bit to deassert
-		indicating the lane is transitioning to the “Rate Change” state.
-		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-			LN_STATE_CHNG_RDY = 0 Lane is transitioning power states */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
-		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (rate change)\n", module, lane);
-
-	/* 8. Program the lane x2/x4 bonding (used with RXAUI,XAUI,DXAUI) fields if
-		applicable to the new lane rate or link topology
-		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
-			CGX_QUAD = 1 If the lane is part of a x4 link (XAUI,DXAUI); else 0
-			CGX_DUAL = 1 If lanes 0&1 or 2&3 are part of a x2 link (RXAUI); else 0
-			CFG_CGX = 0 Keep the Tx/Rx FIFOs to CGX in reset */
-	/* Done at step 6 */
-
-	/* 9. Wait for the PHY “Lane State Change Ready” to signal that the lane has
-		transitioned to the “Rate Change” state.
-		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-			LN_STATE_CHNG_RDY = 1 Lane is in the “Rate Change” power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
-		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (rate change)\n", module, lane);
-
-	/* 10. Deassert the LN_STATE_CHNG signal to complete the lane
-		reconfiguration
-		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
-			LN_RATE_CHNG=0
-		Wait 200 nanoseconds for the PHY firmware to receive the lane rate
-		change deassertion request. */
-	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-		c.s.ln_rate_chng = 0);
-	gser_wait_usec(1);
-
-	/* 11. Wait for the “Lane State Change Ready” status bit to deassert
-		indicating the lane is transitioning states.
-		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-			LN_STATE_CHNG_RDY = 0 Lane is transitioning states */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
-		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (change done)\n", module, lane);
-
-	/* 12. Wait for the PHY “Lane State Change Ready” to signal that the lane
-		has transitioned back to the “Reset” state.
-		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
-		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (change done)\n", module, lane);
-
-	/* 13. Release the lane from reset.
-		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
-			LN_RST=0 Release the lane reset */
-	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-		c.s.ln_rst = 0);
-
-	/* 14. Read/Poll for the GSERC to set the Lane State Change Ready flag and
-		drive the Lane Tx and Rx ready flags to signal that the lane as
-		returned to the ACTIVE state.
-		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-			LN_TX_RDY=1 Lane Tx is ready
-			LN_RX_RDY=1 Lane Rx is ready
-			LN_STATE_CHNG_RDY = 1 Lane is in the “Active” power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_TX_RDY, ==, 1, 5000))
-		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_tx_rdy]=1 (reset done)\n", module, lane);
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_RX_RDY, ==, 1, 5000))
-		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_rx_rdy]=1 (reset done)\n", module, lane);
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
-		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (reset done)\n", module, lane);
-
-	/* 15. Enable the Tx/Rx FIFOs between CGX and GSERC
-		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
-			CFG_CGX = 1 Enable Tx and Rx Async FIFOs to CGX */
-	bool is_cpri = gserc_is_cpri(module, lane);
-	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-		c.s.cfg_cpri = is_cpri;
-		c.s.cfg_cgx = !is_cpri);
-
-	/* 16. CGX should start transmitting now, refer to the CGX initialization
-		and link bring-up section in the CNF95XX B0 HRM. */
-	// FIXME: Enable CGX transmit
-
-	/* 17. Poll the lane receiver looking for the Lane Status Rx Valid flag to
-		be set indicating the Lane Rx CDR is locked and the lane is receiving
-		data
-		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-			LN_STAT_LOS=0 Rx loss-of-signal is deasserted
-			LN_STAT_RXVALID=1 Rx CDR has locked */
-	// FIXME: Should be done in CGX
-
-	/* 18. Now bring up the CGX LMAC receiver for the associated lane, or
-		lanes for a x4 or x2 link. Refer to the CGX initialization and link
-		bring-up section in the CNF95XX B0 HRM. */
-	// FIXME: Should be done in CGX
-
-	/* 19. Once CGX starts transmitting set the SerDes Transmitter Enable on
-		each lane that is active. This prevents transmitting garbage on the Tx
-		serial lanes prior to CGX starting up.
-		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
-			LN_CTRL_TX_EN = 1 Enable the Lane SerDes transmitter driver */
-	// FIXME: Should be done in CGX
-
-	/* 20. Poll the lane receiver looking for a valid receive signal and the
-		indication that the PHY Lane Rx CDR is locked. Note that if the
-		Ethernet link-partner is not up and driving valid Ethernet data into
-		the GSERC PHY serial receiver input then LN_STAT_LOS=1 and
-		LN_STAT_RXVALID=0 until the link partner starts to drive valid data. So
-		do not watch-dog time-out this polling routine. Once LN_STAT_LOS
-		transitions 1->0 then LN_STAT_RXVALID should transition 0->1 within
-		500 microseconds so a watch-dog timer can be used to guardband the
-		Rx CDR lock process.
-		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-			LN_STAT_LOS=0 Rx signal carrier detected (Loss-of-signal is negated)
-			LN_STAT_RXVALID=1 The receive CDR has locked and Rx data is valid */
-	// FIXME: Should be done in CGX
-
-	/* 21. Bring up the CGX receive side. Refer to the CGX initialization and
-	   link bring-up steps in the CNF95XX B0 HRM. */
-	// FIXME: Should be done in CGX
-	GSER_TRACE(QLM, "GSERC%d.%d: Lane mode change complete\n", module, lane);
-	return 0;
-}
+//static int qlm_gserc_change_lane_rate(int module, int lane)
+//{
+//	GSER_TRACE(QLM, "GSERC%d.%d: Changing lane mode\n", module, lane);
+//	/* Lane Rate Change Sequence
+//		1. If the Lane is inactive, proceed to Step 5, else if the Lane is
+//		already up and connected bring down the CGX LMAC {SPU or GMP}
+//		connection to the lane and ensure CGX has asserted the CGX-to-GSERC
+//		reset signal to place the GSERC Lane Tx/Rx async FIFOs in reset. This
+//		is required to ensure the "credit" flow control signaling between the
+//		GSERC lane async Tx/Rx FIFOs and the CGX LMAC cleanly enter the reset
+//		state.
+//		Refer to CGX(0..2)_SPU(0..3)_CONTROL1[RESET] //LMAC is SPU
+//		Refer to CGX(0..2)_GMP_PCS_MR(0..3)_CONTROL[RESET] //LMAC is GMP */
+//	// FIXME: CGX stop
+//
+//	/* 2. Disable the PHY transmitter driver and put the GSERC lane in reset by
+//		writing
+//		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
+//			LN_CTRL_TX_EN=0 Disable the transmitter
+//		Wait at least 100 nanoseconds to allow the Transmitter to turn off
+//		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
+//			LN_RST = 1 Put the PHY lane in Reset */
+//	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+//		c.s.ln_ctrl_tx_en = 0);
+//	gser_wait_usec(1);
+//	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+//		c.s.ln_rst = 1);
+//
+//	/* 3. Wait for the PHY firmware to signal that the Lane is in the Reset
+//		power state which is signaled by the lane Tx and Rx blocks negating
+//		the Tx/Rx ready signals.
+//		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+//			LN_TX_RDY=0 Lane Tx is not ready
+//			LN_RX_RDY=0 Lane Rx is not ready
+//			LN_STATE_CHNG_RDY = 0 Lane is transitioning states */
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_TX_RDY, ==, 0, 500))
+//		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_tx_rdy]=0 (lane is reset)\n", module, lane);
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_RX_RDY, ==, 0, 500))
+//		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_rx_rdy]=0 (lane is reset)\n", module, lane);
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+//	{
+//		/* This happens fast, so sometimes we miss it */
+//		//gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0\n (lane is reset)", module, lane);
+//	}
+//
+//	/* 4. Wait for the “Lane State Change Ready” to signal that the lane has
+//		transitioned to the “Reset” state.
+//		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+//			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+//		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (lane is reset)\n", module, lane);
+//
+//	/* 5. Program the new Lane rate, data width, and transmitter clock parameters
+//		using the values shown in Table 2
+//		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
+//			CFG_CGX=0 Hold the Tx/Rx Async FIFOs in reset
+//			LN_CTRL_RX_WIDTH Table 2
+//			LN_CTRL_TX_WIDTH Table 2
+//			LN_CTRL_RX_RATE Table 2
+//			LN_CTRL_TX_RATE Table 2
+//			TX_CLK_MUX_SEL Table 2
+//			LN_LINK_STAT Set to 0, no AN from the PHY
+//			LN_AN_CFG Set to 0, no AN from thePHY
+//		Wait one microsecond for the PHY firmware to receive the lane rate
+//		change parameters and for the transmitter clock mux to switch to the
+//		new Tx clock rate. */
+//	cavm_gsercx_lanex_control_bcfg_t bcfg = qlm_gserc_get_lane_mode(module, lane);
+//	GSER_CSR_WRITE(CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane), bcfg.u);
+//	gser_wait_usec(1);
+//	qlm_state_lane_t state = qlm_gserc_get_state(module, lane);
+//	bool ena_8b10b;
+//
+//	if (gserc_is_cpri(module, lane))
+//		ena_8b10b = (state.s.baud_mhz != 3072);
+//	else
+//		ena_8b10b = (state.s.baud_mhz <= 6250);
+//
+//	GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_ADAPT_CFG0(module, lane),
+//		c.s.ena_8b10b = ena_8b10b);
+//
+//	/* 6. Trigger the lane rate change by writing the LN_RATE_CHNG field to
+//		load the *new* lane rate settings from Step 5 above.
+//		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
+//			LN_RATE_CHNG=1
+//		Wait at least 200 nanoseconds for the PHY firmware to receive the lane
+//		rate change request before moving to the next step. Note the
+//		LN_STATE_CHNG_RDY will toggle from 1->0->1 when the LN_RATE_CHNG bit is
+//		set above. */
+//	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+//		c.s.ln_rate_chng = 1);
+//	gser_wait_usec(1);
+//
+//	/* 7. Wait for the “Lane State Change Ready” status bit to deassert
+//		indicating the lane is transitioning to the “Rate Change” state.
+//		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+//			LN_STATE_CHNG_RDY = 0 Lane is transitioning power states */
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+//		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (rate change)\n", module, lane);
+//
+//	/* 8. Program the lane x2/x4 bonding (used with RXAUI,XAUI,DXAUI) fields if
+//		applicable to the new lane rate or link topology
+//		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
+//			CGX_QUAD = 1 If the lane is part of a x4 link (XAUI,DXAUI); else 0
+//			CGX_DUAL = 1 If lanes 0&1 or 2&3 are part of a x2 link (RXAUI); else 0
+//			CFG_CGX = 0 Keep the Tx/Rx FIFOs to CGX in reset */
+//	/* Done at step 6 */
+//
+//	/* 9. Wait for the PHY “Lane State Change Ready” to signal that the lane has
+//		transitioned to the “Rate Change” state.
+//		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+//			LN_STATE_CHNG_RDY = 1 Lane is in the “Rate Change” power state */
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+//		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (rate change)\n", module, lane);
+//
+//	/* 10. Deassert the LN_STATE_CHNG signal to complete the lane
+//		reconfiguration
+//		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
+//			LN_RATE_CHNG=0
+//		Wait 200 nanoseconds for the PHY firmware to receive the lane rate
+//		change deassertion request. */
+//	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+//		c.s.ln_rate_chng = 0);
+//	gser_wait_usec(1);
+//
+//	/* 11. Wait for the “Lane State Change Ready” status bit to deassert
+//		indicating the lane is transitioning states.
+//		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+//			LN_STATE_CHNG_RDY = 0 Lane is transitioning states */
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+//		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (change done)\n", module, lane);
+//
+//	/* 12. Wait for the PHY “Lane State Change Ready” to signal that the lane
+//		has transitioned back to the “Reset” state.
+//		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+//			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+//		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (change done)\n", module, lane);
+//
+//	/* 13. Release the lane from reset.
+//		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
+//			LN_RST=0 Release the lane reset */
+//	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+//		c.s.ln_rst = 0);
+//
+//	/* 14. Read/Poll for the GSERC to set the Lane State Change Ready flag and
+//		drive the Lane Tx and Rx ready flags to signal that the lane as
+//		returned to the ACTIVE state.
+//		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+//			LN_TX_RDY=1 Lane Tx is ready
+//			LN_RX_RDY=1 Lane Rx is ready
+//			LN_STATE_CHNG_RDY = 1 Lane is in the “Active” power state */
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_TX_RDY, ==, 1, 5000))
+//		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_tx_rdy]=1 (reset done)\n", module, lane);
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_RX_RDY, ==, 1, 5000))
+//		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_rx_rdy]=1 (reset done)\n", module, lane);
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+//		gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (reset done)\n", module, lane);
+//
+//	/* 15. Enable the Tx/Rx FIFOs between CGX and GSERC
+//		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
+//			CFG_CGX = 1 Enable Tx and Rx Async FIFOs to CGX */
+//	bool is_cpri = gserc_is_cpri(module, lane);
+//	GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+//		c.s.cfg_cpri = is_cpri;
+//		c.s.cfg_cgx = !is_cpri);
+//
+//	/* 16. CGX should start transmitting now, refer to the CGX initialization
+//		and link bring-up section in the CNF95XX B0 HRM. */
+//	// FIXME: Enable CGX transmit
+//
+//	/* 17. Poll the lane receiver looking for the Lane Status Rx Valid flag to
+//		be set indicating the Lane Rx CDR is locked and the lane is receiving
+//		data
+//		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+//			LN_STAT_LOS=0 Rx loss-of-signal is deasserted
+//			LN_STAT_RXVALID=1 Rx CDR has locked */
+//	// FIXME: Should be done in CGX
+//
+//	/* 18. Now bring up the CGX LMAC receiver for the associated lane, or
+//		lanes for a x4 or x2 link. Refer to the CGX initialization and link
+//		bring-up section in the CNF95XX B0 HRM. */
+//	// FIXME: Should be done in CGX
+//
+//	/* 19. Once CGX starts transmitting set the SerDes Transmitter Enable on
+//		each lane that is active. This prevents transmitting garbage on the Tx
+//		serial lanes prior to CGX starting up.
+//		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
+//			LN_CTRL_TX_EN = 1 Enable the Lane SerDes transmitter driver */
+//	// FIXME: Should be done in CGX
+//
+//	/* 20. Poll the lane receiver looking for a valid receive signal and the
+//		indication that the PHY Lane Rx CDR is locked. Note that if the
+//		Ethernet link-partner is not up and driving valid Ethernet data into
+//		the GSERC PHY serial receiver input then LN_STAT_LOS=1 and
+//		LN_STAT_RXVALID=0 until the link partner starts to drive valid data. So
+//		do not watch-dog time-out this polling routine. Once LN_STAT_LOS
+//		transitions 1->0 then LN_STAT_RXVALID should transition 0->1 within
+//		500 microseconds so a watch-dog timer can be used to guardband the
+//		Rx CDR lock process.
+//		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+//			LN_STAT_LOS=0 Rx signal carrier detected (Loss-of-signal is negated)
+//			LN_STAT_RXVALID=1 The receive CDR has locked and Rx data is valid */
+//	// FIXME: Should be done in CGX
+//
+//	/* 21. Bring up the CGX receive side. Refer to the CGX initialization and
+//	   link bring-up steps in the CNF95XX B0 HRM. */
+//	// FIXME: Should be done in CGX
+//	GSER_TRACE(QLM, "GSERC%d.%d: Lane mode change complete\n", module, lane);
+//	return 0;
+//}
 
 /**
  * Change the phy speed. Note that all lanes go down
@@ -3038,134 +3038,134 @@ static int qlm_gserc_change_lane_rate(int module, int lane)
  *
  * @return Zero on success, negative on error
  */
-static int qlm_gserc_change_phy_rate(int module)
-{
-	gser_wait_usec(10000); /* No idea why this is needed. 1ms isn't long enough */
-	GSER_TRACE(QLM, "GSERC%d: Changing PHY rates\n", module);
-	int num_lanes = get_num_lanes(module);
-	/* PHY Rate Change Sequence
-		The PHY Rate 1 and Rate 2 values can be changed without driving the
-		GSERC(0..2)_COMMON_PHY_CTRL_BCFG[POR] power on reset. This is necessary
-		to prevent disruption of the reference clock distribution network
-		between GSERC blocks, refer to Figure 3. The steps required to program
-		new PHY Rate 1 and Rate 2 values is described below. */
-
-	/* 1. If the Lanes are all inactive, proceed to Step 5, else bring-down all
-		the lanes if the lanes are already up and connected to the CGX LMAC
-		{SPU or GMP} and ensure CGX has asserted the CGX-to-GSERC reset signal
-		to place the GSERC Lane Tx/Rx async FIFOs in reset. This is required
-		to ensure the "credit" flow control signaling between the GSERC lane
-		async Tx/Rx FIFOs and the CGX LMAC cleanly enter the reset state.
-		Refer to CGX(0..2)_SPU(0..3)_CONTROL1[RESET] //LMAC is SPU
-		Refer to CGX(0..2)_GMP_PCS_MR(0..3)_CONTROL[RESET] //LMAC is GMP */
-	// FIXME: CGX stop
-
-	/* 2. Disable the PHY transmitter driver and put the GSERC lane in reset by
-		writing
-		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
-			LN_CTRL_TX_EN=0 Disable the transmitter
-		Wait at lease 100 nanoseconds to allow the Transmitter to turn off
-		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
-			LN_RST = 1 Put the PHY lane in Reset */
-	for (int lane = 0; lane < num_lanes; lane++)
-	{
-		GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-			c.s.ln_ctrl_tx_en = 0);
-		gser_wait_usec(1);
-		GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-			c.s.ln_rst = 1);
-	}
-
-	/* 3. Wait for the PHY firmware to signal that the Lane is in the Reset
-		power state which is signaled by the lane Tx and Rx blocks negating
-		the Tx/Rx ready signals.
-		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-			LN_TX_RDY=0 Lane Tx is not ready
-			LN_RX_RDY=0 Lane Rx is not ready
-			LN_STATE_CHNG_RDY = 0 Lane is transitioning states */
-	for (int lane = 0; lane < num_lanes; lane++)
-	{
-		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_TX_RDY, ==, 0, 500))
-			gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_tx_rdy]=0 (change rate)\n", module, lane);
-		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_RX_RDY, ==, 0, 500))
-			gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_rx_rdy]=0 (change rate)\n", module, lane);
-		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
-			GSER_TRACE(QLM, "GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (change rate)\n", module, lane);
-	}
-
-	/* 4. Wait for the “Lane State Change Ready” to signal that the lane has
-		transitioned to the “Reset” state.
-		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
-	for (int lane = 0; lane < num_lanes; lane++)
-	{
-		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
-			gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (change rate)\n", module, lane);
-	}
-
-	/* 5. Write the new PHY Rate 1 and Rate 2 settings from Table 2
-		Write GSERC(0..2)_COMMON_PHY_CTRL_BCFG
-			PHY_CTRL_RATE1 New PHY Rate 1 value from Table 2
-			PHY_CTRL_RATE1 New PHY Rate 2 value from Table 2
-		Wait 1 microsecond for the PHY firmware to pickup the new rates */
-	cavm_gsercx_common_phy_ctrl_bcfg_t bcfg = qlm_gserc_get_clock_mode(module);
-	GSER_CSR_WRITE(CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(module), bcfg.u);
-	gser_wait_usec(1);
-
-	/* 6. Reset the Clock Management Unit
-		Write GSERC(0..2)_COMMON_PHY_CTRL_BCFG
-			CM0_RST=1 Reset CMU */
-	GSER_CSR_MODIFY(c, CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(module),
-		c.s.cm0_rst = 1);
-
-	/* 7. Read/Poll for the CM0 State Change Ready to deassert
-		Read/Poll GSERC(0..2)_COMMON_PHY_STATUS_BSTS
-			CM0_STATE_CHNG_RDY=0 //CM0 is transitioning power states */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_COMMON_PHY_STATUS_BSTS(module), GSERCX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 0, 500))
-		GSER_TRACE(QLM, "GSERC%d: Timeout waiting for GSERCX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=0 (change rate rst)\n", module);
-
-	/* 8. Read/Poll for the CM0 State Change Ready to reassert
-		Read/Poll GSERC(0..2)_COMMON_PHY_STATUS_BSTS
-			CM0_STATE_CHNG_RDY=1 //CM0 is in the Reset power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_COMMON_PHY_STATUS_BSTS(module), GSERCX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 10000))
-		gser_error("GSERC%d: Timeout waiting for GSERCX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1 (change rate rst)\n", module);
-
-	/* 8b. Update the temperature sensor */
-	/* Program the temperature into the GSERC */
-	qlm_gserc_update_dosc_cal_temp(module);
-
-	/* 9. Release the Clock Management Unit reset
-		Write GSERC(0..2)_COMMON_PHY_CTRL_BCFG
-			CM0_RST=0 Release CMU reset */
-	GSER_CSR_MODIFY(c, CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(module),
-		c.s.cm0_rst = 0);
-
-	/* 10. Read/Poll for the CM0 State Change Ready to deassert
-	   Read/Poll GSERC(0..2)_COMMON_PHY_STATUS_BSTS
-	   CM0_STATE_CHNG_RDY=0 //CM0 is transitioning power states */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_COMMON_PHY_STATUS_BSTS(module), GSERCX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 0, 500))
-		GSER_TRACE(QLM, "GSERC%d: Timeout waiting for GSERCX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=0 (change rate)\n", module);
-
-	/* 11. Read/Poll for the CM0 State Change Ready to reassert
-	   Read/Poll GSERC(0..2)_COMMON_PHY_STATUS_BSTS
-		CM0_STATE_CHNG_RDY=1 //CM0 has completed power state transition */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_COMMON_PHY_STATUS_BSTS(module), GSERCX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 50000))
-		gser_error("GSERC%d: Timeout waiting for GSERCX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1 (change rate)\n", module);
-
-	/* 12. Read/Poll for the CM0 OK flag set
-		Read/Poll GSERC(0..2)_COMMON_PHY_STATUS_BSTS
-			CM0_OK=1 //CM0 status is Active power state */
-	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_COMMON_PHY_STATUS_BSTS(module), GSERCX_COMMON_PHY_STATUS_BSTS_CM0_OK, ==, 1, 50000))
-		gser_error("GSERC%d: Timeout waiting for GSERCX_COMMON_PHY_STATUS_BSTS[cm0_ok]=1 (change rate)\n", module);
-
-	/* Update IKVCO */
-	gserc_qlm_set_ikvco_override(module);
-
-	/* Program the new Lane Rates to the new PHY rates, refer to the steps in
-	   Section 1.4 Lane Rate Change. */
-	GSER_TRACE(QLM, "GSERC%d: PHY rate change complete\n", module);
-	return 0;
-}
+//static int qlm_gserc_change_phy_rate(int module)
+//{
+//	gser_wait_usec(10000); /* No idea why this is needed. 1ms isn't long enough */
+//	GSER_TRACE(QLM, "GSERC%d: Changing PHY rates\n", module);
+//	int num_lanes = get_num_lanes(module);
+//	/* PHY Rate Change Sequence
+//		The PHY Rate 1 and Rate 2 values can be changed without driving the
+//		GSERC(0..2)_COMMON_PHY_CTRL_BCFG[POR] power on reset. This is necessary
+//		to prevent disruption of the reference clock distribution network
+//		between GSERC blocks, refer to Figure 3. The steps required to program
+//		new PHY Rate 1 and Rate 2 values is described below. */
+//
+//	/* 1. If the Lanes are all inactive, proceed to Step 5, else bring-down all
+//		the lanes if the lanes are already up and connected to the CGX LMAC
+//		{SPU or GMP} and ensure CGX has asserted the CGX-to-GSERC reset signal
+//		to place the GSERC Lane Tx/Rx async FIFOs in reset. This is required
+//		to ensure the "credit" flow control signaling between the GSERC lane
+//		async Tx/Rx FIFOs and the CGX LMAC cleanly enter the reset state.
+//		Refer to CGX(0..2)_SPU(0..3)_CONTROL1[RESET] //LMAC is SPU
+//		Refer to CGX(0..2)_GMP_PCS_MR(0..3)_CONTROL[RESET] //LMAC is GMP */
+//	// FIXME: CGX stop
+//
+//	/* 2. Disable the PHY transmitter driver and put the GSERC lane in reset by
+//		writing
+//		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
+//			LN_CTRL_TX_EN=0 Disable the transmitter
+//		Wait at lease 100 nanoseconds to allow the Transmitter to turn off
+//		Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
+//			LN_RST = 1 Put the PHY lane in Reset */
+//	for (int lane = 0; lane < num_lanes; lane++)
+//	{
+//		GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+//			c.s.ln_ctrl_tx_en = 0);
+//		gser_wait_usec(1);
+//		GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+//			c.s.ln_rst = 1);
+//	}
+//
+//	/* 3. Wait for the PHY firmware to signal that the Lane is in the Reset
+//		power state which is signaled by the lane Tx and Rx blocks negating
+//		the Tx/Rx ready signals.
+//		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+//			LN_TX_RDY=0 Lane Tx is not ready
+//			LN_RX_RDY=0 Lane Rx is not ready
+//			LN_STATE_CHNG_RDY = 0 Lane is transitioning states */
+//	for (int lane = 0; lane < num_lanes; lane++)
+//	{
+//		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_TX_RDY, ==, 0, 500))
+//			gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_tx_rdy]=0 (change rate)\n", module, lane);
+//		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_RX_RDY, ==, 0, 500))
+//			gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_rx_rdy]=0 (change rate)\n", module, lane);
+//		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+//			GSER_TRACE(QLM, "GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (change rate)\n", module, lane);
+//	}
+//
+//	/* 4. Wait for the “Lane State Change Ready” to signal that the lane has
+//		transitioned to the “Reset” state.
+//		Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+//			LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state */
+//	for (int lane = 0; lane < num_lanes; lane++)
+//	{
+//		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+//			gser_error("GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (change rate)\n", module, lane);
+//	}
+//
+//	/* 5. Write the new PHY Rate 1 and Rate 2 settings from Table 2
+//		Write GSERC(0..2)_COMMON_PHY_CTRL_BCFG
+//			PHY_CTRL_RATE1 New PHY Rate 1 value from Table 2
+//			PHY_CTRL_RATE1 New PHY Rate 2 value from Table 2
+//		Wait 1 microsecond for the PHY firmware to pickup the new rates */
+//	cavm_gsercx_common_phy_ctrl_bcfg_t bcfg = qlm_gserc_get_clock_mode(module);
+//	GSER_CSR_WRITE(CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(module), bcfg.u);
+//	gser_wait_usec(1);
+//
+//	/* 6. Reset the Clock Management Unit
+//		Write GSERC(0..2)_COMMON_PHY_CTRL_BCFG
+//			CM0_RST=1 Reset CMU */
+//	GSER_CSR_MODIFY(c, CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(module),
+//		c.s.cm0_rst = 1);
+//
+//	/* 7. Read/Poll for the CM0 State Change Ready to deassert
+//		Read/Poll GSERC(0..2)_COMMON_PHY_STATUS_BSTS
+//			CM0_STATE_CHNG_RDY=0 //CM0 is transitioning power states */
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_COMMON_PHY_STATUS_BSTS(module), GSERCX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 0, 500))
+//		GSER_TRACE(QLM, "GSERC%d: Timeout waiting for GSERCX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=0 (change rate rst)\n", module);
+//
+//	/* 8. Read/Poll for the CM0 State Change Ready to reassert
+//		Read/Poll GSERC(0..2)_COMMON_PHY_STATUS_BSTS
+//			CM0_STATE_CHNG_RDY=1 //CM0 is in the Reset power state */
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_COMMON_PHY_STATUS_BSTS(module), GSERCX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 10000))
+//		gser_error("GSERC%d: Timeout waiting for GSERCX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1 (change rate rst)\n", module);
+//
+//	/* 8b. Update the temperature sensor */
+//	/* Program the temperature into the GSERC */
+//	qlm_gserc_update_dosc_cal_temp(module);
+//
+//	/* 9. Release the Clock Management Unit reset
+//		Write GSERC(0..2)_COMMON_PHY_CTRL_BCFG
+//			CM0_RST=0 Release CMU reset */
+//	GSER_CSR_MODIFY(c, CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(module),
+//		c.s.cm0_rst = 0);
+//
+//	/* 10. Read/Poll for the CM0 State Change Ready to deassert
+//	   Read/Poll GSERC(0..2)_COMMON_PHY_STATUS_BSTS
+//	   CM0_STATE_CHNG_RDY=0 //CM0 is transitioning power states */
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_COMMON_PHY_STATUS_BSTS(module), GSERCX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 0, 500))
+//		GSER_TRACE(QLM, "GSERC%d: Timeout waiting for GSERCX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=0 (change rate)\n", module);
+//
+//	/* 11. Read/Poll for the CM0 State Change Ready to reassert
+//	   Read/Poll GSERC(0..2)_COMMON_PHY_STATUS_BSTS
+//		CM0_STATE_CHNG_RDY=1 //CM0 has completed power state transition */
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_COMMON_PHY_STATUS_BSTS(module), GSERCX_COMMON_PHY_STATUS_BSTS_CM0_STATE_CHNG_RDY, ==, 1, 50000))
+//		gser_error("GSERC%d: Timeout waiting for GSERCX_COMMON_PHY_STATUS_BSTS[cm0_state_chng_rdy]=1 (change rate)\n", module);
+//
+//	/* 12. Read/Poll for the CM0 OK flag set
+//		Read/Poll GSERC(0..2)_COMMON_PHY_STATUS_BSTS
+//			CM0_OK=1 //CM0 status is Active power state */
+//	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_COMMON_PHY_STATUS_BSTS(module), GSERCX_COMMON_PHY_STATUS_BSTS_CM0_OK, ==, 1, 50000))
+//		gser_error("GSERC%d: Timeout waiting for GSERCX_COMMON_PHY_STATUS_BSTS[cm0_ok]=1 (change rate)\n", module);
+//
+//	/* Update IKVCO */
+//	gserc_qlm_set_ikvco_override(module);
+//
+//	/* Program the new Lane Rates to the new PHY rates, refer to the steps in
+//	   Section 1.4 Lane Rate Change. */
+//	GSER_TRACE(QLM, "GSERC%d: PHY rate change complete\n", module);
+//	return 0;
+//}
 
 //write_dmem is used only in initialize function
 //which is removed by gser-update script (qlm.sed)

@@ -38,20 +38,6 @@
 qlm_state_lane_t qlm_gserc_get_state(int qlm, int lane);
 
 /**
- * For chips that don't use pin strapping, this function programs
- * the QLM to the specified mode
- *
- * @param qlm      QLM to configure
- * @param lane     Lane inside the QLM
- * @param mode     Desired mode
- * @param baud_mhz Desired speed
- * @param flags    Flags to specify mode specific options
- *
- * @return Zero on success, negative on failure
- */
-int qlm_gserc_set_mode(int qlm, int lane, qlm_modes_t mode, int baud_mhz, qlm_mode_flags_t flags);
-
-/**
  * Measure the reference clock of a QLM
  *
  * @param qlm    QLM to measure

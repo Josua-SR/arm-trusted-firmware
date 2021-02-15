@@ -253,7 +253,6 @@ const qlm_ops_t qlm_gserc_ops = {
 	.type = QLM_GSERC_TYPE,
 	.qlm_get_state = qlm_gserc_get_state,
 	.qlm_set_state = qlm_gserc_set_state,
-	.qlm_set_mode = qlm_gserc_set_mode,
 	.qlm_cfg_mode = qlm_gserc_cfg_mode,
 	.qlm_measure_refclock = qlm_gserc_measure_refclock,
 	.qlm_reset = qlm_gserc_reset,
