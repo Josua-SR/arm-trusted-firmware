@@ -6110,6 +6110,35 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 		}
 	}
 
+#if defined(PLAT_loki)
+	/* AN/Fixed to Fixed: CPRI disable DFE/LEQ adaptation
+	 * if requested
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (!(lane_mask & (1 << lane)))
+			continue;
+		GSER_CSR_INIT(bcfg, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane));
+		if ((bcfg.s.ln_an_cfg == QLM_LANE_AN_DIS) &&
+		    (mode == QLM_MODE_CPRI))
+		{
+			if ((flags >> 3) & 0x1)
+			{
+				extern void qlm_gserc_rx_dfe_adaptation(int qlm, int lane);
+
+				qlm_gserc_rx_dfe_adaptation(module, lane);
+			}
+
+			if ((flags >> 2) & 0x1) {
+				extern void qlm_gserc_rx_leq_adaptation(int qlm, int lane,
+						int leq_lfg_start, int leq_hfg_sql_start, int leq_mbf_start,
+						int leq_mbg_start, int gn_apg_start);
+				qlm_gserc_rx_leq_adaptation(module, lane, 2, 8, 0, 8, 3);
+			}
+		}
+	}
+#endif
+
 	/* Release all lanes in Fixed Rate mode from Reset */
 	/* AN mode to Fixed Mode
 	 * AN to Fixed Mode Step 7: Bring lanes out of reset and
