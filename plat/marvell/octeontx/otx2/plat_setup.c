@@ -127,7 +127,8 @@ unsigned int plat_configure_sdp_rid(void)
 		return 0;
 
 	} else if (IS_OCTEONTX_PN(midr, T96PARTNUM) ||
-		   IS_OCTEONTX_PN(midr, LOKIPARTNUM)) {
+		   IS_OCTEONTX_PN(midr, LOKIPARTNUM) ||
+		   IS_OCTEONTX_PN(midr, F95OPARTNUM)) {
 		return 0;
 	}
 
