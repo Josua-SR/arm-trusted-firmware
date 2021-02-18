@@ -91,8 +91,8 @@ enum cgx_cmd_id {
 	CGX_CMD_SET_LINK_MODE,
 	CGX_CMD_GET_SUPPORTED_FEC,
 	CGX_CMD_SET_FEC,
-	CGX_CMD_GET_AN,			/* = 20 */
-	CGX_CMD_SET_AN,
+	CGX_CMD_GET_AN,			/* = 20 */ /* Not Implemented */
+	CGX_CMD_SET_AN, 		           /* Not Implemented */
 	CGX_CMD_GET_ADV_LINK_MODES,
 	CGX_CMD_GET_ADV_FEC,
 	CGX_CMD_GET_PHY_MOD_TYPE, /* line-side modulation type: NRZ or PAM4 */
