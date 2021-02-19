@@ -126,6 +126,7 @@
 #define TSP_SEC_MEM_BASE		TZDRAM_BASE
 #define TSP_SEC_MEM_SIZE		TZDRAM_SIZE
 
+#if NEED_BL32
 /*
  * BL32 secure memory
  * NOTE: Any change in BL32 BASE addresses or sizes,
@@ -138,6 +139,9 @@
 /* BL32 non-secure shared memory */
 #define BL32_NSEC_SHMEM_BASE		(TZDRAM_BASE + TZDRAM_SIZE)
 #define BL32_NSEC_SHMEM_SIZE		0x000800000
+#else
+#define BL32_NSEC_SHMEM_SIZE		0x0
+#endif
 
 /*
  * Memory used for mailbox and RVU MSI-X - placed

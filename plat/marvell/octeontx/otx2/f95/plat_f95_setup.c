@@ -414,8 +414,10 @@ void plat_add_mmio()
 	mmap_add_region(RVU_MEM_BASE, RVU_MEM_BASE,
 			RVU_MEM_SIZE, (MT_MEMORY | MT_RW | MT_NS));
 
+#ifdef NEED_BL32
 	mmap_add_region(BL32_BASE, BL32_BASE,
 			(BL32_LIMIT - BL32_BASE), (MT_MEMORY | MT_RW | MT_SECURE));
+#endif
 
 	mmap_add_region(SFP_SHMEM_BASE, SFP_SHMEM_BASE,
 			SFP_SHMEM_SIZE, (MT_MEMORY | MT_RW | MT_NS));
