@@ -439,11 +439,11 @@ struct cgx_set_fec_args {
 	uint64_t reserved2:54;
 };
 
-/* command argument to be passed for cmd ID - CGX_CMD_SET_FEC */
+/* command argument to be passed for cmd ID - CGX_CMD_DO_CMU_RESET */
 struct cgx_do_cmu_reset {
 	uint64_t reserved1:8;
-	uint64_t cgx:3;
-	uint64_t reserved2:53;
+	uint64_t cgx:4;
+	uint64_t reserved2:52;
 };
 
 /* command argument to be passed for cmd ID - CGX_CMD_SET_PHY_MOD_TYPE */

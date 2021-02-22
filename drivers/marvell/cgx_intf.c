@@ -1535,7 +1535,7 @@ int cgx_do_cmu_reset(int cgx_id, int lmac_id, int cgx_to_reset)
 	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_id];
 	lmac = &cgx->lmac_cfg[lmac_id];
 
-	if (cgx_to_reset == -1) {
+	if (cgx_to_reset == 0xf) {
 		for (int cgx_idx = 0; cgx_idx < MAX_CGX; cgx_idx++) {
 			cgx_temp = &plat_octeontx_bcfg->cgx_cfg[cgx_idx];
 			/* Bring link down all CGX links */
