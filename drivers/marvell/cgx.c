@@ -4067,7 +4067,7 @@ void cgx_set_serdes_tune(int cgx_id, int lane_mask, int tx_swing, int tx_pre, in
 	}
 }
 
-void cgx_set_serdes_rx_leq_adaptation(int cgx_id, int lmac_id,
+void cgx_set_serdes_rx_leq_adaptation(int cgx_id, int lmac_id, int disable,
 	int leq_lfg_start, int leq_hfg_sql_start, int leq_mbf_start,
 	int leq_mbg_start, int gn_apg_start)
 {
@@ -4094,7 +4094,7 @@ void cgx_set_serdes_rx_leq_adaptation(int cgx_id, int lmac_id,
 			if (!(lane_mask & (1 << lane)))
 				continue;
 			/* Configure Rx LEQ Adaptation */
-			cgx->qlm_ops->qlm_rx_leq_adapt(gserx, lane,
+			cgx->qlm_ops->qlm_rx_leq_adapt(gserx, lane, disable,
 				leq_lfg_start, leq_hfg_sql_start, leq_mbf_start,
 				leq_mbg_start, gn_apg_start);
 		}
@@ -4104,7 +4104,7 @@ void cgx_set_serdes_rx_leq_adaptation(int cgx_id, int lmac_id,
 	}
 }
 
-void cgx_set_serdes_rx_dfe_adaptation(int cgx_id, int lmac_id)
+void cgx_set_serdes_rx_dfe_adaptation(int cgx_id, int lmac_id, int disable)
 {
 	cgx_config_t *cgx;
 	cgx_lmac_config_t *lmac;
@@ -4125,7 +4125,7 @@ void cgx_set_serdes_rx_dfe_adaptation(int cgx_id, int lmac_id)
 			if (!(lane_mask & (1 << lane)))
 				continue;
 			/* Configure Rx DFE Adaptation */
-			cgx->qlm_ops->qlm_rx_dfe_adapt(gserx, lane);
+			cgx->qlm_ops->qlm_rx_dfe_adapt(gserx, lane, disable);
 		}
 		lane_mask >>= num_lanes;
 		gserx++;

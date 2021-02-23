@@ -423,7 +423,8 @@ struct gser_leq_adapt {
 	uint64_t mbf_start:4;
 	uint64_t mbg_start:4;
 	uint64_t apg_start:3;
-	uint64_t reserved2:35;
+	uint64_t enable:1;	/* 0 - disable, 1 - enable */
+	uint64_t reserved2:34;
 };
 
 /* command argument to be passed for cmd ID - CGX_CMD_SET_LINK_MODE */
