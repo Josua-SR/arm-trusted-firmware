@@ -31,6 +31,8 @@
 #include "cavm-csrs-tim.h"
 #include "cavm-csrs-ree.h"
 
+#undef DEBUG_ATF_RVU
+
 #ifdef DEBUG_ATF_RVU
 #define debug_rvu printf
 #else
@@ -405,6 +407,7 @@ static int octeontx_init_rvu_from_fdt(void)
 	int top_eth_pf;
 	rvu_sw_rvu_pf_t *sw_pf;
 	struct rvu_pf_eth_lmac eth_lmac_list[MAX_RVU_PFS];
+	int rvu = RVU_LAST;
 	/* Implementation note: this array only requires elements equal to the
 	 * max number of ETH LMAC devices.
 	 * However, since the ETH devices could potentially be placed anywhere
@@ -494,14 +497,6 @@ static int octeontx_init_rvu_from_fdt(void)
 			uninit_pfs++;
 			debug_rvu("RVU: skipping fixed NPA allocation\n");
 		}
-	}
-
-	if (plat_octeontx_bcfg->rvu_config.cpt_dis) {
-		uninit_pfs++;
-	} else {
-		/* Init last RVU - as CPT if present */
-		octeontx_init_rvu_fixed(&current_hwvf, RVU_LAST,
-				SW_RVU_CPT_PF(0), TRUE);
 	}
 
 	/*
@@ -603,6 +598,24 @@ static int octeontx_init_rvu_from_fdt(void)
 	 * All left PFs (uninit_pfs - FACTOR*uninit_pfs) as NPA PF
 	 * FACTOR, as discussed with ODP developers, is set to 3/4.
 	 */
+	/* In T98 SOC (Errata AP-38625)
+	 * If number of CGX.LMACs <= 12, assign PF15 instead of PF23 for CPT
+	 * If number of CGX.LMACs > 12, assign PF23 for CPT.
+	 */
+	if ((pf <= 13) && IS_OCTEONTX_PN(read_midr(), T98PARTNUM)) {
+		rvu = 15;
+		uninit_pfs--;
+	}
+
+	/* Now configure RVU PF for CPT */
+	if (plat_octeontx_bcfg->rvu_config.cpt_dis) {
+		uninit_pfs++;
+	} else {
+		/* Init last RVU - as CPT if present */
+		octeontx_init_rvu_fixed(&current_hwvf, rvu,
+			SW_RVU_CPT_PF(0), TRUE);
+	}
+
 	if (!uninit_pfs)
 		return 0;
 
