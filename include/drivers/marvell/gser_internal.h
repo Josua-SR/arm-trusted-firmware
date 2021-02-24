@@ -95,7 +95,7 @@
 #define gser_is_model			cavm_is_model
 #define gser_clock_get_count(...)	read_cntpct_el0()
 #define gser_clock_get_rate(...)	GTI_RATE
-#define gser_extracts			octeontx_bit_extract
+#define gser_extracts			octeontx_bit_extracts
 #define gser_extract			octeontx_bit_extract
 #define gser_insert			octeontx_bit_insert
 #define qlm_eye_t			gser_qlm_eye_t
