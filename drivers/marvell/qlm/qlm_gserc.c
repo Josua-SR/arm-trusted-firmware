@@ -5474,9 +5474,12 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 		prev_state = qlm_gserc_get_state(module, lane);
 	}
 
-	if ((prev_state.s.mode == mode) && !ignore_mode_chk)
+	/* Check if current and previous mode/baud_mhz match
+	 * Also, supports override for autoneg fec changes
+	 */
+	if (((prev_state.s.mode == mode) && (prev_state.s.baud_mhz == baud_mhz)) && !ignore_mode_chk)
 	{
-		GSER_TRACE(QLM, "GSERC%d: Current and Requested modes are the same\n", qlm);
+		GSER_TRACE(QLM, "GSERC%d: Current and Requested modes are the same\n", module);
 		return 0;
 	}
 
