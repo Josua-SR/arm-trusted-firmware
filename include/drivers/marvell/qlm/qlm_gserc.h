@@ -46,15 +46,7 @@ qlm_state_lane_t qlm_gserc_get_state(int qlm, int lane);
  */
 int qlm_gserc_measure_refclock(int qlm);
 
-/**
- * Put a QLM into hardware reset
- *
- * @param qlm    QLM to use
- *
- * @return Zero on success, negative on failure
- */
-int qlm_gserc_reset(int qlm);
-
+#if defined(IMAGE_BL31)
 /**
  * Enable PRBS on a QLM
  *
@@ -104,6 +96,7 @@ void qlm_gserc_inject_prbs_error(int qlm, int lane);
  * @return Zero on success, negative on failure
  */
 int qlm_gserc_enable_loop(int qlm, qlm_loop_t loop);
+#endif
 
 /**
  * Configure the TX tuning parameters for a QLM lane
@@ -167,6 +160,7 @@ int qlm_gserc_tune_lane_tx(int qlm, int lane, int tx_cmain, int tx_cpre, int tx_
  */
 int qlm_gserc_get_tune_lane_tx(int qlm, int lane, int *tx_cmain, int *tx_cpre, int *tx_cpost, int *tx_bs, int *tx_unused);
 
+#if defined(IMAGE_BL31)
 /**
  * Perform RX equalization on a QLM
  *
@@ -272,6 +266,7 @@ int qlm_gserc_fed_loopback(int module, int lane, bool enable);
  * @return Zero on success, negative on failure
  */
 int qlm_gserc_nea_loopback(int module, int lane, bool enable);
+#endif
 
 /**
  * For chips that don't use pin strapping, this function programs
@@ -293,6 +288,7 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 		       qlm_802_3ap_fec_t fec_types, qlm_lt_init_state_t lt_init,
 		       int ignore_mode_chk);
 
+#if defined(IMAGE_BL31)
 /**
  * This function is used to determine if a mode change
  * requires all module lanes to be reset due to
@@ -314,5 +310,6 @@ int qlm_gserc_mode_chg_full_reset(int module, int baud_mhz);
  * @return Zero on success, negative on failure
  */
 void qlm_gserc_cmu_reset(int module);
+#endif
 
 #endif /* _QLM_GSERC_H_ */
