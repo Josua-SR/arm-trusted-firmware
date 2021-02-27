@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Marvell International Ltd.
+ * Copyright (C) 2019-2021 Marvell
  *
  * SPDX-License-Identifier:     BSD-3-Clause
  * https://spdx.org/licenses
@@ -17,6 +17,7 @@ static void qlm_gserr_set_state(int qlm, int lane, qlm_state_lane_t state)
 	CSR_WRITE(CAVM_GSERRX_SCRATCHX(qlm, lane), state.u);
 }
 
+#if defined(IMAGE_BL31)
 /**
  * Check whether SERDES Rx lane is detecting a signal
  *
@@ -40,6 +41,7 @@ static int qlm_gserr_rx_signal_detect(int qlm, int lane)
 	else
 		return 0;
 }
+#endif
 
 /**
  * Get the LMAC physical lane for the GSER physical lane
@@ -56,6 +58,7 @@ static int qlm_gserr_get_lmac_phy_lane(int qlm, int lane, int lane_to_sds)
 	return phy_lane;
 }
 
+#if defined(IMAGE_BL31)
 static void qlm_gserr_rx_leq_adaptation(int qlm, int lane, int disable, int leq_lfg_start,
 	int leq_hfg_sql_start, int leq_mbf_start, int leq_mbg_start,
 	int gn_apg_start)
@@ -343,71 +346,6 @@ static void qlm_gserr_rx_dfe_adapt(int module, int lane, int disable)
 }
 
 /**
- * Check whether SERDES Link Training Failed
- *
- * @param qlm	  QLM to use
- * @param lane	  Which lane
- * @return 0 on no failure, 1 on fail
- */
-static int qlm_gserr_link_training_fail(int qlm, int lane)
-{
-	GSER_CSR_INIT(fsm_status, CAVM_GSERRX_LNX_LT_TX_FSM_STATUS(qlm, lane));
-	if (fsm_status.s.training_fail)
-		return 1;
-	else
-		return 0;
-}
-
-/**
- * Check whether SERDES Link Training Completed
- *
- * @param qlm	  QLM to use
- * @param lane	  Which lane
- * @return 0 on completion, 1 not complete
- */
-static int qlm_gserr_link_training_complete(int qlm, int lane)
-{
-	GSER_CSR_INIT(fsm_ctrl0, CAVM_GSERRX_LNX_LT_TX_FSM_CTRL0(qlm, lane));
-	if (fsm_ctrl0.s.signal_detect)
-		return 0;
-	else
-		return 1;
-}
-
-/**
- * Set Phy Strap
- *
- * @param qlm    Index into GSER* group
- * @param lane      Which lane
- */
-static void qlm_gserr_set_phy_strap(int qlm, int lane)
-{
-	/* Read GSERRX_LANEX_CONTROL_BCFG Fields. Read initially
-	 * from GSERRX_LANEX_STATUS_BSTS [ln_an_link_sel]
-	 */
-	GSER_CSR_INIT(status_bsts, CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane));
-	/* Write value from above into GSERRX_LANEX_CONTROL_BCFG [ln_link_stat] */
-	GSER_CSR_MODIFY(control_bcfg, CAVM_GSERRX_LANEX_CONTROL_BCFG(qlm, lane),
-		control_bcfg.s.ln_link_stat = status_bsts.s.ln_an_link_sel);
-}
-
-/**
- * Check whether SERDES AN Completed
- *
- * @param qlm	  QLM to use
- * @param lane	  Which lane
- * @return 0 on completion, 1 not complete
- */
-static int qlm_gserr_an_complete(int qlm, int lane)
-{
-	GSER_CSR_INIT(lane_status, CAVM_GSERRX_LANEX_STATUS_BSTS(qlm, lane));
-	if (lane_status.s.ln_an_stat_resolved)
-		return 0;
-	else
-		return 1;
-}
-
-/**
  * Manually turn on or off the SERDES transmitter
  *
  * @param node	  Node to use in numa setup
@@ -462,6 +400,7 @@ static int qlm_gserr_farend_lpbk_chk(int qlm, int lane)
 
 	return 0;
 }
+#endif
 
 const qlm_ops_t qlm_gserr_ops = {
 	.type = QLM_GSERR_TYPE,
@@ -469,24 +408,24 @@ const qlm_ops_t qlm_gserr_ops = {
 	.qlm_set_state = qlm_gserr_set_state,
 	.qlm_cfg_mode = qlm_gserr_cfg_mode,
 	.qlm_measure_refclock = qlm_gserr_measure_refclock,
-	.qlm_reset = qlm_gserr_reset,
+#if defined(IMAGE_BL31)
 	.qlm_enable_prbs = qlm_gserr_enable_prbs,
 	.qlm_disable_prbs = qlm_gserr_disable_prbs,
 	.qlm_get_prbs_errors = qlm_gserr_get_prbs_errors,
 	.qlm_inject_prbs_error = qlm_gserr_inject_prbs_error,
 	.qlm_enable_loop = qlm_gserr_enable_loop,
+#endif
 	.qlm_tune_lane_tx = qlm_gserr_tune_lane_tx,
 	.qlm_get_tune_lane_tx = qlm_gserr_get_tune_lane_tx,
+#if defined(IMAGE_BL31)
 	.qlm_rx_equalization = qlm__gserr_rx_equalization,
 	.qlm_display_settings = qlm_gserr_display_settings,
 	.qlm_eye_capture = qlm_gserr_eye_capture,
 	.qlm_tx_control = qlm_gserr_tx_control,
 	.qlm_rx_signal_detect = qlm_gserr_rx_signal_detect,
+#endif
 	.qlm_get_lmac_phy_lane = qlm_gserr_get_lmac_phy_lane,
-	.qlm_link_training_fail = qlm_gserr_link_training_fail,
-	.qlm_link_training_complete = qlm_gserr_link_training_complete,
-	.qlm_set_phy_strap = qlm_gserr_set_phy_strap,
-	.qlm_an_complete = qlm_gserr_an_complete,
+#if defined(IMAGE_BL31)
 	.qlm_prbs_chk = qlm_gserr_prbs_chk,
 	.qlm_farend_lpbk_chk = qlm_gserr_farend_lpbk_chk,
 	.qlm_display_trace = qlm_gserr_display_trace,
@@ -498,4 +437,5 @@ const qlm_ops_t qlm_gserr_ops = {
 	.qlm_fed_loopback = qlm_gserr_fed_loopback,
 	.qlm_mode_chg_full_reset = qlm_gserr_mode_chg_full_reset,
 	.qlm_cmu_reset = qlm_gserr_cmu_reset,
+#endif
 };
