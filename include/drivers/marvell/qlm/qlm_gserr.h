@@ -217,12 +217,11 @@ int qlm_gserr_eye_capture(int qlm, int lane, int show_data, gser_qlm_eye_t *eye_
  * @param node   Node to trace
  * @param module GSERR to trace
  * @param lane   Lane to trace
- * @param unused Unused argument. Present so a number of QLM functions have the same signature
- *			   for easy calling in the network driver
+ * @param type   1 = autoneg, 0 = link training
  *
  * @return Zero on success, negative on failure
  */
-int qlm_gserr_display_trace(int module, int lane, int unused);
+int qlm_gserr_display_trace(int module, int lane, int type);
 
 /**
  * Implementation of NED Loopback with Internal BIST PRBS Generator/Checker.

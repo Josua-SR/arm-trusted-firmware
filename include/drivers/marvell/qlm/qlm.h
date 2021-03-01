@@ -313,7 +313,7 @@ typedef struct {
 	int (*qlm_get_lmac_phy_lane)(int qlm, int lane, int lane_to_sds);
 	int (*qlm_prbs_chk)(int qlm, int lane);
 	int (*qlm_farend_lpbk_chk)(int qlm, int lane);
-	int (*qlm_display_trace)(int qlm, int lane, int unused);
+	int (*qlm_display_trace)(int qlm, int lane, int type);
 	void (*qlm_rx_leq_adapt)(int qlm, int lane, int disable, int leq_lfg_start,
 		int leq_hfg_sql_start, int leq_mbf_start, int leq_mbg_start,
 		int gn_apg_start);
