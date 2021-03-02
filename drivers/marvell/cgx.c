@@ -3847,6 +3847,11 @@ void cgx_hw_init(int cgx_id)
 			if (lmac->lmac_enable)	{
 				ret = cgx_read_flash_mode_param(cgx_id, lmac_id, &qlm_mode, &lmac_type);
 				if (!ret) {
+					NOTICE("CGX%d.LMAC%d: Changing mode from %s to %s (persistent settings)\n",
+						cgx_id, lmac_id,
+						qlm_get_mode_strmap(lmac->mode_idx).bdk_str,
+						qlm_get_mode_strmap(qlm_mode).bdk_str);
+
 					/* Update the board config structure with QLM/LMAC
 					 * mode from flash if ignoreflash parameter
 					 * not set by user
