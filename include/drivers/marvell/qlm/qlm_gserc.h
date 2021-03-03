@@ -197,16 +197,6 @@ void qlm_gserc_display_settings(int qlm, int qlm_lane, bool show_tx,
 int qlm_gserc_eye_capture(int qlm, int lane, int show_data, gser_qlm_eye_t *eye_data);
 
 /**
- * Manually turn on or off the SERDES transmitter
- *
- * @param node	  Node to use in numa setup
- * @param qlm	   QLM to use
- * @param lane	  Which lane
- * @param enable_tx True to enable transmitter, false to disable
- */
-int qlm_gserc_tx_control(int qlm, int lane, int enable_tx);
-
-/**
  * Some SERDES can display extra tracing about AN, training, etc. This function
  * displays those traces if available. If the SERDES doesn't support tracing, a
  * informational message tells the user.
@@ -267,6 +257,16 @@ int qlm_gserc_fed_loopback(int module, int lane, bool enable);
  */
 int qlm_gserc_nea_loopback(int module, int lane, bool enable);
 #endif
+
+/**
+ * Manually turn on or off the SERDES transmitter
+ *
+ * @param node	  Node to use in numa setup
+ * @param qlm	   QLM to use
+ * @param lane	  Which lane
+ * @param enable_tx True to enable transmitter, false to disable
+ */
+int qlm_gserc_tx_control(int qlm, int lane, int enable_tx);
 
 /**
  * For chips that don't use pin strapping, this function programs

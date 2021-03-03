@@ -412,9 +412,9 @@ const qlm_ops_t qlm_gserc_ops = {
 	.qlm_rx_equalization = qlm__gserc_rx_equalization,
 	.qlm_display_settings = qlm_gserc_display_settings,
 	.qlm_eye_capture = qlm_gserc_eye_capture,
-	.qlm_tx_control = qlm_gserc_tx_control,
 	.qlm_rx_signal_detect = qlm_gserc_rx_signal_detect,
 #endif
+	.qlm_tx_control = qlm_gserc_tx_control,
 	.qlm_get_lmac_phy_lane = qlm_gserc_get_lmac_phy_lane,
 #if defined(IMAGE_BL31)
 	.qlm_prbs_chk = qlm_gserc_prbs_chk,

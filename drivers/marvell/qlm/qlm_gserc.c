@@ -47,8 +47,8 @@ typedef enum
 /* Indexed by QLM number and lane */
 #if defined(IMAGE_BL31)
 static uint64_t prbs_errors[5][2];
-static lane_state_t lane_state[5][2];
 #endif
+static lane_state_t lane_state[5][2];
 
 /**
  * Function to return the number of lanes in the SERDES group
@@ -2288,6 +2288,7 @@ int qlm_gserc_eye_capture(int qlm, int lane, int show_data, qlm_eye_t *eye_data)
 	eye_data->height = y_points;
 	return 0;
 }
+#endif
 
 /**
  * Manually turn on or off the SERDES transmitter
@@ -2305,7 +2306,6 @@ int qlm_gserc_tx_control(int qlm, int lane, int enable_tx)
 	lane_state[qlm][lane] = en ? LANE_STATE_TX_ON : LANE_STATE_TX_OFF;
 	return 0;
 }
-#endif
 
 /**
  * Updated IKVCO Settings Based on Speed
