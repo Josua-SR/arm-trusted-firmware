@@ -344,6 +344,7 @@ static void qlm_gserr_rx_dfe_adapt(int module, int lane, int disable)
 			c.s.cfg_cgx = 1);
 	gser_wait_usec(1000);
 }
+#endif
 
 /**
  * Manually turn on or off the SERDES transmitter
@@ -363,6 +364,7 @@ static int qlm_gserr_tx_control(int qlm, int lane, int enable_tx)
 	return 0;
 }
 
+#if defined(IMAGE_BL31)
 /**
  * Check if PRBS Rx or Tx is enabled
  *
@@ -421,9 +423,9 @@ const qlm_ops_t qlm_gserr_ops = {
 	.qlm_rx_equalization = qlm__gserr_rx_equalization,
 	.qlm_display_settings = qlm_gserr_display_settings,
 	.qlm_eye_capture = qlm_gserr_eye_capture,
-	.qlm_tx_control = qlm_gserr_tx_control,
 	.qlm_rx_signal_detect = qlm_gserr_rx_signal_detect,
 #endif
+	.qlm_tx_control = qlm_gserr_tx_control,
 	.qlm_get_lmac_phy_lane = qlm_gserr_get_lmac_phy_lane,
 #if defined(IMAGE_BL31)
 	.qlm_prbs_chk = qlm_gserr_prbs_chk,

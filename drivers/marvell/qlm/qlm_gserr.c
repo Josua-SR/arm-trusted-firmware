@@ -32,19 +32,9 @@ static cavm_gserrx_lanex_control_bcfg_t qlm_gserr_get_lane_mode(int module, int 
 static int mailbox_command(int qlm, uint8_t cmd, uint64_t args);
 static int mailbox_response(int qlm, uint64_t *arg0, uint64_t *arg1);
 
-typedef enum
-{
-	LANE_STATE_TX_OFF,
-	LANE_STATE_TX_ON,
-	LANE_STATE_AN,
-	LANE_STATE_TRAINING,
-	LANE_STATE_CGX,
-} lane_state_t;
-
 #if defined(IMAGE_BL31)
 /* Indexed by QLM number and lane */
 static uint64_t prbs_errors[5][4];
-static lane_state_t lane_state[5][4];
 #endif
 
 /**
@@ -2271,27 +2261,6 @@ int qlm_gserr_eye_capture(int qlm, int lane, int show_data, qlm_eye_t *eye_data)
 		eye_state.last_resp = mailbox_response(qlm, &eye_state.buffer[1], &eye_state.buffer[2]);
 	eye_data->width = x_points;
 	eye_data->height = y_points;
-	return 0;
-}
-
-/**
- * Manually turn on or off the SERDES transmitter
- *
- * @param node	  Node to use in numa setup
- * @param qlm	   QLM to use
- * @param lane	  Which lane
- * @param enable_tx True to enable transmitter, false to disable
- */
-int qlm_gserr_tx_control(int qlm, int lane, int enable_tx)
-{
-	int en = (enable_tx) ? 1 : 0;
-	GSER_CSR_MODIFY(c, CAVM_GSERRX_LANEX_CONTROL_BCFG(qlm, lane),
-		c.s.ln_ctrl_tx_en = en);
-	lane_state[qlm][lane] = en ? LANE_STATE_TX_ON : LANE_STATE_TX_OFF;
-#if 0
-	update_all_lane_state();
-	show_lane_state(qlm, lane);
-#endif
 	return 0;
 }
 #endif

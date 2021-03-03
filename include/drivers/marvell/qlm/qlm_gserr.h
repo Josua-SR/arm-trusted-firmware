@@ -210,16 +210,6 @@ void qlm_gserr_display_settings(int qlm, int qlm_lane, bool show_tx,
 int qlm_gserr_eye_capture(int qlm, int lane, int show_data, gser_qlm_eye_t *eye_data);
 
 /**
- * Manually turn on or off the SERDES transmitter
- *
- * @param node	  Node to use in numa setup
- * @param qlm	   QLM to use
- * @param lane	  Which lane
- * @param enable_tx True to enable transmitter, false to disable
- */
-int qlm_gserr_tx_control_bdk(int qlm, int lane, int enable_tx);
-
-/**
  * Some SERDES can display extra tracing about AN, training, etc. This function
  * displays those traces if available. If the SERDES doesn't support tracing, a
  * informational message tells the user.
