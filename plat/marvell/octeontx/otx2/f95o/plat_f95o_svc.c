@@ -25,6 +25,7 @@ uintptr_t otx2_svc_smc_handler(uint32_t smc_fid,
 			       u_register_t flags)
 {
 	uint64_t ret = 0;
+	int i;
 
 	switch (smc_fid) {
 	case PLAT_OCTEONTX_INSTALL_BPHY_PSM_ERRINT:
@@ -39,6 +40,14 @@ uintptr_t otx2_svc_smc_handler(uint32_t smc_fid,
 
 	case PLAT_OCTEONTX_GET_BPHY_PSM_MAX_IRQ:
 		SMC_RET1(handle, BPHY_PSM_IRQS_NUMBER);
+		break;
+
+	case PLAT_OCTEONTX_GET_BPHY_PSM_IRQS_BITMASK:
+		if (sizeof(uint64_t) * 8 < BPHY_PSM_IRQS_NUMBER)
+			WARN("Irq bitmask does not match current SMC transfer size");
+		for (i = 0; i < BPHY_PSM_IRQS_NUMBER; i++)
+			ret |= (uint64_t)(!plat_is_irq_ns(BPHY_PSM_IRQ(i))) << i;
+		SMC_RET1(handle, ret);
 		break;
 
 	default:
