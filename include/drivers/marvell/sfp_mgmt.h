@@ -346,4 +346,5 @@ int mcp_get_neg_fec_tech(int cgx_id, int lmac_id, int *fec_type,
 			 int *qlm_mode, int *lmac_type);
 int mcp_wait_for_cmd_ack_to_clr(int cgx_id, int lmac_id);
 void shmem_an_lt_update(int cgx_id, int lmac_id);
+const char *mcp_anlt_state_to_str(an_lt_state_t state);
 #endif /* __SFP_MGMT_H__ */

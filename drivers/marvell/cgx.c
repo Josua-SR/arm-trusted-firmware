@@ -2265,8 +2265,8 @@ static int cgx_complete_sw_an_with_mcp(int cgx_id, int lmac_id, cgx_lmac_context
 
 	status = mcp_get_an_lt_state(cgx_id, lmac_id);
 
-	debug_cgx("%s:%d:%d: starting AN state %d\n",
-		__func__, cgx_id, lmac_id, status);
+	debug_cgx("%s:%d:%d: starting AN state %s\n",
+		__func__, cgx_id, lmac_id, mcp_anlt_state_to_str(status));
 
 	/* With NO_STATE/LT_COMPLETE, send request to MCP to start
 	 * AN & LT.
@@ -2339,8 +2339,8 @@ an_check_state:
 	} else if (status == AN_LT_STATE_STOPPED) {
 		goto an_lt_link_failure;
 	} else {
-		debug_cgx("%s: %d:%d AN/LT in progress/Fail status %d\n",
-				__func__, cgx_id, lmac_id, status);
+		debug_cgx("%s: %d:%d AN/LT in progress. Current State: %s\n",
+				__func__, cgx_id, lmac_id, mcp_anlt_state_to_str(status));
 		goto restart_an;
 	}
 an_lt_link_up:

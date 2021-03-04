@@ -1465,3 +1465,65 @@ retry_ack_check:
 
 	return 0;
 }
+
+/**
+ * Convert an AN_LT State into a string value
+ *
+ * @param state   AN_LT state to convert
+ *
+ * @return state string
+ */
+const char *mcp_anlt_state_to_str(an_lt_state_t state)
+{
+	const char *str;
+
+	switch (state) {
+	case AN_LT_NO_STATE:
+		str = "NO_STATE";
+		break;
+	case AN_LT_STATE_NO_RX_SIGNAL:
+		str = "NO_RX_SIGNAL";
+		break;
+	case AN_LT_STATE_AN_FIRST_LOOP:
+		str = "AN_FIRST_LOOP";
+		break;
+	case AN_LT_STATE_AN_IN_PROGRESS:
+		str = "AN_IN_PROGRESS";
+		break;
+	case AN_LT_STATE_AN_FAIL:
+		str = "AN_FAIL";
+		break;
+	case AN_LT_STATE_AN_COMPLETE:
+		str = "AN_COMPLETE";
+		break;
+	case AN_LT_STATE_LT_FIRST_LOOP:
+		str = "LT_FIRST_LOOP";
+		break;
+	case AN_LT_STATE_LT_IN_PROGRESS:
+		str = "LT_IN_PROGRESS";
+		break;
+	case AN_LT_STATE_LT_FAIL:
+		str = "LT_FAIL";
+		break;
+	case AN_LT_STATE_LINK_FIRST_LOOP:
+		str = "LINK_FIRST_LOOP";
+		break;
+	case AN_LT_STATE_LINK_IN_PROGRESS:
+		str = "LINK_IN_PROGRESS";
+		break;
+	case AN_LT_STATE_LINK_FAIL:
+		str = "LINK_FAIL";
+		break;
+	case AN_LT_STATE_LINK_UP:
+		str = "LINK_UP";
+		break;
+	case AN_LT_STATE_STOPPED:
+		str = "STOPPED";
+		break;
+	default:
+		str = "UNKNOWN_STATE";
+		break;
+	}
+
+	return str;
+}
