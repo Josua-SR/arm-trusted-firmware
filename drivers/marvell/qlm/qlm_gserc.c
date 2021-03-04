@@ -2913,23 +2913,30 @@ static void decode_training_state(uint8_t *data, int length)
  * @param node   Node to trace
  * @param module GSERC to trace
  * @param lane   Lane to trace
- * @param unused Unused argument. Present so a number of QLM functions have the same signature
- *			   for easy calling in the network driver
+ * @param type    1 = autoneg, 0 = link training
  *
  * @return Zero on success, negative on failure
  */
-int qlm_gserc_display_trace(int module, int lane, int unused)
+int qlm_gserc_display_trace(int module, int lane, int type)
 {
 	uint8_t data[64 * 8];
-	printf("GSERC%d.%d: AN trace\n", module, lane);
-	int len = qlm_gserc_get_trace(module, lane, 1, data, sizeof(data));
-	decode_an(data, len);
-	printf("GSERC%d.%d: Training state machine trace\n", module, lane);
-	len = qlm_gserc_get_trace(module, lane, 2, data, sizeof(data));
-	decode_training_state(data, len);
-	printf("GSERC%d.%d: Training coefficient trace\n", module, lane);
-	len = qlm_gserc_get_trace(module, lane, 3, data, sizeof(data));
-	decode_training_coef(data, len);
+	int len;
+
+	if (type == 1)
+	{
+		printf("GSERC%d.%d: AN trace\n", module, lane);
+		len = qlm_gserc_get_trace(module, lane, 1, data, sizeof(data));
+		decode_an(data, len);
+	}
+	else
+	{
+		printf("GSERC%d.%d: Training state machine trace (Local Requests)\n", module, lane);
+		len = qlm_gserc_get_trace(module, lane, 2, data, sizeof(data));
+		decode_training_state(data, len);
+		printf("GSERC%d.%d: Training coefficient trace (Link Partner Requests)\n", module, lane);
+		len = qlm_gserc_get_trace(module, lane, 3, data, sizeof(data));
+		decode_training_coef(data, len);
+	}
 	return 0;
 }
 #endif
