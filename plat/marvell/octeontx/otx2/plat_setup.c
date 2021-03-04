@@ -402,6 +402,10 @@ void plat_octeontx_cpu_setup(void)
 	set_bit(cvmmemctl1_el1, 5); /* Trap any accesses to nonzero node id */
 	set_bit(cvmmemctl1_el1, 6); /* Enable SSO switch tag */
 
+	/* Errata AP-32370 */
+	/* cvmctl_el1[56] =  Force ICache flush when any remote IC is received.*/
+	set_bit(cvmmemctl1_el1, 56);
+
 	if (IS_OCTEONTX_PN(midr, F95PARTNUM)
 	    || IS_OCTEONTX_PN(midr, LOKIPARTNUM)
 	    || IS_OCTEONTX_PN(midr, F95OPARTNUM)
