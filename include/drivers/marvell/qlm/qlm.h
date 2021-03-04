@@ -311,10 +311,6 @@ typedef struct {
 	int (*qlm_tx_sm_rst_control)(int qlm, uint64_t lane_mask, int reset_tx);
 	int (*qlm_rx_signal_detect)(int qlm, int lane);
 	int (*qlm_get_lmac_phy_lane)(int qlm, int lane, int lane_to_sds);
-	int (*qlm_link_training_fail)(int qlm, int lane);
-	int (*qlm_link_training_complete)(int qlm, int lane);
-	void (*qlm_set_phy_strap)(int qlm, int lane);
-	int (*qlm_an_complete)(int qlm, int lane);
 	int (*qlm_prbs_chk)(int qlm, int lane);
 	int (*qlm_farend_lpbk_chk)(int qlm, int lane);
 	int (*qlm_display_trace)(int qlm, int lane, int unused);
