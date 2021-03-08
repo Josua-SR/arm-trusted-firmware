@@ -1646,15 +1646,22 @@ only LMAC0 is enabled for a given CGX; all other LMACs must remain disabled.
 The following are the valid standard mode changes.  Other chip/board specific mode
 changes are supported but not documented here.
 
+The modes in the parenthesis are the associated BDK/EBF modes.
 
 Single Lane Backplane/Chip-to-Chip Protocols
-* MODE change between SGMII / 1G_X(1000BASE-X) / XFI / 25GAUI_C2C / 25G_KR
+* MODE change between SGMII / 1000BASEX(1G_X) / 10G_C2C(XFI) / 25G_C2C(25GAUI_C2C) / 25G_KR
 
 Single Lane Cable Protocols
-* MODE change between SGMII / 1G_X(1000BASE-X) / SFI / 25GAUI_C2M / 25G_CR
+* MODE change between SGMII / 1000BASEX(1G_X) / 10G_C2M(SFI) / 25G_C2M(25GAUI_C2M) / 25G_CR
+
+Dual Lane Backplane/Chip-to-Chip Protocols
+* MODE change between 50G_C2C(50GAUI_2_C2C) / 50G_KR(50G_KR2)
+
+Dual Lane Cable Protocols
+* MODE change between 50G_C2M(50GAUI_2_C2M) / 50G_CR(50G_CR2)
 
 Quad Lane Backplane/Chip-to-Chip Protocols
-* MODE change between XLAUI / CAUI_C2C / 100G_KR4
+* MODE change between 40G_C2C(XLAUI) / 100G_C2C(CAUI_C2C) / 100G_KR4
 
 Quad Lane Cable Protocols
-* MODE change between XLAUI_C2M / CAUI_C2M / 100G_CR4
+* MODE change between 40G_C2M(XLAUI_C2M) / 100G_C2M(CAUI_4_C2M) / 100G_CR4
