@@ -4651,7 +4651,7 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 								int leq_lfg_start, int leq_hfg_sql_start, int leq_mbf_start,
 								int leq_mbg_start, int gn_apg_start);
 
-					qlm_gserc_rx_leq_adaptation(module, lane, 1, 2, 8, 0, 8, 3);
+					qlm_gserc_rx_leq_adaptation(module, lane, 1, 9, 0xa, 0, 0, 3);
 				}
 			}
 		}
@@ -4748,7 +4748,7 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 							int leq_lfg_start, int leq_hfg_sql_start, int leq_mbf_start,
 							int leq_mbg_start, int gn_apg_start);
 
-					qlm_gserc_rx_leq_adaptation(module, lane, 1, 2, 8, 0, 8, 3);
+					qlm_gserc_rx_leq_adaptation(module, lane, 1, 9, 0xa, 0, 0, 3);
 				}
 			}
 		}
