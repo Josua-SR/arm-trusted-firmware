@@ -122,7 +122,7 @@
 #define TSP_SEC_MEM_BASE		TZDRAM_BASE
 #define TSP_SEC_MEM_SIZE		TZDRAM_SIZE
 
-#if NEED_BL32
+#ifdef INCLUDE_OPTEE
 /*
  * BL32 secure memory
  * NOTE: Any change in BL32 BASE addresses or sizes,

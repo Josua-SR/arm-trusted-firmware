@@ -6,6 +6,10 @@
 RAS_EXTENSION		:=       1
 HANDLE_EA_EL3_FIRST	:=       1
 
+ifeq (${NEED_BL32},yes)
+    $(eval $(call add_define,INCLUDE_OPTEE))
+endif
+
 # Include common Marvell platform's makefile helper
 include plat/marvell/octeontx/platform.mk
 

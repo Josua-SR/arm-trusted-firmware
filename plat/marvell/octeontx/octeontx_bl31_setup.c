@@ -95,7 +95,7 @@ entry_point_info_t *bl31_plat_get_next_image_ep_info(uint32_t type)
 
 	if (type == NON_SECURE)
 		return &bl33_image_ep_info;
-#if defined(NEED_BL32) && defined(BL32_BASE)
+#ifdef INCLUDE_OPTEE
 	if (type == SECURE)
 		return &bl32_image_ep_info;
 #endif
