@@ -1570,7 +1570,7 @@ int cgx_do_cmu_reset(int cgx_id, int lmac_id, int cgx_to_reset)
 			/* Bring up all CGX links */
 			for (int lmac_idx = 0; lmac_idx < MAX_LMAC_PER_CGX; lmac_idx++) {
 				lmac_tmp = &cgx_temp->lmac_cfg[lmac_idx];
-				/* Don't need to bring down CPRI links */
+				/* Don't need to bring up CPRI links */
 				if (plat_octeontx_bcfg->qlm_cfg[lmac_tmp->gserx].is_cpri)
 					continue;
 				/* Bring UP the CGX link */
@@ -1584,7 +1584,7 @@ int cgx_do_cmu_reset(int cgx_id, int lmac_id, int cgx_to_reset)
 				cgx_set_error_type(cgx_id, lmac_idx, 0);
 			}
 		}
-		printf("reset all qlms that are enabled\n");
+		debug_cgx_intf("reset all qlms that are enabled\n");
 	} else {
 		/* Bring down all Links connected to the same
 		 * GSERx as the CGX LMAC
@@ -1592,10 +1592,13 @@ int cgx_do_cmu_reset(int cgx_id, int lmac_id, int cgx_to_reset)
 		for (int lmac_idx = 0; lmac_idx < MAX_LMAC_PER_CGX; lmac_idx++) {
 			lmac_tmp = &cgx->lmac_cfg[lmac_idx];
 			if (lmac_tmp->gserx == lmac->gserx) {
-				if (cgx_link_bringdown(cgx_id, lmac_idx)) {
-					debug_cgx_intf("%s: CGX%d:%d Failed to bring link down\n",
-						       __func__, cgx_id, lmac_idx);
-					goto mode_err;
+				/* Don't need to bring down CPRI links */
+				if (!plat_octeontx_bcfg->qlm_cfg[lmac_tmp->gserx].is_cpri) {
+					if (cgx_link_bringdown(cgx_id, lmac_idx)) {
+						debug_cgx_intf("%s: CGX%d:%d Failed to bring link down\n",
+							       __func__, cgx_id, lmac_idx);
+						goto mode_err;
+					}
 				}
 			}
 		}
@@ -1611,17 +1614,20 @@ int cgx_do_cmu_reset(int cgx_id, int lmac_id, int cgx_to_reset)
 		for (int lmac_idx = 0; lmac_idx < MAX_LMAC_PER_CGX; lmac_idx++) {
 			lmac_tmp = &cgx->lmac_cfg[lmac_idx];
 			if (lmac_tmp->gserx == lmac->gserx) {
-				cgx_lmac_init(cgx_id, lmac_idx);
+				/* Don't need to bring UP CPRI links */
+				if (!plat_octeontx_bcfg->qlm_cfg[lmac_tmp->gserx].is_cpri) {
+					cgx_lmac_init(cgx_id, lmac_idx);
 
-				/* Bring UP the CGX link */
-				cgx_link_bringup(cgx_id, lmac_idx);
+					/* Bring UP the CGX link */
+					cgx_link_bringup(cgx_id, lmac_idx);
 
-				/* Clear any errors set during LINK bring up as the mode
-				 * is changed now successfully and link may come up
-				 * later. In this case, still return SUCCESS for MODE
-				 * change command
-				 */
-				cgx_set_error_type(cgx_id, lmac_idx, 0);
+					/* Clear any errors set during LINK bring up as the mode
+					 * is changed now successfully and link may come up
+					 * later. In this case, still return SUCCESS for MODE
+					 * change command
+					 */
+					cgx_set_error_type(cgx_id, lmac_idx, 0);
+				}
 			}
 		}
 	}
@@ -1699,7 +1705,7 @@ static int cgx_control_higig2(int cgx_id, int lmac_id, int enable)
 		      __func__, cgx_id, lmac_id,
 		      qlm_get_mode_strmap(lmac->mode_idx).bdk_str);
 		return -1;
-        }
+	}
 
 	if (enable)
 		v = &values[1];
