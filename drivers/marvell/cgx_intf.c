@@ -1559,6 +1559,9 @@ int cgx_do_cmu_reset(int cgx_id, int lmac_id, int cgx_to_reset)
 				/* CMU reset only needs to be done 1 time per GSERX */
 				if (lmac_tmp->gserx != gserx_pre) {
 					/* Complete CMU reset */
+					debug_cgx_intf("%s: GSERX %d Completing CMU Reset\n",
+						       __func__, lmac_tmp->gserx);
+
 					cgx_temp->qlm_ops->qlm_cmu_reset(lmac_tmp->gserx);
 					gserx_pre = lmac_tmp->gserx;
 				}
@@ -1596,6 +1599,9 @@ int cgx_do_cmu_reset(int cgx_id, int lmac_id, int cgx_to_reset)
 				}
 			}
 		}
+
+		debug_cgx_intf("%s: GSERX %d Completing CMU Reset\n",
+			       __func__, lmac->gserx);
 
 		cgx->qlm_ops->qlm_cmu_reset(lmac->gserx);
 
