@@ -24,6 +24,7 @@
 
 /* This file map memory for different blocks so it needs all csrs definitions */
 #include "cavm-csrs.h"
+#include "cavm-csrs-fus.h"
 
 #define CAVM_BPHY_BAR_E_BPHY_PF_BAR0 (0x860000000000ll)
 #define CAVM_BPHY_BAR_E_BPHY_PF_BAR0_SIZE 0x4000000000ull

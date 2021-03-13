@@ -36,6 +36,7 @@
 
 #include "cavm-csrs-fusf.h"
 #include "cavm-csrs-gpio.h"
+#include <plat_fuse.h>
 
 /* Each of these can be overridden by the platform - this is uncommon */
 #pragma weak plat_octeontx_get_eth_count
@@ -1087,4 +1088,14 @@ void plat_gti_irq_setup(int core)
 	octeontx_write64(vector_ptr, CAVM_GICD_SETSPI_SR | 1);
 	vector_ptr += 0x8;
 	octeontx_write64(vector_ptr, GTI_CWD_SPI_IRQ(core));
+}
+
+int plat_fuse_read(int fuse)
+{
+	int byte_addr = FUSE_BIT_TO_BYTE_ADDR(fuse);
+        /* Use the cached fuse access */
+        uint64_t dat = CSR_READ(CAVM_FUS_CACHEX(byte_addr >> 3));
+        dat >>= (byte_addr & 7) << 3;
+
+	return FUSE_GET_VAL((dat & 0xff), fuse);
 }

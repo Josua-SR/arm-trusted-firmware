@@ -25,6 +25,7 @@
 /* This file map memory for different blocks so it needs all csrs definitions */
 #include "cavm-csrs.h"
 #include "cavm-csrs-gserj.h"
+#include <plat_fuse.h>
 
 #define CAVM_BPHY_BAR_E_BPHY_PF_BAR0 (0x860000000000ll)
 #define CAVM_BPHY_BAR_E_BPHY_PF_BAR0_SIZE 0x8000000000ull
@@ -114,11 +115,15 @@ int plat_octeontx_get_pem_count(void)
 
 int plat_octeontx_get_gser_count(void)
 {
+	if (plat_fuse_read(CAVM_FUS_FUSE_NUM_E_LMC_CRIPPLEX(2)))
+		return 6;
 	return 10;
 }
 
 int plat_octeontx_get_gserj_count(void)
 {
+	if (plat_fuse_read(CAVM_FUS_FUSE_NUM_E_LMC_CRIPPLEX(2)))
+		return 4;
 	return 8;
 }
 
