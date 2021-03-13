@@ -4284,6 +4284,7 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 					c.s.tx_clk_mux_sel = lane_new.s.tx_clk_mux_sel;
 					c.s.cgx_quad = lane_new.s.cgx_quad;
 					c.s.cgx_dual = lane_new.s.cgx_dual;
+					c.s.rx_bitstrip_en = lane_new.s.rx_bitstrip_en;
 					//c.s.cfg_cgx = 0; /* Not being done currently in BDK but is recommended */
 					c.s.ln_link_stat = 0);
 			gser_wait_usec(1);
@@ -4610,6 +4611,7 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 			    c.s.tx_clk_mux_sel = lane_new.s.tx_clk_mux_sel;
 			    c.s.cgx_quad = lane_new.s.cgx_quad;
 			    c.s.cgx_dual = lane_new.s.cgx_dual;
+			    c.s.rx_bitstrip_en = lane_new.s.rx_bitstrip_en;
 					//c.s.cfg_cgx = 0; /* Not being done currently in BDK but is recommended */
 			    c.s.ln_link_stat = 0);
 			gser_wait_usec(1);
