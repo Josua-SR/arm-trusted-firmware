@@ -1566,26 +1566,22 @@ static int octeontx2_fill_cgx_struct(int cgx_idx, int qlm, int gserx,
 }
 
 /*
- * From the  DTS str list of devices finds the required led_node
- * And from the LED node gets the gpio pin and returns it
+ * From the DTS str list of devices finds the required led_node
+ * and returns pointer to it.
  *
  */
-static int octeontx2_cgx_update_gpio_leds_helper(const char *property_start,
-	const char *property_end, const char *led_node, const char *find_attr)
+static const char *octeontx2_cgx_get_led_node_ptr(const char *property_start,
+	const char *property_end, const char *node_name)
 {
-	char gpio[2];
-	int devstr_len = 0;
-	int index = 0, gindex = 0;
 	const char *node_ptr = NULL;
-	const char *gpio_ptr = NULL;
 
 	if (!property_start || !property_end) {
 		debug_dts("GPIO Led helper start and end pointers not valid\n");
-		return -1;
+		return NULL;
 	}
 
 	while (property_start < property_end) {
-		node_ptr = octeontx2_first_substring(property_start, led_node);
+		node_ptr = octeontx2_first_substring(property_start, node_name);
 		if (!node_ptr)
 			property_start += (strlen(property_start) + 1);
 		else
@@ -1595,15 +1591,60 @@ static int octeontx2_cgx_update_gpio_leds_helper(const char *property_start,
 	if (!node_ptr) {
 		debug_dts
 			("GPIO LED link node not found for CGX LMAC::%s\n"
-			, led_node);
-		return -1;
+			, node_name);
+		return NULL;
 	}
+
+	return node_ptr;
+}
+
+/*
+ * Checks if LED node entry represents a direct gpio.
+ * Returns:
+ *   1: if the gpio is direct (dev=N0.GPIO0)
+ *   0: for all other cases (gpio behind mux/expander or
+ *      'dev' attribute wasn't found)
+ *
+ */
+static int octeontx2_cgx_check_led_gpio_is_direct(const char *node_name,
+	const char *node_ptr)
+{
+	const char *devname_ptr;
+
+	devname_ptr = octeontx2_first_substring(node_ptr, "dev");
+	if (!devname_ptr) {
+		debug_dts
+			("GPIO LED: 'dev' attribute not found for CGX LMAC::%s\n"
+			, node_name);
+		return 0;
+	}
+
+	/* now, move the ptr after 'dev=', where actual name starts  */
+	devname_ptr = strchr(devname_ptr, '=') + 1;
+
+	if (!strncmp(devname_ptr, "N0.GPIO0", sizeof("N0.GPIO0") - 1))
+		return 1;
+
+	return 0;
+}
+
+/*
+ * From the LED node pointer gets the gpio pin and returns it
+ *
+ */
+static int octeontx2_cgx_update_gpio_leds_helper(const char *node_name,
+	const char *node_ptr, const char *find_attr)
+{
+	char gpio[2];
+	int devstr_len = 0;
+	int index = 0, gindex = 0;
+	const char *gpio_ptr = NULL;
 
 	gpio_ptr = octeontx2_first_substring(node_ptr, find_attr);
 	if (!gpio_ptr) {
 		debug_dts
 			("GPIO LED link gpio not found for CGX LMAC::%s\n"
-			, led_node);
+			, node_name);
 		return -1;
 	}
 
@@ -1617,7 +1658,7 @@ static int octeontx2_cgx_update_gpio_leds_helper(const char *property_start,
 
 			debug_dts
 				("GPIO LED link gpio missed for CGX LMAC::%s\n"
-				, led_node);
+				, node_name);
 			return -1;
 		}
 		if (gpio_ptr[index] >= '0' && gpio_ptr[index] <= '9')
@@ -1639,12 +1680,14 @@ static void octeontx2_cgx_update_gpio_leds(const void *fdt,
 {
 	char prop[64];
 	int offset = 0;
-	int gpio_act = 0;
-	int gpio_link = 0;
+	int gpio_act = -1;
+	int gpio_link = -1;
 	int property_len = 0;
 	int gpio_link_drv = 1;
-	const char *act_node = NULL;
-	const char *link_node = NULL;
+	const char *act_node_name = NULL;
+	const char *act_node_ptr = NULL;
+	const char *link_node_name = NULL;
+	const char *link_node_ptr = NULL;
 	const void *property_end = NULL;
 	const void *property_start = NULL;
 
@@ -1656,30 +1699,6 @@ static void octeontx2_cgx_update_gpio_leds(const void *fdt,
 		lmac->gpio_led.link_active_high = 1;
 	}
 
-	snprintf(prop, sizeof(prop), "NETWORK-LED-LINK-FAST.N0.CGX%d.P%d",
-		 cgx_idx, lmac_idx);
-
-	link_node = octeontx2_fdtbdk_get_str(fdt, prop);
-	if (!link_node) {
-		debug_dts
-			("Gpio LED link not set for CGX::%d LMAC::%d\n",
-				cgx_idx, lmac_idx);
-	}
-
-	memset(prop, 0, sizeof(prop));
-	snprintf(prop, sizeof(prop), "NETWORK-LED-ACTIVITY.N0.CGX%d.P%d",
-		 cgx_idx, lmac_idx);
-	act_node = octeontx2_fdtbdk_get_str(fdt, prop);
-	if (!act_node) {
-		debug_dts("Gpio LED act not set for CGX::%d LMAC::%d\n",
-			cgx_idx, lmac_idx);
-	}
-
-	if (!link_node && !act_node) {
-		debug_dts("Gpio LED property not set for CGX::%d LMAC::%d\n",
-			 cgx_idx, lmac_idx);
-		return;
-	}
 	offset = fdt_path_offset(fdt, "/cavium,bdk");
 	if (offset > 0) {
 		property_start = fdt_getprop(fdt, offset, "DEVICES",
@@ -1694,19 +1713,61 @@ static void octeontx2_cgx_update_gpio_leds(const void *fdt,
 		return;
 	}
 
-	if (link_node) {
-		gpio_link = octeontx2_cgx_update_gpio_leds_helper(
-			property_start, property_end, link_node,
-			 "gpio");
-		gpio_link_drv = octeontx2_cgx_update_gpio_leds_helper(
-			property_start, property_end, link_node,
-			 "active_high");
+	snprintf(prop, sizeof(prop), "NETWORK-LED-LINK-FAST.N0.CGX%d.P%d",
+		 cgx_idx, lmac_idx);
+
+	link_node_name = octeontx2_fdtbdk_get_str(fdt, prop);
+	if (link_node_name) {
+		link_node_ptr = octeontx2_cgx_get_led_node_ptr(
+			property_start, property_end, link_node_name);
+	} else {
+		debug_dts
+			("Gpio LED link not set for CGX::%d LMAC::%d\n",
+				cgx_idx, lmac_idx);
 	}
 
-	if (act_node) {
-		gpio_act = octeontx2_cgx_update_gpio_leds_helper(property_start,
-			 property_end, act_node, "gpio");
+	memset(prop, 0, sizeof(prop));
+	snprintf(prop, sizeof(prop), "NETWORK-LED-ACTIVITY.N0.CGX%d.P%d",
+		 cgx_idx, lmac_idx);
+	act_node_name = octeontx2_fdtbdk_get_str(fdt, prop);
+	if (act_node_name) {
+		act_node_ptr = octeontx2_cgx_get_led_node_ptr(
+			property_start, property_end, act_node_name);
+	} else {
+		debug_dts("Gpio LED act not set for CGX::%d LMAC::%d\n",
+			cgx_idx, lmac_idx);
 	}
+
+	if (!link_node_name && !act_node_name) {
+		debug_dts("Gpio LED property not set for CGX::%d LMAC::%d\n",
+			 cgx_idx, lmac_idx);
+		return;
+	}
+
+	if (link_node_ptr) {
+		if (octeontx2_cgx_check_led_gpio_is_direct(
+			link_node_name, link_node_ptr)) {
+
+			gpio_link = octeontx2_cgx_update_gpio_leds_helper(
+				link_node_name, link_node_ptr, "gpio");
+			gpio_link_drv = octeontx2_cgx_update_gpio_leds_helper(
+				link_node_name, link_node_ptr, "active_high");
+		} else {
+			debug_dts("link LED gpio is not direct - parsing skipped\n");
+		}
+	}
+
+	if (act_node_ptr) {
+		if (octeontx2_cgx_check_led_gpio_is_direct(
+			act_node_name, act_node_ptr)) {
+
+			gpio_act = octeontx2_cgx_update_gpio_leds_helper(
+				act_node_name, act_node_ptr, "gpio");
+		} else {
+			debug_dts("act LED gpio is not direct - parsing skipped\n");
+		}
+	}
+
 	if (gpio_link >= 0) {
 		lmac->gpio_led.link_status = 0;
 		lmac->gpio_led.link = gpio_link;
