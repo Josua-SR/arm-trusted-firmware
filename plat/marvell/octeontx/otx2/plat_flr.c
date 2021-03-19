@@ -221,6 +221,39 @@ ATOMIC_ASM_STUB(swp, b, w)
 #undef ATOMIC_ASM_STUB_64
 #undef ATOMIC_ASM_STUB_32
 
+#define STP_ASM_STUB(reg_type)						      \
+static inline void do_stp##reg_type(uint64_t w0, uint64_t w1, uint64_t *addr) \
+{									      \
+	__asm__ volatile(						      \
+		"stp %"#reg_type"[v0], %"#reg_type"[v1], [%x[dst],#0]!"       \
+		:						              \
+		:						              \
+		[v0] "r" (w0), [v1] "r" (w1), [dst] "r" (addr));	      \
+}
+
+STP_ASM_STUB()
+STP_ASM_STUB(w)
+
+#undef STP_ASM_STUB
+
+#define LDP_ASM_STUB(reg_type)						      \
+static inline void do_ldp##reg_type(uint64_t *w0, uint64_t *w1,		      \
+				    uint64_t *addr)			      \
+{									      \
+	__asm__ volatile(						      \
+		"ldp %"#reg_type"[v0], %"#reg_type"[v1], [%x[dst],#0]!"       \
+		:						              \
+		[v0] "=r" (*w0), [v1] "=r" (*w1)			      \
+		:						              \
+		[dst] "r" (addr));					      \
+}
+
+LDP_ASM_STUB()
+LDP_ASM_STUB(w)
+
+#undef LDP_ASM_STUB
+
+
 static uintptr_t virt_to_phys(uintptr_t va)
 {
 	uint64_t pa, par_el1;
@@ -263,24 +296,56 @@ static uintptr_t virt_to_phys(uintptr_t va)
 static int update_value(void *ctx_h, uint64_t *value, uint64_t *mask,
 	uint8_t *rt_id, uint8_t *rs_id, flr_operation_e op)
 {
-	uint64_t rs_value;
 	uint64_t rt_value;
+	uint64_t rs_value;
 
 	if (op == FLR_OPERATION_STORE) {
-		/* If it was write, the value to store is saved at Rt */
-		INFO("val = 0x%llx; rt=%d; mask=0x%llx\n",
-			read_gp_reg(ctx_h, mask, rt_id), *rt_id, *mask);
-		*value = read_gp_reg(ctx_h, mask, rt_id);
+		if (*rs_id != INVALID_REG_IDX) {
+			rt_value = read_gp_reg(ctx_h, mask, rt_id);
+			rs_value = read_gp_reg(ctx_h, mask, rs_id);
 
-		INFO("%s: Write: value=0x%llx\n", __func__, (*value & *mask));
+			INFO("STP val0 = 0x%llx; rt=%d;, val1 = 0x%llx; rs=%d; mask=0x%llx to address %p\n",
+			     rt_value, *rt_id, rs_value, *rs_id, *mask, value);
+
+			if (*mask == UINT64_MAX) {
+				do_stp(rt_value, rs_value, value);
+			} else if (*mask == UINT32_MAX) {
+				do_stpw(rt_value, rs_value, value);
+			} else {
+				ERROR("%s: Invalid mask = 0x%llx\n", __func__, *mask);
+				return -1;
+			}
+		} else {
+			/* If it was write, the value to store is saved at Rt */
+			INFO("val = 0x%llx; rt=%d; mask=0x%llx\n",
+				read_gp_reg(ctx_h, mask, rt_id), *rt_id, *mask);
+			*value = read_gp_reg(ctx_h, mask, rt_id);
+
+			INFO("%s: Write: value=0x%llx\n", __func__, (*value & *mask));
+		}
 	} else if (op == FLR_OPERATION_LOAD) {
-		/*
-		 * On reads, Rt is the register that is returned,
-		 * Rn stores requested address, as well as FAR_EL3.
-		 * Write proper structure field at Rt.
-		 */
-		write_gp_reg(ctx_h, mask, rt_id, *value);
-		INFO("%s: Read: value=0x%llx\n", __func__, (*value & *mask));
+		if (*rs_id != INVALID_REG_IDX) {
+			if (*mask == UINT64_MAX) {
+				do_ldp(&rt_value, &rs_value, value);
+			} else if (*mask == UINT32_MAX) {
+				do_ldpw(&rt_value, &rs_value, value);
+			} else {
+				ERROR("%s: Invalid mask = 0x%llx\n", __func__, *mask);
+				return -1;
+			}
+			INFO("LDP from address %p mask 0x%llx val0 = 0x%llx val1 = 0x%llx to rt=%d rs=%d\n",
+			     value, *mask, rt_value, rs_value, *rt_id, *rs_id);
+			write_gp_reg(ctx_h, mask, rt_id, rt_value);
+			write_gp_reg(ctx_h, mask, rs_id, rs_value);
+		} else {
+			/*
+			 * On reads, Rt is the register that is returned,
+			 * Rn stores requested address, as well as FAR_EL3.
+			 * Write proper structure field at Rt.
+			 */
+			write_gp_reg(ctx_h, mask, rt_id, *value);
+			INFO("%s: Read: value=0x%llx\n", __func__, (*value & *mask));
+		}
 	} else {
 /*
  * This macro helps to reduce repetitive sequence of choosing correct function.
@@ -435,18 +500,6 @@ static int alias_handler(void *ctx_h, uintptr_t pa, uint64_t *mask,
 		return rc;
 	}
 
-	/* If it's not pair instruction, nothing to do here, simply return. */
-	if (*rt2_id == INVALID_REG_IDX ||
-	    (op != FLR_OPERATION_STORE && op != FLR_OPERATION_LOAD))
-		return rc;
-
-	/* Load/store register pair are only in 8B and 4B variants */
-	pa += (*mask == UINT64_MAX) ? 8 : 4;
-	rc = do_alias(ctx_h, pa, mask, rt2_id, NULL, op);
-	if(rc)
-		ERROR(
-			"Unable to handle operation 0x%x PA=0x%lx for second register in pair\n",
-			op, pa);
 	return rc;
 }
 
