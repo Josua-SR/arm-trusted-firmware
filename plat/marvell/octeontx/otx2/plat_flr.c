@@ -243,7 +243,7 @@ static inline void do_ldp##reg_type(uint64_t *w0, uint64_t *w1,		      \
 	__asm__ volatile(						      \
 		"ldp %"#reg_type"[v0], %"#reg_type"[v1], [%x[dst],#0]!"       \
 		:						              \
-		[v0] "=r" (*w0), [v1] "=r" (*w1)			      \
+		[v0] "=&r" (*w0), [v1] "=&r" (*w1)			      \
 		:						              \
 		[dst] "r" (addr));					      \
 }
