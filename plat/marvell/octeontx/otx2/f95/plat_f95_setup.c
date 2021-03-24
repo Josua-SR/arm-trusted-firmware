@@ -300,6 +300,9 @@ void plat_add_mmio()
 		add_map_record(CAVM_PEM_BAR_E_PEMX_PF_BAR4_CN9(i), CAVM_PEM_BAR_E_PEMX_PF_BAR4_CN9_SIZE, attr);
 	}
 
+	add_map_record(CAVM_FUS_BAR_E_FUS_PF_BAR0,
+			CAVM_FUS_BAR_E_FUS_PF_BAR0_SIZE, attr);
+
 	device_type_count = plat_octeontx_get_gser_count();
 	if (cavm_is_model(OCTEONTX_CNF95XX_PASS1_X)) {
 		for (i = 0; i < device_type_count; i++)

@@ -293,6 +293,9 @@ void plat_add_mmio(void)
 				CAVM_CGX_BAR_E_CGXX_PF_BAR4_SIZE, attr);
 	}
 
+	add_map_record(CAVM_FUS_BAR_E_FUS_PF_BAR0,
+			CAVM_FUS_BAR_E_FUS_PF_BAR0_SIZE, attr);
+
 	device_type_count = plat_octeontx_get_gserr_count();
 	for (i = 0; i < device_type_count; i++)
 		add_map_record(CAVM_GSERR_BAR_E_GSERRX_PF_BAR0(i),
