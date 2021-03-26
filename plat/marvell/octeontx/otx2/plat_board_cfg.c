@@ -41,60 +41,60 @@
 #define MHZ_TICKS_PER_SEC 1000000
 
 /* List of GPIO types - used as expanders in case of SFP/QSFP/PHY */
-static const gpio_compat_t gpio_compat_list[] = {
+static gpio_compat_t gpio_compat_list[] = {
 	{ "cavium,thunder-8890-gpio", GPIO_PIN_DEFAULT, 64 },	/* 64 pins for T9x */
-	{ "nxp_pca9505",	GPIO_PIN_PCA953X, 40 },
-	{ "nxp_pca9698",	GPIO_PIN_PCA953X, 40 },
-	{ "nxp_pca9534",	GPIO_PIN_PCA953X, 8 },
-	{ "nxp_pca9535",	GPIO_PIN_PCA953X, 16 },
-	{ "nxp_pca9536",	GPIO_PIN_PCA953X, 4 },
-	{ "nxp_pca9537",	GPIO_PIN_PCA953X, 4 },
-	{ "nxp_pca9538",	GPIO_PIN_PCA953X, 8 },
-	{ "nxp_pca9539",	GPIO_PIN_PCA953X, 16 },
-	{ "nxp_pca9554",	GPIO_PIN_PCA953X, 8 },
-	{ "nxp_pca9554a",	GPIO_PIN_PCA953X, 8 },
-	{ "nxp_pca9555",	GPIO_PIN_PCA953X, 16 },
-	{ "nxp_pca9555a",	GPIO_PIN_PCA953X, 16 },
-	{ "nxp_pca9556",	GPIO_PIN_PCA953X, 8 },
-	{ "nxp_pca9557",	GPIO_PIN_PCA953X, 8 },
-	{ "nxp_pca9574",	GPIO_PIN_PCA957X, 8 },
-	{ "nxp_pca9575",	GPIO_PIN_PCA957X, 16 },
-	{ "maxim_max7310",	GPIO_PIN_PCA953X, 8 },
-	{ "maxim_max7312",	GPIO_PIN_PCA953X, 16 },
-	{ "maxim_max7313",	GPIO_PIN_PCA953X, 16 },
-	{ "maxim_max7315",	GPIO_PIN_PCA953X, 8 },
-	{ "ti_pca6107",		GPIO_PIN_PCA953X, 8 },
-	{ "ti_tca6408",		GPIO_PIN_PCA953X, 8 },
-	{ "ti_tca6416",		GPIO_PIN_PCA953X, 16 },
-	{ "ti_tca9554",		GPIO_PIN_PCA953X, 8 },
-	{ "nxp_pcf8574",	GPIO_PIN_PCF857X, 8 },
-	{ "nxp_pcf8574a",	GPIO_PIN_PCF857X, 8 },
-	{ "nxp_pca8574",	GPIO_PIN_PCF857X, 8 },
-	{ "nxp_pca9670",	GPIO_PIN_PCF857X, 8 },
-	{ "nxp_pca9672",	GPIO_PIN_PCF857X, 8 },
-	{ "nxp_pca9674",	GPIO_PIN_PCF857X, 8 },
-	{ "nxp_pca8575",	GPIO_PIN_PCF857X, 16 },
-	{ "nxp_pcf8575",	GPIO_PIN_PCF857X, 16 },
-	{ "nxp_pca9671",	GPIO_PIN_PCF857X, 16 },
-	{ "nxp_pca9673",	GPIO_PIN_PCF857X, 16 },
-	{ "nxp_pca9675",	GPIO_PIN_PCF857X, 16 },
-	{ "maxim_max7328",	GPIO_PIN_PCF857X, 8 },
-	{ "maxim_max7329",	GPIO_PIN_PCF857X, 8 },
+	{ "nxp,pca9505",	GPIO_PIN_PCA953X, 40 },
+	{ "nxp,pca9698",	GPIO_PIN_PCA953X, 40 },
+	{ "nxp,pca9534",	GPIO_PIN_PCA953X, 8 },
+	{ "nxp,pca9535",	GPIO_PIN_PCA953X, 16 },
+	{ "nxp,pca9536",	GPIO_PIN_PCA953X, 4 },
+	{ "nxp,pca9537",	GPIO_PIN_PCA953X, 4 },
+	{ "nxp,pca9538",	GPIO_PIN_PCA953X, 8 },
+	{ "nxp,pca9539",	GPIO_PIN_PCA953X, 16 },
+	{ "nxp,pca9554",	GPIO_PIN_PCA953X, 8 },
+	{ "nxp,pca9554a",	GPIO_PIN_PCA953X, 8 },
+	{ "nxp,pca9555",	GPIO_PIN_PCA953X, 16 },
+	{ "nxp,pca9555a",	GPIO_PIN_PCA953X, 16 },
+	{ "nxp,pca9556",	GPIO_PIN_PCA953X, 8 },
+	{ "nxp,pca9557",	GPIO_PIN_PCA953X, 8 },
+	{ "nxp,pca9574",	GPIO_PIN_PCA957X, 8 },
+	{ "nxp,pca9575",	GPIO_PIN_PCA957X, 16 },
+	{ "maxim,max7310",	GPIO_PIN_PCA953X, 8 },
+	{ "maxim,max7312",	GPIO_PIN_PCA953X, 16 },
+	{ "maxim,max7313",	GPIO_PIN_PCA953X, 16 },
+	{ "maxim,max7315",	GPIO_PIN_PCA953X, 8 },
+	{ "ti,pca6107",		GPIO_PIN_PCA953X, 8 },
+	{ "ti,tca6408",		GPIO_PIN_PCA953X, 8 },
+	{ "ti,tca6416",		GPIO_PIN_PCA953X, 16 },
+	{ "ti,tca9554",		GPIO_PIN_PCA953X, 8 },
+	{ "nxp,pcf8574",	GPIO_PIN_PCF857X, 8 },
+	{ "nxp,pcf8574a",	GPIO_PIN_PCF857X, 8 },
+	{ "nxp,pca8574",	GPIO_PIN_PCF857X, 8 },
+	{ "nxp,pca9670",	GPIO_PIN_PCF857X, 8 },
+	{ "nxp,pca9672",	GPIO_PIN_PCF857X, 8 },
+	{ "nxp,pca9674",	GPIO_PIN_PCF857X, 8 },
+	{ "nxp,pca8575",	GPIO_PIN_PCF857X, 16 },
+	{ "nxp,pcf8575",	GPIO_PIN_PCF857X, 16 },
+	{ "nxp,pca9671",	GPIO_PIN_PCF857X, 16 },
+	{ "nxp,pca9673",	GPIO_PIN_PCF857X, 16 },
+	{ "nxp,pca9675",	GPIO_PIN_PCF857X, 16 },
+	{ "maxim,max7328",	GPIO_PIN_PCF857X, 8 },
+	{ "maxim,max7329",	GPIO_PIN_PCF857X, 8 },
 	{ "cavium,cpld96xx",	GPIO_PIN_CPLD,	8},
 };
 
 /* List of I2C Mux/Switch types */
-static const i2c_compat_t i2c_compat_list[] = {
+static i2c_compat_t i2c_compat_list[] = {
 	{ "cavium,thunder-8890-twsi", I2C_BUS_DEFAULT, I2C_OTHER,  0, 6},
 	{ "cavium,thunderx-i2c", I2C_BUS_DEFAULT, I2C_OTHER,  0, 6},
-	{ "nxp_pca9540", I2C_BUS_PCA9540, I2C_MUX,    4, 2 },
-	{ "nxp_pca9542", I2C_BUS_PCA9542, I2C_MUX,    4, 2 },
-	{ "nxp_pca9543", I2C_BUS_PCA9543, I2C_SWITCH, 0, 2 },
-	{ "nxp_pca9544", I2C_BUS_PCA9544, I2C_MUX,    4, 4 },
-	{ "nxp_pca9545", I2C_BUS_PCA9545, I2C_SWITCH, 0, 4 },
-	{ "nxp_pca9546", I2C_BUS_PCA9546, I2C_SWITCH, 0, 4 },
-	{ "nxp_pca9547", I2C_BUS_PCA9547, I2C_MUX,    8, 8 },
-	{ "nxp_pca9548", I2C_BUS_PCA9548, I2C_SWITCH, 0, 8 },
+	{ "nxp,pca9540", I2C_BUS_PCA9540, I2C_MUX,    4, 2 },
+	{ "nxp,pca9542", I2C_BUS_PCA9542, I2C_MUX,    4, 2 },
+	{ "nxp,pca9543", I2C_BUS_PCA9543, I2C_SWITCH, 0, 2 },
+	{ "nxp,pca9544", I2C_BUS_PCA9544, I2C_MUX,    4, 4 },
+	{ "nxp,pca9545", I2C_BUS_PCA9545, I2C_SWITCH, 0, 4 },
+	{ "nxp,pca9546", I2C_BUS_PCA9546, I2C_SWITCH, 0, 4 },
+	{ "nxp,pca9547", I2C_BUS_PCA9547, I2C_MUX,    8, 8 },
+	{ "nxp,pca9548", I2C_BUS_PCA9548, I2C_SWITCH, 0, 8 },
 };
 
 /* List of PHY compatible strings/types */
@@ -116,6 +116,30 @@ static const phy_compatible_type_t phy_compat_list[] = {
 
 extern int cgx_read_flash_fec(int cgx_id, int lmac_id, int *fec);
 extern int cgx_read_flash_phy_mod(int cgx_id, int lmac_id, int *phy_mod);
+
+
+static int fdt_check_compatible_new_old_fmt(const void *fdt, int nodeoffset,
+		char *compatible)
+{
+	int ret;
+	char *p;
+
+	if (!fdt_node_check_compatible(fdt, nodeoffset, compatible))
+		return 0;
+
+	/* try with the 'old' format ... */
+	p = strchr(compatible, ',');
+	if (!p)
+		return 1;
+
+	*p = '_';
+	ret = fdt_node_check_compatible(fdt, nodeoffset, compatible);
+
+	/* Reverting change in compatible string before return */
+	*p = ',';
+
+	return ret;
+}
 
 /* Output information specific for OCTEONTX2, for now only CGX. */
 void plat_octeontx_print_board_variables(void)
@@ -820,7 +844,7 @@ static int octeontx2_fdt_get_i2c_bus_info(const void *fdt, int offset,
 	}
 
 	for (int i = 0; i < ARRAY_SIZE(i2c_compat_list); i++) {
-		if (!fdt_node_check_compatible(fdt, parent,
+		if (!fdt_check_compatible_new_old_fmt(fdt, parent,
 					       i2c_compat_list[i].compatible)) {
 			debug_dts("CGX%d.LMAC%d: I2C type %d\n", cgx_idx,
 					lmac_idx, i2c_compat_list[i].type);
@@ -897,7 +921,7 @@ static int octeontx2_fdt_gpio_get_info_by_phandle(const void *fdt, int offset,
 	debug_dts("CGX%d.LMAC%d: GPIO name %s pin %d flags %d\n",
 			cgx_idx, lmac_idx, propname, gpio_info->pin, gpio_info->flags);
 	for (int i = 0; i < ARRAY_SIZE(gpio_compat_list); i++) {
-		if (!fdt_node_check_compatible(fdt, node,
+		if (!fdt_check_compatible_new_old_fmt(fdt, node,
 				gpio_compat_list[i].compatible)) {
 			debug_dts("CGX%d.LMAC%d: gpio type %d\n", cgx_idx,
 					lmac_idx, gpio_compat_list[i].type);
@@ -916,19 +940,6 @@ static int octeontx2_fdt_gpio_get_info_by_phandle(const void *fdt, int offset,
 			gpio_info->num_pins = octeontx2_fdt_get_int32(fdt,
 				"ngpios", node);
 
-			/* If the gpio is connected directly, just update
-			 * the type and return
-			 */
-			if (gpio_compat_list[i].type == GPIO_PIN_DEFAULT) {
-				gpio_info->type = gpio_compat_list[i].type;
-				break;
-			}
-
-			/* For all other GPIO pins that are connected
-			 * through expanders
-			 */
-			gpio_info->num_pins = octeontx2_fdt_get_int32(fdt,
-				"ngpios", node);
 			/* If max number of GPIOs are not available from
 			 * DT, get it from the static table
 			 */
