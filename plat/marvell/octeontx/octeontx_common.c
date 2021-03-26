@@ -57,7 +57,7 @@ static void plat_add_mmio_common(void)
 
 	/* Shared Memory */
 	/* Do not use add_map_record here, it will round size up */
-	attr = MT_MEMORY | MT_RO | MT_SECURE;
+	attr = MT_MEMORY | MT_RW | MT_SECURE;
 
 	if (fdt_ptr != (void *)~0)
 		mmap_add_region((unsigned long)fdt_ptr, (unsigned long)fdt_ptr,

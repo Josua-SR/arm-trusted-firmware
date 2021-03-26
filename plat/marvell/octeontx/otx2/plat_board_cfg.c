@@ -114,6 +114,9 @@ static const phy_compatible_type_t phy_compat_list[] = {
 	{ "ethernet-phy-ieee802.3-c45", PHY_GENERIC_8023_C45},
 };
 
+#define TWSI_TRIM_LIST_LEN 12
+static int twsi_trim_list[TWSI_TRIM_LIST_LEN];
+
 extern int cgx_read_flash_fec(int cgx_id, int lmac_id, int *fec);
 extern int cgx_read_flash_phy_mod(int cgx_id, int lmac_id, int *phy_mod);
 
@@ -835,6 +838,7 @@ static int octeontx2_fdt_get_i2c_bus_info(const void *fdt, int offset,
 		i2c_info_t *i2c_info, int cgx_idx, int lmac_idx)
 {
 	int parent, ret;
+	int bus_offset = -1;
 
 	parent = fdt_parent_offset(fdt, offset);
 	if (parent < 0) {
@@ -857,6 +861,9 @@ static int octeontx2_fdt_get_i2c_bus_info(const void *fdt, int offset,
 					i2c_info->bus = ret;
 				else
 					return ret;
+
+				bus_offset = fdt_parent_offset(fdt, offset);
+
 			} else { /* all other MUX/SWITCH cases */
 				i2c_info->is_mux = i2c_compat_list[i].mux_type;
 				i2c_info->enable_bit =
@@ -877,6 +884,8 @@ static int octeontx2_fdt_get_i2c_bus_info(const void *fdt, int offset,
 					cgx_idx, lmac_idx, !i2c_info->is_mux,
 					i2c_info->channel,
 					i2c_info->addr, i2c_info->bus);
+
+				bus_offset = fdt_parent_offset(fdt, parent);
 			}
 			break;
 		}
@@ -886,7 +895,7 @@ static int octeontx2_fdt_get_i2c_bus_info(const void *fdt, int offset,
 				cgx_idx, lmac_idx);
 		return -1;
 	}
-	return 0;
+	return bus_offset;
 }
 
 static int octeontx2_fdt_gpio_get_info_by_phandle(const void *fdt, int offset,
@@ -980,50 +989,78 @@ static int octeontx2_fdt_gpio_get_info_by_phandle(const void *fdt, int offset,
 	return 0;
 }
 
-static void octeontx2_fdt_parse_qsfp_info(const void *fdt, int offset,
+/*
+ * Function parsing QSFP info
+ * Returns:
+ *   0: if QSFP slot was parsed & is going to be managed in ATF
+ *   1: parsing was skipped as QSFP slot is going to be managed in kernel
+ *  -1: on parsing error
+ *
+ */
+static int octeontx2_fdt_parse_qsfp_info(const void *fdt, int offset,
 		int cgx_idx, int lmac_idx)
 {
 	const char *name;
-	i2c_info_t *i2c_info;
+	i2c_info_t i2c_info;
 	sfp_slot_info_t *qsfp_info;
 	cgx_lmac_config_t *lmac;
 	int eeprom, parent, ret;
+	int i2c_bus_offset;
 
 	lmac = &(plat_octeontx_bcfg->cgx_cfg[cgx_idx].lmac_cfg[lmac_idx]);
 	qsfp_info = &lmac->sfp_info;
-	i2c_info = &qsfp_info->i2c_eeprom_info;
 
 	if (fdt_node_check_compatible(fdt, offset, "qsfp-slot"))
-		return;
-
-	qsfp_info->is_sfp = 0;
-	name = fdt_get_name(fdt, offset, NULL);
-	strlcpy(qsfp_info->name, name, sizeof(qsfp_info->name));
-	debug_dts("CGX%d.LMAC%d: qsfp_info->name %s\n",
-			cgx_idx, lmac_idx, qsfp_info->name);
-
-	/* obtain MAX power for the slot as per the board design */
-	qsfp_info->max_power = octeontx2_fdt_get_int32(fdt, "max_power", offset);
+		return -1;
 
 	/* Parse EEPROM related I2C info */
 	eeprom = octeontx2_fdt_lookup_phandle(fdt, offset, "eeprom");
 	if (eeprom < 0) {
 		ERROR("CGX%d.LMAC%d: Couldn't find EEPROM info for SFP\n",
 				cgx_idx, lmac_idx);
+
+		ret = -1;
 		goto qsfp_update;
 	}
 
 	parent = fdt_parent_offset(fdt, eeprom);
+	i2c_bus_offset = octeontx2_fdt_get_i2c_bus_info(fdt, parent, &i2c_info,
+					cgx_idx, lmac_idx);
+	if (i2c_bus_offset < 0) {
+		ret = -1;
+		goto qsfp_update;
+	}
+
+	name = fdt_get_name(fdt, offset, NULL);
+	if (fdt_get_property(fdt, i2c_bus_offset, "twsi-in-kernel", NULL)) {
+		debug_dts("CGX%d.LMAC%d: skipped parsing %s, "
+			"i2c bus %d is managed in kernel\n",
+				cgx_idx, lmac_idx, name, i2c_info.bus);
+
+		return 1;
+	}
+
+	/* Update the list of twsi nodes to be trimmed */
+	if (!twsi_trim_list[i2c_info.bus]) {
+		twsi_trim_list[i2c_info.bus] = i2c_bus_offset;
+	}
+
+	qsfp_info->is_sfp = 0;
+	strlcpy(qsfp_info->name, name, sizeof(qsfp_info->name));
+	debug_dts("CGX%d.LMAC%d: qsfp_info->name %s\n",
+			cgx_idx, lmac_idx, qsfp_info->name);
+
+	memcpy(&qsfp_info->i2c_eeprom_info, &i2c_info, sizeof(i2c_info_t));
 
 	qsfp_info->eeprom_addr = octeontx2_fdt_get_int32(fdt, "reg", eeprom);
 
 	debug_dts("CGX%d.LMAC%d: EEPROM addr 0x%x\n", cgx_idx, lmac_idx,
 					qsfp_info->eeprom_addr);
 
-	ret = octeontx2_fdt_get_i2c_bus_info(fdt, parent, i2c_info,
-					cgx_idx, lmac_idx);
-	if (ret == -1)
-		goto qsfp_update;
+	/* obtain MAX power for the slot as per the board design */
+	qsfp_info->max_power = octeontx2_fdt_get_int32(fdt, "max_power",
+			offset);
+
 
 	/* Parse GPIO info for QSFP interface */
 	ret = octeontx2_fdt_gpio_get_info_by_phandle(fdt, offset, "mod_sel",
@@ -1057,58 +1094,85 @@ static void octeontx2_fdt_parse_qsfp_info(const void *fdt, int offset,
 	lmac->sfp_slot = 1;	/* SFP slot is present */
 	qsfp_info->is_qsfp = 1;	/* To indicate slot is QSFP */
 
-	return;
+	return 0;
 
 qsfp_update:
 	ERROR("%s: %d:%d QSFP slot info not parsed fully\n",
 			__func__, cgx_idx, lmac_idx);
-	return;
+	return ret;
 }
 
-static void octeontx2_fdt_parse_sfp_info(const void *fdt, int offset,
+/*
+ * Function parsing SFP info
+ * Returns:
+ *   0: if SFP slot was parsed & is going to be managed in ATF
+ *   1: parsing was skipped as SFP slot is going to be managed in kernel
+ *  -1: on parsing error
+ *
+ */
+static int octeontx2_fdt_parse_sfp_info(const void *fdt, int offset,
 		int cgx_idx, int lmac_idx)
 {
 	const char *name;
-	i2c_info_t *i2c_info;
+	i2c_info_t i2c_info;
 	sfp_slot_info_t *sfp_info;
 	cgx_lmac_config_t *lmac;
 	int eeprom, parent, ret;
+	int i2c_bus_offset;
 
 	lmac = &(plat_octeontx_bcfg->cgx_cfg[cgx_idx].lmac_cfg[lmac_idx]);
 	sfp_info = &lmac->sfp_info;
-	i2c_info = &sfp_info->i2c_eeprom_info;
 
 	if (fdt_node_check_compatible(fdt, offset, "sfp-slot"))
-		return;
-
-	sfp_info->is_qsfp = 0;
-	name = fdt_get_name(fdt, offset, NULL);
-	strlcpy(sfp_info->name, name, sizeof(sfp_info->name));
-	debug_dts("CGX%d.LMAC%d: sfp_info->name %s\n",
-			cgx_idx, lmac_idx, sfp_info->name);
-
-	/* obtain MAX power for the slot as per the board design */
-	sfp_info->max_power = octeontx2_fdt_get_int32(fdt, "max_power", offset);
+		return -1;
 
 	/* Parse EEPROM related I2C info */
 	eeprom = octeontx2_fdt_lookup_phandle(fdt, offset, "eeprom");
 	if (eeprom < 0) {
 		ERROR("CGX%d.LMAC%d: Couldn't find EEPROM info for SFP\n",
 				cgx_idx, lmac_idx);
+
+		ret = -1;
 		goto sfp_update;
 	}
 
 	parent = fdt_parent_offset(fdt, eeprom);
+	i2c_bus_offset = octeontx2_fdt_get_i2c_bus_info(fdt, parent, &i2c_info,
+					cgx_idx, lmac_idx);
+	if (i2c_bus_offset < 0) {
+		ret = -1;
+		goto sfp_update;
+	}
+
+	name = fdt_get_name(fdt, offset, NULL);
+	if (fdt_get_property(fdt, i2c_bus_offset, "twsi-in-kernel", NULL)) {
+		debug_dts("CGX%d.LMAC%d: skipped parsing %s, "
+			"i2c bus %d is managed in kernel\n",
+				cgx_idx, lmac_idx, name, i2c_info.bus);
+
+		return 1;
+	}
+
+	/* Update the list of twsi nodes to be trimmed */
+	if (!twsi_trim_list[i2c_info.bus]) {
+		twsi_trim_list[i2c_info.bus] = i2c_bus_offset;
+	}
+
+	sfp_info->is_qsfp = 0;
+	strlcpy(sfp_info->name, name, sizeof(sfp_info->name));
+	debug_dts("CGX%d.LMAC%d: sfp_info->name %s\n",
+			cgx_idx, lmac_idx, sfp_info->name);
+
+	memcpy(&sfp_info->i2c_eeprom_info, &i2c_info, sizeof(i2c_info_t));
 
 	sfp_info->eeprom_addr = octeontx2_fdt_get_int32(fdt, "reg", eeprom);
 
 	debug_dts("CGX%d.LMAC%d: EEPROM addr 0x%x\n", cgx_idx, lmac_idx,
 					sfp_info->eeprom_addr);
 
-	ret = octeontx2_fdt_get_i2c_bus_info(fdt, parent, i2c_info,
-						cgx_idx, lmac_idx);
-	if (ret == -1)
-		goto sfp_update;
+	/* obtain MAX power for the slot as per the board design */
+	sfp_info->max_power = octeontx2_fdt_get_int32(fdt, "max_power", offset);
+
 
 	/* Parse GPIO info for SFP interface */
 	ret = octeontx2_fdt_gpio_get_info_by_phandle(fdt, offset, "detect",
@@ -1132,12 +1196,12 @@ static void octeontx2_fdt_parse_sfp_info(const void *fdt, int offset,
 	lmac->sfp_slot = 1;	/* SFP slot is present */
 	sfp_info->is_sfp = 1;	/* To indicate slot is SFP */
 
-	return;
+	return 0;
 
 sfp_update:
 	ERROR("%s: %d:%d SFP slot info not parsed fully\n",
 			__func__, cgx_idx, lmac_idx);
-	return;
+	return ret;
 }
 
 /* This routine sets a number of LMACs to initialize and the size to use.
@@ -1896,7 +1960,7 @@ static int octeontx2_cgx_get_phy_info(const void *fdt, int lmac_offset, int cgx_
  *  - octeontx,sgmii-mac-phy-mode
  *  - octeontx,disable-autonegotiation
  */
-static void octeontx2_cgx_lmacs_check_linux(const void *fdt,
+static void octeontx2_cgx_lmacs_check_linux(void *fdt,
 		cgx_config_t *cgx, int cgx_idx, int cgx_offset, int *fdt_vfs)
 {
 	int lmac_idx;
@@ -1996,25 +2060,30 @@ static void octeontx2_cgx_lmacs_check_linux(const void *fdt,
 			}
 		}
 
-		/* Enable SFP management only for LIO3 & LOKI EBB board */
-		if ((!strncmp(plat_octeontx_bcfg->bcfg.board_model, "cn33", 4))
-			|| (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504n", 8))
-			|| (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504mm", 9))) {
-			/* Check for sfp-slot info */
-			sfp_offset = octeontx2_fdt_lookup_phandle(fdt,
-						lmac_offset, sfpname);
-			if (sfp_offset > 0) {
-				octeontx2_fdt_parse_sfp_info(fdt, sfp_offset,
-						cgx_idx, lmac_idx);
-			}
+		/* Check for sfp-slot info */
+		sfp_offset = octeontx2_fdt_lookup_phandle(fdt,
+					lmac_offset, sfpname);
+		if (sfp_offset > 0 && !octeontx2_fdt_parse_sfp_info(fdt,
+				sfp_offset, cgx_idx, lmac_idx)) {
 
-			/* Check for qsfp-slot info */
-			qsfp_offset = octeontx2_fdt_lookup_phandle(fdt,
-					lmac_offset, qsfpname);
-			if (qsfp_offset > 0) {
-				octeontx2_fdt_parse_qsfp_info(fdt, qsfp_offset,
-					cgx_idx, lmac_idx);
-			}
+			/* sfp node is managed in ATF and we are
+			 * done with parsing it, thus remove the reference
+			 * from the lmac node
+			 */
+			fdt_nop_property(fdt, lmac_offset, sfpname);
+		}
+
+		/* Check for qsfp-slot info */
+		qsfp_offset = octeontx2_fdt_lookup_phandle(fdt,
+				lmac_offset, qsfpname);
+		if (qsfp_offset > 0 && !octeontx2_fdt_parse_qsfp_info(fdt,
+				qsfp_offset, cgx_idx, lmac_idx)) {
+
+			/* qsfp node is managed in ATF and we are
+			 * done with parsing it, thus remove the reference
+			 * from the lmac node
+			 */
+			fdt_nop_property(fdt, lmac_offset, qsfpname);
 		}
 
 		/* Override fec, phy-mod params from flash if exist on
@@ -2144,7 +2213,7 @@ static void octeontx2_cgx_lmacs_check_linux(const void *fdt,
 }
 
 /* Main routine to parse the CGX information from the Linux DT file. */
-static void octeontx2_cgx_check_linux(const void *fdt)
+static void octeontx2_cgx_check_linux(void *fdt)
 {
 	int i;
 	cgx_config_t *cgx;
@@ -2175,6 +2244,16 @@ static void octeontx2_cgx_check_linux(const void *fdt)
 		}
 		octeontx2_cgx_lmacs_check_linux(fdt, cgx, i, cgx_offset, &fdt_vfs);
 	}
+
+	/* As all the ATF-managed sfp/qsfps are parsed, we can proceed to
+	 * trim associated twsi buses from Linux dts
+	 */
+	for (int i = 0; i < TWSI_TRIM_LIST_LEN; i++) {
+		if (twsi_trim_list[i]) {
+			fdt_nop_node(fdt, twsi_trim_list[i]);
+		}
+	}
+
 
 	/* Parse RVU configuration */
 	octeontx2_parse_rvu_config(fdt, &fdt_vfs);
@@ -2392,7 +2471,7 @@ static void octeontx2_map_cgx_to_nix(void)
  * CGX/LMAC, if any.
  * After it the Linux DT file is used to get other information for CGX.
  */
-static void octeontx2_fill_cgx_details(const void *fdt)
+static void octeontx2_fill_cgx_details(void *fdt)
 {
 	int qlm_idx;
 	int lane_idx;
@@ -2766,7 +2845,7 @@ static void octeontx2_fill_timer_ms(const void *fdt)
 
 int plat_octeontx_fill_board_details(void)
 {
-	const void *fdt = fdt_ptr;
+	void *fdt = fdt_ptr;
 	int offset, rc;
 
 	rc = fdt_check_header(fdt);
