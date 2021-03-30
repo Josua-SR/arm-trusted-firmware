@@ -130,7 +130,57 @@ the handle to PHY:
        phy-handle = <&sgmii00>;
    };
 
-2.7 Examples
+
+2.7 The 'twsi-in-kernel' attribute
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Regarding management of SFP/QSFPs, the new attribute, 'twsi-in-kernel',
+was added to mark that given twsi bus is to be managed by Linux kernel.
+It is *only* applicable for twsi buses related to sfp/qsfp management
+(the ones that sfps/qsfps are attached to via i2c muxes/switches and
+gpio expanders).
+
+In case attribute is present, ATF will skip parsing the twsi bus node
+and all its i2c muxes/switches/gpio expanders subnodes, also they
+will not be removed from dts tree, to make them available for Linux.
+
+In case attribute is *not* present, it means that the twsi bus along
+with its muxes / expanders subnodes will by managed in ATF and they
+will be removed from dts tree right after ATF is done with parsing.
+
+
+**'twsi-in-kernel' attribute example:**
+
+.. code-block:: none
+
+&i2c_9_3 {
+        twsi-in-kernel;
+        mux@70 {
+                compatible = "nxp,pca9547";
+                reg = <0x70>;
+                #address-cells = <1>;
+                #size-cells = <0>;
+
+                i2c@0 {
+                        #address-cells = <1>;
+                        ...
+                        sfp_1: sfp-slot@1 {
+                                compatible = "sfp-slot";
+                                /* format : gpio_controller phandle, pin, flags
+                                 * flags : polarity inversion
+                                 */
+                                rx_los = <&gpio_exp_3_20 2 0>;
+                                detect = <&gpio_exp_3_20 3 0>;
+                                ...
+                        };
+                };
+        ...
+        gpio_exp_3_20: gpio@20 { ... };
+        gpio_exp_3_22: gpio@22 { ... };
+};
+
+
+2.8 Examples
 ^^^^^^^^^^^^
 
 **SFP (example slot info):**
@@ -199,7 +249,7 @@ the handle to PHY:
 
    gpio0: gpio-i2c@0 {
        #gpio-cells = <2>;
-       compatible = "nxp_pca8574";
+       compatible = "nxp,pca8574";
        gpio-controller;
        reg = <0x22>;
        ngpios = <8>;
@@ -212,7 +262,7 @@ the handle to PHY:
    switch@e0 {
        #address-cells = <1>;
        #size-cells = <0>;
-       compatible = "nxp_pca9548";
+       compatible = "nxp,pca9548";
        reg = <0xE0>;
        i2c@0 {
            #address-cells = <1>;
@@ -1187,14 +1237,14 @@ Below table lists the I2C MUX/Switches supported and the corresponding DTS compa
   static const i2c_compat_t i2c_compat_list[] = {
     { "cavium,thunder-8890-twsi", I2C_BUS_DEFAULT, I2C_OTHER,  0, 6},
     { "cavium,thunderx-i2c", I2C_BUS_DEFAULT, I2C_OTHER,  0, 6},
-    { "nxp_pca9540", I2C_BUS_PCA9540, I2C_MUX,    4, 2 },
-    { "nxp_pca9542", I2C_BUS_PCA9542, I2C_MUX,    4, 2 },
-    { "nxp_pca9543", I2C_BUS_PCA9543, I2C_SWITCH, 0, 2 },
-    { "nxp_pca9544", I2C_BUS_PCA9544, I2C_MUX,    4, 4 },
-    { "nxp_pca9545", I2C_BUS_PCA9545, I2C_SWITCH, 0, 4 },
-    { "nxp_pca9546", I2C_BUS_PCA9546, I2C_SWITCH, 0, 4 },
-    { "nxp_pca9547", I2C_BUS_PCA9547, I2C_MUX,    8, 8 },
-    { "nxp_pca9548", I2C_BUS_PCA9548, I2C_SWITCH, 0, 8 },
+    { "nxp,pca9540", I2C_BUS_PCA9540, I2C_MUX,    4, 2 },
+    { "nxp,pca9542", I2C_BUS_PCA9542, I2C_MUX,    4, 2 },
+    { "nxp,pca9543", I2C_BUS_PCA9543, I2C_SWITCH, 0, 2 },
+    { "nxp,pca9544", I2C_BUS_PCA9544, I2C_MUX,    4, 4 },
+    { "nxp,pca9545", I2C_BUS_PCA9545, I2C_SWITCH, 0, 4 },
+    { "nxp,pca9546", I2C_BUS_PCA9546, I2C_SWITCH, 0, 4 },
+    { "nxp,pca9547", I2C_BUS_PCA9547, I2C_MUX,    8, 8 },
+    { "nxp,pca9548", I2C_BUS_PCA9548, I2C_SWITCH, 0, 8 },
   };
 
 NOTE: MCP supports only PCA9548 driver currently. If a platform requires other I2C switch/MUX type, corresponding driver should be added in MCP.
@@ -1210,43 +1260,43 @@ If a GPIO expander needs to be added other than the listed below, this array in 
 
   static const gpio_compat_t gpio_compat_list[] = {
     { "cavium,thunder-8890-gpio", GPIO_PIN_DEFAULT, 64 },   /* 64 pins for T9x */
-    { "nxp_pca9505",    GPIO_PIN_PCA953X, 40 },
-    { "nxp_pca9698",    GPIO_PIN_PCA953X, 40 },
-    { "nxp_pca9534",    GPIO_PIN_PCA953X, 8 },
-    { "nxp_pca9535",    GPIO_PIN_PCA953X, 16 },
-    { "nxp_pca9536",    GPIO_PIN_PCA953X, 4 },
-    { "nxp_pca9537",    GPIO_PIN_PCA953X, 4 },
-    { "nxp_pca9538",    GPIO_PIN_PCA953X, 8 },
-    { "nxp_pca9539",    GPIO_PIN_PCA953X, 16 },
-    { "nxp_pca9554",    GPIO_PIN_PCA953X, 8 },
-    { "nxp_pca9554a",   GPIO_PIN_PCA953X, 8 },
-    { "nxp_pca9555",    GPIO_PIN_PCA953X, 16 },
-    { "nxp_pca9555a",   GPIO_PIN_PCA953X, 16 },
-    { "nxp_pca9556",    GPIO_PIN_PCA953X, 8 },
-    { "nxp_pca9557",    GPIO_PIN_PCA953X, 8 },
-    { "nxp_pca9574",    GPIO_PIN_PCA957X, 8 },
-    { "nxp_pca9575",    GPIO_PIN_PCA957X, 16 },
-    { "maxim_max7310",  GPIO_PIN_PCA953X, 8 },
-    { "maxim_max7312",  GPIO_PIN_PCA953X, 16 },
-    { "maxim_max7313",  GPIO_PIN_PCA953X, 16 },
-    { "maxim_max7315",  GPIO_PIN_PCA953X, 8 },
-    { "ti_pca6107",     GPIO_PIN_PCA953X, 8 },
-    { "ti_tca6408",     GPIO_PIN_PCA953X, 8 },
-    { "ti_tca6416",     GPIO_PIN_PCA953X, 16 },
-    { "ti_tca9554",     GPIO_PIN_PCA953X, 8 },
-    { "nxp_pcf8574",    GPIO_PIN_PCF857X, 8 },
-    { "nxp_pcf8574a",   GPIO_PIN_PCF857X, 8 },
-    { "nxp_pca8574",    GPIO_PIN_PCF857X, 8 },
-    { "nxp_pca9670",    GPIO_PIN_PCF857X, 8 },
-    { "nxp_pca9672",    GPIO_PIN_PCF857X, 8 },
-    { "nxp_pca9674",    GPIO_PIN_PCF857X, 8 },
-    { "nxp_pca8575",    GPIO_PIN_PCF857X, 16 },
-    { "nxp_pcf8575",    GPIO_PIN_PCF857X, 16 },
-    { "nxp_pca9671",    GPIO_PIN_PCF857X, 16 },
-    { "nxp_pca9673",    GPIO_PIN_PCF857X, 16 },
-    { "nxp_pca9675",    GPIO_PIN_PCF857X, 16 },
-    { "maxim_max7328",  GPIO_PIN_PCF857X, 8 },
-    { "maxim_max7329",  GPIO_PIN_PCF857X, 8 },
+    { "nxp,pca9505",    GPIO_PIN_PCA953X, 40 },
+    { "nxp,pca9698",    GPIO_PIN_PCA953X, 40 },
+    { "nxp,pca9534",    GPIO_PIN_PCA953X, 8 },
+    { "nxp,pca9535",    GPIO_PIN_PCA953X, 16 },
+    { "nxp,pca9536",    GPIO_PIN_PCA953X, 4 },
+    { "nxp,pca9537",    GPIO_PIN_PCA953X, 4 },
+    { "nxp,pca9538",    GPIO_PIN_PCA953X, 8 },
+    { "nxp,pca9539",    GPIO_PIN_PCA953X, 16 },
+    { "nxp,pca9554",    GPIO_PIN_PCA953X, 8 },
+    { "nxp,pca9554a",   GPIO_PIN_PCA953X, 8 },
+    { "nxp,pca9555",    GPIO_PIN_PCA953X, 16 },
+    { "nxp,pca9555a",   GPIO_PIN_PCA953X, 16 },
+    { "nxp,pca9556",    GPIO_PIN_PCA953X, 8 },
+    { "nxp,pca9557",    GPIO_PIN_PCA953X, 8 },
+    { "nxp,pca9574",    GPIO_PIN_PCA957X, 8 },
+    { "nxp,pca9575",    GPIO_PIN_PCA957X, 16 },
+    { "maxim,max7310",  GPIO_PIN_PCA953X, 8 },
+    { "maxim,max7312",  GPIO_PIN_PCA953X, 16 },
+    { "maxim,max7313",  GPIO_PIN_PCA953X, 16 },
+    { "maxim,max7315",  GPIO_PIN_PCA953X, 8 },
+    { "ti,pca6107",     GPIO_PIN_PCA953X, 8 },
+    { "ti,tca6408",     GPIO_PIN_PCA953X, 8 },
+    { "ti,tca6416",     GPIO_PIN_PCA953X, 16 },
+    { "ti,tca9554",     GPIO_PIN_PCA953X, 8 },
+    { "nxp,pcf8574",    GPIO_PIN_PCF857X, 8 },
+    { "nxp,pcf8574a",   GPIO_PIN_PCF857X, 8 },
+    { "nxp,pca8574",    GPIO_PIN_PCF857X, 8 },
+    { "nxp,pca9670",    GPIO_PIN_PCF857X, 8 },
+    { "nxp,pca9672",    GPIO_PIN_PCF857X, 8 },
+    { "nxp,pca9674",    GPIO_PIN_PCF857X, 8 },
+    { "nxp,pca8575",    GPIO_PIN_PCF857X, 16 },
+    { "nxp,pcf8575",    GPIO_PIN_PCF857X, 16 },
+    { "nxp,pca9671",    GPIO_PIN_PCF857X, 16 },
+    { "nxp,pca9673",    GPIO_PIN_PCF857X, 16 },
+    { "nxp,pca9675",    GPIO_PIN_PCF857X, 16 },
+    { "maxim,max7328",  GPIO_PIN_PCF857X, 8 },
+    { "maxim,max7329",  GPIO_PIN_PCF857X, 8 },
     { "cavium,cpld96xx",    GPIO_PIN_CPLD,  8},
   };
 
