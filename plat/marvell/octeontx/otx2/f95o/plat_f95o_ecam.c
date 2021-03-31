@@ -438,12 +438,56 @@ static inline int f95o_is_domain_present(struct ecam_device *dev)
 	return (dom_const.s.pres && dom_const.s.permit);
 }
 
-static int f95o_get_secure_settings(struct ecam_device *dev, uint64_t pconfig)
+static int f95o_matched_twsi_slave(int instance)
+{
+	if (plat_octeontx_bcfg->bcfg.slave_twsi.s.bus == -1)
+		return 0;
+
+	return (plat_octeontx_bcfg->bcfg.slave_twsi.s.bus == instance) ? 1 : 0;
+}
+
+static int f95o_matched_dev(struct secure_devices *dev,
+	uint32_t g_pccpf_id, uint32_t g_vsec_ctl)
 {
 	cavm_pccpf_xxx_id_t pccpf_id;
 	union cavm_pccpf_xxx_vsec_ctl vsec_ctl;
 
-	int i = 0;
+	pccpf_id.u = g_pccpf_id;
+	vsec_ctl.u = g_vsec_ctl;
+
+	// not matched product and device id
+	if (ECAM_DEV_ID(dev->prodid, dev->devid) != pccpf_id.s.devid)
+		return 0;
+
+	// any instance is matching
+	if (dev->instance == ECAM_ALL_INSTANCES)
+		return 1;
+
+	// given instance is matching
+	if (dev->instance == vsec_ctl.s.inst_num)
+		return 1;
+
+	// custom match for specific instance
+	if (dev->instance == ECAM_CUSTOM_INSTANCE) {
+		debug_plat_ecam(
+			"ECAM: pccpf.devid = %x instance=%d bus=%d did=%x\n",
+			pccpf_id.s.devid, vsec_ctl.s.inst_num,
+			plat_octeontx_bcfg->bcfg.slave_twsi.s.bus,
+			ECAM_PROD_DEV_ID(CAVM_PCC_DEV_IDL_E_MIO_TWS));
+		switch (pccpf_id.s.devid) {
+		case ECAM_PROD_DEV_ID(CAVM_PCC_DEV_IDL_E_MIO_TWS):
+			return f95o_matched_twsi_slave(vsec_ctl.s.inst_num);
+		}
+	}
+
+	return 0;
+}
+
+static int f95o_get_secure_settings(struct ecam_device *dev, uint64_t pconfig)
+{
+	cavm_pccpf_xxx_id_t pccpf_id;
+	union cavm_pccpf_xxx_vsec_ctl vsec_ctl;
+	struct secure_devices *sdev;
 
 	/* Get secure/non-secure setting */
 	pccpf_id.u = octeontx_read32(pconfig + CAVM_PCCPF_XXX_ID);
@@ -452,35 +496,33 @@ static int f95o_get_secure_settings(struct ecam_device *dev, uint64_t pconfig)
 	debug_plat_ecam("%s: InstNum=0x%04x\n", __func__, vsec_ctl.s.inst_num);
 
 	dev->config.s.is_secure = 0;
-	while (secure_devs[i].devid != ECAM_INVALID_PCC_IDL_ID) {
-		if ((((secure_devs[i].prodid << ECAM_PROD_SHIFT) |
-			secure_devs[i].devid) == pccpf_id.s.devid) &&
-			(secure_devs[i].instance == ECAM_ALL_INSTANCES ||
-			secure_devs[i].instance == vsec_ctl.s.inst_num))
-			dev->config.s.is_secure = 1;
-		i++;
-	}
-
-	i = 0;
 	dev->config.s.is_mcp_secure = 0;
-	while (secure_mcp_devs[i].devid != ECAM_INVALID_PCC_IDL_ID) {
-		if ((((secure_mcp_devs[i].prodid << ECAM_PROD_SHIFT) |
-			secure_mcp_devs[i].devid) == pccpf_id.s.devid) &&
-			(secure_mcp_devs[i].instance == ECAM_ALL_INSTANCES ||
-			secure_mcp_devs[i].instance == vsec_ctl.s.inst_num))
-			dev->config.s.is_mcp_secure = 1;
-		i++;
+	dev->config.s.is_scp_secure = 0;
+
+	sdev = secure_devs;
+	while (sdev->devid != ECAM_INVALID_PCC_IDL_ID) {
+		if (f95o_matched_dev(sdev, pccpf_id.u, vsec_ctl.u)) {
+			dev->config.s.is_secure = 1;
+			break;
+		}
+		sdev++;
 	}
 
-	i = 0;
-	dev->config.s.is_scp_secure = 0;
-	while (secure_scp_devs[i].devid != ECAM_INVALID_PCC_IDL_ID) {
-		if ((((secure_scp_devs[i].prodid << ECAM_PROD_SHIFT) |
-			secure_scp_devs[i].devid) == pccpf_id.s.devid) &&
-			(secure_scp_devs[i].instance == ECAM_ALL_INSTANCES ||
-			secure_scp_devs[i].instance == vsec_ctl.s.inst_num))
+	sdev = secure_mcp_devs;
+	while (sdev->devid != ECAM_INVALID_PCC_IDL_ID) {
+		if (f95o_matched_dev(sdev, pccpf_id.u, vsec_ctl.u)) {
+			dev->config.s.is_mcp_secure = 1;
+			break;
+		}
+		sdev++;
+	}
+
+	sdev = secure_scp_devs;
+	while (sdev->devid != ECAM_INVALID_PCC_IDL_ID) {
+		if (f95o_matched_dev(sdev, pccpf_id.u, vsec_ctl.u)) {
 			dev->config.s.is_scp_secure = 1;
-		i++;
+		}
+		sdev++;
 	}
 
 	return 1;

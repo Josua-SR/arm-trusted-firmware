@@ -416,7 +416,7 @@ static inline int cn95xx_is_domain_present(struct ecam_device *dev)
 	return (dom_const.s.pres && dom_const.s.permit);
 }
 
-static int cnf95xx_matched_twsi_slave(int instance)
+static int cn95xx_matched_twsi_slave(int instance)
 {
 	if (plat_octeontx_bcfg->bcfg.slave_twsi.s.bus == -1)
 		return 0;
@@ -424,8 +424,7 @@ static int cnf95xx_matched_twsi_slave(int instance)
 	return (plat_octeontx_bcfg->bcfg.slave_twsi.s.bus == instance) ? 1 : 0;
 }
 
-
-static int cnf95xx_matched_dev(struct secure_devices *dev,
+static int cn95xx_matched_dev(struct secure_devices *dev,
 	uint32_t g_pccpf_id, uint32_t g_vsec_ctl)
 {
 	cavm_pccpf_xxx_id_t pccpf_id;
@@ -455,13 +454,12 @@ static int cnf95xx_matched_dev(struct secure_devices *dev,
 			ECAM_PROD_DEV_ID(CAVM_PCC_DEV_IDL_E_MIO_TWS));
 		switch (pccpf_id.s.devid) {
 		case ECAM_PROD_DEV_ID(CAVM_PCC_DEV_IDL_E_MIO_TWS):
-			return cnf95xx_matched_twsi_slave(vsec_ctl.s.inst_num);
+			return cn95xx_matched_twsi_slave(vsec_ctl.s.inst_num);
 		}
 	}
 
 	return 0;
 }
-
 
 static int cn95xx_get_secure_settings(struct ecam_device *dev, uint64_t pconfig)
 {
@@ -481,23 +479,16 @@ static int cn95xx_get_secure_settings(struct ecam_device *dev, uint64_t pconfig)
 
 	sdev = secure_devs;
 	while (sdev->devid != ECAM_INVALID_PCC_IDL_ID) {
-		if (cnf95xx_matched_dev(sdev, pccpf_id.u, vsec_ctl.u)) {
+		if (cn95xx_matched_dev(sdev, pccpf_id.u, vsec_ctl.u)) {
 			dev->config.s.is_secure = 1;
 			break;
 		}
 		sdev++;
 	}
 
-	if (sdev->devid == CAVM_PCC_DEV_IDL_E_SMI && dev->config.s.is_secure) {
-		if (plat_octeontx_bcfg->show_smi_in_nsw) {
-			/* Do not hide SMI from non-secure world */
-			dev->config.s.is_secure = 0;
-		}
-	}
-
 	sdev = secure_mcp_devs;
 	while (sdev->devid != ECAM_INVALID_PCC_IDL_ID) {
-		if (cnf95xx_matched_dev(sdev, pccpf_id.u, vsec_ctl.u)) {
+		if (cn95xx_matched_dev(sdev, pccpf_id.u, vsec_ctl.u)) {
 			dev->config.s.is_mcp_secure = 1;
 			break;
 		}
@@ -506,7 +497,7 @@ static int cn95xx_get_secure_settings(struct ecam_device *dev, uint64_t pconfig)
 
 	sdev = secure_scp_devs;
 	while (sdev->devid != ECAM_INVALID_PCC_IDL_ID) {
-		if (cnf95xx_matched_dev(sdev, pccpf_id.u, vsec_ctl.u)) {
+		if (cn95xx_matched_dev(sdev, pccpf_id.u, vsec_ctl.u)) {
 			dev->config.s.is_scp_secure = 1;
 			break;
 		}
