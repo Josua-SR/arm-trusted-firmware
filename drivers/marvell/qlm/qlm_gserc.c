@@ -2037,6 +2037,13 @@ int qlm__gserc_rx_equalization(int qlm, int qlm_lane)
 	if (gser_is_platform(GSER_PLATFORM_ASIM))
 		return 0;
 
+	qlm_state_lane_t state = qlm_gserc_get_state(qlm, qlm_lane);
+	if (state.s.baud_mhz < 5000)
+	{
+		GSER_TRACE(QLM, "GSERC%d.%d: Not running Rx adaptation (baud rate < 5G)", qlm, qlm_lane);
+		return 0;
+	}
+
 	int result = 0;
 	int num_lanes = get_num_lanes(qlm);
 	for (int lane = 0; lane < num_lanes; lane++)

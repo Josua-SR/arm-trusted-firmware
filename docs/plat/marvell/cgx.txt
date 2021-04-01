@@ -685,6 +685,25 @@ can be passed (CGX0 is mapped to NIX and used by kernel).
 
 * The command expects GSERC and lane as index with enable/disable parameter.
 
+3.2.2.13 CPRI TX Equalization
+"""""""""""""""""""""""""""""
+
+This command CGX_CMD_CPRI_RXEQ starts rx adaptation on GSERC interface.
+
+.. code-block:: c
+
+  /* command argument to be passed for cmd ID - CGX_CMD_CPRI_RXEQ */
+  struct cpri_mode_tx_ctrl_args {
+	uint64_t reserved1:8;
+	uint64_t gserc_idx:4;   /* GSERC index 0 - 4 */
+	uint64_t lane_idx:4;    /* lane index 0 - 1 */
+	uint64_t enable:1;      /* Ignored for RX Adaptation command */
+	uint64_t reserved2:47;
+  };
+
+Since the command uses CGX framework, any CGX IDx and LMAC IDx other than CGX index as 0
+can be passed.
+
 3.2.2.13 GET LINK STATUS
 """"""""""""""""""""""""
 

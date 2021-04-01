@@ -1170,6 +1170,42 @@ static int cpri_set_tx_control(struct cpri_mode_tx_ctrl_args *args)
 
 	return 0;
 }
+
+static int cpri_handle_rx_equalization(struct cpri_mode_tx_ctrl_args *args)
+{
+	cgx_config_t *cgx;
+	int gserc_idx, lane_idx;
+	int cgx_idx, lmac_idx;
+
+	gserc_idx = args->gserc_idx;
+	lane_idx = args->lane_idx;
+
+	debug_cgx_intf("%s: GSERC%d Lane%d\n",  __func__, gserc_idx, lane_idx);
+
+	if (((gserc_idx < 0) && (gserc_idx > 4)) ||
+			((lane_idx < 0) && (lane_idx > 1))) {
+		WARN("%s: Invalid GSERX lane index %d:%d\n", __func__,
+				gserc_idx, lane_idx);
+		return -1;
+	}
+
+	cgx_obtain_lmac_index(gserc_idx, lane_idx, &cgx_idx, &lmac_idx);
+
+	if ((cgx_idx == -1) && (lmac_idx == -1)) {
+		WARN("%s: invalid CGX, LMAC index obtained\n", __func__);
+		return -1;
+	}
+
+	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_idx];
+
+	if (cgx->qlm_ops->qlm_rx_equalization(gserc_idx, lane_idx) == -1) {
+		debug_cgx_intf("%s:RX EQU failed %d:%d\n", __func__, gserc_idx, lane_idx);
+		return -1;
+	}
+
+	return 0;
+}
+
 #endif
 
 int cgx_handle_mode_change(int cgx_id, int lmac_id,
@@ -2074,6 +2110,15 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 					cgx_set_error_type(cgx_id, lmac_id,
 						CGX_ERR_SERDES_CPRI_PARAM_INVALID);
 				}
+			break;
+			case CGX_CMD_CPRI_RXEQ:
+				scratchx1.u = CSR_READ(CAVM_CGXX_CMRX_SCRATCHX(
+							cgx_id, lmac_id, 1));
+				ret = cpri_handle_rx_equalization(
+						&scratchx1.s.cpri_tx_ctrl_args);
+				if (ret == -1)
+					cgx_set_error_type(cgx_id, lmac_id,
+						CGX_ERR_RX_EQU_FAIL);
 			break;
 #endif
 			/* FIXME: add support for other commands */
