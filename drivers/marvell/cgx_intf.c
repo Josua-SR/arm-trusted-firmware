@@ -1026,7 +1026,7 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 	cgx_config_t *cgx;
 	int cgx_idx = 0, lmac_idx = 0;
 	int gserc_idx = 0, lane_idx = 0;
-	int current_rate, is_allowed;
+	int current_rate, same_rate_class;
 	qlm_mode_flags_t flags;
 	int max_lane_count = 2; /* GSERC has only 2 lanes per DLM */
 	cgx_lmac_config_t *lmac;
@@ -1118,14 +1118,15 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 			if (j != lane_idx)
 				current_rate = plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[j];
 		}
-		is_allowed = cpri_is_rate_change_allowed(current_rate, req_rate);
-		if (!is_allowed) {
-			ERROR("%s: CPRI rate change not allowed as other lane baud rate is not in the rate set\n",
-					__func__);
-			return -1;
-		}
+		same_rate_class = cpri_is_rate_change_allowed(current_rate, req_rate);
 		/* Change the SERDES speed */
-		lane_mask |= 1 << lane_idx;
+		/* If changing CPRI rate classes,
+		 * both lanes will be changed to requested rate
+		 */
+		if (!same_rate_class)
+			lane_mask = (1 << max_lane_count) - 1;
+		else
+			lane_mask |= 1 << lane_idx;
 		/* CPRI does not support AN or FEC so set to 0 */
 		if (cgx->qlm_ops->qlm_cfg_mode(gserc_idx, lane_mask,
 					       QLM_MODE_CPRI, req_rate, flags, 0,
