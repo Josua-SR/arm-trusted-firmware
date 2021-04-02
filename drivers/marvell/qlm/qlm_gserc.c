@@ -3588,11 +3588,13 @@ static ap_802_3_adv_t qlm_gserc_ap_adv(int module, int lane, qlm_802_3ap_fec_t f
  * For chips that don't use pin strapping, this function programs
  * the QLM Clock management settings.
  *
- * @param module           Index into GSER* group
+ * @param module       Index into GSER* group
+ * @param flags        Flags to specify mode specific options
+ * @param update_tx    If 0 do not update Tx eq settings
  *
  * @return Zero on success, negative on failure
  */
-static void qlm_gserc_cmu_cfg(int module)
+static void qlm_gserc_cmu_cfg(int module, qlm_mode_flags_t flags, int update_tx, uint8_t lane_mask)
 {
 	/* 1. Set tx/rx rate/width controls.  Completed in separate function */
 	/* 2. Bring all lanes to RESET power state. Completed in separate function */
@@ -3603,10 +3605,12 @@ static void qlm_gserc_cmu_cfg(int module)
 	 *		PHY_CTRL_RATE1 New PHY Rate 2 value from Table 2
 	 *	Wait 1 microsecond for the PHY firmware to pickup the new rates
 	 */
+	int num_lanes = get_num_lanes(module);
 	cavm_gsercx_common_phy_ctrl_bcfg_t bcfg = qlm_gserc_get_clock_mode(module);
 
 	GSER_CSR_WRITE(CAVM_GSERCX_COMMON_PHY_CTRL_BCFG(module), bcfg.u);
-	gser_wait_usec(1);
+	/* Allow time for register writes to propagate */
+	gser_wait_usec(REG_STABIL_LONG_US);
 
 	/* 5. Reset the Clock Management Unit
 	 *	Write GSERC(0..2)_COMMON_PHY_CTRL_BCFG
@@ -3632,6 +3636,87 @@ static void qlm_gserc_cmu_cfg(int module)
 	/* 7b. Update the temperature sensor */
 	/* Program the temperature into the GSERC */
 	qlm_gserc_update_dosc_cal_temp(module);
+
+	/* Fixed to Fixed: Update Tx equalization setting
+	 * before deasserting cmu reset
+	 * Only updates lanes in provide lane_mask
+	 */
+	if (update_tx)
+	{
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			apply_tuning(module, lane);
+		}
+	}
+
+	/* CMU reset sequence for GSERC
+	 * Write the new PHY Lane Tx/Rx Rate settings from Table 8
+	 * Write GSERC(0..4)_LANE(0..1)_CONTROL_BCFG
+	 * TX_CLK_MUX_SEL CPRI Table 8
+	 * CFG_CPRI Table 8
+	 * RX_BITSTRIP_EN CPRI Table 8
+	 * CFG_CGX = 0 Disable Tx and Rx Async FIFOs to CGX
+	 * Write GSERC(0..4)_LN(0..1)_FEATURE_ADAPT_CFG0
+	 * ENA_8B10B CPRI Table 8
+	 */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		bool is_cpri = gserc_is_cpri(module, lane);
+		cavm_gsercx_lanex_control_bcfg_t lane_new = qlm_gserc_get_lane_mode(module, lane);
+
+		GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+				c.s.tx_clk_mux_sel = lane_new.s.tx_clk_mux_sel;
+				c.s.cgx_quad = lane_new.s.cgx_quad;
+				c.s.cgx_dual = lane_new.s.cgx_dual;
+				c.s.cfg_cpri = is_cpri;
+				c.s.cfg_cgx = !is_cpri;
+				c.s.rx_bitstrip_en = lane_new.s.rx_bitstrip_en;
+				c.s.ln_link_stat = 0);
+		gser_wait_usec(1);
+		qlm_state_lane_t state = qlm_gserc_get_state(module, lane);
+		bool ena_8b10b;
+
+		if (gserc_is_cpri(module, lane))
+			ena_8b10b = (state.s.baud_mhz != 3072);
+		else
+			ena_8b10b = (state.s.baud_mhz <= 6250);
+
+		GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_ADAPT_CFG0(module, lane),
+				c.s.ena_8b10b = ena_8b10b);
+
+#if defined(IMAGE_BL31)
+#if defined(PLAT_loki)
+		if (state.s.mode == QLM_MODE_CPRI)
+		{
+			if (((flags >> 3) & 0x1) ||
+			    (state.s.baud_mhz == 2458))
+			{
+				extern void qlm_gserc_rx_dfe_adaptation(int qlm, int lane, int disable);
+
+				qlm_gserc_rx_dfe_adaptation(module, lane, 1);
+			}
+
+			if (((flags >> 2) & 0x1) ||
+			    (state.s.baud_mhz == 2458))
+			{
+				extern void qlm_gserc_rx_leq_adaptation(int qlm, int lane, int disable,
+									int leq_lfg_start, int leq_hfg_sql_start, int leq_mbf_start,
+									int leq_mbg_start, int gn_apg_start);
+
+				qlm_gserc_rx_leq_adaptation(module, lane, 1, 9, 0xa, 0, 0, 3);
+			}
+		}
+#endif
+#endif
+	}
+
+	/* Update IKVCO */
+	gserc_qlm_set_ikvco_override(module);
+
+	/* Allow time for register writes to propagate */
+	gser_wait_usec(REG_STABIL_LONG_US);
 
 	/* 8. Release the Clock Management Unit reset
 	 *	Write GSERC(0..2)_COMMON_PHY_CTRL_BCFG
@@ -3660,9 +3745,6 @@ static void qlm_gserc_cmu_cfg(int module)
 	 */
 	if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_COMMON_PHY_STATUS_BSTS(module), GSERCX_COMMON_PHY_STATUS_BSTS_CM0_OK, ==, 1, 50000))
 		gser_error("GSERC%d: Timeout waiting for GSERCX_COMMON_PHY_STATUS_BSTS[cm0_ok]=1 (change rate)\n", module);
-
-	/* Update IKVCO */
-	gserc_qlm_set_ikvco_override(module);
 }
 
 #if defined(IMAGE_BL31)
@@ -3859,7 +3941,7 @@ void qlm_gserc_cmu_reset(int module)
 	/******* End: Transition All AN DISABLED lanes to Reset Power State *******/
 
 	/* Complete cmu reset sequence */
-	qlm_gserc_cmu_cfg(module);
+	qlm_gserc_cmu_cfg(module, 0, 0, 0);
 
 	/******* Start: Transition All AN enabled lanes back to Active Power State *******/
 	/* AN to AN Extra Step 1
@@ -4098,7 +4180,9 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 		   module, prev_state_an, req_state_an, cmu_change);
 
 	/* AN to Fixed Step 1a: Set new tx/rx rate and widths on changed lanes */
-	if (prev_state_an)
+	/* Fixed to Fixed Step 1a: Set new tx/rx rate and widths on changed lanes */
+	if ((prev_state_an) ||
+	    (!prev_state_an && !req_state_an))
 	{
 		for (int lane = 0; lane < num_lanes; lane++)
 		{
@@ -4112,6 +4196,8 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 			    c.s.ln_ctrl_tx_width = lane_new.s.ln_ctrl_tx_width;
 			    c.s.ln_ctrl_rx_width = lane_new.s.ln_ctrl_rx_width);
 		}
+		/* Allow time for register writes to propagate */
+		gser_wait_usec(REG_STABIL_SHORT_US);
 	}
 
 	/* Bring all lanes being changed to RESET or ACTIVE power state */
@@ -4157,7 +4243,7 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 		}
 
 		/* Delayed required between AN slave and AN master changes */
-		gser_wait_usec(1);
+		gser_wait_usec(AN_CHG_DELAY_US);
 
 		/* AN to Fixed Mode Step 4: Change AN master lanes to fixed-rate mode */
 		for (int lane = 0; lane < num_lanes; lane++)
@@ -4190,7 +4276,7 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 		}
 
 		/* Delayed required between AN slave and AN master changes */
-		gser_wait_usec(1);
+		gser_wait_usec(AN_CHG_DELAY_US);
 
 		/* AN to Fixed Mode Step 4: Change AN master lanes to fixed-rate mode */
 		for (int lane = 0; lane < num_lanes; lane++)
@@ -4272,7 +4358,7 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 	 * change parameters and for the transmitter clock mux to switch to the
 	 * new Tx clock rate.
 	 */
-	if (prev_state_an && !req_state_an)
+	if ((prev_state_an && !req_state_an) && !cmu_change)
 	{
 		for (int lane = 0; lane < num_lanes; lane++)
 		{
@@ -4299,29 +4385,14 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 			GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_ADAPT_CFG0(module, lane),
 				c.s.ena_8b10b = ena_8b10b);
 		}
-	}
-
-	/* Fixed to Fixed Mode Rate Change in RESET State Step 1 */
-	if (!prev_state_an && !req_state_an)
-	{
-		for (int lane = 0; lane < num_lanes; lane++)
-		{
-			if (!(lane_mask & (1 << lane)))
-				continue;
-			cavm_gsercx_lanex_control_bcfg_t lane_new = qlm_gserc_get_lane_mode(module, lane);
-
-			GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-					c.s.ln_ctrl_tx_rate = lane_new.s.ln_ctrl_tx_rate;
-					c.s.ln_ctrl_rx_rate = lane_new.s.ln_ctrl_rx_rate;
-					c.s.ln_ctrl_tx_width = lane_new.s.ln_ctrl_tx_width;
-					c.s.ln_ctrl_rx_width = lane_new.s.ln_ctrl_rx_width);
-		}
+		/* Allow time for register writes to propagate */
+		gser_wait_usec(REG_STABIL_SHORT_US);
 	}
 
 	/* AN to AN Extra Step 1
 	 * Switch the tx_clk_mux to the clock required for the new rate
 	 */
-	if (prev_state_an && req_state_an)
+	if ((prev_state_an && req_state_an) && !cmu_change)
 	{
 		for (int lane = 0; lane < num_lanes; lane++)
 		{
@@ -4335,12 +4406,14 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 					c.s.cgx_dual = lane_new.s.cgx_dual;
 					c.s.ln_link_stat = 0);
 		}
+		/* Allow time for register writes to propagate */
+		gser_wait_usec(REG_STABIL_SHORT_US);
 	}
 
 	/* Fixed to AN Extra Step 1
 	 * Configure the lane clock settings
 	 */
-	if (!prev_state_an && req_state_an)
+	if ((!prev_state_an && req_state_an) && !cmu_change)
 	{
 		for (int lane = 0; lane < num_lanes; lane++)
 		{
@@ -4358,32 +4431,14 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 					c.s.cgx_dual = lane_new.s.cgx_dual;
 					c.s.ln_link_stat = 0);
 		}
+		/* Allow time for register writes to propagate */
+		gser_wait_usec(REG_STABIL_SHORT_US);
 	}
 
 	/* Fixed to AN Mode Step 2. If necessary, change Clock Management settings */
 	/* AN to Fixed Mode Step 6c: If necessary, CMU rate strap changes may be performed */
 	if (cmu_change)
-	{
-		/* AN to AN Extra Step 1
-		 * Switch the tx_clk_mux to the clock required for the new rate
-		 */
-		for (int lane = 0; lane < num_lanes; lane++)
-		{
-			if ((!(lane_mask & (1 << lane))) &&
-			    (ln_an_cfg_orig[lane] != QLM_LANE_AN_DIS))
-			{
-				cavm_gsercx_lanex_control_bcfg_t lane_new = qlm_gserc_get_lane_mode(module, lane);
-
-				GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-						c.s.tx_clk_mux_sel = lane_new.s.tx_clk_mux_sel;
-						c.s.cgx_quad = lane_new.s.cgx_quad;
-						c.s.cgx_dual = lane_new.s.cgx_dual;
-						c.s.ln_link_stat = 0);
-			}
-		}
-
-		qlm_gserc_cmu_cfg(module);
-	}
+		qlm_gserc_cmu_cfg(module, flags, 1, lane_mask);
 
 	/* Changes for AN mode change request */
 	if (req_state_an)
@@ -4471,7 +4526,7 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 		}
 
 		/* Delayed required between AN slave and AN master changes */
-		gser_wait_usec(1);
+		gser_wait_usec(AN_CHG_DELAY_US);
 
 		/* Fixed to AN mode Step 9. Set ln_an_cfg = 2 for all AN master lanes */
 		for (int lane = 0; lane < num_lanes; lane++)
@@ -4507,7 +4562,7 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 		}
 
 		/* Delayed required between AN slave and AN master changes */
-		gser_wait_usec(1);
+		gser_wait_usec(AN_CHG_DELAY_US);
 
 		/* Set AN Master lanes */
 		for (int lane = 0; lane < num_lanes; lane++)
@@ -4551,173 +4606,174 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 		 * LN_STATE_CHNG_RDY will toggle from 1->0->1 when the LN_RATE_CHNG bit is
 		 * set above.
 		 */
-		for (int lane = 0; lane < num_lanes; lane++)
+		if (!cmu_change)
 		{
-			if (!(lane_mask & (1 << lane)))
-				continue;
-			GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-				c.s.ln_rate_chng = 1);
-		}
-
-		gser_wait_usec(1);
-
-		/* Fixed to Fixed Mode Step 4a. Wait for the “Lane State Change Ready” status bit to deassert
-		 * indicating the lane is transitioning to the “Rate Change” state.
-		 * Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-		 * LN_STATE_CHNG_RDY = 0 Lane is transitioning power states
-		 */
-		for (int lane = 0; lane < num_lanes; lane++)
-		{
-			if (!(lane_mask & (1 << lane)))
-				continue;
-			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+			for (int lane = 0; lane < num_lanes; lane++)
 			{
-				/* This is an interim step and happens fast, so sometimes we miss it */
-				//gser_error("GSERC%d.%d: CHRDY5: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (rate change)\n", module, lane);
+				if (!(lane_mask & (1 << lane)))
+					continue;
+				GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+						c.s.ln_rate_chng = 1);
 			}
-		}
 
-		/* Fixed to Fixed Mode Step 4b. Wait for the PHY “Lane State Change Ready” to signal that the lane has
-		 * transitioned to the “Rate Change” state.
-		 * Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-		 * LN_STATE_CHNG_RDY = 1 Lane is in the “Rate Change” power state
-		 */
-		for (int lane = 0; lane < num_lanes; lane++)
-		{
-			if (!(lane_mask & (1 << lane)))
-				continue;
-			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
-				gser_error("GSERC%d.%d: CHRDY6: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (rate change)\n", module, lane);
-		}
-
-		/* Fixed to Fixed Mode Step 5. Make any required configuration changes for the
-		 * new rate through the PHY register interface.
-		 * Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
-		 * CFG_CGX=0 Hold the Tx/Rx Async FIFOs in reset
-		 * TX_CLK_MUX_SEL Table 2
-		 * LN_LINK_STAT Set to 0, no AN from the PHY
-		 * LN_AN_CFG Set to 0, no AN from thePHY
-		 * Wait one microsecond for the PHY firmware to receive the lane rate
-		 * change parameters and for the transmitter clock mux to switch to the
-		 * new Tx clock rate.
-		 */
-		for (int lane = 0; lane < num_lanes; lane++)
-		{
-			if (!(lane_mask & (1 << lane)))
-				continue;
-			cavm_gsercx_lanex_control_bcfg_t lane_new = qlm_gserc_get_lane_mode(module, lane);
-
-			GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-			    c.s.tx_clk_mux_sel = lane_new.s.tx_clk_mux_sel;
-			    c.s.cgx_quad = lane_new.s.cgx_quad;
-			    c.s.cgx_dual = lane_new.s.cgx_dual;
-			    c.s.rx_bitstrip_en = lane_new.s.rx_bitstrip_en;
-					//c.s.cfg_cgx = 0; /* Not being done currently in BDK but is recommended */
-			    c.s.ln_link_stat = 0);
 			gser_wait_usec(1);
-			qlm_state_lane_t state = qlm_gserc_get_state(module, lane);
-			bool ena_8b10b;
 
-			if (gserc_is_cpri(module, lane))
-				ena_8b10b = (state.s.baud_mhz != 3072);
-			else
-				ena_8b10b = (state.s.baud_mhz <= 6250);
+			/* Fixed to Fixed Mode Step 4a. Wait for the “Lane State Change Ready” status bit to deassert
+			 * indicating the lane is transitioning to the “Rate Change” state.
+			 * Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+			 * LN_STATE_CHNG_RDY = 0 Lane is transitioning power states
+			 */
+			for (int lane = 0; lane < num_lanes; lane++)
+			{
+				if (!(lane_mask & (1 << lane)))
+					continue;
+				if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+				{
+					/* This is an interim step and happens fast, so sometimes we miss it */
+					//gser_error("GSERC%d.%d: CHRDY5: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (rate change)\n", module, lane);
+				}
+			}
 
-			GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_ADAPT_CFG0(module, lane),
-				c.s.ena_8b10b = ena_8b10b);
-		}
+			/* Fixed to Fixed Mode Step 4b. Wait for the PHY “Lane State Change Ready” to signal that the lane has
+			 * transitioned to the “Rate Change” state.
+			 * Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+			 * LN_STATE_CHNG_RDY = 1 Lane is in the “Rate Change” power state
+			 */
+			for (int lane = 0; lane < num_lanes; lane++)
+			{
+				if (!(lane_mask & (1 << lane)))
+					continue;
+				if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+					gser_error("GSERC%d.%d: CHRDY6: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (rate change)\n", module, lane);
+			}
+
+			/* Fixed to Fixed Mode Step 5. Make any required configuration changes for the
+			 * new rate through the PHY register interface.
+			 * Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
+			 * CFG_CGX=0 Hold the Tx/Rx Async FIFOs in reset
+			 * TX_CLK_MUX_SEL Table 2
+			 * LN_LINK_STAT Set to 0, no AN from the PHY
+			 * LN_AN_CFG Set to 0, no AN from thePHY
+			 * Wait one microsecond for the PHY firmware to receive the lane rate
+			 * change parameters and for the transmitter clock mux to switch to the
+			 * new Tx clock rate.
+			 */
+			for (int lane = 0; lane < num_lanes; lane++)
+			{
+				if (!(lane_mask & (1 << lane)))
+					continue;
+				cavm_gsercx_lanex_control_bcfg_t lane_new = qlm_gserc_get_lane_mode(module, lane);
+
+				GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+						c.s.tx_clk_mux_sel = lane_new.s.tx_clk_mux_sel;
+						c.s.cgx_quad = lane_new.s.cgx_quad;
+						c.s.cgx_dual = lane_new.s.cgx_dual;
+						c.s.rx_bitstrip_en = lane_new.s.rx_bitstrip_en;
+						//c.s.cfg_cgx = 0; /* Not being done currently in BDK but is recommended */
+						c.s.ln_link_stat = 0);
+				gser_wait_usec(1);
+				qlm_state_lane_t state = qlm_gserc_get_state(module, lane);
+				bool ena_8b10b;
+
+				if (gserc_is_cpri(module, lane))
+					ena_8b10b = (state.s.baud_mhz != 3072);
+				else
+					ena_8b10b = (state.s.baud_mhz <= 6250);
+
+				GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_ADAPT_CFG0(module, lane),
+						c.s.ena_8b10b = ena_8b10b);
+			}
 
 #if defined(IMAGE_BL31)
 #if defined(PLAT_loki)
-		/* Fixed to Fixed: CPRI disable DFE/LEQ adaptation
-		 * if requested
-		 */
-		for (int lane = 0; lane < num_lanes; lane++)
-		{
-			if (!(lane_mask & (1 << lane)))
-				continue;
-			if (mode == QLM_MODE_CPRI)
+			/* Fixed to Fixed: CPRI disable DFE/LEQ adaptation
+			 * if requested
+			 */
+			for (int lane = 0; lane < num_lanes; lane++)
 			{
-				if (((flags >> 3) & 0x1) ||
-				    (baud_mhz == 2458))
+				if (!(lane_mask & (1 << lane)))
+					continue;
+				if (mode == QLM_MODE_CPRI)
 				{
-					extern void qlm_gserc_rx_dfe_adaptation(int qlm, int lane, int disable);
+					if (((flags >> 3) & 0x1) ||
+					    (baud_mhz == 2458))
+					{
+						extern void qlm_gserc_rx_dfe_adaptation(int qlm, int lane, int disable);
 
-					qlm_gserc_rx_dfe_adaptation(module, lane, 1);
-				}
+						qlm_gserc_rx_dfe_adaptation(module, lane, 1);
+					}
 
-				if (((flags >> 2) & 0x1) ||
-				    (baud_mhz == 2458))
-				{
-					extern void qlm_gserc_rx_leq_adaptation(int qlm, int lane, int disable,
-								int leq_lfg_start, int leq_hfg_sql_start, int leq_mbf_start,
-								int leq_mbg_start, int gn_apg_start);
+					if (((flags >> 2) & 0x1) ||
+					    (baud_mhz == 2458))
+					{
+						extern void qlm_gserc_rx_leq_adaptation(int qlm, int lane, int disable,
+											int leq_lfg_start, int leq_hfg_sql_start, int leq_mbf_start,
+											int leq_mbg_start, int gn_apg_start);
 
-					qlm_gserc_rx_leq_adaptation(module, lane, 1, 9, 0xa, 0, 0, 3);
+						qlm_gserc_rx_leq_adaptation(module, lane, 1, 9, 0xa, 0, 0, 3);
+					}
 				}
 			}
-		}
 #endif
 #endif
-
-		/* Fixed to Fixed Mode Step 6. Deassert the LN_STATE_CHNG signal to complete the lane
-		 * reconfiguration
-		 * Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
-		 * LN_RATE_CHNG=0
-		 * Wait 200 nanoseconds for the PHY firmware to receive the lane rate
-		 * change deassertion request.
-		 */
-		for (int lane = 0; lane < num_lanes; lane++)
-		{
-			if (!(lane_mask & (1 << lane)))
-				continue;
-			GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-				c.s.ln_rate_chng = 0);
-		}
-
-		gser_wait_usec(1);
-
-		/* Fixed to Fixed Mode Step 7a. Wait for the “Lane State Change Ready” status bit to deassert
-		 * indicating the lane is transitioning states.
-		 * Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-		 * LN_STATE_CHNG_RDY = 0 Lane is transitioning states
-		 */
-		for (int lane = 0; lane < num_lanes; lane++)
-		{
-			if (!(lane_mask & (1 << lane)))
-				continue;
-			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+			/* Fixed to Fixed: Update Tx equalization setting
+			 * before deasserting lane reset
+			 */
+			for (int lane = 0; lane < num_lanes; lane++)
 			{
-				/* This is an interim step and happens fast, so sometimes we miss it */
-				//gser_error("GSERC%d.%d: CHRDY7: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (change done)\n", module, lane);
+				if (!(lane_mask & (1 << lane)))
+					continue;
+				apply_tuning(module, lane);
 			}
-		}
 
-		/* Fixed to Fixed Mode Step 7b. Wait for the PHY “Lane State Change Ready” to signal that the lane
-		 * has transitioned back to the “Reset” state.
-		 * Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
-		 * LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state
-		 */
-		for (int lane = 0; lane < num_lanes; lane++)
-		{
-			if (!(lane_mask & (1 << lane)))
-				continue;
-			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
-				gser_error("GSERC%d.%d: CHRDY8: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (change done)\n", module, lane);
-		}
-	}
+			/* Allow time for register writes to propagate */
+			gser_wait_usec(REG_STABIL_LONG_US);
 
-	/* AN/Fixed to Fixed: Update Tx equalization setting
-	 * before deasserting lane reset
-	 */
-	for (int lane = 0; lane < num_lanes; lane++)
-	{
-		if (!(lane_mask & (1 << lane)))
-			continue;
-		GSER_CSR_INIT(bcfg, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane));
-		if (bcfg.s.ln_an_cfg == QLM_LANE_AN_DIS)
-		{
-			apply_tuning(module, lane);
+			/* Fixed to Fixed Mode Step 6. Deassert the LN_STATE_CHNG signal to complete the lane
+			 * reconfiguration
+			 * Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
+			 * LN_RATE_CHNG=0
+			 * Wait 200 nanoseconds for the PHY firmware to receive the lane rate
+			 * change deassertion request.
+			 */
+			for (int lane = 0; lane < num_lanes; lane++)
+			{
+				if (!(lane_mask & (1 << lane)))
+					continue;
+				GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
+						c.s.ln_rate_chng = 0);
+			}
+
+			gser_wait_usec(1);
+
+			/* Fixed to Fixed Mode Step 7a. Wait for the “Lane State Change Ready” status bit to deassert
+			 * indicating the lane is transitioning states.
+			 * Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+			 * LN_STATE_CHNG_RDY = 0 Lane is transitioning states
+			 */
+			for (int lane = 0; lane < num_lanes; lane++)
+			{
+				if (!(lane_mask & (1 << lane)))
+					continue;
+				if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 0, 10000))
+				{
+					/* This is an interim step and happens fast, so sometimes we miss it */
+					//gser_error("GSERC%d.%d: CHRDY7: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=0 (change done)\n", module, lane);
+				}
+			}
+
+			/* Fixed to Fixed Mode Step 7b. Wait for the PHY “Lane State Change Ready” to signal that the lane
+			 * has transitioned back to the “Reset” state.
+			 * Read/Poll GSERC(0..2)_LANE(0..3)_STATUS_BSTS
+			 * LN_STATE_CHNG_RDY = 1 Lane is in the “Reset” power state
+			 */
+			for (int lane = 0; lane < num_lanes; lane++)
+			{
+				if (!(lane_mask & (1 << lane)))
+					continue;
+				if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
+					gser_error("GSERC%d.%d: CHRDY8: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1 (change done)\n", module, lane);
+			}
 		}
 	}
 
@@ -4726,7 +4782,7 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 	/* AN to Fixed: CPRI disable DFE/LEQ adaptation
 	 * if requested
 	 */
-	if (prev_state_an && !req_state_an)
+	if ((prev_state_an && !req_state_an) && !cmu_change)
 	{
 		for (int lane = 0; lane < num_lanes; lane++)
 		{
@@ -4757,6 +4813,21 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 	}
 #endif
 #endif
+
+	/* AN to Fixed: Update Tx equalization setting
+	 * before deasserting lane reset
+	 */
+	if ((prev_state_an && !req_state_an) && !cmu_change)
+	{
+		for (int lane = 0; lane < num_lanes; lane++)
+		{
+			if (!(lane_mask & (1 << lane)))
+				continue;
+			apply_tuning(module, lane);
+		}
+		/* Allow time for register writes to propagate */
+		gser_wait_usec(REG_STABIL_LONG_US);
+	}
 
 	/* Release all lanes in Fixed Rate mode from Reset */
 	/* AN mode to Fixed Mode
@@ -4844,26 +4915,6 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 			if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(module, lane), GSERCX_STATUS_BSTS_LN_STATE_CHNG_RDY, ==, 1, 10000))
 				gser_error("GSERC%d.%d: CHRDY10: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_state_chng_rdy]=1\n", module, lane);
 		}
-	}
-
-	if (!req_state_an)
-	{
-		/* Fixed to Fixed Mode Step 15. Enable the Tx/Rx FIFOs between CGX and GSERC
-		 * Write GSERC(0..2)_LANE(0..3)_CONTROL_BCFG
-		 * CFG_CGX = 1 Enable Tx and Rx Async FIFOs to CGX
-		 */
-		for (int lane = 0; lane < num_lanes; lane++)
-		{
-			if (!(lane_mask & (1 << lane)))
-				continue;
-			bool is_cpri = gserc_is_cpri(module, lane);
-
-			GSER_CSR_MODIFY(c, CAVM_GSERCX_LANEX_CONTROL_BCFG(module, lane),
-					c.s.cfg_cpri = is_cpri;
-					c.s.cfg_cgx = !is_cpri);
-		}
-
-		gser_wait_usec(1000);
 	}
 
 	return 0;

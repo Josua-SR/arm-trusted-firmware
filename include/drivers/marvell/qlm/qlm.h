@@ -16,6 +16,11 @@
 /* Perform RX adaptation by default */
 #define QLM_DEFAULT_RX_ADAPTATION 1
 
+/* Delay for registers writes to stabilize */
+#define REG_STABIL_LONG_US 2000
+#define REG_STABIL_SHORT_US 1
+#define AN_CHG_DELAY_US 1
+
 /*
  * Define different QLM-MODE variants. These definitions based on the BDK code.
  */
