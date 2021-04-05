@@ -116,6 +116,8 @@ typedef struct gpio_led_eth {
 	uint8_t  is_act_supported:1;
 } gpio_led_eth_t;
 
+#define MDIO_NUM 2
+
 /* Define LMAC structure. */
 typedef struct cgx_lmac_config {
 	/* for RVU */

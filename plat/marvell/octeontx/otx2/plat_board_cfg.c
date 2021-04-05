@@ -114,8 +114,8 @@ static const phy_compatible_type_t phy_compat_list[] = {
 	{ "ethernet-phy-ieee802.3-c45", PHY_GENERIC_8023_C45},
 };
 
-#define TWSI_TRIM_LIST_LEN 12
-static int twsi_trim_list[TWSI_TRIM_LIST_LEN];
+static int twsi_trim_list[TWSI_NUM];
+static int mdio_trim_list[MDIO_NUM];
 
 extern int cgx_read_flash_fec(int cgx_id, int lmac_id, int *fec);
 extern int cgx_read_flash_phy_mod(int cgx_id, int lmac_id, int *phy_mod);
@@ -1856,11 +1856,21 @@ static void octeontx2_cgx_update_gpio_leds(const void *fdt,
 	}
 }
 
-static int octeontx2_cgx_get_phy_info(const void *fdt, int lmac_offset, int cgx_idx, int lmac_idx)
+/*
+ * Function parsing PHY info
+ * Returns:
+ *   0: if PHY was parsed & will be managed in ATF
+ *   1: parsing skipped as PHY is going to be be managed in kernel
+ *  -1: on parsing error
+ *
+ */
+static int octeontx2_cgx_get_phy_info(void *fdt, int lmac_offset, int cgx_idx, int lmac_idx)
 {
 	cgx_lmac_config_t *lmac;
 	int phy_offset, mux_offset;
 	char phyname[16];
+	int mdio_bus_offset;
+	int lenp;
 	phy_config_t *phy;
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_idx].lmac_cfg[lmac_idx];
@@ -1899,12 +1909,43 @@ static int octeontx2_cgx_get_phy_info(const void *fdt, int lmac_offset, int cgx_
 			ERROR("ERROR: Supported PHY compatible not found\n");
 			return -1;
 		}
-		/* Save the PHY address and bus for all PHY types */
-		phy->addr = octeontx2_fdt_get_int32(fdt,
-					"reg", phy_offset);
+
 		phy->mdio_bus = octeontx2_fdt_get_bus(fdt,
 				phy_offset, cgx_idx,
 				lmac_idx);
+
+		if (phy->mdio_bus < 0 || phy->mdio_bus >= MDIO_NUM) {
+			ERROR("ERROR: Incorrect mdio bus number\n");
+			return -1;
+		}
+
+		/* Check if MDIO bus, the PHY is on, has the "mdio-in-kernel"
+		 * attribute specified. If yes, then skip parsing the PHY.
+		 * Otherwise both, bus and the PHY, are going to be trimmed
+		 * from the Linux dts.
+		 */
+		mdio_bus_offset = fdt_parent_offset(fdt, phy_offset);
+		if (fdt_get_property(fdt,
+				mdio_bus_offset, "mdio-in-kernel", &lenp)) {
+
+			debug_dts("%s: %d:%d PHY parsing skipped. "
+					"MDIO bus managed in kernel\n",
+					__func__, cgx_idx, lmac_idx);
+			return 1;
+		} else if (lenp == -FDT_ERR_NOTFOUND) {
+
+			/* Update the list of MDIO bus nodes to be trimmed */
+			if (!mdio_trim_list[phy->mdio_bus])
+				mdio_trim_list[phy->mdio_bus] = mdio_bus_offset;
+
+			/* Remove the reference to the PHY from the lmac node */
+			fdt_nop_property(fdt, lmac_offset, phyname);
+		}
+
+		/* Save the PHY address and bus for all PHY types */
+		phy->addr = octeontx2_fdt_get_int32(fdt,
+					"reg", phy_offset);
+
 		phy->port = octeontx2_fdt_get_int32(fdt,
 					"port", phy_offset);
 
@@ -2248,12 +2289,20 @@ static void octeontx2_cgx_check_linux(void *fdt)
 	/* As all the ATF-managed sfp/qsfps are parsed, we can proceed to
 	 * trim associated twsi buses from Linux dts
 	 */
-	for (int i = 0; i < TWSI_TRIM_LIST_LEN; i++) {
+	for (int i = 0; i < TWSI_NUM; i++) {
 		if (twsi_trim_list[i]) {
 			fdt_nop_node(fdt, twsi_trim_list[i]);
 		}
 	}
 
+	/* Also, MDIO bus nodes that have no "mdio-in-kernel" attribute
+	 * are trimmed along with their subnodes (PHYs).
+	 */
+	for (int i = 0; i < MDIO_NUM; i++) {
+		if (mdio_trim_list[i]) {
+			fdt_nop_node(fdt, mdio_trim_list[i]);
+		}
+	}
 
 	/* Parse RVU configuration */
 	octeontx2_parse_rvu_config(fdt, &fdt_vfs);
