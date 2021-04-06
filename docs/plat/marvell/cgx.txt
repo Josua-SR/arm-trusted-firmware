@@ -115,7 +115,35 @@ PHY (example PHY info):
        };
    };
 
-2.6 PHY handle
+
+2.6 The 'mdio-in-kernel' attribute
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The new attribute 'mdio-in-kernel' was added to mark that given MDIO bus
+shall be preserved in the device tree to be used by Linux.
+
+In case attribute is present, ATF will leave MDIO bus node as it is and
+the PHYs on that bus will not be managed by ATF.
+
+In case attribute is *not* present, it means MDIO bus along with the PHYs
+subnodes will be managed in ATF and they will be trimmed from Linux dts.
+
+**'mdio-in-kernel' attribute example:**
+
+.. code-block:: none
+
+   mdio0@87e005003800 {
+       mdio-in-kernel;
+       /* DLM4 lane 0 mapping */
+       phy40: ethernet-phy@40 {
+           reg = <0x00> ;
+           compatible = "marvell,88x3310",
+                   "ethernet-phy-ieee802.3-c45";
+       };
+   };
+
+
+2.7 PHY handle
 ^^^^^^^^^^^^^^
 
 The corresponding LMAC node depending on the board design, should have
@@ -131,7 +159,7 @@ the handle to PHY:
    };
 
 
-2.7 The 'twsi-in-kernel' attribute
+2.8 The 'twsi-in-kernel' attribute
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Regarding management of SFP/QSFPs, the new attribute, 'twsi-in-kernel',
@@ -180,7 +208,7 @@ will be removed from dts tree right after ATF is done with parsing.
 };
 
 
-2.8 Examples
+2.9 Examples
 ^^^^^^^^^^^^
 
 **SFP (example slot info):**
