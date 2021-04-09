@@ -278,6 +278,12 @@ static void rvu_provision_pfs_for_sw_devs(int top_eth_pf,
 	for (i = SW_RVU_REE_NUM_PF - 1; (int)i >= 0; i--) {
 		rvu_pf = rvu_first_available(avail_from_top);
 
+		if (rvu_pf == (MAX_RVU_PFS - 1)) {
+			octeontx_init_rvu_fixed(cur_hwvf, rvu_pf,
+					SW_RVU_SSO_TIM_PF(0), TRUE);
+			rvu_pf = rvu_first_available(avail_from_top);
+		}
+
 		/* Enforce constraint */
 		if (rvu_pf < RVU_ETH_FIRST) {
 			ERROR("RVU: too many SW_RVU_xxx devices (REE%d).\n", i);
