@@ -1895,21 +1895,6 @@ static int octeontx2_cgx_get_phy_info(void *fdt, int lmac_offset, int cgx_idx, i
 	if (phy_offset > 0) {
 		phy = &lmac->phy_config;
 
-		for (int i = 0; i < ARRAY_SIZE(phy_compat_list); i++) {
-			if (!fdt_node_check_compatible(fdt, phy_offset,
-				phy_compat_list[i].compatible)) {
-				phy->type = phy_compat_list[i].phy_type;
-				debug_dts("%s: %d:%d PHY type %d\n",
-					__func__, cgx_idx, lmac_idx,
-					phy->type);
-				break;
-			}
-		}
-		if (phy->type == PHY_NONE) {
-			ERROR("ERROR: Supported PHY compatible not found\n");
-			return -1;
-		}
-
 		phy->mdio_bus = octeontx2_fdt_get_bus(fdt,
 				phy_offset, cgx_idx,
 				lmac_idx);
@@ -1940,6 +1925,21 @@ static int octeontx2_cgx_get_phy_info(void *fdt, int lmac_offset, int cgx_idx, i
 
 			/* Remove the reference to the PHY from the lmac node */
 			fdt_nop_property(fdt, lmac_offset, phyname);
+		}
+
+		for (int i = 0; i < ARRAY_SIZE(phy_compat_list); i++) {
+			if (!fdt_node_check_compatible(fdt, phy_offset,
+				phy_compat_list[i].compatible)) {
+				phy->type = phy_compat_list[i].phy_type;
+				debug_dts("%s: %d:%d PHY type %d\n",
+					__func__, cgx_idx, lmac_idx,
+					phy->type);
+				break;
+			}
+		}
+		if (phy->type == PHY_NONE) {
+			ERROR("ERROR: Supported PHY compatible not found\n");
+			return -1;
 		}
 
 		/* Save the PHY address and bus for all PHY types */
