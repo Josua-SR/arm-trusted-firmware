@@ -428,6 +428,8 @@ void octeontx_configure_pem_ep_security(int pem, int secure)
 
 	switch (MIDR_PARTNUM(read_midr())) {
 	case T96PARTNUM:
+	case T98PARTNUM:
+	case F95PARTNUM:
 		if (pem == 0)
 			streamid = CAVM_PCC_DEV_CON_E_PCIERC0_CN9;
 		else if (pem == 2)
