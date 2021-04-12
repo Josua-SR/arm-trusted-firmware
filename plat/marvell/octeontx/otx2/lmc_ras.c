@@ -866,7 +866,8 @@ static struct ras_dram_lmc_map *ras_dram_get_lmc_map(int lmc)
 		once++;
 	} else if (!once && is_asim()) {
 		/* h/w discovery invalid in ASIM, use static config */
-		if (cavm_is_model(OCTEONTX_CN96XX)) {
+		if (cavm_is_model(OCTEONTX_CN96XX) ||
+		    cavm_is_model(OCTEONTX_CN98XX)) {
 			plat_lmc_map[0] = (struct ras_dram_lmc_map) {
 				.lmc = 0, .mcc = 1, .lmcoe = 0, .valid = 1 };
 			plat_lmc_map[1] = (struct ras_dram_lmc_map) {
