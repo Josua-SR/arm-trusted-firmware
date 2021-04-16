@@ -2012,6 +2012,7 @@ static void octeontx2_cgx_lmacs_check_linux(void *fdt,
 	int lmac_offset, sfp_offset, qsfp_offset;
 	int req_vfs, req_fec, phy_mod_type;
 	char sfpname[16], qsfpname[16];
+	int lmac_count = 0;
 
 	for (lmac_idx = 0; lmac_idx < cgx->lmac_count; lmac_idx++) {
 		int lane = 0;
@@ -2034,7 +2035,9 @@ static void octeontx2_cgx_lmacs_check_linux(void *fdt,
 		/* In case of MODE that is using 2 lanes, lane index
 		 * should be aligned to obtain the correct DT entry
 		 */
-		if (((!plat_octeontx_bcfg->qlm_auto_config) ||
+		if (lmac->mode_idx == QLM_MODE_QSGMII)
+			lane = lmac_idx;
+		else if (((!plat_octeontx_bcfg->qlm_auto_config) ||
 			(!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504n", 8)))
 			&& (lmac->max_lane_count != 4))	{
 			lane = lmac->first_phy_lane;
@@ -2063,8 +2066,14 @@ static void octeontx2_cgx_lmacs_check_linux(void *fdt,
 				cgx_idx, lane);
 		lmac_offset = fdt_subnode_offset(fdt, cgx_offset, name);
 		if (lmac_offset < 0) {
-			ERROR("CGX%d.LMAC%d: DT:%s not found in device tree\n",
-					cgx_idx, lmac_idx, name);
+			/* In case of QSGMII, not all LMACs needs DT entries based on board
+			 * design, so it is fine to skip if DTS entries are not present
+			 */
+			if (lmac->mode_idx == QLM_MODE_QSGMII)
+				lmac_count++;
+			else
+				ERROR("CGX%d.LMAC%d: DT:%s not found in device tree\n",
+						cgx_idx, lmac_idx, name);
 			continue;
 		}
 
@@ -2251,6 +2260,11 @@ static void octeontx2_cgx_lmacs_check_linux(void *fdt,
 		/* Enable LMAC */
 		lmac->lmac_enable = 1;
 	}
+	/* In case of QSGMII, all 4 entries in DTS may not be present.
+	 * In that case, reduce the lmac count of entries not present
+	 */
+	if (lmac_count)
+		cgx->lmac_count -= lmac_count;
 }
 
 /* Main routine to parse the CGX information from the Linux DT file. */

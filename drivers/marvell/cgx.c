@@ -3844,7 +3844,7 @@ void cgx_hw_init(int cgx_id)
 		 */
 		for (lmac_id = 0; lmac_id < MAX_LMAC_PER_CGX; lmac_id++) {
 			lmac = &cgx->lmac_cfg[lmac_id];
-			if (lmac->lmac_enable)	{
+			if (lmac->lmac_enable || (lmac->mode == CAVM_CGX_LMAC_TYPES_E_QSGMII))  {
 				ret = cgx_read_flash_mode_param(cgx_id, lmac_id, &qlm_mode, &lmac_type);
 				if (!ret) {
 					if ((qlm_mode == lmac->mode_idx) &&

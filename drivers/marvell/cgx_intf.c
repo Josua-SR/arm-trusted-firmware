@@ -2744,7 +2744,7 @@ void cgx_fw_intf_init(void)
 			for (int lmac = 0; lmac < MAX_LMAC_PER_CGX; lmac++) {
 				lmac_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx].lmac_cfg[lmac];
 				lmac_ctx = &lmac_context[cgx][lmac];
-				if (lmac_cfg->lmac_enable) {
+				if (lmac_cfg->lmac_enable || (lmac_cfg->mode == CAVM_CGX_LMAC_TYPES_E_QSGMII))  {
 					cgx_check_for_presence_of_phy(cgx, lmac);
 					if (lmac_cfg->phy_present) {
 						lmac_cfg->line_fec = lmac_cfg->fec;
