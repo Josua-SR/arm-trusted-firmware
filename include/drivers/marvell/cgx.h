@@ -61,9 +61,14 @@
 #define CGX_POLL_AN_RX_SIGNAL_SHORT	500	/* 500 us */
 #define CGX_POLL_AN_RX_SIGNAL2		200000	/* 100 ms - MCP AN*/
 #define CGX_POLL_TRAINING_STATUS	600000	/* 500 ms */
-#define GSERN_LANEX_TX_RST_SM_TIMEOUT   10000 /* 10 ms */
+#define GSERN_LANEX_TX_RST_SM_TIMEOUT   10000   /* 10 ms */
 #define REMOTE_FAULT_TIMEOUT_MS		10000
 #define TX_IDLE_TOGGLE_US		1000
+#define CGX_AN_LT_FAIL_TIMEOUT_MS         3000    /* 3 s */
+#define CGX_TOTAL_LINK_TIMEOUT_MS         3000    /* 3 s */
+#define CGX_ETH_FAIL_TIMEOUT_MS           1000    /* 1 s */
+#define CGX_NO_RX_SIG_FAIL_TIMEOUT_MS     200     /* 200 ms */
+#define CGX_LINK_PARTNER_FAIL_TIMEOUT_MS  1000    /* 1 s */
 
 /* Bit mask to clear error interrupt bits set in
  * SPUX_INT CSR
@@ -84,11 +89,7 @@
 #define CGX_SPUX_CLEAR_ERR_INT_MASK 0x743FE
 
 /* Max retries for different failures */
-#define SIG_FAIL_RETRIES 10
-#define AN_LT_FAIL_RETRIES 3
 #define PHY_FAIL_RETRIES 5
-#define LP_FAIL_RETRIES 5
-#define ETH_FAIL_RETRIES 5
 /* MCP AN/LT failure counts */
 #define MCP_LINK_FAIL_MAX 4
 #define MCP_LINK_LT_FAIL_MAX 4
