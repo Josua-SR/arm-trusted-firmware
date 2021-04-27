@@ -173,9 +173,19 @@ static void armada_select_channel(int channel)
 {
 	uint32_t ctrl0;
 
-	/* Stop the measurements */
 	ctrl0 = mmio_read_32(TSEN_CTRL0);
-	ctrl0 &= ~TSEN_CTRL0_START;
+
+	/* Disable TSEN */
+	ctrl0 &= ~(TSEN_CTRL0_START | TSEN_CTRL0_ENABLE);
+	mmio_write_32(TSEN_CTRL0, ctrl0);
+
+	/* Put TSEN in reset */
+	ctrl0 |= TSEN_CTRL0_RESET;
+	mmio_write_32(TSEN_CTRL0, ctrl0);
+	udelay(5);
+
+	/* De-assert reset */
+	ctrl0 &= ~TSEN_CTRL0_RESET;
 	mmio_write_32(TSEN_CTRL0, ctrl0);
 
 	/* Reset the mode, internal sensor will be automatically selected */
@@ -194,8 +204,8 @@ static void armada_select_channel(int channel)
 	/* Actually set the mode/channel */
 	mmio_write_32(TSEN_CTRL0, ctrl0);
 
-	/* Re-start the measurements */
-	ctrl0 |= TSEN_CTRL0_START;
+	/* Enable TSEN */
+	ctrl0 |= TSEN_CTRL0_START | TSEN_CTRL0_ENABLE;
 	mmio_write_32(TSEN_CTRL0, ctrl0);
 }
 
@@ -203,16 +213,29 @@ static void armada_ap806_thermal_init(void)
 {
 	uint32_t reg;
 
+	/* Disable TSEN */
 	reg = mmio_read_32(TSEN_CTRL0);
+	reg &= ~(TSEN_CTRL0_START | TSEN_CTRL0_ENABLE);
+	mmio_write_32(TSEN_CTRL0, reg);
+
+	/* Put TSEN in reset */
+	reg |= TSEN_CTRL0_RESET;
+	mmio_write_32(TSEN_CTRL0, reg);
+	udelay(5);
+
+	/* De-assert reset */
 	reg &= ~TSEN_CTRL0_RESET;
-	reg |= TSEN_CTRL0_START | TSEN_CTRL0_ENABLE;
+	mmio_write_32(TSEN_CTRL0, reg);
 
 	/* Sample every ~2ms */
 	reg |= TSEN_CTRL0_OSR_MAX << TSEN_CTRL0_OSR_SHIFT;
 
-	/* Enable average (2 samples by default) */
-	reg &= ~TSEN_CTRL0_AVG_BYPASS;
+	/* Disable average (2 samples by default) */
+	reg |= TSEN_CTRL0_AVG_BYPASS;
+	mmio_write_32(TSEN_CTRL0, reg);
 
+	/* Enable TSEN */
+	reg |= TSEN_CTRL0_START | TSEN_CTRL0_ENABLE;
 	mmio_write_32(TSEN_CTRL0, reg);
 
 	debug("thermal: Initialization done\n");
