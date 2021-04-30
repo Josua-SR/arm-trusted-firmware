@@ -1132,8 +1132,12 @@ int cpri_handle_mode_change(struct cpri_mode_change_args *args)
 					       QLM_MODE_CPRI, req_rate, flags, 0,
 					       0, LT_INIT_UNCHANGED, 0))
 			return -1;
-		plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[lane_idx]
-							= req_rate;
+		for (int j = 0; j < max_lane_count; j++) {
+			if ((1 << j) & lane_mask) {
+				plat_octeontx_bcfg->qlm_cfg[gserc_idx].cpri_baud_rate[j]
+					= req_rate;
+			}
+		}
 	}
 	return 0;
 }
