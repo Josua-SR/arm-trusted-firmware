@@ -6,6 +6,9 @@
 #include <gser_internal.h>
 #include <qlm/qlm.h>
 #include <qlm/qlm_gserc.h>
+#if defined(IMAGE_BL31)
+#include <plat_pwrc.h>
+#endif
 
 /**
  * Define to enable or disable lanes 2-3. Used to keep differences between
@@ -175,6 +178,20 @@ static void apply_tuning(int module, int lane)
 	}
 }
 
+static int get_sensor_num(void)
+{
+	int sensor = 0;
+
+	if (gser_is_model(OCTEONTX_LOKI) ||
+	    gser_is_model(OCTEONTX_F95O))
+		sensor = 6;
+	else {
+		gser_error("GSERC: Unrecognized chip\n");
+		return 0;
+	}
+	return sensor;
+}
+
 /**
  * Update DOSC cal temp
  *
@@ -184,36 +201,43 @@ static void apply_tuning(int module, int lane)
 static void qlm_gserc_update_dosc_cal_temp(int module)
 {
 	int sensor;
-	int retry_count = 0;
+	int32_t temp;
+	int ret = -1;
 
-	/* Figure out which sensor to use */
-	if (gser_is_model(OCTEONTX_LOKI))
-		sensor = 6;  /* TSN6 is nearest to GSERC */
-	else
-	{
-		gser_error("GSERC: Unrecognized chip\n");
-		return;
-	}
+	sensor = get_sensor_num();
 
+#if defined(IMAGE_BL31)
 	/* Program the temperature into the GSERC */
-	GSER_CSR_INIT(temp_result, CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
-	while ((!temp_result.s.temp_valid && !gser_is_platform(GSER_PLATFORM_ASIM)) &&
-	       (retry_count < 1000)) {
-		temp_result.u = GSER_CSR_READ(CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
-		retry_count++;
-		gser_wait_usec(1);
+	ret = octeontx_obtain_tsn_temp(sensor, &temp);
+	temp /= 1000;
+#endif
+	/*To handle failed TSN or Direct read TSN support */
+	if (ret) {
+
+		int retry_count = 0;
+
+		GSER_CSR_INIT(temp_result, CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
+		while ((!temp_result.s.temp_valid &&
+			!gser_is_platform(GSER_PLATFORM_ASIM)) &&
+			(retry_count < 1000)) {
+			temp_result.u =
+				GSER_CSR_READ(CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
+			retry_count++;
+			gser_wait_usec(1);
+		}
+		if (retry_count >= 1000) {
+			gser_error("GSERC%d: Unable to read valid temp sensor temperature\n", module);
+			return;
+		}
+		temp = gser_extracts(temp_result.s.temp_corrected, 2, 8);
 	}
-	if (retry_count >= 1000) {
-		gser_error("GSERC%d: Unable to read valid temp sensor temperature\n", module);
-		return;
-	}
-	int temp = gser_extracts(temp_result.s.temp_corrected, 2, 8);
 
 	temp += 40;
 	if (temp < 0)
 		temp = 0;
 	if (temp > 125 + 40)
 		temp = 125 + 40;
+
 	/* We program the temperature regardless of GSER_GSERC_ENABLE_DOSC_TEMP_SKEW.
 	   This allows checking that the correct value is programmed without
 	   performing DOSC_TEMP_SKEW */

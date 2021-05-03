@@ -66,5 +66,6 @@ const plat_psci_ops_t *plat_octeontx_psci_override_pm_ops(plat_psci_ops_t *ops);
 int octeontx_pwrc_setup(void);
 int octeontx_setup_psci_ops(uintptr_t sec_entrypoint,
 			const plat_psci_ops_t **psci_ops);
+int octeontx_obtain_tsn_temp(int tsn, int32_t *temp_val);
 
 #endif /* __PLAT_PWRC_H__ */

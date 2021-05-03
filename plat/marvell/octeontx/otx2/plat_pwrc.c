@@ -70,6 +70,11 @@ scmi_channel_plat_info_t plat_octeontx_scmi_plat_info;
 /* Create bakery lock instance for SCMI purposes */
 DEFINE_BAKERY_LOCK(octeontx_scmi_lock);
 
+int octeontx_obtain_tsn_temp(int tsn, int32_t *temp_val)
+{
+	return scmi_octeontx_obtain_tsn(&scmi_channel, tsn, temp_val);
+}
+
 /*
  * Helper function to suspend a CPU power domain and its parent power domains
  * if applicable.

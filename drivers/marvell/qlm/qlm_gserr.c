@@ -6,6 +6,9 @@
 #include <gser_internal.h>
 #include <qlm/qlm.h>
 #include <qlm/qlm_gserr.h>
+#if defined(IMAGE_BL31)
+#include <plat_pwrc.h>
+#endif
 
 /**
  * Define to enable or disable lanes 2-3. Used to keep differences between
@@ -155,6 +158,29 @@ static void apply_tuning(int module, int lane)
 	}
 }
 
+static int get_sensor_num(void)
+{
+	int sensor;
+
+	if (gser_is_model(OCTEONTX_CN96XX))
+		sensor = 10; /* TSN10 is nearest to GSERR */
+	else if (gser_is_model(OCTEONTX_CNF95XX))
+		sensor = 2;  /* TSN2 is nearest to GSERR */
+	else if (gser_is_model(OCTEONTX_LOKI) ||
+		 gser_is_model(OCTEONTX_F95O))
+		sensor = 2;  /* TSN2 is nearest to GSERR */
+	else if (gser_is_model(OCTEONTX_F95MM))
+		sensor = 2;  /* TSN2 is nearest to GSERR, updated 5/12/2020 */
+	else if (gser_is_model(OCTEONTX_CN98XX))
+		sensor = 14; /* TSN14 is nearest to GSERR */
+	else
+	{
+		gser_error("GSERR: Unrecognized chip\n");
+		return 0;
+	}
+	return sensor;
+}
+
 /**
  * Update DOSC cal temp
  *
@@ -164,39 +190,38 @@ static void apply_tuning(int module, int lane)
 static void qlm_gserr_update_dosc_cal_temp(int module)
 {
 	int sensor;
-	int retry_count = 0;
+	int32_t temp;
+	int ret = -1;
 
-	/* Figure out which sensor to use */
-	if (gser_is_model(OCTEONTX_CN96XX))
-		sensor = 10; /* TSN10 is nearest to GSERR */
-	else if (gser_is_model(OCTEONTX_CNF95XX))
-		sensor = 2;  /* TSN2 is nearest to GSERR */
-	else if (gser_is_model(OCTEONTX_LOKI))
-		sensor = 2;  /* TSN2 is nearest to GSERR */
-	else if (gser_is_model(OCTEONTX_F95MM))
-		sensor = 2;  /* TSN2 is nearest to GSERR, updated 5/12/2020 */
-	else if (gser_is_model(OCTEONTX_CN98XX))
-		sensor = 14; /* TSN14 is nearest to GSERR */
-	else
-	{
-		gser_error("GSERR: Unrecognized chip\n");
-		return;
-	}
+	sensor = get_sensor_num();
 
 	/* Update the temperature sensor */
 	/* Program the temperature into the GSERR */
-	GSER_CSR_INIT(temp_result, CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
-	while ((!temp_result.s.temp_valid && !gser_is_platform(GSER_PLATFORM_ASIM)) &&
-	       (retry_count < 1000)) {
-		temp_result.u = GSER_CSR_READ(CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
-		retry_count++;
-		gser_wait_usec(1);
+#if defined(IMAGE_BL31)
+	ret = octeontx_obtain_tsn_temp(sensor, &temp);
+	temp /= 1000;
+#endif
+	/* To handle failed TSN read or Direct read TSN */
+	if (ret) {
+		int retry_count = 0;
+
+		GSER_CSR_INIT(temp_result,
+			CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
+		while ((!temp_result.s.temp_valid &&
+			!gser_is_platform(GSER_PLATFORM_ASIM)) &&
+			(retry_count < 1000)) {
+			temp_result.u = GSER_CSR_READ
+				(CAVM_TSNX_TS_TEMP_CONV_RESULT(sensor));
+			retry_count++;
+			gser_wait_usec(1);
+		}
+		if (retry_count >= 1000) {
+			gser_error("GSERR%d: Unable to read valid temp sensor temperature\n"
+				, module);
+			return;
+		}
+		temp = gser_extracts(temp_result.s.temp_corrected, 2, 8);
 	}
-	if (retry_count >= 1000) {
-		gser_error("GSERR%d: Unable to read valid temp sensor temperature\n", module);
-		return;
-	}
-	int temp = gser_extracts(temp_result.s.temp_corrected, 2, 8);
 
 	temp += 40;
 	if (temp < 0)

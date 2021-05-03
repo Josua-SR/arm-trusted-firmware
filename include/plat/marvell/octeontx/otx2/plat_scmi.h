@@ -51,6 +51,9 @@
 #define SCMI_CAVM_FLSF_CLR_FORCE_2NDRY_MSG_LEN		4
 #define SCMI_CAVM_FLSF_CLR_FORCE_2NDRY_RESP_LEN		12
 
+#define SCMI_CAVM_GET_TSN_TEMP_MSG_LEN		12
+#define SCMI_CAVM_GET_TSN_TEMP_RESP_LEN		12
+
 
 /* SCMI message header format bit field */
 #define SCMI_MSG_ID_SHIFT		0
@@ -191,6 +194,7 @@
 #define SCMI_CAVM_SFP_CONFIG_MSG			0x5
 #define SCMI_CAVM_FLSF_FW_BOOTED_MSG		0x6
 #define SCMI_CAVM_FLSF_CLR_FORCE_2NDRY_MSG	0x7
+#define SCMI_CAVM_GET_TSN_TEMP			0x8
 
 /* FailSafe status return codes */
 #define SCMI_CAVM_FLSF_RET_OK		0x0
@@ -347,6 +351,7 @@ int scmi_pwr_state_get(void *p, uint32_t domain_id, uint32_t *scmi_pwr_state);
  */
 int scmi_sys_pwr_state_set(void *p, uint32_t flags, uint32_t system_state);
 int scmi_sys_pwr_state_get(void *p, uint32_t *system_state);
+int scmi_octeontx_obtain_tsn(void *p, uint32_t tsn_index, int32_t *temp_val);
 
 /* SCMI register configuration API */
 const uintptr_t plat_get_scmi_mbox_addr();

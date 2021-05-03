@@ -416,6 +416,41 @@ int scmi_octeontx_sfp_config(void *p, void *sfp_shmem)
 	return ret;
 }
 
+/*
+ * API to get the temperature sensor value
+ */
+int  scmi_octeontx_obtain_tsn(void *p, uint32_t tsn_index, int32_t *temp_val)
+{
+	mailbox_mem_t *mbx_mem;
+	int token = 0, ret;
+	scmi_channel_t *ch = (scmi_channel_t *)p;
+
+	if (validate_scmi_channel(ch))
+		return -1;
+
+	scmi_get_channel(ch);
+
+	mbx_mem = (mailbox_mem_t *)(ch->info->scmi_mbx_mem);
+	mbx_mem->msg_header = SCMI_MSG_CREATE(SCMI_CAVM_CONFIG_PROTO_ID,
+			SCMI_CAVM_GET_TSN_TEMP, token);
+	mbx_mem->len = SCMI_CAVM_GET_TSN_TEMP_MSG_LEN;
+	mbx_mem->flags = SCMI_FLAG_RESP_POLL;
+
+	SCMI_PAYLOAD_ARG1(mbx_mem->payload, tsn_index);
+
+	scmi_send_sync_command(ch);
+
+	/* Get the return values */
+	SCMI_PAYLOAD_RET_VAL2(mbx_mem->payload, ret, *temp_val);
+	if (ret != 0)
+		ERROR("%s: tsn index %d, SCMI SCMI_CAVM_GET_TSN_TEMP"
+			" returned error %d\n", __func__, tsn_index, ret);
+	assert_scmi(mbx_mem->len == SCMI_CAVM_GET_TSN_TEMP_RESP_LEN);
+	scmi_put_channel(ch);
+
+	return ret;
+}
+
 int scmi_octeontx_flsf_fw_booted(void *p)
 {
 	mailbox_mem_t *mbx_mem;
