@@ -2576,7 +2576,7 @@ void cgx_set_supported_link_modes(int cgx_id, int lmac_id)
 		case QLM_MODE_50G_KR2:
 		case QLM_MODE_40GAUI_2_C2C:
 			if (!is_gsern) /* 40GAUI_2 to 50G_R2 change not supported */
-				lmac_cfg->supported_link_modes &=
+				lmac_cfg->supported_link_modes |=
 					((1 << CGX_MODE_50G_C2C_BIT) |
 					 (1 << CGX_MODE_50G_C2M_BIT) |
 					 (1 << CGX_MODE_50G_CR_BIT) |
