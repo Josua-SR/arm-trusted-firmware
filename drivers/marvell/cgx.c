@@ -3044,10 +3044,8 @@ int cgx_xaui_init_link(int cgx_id, int lmac_id)
 			CAVM_CGXX_SPU_USXGMII_CONTROL(cgx_id),
 			enable, 1);
 
-	/* At this point CGX is driving the serdes. Enable serdes transmitter.
-	 * Only enable serdes transmitter if autoneg is disabled
-	 */
-	if (lmac->autoneg_dis || !is_gsern)
+	/* GSERN Only: Enable serdes transmitter if autoneg is disabled */
+	if (lmac->autoneg_dis && is_gsern)
 		cgx_serdes_tx_control(cgx_id, lmac_id, true);
 
 	/* keep the reset values for lane polarity. select deficit
@@ -3094,10 +3092,12 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ctx)
 			__func__, cgx_id, lmac_id, lmac->mode,
 			!lmac->autoneg_dis, lmac->use_training);
 
+	/* Enable SERDES transmitter */
+	cgx_serdes_tx_control(cgx_id, lmac_id, true);
+
 	/* Don't try to bring link UP
 	 * if PRBS is enabled on any LMAC lanes
 	 */
-
 	if (!is_gsern) {
 		if (cgx_qlm_prbs_lpbk_chk(cgx_id, lmac_id)) {
 			debug_cgx("%s: %d:%d Not bringing link up. PRBS or Farend loopback enabled.\n",
@@ -3513,8 +3513,13 @@ int cgx_xaui_set_link_down(int cgx_id, int lmac_id)
 	cavm_cgxx_cmrx_rx_fifo_len_t rx_fifo_len;
 	cavm_cgxx_cmrx_tx_fifo_len_t tx_fifo_len;
 	cavm_cgxx_cmrx_config_t cmrx_config;
+	bool is_gsern = 0;
 
 	debug_cgx("%s %d:%d\n", __func__, cgx_id, lmac_id);
+
+	if ((IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 1)) ||
+		(IS_OCTEONTX_VAR(read_midr(), F95PARTNUM, 1)))
+		is_gsern = true;
 
 	lmac = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 
@@ -3536,6 +3541,10 @@ int cgx_xaui_set_link_down(int cgx_id, int lmac_id)
 	CAVM_MODIFY_CGX_CSR(cavm_cgxx_cmrx_config_t,
 			CAVM_CGXX_CMRX_CONFIG(cgx_id, lmac_id),
 			data_pkt_tx_en, 0);
+
+	/* Disable SERDES transmitter */
+	if (!is_gsern)
+		cgx_serdes_tx_control(cgx_id, lmac_id, false);
 
 	/* FIXME: if flow control is enabled, disable appropriate
 	 * flow control packets
