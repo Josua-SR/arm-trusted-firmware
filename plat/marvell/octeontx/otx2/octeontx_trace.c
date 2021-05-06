@@ -65,6 +65,9 @@ uint64_t cpu_tracebufsize; /* cpu trace buffer size */
 uint64_t nsec_npres;
 uint64_t nsec_npres_end;
 
+/* Trace is assumed to be in enabled state during bootup */
+bool trace_enabled = true;
+
 /* Check if an address region is non secure, non preserve */
 static inline bool is_address_region_nsec_npres(uint64_t addr, uint64_t size)
 {
@@ -95,12 +98,18 @@ static inline bool is_address_region_arm_tracebuf(uint64_t addr, uint64_t size)
 		return true;
 }
 
+/* Callers expected to acquire necessary locks to ensure
+ * that this function is not reentrant
+ */
 void plat_armtrace_stop(void)
 {
 	int i;
 	uint64_t base1, base2;
 	uint64_t size = PAGE_SIZE;
 	unsigned int attr = MT_DEVICE | MT_RW | MT_NS;
+
+	if (!trace_enabled)
+		return;
 
 	VERBOSE("Disabling ETM/ETR for %d cores\n", PLATFORM_CORE_COUNT);
 
@@ -129,6 +138,12 @@ void plat_armtrace_stop(void)
 		octeontx_mmap_remove_dynamic_region_with_sync(base1, size);
 		octeontx_mmap_remove_dynamic_region_with_sync(base2, size);
 	}
+
+	/*
+	 * No concurrent callers expected and assume trace gets
+	 * enabled by non secure world
+	 */
+	trace_enabled = false;
 
 	return;
 
@@ -198,6 +213,11 @@ void plat_armtrace_init(void)
 	nsec_npres_end = nsec_npres + size - 1;
 	INFO("NS non preserve start = 0x%llx, size = 0x%llx\n",
 		       nsec_npres, size);
+
+	/* We do not have any concurrent callers here since this
+	 * is called only once at boot time
+	 */
+	trace_enabled = true;
 
 	return;
 

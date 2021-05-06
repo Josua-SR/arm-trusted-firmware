@@ -178,13 +178,15 @@ uint64_t gti_cwd_irq_handler(uint32_t id, uint32_t flags, void *cookie)
 {
 	int el_mode;
 
-#if defined ARM_TRACE_SECURE_BUFFER
-	/* Ensure we stop the ARM Trace, so that the trace data
-	 * relevant to this watchdog interrupt doesn't get overwritten.
-	 */
-	plat_armtrace_stop();
-#endif
 	if ((in_use_lock++) == 0) {
+
+#if defined ARM_TRACE_SECURE_BUFFER
+		/* Ensure we stop the ARM Trace, so that the trace data
+		 * relevant to this watchdog interrupt doesn't get
+		 * overwritten.
+		 */
+		plat_armtrace_stop();
+#endif
 		g_intid = id;
 		el_mode = prepare_elx_restore_context();
 		prepare_elx_kernel_callback(el_mode);
