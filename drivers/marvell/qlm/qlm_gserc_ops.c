@@ -391,6 +391,62 @@ static int qlm_gserc_farend_lpbk_chk(int qlm, int lane)
 
 	return 0;
 }
+
+/**
+ * Perform RX State Machine reset
+ *
+ * @param qlm       Index into GSER* group
+ * @param qlm_lane  Which lane
+ * @return 0 on success, -1 on failure
+ */
+static int qlm_gserc_rx_state_reset(int qlm, int qlm_lane)
+{
+	if (gser_is_platform(GSER_PLATFORM_ASIM))
+		return 0;
+
+	int result = 0;
+	GSER_CSR_INIT(gsercx_const, CAVM_GSERCX_CONST(qlm));
+	int num_lanes = gsercx_const.s.nr_lanes;
+
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if ((qlm_lane != -1) && (qlm_lane != lane))
+			continue;
+
+		GSER_CSR_INIT(rxdp_ctrl1, CAVM_GSERCX_LNX_TOP_DPL_RXDP_CTRL1(qlm, lane));
+		GSER_CSR_INIT(afe_loopback_ctrl, CAVM_GSERCX_LNX_TOP_AFE_LOOPBACK_CTRL(qlm, lane));
+		if (rxdp_ctrl1.s.rx_dmux_sel ||
+			afe_loopback_ctrl.s.loopback_nea_en)
+		{
+			GSER_TRACE(QLM, "N0.GSERC%d.%d: NED or NEA loopback, skipping state reset\n", qlm, lane);
+			continue;
+		}
+
+		GSER_CSR_INIT(bsts, CAVM_GSERCX_LANEX_STATUS_BSTS(qlm, lane));
+		if (bsts.s.ln_stat_los)
+		{
+			GSER_TRACE(QLM, "N0.GSERC%d.%d: Loss of signal\n", qlm, lane);
+			result = -1;
+			continue;
+		}
+
+		/* Read/Modify GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD bit 5 */
+		GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_SPARE_CFG6_RSVD(qlm, lane),
+			c.s.data = (1 << 5));
+
+		/* Wait 2ms */
+		gser_wait_usec(2000);
+
+		/* Poll for GSERCX_LANEX_STATUS_BSTS[ln_stat_rxvalid] for 100ms */
+		if (GSER_CSR_WAIT_FOR_FIELD(CAVM_GSERCX_LANEX_STATUS_BSTS(qlm, lane), GSERCX_STATUS_BSTS_LN_STAT_RXVALID, ==, 1, 100000)) {
+			GSER_TRACE(QLM, "GSERC%d.%d: Timeout waiting for GSERCX_LANEX_STATUS_BSTS[ln_stat_rxvalid]=1)\n", qlm, lane);
+			result = -1;
+			continue;
+		}
+	}
+
+	return result;
+}
 #endif
 
 const qlm_ops_t qlm_gserc_ops = {
@@ -413,6 +469,7 @@ const qlm_ops_t qlm_gserc_ops = {
 	.qlm_display_settings = qlm_gserc_display_settings,
 	.qlm_eye_capture = qlm_gserc_eye_capture,
 	.qlm_rx_signal_detect = qlm_gserc_rx_signal_detect,
+	.qlm_rx_state_reset = qlm_gserc_rx_state_reset,
 #endif
 	.qlm_tx_control = qlm_gserc_tx_control,
 	.qlm_get_lmac_phy_lane = qlm_gserc_get_lmac_phy_lane,

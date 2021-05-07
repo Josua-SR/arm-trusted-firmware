@@ -308,6 +308,9 @@ typedef struct {
 			int *tx_cpre, int *tx_cpost, int *tx_bs,
 			int *tx_unused);
 	int (*qlm_rx_equalization)(int qlm, int qlm_lane);
+#if defined(PLAT_loki)
+	int (*qlm_rx_state_reset)(int qlm, int qlm_lane);
+#endif
 	void (*qlm_display_settings)(int qlm, int qlm_lane, bool show_tx,
 			bool show_rx, char *buf, int size);
 	int (*qlm_eye_capture)(int qlm, int lane, int show_data,

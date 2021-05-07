@@ -1175,7 +1175,7 @@ static int cpri_set_tx_control(struct cpri_mode_tx_ctrl_args *args)
 	return 0;
 }
 
-static int cpri_handle_rx_equalization(struct cpri_mode_tx_ctrl_args *args)
+static int cpri_handle_misc_cmds(struct cpri_mode_misc_args *args)
 {
 	cgx_config_t *cgx;
 	int gserc_idx, lane_idx;
@@ -1202,14 +1202,27 @@ static int cpri_handle_rx_equalization(struct cpri_mode_tx_ctrl_args *args)
 
 	cgx = &plat_octeontx_bcfg->cgx_cfg[cgx_idx];
 
-	if (cgx->qlm_ops->qlm_rx_equalization(gserc_idx, lane_idx) == -1) {
-		debug_cgx_intf("%s:RX EQU failed %d:%d\n", __func__, gserc_idx, lane_idx);
-		return -1;
+	switch (args->flags) {
+	case 0:
+		if (cgx->qlm_ops->qlm_rx_equalization(gserc_idx, lane_idx) == -1) {
+			debug_cgx_intf("%s:RX EQU failed %d:%d\n",
+					__func__, gserc_idx, lane_idx);
+			return -1;
+		}
+		break;
+	case 1:
+		if (cgx->qlm_ops->qlm_rx_state_reset(gserc_idx, lane_idx) == -1) {
+			debug_cgx_intf("%s:RX State Machine failed %d:%d\n",
+					__func__, gserc_idx, lane_idx);
+			return -1;
+		}
+		break;
+	default:
+		break;
 	}
 
 	return 0;
 }
-
 #endif
 
 int cgx_handle_mode_change(int cgx_id, int lmac_id,
@@ -2115,11 +2128,12 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 						CGX_ERR_SERDES_CPRI_PARAM_INVALID);
 				}
 			break;
-			case CGX_CMD_CPRI_RXEQ:
+			case CGX_CMD_CPRI_MISC:
 				scratchx1.u = CSR_READ(CAVM_CGXX_CMRX_SCRATCHX(
 							cgx_id, lmac_id, 1));
-				ret = cpri_handle_rx_equalization(
-						&scratchx1.s.cpri_tx_ctrl_args);
+				ret = cpri_handle_misc_cmds(
+						&scratchx1.s.cpri_misc_args);
+
 				if (ret == -1)
 					cgx_set_error_type(cgx_id, lmac_id,
 						CGX_ERR_RX_EQU_FAIL);

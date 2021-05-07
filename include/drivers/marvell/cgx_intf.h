@@ -113,7 +113,7 @@ enum cgx_cmd_id {
 	CGX_CMD_LEQ_ADAPT_SERDES,
 	CGX_CMD_DFE_ADAPT_SERDES,		/* = 40 */
 	CGX_CMD_DO_CMU_RESET,
-	CGX_CMD_CPRI_RXEQ,
+	CGX_CMD_CPRI_MISC,
 };
 
 /* async event ids */
@@ -416,6 +416,16 @@ struct cpri_mode_tx_ctrl_args {
 	uint64_t reserved2:47;
 };
 
+/* command argument to be passed for cmd ID - CGX_CMD_CPRI_MISC */
+struct cpri_mode_misc_args {
+	uint64_t reserved1:8;
+	uint64_t gserc_idx:4;	/* GSERC index 0 - 4 */
+	uint64_t lane_idx:4;	/* lane index 0 - 1 */
+	uint64_t flags:2;	/* 0 - RX Eq
+				   1 - RX State machine reset */
+	uint64_t reserved2:46;
+};
+
 /* command argument to be passed for cmd ID - CGX_CMD_LEQ_ADAPT_SERDES */
 struct gser_leq_adapt {
 	uint64_t reserved1:8;
@@ -529,6 +539,7 @@ union cgx_cmd_s {
 	struct cgx_mac_addr_args mac_args;
 	struct cpri_mode_change_args cpri_change_args;
 	struct cpri_mode_tx_ctrl_args cpri_tx_ctrl_args;
+	struct cpri_mode_misc_args cpri_misc_args;
 	struct gser_leq_adapt leq_adt;
 	/* any other arg for command id * like : mtu, dmac filtering control */
 #ifdef DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS
