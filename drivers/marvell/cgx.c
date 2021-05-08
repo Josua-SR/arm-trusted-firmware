@@ -3846,10 +3846,8 @@ void cgx_hw_init(int cgx_id)
 			lmac = &cgx->lmac_cfg[lmac_id];
 			if (lmac->lmac_enable || (lmac->mode == CAVM_CGX_LMAC_TYPES_E_QSGMII))  {
 				ret = cgx_read_flash_mode_param(cgx_id, lmac_id, &qlm_mode, &lmac_type);
-				if (!ret) {
-					if ((qlm_mode == lmac->mode_idx) &&
-					    (lmac_type == lmac->mode))
-						continue;
+				if (!ret &&
+				    !(qlm_mode == lmac->mode_idx && lmac_type == lmac->mode)) {
 					NOTICE("CGX%d.LMAC%d: Changing mode from %s to %s (persistent settings)\n",
 						cgx_id, lmac_id,
 						qlm_get_mode_strmap(lmac->mode_idx).bdk_str,
