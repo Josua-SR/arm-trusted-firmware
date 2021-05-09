@@ -425,11 +425,16 @@ void octeontx_configure_pem_ep_security(int pem, int secure)
 	int strm_ns, phys_ns;
 	uint32_t streamid;
 	cavm_smmux_s_gbpa_t s_gbpa;
+	uint64_t midr = read_midr();
 
-	switch (MIDR_PARTNUM(read_midr())) {
+	switch (MIDR_PARTNUM(midr)) {
+	case F95PARTNUM:
+		/* f95 pass2.0 doesn't have PEM */
+		if (IS_OCTEONTX_VAR(midr, F95PARTNUM, 2))
+			break;
+		/* fall through for f95 pass 1.x */
 	case T96PARTNUM:
 	case T98PARTNUM:
-	case F95PARTNUM:
 		if (pem == 0)
 			streamid = CAVM_PCC_DEV_CON_E_PCIERC0_CN9;
 		else if (pem == 2)
