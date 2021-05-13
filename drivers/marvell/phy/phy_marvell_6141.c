@@ -28,13 +28,24 @@
 #include "mydHwSerdesCntl.h"
 #include "mydFEC.h"
 
+/* In the device tree, the "port" property of a 6141 phy node specifies the
+ * PHY lane number to use.  If "port" is absent in a phy node, the device tree
+ * parser will return -1 as the value of port.  We will treat -1 as if it were
+ * 0 so that this 6141 driver remains compatible with legacy device trees that
+ * have missing "port"s in their 6141 phy nodes.
+ */
+#define PHY_PORT_TO_LANE(p) (((p) == -1) ? 0 : (p))
+
 typedef struct {
+	MYD_DEV_PTR pdev;
 	MYD_DEV myd_dev;
 #define STATE_DOWN       0
 #define STATE_UP         1
 #define STATE_CONFIGURED 2
 	int state;
 } priv_6141_t;
+
+#define PDEV(p) ((priv_6141_t *)(p))->pdev
 
 priv_6141_t marvell_6141_priv[MAX_CGX];
 
@@ -74,8 +85,19 @@ void phy_marvell_6141_probe(int cgx_id, int lmac_id)
 
 	phy = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id].phy_config;
 	phy->priv = &marvell_6141_priv[cgx_id];
+	if (cgx_id == 2 &&
+	    !strncmp(plat_octeontx_bcfg->bcfg.board_model,
+		     "cn3380_250sv_v5", 15)) {
+		/* For this rev of the LIO3 card, there is only one 6141 PHY.
+		 * QLM6 and QLM7 connect to that one-and-only PHY.  A PHY must
+		 * have just one associated MYD_DEV struct.  So CGX2's PDEV and
+		 * CGX0's PDEV must both point to that one MYD_DEV struct.
+		 */
+		PDEV(phy->priv) = &marvell_6141_priv[0].myd_dev;
+	} else
+		PDEV(phy->priv) = &marvell_6141_priv[cgx_id].myd_dev;
 
-	if (((MYD_DEV_PTR)phy->priv)->devEnabled)
+	if (PDEV(phy->priv)->devEnabled)
 		return;
 
 	mydGetAPIVersion(&major, &minor, &buildID);
@@ -117,14 +139,14 @@ void phy_marvell_6141_probe(int cgx_id, int lmac_id)
 					 phy->addr,
 					 phy,
 					 MYD_RELOAD_CONFIG,
-					 phy->priv);
+					 PDEV(phy->priv));
 		if (status != MYD_OK) {
 			ERROR("%s: %d:%d mydReloadDriver() failed\n",
 			      __func__, cgx_id, lmac_id);
 			return;
 		}
 
-		status = mydSerdesGetRevision(phy->priv, phy->addr,
+		status = mydSerdesGetRevision(PDEV(phy->priv), phy->addr,
 					      &serdesRevision, &sbmRevision);
 		if (status != MYD_OK) {
 			ERROR("%s: %d:%d mydSerdesGetRevision() failed\n",
@@ -141,7 +163,7 @@ void phy_marvell_6141_probe(int cgx_id, int lmac_id)
 			 * (for an explanantion, see other comments at the
 			 * bottom of this function).
 			 */
-			myd_write_mdio(phy->priv, phy->addr, MYD_LINE_SIDE,
+			myd_write_mdio(PDEV(phy->priv), phy->addr, MYD_LINE_SIDE,
 				       MYD_DATAPATH_CNTL,
 				       MYD_DP_DISENGAGE_MODE << 14);
 
@@ -155,7 +177,7 @@ void phy_marvell_6141_probe(int cgx_id, int lmac_id)
 		 * need to unload MYD driver because the API for firmware load
 		 * requires an uninitialized MYD driver.
 		 */
-		status = mydUnloadDriver(phy->priv);
+		status = mydUnloadDriver(PDEV(phy->priv));
 		if (status != MYD_OK)
 			ERROR("%s: %d:%d mydUnloadDriver() failed\n",
 			      __func__, cgx_id, lmac_id);
@@ -174,7 +196,7 @@ void phy_marvell_6141_probe(int cgx_id, int lmac_id)
 			       x6141_serdes_image_start,
 			       x6141_serdes_image_size,
 			       phy,
-			       phy->priv);
+			       PDEV(phy->priv));
 	if (status != MYD_OK) {
 		ERROR("%s: %d:%d mydInitDriver() failed\n", __func__, cgx_id,
 		      lmac_id);
@@ -186,7 +208,7 @@ void phy_marvell_6141_probe(int cgx_id, int lmac_id)
 	 * is down.  This fulfills a customer requirement to keep the line-side
 	 * link up during an LIO3 (T93) warm reset.
 	 */
-	myd_write_mdio(phy->priv, phy->addr, MYD_LINE_SIDE, MYD_DATAPATH_CNTL,
+	myd_write_mdio(PDEV(phy->priv), phy->addr, MYD_LINE_SIDE, MYD_DATAPATH_CNTL,
 		       MYD_DP_DISENGAGE_MODE << 14);
 }
 
@@ -340,13 +362,13 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 		return;
 	}
 
-	lane = lmac_cfg->lane_to_sds & 3;
-	myd_dev = phy->priv;
+	lane = PHY_PORT_TO_LANE(phy->port);
+	myd_dev = PDEV(phy->priv);
 	myd_host_config = &myd_dev->hostConfig[0][lane];
 
 	if (myd_host_config->opMode == MYD_P25YN && host_mode != MYD_P25YN) {
 		/* undo the 25GBASE-R2 hack */
-		myd_write_mdio(phy->priv, phy->addr, 4, 0xF06C, 0);
+		myd_write_mdio(PDEV(phy->priv), phy->addr, 4, 0xF06C, 0);
 	}
 
 	debug_phy_driver("%s: %d:%d Tune RX equalizer at 6141 PHY line side\n",
@@ -372,7 +394,7 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 	mode_option = MYD_MODE_CTLE | MYD_MODE_INIT_CTLE |
 		      MYD_MODE_FORCE_RECONFIG;
 
-	status = mydSetModeSelection(phy->priv, phy->addr, lane, host_mode,
+	status = mydSetModeSelection(PDEV(phy->priv), phy->addr, lane, host_mode,
 				     line_mode, mode_option,
 				     &result);
 	if (status == MYD_OK) {
@@ -388,10 +410,10 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 			 */
 
 			/* fix alignment markers */
-			myd_write_mdio(phy->priv, phy->addr, 4, 0xF06C, 0xF000);
+			myd_write_mdio(PDEV(phy->priv), phy->addr, 4, 0xF06C, 0xF000);
 
 			/* host-side sw reset */
-			myd_write_mdio(phy->priv, phy->addr,
+			myd_write_mdio(PDEV(phy->priv), phy->addr,
 					31, 0xF003, 0x0080);
 		}
 
@@ -406,10 +428,12 @@ void phy_marvell_6141_config(int cgx_id, int lmac_id)
 
 static MYD_BOOL host_side_has_block_lock(phy_config_t *phy)
 {
+	MYD_U16 lane = PHY_PORT_TO_LANE(phy->port);
 	MYD_U16 value = 0;
 
 #define BASE_R_STATUS_1 0x1020
-	myd_read_mdio(phy->priv, phy->addr, MYD_HOST_SIDE, BASE_R_STATUS_1,
+	myd_read_mdio(PDEV(phy->priv), phy->addr, MYD_HOST_SIDE,
+		      BASE_R_STATUS_1 + (lane * 0x200),
 		      &value);
 
 #define BLOCK_LOCK_MASK 1
@@ -490,13 +514,13 @@ void phy_marvell_6141_get_link_status(int cgx_id, int lmac_id,
 	debug_phy_driver("%s: %d:%d\n", __func__, cgx_id, lmac_id);
 
 	lmac_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
-	lane = lmac_cfg->lane_to_sds & 3;
 	phy = &lmac_cfg->phy_config;
+	lane = PHY_PORT_TO_LANE(phy->port);
 
 	mydMemSet(&statusDetail, 0, sizeof(MYD_PCS_LINK_STATUS));
 	link->u64 = 0;
 
-	status = mydCheckPCSLinkStatus(phy->priv, phy->addr, lane,
+	status = mydCheckPCSLinkStatus(PDEV(phy->priv), phy->addr, lane,
 				       &currentStatus, &latchedStatus,
 				       &statusDetail);
 	if (status != MYD_OK) {
@@ -515,7 +539,7 @@ void phy_marvell_6141_get_link_status(int cgx_id, int lmac_id,
 	link->s.link_up = 1;
 	link->s.full_duplex = 1;
 
-	myd_dev = phy->priv;
+	myd_dev = PDEV(phy->priv);
 	myd_mode_config = &myd_dev->lineConfig[0][lane];
 	switch (myd_mode_config->opMode) {
 	case MYD_P10LN:
@@ -611,8 +635,8 @@ static int phy_marvell_6141_get_fec_stats(int cgx_id, int lmac_id)
 	debug_phy_driver("%s: %d:%d\n", __func__, cgx_id, lmac_id);
 
 	lmac_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
-	lane = lmac_cfg->lane_to_sds & 3;
 	phy = &lmac_cfg->phy_config;
+	lane = PHY_PORT_TO_LANE(phy->port);
 	s = &phy->fec_stats;
 
 	struct {
@@ -627,7 +651,7 @@ static int phy_marvell_6141_get_fec_stats(int cgx_id, int lmac_id)
 	};
 
 	for (i = 0; i < ARRAY_SIZE(table); i++) {
-		status = table[i].func(phy->priv, phy->addr, MYD_LINE_SIDE,
+		status = table[i].func(PDEV(phy->priv), phy->addr, MYD_LINE_SIDE,
 				       lane, &cntr);
 		if (status == MYD_OK) {
 			*table[i].cntr = cntr;
@@ -689,11 +713,11 @@ static int phy_marvell_6141_enable_prbs(int cgx_id, int lmac_id, int host_side,
 
 	lmac_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 	phy = &lmac_cfg->phy_config;
-	lane = lmac_cfg->lane_to_sds & 3;
+	lane = PHY_PORT_TO_LANE(phy->port);
 	prbs_sel = phy_marvell_6141_get_prbs_selector(prbs);
 
 	status = mydSetPRBSClearOnRead(
-		phy->priv,
+		PDEV(phy->priv),
 		phy->addr,
 		MYD_HOST_SIDE,
 		lane,
@@ -706,7 +730,7 @@ static int phy_marvell_6141_enable_prbs(int cgx_id, int lmac_id, int host_side,
 	}
 
 	status = mydSetPRBSClearOnRead(
-		phy->priv,
+		PDEV(phy->priv),
 		phy->addr,
 		MYD_LINE_SIDE,
 		lane,
@@ -719,7 +743,7 @@ static int phy_marvell_6141_enable_prbs(int cgx_id, int lmac_id, int host_side,
 	}
 
 	status = mydSetPRBSPattern(
-		phy->priv,
+		PDEV(phy->priv),
 		phy->addr,
 		MYD_LINE_SIDE,
 		lane,
@@ -732,7 +756,7 @@ static int phy_marvell_6141_enable_prbs(int cgx_id, int lmac_id, int host_side,
 	}
 
 	status = mydSetPRBSPattern(
-		phy->priv,
+		PDEV(phy->priv),
 		phy->addr,
 		MYD_HOST_SIDE,
 		lane,
@@ -748,7 +772,7 @@ static int phy_marvell_6141_enable_prbs(int cgx_id, int lmac_id, int host_side,
 	enable_rx = (dir == QLM_DIRECTION_RX);
 
 	status = mydSetPRBSEnableTxRx(
-		phy->priv,
+		PDEV(phy->priv),
 		phy->addr,
 		host_side ? MYD_HOST_SIDE : MYD_LINE_SIDE,
 		lane,
@@ -777,11 +801,11 @@ static int phy_marvell_6141_disable_prbs(int cgx_id, int lmac_id, int host_side,
 
 	lmac_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 	phy = &lmac_cfg->phy_config;
-	lane = lmac_cfg->lane_to_sds & 3;
+	lane = PHY_PORT_TO_LANE(phy->port);
 	prbs_sel = phy_marvell_6141_get_prbs_selector(prbs);
 
 	status = mydSetPRBSEnableTxRx(
-		phy->priv,
+		PDEV(phy->priv),
 		phy->addr,
 		host_side ? MYD_HOST_SIDE : MYD_LINE_SIDE,
 		lane,
@@ -795,7 +819,7 @@ static int phy_marvell_6141_disable_prbs(int cgx_id, int lmac_id, int host_side,
 	}
 
 	mydLaneSoftReset(
-		phy->priv,
+		PDEV(phy->priv),
 		phy->addr,
 		host_side ? MYD_HOST_SIDE : MYD_LINE_SIDE,
 		lane,
@@ -820,11 +844,11 @@ static uint64_t phy_marvell_6141_get_prbs_errors(int cgx_id, int lmac_id,
 
 	lmac_cfg = &plat_octeontx_bcfg->cgx_cfg[cgx_id].lmac_cfg[lmac_id];
 	phy = &lmac_cfg->phy_config;
-	lane = lmac_cfg->lane_to_sds & 3;
+	lane = PHY_PORT_TO_LANE(phy->port);
 	prbs_sel = phy_marvell_6141_get_prbs_selector(prbs);
 
 	status = mydGetPRBSLocked(
-		phy->priv,
+		PDEV(phy->priv),
 		phy->addr,
 		host_side ? MYD_HOST_SIDE : MYD_LINE_SIDE,
 		lane,
@@ -839,7 +863,7 @@ static uint64_t phy_marvell_6141_get_prbs_errors(int cgx_id, int lmac_id,
 	}
 
 	status = mydGetPRBSCounts(
-		phy->priv,
+		PDEV(phy->priv),
 		phy->addr,
 		host_side ? MYD_HOST_SIDE : MYD_LINE_SIDE,
 		lane,
