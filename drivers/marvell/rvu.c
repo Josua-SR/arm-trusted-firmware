@@ -342,7 +342,10 @@ static void rvu_provision_pfs_for_sw_devs(int top_eth_pf,
 
 	/* Provision RVU PFs for SDP. */
 	for (i = SW_RVU_SDP_NUM_PF - 1; (int)i >= 0; i--) {
-		rvu_pf = rvu_first_available(avail_from_top);
+		if (IS_OCTEONTX_PASS(read_midr(), T98PARTNUM, 1, 0))
+			rvu_pf = i ? 14 : 13;
+		else
+			rvu_pf = rvu_first_available(avail_from_top);
 
 		/* Enforce constraint */
 		if (rvu_pf < RVU_ETH_FIRST) {
