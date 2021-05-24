@@ -1398,7 +1398,7 @@ static void *map_elx_addr(uint64_t address, struct elx_map *m, int is_phys)
 	 * set to zero, so it's not an issue
 	 */
 	m->lmcx = pa_to_lmc(m->pa);
-	debug_ras("(map e?%d va:%llx -> el3:%p LMC%d)\n",
+	debug_ras("(map nomap:%d va:0x%llx -> el3:%p LMC%d)\n",
 		m->nomap, address, m->mapped, m->lmcx);
 
 	return m->mapped;
@@ -2151,6 +2151,7 @@ int64_t plat_ras_lmc_inject(u_register_t x2, u_register_t x3,
 	uint64_t __attribute__((unused)) data;
 #endif
 	int read_own_code = 0;
+	memset(&m, 0, sizeof(m));
 
 	debug_ras("%s(a:%lx f:%lx x4:%lx)\n", __func__, x2, x3, x4);
 
