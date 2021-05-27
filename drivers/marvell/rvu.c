@@ -280,7 +280,7 @@ static void rvu_provision_pfs_for_sw_devs(int top_eth_pf,
 
 		if (rvu_pf == (MAX_RVU_PFS - 1)) {
 			octeontx_init_rvu_fixed(cur_hwvf, rvu_pf,
-					SW_RVU_SSO_TIM_PF(0), TRUE);
+					SW_RVU_SSO_TIM_PF(0), FALSE);
 			rvu_pf = rvu_first_available(avail_from_top);
 		}
 
@@ -485,7 +485,8 @@ static int octeontx_init_rvu_from_fdt(void)
 		panic();
 	}
 	if (sw_pf && (sw_pf->mapping == SW_RVU_MAP_LEGACY) &&
-	    octeontx_is_in_ep_mode()) {
+	    octeontx_is_in_ep_mode() &&
+	    !IS_OCTEONTX_PASS(read_midr(), T98PARTNUM, 1, 0)) {
 		debug_rvu("RVU: provision PF%d -> SW_RVU_SDP (override NPA)\n",
 			  FIXED_RVU_NPA);
 		octeontx_init_rvu_fixed(&current_hwvf, FIXED_RVU_NPA,
@@ -627,6 +628,61 @@ static int octeontx_init_rvu_from_fdt(void)
 
 	if (!uninit_pfs)
 		return 0;
+
+	/*
+	 * Fix RVU PFs for NPA, SSO and SDP to address errata workaround AP-38625
+	 * on T98 Pass1.0
+	 *
+	 * CGX_LMACS <= 11  // PF1 .. PF11
+	 * 	PF12 for SSO
+	 * 	PF13 & PF14 for SDP
+	 *
+	 * CGX_LMACS == 12 // PF1 .. PF12
+	 * 	PF13 for SDP
+	 * 	PF14 for SSO even if EP is configured or not
+	 *
+	 * CGX_LMACS > 12
+	 * 	No PF for SDP
+	 * 	PF14 for SSO (Force)
+	 *
+	 * REE:
+	 * 	PF21 and PF22
+	 *
+	 * CPT:
+	 * 	PF15 (CGX_LMACS <= 12) or PF23
+	 *
+	 * In all the combinations, Configure total 3 PFs for SSO and one PF for NPA and
+	 * disable all unused PFs
+	 */
+	if (IS_OCTEONTX_PASS(read_midr(), T98PARTNUM, 1, 0)) {
+		int sso_rvu, sdp_rvu;
+		if (pf <= 11) {
+			sso_rvu = 12;
+			sdp_rvu = 13;
+
+			octeontx_init_rvu_fixed(&current_hwvf, sso_rvu,
+				SW_RVU_SSO_TIM_PF(0), TRUE);
+			if (octeontx_is_in_ep_mode()) {
+				octeontx_init_rvu_fixed(&current_hwvf, sdp_rvu,
+					SW_RVU_SDP_PF(0), TRUE);
+				octeontx_init_rvu_fixed(&current_hwvf, sdp_rvu + 1,
+					SW_RVU_SDP_PF(1), TRUE);
+			}
+		} else if (pf == 12) {
+			sso_rvu = 14;
+			sdp_rvu = 13;
+			octeontx_init_rvu_fixed(&current_hwvf, sso_rvu,
+				SW_RVU_SSO_TIM_PF(0), TRUE);
+			if (octeontx_is_in_ep_mode())
+				octeontx_init_rvu_fixed(&current_hwvf, sdp_rvu,
+					SW_RVU_SDP_PF(0), TRUE);
+		} else if (pf > 12) {
+			sso_rvu = 14;
+			octeontx_init_rvu_fixed(&current_hwvf, sso_rvu,
+				SW_RVU_SSO_TIM_PF(0), TRUE);
+		}
+		return 0;
+	}
 
 	sso_tim_pfs = uninit_pfs * SSO_TIM_TO_NPA_PFS_FACTOR;
 	/* Limit number of SSO PFs so as not to waste [MSIX] resources */
