@@ -32,7 +32,7 @@
  *   where:
  *     MEMTYP = {0:IMEM/1:DMEM}
  *     MDAB-IDs:
- *       MBP[0:14]:  {0..14}
+ *       MBP[0:42]:  {0..42}
  *
  *     SW must also be sure to restrict the 8B_OFFSET (based on DSPTYPE/RAMTYPE) as follows:
  *
@@ -64,6 +64,8 @@ static inline uint64_t CAVM_MDAB_MBPX_DMEM_ARRAYX(uint64_t a, uint64_t b)
         return 0x87e044800000ll + 0x20000ll * ((a) & 0x3f) + 8ll * ((b) & 0x3fff);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=16383)))
         return 0x87e044800000ll + 0x20000ll * ((a) & 0xf) + 8ll * ((b) & 0x3fff);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=16383)))
+        return 0x87e044800000ll + 0x20000ll * ((a) & 0x3f) + 8ll * ((b) & 0x3fff);
     __cavm_csr_fatal("MDAB_MBPX_DMEM_ARRAYX", 2, a, b, 0, 0, 0, 0);
 }
 
@@ -85,7 +87,7 @@ static inline uint64_t CAVM_MDAB_MBPX_DMEM_ARRAYX(uint64_t a, uint64_t b)
  *   rsl_byte_address = 0x87E044400000 + (MDAB-ID[5:0] \<\< 16) + (8B_OFFSET[12:0] \<\< 3)
  *    where:
  *     MDAB-IDs:
- *       MBP[0:14]:  {0..14}
+ *       MBP[0:42]:  {0..42}
  *
  *     SW must also be sure to restrict the 8B_OFFSET (based on DSPTYPE/RAMTYPE) as follows:
  *
@@ -117,6 +119,8 @@ static inline uint64_t CAVM_MDAB_MBPX_IMEM_ARRAYX(uint64_t a, uint64_t b)
         return 0x87e044400000ll + 0x10000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1fff);
     if (cavm_is_model(OCTEONTX_F95MM) && ((a<=14) && (b<=8191)))
         return 0x87e044400000ll + 0x10000ll * ((a) & 0xf) + 8ll * ((b) & 0x1fff);
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=42) && (b<=8191)))
+        return 0x87e044400000ll + 0x10000ll * ((a) & 0x3f) + 8ll * ((b) & 0x1fff);
     __cavm_csr_fatal("MDAB_MBPX_IMEM_ARRAYX", 2, a, b, 0, 0, 0, 0);
 }
 

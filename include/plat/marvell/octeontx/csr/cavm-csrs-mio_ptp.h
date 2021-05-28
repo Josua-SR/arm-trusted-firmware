@@ -48,6 +48,7 @@
 #define CAVM_MIO_PTP_EXT_SEL_E_QLM_REFX_F95MM(a) (0x38 + (a))
 #define CAVM_MIO_PTP_EXT_SEL_E_QLM_REFX_F95O(a) (0x38 + (a))
 #define CAVM_MIO_PTP_EXT_SEL_E_QLM_REFX_LOKI(a) (0x38 + (a))
+#define CAVM_MIO_PTP_EXT_SEL_E_RSVD1 (2)
 
 /**
  * Enumeration mio_ptp_int_vec_e

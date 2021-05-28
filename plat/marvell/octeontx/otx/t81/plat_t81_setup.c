@@ -14,6 +14,7 @@
 
 /* This file map memory for different blocks so it needs all csrs definitions */
 #include "cavm-csrs.h"
+#include "cavm-csrs-sli.h"
 
 /*
  * SATA to GSER mapping
