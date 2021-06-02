@@ -3718,7 +3718,6 @@ static void qlm_gserc_cmu_cfg(int module, qlm_mode_flags_t flags, int update_tx,
 				c.s.ena_8b10b = ena_8b10b);
 
 #if defined(IMAGE_BL31)
-#if defined(PLAT_loki)
 		if (state.s.mode == QLM_MODE_CPRI)
 		{
 			if (((flags >> 3) & 0x1) ||
@@ -3739,7 +3738,6 @@ static void qlm_gserc_cmu_cfg(int module, qlm_mode_flags_t flags, int update_tx,
 				qlm_gserc_rx_leq_adaptation(module, lane, 1, 9, 0xa, 0, 0, 3);
 			}
 		}
-#endif
 #endif
 	}
 
@@ -4716,7 +4714,6 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 			}
 
 #if defined(IMAGE_BL31)
-#if defined(PLAT_loki)
 			/* Fixed to Fixed: CPRI disable DFE/LEQ adaptation
 			 * if requested
 			 */
@@ -4745,7 +4742,6 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 					}
 				}
 			}
-#endif
 #endif
 			/* Fixed to Fixed: Update Tx equalization setting
 			 * before deasserting lane reset
@@ -4809,7 +4805,6 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 	}
 
 #if defined(IMAGE_BL31)
-#if defined(PLAT_loki)
 	/* AN to Fixed: CPRI disable DFE/LEQ adaptation
 	 * if requested
 	 */
@@ -4842,7 +4837,6 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 			}
 		}
 	}
-#endif
 #endif
 
 	/* AN to Fixed: Update Tx equalization setting
