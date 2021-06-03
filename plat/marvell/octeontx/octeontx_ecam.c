@@ -412,6 +412,7 @@ struct ecam_init_callback init_callbacks[] = {
 	{0xa00f, 0x177d, init_uaa},
 	{0xa017, 0x177d, init_gti},
 	{0xa020, 0x177d, init_pem},
+	{0xa06c, 0x177d, init_pem},
 	{0xa027, 0x177d, init_iobn},
 	{0xa06b, 0x177d, init_iobn},
 	{ECAM_INVALID_DEV_ID, 0, 0},	//no more callbacks
