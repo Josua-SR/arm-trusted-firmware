@@ -99,6 +99,14 @@
 #define CAVM_RFOE_RX_PKT_ERR_E_RE_TERMINATE (9)
 
 /**
+ * Enumeration rfoe_rx_pkt_logger_idx_e
+ *
+ * RFOE Packet Logger Index Enumeration
+ */
+#define CAVM_RFOE_RX_PKT_LOGGER_IDX_E_RX_PKT (0)
+#define CAVM_RFOE_RX_PKT_LOGGER_IDX_E_TX_PKT (1)
+
+/**
  * Enumeration rfoe_rx_pswt_e
  *
  * RFOE RX Packet Status Word Type Enumeration
@@ -2972,8 +2980,6 @@ static inline uint64_t CAVM_RFOEX_PKT_LOGGERX_ADDR(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1)))
         return 0x864100001020ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1)))
-        return 0x864100001020ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1)))
         return 0x864100001020ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("RFOEX_PKT_LOGGERX_ADDR", 2, a, b, 0, 0, 0, 0);
@@ -3140,8 +3146,6 @@ static inline uint64_t CAVM_RFOEX_PKT_LOGGERX_CFG(uint64_t a, uint64_t b)
 {
     if (cavm_is_model(OCTEONTX_F95MM) && ((a==0) && (b<=1)))
         return 0x864100001030ll + 0x1000000000ll * ((a) & 0x0) + 8ll * ((b) & 0x1);
-    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1)))
-        return 0x864100001030ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     if (cavm_is_model(OCTEONTX_LOKI) && ((a<=2) && (b<=1)))
         return 0x864100001030ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
     __cavm_csr_fatal("RFOEX_PKT_LOGGERX_CFG", 2, a, b, 0, 0, 0, 0);
@@ -8759,6 +8763,216 @@ static inline uint64_t CAVM_RFOEX_RX_PKT_LEN_CFGX(uint64_t a, uint64_t b)
 #define basename_CAVM_RFOEX_RX_PKT_LEN_CFGX(a,b) "RFOEX_RX_PKT_LEN_CFGX"
 #define busnum_CAVM_RFOEX_RX_PKT_LEN_CFGX(a,b) (a)
 #define arguments_CAVM_RFOEX_RX_PKT_LEN_CFGX(a,b) (a),(b),-1,-1
+
+/**
+ * Register (NCB) rfoe#_rx_pkt_logger#_addr
+ *
+ * RFOE RX Packet Logger Buffer Address Register
+ * Defines start address for packet logger circular buffer.
+ * Index {b} enumerated by RFOE_RX_PKT_LOGGER_IDX_E
+ */
+union cavm_rfoex_rx_pkt_loggerx_addr
+{
+    uint64_t u;
+    struct cavm_rfoex_rx_pkt_loggerx_addr_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_53_63        : 11;
+        uint64_t start_addr            : 53; /**< [ 52:  0](R/W) Specifies the byte address of the start of the write DMA.
+                                                                 * If RFOE()_RX_PKT_LOGGER()_CFG[TARGET_MEM] = 0, the address  must be
+                                                                 128-bit aligned (i.e., bits[3:0] must be 0).
+                                                                 * If RFOE()_RX_PKT_LOGGER()_CFG[TARGET_MEM] = 1, the address  must be
+                                                                 128-byte aligned (i.e., bits[6:0] must be 0). */
+#else /* Word 0 - Little Endian */
+        uint64_t start_addr            : 53; /**< [ 52:  0](R/W) Specifies the byte address of the start of the write DMA.
+                                                                 * If RFOE()_RX_PKT_LOGGER()_CFG[TARGET_MEM] = 0, the address  must be
+                                                                 128-bit aligned (i.e., bits[3:0] must be 0).
+                                                                 * If RFOE()_RX_PKT_LOGGER()_CFG[TARGET_MEM] = 1, the address  must be
+                                                                 128-byte aligned (i.e., bits[6:0] must be 0). */
+        uint64_t reserved_53_63        : 11;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_rx_pkt_loggerx_addr_s cn; */
+};
+typedef union cavm_rfoex_rx_pkt_loggerx_addr cavm_rfoex_rx_pkt_loggerx_addr_t;
+
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(uint64_t a, uint64_t b)
+{
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1)))
+        return 0x864100001020ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
+    __cavm_csr_fatal("RFOEX_RX_PKT_LOGGERX_ADDR", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(a,b) cavm_rfoex_rx_pkt_loggerx_addr_t
+#define bustype_CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(a,b) CSR_TYPE_NCB
+#define basename_CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(a,b) "RFOEX_RX_PKT_LOGGERX_ADDR"
+#define busnum_CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(a,b) (a)
+#define arguments_CAVM_RFOEX_RX_PKT_LOGGERX_ADDR(a,b) (a),(b),-1,-1
+
+/**
+ * Register (NCB) rfoe#_rx_pkt_logger#_cfg
+ *
+ * RFOE RX Packet Logger Buffer Configuration  Register
+ * Defines configuration for packet logger circular buffer.
+ * Index {b} enumerated by RFOE_RX_PKT_LOGGER_IDX_E
+ */
+union cavm_rfoex_rx_pkt_loggerx_cfg
+{
+    uint64_t u;
+    struct cavm_rfoex_rx_pkt_loggerx_cfg_s
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t target_mem            : 1;  /**< [ 63: 63](R/W) Specifies the target memory for the log buffer.
+                                                                 0 = SMEM.
+                                                                 1 = LLC/DRAM. */
+        uint64_t reserved_62           : 1;
+        uint64_t cmd_type              : 2;  /**< [ 61: 60](R/W) Command type for LLC/DRAM write, as enumerated by MHBW_PNB_WR_CMD_E.
+
+                                                                 Note:
+                                                                 * Writes to BPHY SMEM ignore this field.
+                                                                 * Unaligned or partial cacheline writes always use MHBW_PNB_WR_CMD_E::STP.
+
+                                                                 Internal:
+                                                                 Notes:
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for unaligned cache line
+                                                                 starts. All transfers for this burst will be STP.
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for the last transfer in a burst if unaligned. */
+        uint64_t reserved_59           : 1;
+        uint64_t dswap                 : 3;  /**< [ 58: 56](R/W) The byte swap mode for DMA to LLC/DRAM. Enumerated in MHBW_PNB_DSWAP_E.
+                                                                 DMA to BPHY SMEM ignores this field. */
+        uint64_t reserved_53_55        : 3;
+        uint64_t tail_idx              : 17; /**< [ 52: 36](RO/H) Index for the next logger status write, in units of 16 bytes.
+                                                                 * Newest logger entry is at ([TAIL_IDX]-1) mod [SIZE].
+                                                                 * Address in memory is RFOE()_RX_PKT_LOGGER()_ADDR +
+                                                                 (([TAIL_IDX]-1) mod [SIZE])*16 bytes.
+                                                                 * Newest is not valid after reset since nothing has been written to packet logger in memory. */
+        uint64_t reserved_35           : 1;
+        uint64_t flush_done            : 1;  /**< [ 34: 34](RO/H) Cleared on a write to[FLUSH]=1.  Set when the
+                                                                 packet logger buffer has been flushed to memory.
+                                                                 * Indicates that all logger write requests have been issued from RFOE.
+                                                                 * Does not guarantee return of all commits. */
+        uint64_t flush                 : 1;  /**< [ 33: 33](R/W/H) On a write with [FLUSH]=1, hardware flushes the internal packet log FIFO to
+                                                                 memory. Hardware clears when flush operation completes as indicated by
+                                                                 [FLUSH_DONE] == 1. */
+        uint64_t enable                : 1;  /**< [ 32: 32](R/W) Enable receive packet logging.
+                                                                 0 = Disabled.
+                                                                 1 = Enable packet logging.
+
+                                                                 When enabled, each RoE subtype 0xFD packet with EOS set generates a log
+                                                                 entry. All other packets generate a log entry for each packet.
+
+                                                                 Logger entries for packets already started will be completed and written
+                                                                 normally.  If a flush is desired,
+                                                                 write [FLUSH] = 1 to force all waiting entries to memory.
+
+                                                                 Software should only change logger configuration when logger is idle, logger
+                                                                 FIFO empty (ie. flushed) and [ENABLE] = 0.
+
+                                                                 Ignored for the TX packet logger ({b} = RFOE_RX_PKT_LOGGER_IDX_E::TX_PKT).
+                                                                 The TX packet logger is enabled by RFOE()_TX_LMAC_CFG()[TX_PKT_LOG_EN]. */
+        uint64_t ddr_wait_cycles       : 12; /**< [ 31: 20](R/W) Used when [TARGET_MEM]=1.  No action when [TARGET_MEM]=0.
+                                                                 Maximum time for coalescing log writes to LLC/DRAM. Up to 128 bytes of
+                                                                 log entries are coalesced before writing to LLC/DRAM. After
+                                                                 [DDR_WAIT_CYCLES]*16 cycles with no new log entries, any buffered
+                                                                 entries are written to memory.
+
+                                                                 The reset value of 0x80 results in a time of 2 us when BCLK is 1 GHz.
+
+                                                                 Setting [DDR_WAIT_CYCLES]=0 disables the timer, and the logger will
+                                                                 wait indefinitely to collect 128 bytes of log entries before writing
+                                                                 to LLC/DRAM.
+
+                                                                 Ignored when [TARGET_MEM]=0. */
+        uint64_t reserved_17_19        : 3;
+        uint64_t size                  : 17; /**< [ 16:  0](R/W) Total size of the log buffer in units of 128 bits. Must have [SIZE] \> 0.
+                                                                 If RFOE()_RX_PKT_LOGGER()_CFG[TARGET_MEM]=1, [SIZE] must be a multiple
+                                                                 of 8 (i.e., the size must be a multiple of 128 bytes). */
+#else /* Word 0 - Little Endian */
+        uint64_t size                  : 17; /**< [ 16:  0](R/W) Total size of the log buffer in units of 128 bits. Must have [SIZE] \> 0.
+                                                                 If RFOE()_RX_PKT_LOGGER()_CFG[TARGET_MEM]=1, [SIZE] must be a multiple
+                                                                 of 8 (i.e., the size must be a multiple of 128 bytes). */
+        uint64_t reserved_17_19        : 3;
+        uint64_t ddr_wait_cycles       : 12; /**< [ 31: 20](R/W) Used when [TARGET_MEM]=1.  No action when [TARGET_MEM]=0.
+                                                                 Maximum time for coalescing log writes to LLC/DRAM. Up to 128 bytes of
+                                                                 log entries are coalesced before writing to LLC/DRAM. After
+                                                                 [DDR_WAIT_CYCLES]*16 cycles with no new log entries, any buffered
+                                                                 entries are written to memory.
+
+                                                                 The reset value of 0x80 results in a time of 2 us when BCLK is 1 GHz.
+
+                                                                 Setting [DDR_WAIT_CYCLES]=0 disables the timer, and the logger will
+                                                                 wait indefinitely to collect 128 bytes of log entries before writing
+                                                                 to LLC/DRAM.
+
+                                                                 Ignored when [TARGET_MEM]=0. */
+        uint64_t enable                : 1;  /**< [ 32: 32](R/W) Enable receive packet logging.
+                                                                 0 = Disabled.
+                                                                 1 = Enable packet logging.
+
+                                                                 When enabled, each RoE subtype 0xFD packet with EOS set generates a log
+                                                                 entry. All other packets generate a log entry for each packet.
+
+                                                                 Logger entries for packets already started will be completed and written
+                                                                 normally.  If a flush is desired,
+                                                                 write [FLUSH] = 1 to force all waiting entries to memory.
+
+                                                                 Software should only change logger configuration when logger is idle, logger
+                                                                 FIFO empty (ie. flushed) and [ENABLE] = 0.
+
+                                                                 Ignored for the TX packet logger ({b} = RFOE_RX_PKT_LOGGER_IDX_E::TX_PKT).
+                                                                 The TX packet logger is enabled by RFOE()_TX_LMAC_CFG()[TX_PKT_LOG_EN]. */
+        uint64_t flush                 : 1;  /**< [ 33: 33](R/W/H) On a write with [FLUSH]=1, hardware flushes the internal packet log FIFO to
+                                                                 memory. Hardware clears when flush operation completes as indicated by
+                                                                 [FLUSH_DONE] == 1. */
+        uint64_t flush_done            : 1;  /**< [ 34: 34](RO/H) Cleared on a write to[FLUSH]=1.  Set when the
+                                                                 packet logger buffer has been flushed to memory.
+                                                                 * Indicates that all logger write requests have been issued from RFOE.
+                                                                 * Does not guarantee return of all commits. */
+        uint64_t reserved_35           : 1;
+        uint64_t tail_idx              : 17; /**< [ 52: 36](RO/H) Index for the next logger status write, in units of 16 bytes.
+                                                                 * Newest logger entry is at ([TAIL_IDX]-1) mod [SIZE].
+                                                                 * Address in memory is RFOE()_RX_PKT_LOGGER()_ADDR +
+                                                                 (([TAIL_IDX]-1) mod [SIZE])*16 bytes.
+                                                                 * Newest is not valid after reset since nothing has been written to packet logger in memory. */
+        uint64_t reserved_53_55        : 3;
+        uint64_t dswap                 : 3;  /**< [ 58: 56](R/W) The byte swap mode for DMA to LLC/DRAM. Enumerated in MHBW_PNB_DSWAP_E.
+                                                                 DMA to BPHY SMEM ignores this field. */
+        uint64_t reserved_59           : 1;
+        uint64_t cmd_type              : 2;  /**< [ 61: 60](R/W) Command type for LLC/DRAM write, as enumerated by MHBW_PNB_WR_CMD_E.
+
+                                                                 Note:
+                                                                 * Writes to BPHY SMEM ignore this field.
+                                                                 * Unaligned or partial cacheline writes always use MHBW_PNB_WR_CMD_E::STP.
+
+                                                                 Internal:
+                                                                 Notes:
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for unaligned cache line
+                                                                 starts. All transfers for this burst will be STP.
+                                                                 *BPHY DDR Hardware DMA replaces this field with STP for the last transfer in a burst if unaligned. */
+        uint64_t reserved_62           : 1;
+        uint64_t target_mem            : 1;  /**< [ 63: 63](R/W) Specifies the target memory for the log buffer.
+                                                                 0 = SMEM.
+                                                                 1 = LLC/DRAM. */
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_rfoex_rx_pkt_loggerx_cfg_s cn; */
+};
+typedef union cavm_rfoex_rx_pkt_loggerx_cfg cavm_rfoex_rx_pkt_loggerx_cfg_t;
+
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_CFG(uint64_t a, uint64_t b) __attribute__ ((pure, always_inline));
+static inline uint64_t CAVM_RFOEX_RX_PKT_LOGGERX_CFG(uint64_t a, uint64_t b)
+{
+    if (cavm_is_model(OCTEONTX_F95O) && ((a<=2) && (b<=1)))
+        return 0x864100001030ll + 0x1000000000ll * ((a) & 0x3) + 8ll * ((b) & 0x1);
+    __cavm_csr_fatal("RFOEX_RX_PKT_LOGGERX_CFG", 2, a, b, 0, 0, 0, 0);
+}
+
+#define typedef_CAVM_RFOEX_RX_PKT_LOGGERX_CFG(a,b) cavm_rfoex_rx_pkt_loggerx_cfg_t
+#define bustype_CAVM_RFOEX_RX_PKT_LOGGERX_CFG(a,b) CSR_TYPE_NCB
+#define basename_CAVM_RFOEX_RX_PKT_LOGGERX_CFG(a,b) "RFOEX_RX_PKT_LOGGERX_CFG"
+#define busnum_CAVM_RFOEX_RX_PKT_LOGGERX_CFG(a,b) (a)
+#define arguments_CAVM_RFOEX_RX_PKT_LOGGERX_CFG(a,b) (a),(b),-1,-1
 
 /**
  * Register (RSL) rfoe#_rx_pkt_logger_addr
