@@ -4241,6 +4241,29 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 		GSER_TRACE(QLM, "GSERC%d.%d: Setting Lane Reset\n", module, lane);
 	}
 
+	/* Check for HFG data-based configuration */
+	for (int lane = 0; lane < num_lanes; lane++)
+	{
+		if (!(lane_mask & (1 << lane)))
+			continue;
+		/* Get settings from the device tree */
+		qlm_state_lane_t qlm_state = qlm_gserc_get_state(module, lane);
+		const char *smode = qlm_mode_to_cfg_str(qlm_state.s.mode);
+		int qlm = map_module_to_qlm(module);
+		int rx_hfg = gser_config_get_int(GSER_CONFIG_QLM_RX_HFG, smode, qlm_state.s.baud_mhz, qlm, lane);
+
+		if (rx_hfg == 1) {
+			GSER_TRACE(QLM, "GSERC%d.%d: Setting RX HFG adaptation to data-based\n", module, lane);
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_SPARE_CFG0_RSVD(module, lane),
+					c.s.data |= 0x80);
+		} else {
+			GSER_TRACE(QLM, "GSERC%d.%d: Setting RX HFG adaptation to edge-based\n", module, lane);
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_SPARE_CFG0_RSVD(module, lane),
+					c.s.data &= (0x80 - 1));
+		}
+		gser_wait_usec(REG_STABIL_LONG_US);
+	}
+
 	/* AN to Fixed Mode Step 2: Disable Link training */
 	if (prev_state_an && !req_state_an)
 	{

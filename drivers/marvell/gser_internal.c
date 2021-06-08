@@ -188,6 +188,59 @@ static int gser_config_get_qlm_tuning(int prop, const char *mode, int baud_mhz,
 	return strtol(buf, NULL, 16);
 }
 
+static int gser_config_get_qlm_rx_hfg(int prop, const char *mode, int baud_mhz,
+	int qlm, int lane)
+{
+	char name[64];
+	const char *buf;
+	const void *fdt = fdt_ptr;
+	int offset, rc, len;
+
+	rc = fdt_check_header(fdt);
+	if (rc) {
+		WARN("Invalid device tree\n");
+		return -1;
+	}
+
+	offset = fdt_path_offset(fdt, "/cavium,bdk");
+	if (offset < 0) {
+		WARN("FDT node not found\n");
+		return -1;
+	}
+
+
+	snprintf(name, sizeof(name), "QLM-RX-HFG.%s.%d.N0.QLM%d.LANE%d",
+		mode, baud_mhz, qlm, lane);
+	buf = fdt_getprop(fdt, offset, name, &len);
+	if (!buf) {
+		snprintf(name, sizeof(name), "QLM-RX-HFG.%s.%d.N0.QLM%d",
+			 mode, baud_mhz, qlm);
+		buf = fdt_getprop(fdt, offset, name, &len);
+		if (!buf) {
+			snprintf(name, sizeof(name), "QLM-RX-HFG.%s.%d.N0",
+				 mode, baud_mhz);
+			buf = fdt_getprop(fdt, offset, name, &len);
+			if (!buf) {
+				snprintf(name, sizeof(name), "QLM-RX-HFG.%s.%d",
+					 mode, baud_mhz);
+				buf = fdt_getprop(fdt, offset, name, &len);
+				if (!buf) {
+					snprintf(name, sizeof(name), "QLM-RX-HFG.%s",
+						 mode);
+					buf = fdt_getprop(fdt, offset, name, &len);
+					if (!buf) {
+						snprintf(name, sizeof(name), "QLM-RX-HFG");
+						buf = fdt_getprop(fdt, offset, name, &len);
+						debug_gser("No %s option is set in BDK DT\n", name);
+						return -1;
+					}
+				}
+			}
+		}
+	}
+	return strtol(buf, NULL, 16);
+}
+
 static int gser_get_lane_config(int prop, int qlm, int lane)
 {
 	switch (prop) {
@@ -237,6 +290,14 @@ int gser_config_get_int(int prop, ...)
 		qlm = va_arg(vl, int);
 		lane = va_arg(vl, int);
 		ret = gser_config_get_qlm_tuning(
+			prop, mode, baud_mhz, qlm, lane);
+		break;
+	case GSER_CONFIG_QLM_RX_HFG:
+		mode = va_arg(vl, char*);
+		baud_mhz = va_arg(vl, int);
+		qlm = va_arg(vl, int);
+		lane = va_arg(vl, int);
+		ret = gser_config_get_qlm_rx_hfg(
 			prop, mode, baud_mhz, qlm, lane);
 		break;
 	case GSER_CONFIG_QLM_VOLTAGE:
