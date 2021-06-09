@@ -151,7 +151,7 @@ static int cgx_link_training_tracing(int cgx_id, int lmac_id)
 /*
  * Called whenever CGX needs to enable or disable the SERDES transmitter
  */
-static int cgx_serdes_tx_control(int cgx_id, int lmac_id, bool enable_tx)
+int cgx_serdes_tx_control(int cgx_id, int lmac_id, bool enable_tx)
 {
 	int qlm, gserx, lane, num_lanes;
 	uint64_t lane_mask;
@@ -3091,9 +3091,6 @@ int cgx_xaui_set_link_up(int cgx_id, int lmac_id, cgx_lmac_context_t *lmac_ctx)
 	debug_cgx("%s: %d:%d mode %d AN enable %d training %d\n",
 			__func__, cgx_id, lmac_id, lmac->mode,
 			!lmac->autoneg_dis, lmac->use_training);
-
-	/* Enable SERDES transmitter */
-	cgx_serdes_tx_control(cgx_id, lmac_id, true);
 
 	/* Don't try to bring link UP
 	 * if PRBS is enabled on any LMAC lanes
