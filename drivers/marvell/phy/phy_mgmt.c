@@ -143,7 +143,7 @@ int phy_set_mod_type(int cgx_id, int lmac_id, phy_mod_type mod_type)
 		case QLM_MODE_50GAUI_2_C2C:
 		case QLM_MODE_50GAUI_4_C2C:
 			phy->mod_type = PHY_MOD_TYPE_PAM4;
-			if (lmac->fec != CGX_FEC_RS) {
+			if (lmac->line_fec != CGX_FEC_RS) {
 				WARN("%s: %d:%d Setting FEC to RS because PAM4 requires it.\n",
 				     __func__, cgx_id, lmac_id);
 				cgx_set_fec_type(cgx_id, lmac_id, CGX_FEC_RS);
