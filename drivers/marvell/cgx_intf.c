@@ -371,7 +371,7 @@ static int cgx_link_bringup(int cgx_id, int lmac_id)
 	link_state_t link;
 	int phy_fail_count = 0;
 	uint64_t rx_sig_timeout, eth_link_timeout, initial_time;
-	uint64_t lp_link_timeout = 0;
+	uint64_t lp_link_timeout = 0, rx_link_time = 0;
 	uint64_t an_lt_timeout, total_link_timeout, current_time;
 	bool signal_detect = 0, timeout_init_complete = 0;
 
@@ -663,8 +663,14 @@ retry_link:
 				}
 			} else {
 				lmac_ctx->s.rx_link_up = 1;
+				signal_detect = 1;
+				rx_link_time =  gser_clock_get_count(GSER_CLOCK_TIME);
+				debug_cgx_intf("%s: %d:%d Rx Link Up Time:%lld ms\n",
+					       __func__, cgx_id, lmac_id,
+					       ((rx_link_time - initial_time) *
+						1000 / gser_clock_get_rate(GSER_CLOCK_TIME)));
 				/* Allow link partner to take more time to complete Rx init */
-				lp_link_timeout = gser_clock_get_count(GSER_CLOCK_TIME) +
+				lp_link_timeout = rx_link_time +
 					CGX_LINK_PARTNER_FAIL_TIMEOUT_MS *
 					gser_clock_get_rate(GSER_CLOCK_TIME)/1000;
 			}
@@ -697,6 +703,15 @@ retry_link:
 			/* SUCCESS case : update the link status and indicate
 			 * poll timer to start polling for link
 			 */
+			current_time = gser_clock_get_count(GSER_CLOCK_TIME);
+			debug_cgx_intf("%s: %d:%d Remote Fault Clear Time:%lld ms\n",
+				       __func__, cgx_id, lmac_id,
+				       ((current_time - rx_link_time) *
+					1000 / gser_clock_get_rate(GSER_CLOCK_TIME)));
+			debug_cgx_intf("%s: %d:%d Total Link Up Time:%lld ms\n",
+				       __func__, cgx_id, lmac_id,
+				       ((current_time - initial_time) *
+					1000 / gser_clock_get_rate(GSER_CLOCK_TIME)));
 			lmac_ctx->s.link_up = link.s.link_up;
 			lmac_ctx->s.full_duplex = link.s.full_duplex;
 			lmac_ctx->s.speed = link.s.speed;
