@@ -993,7 +993,7 @@ static int cgx_set_phy_mod_type(int cgx_id, int lmac_id, int phy_mod_type)
 	return 0;
 }
 
-#if defined(PLAT_loki) || defined(PLAT_f95o)
+#if defined(PLAT_loki)
 static void cgx_obtain_lmac_index(int gserc_idx, int lane_idx, int *cgx_idx, int *lmac_idx)
 {
 	cgx_config_t *cgx;
@@ -2158,7 +2158,7 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 			case CGX_CMD_SET_PTP_MODE:
 				ret = cgx_set_ptp_mode(cgx_id, lmac_id, enable);
 			break;
-#if defined(PLAT_loki) || defined(PLAT_f95o)
+#if defined(PLAT_loki)
 			case CGX_CMD_CPRI_MODE_CHANGE:
 				/* CGX and LMAC index can be passed as any
 				 * valid CGX (other than CGX0 mapped to NIX
