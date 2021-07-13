@@ -9962,16 +9962,18 @@ union cavm_gsercx_common_phy_ctrl_bcfg
         uint64_t reserved_19           : 1;
         uint64_t cm0_rst               : 1;  /**< [ 18: 18](R/W) CMU reset, active high. */
         uint64_t phy_ctrl_rate2        : 6;  /**< [ 17: 12](R/W) Phy configuration for rate 2.
-                                                                   CPRI Rates:
-                                                                   0x11 = 6.144 Gbps.
-                                                                   0x12 = 9.8304 Gbps.
                                                                    Ethernet Rates:
                                                                    0x23 = 10.3125 Gbps (Default).
                                                                    0x24 = 10.20 Gbps (At-speed scan mode).
                                                                    0x26 = 8.5 Gbps.
                                                                    0x28 = 6.25 Gbps.
                                                                    0x2A = 5 Gbps.
-                                                                   _ Others = Reserved. */
+                                                                   _ Others = Reserved.
+
+                                                                 Internal:
+                                                                 CPRI Rates:
+                                                                 0x11 = 6.144 Gbps.
+                                                                 0x12 = 9.8304 Gbps. */
         uint64_t phy_ctrl_rate1        : 6;  /**< [ 11:  6](R/W) Phy configuration for rate 1.
                                                                    Ethernet Rates:
                                                                    0x00 = 30 Gbps.
@@ -9993,20 +9995,24 @@ union cavm_gsercx_common_phy_ctrl_bcfg
         uint64_t phy_ctrl_refclk       : 5;  /**< [  5:  1](R/W) Phy configuration for the ref clock frequency:
                                                                    0x0A = 212.5 MHz.
                                                                    0x0E = 156.25 MHz Ethernet (Default).
-                                                                   0x15 = 245.76 MHz.
-                                                                   0x14 = 122.88 MHz CPRI.
                                                                    Ox13 = 200 MHz.
-                                                                   _ Others = Reserved. */
+                                                                   _ Others = Reserved.
+
+                                                                 Internal:
+                                                                 0x15 = 245.76 MHz.
+                                                                 0x14 = 122.88 MHz CPRI. */
         uint64_t por                   : 1;  /**< [  0:  0](R/W) Power on reset signal, active high. */
 #else /* Word 0 - Little Endian */
         uint64_t por                   : 1;  /**< [  0:  0](R/W) Power on reset signal, active high. */
         uint64_t phy_ctrl_refclk       : 5;  /**< [  5:  1](R/W) Phy configuration for the ref clock frequency:
                                                                    0x0A = 212.5 MHz.
                                                                    0x0E = 156.25 MHz Ethernet (Default).
-                                                                   0x15 = 245.76 MHz.
-                                                                   0x14 = 122.88 MHz CPRI.
                                                                    Ox13 = 200 MHz.
-                                                                   _ Others = Reserved. */
+                                                                   _ Others = Reserved.
+
+                                                                 Internal:
+                                                                 0x15 = 245.76 MHz.
+                                                                 0x14 = 122.88 MHz CPRI. */
         uint64_t phy_ctrl_rate1        : 6;  /**< [ 11:  6](R/W) Phy configuration for rate 1.
                                                                    Ethernet Rates:
                                                                    0x00 = 30 Gbps.
@@ -10026,16 +10032,18 @@ union cavm_gsercx_common_phy_ctrl_bcfg
                                                                    0x25 = 10 Gbps.
                                                                    _ Others = Reserved. */
         uint64_t phy_ctrl_rate2        : 6;  /**< [ 17: 12](R/W) Phy configuration for rate 2.
-                                                                   CPRI Rates:
-                                                                   0x11 = 6.144 Gbps.
-                                                                   0x12 = 9.8304 Gbps.
                                                                    Ethernet Rates:
                                                                    0x23 = 10.3125 Gbps (Default).
                                                                    0x24 = 10.20 Gbps (At-speed scan mode).
                                                                    0x26 = 8.5 Gbps.
                                                                    0x28 = 6.25 Gbps.
                                                                    0x2A = 5 Gbps.
-                                                                   _ Others = Reserved. */
+                                                                   _ Others = Reserved.
+
+                                                                 Internal:
+                                                                 CPRI Rates:
+                                                                 0x11 = 6.144 Gbps.
+                                                                 0x12 = 9.8304 Gbps. */
         uint64_t cm0_rst               : 1;  /**< [ 18: 18](R/W) CMU reset, active high. */
         uint64_t reserved_19           : 1;
         uint64_t cm0_pd                : 2;  /**< [ 21: 20](R/W) CMU macro power down control:
@@ -10855,6 +10863,386 @@ union cavm_gsercx_lanex_control_bcfg
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_48_63        : 16;
+        uint64_t cpri_txclk_bist_ovrd  : 2;  /**< [ 47: 46](R/W) Reserved.
+                                                                 Internal:
+                                                                 Overrides the CPRI TXCLK MUX:
+                                                                   0x0 = Standard operation.
+                                                                   0x1 = Select div2 txclk.
+                                                                   0x2 = Reserved.
+                                                                   0x3 = Select div4 txclk. */
+        uint64_t rx_bitstrip_mode      : 1;  /**< [ 45: 45](R/W) Selects the bitstrip div mode.
+                                                                   0x0 = Div 2 bitstripping.
+                                                                   0x1 = Div 4 bitstripping. */
+        uint64_t cfg_cpri              : 1;  /**< [ 44: 44](R/W) Reserved.
+                                                                 Internal:
+                                                                 Select for the lane tx clock and data muxes:
+                                                                   0x0 = Ethernet ln_txclk and ln_txdata.
+                                                                   0x1 = CPRI ln_txclk and ln_txdata. */
+        uint64_t rx_bitstrip_cfg       : 1;  /**< [ 43: 43](R/W) Reserved.
+                                                                 Internal:
+                                                                 Configures the sampling position for the div 4 bit stripping logic at the 2.4576Gbps CPRI rate:
+                                                                   0x0 = 135 degree sample.
+                                                                   0x1 = 225 degree sample. */
+        uint64_t rx_bitstrip_en        : 1;  /**< [ 42: 42](R/W) Reserved.
+                                                                 Internal:
+                                                                 Enables the bit stripping logic used in the 2.4576Gbps CPRI rate.  Clear to a 0
+                                                                 to reset the bit strip
+                                                                 pattern lock FSM. */
+        uint64_t rx_wpk_order          : 1;  /**< [ 41: 41](R/W) Receiver word packing order. Used when the GSERC()_LANE()_CONTROL_BCFG[LN_CTRL_RX_WIDTH]
+                                                                 is set to 0x3 to configure the GSERC PHY to 20-bit receive path data width
+                                                                 for the 10.3125Gbuad and lower Ethernet data rates.
+                                                                 When [RX_WPK_ORDER] is set to 1 the first (earliest) 20-bit word received from the GSERC PHY
+                                                                 is packed into the lower 20-bit word position of the 40-bit word and the second (later)
+                                                                 20-bit word received is packed into the upper 20-bit word position of the 40-bit word.
+                                                                 When [RX_WPK_ORDER] is cleared to 0 the 20-bit word packing order within the 40-bit word
+                                                                 is swapped. Set [RX_WUP_ORDER] to 1 for normal Ethernet receive data to the CGX Ethernet MAC.
+                                                                 For diagnostic use only. */
+        uint64_t tx_wup_order          : 1;  /**< [ 40: 40](RAZ) Reserved.
+                                                                 Internal:
+                                                                 40b20b gearbox deprecated. */
+        uint64_t rx_wpk_20b40b         : 1;  /**< [ 39: 39](RAZ) Reserved.
+                                                                 Internal:
+                                                                 This field deprecated.
+                                                                 The Rx word packing 20-bit to 40-bit gearbox is enabled in hardware when
+                                                                 GSERC()_LANE()_CONTROL_BCFG[LN_CTRL_RX_WIDTH] is set to 0x3 to configure the
+                                                                 PHY for 20 bit receive data width. When
+                                                                 GSERC()_LANE()_CONTROL_BCFG[LN_CTRL_RX_WIDTH] is set to 0x5 40-bit (or any other Rx
+                                                                 lane width other than 16-bit width) the gearbox is bypassed. */
+        uint64_t tx_wup_40b20b         : 1;  /**< [ 38: 38](RAZ) Reserved.
+                                                                 Internal:
+                                                                 40b20b gearbox deprecated. */
+        uint64_t reverse_rx_bit_order  : 1;  /**< [ 37: 37](R/W) When set to 1, reverses the bit order in the 40-bit receive word
+                                                                 from the GSERC PHY to the CGX MAC. This control must be set to 1
+                                                                 for normal Ethernet receive data.
+                                                                 For diagnostic use only. */
+        uint64_t reverse_tx_bit_order  : 1;  /**< [ 36: 36](R/W) When set to 1, reverses the bit order in the 40-bit transmit word
+                                                                 from the CGX MAC to the GSERC PHY. This control must be set to 1
+                                                                 for normal Ethernet transmit data.
+                                                                 For diagnostic use only. */
+        uint64_t cgx_quad              : 1;  /**< [ 35: 35](R/W) Reserved.
+                                                                 Internal:
+                                                                 Not used to bond DLMs into a quad lane link.  XAUI/DXAUI not support across DLMs. */
+        uint64_t cgx_dual              : 1;  /**< [ 34: 34](R/W) When set, indicates the DLM is in CGX dual aggregation mode. [CGX_DUAL] must only be
+                                                                 set when GSERC()_LANE()_CONTROL_BCFG[CFG_CGX] is set.
+
+                                                                 When [CGX_DUAL] is set, GSERC bundles transmitter lanes 0 and 1 for one CGX controller to
+                                                                 minimize the transmitter lane-to-lane skew. [CGX_DUAL] must only be set for the RXAUI
+                                                                 protocol. */
+        uint64_t cfg_cgx               : 1;  /**< [ 33: 33](R/W) Enables SCLK to the CGX TX and RX data path to CGX in Ethernet mode.
+                                                                 Internal:
+                                                                 For CPRI set CFG_CGX = 0. */
+        uint64_t reserved_32           : 1;
+        uint64_t ln_tx_clk_gate_en     : 1;  /**< [ 31: 31](R/W) When set to 0 disables the ln_tx_clk clock from the ln_tx_clk clock mux.
+                                                                 Use to disable the ln_tx_clk for power savings.
+                                                                 For normal operation set [LN_TX_CLK_GATE_EN] to 1. */
+        uint64_t tx_clk_mux_sel        : 5;  /**< [ 30: 26](R/W) Selects the clock source for ln_tx_clk input:
+                                                                   0x0 = 25G, 50G, and 100G data rates. Also for
+                                                                         10G, 40G data rates if GSERC()_PHY_CTRL_BCFG[PHY_CTRL_RATE1] is
+                                                                         configured for the 10.3125Gbps data rate.
+                                                                   0x1 = 10G, 40G data rates if GSERC()_PHY_CTRL_BCFG[PHY_CTRL_RATE2] is
+                                                                         configured for the 10.3125Gbps data rate.
+                                                                         Also for RXAUI, DXAUI, and QSGMII data rates.
+                                                                   0x4 = XAUI data rate.
+                                                                   0x6 = SGMII data rate
+                                                                   All other selections reserved.
+
+                                                                 Internal:
+                                                                 Selects the clock source for ln_tx_clk input:
+                                                                   0x0 = cm0_clk_rate1 for the 25G, 50G, and 100G data rates
+                                                                         and for 10G, 40G data rates if GSERC()_PHY_CTRL_BCFG[PHY_CTRL_RATE1] is
+                                                                         configured for the 10.3125Gbps data rate.
+                                                                   0x1 = cm0_clk_rate2 for 10G,40G data rates if GSERC()_PHY_CTRL_BCFG[PHY_CTRL_RATE2] is
+                                                                         configured for the 10.3125Gbps lane data rate.
+                                                                         Also programmed for RXAUI, DXAUI, and QSGMII data rates.
+                                                                   0x4 = cm0_clk_rate2_divided_by_2 for XAUI data rate.
+                                                                   0x6 = cm0_clk_rate3 for SGMII data rate.
+                                                                   All other selections reserved. */
+        uint64_t reserved_25           : 1;
+        uint64_t ln_link_stat          : 5;  /**< [ 24: 20](R/W) Reserved.
+                                                                 Internal:
+                                                                 Link status that encodes the technology ability bit number (A0-A24) in
+                                                                 the base page:
+                                                                   0x0 = 1G_KX.
+                                                                   0x1 = Reserved.
+                                                                   0x2 = 10G_KR.
+                                                                   0x3 = 40G_KR4.
+                                                                   0x4 = 40G_CR4.
+                                                                   0x5 = 100G_CR10.
+                                                                   0x6 = 100G_KP4.
+                                                                   0x7 = 100G_KR4.
+                                                                   0x8 = 100G_CR4.
+                                                                   0x9 = Reserved.
+                                                                   0xA = 25G_GR.
+                                                                   0xB = 25G_KR.
+                                                                   0xC = 25G_CR.
+                                                                   0xD = 50G_KR2.
+                                                                   0xE = 50G_CR2. */
+        uint64_t ln_an_cfg             : 2;  /**< [ 19: 18](R/W) Reserved.
+                                                                 Internal:
+                                                                 Encodes the lane bonding and auto-negotiation configuration:
+                                                                   0x0 = Not auto-negotiation controlled, lane will be manually controlled via
+                                                                         LN_PD and LN_RST.
+                                                                   0x1 = Auto-negotiation controlled, but auto-negotiation is not run on the
+                                                                         lane (AN-slave lane).
+                                                                   0x2 = Auto-negotiation controlled, but auto-negotiation is run on the
+                                                                         lane (AN-master lane).
+                                                                   0x3 = Reserved. */
+        uint64_t ln_rate_chng          : 1;  /**< [ 17: 17](R/W) Rate change handshake signal.  Phy transitions to rates set in LN_CTRL_RX_RATE and
+                                                                 LN_CTRL_TX_RATE when asserted.  De-assertion indicates to the PHY that rate
+                                                                 configuration adjustments have been completed. */
+        uint64_t ln_ctrl_rxpolarity    : 1;  /**< [ 16: 16](R/W) RX data polarity inversion:
+                                                                   0x0 = No polarity inversion.
+                                                                   0x1 = Polarity inversion. */
+        uint64_t ln_ctrl_rx_width      : 3;  /**< [ 15: 13](R/W) RX data word width selector:
+                                                                   0x1 = 10 bit Reserved.
+                                                                   0x2 = 16 bit Reserved.
+                                                                   0x3 = 20 bit 40G,10G,DXAUI,RXAUI,XAUI,QSGMII,SGMII.
+                                                                   0x4 = 32 bit Reserved.
+                                                                   0x5 = 40 bit 25G,50G,100G data rates (Default).
+                                                                   Others = Reserved.
+
+                                                                 Internal:
+                                                                 For CPRI select 0x3 = 20 bit. */
+        uint64_t ln_ctrl_tx_width      : 3;  /**< [ 12: 10](R/W) TX data word width selector:
+                                                                   0x1 = 10 bit Reserved.
+                                                                   0x2 = 16 bit 40G,10G,DXAUI,RXAUI,XAUI,QSGMII,SGMII
+                                                                   0x3 = 20 bit Reserved.
+                                                                   0x4 = 32 bit 25G,50G,100G data rate (Default).
+                                                                   0x5 = 40 bit Reserved.
+                                                                   Others - Reserved.
+
+                                                                 Internal:
+                                                                 For CPRI select 0x3 = 20 bit. */
+        uint64_t ln_ctrl_rx_rate       : 3;  /**< [  9:  7](R/W) RX data rate selector:
+                                                                   0x0 = Rate 1 (PHY_CTRL_RATE1).
+                                                                   0x1 = Rate 2 (PHY_CTRL_RATE2).
+                                                                   0x2 = Rate 3 (Reserved for 1.25Gbps Ethernet).
+                                                                   0x4 = Divide-by-2 of Rate 1.
+                                                                   0x5 = Divide-by-2 of Rate 2.
+                                                                   0x6 = Divide-by-2 of Rate 3.
+                                                                   Others = Reserved.
+
+                                                                 Internal:
+                                                                 For CPRI select:
+                                                                 0x1 = Rate 2 for the 9.8304 Gbps, 6.144Gbps, and 2.4576Gbps rates.
+                                                                 0x5 = Divided-by-2 of Rate 2 for the 4.9152 Gbps, and 3.072 Gbps rates. */
+        uint64_t ln_ctrl_tx_rate       : 3;  /**< [  6:  4](R/W) TX data rate selector:
+                                                                   0x0 = Rate 1 (PHY_CTRL_RATE1).
+                                                                   0x1 = Rate 2 (PHY_CTRL_RATE2).
+                                                                   0x2 = Rate 3 (Reserved for 1.25Gbps Ethernet).
+                                                                   0x4 = Divide-by-2 of Rate 1.
+                                                                   0x5 = Divide-by-2 of Rate 2.
+                                                                   0x6 = Divide-by-2 of Rate 3.
+                                                                   Others = Reserved.
+
+                                                                 Internal:
+                                                                 For CPRI select:
+                                                                 0x1 = Rate 2 for all CPRI rates. */
+        uint64_t ln_ctrl_tx_en         : 1;  /**< [  3:  3](R/W) Transmit enable:
+                                                                   0x0 = Data on LN_TXDATA will not be transmitted, transmitter placed into
+                                                                         electrical idle.
+                                                                   0x1 = Data on the active bits, set by LN_CTRL_RX/TX_WIDTH, of LN_TXDATA
+                                                                         will be transmitted. */
+        uint64_t ln_pd                 : 2;  /**< [  2:  1](R/W) Lane macro power down control:
+                                                                   0x0 = Nomral/active.
+                                                                   0x1 = Partial power down.
+                                                                   0x2,0x3 = Most blocks powered down (Sleep mode). */
+        uint64_t ln_rst                : 1;  /**< [  0:  0](R/W) Lane reset control, active high. */
+#else /* Word 0 - Little Endian */
+        uint64_t ln_rst                : 1;  /**< [  0:  0](R/W) Lane reset control, active high. */
+        uint64_t ln_pd                 : 2;  /**< [  2:  1](R/W) Lane macro power down control:
+                                                                   0x0 = Nomral/active.
+                                                                   0x1 = Partial power down.
+                                                                   0x2,0x3 = Most blocks powered down (Sleep mode). */
+        uint64_t ln_ctrl_tx_en         : 1;  /**< [  3:  3](R/W) Transmit enable:
+                                                                   0x0 = Data on LN_TXDATA will not be transmitted, transmitter placed into
+                                                                         electrical idle.
+                                                                   0x1 = Data on the active bits, set by LN_CTRL_RX/TX_WIDTH, of LN_TXDATA
+                                                                         will be transmitted. */
+        uint64_t ln_ctrl_tx_rate       : 3;  /**< [  6:  4](R/W) TX data rate selector:
+                                                                   0x0 = Rate 1 (PHY_CTRL_RATE1).
+                                                                   0x1 = Rate 2 (PHY_CTRL_RATE2).
+                                                                   0x2 = Rate 3 (Reserved for 1.25Gbps Ethernet).
+                                                                   0x4 = Divide-by-2 of Rate 1.
+                                                                   0x5 = Divide-by-2 of Rate 2.
+                                                                   0x6 = Divide-by-2 of Rate 3.
+                                                                   Others = Reserved.
+
+                                                                 Internal:
+                                                                 For CPRI select:
+                                                                 0x1 = Rate 2 for all CPRI rates. */
+        uint64_t ln_ctrl_rx_rate       : 3;  /**< [  9:  7](R/W) RX data rate selector:
+                                                                   0x0 = Rate 1 (PHY_CTRL_RATE1).
+                                                                   0x1 = Rate 2 (PHY_CTRL_RATE2).
+                                                                   0x2 = Rate 3 (Reserved for 1.25Gbps Ethernet).
+                                                                   0x4 = Divide-by-2 of Rate 1.
+                                                                   0x5 = Divide-by-2 of Rate 2.
+                                                                   0x6 = Divide-by-2 of Rate 3.
+                                                                   Others = Reserved.
+
+                                                                 Internal:
+                                                                 For CPRI select:
+                                                                 0x1 = Rate 2 for the 9.8304 Gbps, 6.144Gbps, and 2.4576Gbps rates.
+                                                                 0x5 = Divided-by-2 of Rate 2 for the 4.9152 Gbps, and 3.072 Gbps rates. */
+        uint64_t ln_ctrl_tx_width      : 3;  /**< [ 12: 10](R/W) TX data word width selector:
+                                                                   0x1 = 10 bit Reserved.
+                                                                   0x2 = 16 bit 40G,10G,DXAUI,RXAUI,XAUI,QSGMII,SGMII
+                                                                   0x3 = 20 bit Reserved.
+                                                                   0x4 = 32 bit 25G,50G,100G data rate (Default).
+                                                                   0x5 = 40 bit Reserved.
+                                                                   Others - Reserved.
+
+                                                                 Internal:
+                                                                 For CPRI select 0x3 = 20 bit. */
+        uint64_t ln_ctrl_rx_width      : 3;  /**< [ 15: 13](R/W) RX data word width selector:
+                                                                   0x1 = 10 bit Reserved.
+                                                                   0x2 = 16 bit Reserved.
+                                                                   0x3 = 20 bit 40G,10G,DXAUI,RXAUI,XAUI,QSGMII,SGMII.
+                                                                   0x4 = 32 bit Reserved.
+                                                                   0x5 = 40 bit 25G,50G,100G data rates (Default).
+                                                                   Others = Reserved.
+
+                                                                 Internal:
+                                                                 For CPRI select 0x3 = 20 bit. */
+        uint64_t ln_ctrl_rxpolarity    : 1;  /**< [ 16: 16](R/W) RX data polarity inversion:
+                                                                   0x0 = No polarity inversion.
+                                                                   0x1 = Polarity inversion. */
+        uint64_t ln_rate_chng          : 1;  /**< [ 17: 17](R/W) Rate change handshake signal.  Phy transitions to rates set in LN_CTRL_RX_RATE and
+                                                                 LN_CTRL_TX_RATE when asserted.  De-assertion indicates to the PHY that rate
+                                                                 configuration adjustments have been completed. */
+        uint64_t ln_an_cfg             : 2;  /**< [ 19: 18](R/W) Reserved.
+                                                                 Internal:
+                                                                 Encodes the lane bonding and auto-negotiation configuration:
+                                                                   0x0 = Not auto-negotiation controlled, lane will be manually controlled via
+                                                                         LN_PD and LN_RST.
+                                                                   0x1 = Auto-negotiation controlled, but auto-negotiation is not run on the
+                                                                         lane (AN-slave lane).
+                                                                   0x2 = Auto-negotiation controlled, but auto-negotiation is run on the
+                                                                         lane (AN-master lane).
+                                                                   0x3 = Reserved. */
+        uint64_t ln_link_stat          : 5;  /**< [ 24: 20](R/W) Reserved.
+                                                                 Internal:
+                                                                 Link status that encodes the technology ability bit number (A0-A24) in
+                                                                 the base page:
+                                                                   0x0 = 1G_KX.
+                                                                   0x1 = Reserved.
+                                                                   0x2 = 10G_KR.
+                                                                   0x3 = 40G_KR4.
+                                                                   0x4 = 40G_CR4.
+                                                                   0x5 = 100G_CR10.
+                                                                   0x6 = 100G_KP4.
+                                                                   0x7 = 100G_KR4.
+                                                                   0x8 = 100G_CR4.
+                                                                   0x9 = Reserved.
+                                                                   0xA = 25G_GR.
+                                                                   0xB = 25G_KR.
+                                                                   0xC = 25G_CR.
+                                                                   0xD = 50G_KR2.
+                                                                   0xE = 50G_CR2. */
+        uint64_t reserved_25           : 1;
+        uint64_t tx_clk_mux_sel        : 5;  /**< [ 30: 26](R/W) Selects the clock source for ln_tx_clk input:
+                                                                   0x0 = 25G, 50G, and 100G data rates. Also for
+                                                                         10G, 40G data rates if GSERC()_PHY_CTRL_BCFG[PHY_CTRL_RATE1] is
+                                                                         configured for the 10.3125Gbps data rate.
+                                                                   0x1 = 10G, 40G data rates if GSERC()_PHY_CTRL_BCFG[PHY_CTRL_RATE2] is
+                                                                         configured for the 10.3125Gbps data rate.
+                                                                         Also for RXAUI, DXAUI, and QSGMII data rates.
+                                                                   0x4 = XAUI data rate.
+                                                                   0x6 = SGMII data rate
+                                                                   All other selections reserved.
+
+                                                                 Internal:
+                                                                 Selects the clock source for ln_tx_clk input:
+                                                                   0x0 = cm0_clk_rate1 for the 25G, 50G, and 100G data rates
+                                                                         and for 10G, 40G data rates if GSERC()_PHY_CTRL_BCFG[PHY_CTRL_RATE1] is
+                                                                         configured for the 10.3125Gbps data rate.
+                                                                   0x1 = cm0_clk_rate2 for 10G,40G data rates if GSERC()_PHY_CTRL_BCFG[PHY_CTRL_RATE2] is
+                                                                         configured for the 10.3125Gbps lane data rate.
+                                                                         Also programmed for RXAUI, DXAUI, and QSGMII data rates.
+                                                                   0x4 = cm0_clk_rate2_divided_by_2 for XAUI data rate.
+                                                                   0x6 = cm0_clk_rate3 for SGMII data rate.
+                                                                   All other selections reserved. */
+        uint64_t ln_tx_clk_gate_en     : 1;  /**< [ 31: 31](R/W) When set to 0 disables the ln_tx_clk clock from the ln_tx_clk clock mux.
+                                                                 Use to disable the ln_tx_clk for power savings.
+                                                                 For normal operation set [LN_TX_CLK_GATE_EN] to 1. */
+        uint64_t reserved_32           : 1;
+        uint64_t cfg_cgx               : 1;  /**< [ 33: 33](R/W) Enables SCLK to the CGX TX and RX data path to CGX in Ethernet mode.
+                                                                 Internal:
+                                                                 For CPRI set CFG_CGX = 0. */
+        uint64_t cgx_dual              : 1;  /**< [ 34: 34](R/W) When set, indicates the DLM is in CGX dual aggregation mode. [CGX_DUAL] must only be
+                                                                 set when GSERC()_LANE()_CONTROL_BCFG[CFG_CGX] is set.
+
+                                                                 When [CGX_DUAL] is set, GSERC bundles transmitter lanes 0 and 1 for one CGX controller to
+                                                                 minimize the transmitter lane-to-lane skew. [CGX_DUAL] must only be set for the RXAUI
+                                                                 protocol. */
+        uint64_t cgx_quad              : 1;  /**< [ 35: 35](R/W) Reserved.
+                                                                 Internal:
+                                                                 Not used to bond DLMs into a quad lane link.  XAUI/DXAUI not support across DLMs. */
+        uint64_t reverse_tx_bit_order  : 1;  /**< [ 36: 36](R/W) When set to 1, reverses the bit order in the 40-bit transmit word
+                                                                 from the CGX MAC to the GSERC PHY. This control must be set to 1
+                                                                 for normal Ethernet transmit data.
+                                                                 For diagnostic use only. */
+        uint64_t reverse_rx_bit_order  : 1;  /**< [ 37: 37](R/W) When set to 1, reverses the bit order in the 40-bit receive word
+                                                                 from the GSERC PHY to the CGX MAC. This control must be set to 1
+                                                                 for normal Ethernet receive data.
+                                                                 For diagnostic use only. */
+        uint64_t tx_wup_40b20b         : 1;  /**< [ 38: 38](RAZ) Reserved.
+                                                                 Internal:
+                                                                 40b20b gearbox deprecated. */
+        uint64_t rx_wpk_20b40b         : 1;  /**< [ 39: 39](RAZ) Reserved.
+                                                                 Internal:
+                                                                 This field deprecated.
+                                                                 The Rx word packing 20-bit to 40-bit gearbox is enabled in hardware when
+                                                                 GSERC()_LANE()_CONTROL_BCFG[LN_CTRL_RX_WIDTH] is set to 0x3 to configure the
+                                                                 PHY for 20 bit receive data width. When
+                                                                 GSERC()_LANE()_CONTROL_BCFG[LN_CTRL_RX_WIDTH] is set to 0x5 40-bit (or any other Rx
+                                                                 lane width other than 16-bit width) the gearbox is bypassed. */
+        uint64_t tx_wup_order          : 1;  /**< [ 40: 40](RAZ) Reserved.
+                                                                 Internal:
+                                                                 40b20b gearbox deprecated. */
+        uint64_t rx_wpk_order          : 1;  /**< [ 41: 41](R/W) Receiver word packing order. Used when the GSERC()_LANE()_CONTROL_BCFG[LN_CTRL_RX_WIDTH]
+                                                                 is set to 0x3 to configure the GSERC PHY to 20-bit receive path data width
+                                                                 for the 10.3125Gbuad and lower Ethernet data rates.
+                                                                 When [RX_WPK_ORDER] is set to 1 the first (earliest) 20-bit word received from the GSERC PHY
+                                                                 is packed into the lower 20-bit word position of the 40-bit word and the second (later)
+                                                                 20-bit word received is packed into the upper 20-bit word position of the 40-bit word.
+                                                                 When [RX_WPK_ORDER] is cleared to 0 the 20-bit word packing order within the 40-bit word
+                                                                 is swapped. Set [RX_WUP_ORDER] to 1 for normal Ethernet receive data to the CGX Ethernet MAC.
+                                                                 For diagnostic use only. */
+        uint64_t rx_bitstrip_en        : 1;  /**< [ 42: 42](R/W) Reserved.
+                                                                 Internal:
+                                                                 Enables the bit stripping logic used in the 2.4576Gbps CPRI rate.  Clear to a 0
+                                                                 to reset the bit strip
+                                                                 pattern lock FSM. */
+        uint64_t rx_bitstrip_cfg       : 1;  /**< [ 43: 43](R/W) Reserved.
+                                                                 Internal:
+                                                                 Configures the sampling position for the div 4 bit stripping logic at the 2.4576Gbps CPRI rate:
+                                                                   0x0 = 135 degree sample.
+                                                                   0x1 = 225 degree sample. */
+        uint64_t cfg_cpri              : 1;  /**< [ 44: 44](R/W) Reserved.
+                                                                 Internal:
+                                                                 Select for the lane tx clock and data muxes:
+                                                                   0x0 = Ethernet ln_txclk and ln_txdata.
+                                                                   0x1 = CPRI ln_txclk and ln_txdata. */
+        uint64_t rx_bitstrip_mode      : 1;  /**< [ 45: 45](R/W) Selects the bitstrip div mode.
+                                                                   0x0 = Div 2 bitstripping.
+                                                                   0x1 = Div 4 bitstripping. */
+        uint64_t cpri_txclk_bist_ovrd  : 2;  /**< [ 47: 46](R/W) Reserved.
+                                                                 Internal:
+                                                                 Overrides the CPRI TXCLK MUX:
+                                                                   0x0 = Standard operation.
+                                                                   0x1 = Select div2 txclk.
+                                                                   0x2 = Reserved.
+                                                                   0x3 = Select div4 txclk. */
+        uint64_t reserved_48_63        : 16;
+#endif /* Word 0 - End */
+    } s;
+    /* struct cavm_gsercx_lanex_control_bcfg_s cn9; */
+    /* struct cavm_gsercx_lanex_control_bcfg_s f95o; */
+    struct cavm_gsercx_lanex_control_bcfg_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_48_63        : 16;
         uint64_t cpri_txclk_bist_ovrd  : 2;  /**< [ 47: 46](R/W) Overrides the CPRI TXCLK MUX:
                                                                    0x0 = Standard operation.
                                                                    0x1 = Select div2 txclk.
@@ -11194,8 +11582,7 @@ union cavm_gsercx_lanex_control_bcfg
                                                                    0x3 = Select div4 txclk. */
         uint64_t reserved_48_63        : 16;
 #endif /* Word 0 - End */
-    } s;
-    /* struct cavm_gsercx_lanex_control_bcfg_s cn; */
+    } loki;
 };
 typedef union cavm_gsercx_lanex_control_bcfg cavm_gsercx_lanex_control_bcfg_t;
 
@@ -29922,7 +30309,7 @@ static inline uint64_t CAVM_GSERCX_LNX_FEATURE_SIG_DET_CFG0_RSVD(uint64_t a, uin
 /**
  * Register (RSL32b) gserc#_ln#_feature_spare_cfg0_rsvd
  *
- * INTERNAL: GSERC Ln Feature Spare Cfg0 Register
+ * GSERC Ln Feature Spare Cfg0 Register
  */
 union cavm_gsercx_lnx_feature_spare_cfg0_rsvd
 {
@@ -29937,7 +30324,20 @@ union cavm_gsercx_lnx_feature_spare_cfg0_rsvd
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_gsercx_lnx_feature_spare_cfg0_rsvd_s cn; */
+    /* struct cavm_gsercx_lnx_feature_spare_cfg0_rsvd_s cn9; */
+    /* struct cavm_gsercx_lnx_feature_spare_cfg0_rsvd_s f95o; */
+    struct cavm_gsercx_lnx_feature_spare_cfg0_rsvd_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_8_31         : 24;
+        uint32_t data                  : 8;  /**< [  7:  0](R/W/H) Set bit 7 to enable continuous data-based HFG adaptation.
+                                                                 Do not change any other bits in this register. */
+#else /* Word 0 - Little Endian */
+        uint32_t data                  : 8;  /**< [  7:  0](R/W/H) Set bit 7 to enable continuous data-based HFG adaptation.
+                                                                 Do not change any other bits in this register. */
+        uint32_t reserved_8_31         : 24;
+#endif /* Word 0 - End */
+    } loki;
 };
 typedef union cavm_gsercx_lnx_feature_spare_cfg0_rsvd cavm_gsercx_lnx_feature_spare_cfg0_rsvd_t;
 
@@ -30156,7 +30556,7 @@ static inline uint64_t CAVM_GSERCX_LNX_FEATURE_SPARE_CFG5_RSVD(uint64_t a, uint6
 /**
  * Register (RSL32b) gserc#_ln#_feature_spare_cfg6_rsvd
  *
- * INTERNAL: GSERC Ln Feature Spare Cfg6 Register
+ * GSERC Ln Feature Spare Cfg6 Register
  */
 union cavm_gsercx_lnx_feature_spare_cfg6_rsvd
 {
@@ -30171,7 +30571,18 @@ union cavm_gsercx_lnx_feature_spare_cfg6_rsvd
         uint32_t reserved_8_31         : 24;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_gsercx_lnx_feature_spare_cfg6_rsvd_s cn; */
+    /* struct cavm_gsercx_lnx_feature_spare_cfg6_rsvd_s cn9; */
+    /* struct cavm_gsercx_lnx_feature_spare_cfg6_rsvd_s f95o; */
+    struct cavm_gsercx_lnx_feature_spare_cfg6_rsvd_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t reserved_8_31         : 24;
+        uint32_t data                  : 8;  /**< [  7:  0](R/W/H) Use only bit 5 for PHY Lane Rx CDR lock state machine reset. See GSERC Software Initialization. */
+#else /* Word 0 - Little Endian */
+        uint32_t data                  : 8;  /**< [  7:  0](R/W/H) Use only bit 5 for PHY Lane Rx CDR lock state machine reset. See GSERC Software Initialization. */
+        uint32_t reserved_8_31         : 24;
+#endif /* Word 0 - End */
+    } loki;
 };
 typedef union cavm_gsercx_lnx_feature_spare_cfg6_rsvd cavm_gsercx_lnx_feature_spare_cfg6_rsvd_t;
 

@@ -2714,7 +2714,167 @@ union cavm_dpi_dma_ptr_s
                                                                  space pointer */
 #endif /* Word 1 - End */
     } s;
-    /* struct cavm_dpi_dma_ptr_s_s cn; */
+    /* struct cavm_dpi_dma_ptr_s_s cn9; */
+    /* struct cavm_dpi_dma_ptr_s_s cn96xxp1; */
+    struct cavm_dpi_dma_ptr_s_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t i                     : 1;  /**< [ 63: 63] Invert free. Only used with LLC/DRAM pointers.
+
+                                                                 This bit gives the software the ability to free buffers
+                                                                 independently for a DPI_HDR_XTYPE_E::OUTBOUND DMA transfer when
+                                                                 DPI_DMA_INSTR_HDR_S[II] is clear. See DPI_DMA_INSTR_HDR_S[II] and
+                                                                 DPI_DMA_INSTR_HDR_S[FL].
+
+                                                                 [I] is not used by DPI when DPI_DMA_INSTR_HDR_S[II] is set. [I] must not be set,
+                                                                 and DPI never frees buffers for DPI_HDR_XTYPE_E::INBOUND and
+                                                                 DPI_HDR_XTYPE_E::INTERNAL DPI DMA instructions. */
+        uint64_t f                     : 1;  /**< [ 62: 62] Full-block write operations are allowed.
+                                                                 Only used with LLC/DRAM pointers.
+
+                                                                 When set, the hardware is permitted to write all the bytes in the cache blocks
+                                                                 covered by [PTR] .. [PTR] + [LENGTH] - 1. This can improve memory system performance
+                                                                 when the write misses in the LLC.
+
+                                                                 [F] can only be set for LLC/DRAM pointers that can be written to:
+
+                                                                 * The DPI_DMA_PTR_S's in the first-pointers area that are write pointers
+                                                                   for DPI_HDR_XTYPE_E::INBOUND DPI DMA instructions.
+
+                                                                 * The DPI_DMA_PTR_S's in the last-pointers area that are always write
+                                                                   pointers (when present for DPI_HDR_XTYPE_E::INTERNAL DPI DMA instructions).
+
+                                                                 [F] must not be set for LLC/DRAM pointers that are not written to:
+
+                                                                 * The DPI_DMA_PTR_S's in the first-pointers area for DPI_HDR_XTYPE_E::OUTBOUND
+                                                                   and DPI_HDR_XTYPE_E::INTERNAL DPI DMA instructions. */
+        uint64_t ac                    : 1;  /**< [ 61: 61] Allocate LLC.  Only used with LLC/DRAM Pointers.
+                                                                 This is a hint to DPI that the cache blocks should be allocated in
+                                                                 the LLC (if they were not already). Should typically be set to allocate the
+                                                                 referenced cache blocks into the LLC.
+
+                                                                 When the LLC/DRAM pointer is a source of data (e.g. a DPI_HDR_XTYPE_E::OUTBOUND
+                                                                 DPI DMA instruction), the referenced cache blocks are not allocated into the LLC
+                                                                 as part of completing the DMA (when not already present in the LLC) if [AC]
+                                                                 is clear.
+
+                                                                 When the LLC/DRAM pointer is a destination for data (e.g. a
+                                                                 DPI_HDR_XTYPE_E::INBOUND DPI DMA instruction), the referenced cache blocks are
+                                                                 not allocated into the cache as part of completing the DMA (when not already
+                                                                 present in the LLC) if [AC] is clear, and either:
+
+                                                                 * the entire cache block is written by this LLC/DRAM pointer, or
+
+                                                                 * [F] is set so that the entire cache block can be written. */
+        uint64_t bed                   : 1;  /**< [ 60: 60] Big-endian data.
+                                                                 Only used with LLC/DRAM pointers. */
+        uint64_t reserved_16_59        : 44;
+        uint64_t length                : 16; /**< [ 15:  0] Size in bytes of the contiguous space specified by PTR. A SIZE value of 0x0 is
+                                                                 illegal.
+
+                                                                 Note that the sum of the sizes in the first-pointers area must always exactly
+                                                                 equal the sum of the sizes/lengths in the last-pointers area:
+
+                                                                 * With DPI_HDR_XTYPE_E::OUTBOUND and DPI_HDR_XTYPE_E::INBOUND DPI DMA
+                                                                   instructions, the sum of the (DPI_DMA_INSTR_HDR_S[NFST] number of)
+                                                                   DPI_DMA_PTR_S[LENGTH]'s in the first pointers block must exactly equal
+                                                                   the sum of the (DPI_DMA_INSTR_HDR_S[NLST] number of) length DPI components in
+                                                                   the last pointers block.
+
+                                                                 * With DPI_HDR_XTYPE_E::INTERNAL DPI DMA instructions, the sum of the
+                                                                   (DPI_DMA_INSTR_HDR_S[NFST] number of) DPI_DMA_PTR_S[LENGTH]'s in the
+                                                                   first pointers block must exactly equal the sum of the
+                                                                   (DPI_DMA_INSTR_HDR_S[NLST] number of) DPI_DMA_PTR_S[LENGTH]'s in the
+                                                                   last pointers block. */
+#else /* Word 0 - Little Endian */
+        uint64_t length                : 16; /**< [ 15:  0] Size in bytes of the contiguous space specified by PTR. A SIZE value of 0x0 is
+                                                                 illegal.
+
+                                                                 Note that the sum of the sizes in the first-pointers area must always exactly
+                                                                 equal the sum of the sizes/lengths in the last-pointers area:
+
+                                                                 * With DPI_HDR_XTYPE_E::OUTBOUND and DPI_HDR_XTYPE_E::INBOUND DPI DMA
+                                                                   instructions, the sum of the (DPI_DMA_INSTR_HDR_S[NFST] number of)
+                                                                   DPI_DMA_PTR_S[LENGTH]'s in the first pointers block must exactly equal
+                                                                   the sum of the (DPI_DMA_INSTR_HDR_S[NLST] number of) length DPI components in
+                                                                   the last pointers block.
+
+                                                                 * With DPI_HDR_XTYPE_E::INTERNAL DPI DMA instructions, the sum of the
+                                                                   (DPI_DMA_INSTR_HDR_S[NFST] number of) DPI_DMA_PTR_S[LENGTH]'s in the
+                                                                   first pointers block must exactly equal the sum of the
+                                                                   (DPI_DMA_INSTR_HDR_S[NLST] number of) DPI_DMA_PTR_S[LENGTH]'s in the
+                                                                   last pointers block. */
+        uint64_t reserved_16_59        : 44;
+        uint64_t bed                   : 1;  /**< [ 60: 60] Big-endian data.
+                                                                 Only used with LLC/DRAM pointers. */
+        uint64_t ac                    : 1;  /**< [ 61: 61] Allocate LLC.  Only used with LLC/DRAM Pointers.
+                                                                 This is a hint to DPI that the cache blocks should be allocated in
+                                                                 the LLC (if they were not already). Should typically be set to allocate the
+                                                                 referenced cache blocks into the LLC.
+
+                                                                 When the LLC/DRAM pointer is a source of data (e.g. a DPI_HDR_XTYPE_E::OUTBOUND
+                                                                 DPI DMA instruction), the referenced cache blocks are not allocated into the LLC
+                                                                 as part of completing the DMA (when not already present in the LLC) if [AC]
+                                                                 is clear.
+
+                                                                 When the LLC/DRAM pointer is a destination for data (e.g. a
+                                                                 DPI_HDR_XTYPE_E::INBOUND DPI DMA instruction), the referenced cache blocks are
+                                                                 not allocated into the cache as part of completing the DMA (when not already
+                                                                 present in the LLC) if [AC] is clear, and either:
+
+                                                                 * the entire cache block is written by this LLC/DRAM pointer, or
+
+                                                                 * [F] is set so that the entire cache block can be written. */
+        uint64_t f                     : 1;  /**< [ 62: 62] Full-block write operations are allowed.
+                                                                 Only used with LLC/DRAM pointers.
+
+                                                                 When set, the hardware is permitted to write all the bytes in the cache blocks
+                                                                 covered by [PTR] .. [PTR] + [LENGTH] - 1. This can improve memory system performance
+                                                                 when the write misses in the LLC.
+
+                                                                 [F] can only be set for LLC/DRAM pointers that can be written to:
+
+                                                                 * The DPI_DMA_PTR_S's in the first-pointers area that are write pointers
+                                                                   for DPI_HDR_XTYPE_E::INBOUND DPI DMA instructions.
+
+                                                                 * The DPI_DMA_PTR_S's in the last-pointers area that are always write
+                                                                   pointers (when present for DPI_HDR_XTYPE_E::INTERNAL DPI DMA instructions).
+
+                                                                 [F] must not be set for LLC/DRAM pointers that are not written to:
+
+                                                                 * The DPI_DMA_PTR_S's in the first-pointers area for DPI_HDR_XTYPE_E::OUTBOUND
+                                                                   and DPI_HDR_XTYPE_E::INTERNAL DPI DMA instructions. */
+        uint64_t i                     : 1;  /**< [ 63: 63] Invert free. Only used with LLC/DRAM pointers.
+
+                                                                 This bit gives the software the ability to free buffers
+                                                                 independently for a DPI_HDR_XTYPE_E::OUTBOUND DMA transfer when
+                                                                 DPI_DMA_INSTR_HDR_S[II] is clear. See DPI_DMA_INSTR_HDR_S[II] and
+                                                                 DPI_DMA_INSTR_HDR_S[FL].
+
+                                                                 [I] is not used by DPI when DPI_DMA_INSTR_HDR_S[II] is set. [I] must not be set,
+                                                                 and DPI never frees buffers for DPI_HDR_XTYPE_E::INBOUND and
+                                                                 DPI_HDR_XTYPE_E::INTERNAL DPI DMA instructions. */
+#endif /* Word 0 - End */
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 1 - Big Endian */
+        uint64_t ptr                   : 64; /**< [127: 64] For LLC/DRAM - bits \<52:0\> used for byte pointer. Points to where the packet data
+                                                                 starts. PTR can be any byte alignment. Note that [PTR] is interpreted as a
+                                                                 little-endian byte pointer when BED is clear, a big-endian byte pointer when
+                                                                 [BED] is set. Bits \<63:53\> ignored and should be zero For MAC - 64-bit memory
+                                                                 space pointer */
+#else /* Word 1 - Little Endian */
+        uint64_t ptr                   : 64; /**< [127: 64] For LLC/DRAM - bits \<52:0\> used for byte pointer. Points to where the packet data
+                                                                 starts. PTR can be any byte alignment. Note that [PTR] is interpreted as a
+                                                                 little-endian byte pointer when BED is clear, a big-endian byte pointer when
+                                                                 [BED] is set. Bits \<63:53\> ignored and should be zero For MAC - 64-bit memory
+                                                                 space pointer */
+#endif /* Word 1 - End */
+    } cn96xxp3;
+    /* struct cavm_dpi_dma_ptr_s_cn96xxp3 cn98xx; */
+    /* struct cavm_dpi_dma_ptr_s_s cnf95xxp1; */
+    /* struct cavm_dpi_dma_ptr_s_cn96xxp3 cnf95xxp2; */
+    /* struct cavm_dpi_dma_ptr_s_cn96xxp3 f95mm; */
+    /* struct cavm_dpi_dma_ptr_s_cn96xxp3 f95o; */
+    /* struct cavm_dpi_dma_ptr_s_cn96xxp3 loki; */
 };
 
 /**

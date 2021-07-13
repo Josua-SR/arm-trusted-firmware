@@ -1248,6 +1248,40 @@ union cavm_gpio_clk_syncex
     {
 #if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
         uint64_t reserved_12_63        : 52;
+        uint64_t qlm_sel               : 4;  /**< [ 11:  8](R/W) Selects which Ethernet Serdes to select from.
+                                                                 0 = GSERR0.
+                                                                 1..5 = GSERC(0..4). */
+        uint64_t reserved_4_7          : 4;
+        uint64_t div                   : 2;  /**< [  3:  2](R/W) GPIO internal clock division of the SerDes recovered clock selected by [QLM_SEL]
+                                                                 to create the output clock. The maximum supported GPIO output frequency is 125
+                                                                 MHz.
+                                                                 0x0 = Divide by 40.
+                                                                 0x1 = Divide by 80.
+                                                                 0x2 = Divide by 160.
+                                                                 0x3 = Divide by 320. */
+        uint64_t lane_sel              : 2;  /**< [  1:  0](R/W) Which RX lane within the SerDes selected with [QLM_SEL] to use as the GPIO
+                                                                 internal clock. */
+#else /* Word 0 - Little Endian */
+        uint64_t lane_sel              : 2;  /**< [  1:  0](R/W) Which RX lane within the SerDes selected with [QLM_SEL] to use as the GPIO
+                                                                 internal clock. */
+        uint64_t div                   : 2;  /**< [  3:  2](R/W) GPIO internal clock division of the SerDes recovered clock selected by [QLM_SEL]
+                                                                 to create the output clock. The maximum supported GPIO output frequency is 125
+                                                                 MHz.
+                                                                 0x0 = Divide by 40.
+                                                                 0x1 = Divide by 80.
+                                                                 0x2 = Divide by 160.
+                                                                 0x3 = Divide by 320. */
+        uint64_t reserved_4_7          : 4;
+        uint64_t qlm_sel               : 4;  /**< [ 11:  8](R/W) Selects which Ethernet Serdes to select from.
+                                                                 0 = GSERR0.
+                                                                 1..5 = GSERC(0..4). */
+        uint64_t reserved_12_63        : 52;
+#endif /* Word 0 - End */
+    } f95o;
+    struct cavm_gpio_clk_syncex_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_12_63        : 52;
         uint64_t qlm_sel               : 4;  /**< [ 11:  8](R/W) Selects which Ethernet/CPRI Serdes to select from.
                                                                  0 = GSERR0.
                                                                  1..5 = GSERC(0..4). */
@@ -1277,8 +1311,7 @@ union cavm_gpio_clk_syncex
                                                                  1..5 = GSERC(0..4). */
         uint64_t reserved_12_63        : 52;
 #endif /* Word 0 - End */
-    } f95o;
-    /* struct cavm_gpio_clk_syncex_f95o loki; */
+    } loki;
 };
 typedef union cavm_gpio_clk_syncex cavm_gpio_clk_syncex_t;
 

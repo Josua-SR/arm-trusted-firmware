@@ -2262,7 +2262,10 @@ union cavm_psm_int_timer_ena_w1c
         uint64_t reserved_10_63        : 54;
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[SOF]. */
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[SOSF]. */
-        uint64_t reserved_3_7          : 5;
+        uint64_t reserved_4_7          : 4;
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[RFP_MISSING].
+                                                                 Internal:
+                                                                 The timer received a late RFP. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[BFNERR]. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[RFP_LATE]. */
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[RFP_EARLY]. */
@@ -2270,7 +2273,10 @@ union cavm_psm_int_timer_ena_w1c
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[RFP_EARLY]. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[RFP_LATE]. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[BFNERR]. */
-        uint64_t reserved_3_7          : 5;
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[RFP_MISSING].
+                                                                 Internal:
+                                                                 The timer received a late RFP. */
+        uint64_t reserved_4_7          : 4;
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[SOSF]. */
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1C/H) Reads or clears enable for PSM_INT_TIMER_SUM_W1C[SOF]. */
         uint64_t reserved_10_63        : 54;
@@ -2311,7 +2317,10 @@ union cavm_psm_int_timer_ena_w1s
         uint64_t reserved_10_63        : 54;
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[SOF]. */
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[SOSF]. */
-        uint64_t reserved_3_7          : 5;
+        uint64_t reserved_4_7          : 4;
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[RFP_MISSING].
+                                                                 Internal:
+                                                                 The timer received a late RFP. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[BFNERR]. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[RFP_LATE]. */
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[RFP_EARLY]. */
@@ -2319,7 +2328,10 @@ union cavm_psm_int_timer_ena_w1s
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[RFP_EARLY]. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[RFP_LATE]. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[BFNERR]. */
-        uint64_t reserved_3_7          : 5;
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[RFP_MISSING].
+                                                                 Internal:
+                                                                 The timer received a late RFP. */
+        uint64_t reserved_4_7          : 4;
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[SOSF]. */
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1S/H) Reads or sets enable for PSM_INT_TIMER_SUM_W1C[SOF]. */
         uint64_t reserved_10_63        : 54;
@@ -2361,7 +2373,10 @@ union cavm_psm_int_timer_sum_w1c
         uint64_t reserved_10_63        : 54;
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1C/H) A start-of-frame was detected. */
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1C/H) A start-of-subframe was detected. */
-        uint64_t reserved_3_7          : 5;
+        uint64_t reserved_4_7          : 4;
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1C/H) Reserved.
+                                                                 Internal:
+                                                                 The timer received a late RFP. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1C/H) The timer received a bad BFN number. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1C/H) The timer received a late RFP. */
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1C/H) The timer received an early RFP. */
@@ -2369,7 +2384,10 @@ union cavm_psm_int_timer_sum_w1c
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1C/H) The timer received an early RFP. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1C/H) The timer received a late RFP. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1C/H) The timer received a bad BFN number. */
-        uint64_t reserved_3_7          : 5;
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1C/H) Reserved.
+                                                                 Internal:
+                                                                 The timer received a late RFP. */
+        uint64_t reserved_4_7          : 4;
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1C/H) A start-of-subframe was detected. */
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1C/H) A start-of-frame was detected. */
         uint64_t reserved_10_63        : 54;
@@ -2410,7 +2428,10 @@ union cavm_psm_int_timer_sum_w1s
         uint64_t reserved_10_63        : 54;
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[SOF]. */
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[SOSF]. */
-        uint64_t reserved_3_7          : 5;
+        uint64_t reserved_4_7          : 4;
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[RFP_MISSING].
+                                                                 Internal:
+                                                                 The timer received a late RFP. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[BFNERR]. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[RFP_LATE]. */
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[RFP_EARLY]. */
@@ -2418,7 +2439,10 @@ union cavm_psm_int_timer_sum_w1s
         uint64_t rfp_early             : 1;  /**< [  0:  0](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[RFP_EARLY]. */
         uint64_t rfp_late              : 1;  /**< [  1:  1](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[RFP_LATE]. */
         uint64_t bfnerr                : 1;  /**< [  2:  2](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[BFNERR]. */
-        uint64_t reserved_3_7          : 5;
+        uint64_t rfp_missing           : 1;  /**< [  3:  3](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[RFP_MISSING].
+                                                                 Internal:
+                                                                 The timer received a late RFP. */
+        uint64_t reserved_4_7          : 4;
         uint64_t sosf                  : 1;  /**< [  8:  8](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[SOSF]. */
         uint64_t sof                   : 1;  /**< [  9:  9](R/W1S/H) Reads or sets PSM_INT_TIMER_SUM_W1C[SOF]. */
         uint64_t reserved_10_63        : 54;
