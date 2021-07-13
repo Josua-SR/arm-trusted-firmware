@@ -2038,7 +2038,8 @@ static void octeontx2_cgx_lmacs_check_linux(void *fdt,
 		if (lmac->mode_idx == QLM_MODE_QSGMII)
 			lane = lmac_idx;
 		else if (((!plat_octeontx_bcfg->qlm_auto_config) ||
-			(!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504n", 8)))
+			(!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504n", 8)) ||
+			(!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504o", 8)))
 			&& (lmac->max_lane_count != 4))	{
 			lane = lmac->first_phy_lane;
 			/* For 2 DLMs mapped to 1 CGX, for the higher
