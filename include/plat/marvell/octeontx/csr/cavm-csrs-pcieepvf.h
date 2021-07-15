@@ -3179,7 +3179,42 @@ union cavm_pcieepvfx_msix_cap_cntrl
         uint32_t msixen                : 1;  /**< [ 31: 31](R/W) MSI-X enable. */
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_pcieepvfx_msix_cap_cntrl_s cn; */
+    /* struct cavm_pcieepvfx_msix_cap_cntrl_s cn9; */
+    /* struct cavm_pcieepvfx_msix_cap_cntrl_s cn96xxp1; */
+    struct cavm_pcieepvfx_msix_cap_cntrl_cn96xxp3
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint32_t msixen                : 1;  /**< [ 31: 31](R/W) MSI-X enable. */
+        uint32_t funm                  : 1;  /**< [ 30: 30](R/W) Function mask.
+                                                                 0 = Each vectors mask bit determines whether the vector is masked or not.
+                                                                 1 = All vectors associated with the function are masked, regardless of their respective
+                                                                 per-vector mask bits. */
+        uint32_t reserved_27_29        : 3;
+        uint32_t msixts                : 11; /**< [ 26: 16](RO) MSI-X table size encoded as (table size - 1).
+
+                                                                 This field is writable through PEM()_CFG_WR to PCIEEPVF_MSIX_CAP_CNTRL_SHADOW.
+                                                                 All VFs in a single PF have the same value for MSI-X Table Size. */
+        uint32_t ncp                   : 8;  /**< [ 15:  8](RO) Next capability pointer. */
+        uint32_t msixcid               : 8;  /**< [  7:  0](RO) MSI-X capability ID. */
+#else /* Word 0 - Little Endian */
+        uint32_t msixcid               : 8;  /**< [  7:  0](RO) MSI-X capability ID. */
+        uint32_t ncp                   : 8;  /**< [ 15:  8](RO) Next capability pointer. */
+        uint32_t msixts                : 11; /**< [ 26: 16](RO) MSI-X table size encoded as (table size - 1).
+
+                                                                 This field is writable through PEM()_CFG_WR to PCIEEPVF_MSIX_CAP_CNTRL_SHADOW.
+                                                                 All VFs in a single PF have the same value for MSI-X Table Size. */
+        uint32_t reserved_27_29        : 3;
+        uint32_t funm                  : 1;  /**< [ 30: 30](R/W) Function mask.
+                                                                 0 = Each vectors mask bit determines whether the vector is masked or not.
+                                                                 1 = All vectors associated with the function are masked, regardless of their respective
+                                                                 per-vector mask bits. */
+        uint32_t msixen                : 1;  /**< [ 31: 31](R/W) MSI-X enable. */
+#endif /* Word 0 - End */
+    } cn96xxp3;
+    /* struct cavm_pcieepvfx_msix_cap_cntrl_cn96xxp3 cn98xx; */
+    /* struct cavm_pcieepvfx_msix_cap_cntrl_s cnf95xx; */
+    /* struct cavm_pcieepvfx_msix_cap_cntrl_s f95o; */
+    /* struct cavm_pcieepvfx_msix_cap_cntrl_cn96xxp3 loki; */
 };
 typedef union cavm_pcieepvfx_msix_cap_cntrl cavm_pcieepvfx_msix_cap_cntrl_t;
 
