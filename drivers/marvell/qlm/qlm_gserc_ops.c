@@ -53,13 +53,11 @@ static int qlm_gserc_rx_signal_detect(int qlm, int lane)
 static int qlm_gserc_get_lmac_phy_lane(int qlm, int lane, int lane_to_sds)
 {
 	int phy_lane;
-	if (IS_OCTEONTX_PN(read_midr(), LOKIPARTNUM)) {
-		switch (qlm) {
+	switch (qlm) {
 		case 1:
 		case 3:
 			lane += 2;
 		break;
-		}
 	}
 	phy_lane = ((lane_to_sds >> (lane * 2)) & 0x3);
 	return phy_lane;

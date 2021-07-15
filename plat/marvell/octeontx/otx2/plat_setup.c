@@ -1012,7 +1012,8 @@ bool plat_ras_feature_supported(void)
 	 *
 	 * Disable on 9504n EBB due to problems with some DIMMs.
 	 */
-	if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504n", 8)) {
+	if (!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504n", 8) ||
+		!strncmp(plat_octeontx_bcfg->bcfg.board_model, "ebb9504o", 8)) {
 		VERBOSE("%s: RAS support excluded from board %s\n",
 			__func__, plat_octeontx_bcfg->bcfg.board_model);
 		return ret; // i.e. false
