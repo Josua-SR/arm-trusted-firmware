@@ -24,6 +24,9 @@
  */
 static unsigned char tb_fw_hash_buf[HASH_DER_LEN];
 static unsigned char soc_fw_hash_buf[HASH_DER_LEN];
+#ifdef BL32_BASE
+static unsigned char tos_fw_hash_buf[HASH_DER_LEN];
+#endif
 static unsigned char nt_world_bl_hash_buf[HASH_DER_LEN];
 static unsigned char trusted_world_pk_buf[PK_DER_LEN];
 static unsigned char non_trusted_world_pk_buf[PK_DER_LEN];
@@ -57,6 +60,10 @@ static auth_param_type_desc_t non_trusted_world_pk = AUTH_PARAM_TYPE_DESC(
 
 static auth_param_type_desc_t soc_fw_content_pk = AUTH_PARAM_TYPE_DESC(
 		AUTH_PARAM_PUB_KEY, SOC_FW_CONTENT_CERT_PK_OID);
+#ifdef BL32_BASE
+static auth_param_type_desc_t tos_fw_content_pk = AUTH_PARAM_TYPE_DESC(
+		AUTH_PARAM_PUB_KEY, TRUSTED_OS_FW_CONTENT_CERT_PK_OID);
+#endif
 static auth_param_type_desc_t nt_fw_content_pk = AUTH_PARAM_TYPE_DESC(
 		AUTH_PARAM_PUB_KEY, NON_TRUSTED_FW_CONTENT_CERT_PK_OID);
 
@@ -69,6 +76,11 @@ static auth_param_type_desc_t nt_world_bl_hash = AUTH_PARAM_TYPE_DESC(
 #ifdef NT_FW_CONFIG
 static auth_param_type_desc_t nt_fw_config_hash = AUTH_PARAM_TYPE_DESC(
 		AUTH_PARAM_HASH, NON_TRUSTED_FW_CONFIG_HASH_OID);
+#endif
+
+#ifdef BL32_BASE
+static auth_param_type_desc_t tos_fw_hash = AUTH_PARAM_TYPE_DESC(
+		AUTH_PARAM_HASH, TRUSTED_OS_FW_HASH_OID);
 #endif
 
 /*
@@ -249,6 +261,91 @@ static const auth_img_desc_t bl31_image = {
 		}
 	};
 
+#ifdef BL32_BASE
+/*
+ * Trusted OS Firmware
+ */
+static const auth_img_desc_t trusted_os_fw_key_cert = {
+	.img_id = TRUSTED_OS_FW_KEY_CERT_ID,
+	.img_type = IMG_CERT,
+	.parent = &trusted_key_cert,
+	.img_auth_methods = (const auth_method_desc_t[AUTH_METHOD_NUM]) {
+		[0] = {
+			.type = AUTH_METHOD_SIG,
+			.param.sig = {
+				.pk = &trusted_world_pk,
+				.sig = &sig,
+				.alg = &sig_alg,
+				.data = &raw_data
+			}
+		},
+		[1] = {
+			.type = AUTH_METHOD_NV_CTR,
+			.param.nv_ctr = {
+				.cert_nv_ctr = &trusted_nv_ctr,
+				.plat_nv_ctr = &trusted_nv_ctr
+			}
+		}
+	},
+	.authenticated_data = (const auth_param_desc_t[COT_MAX_VERIFIED_PARAMS]) {
+		[0] = {
+			.type_desc = &tos_fw_content_pk,
+			.data = {
+				.ptr = (void *)content_pk_buf,
+				.len = (unsigned int)PK_DER_LEN
+			}
+		}
+	}
+};
+static const auth_img_desc_t trusted_os_fw_content_cert = {
+	.img_id = TRUSTED_OS_FW_CONTENT_CERT_ID,
+	.img_type = IMG_CERT,
+	.parent = &trusted_os_fw_key_cert,
+	.img_auth_methods = (const auth_method_desc_t[AUTH_METHOD_NUM]) {
+		[0] = {
+			.type = AUTH_METHOD_SIG,
+			.param.sig = {
+				.pk = &tos_fw_content_pk,
+				.sig = &sig,
+				.alg = &sig_alg,
+				.data = &raw_data
+			}
+		},
+		[1] = {
+			.type = AUTH_METHOD_NV_CTR,
+			.param.nv_ctr = {
+				.cert_nv_ctr = &trusted_nv_ctr,
+				.plat_nv_ctr = &trusted_nv_ctr
+			}
+		}
+	},
+	.authenticated_data = (const auth_param_desc_t[COT_MAX_VERIFIED_PARAMS]) {
+		[0] = {
+			.type_desc = &tos_fw_hash,
+			.data = {
+				.ptr = (void *)tos_fw_hash_buf,
+				.len = (unsigned int)HASH_DER_LEN
+			}
+		},
+	}
+};
+
+static const auth_img_desc_t bl32_image = {
+	.img_id = BL32_IMAGE_ID,
+	.img_type = IMG_RAW,
+	.parent = &trusted_os_fw_content_cert,
+	.img_auth_methods = (const auth_method_desc_t[AUTH_METHOD_NUM]) {
+		[0] = {
+			.type = AUTH_METHOD_HASH,
+			.param.hash = {
+				.data = &raw_data,
+				.hash = &tos_fw_hash
+			}
+		}
+	}
+};
+#endif
+
 /*
  * Non-Trusted Firmware
  */
@@ -376,6 +473,11 @@ static const auth_img_desc_t * const cot_desc[] = {
 	[SOC_FW_KEY_CERT_ID]			= &soc_fw_key_cert,
 	[SOC_FW_CONTENT_CERT_ID]		= &soc_fw_content_cert,
 	[BL31_IMAGE_ID]				= &bl31_image,
+#ifdef BL32_BASE
+	[TRUSTED_OS_FW_KEY_CERT_ID]		= &trusted_os_fw_key_cert,
+	[TRUSTED_OS_FW_CONTENT_CERT_ID]		= &trusted_os_fw_content_cert,
+	[BL32_IMAGE_ID]				= &bl32_image,
+#endif
 	[NON_TRUSTED_FW_KEY_CERT_ID]		= &non_trusted_fw_key_cert,
 	[NON_TRUSTED_FW_CONTENT_CERT_ID]	= &non_trusted_fw_content_cert,
 	[BL33_IMAGE_ID]				= &bl33_image,
