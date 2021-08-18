@@ -46,11 +46,11 @@ CASSERT(MSIX_TABLE_BASE + MSIX_TABLE_SIZE <= SH_FWDATA_BASE,
 	sh_fwdate_overlaps_with_msix_table);
 
 /*
- * According to errata RVU-36163 in RVU_PRIV_PF()_MSIX_CFG fields
- * PF_MSIXT_OFFSET and VF_MSIXT_OFFSET has to be aligned to multiple of 64.
+ * Due to hardware bug, RVU_PRIV_PF()_MSIX_CFG fields PF_MSIXT_OFFSET
+ * and VF_MSIXT_OFFSET has to be aligned to multiple of 64.
  */
-#define RVU_36163_OFFSET_ALIGNMENT	(1 << 6)
-#define RVU_36163_ALIGNMENT_MASK    (RVU_36163_OFFSET_ALIGNMENT - 1)
+#define RVU_OFFSET_ALIGNMENT	(1 << 6)
+#define RVU_ALIGNMENT_MASK    (RVU_OFFSET_ALIGNMENT - 1)
 
 #define DEVID_MASK	0xff
 #define CLASS_CODE_MASK	0xffffff
