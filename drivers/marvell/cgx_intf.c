@@ -853,6 +853,7 @@ static int cgx_link_bringdown(int cgx_id, int lmac_id)
 	cgx_set_link_state(cgx_id, lmac_id, &link,
 			cgx_get_error_type(cgx_id, lmac_id));
 
+	lmac_ctx->s.rx_link_up = 0;
 	lmac_ctx->s.link_enable = 0;
 	lmac_ctx->s.init_link = 0;
 
