@@ -64,11 +64,8 @@
 #define GSERN_LANEX_TX_RST_SM_TIMEOUT   10000   /* 10 ms */
 #define REMOTE_FAULT_TIMEOUT_MS		10000
 #define TX_IDLE_TOGGLE_US		1000
-#define CGX_AN_LT_FAIL_TIMEOUT_MS         3000    /* 3 s */
-#define CGX_TOTAL_LINK_TIMEOUT_MS         4000    /* 4 s */
-#define CGX_ETH_FAIL_TIMEOUT_MS           3000    /* 3 s */
-#define CGX_NO_RX_SIG_FAIL_TIMEOUT_MS     200     /* 200 ms */
-#define CGX_LINK_PARTNER_FAIL_TIMEOUT_MS  4000    /* 4 s */
+#define CGX_TOTAL_LINK_TIMEOUT_MS       4000    /* 4 s */
+#define CGX_NO_RX_SIG_FAIL_TIMEOUT_MS   200     /* 200 ms */
 
 /* Bit mask to clear error interrupt bits set in
  * SPUX_INT CSR

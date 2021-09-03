@@ -370,9 +370,8 @@ static int cgx_link_bringup(int cgx_id, int lmac_id)
 	cgx_lmac_timers_t *lmac_tmr;
 	link_state_t link;
 	int phy_fail_count = 0;
-	uint64_t rx_sig_timeout, eth_link_timeout, initial_time;
-	uint64_t lp_link_timeout = 0, rx_link_time = 0;
-	uint64_t an_lt_timeout, total_link_timeout, current_time;
+	uint64_t rx_sig_timeout, total_link_timeout;
+	uint64_t current_time, initial_time, rx_link_time = 0;
 	bool signal_detect = 0, timeout_init_complete = 0;
 
 	/* get the lmac type and based on lmac
@@ -554,6 +553,7 @@ sfp_err:
 			return -1;
 		}
 retry_link:
+		current_time = gser_clock_get_count(GSER_CLOCK_TIME);
 		if (lmac_cfg->phy_present) {
 			/* Get the link status */
 			phy_get_link_status(cgx_id, lmac_id, &link);
@@ -576,15 +576,10 @@ retry_link:
 		}
 
 		if (!timeout_init_complete) {
-			initial_time = gser_clock_get_count(GSER_CLOCK_TIME);
-			rx_sig_timeout = initial_time +
+			initial_time = current_time;
+			rx_link_time = current_time;
+			rx_sig_timeout = rx_link_time +
 				CGX_NO_RX_SIG_FAIL_TIMEOUT_MS *
-				gser_clock_get_rate(GSER_CLOCK_TIME)/1000;
-			eth_link_timeout = initial_time +
-				CGX_ETH_FAIL_TIMEOUT_MS *
-				gser_clock_get_rate(GSER_CLOCK_TIME)/1000;
-			an_lt_timeout = initial_time +
-				CGX_AN_LT_FAIL_TIMEOUT_MS *
 				gser_clock_get_rate(GSER_CLOCK_TIME)/1000;
 			/* Worst case timeout */
 			total_link_timeout = initial_time +
@@ -601,8 +596,9 @@ retry_link:
 				 */
 				if (cgx_get_error_type(cgx_id, lmac_id) ==
 				    CGX_ERR_SERDES_RX_NO_SIGNAL) {
-					if (!signal_detect && (gser_clock_get_count(GSER_CLOCK_TIME) >=
-						       rx_sig_timeout)) {
+					if (!signal_detect &&
+					    (current_time >= total_link_timeout) &&
+					    (current_time >= rx_sig_timeout)) {
 						debug_cgx_intf("%s: %d:%d Signal Detect failed\n"
 							       , __func__, cgx_id, lmac_id);
 						goto cgx_err;
@@ -611,14 +607,14 @@ retry_link:
 							       "retrying link\n", __func__,
 							       cgx_id, lmac_id);
 						/* if init link fails, retry */
+						rx_link_time = gser_clock_get_count(GSER_CLOCK_TIME);
 						cgx_set_error_type(cgx_id, lmac_id, 0);
 						goto retry_link;
 					}
 				} else if (cgx_get_error_type(cgx_id, lmac_id) ==
 					   CGX_ERR_AN_CPT_FAIL) {
 					signal_detect = 1;
-					if (gser_clock_get_count(GSER_CLOCK_TIME) >=
-					    an_lt_timeout) {
+					if (current_time >= total_link_timeout) {
 						debug_cgx_intf("%s: %d:%d AN Init failed\n"
 							       , __func__,
 							       cgx_id, lmac_id);
@@ -634,8 +630,7 @@ retry_link:
 				} else if (cgx_get_error_type(cgx_id, lmac_id) ==
 					CGX_ERR_TRAINING_FAIL) {
 					signal_detect = 1;
-					if (gser_clock_get_count(GSER_CLOCK_TIME) >=
-					    an_lt_timeout) {
+					if (current_time >= total_link_timeout) {
 						debug_cgx_intf("%s: %d:%d Link Training failed\n"
 							, __func__, cgx_id, lmac_id);
 						goto cgx_err;
@@ -648,8 +643,7 @@ retry_link:
 					}
 				} else {
 					signal_detect = 1;
-					if (gser_clock_get_count(GSER_CLOCK_TIME) >=
-					    eth_link_timeout) {
+					if (current_time >= total_link_timeout) {
 						debug_cgx_intf("%s: %d:%d Ethernet Init failed\n"
 							, __func__, cgx_id, lmac_id);
 						goto cgx_err;
@@ -664,15 +658,17 @@ retry_link:
 			} else {
 				lmac_ctx->s.rx_link_up = 1;
 				signal_detect = 1;
-				rx_link_time =  gser_clock_get_count(GSER_CLOCK_TIME);
-				debug_cgx_intf("%s: %d:%d Rx Link Up Time:%lld ms\n",
+				current_time = gser_clock_get_count(GSER_CLOCK_TIME);
+				/* Rx Signal Detect Time may be off by as much as 10ms */
+				debug_cgx_intf("%s: %d:%d Rx Signal Detect Time:%lld ms\n",
 					       __func__, cgx_id, lmac_id,
 					       ((rx_link_time - initial_time) *
 						1000 / gser_clock_get_rate(GSER_CLOCK_TIME)));
-				/* Allow link partner to take more time to complete Rx init */
-				lp_link_timeout = rx_link_time +
-					CGX_LINK_PARTNER_FAIL_TIMEOUT_MS *
-					gser_clock_get_rate(GSER_CLOCK_TIME)/1000;
+				debug_cgx_intf("%s: %d:%d Rx Link Up Time:%lld ms\n",
+					       __func__, cgx_id, lmac_id,
+					       ((current_time - initial_time) *
+						1000 / gser_clock_get_rate(GSER_CLOCK_TIME)));
+				rx_link_time = current_time;
 			}
 		}
 
@@ -680,8 +676,7 @@ retry_link:
 		if (lmac_ctx->s.rx_link_up) {
 			if (cgx_xaui_get_link(cgx_id, lmac_id, &link, lmac_ctx, lmac_tmr) == -1) {
 				current_time = gser_clock_get_count(GSER_CLOCK_TIME);
-				if ((current_time >= lp_link_timeout) ||
-				    (current_time >= total_link_timeout)) {
+				if (current_time >= total_link_timeout) {
 					debug_cgx_intf("%s %d:%d Link down\n"
 						, __func__, cgx_id, lmac_id);
 					goto cgx_err;
