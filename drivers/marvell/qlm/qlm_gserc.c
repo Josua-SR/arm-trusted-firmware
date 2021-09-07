@@ -2653,7 +2653,7 @@ static cavm_gsercx_lanex_control_bcfg_t qlm_gserc_get_lane_mode(int module, int 
 	bcfg.s.cgx_dual = is_dual;
 	bcfg.s.ln_link_stat = 0;
 	bcfg.s.ln_an_cfg = ln_an_cfg;
-	bcfg.s.rx_bitstrip_en = (state.s.baud_mhz == 2458);
+	bcfg.s.rx_bitstrip_en = 0;
 	/* Program RX polarity. The TX polarity is programemd in qlm_gserc_init() */
 	bcfg.s.ln_ctrl_rxpolarity = gser_config_get_int(GSER_CONFIG_QLM_LANE_RX_POLARITY,
 		map_module_to_qlm(module), lane);
@@ -3717,6 +3717,22 @@ static void qlm_gserc_cmu_cfg(int module, qlm_mode_flags_t flags, int update_tx,
 		GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_ADAPT_CFG0(module, lane),
 				c.s.ena_8b10b = ena_8b10b);
 
+		// 2.4G is always CPRI
+		if (state.s.baud_mhz == 2458) {
+			// RX at 2.4G without bit-stripping and TX at 9.8G with bit-stuffing
+			// Set rxcdr_clkdiv_swing = 3 (cdr refclk register afe_ctrl1)
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_CDR_REFCLK_AFE_CTRL1_RSVD(module, lane),
+				c.s.rxcdr_clkdiv_swing = 3);
+			// Set rxcdr_pi_swing = 0 (cdr refclk register afe_pi_ctrl3)
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_CDR_REFCLK_AFE_PI_CTRL3_RSVD(module, lane),
+				c.s.rxcdr_pi_swing = 0);
+			// Set output_sample_period = 0 (cdr rxclk register dlpf_ctrl8)
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_CDR_RXCLK_DLPF_CTRL8_RSVD(module, lane),
+				c.s.output_sample_period = 0);
+			// Set rxcdr_clkdiv = 3
+			GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_CDR_REFCLK_AFE_CTRL0(module, lane),
+				c.s.rxcdr_clkdiv = 3);
+		}
 #if defined(IMAGE_BL31)
 		if (state.s.mode == QLM_MODE_CPRI)
 		{
@@ -4436,6 +4452,22 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 
 			GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_ADAPT_CFG0(module, lane),
 				c.s.ena_8b10b = ena_8b10b);
+			// 2.4G is always CPRI
+			if (state.s.baud_mhz == 2458) {
+				// RX at 2.4G without bit-stripping and TX at 9.8G with bit-stuffing
+				// Set rxcdr_clkdiv_swing = 3 (cdr refclk register afe_ctrl1)
+				GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_CDR_REFCLK_AFE_CTRL1_RSVD(module, lane),
+					c.s.rxcdr_clkdiv_swing = 3);
+				// Set rxcdr_pi_swing = 0 (cdr refclk register afe_pi_ctrl3)
+				GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_CDR_REFCLK_AFE_PI_CTRL3_RSVD(module, lane),
+					c.s.rxcdr_pi_swing = 0);
+				// Set output_sample_period = 0 (cdr rxclk register dlpf_ctrl8)
+				GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_CDR_RXCLK_DLPF_CTRL8_RSVD(module, lane),
+					c.s.output_sample_period = 0);
+				// Set rxcdr_clkdiv = 3
+				GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_CDR_REFCLK_AFE_CTRL0(module, lane),
+					c.s.rxcdr_clkdiv = 3);
+			}
 		}
 		/* Allow time for register writes to propagate */
 		gser_wait_usec(REG_STABIL_SHORT_US);
@@ -4734,6 +4766,22 @@ int qlm_gserc_cfg_mode(int module, uint8_t lane_mask, qlm_modes_t mode, int baud
 
 				GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_FEATURE_ADAPT_CFG0(module, lane),
 						c.s.ena_8b10b = ena_8b10b);
+				// 2.4G is always CPRI
+				if (state.s.baud_mhz == 2458) {
+					// RX at 2.4G without bit-stripping and TX at 9.8G with bit-stuffing
+					// Set rxcdr_clkdiv_swing = 3 (cdr refclk register afe_ctrl1)
+					GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_CDR_REFCLK_AFE_CTRL1_RSVD(module, lane),
+						c.s.rxcdr_clkdiv_swing = 3);
+					// Set rxcdr_pi_swing = 0 (cdr refclk register afe_pi_ctrl3)
+					GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_CDR_REFCLK_AFE_PI_CTRL3_RSVD(module, lane),
+						c.s.rxcdr_pi_swing = 0);
+					// Set output_sample_period = 0 (cdr rxclk register dlpf_ctrl8)
+					GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_CDR_RXCLK_DLPF_CTRL8_RSVD(module, lane),
+						c.s.output_sample_period = 0);
+					// Set rxcdr_clkdiv = 3
+					GSER_CSR_MODIFY(c, CAVM_GSERCX_LNX_CDR_REFCLK_AFE_CTRL0(module, lane),
+						c.s.rxcdr_clkdiv = 3);
+				}
 			}
 
 #if defined(IMAGE_BL31)
