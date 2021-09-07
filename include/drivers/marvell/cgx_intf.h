@@ -396,6 +396,13 @@ struct cgx_link_change_args {		/* start from bit 8 */
 	uint64_t reserved2:50;
 };
 
+/* command argument to be passed for cmd ID - CGX_CMD_LINK_BRINGUP */
+struct cgx_link_bringup_args {		/* start from bit 8 */
+	uint64_t reserved1:8;
+	uint64_t timeout:14;		/* in ms */
+	uint64_t reserved2:42;
+};
+
 /* command argument to be passed for cmd ID - CGX_CMD_CPRI_MODE_CHANGE */
 struct cpri_mode_change_args {
 	uint64_t reserved1:8;
@@ -530,6 +537,7 @@ union cgx_cmd_s {
 	struct cgx_ctl_args cmd_args;
 	struct cgx_mtu_args mtu_size;
 	struct cgx_link_change_args lnk_args;	/* Input to CGX_CMD_LINK_CHANGE */
+	struct cgx_link_bringup_args lnk_bringup;
 	struct cgx_set_mode_args mode_args;
 	struct cgx_mode_change_args mode_change_args;
 	struct cgx_set_fec_args fec_args;
