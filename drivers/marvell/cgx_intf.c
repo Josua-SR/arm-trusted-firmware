@@ -578,18 +578,23 @@ retry_link:
 		if (!timeout_init_complete) {
 			initial_time = current_time;
 			rx_link_time = current_time;
+			int ltimeout = 0;
 			rx_sig_timeout = rx_link_time +
 				CGX_NO_RX_SIG_FAIL_TIMEOUT_MS *
 				gser_clock_get_rate(GSER_CLOCK_TIME)/1000;
 			/* Worst case timeout */
-			if ((link_timeout == 0) || (link_timeout == -1)
-			    || (link_timeout > 10000))
-				total_link_timeout = initial_time +
-					CGX_TOTAL_LINK_TIMEOUT_MS *
-					gser_clock_get_rate(GSER_CLOCK_TIME)/1000;
+			/* Timeout from CGX_CMD_LINK_TIMEOUT command */
+			if (lmac_ctx->s.link_timeout && (lmac_ctx->s.link_timeout != -1)
+			    && (lmac_ctx->s.link_timeout <= 10000))
+				ltimeout = lmac_ctx->s.link_timeout;
+			/* Timeout passed to CGX_CMD_BRINGUP_LINK command */
+			else if (link_timeout && (link_timeout != -1) && (link_timeout <= 10000))
+				ltimeout = link_timeout;
+			/* Timeout not passed */
 			else
-				total_link_timeout = initial_time +
-					link_timeout *
+				ltimeout = CGX_TOTAL_LINK_TIMEOUT_MS;
+
+			total_link_timeout = initial_time + ltimeout *
 					gser_clock_get_rate(GSER_CLOCK_TIME)/1000;
 			timeout_init_complete = 1;
 		}
@@ -1975,6 +1980,21 @@ static int cgx_process_requests(int cgx_id, int lmac_id)
 				break;
 			case CGX_CMD_LINK_BRING_DOWN:
 				ret = cgx_link_bringdown(cgx_id, lmac_id);
+				break;
+			case CGX_CMD_LINK_TIMEOUT:
+				{
+					int lmac_lnk_timeout = 0;
+
+					lmac_lnk_timeout = scratchx1.s.lnk_bringup.timeout;
+					if ((lmac_lnk_timeout == 0) ||
+					    (lmac_lnk_timeout == -1))
+						lmac_lnk_timeout = 0;
+					else if (lmac_lnk_timeout > 10000)
+						lmac_lnk_timeout = 10000;
+
+					lmac_ctx->s.link_timeout = lmac_lnk_timeout;
+					debug_cgx_intf("%d:%d: link_timeout = %d\n", cgx_id, lmac_id, lmac_lnk_timeout);
+				}
 				break;
 			case CGX_CMD_INTERNAL_LBK:
 				lmac_ctx->s.lbk1_enable = enable;

@@ -114,6 +114,7 @@ enum cgx_cmd_id {
 	CGX_CMD_DFE_ADAPT_SERDES,		/* = 40 */
 	CGX_CMD_DO_CMU_RESET,
 	CGX_CMD_CPRI_MISC,
+	CGX_CMD_LINK_TIMEOUT,
 };
 
 /* async event ids */

@@ -241,7 +241,8 @@ typedef union cgx_lmac_context {
 		uint64_t rx_link_up:1;
 		/* Used to track if a remote fault is detected. */
 		uint64_t remote_fault:1;
-		uint64_t reserved:35;
+		uint64_t link_timeout:14;
+		uint64_t reserved:21;
 	} s;
 } cgx_lmac_context_t;
 
