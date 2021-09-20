@@ -184,6 +184,7 @@ int smi_reset(int bus_id)
 
 	smix_clk.u = CSR_READ(CAVM_SMI_X_CLK(bus_id));
 	smix_clk.s.sample_mode = 1;
+	smix_clk.s.clk_idle = 1;
 	CSR_WRITE(CAVM_SMI_X_CLK(bus_id), smix_clk.u);
 
 	smi_en.s.en = 0;
