@@ -11,6 +11,7 @@
 #include <plat_ghes.h>
 #include <plat/common/platform.h>
 #include <octeontx_sdei.h>
+#include <lib/el3_runtime/context_mgmt.h>
 
 #if SDEI_SUPPORT
 #include <services/sdei.h>
@@ -35,6 +36,8 @@ static int plat_ras_mdc_handler(const struct err_record_info *info,
 {
 	int ret;
 
+	cm_el1_sysregs_context_save(NON_SECURE);
+
 	ret = otx2_mdc_isr(data->interrupt, data->flags, data->cookie);
 
 	/* issue EOI to controller */
@@ -49,6 +52,8 @@ static int plat_ras_mcc_handler(const struct err_record_info *info,
 {
 	int ret;
 
+	cm_el1_sysregs_context_save(NON_SECURE);
+
 	ret = otx2_mcc_isr(data->interrupt, data->flags, data->cookie);
 
 	/* issue EOI to controller */
@@ -62,6 +67,8 @@ static int plat_ras_lmc_handler(const struct err_record_info *info,
 		int probe_data, const struct err_handler_data *const data)
 {
 	int ret;
+
+	cm_el1_sysregs_context_save(NON_SECURE);
 
 	ret = otx2_lmc_isr(data->interrupt, data->flags, data->cookie);
 
@@ -221,6 +228,7 @@ void otx2_send_ghes(struct otx2_ghes_err_record *rec,
 		    struct otx2_ghes_err_ring *err_ring,
 		    int event)
 {
+	int ret = 0;
 	uint32_t head = err_ring->head;
 
 	/* Ensure that error record is written fully prior to advancing
@@ -234,7 +242,18 @@ void otx2_send_ghes(struct otx2_ghes_err_record *rec,
 	dsbsy();
 
 #if SDEI_SUPPORT
-	sdei_dispatch_event(event);
+	ret = sdei_dispatch_event(event);
+	if (ret != 0) {
+		/*
+		 * sdei_dispatch_event() may return failing result in some cases,
+		 * for example kernel may not have registered a handler or RAS event
+		 * may happen early during boot. We restore the NS context when
+		 * sdei_dispatch_event() returns failing result.
+		 */
+		ERROR("SDEI dispatch failed: %d", ret);
+		cm_el1_sysregs_context_restore(NON_SECURE);
+		cm_set_next_eret_context(NON_SECURE);
+	}
 #endif
 }
 
