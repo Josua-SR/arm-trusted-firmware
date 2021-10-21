@@ -481,6 +481,38 @@ int scmi_octeontx_flsf_fw_booted(void *p)
 
 }
 
+int scmi_octeontx_set_avs_status(void *p, int status)
+{
+	mailbox_mem_t *mbx_mem;
+	int token = 0, ret;
+	scmi_channel_t *ch = (scmi_channel_t *)p;
+
+	if (validate_scmi_channel(ch))
+		return -1;
+
+	scmi_get_channel(ch);
+
+	mbx_mem = (mailbox_mem_t *)(ch->info->scmi_mbx_mem);
+	mbx_mem->msg_header = SCMI_MSG_CREATE(SCMI_CAVM_CONFIG_PROTO_ID,
+			SCMI_CAVM_SET_AVS_STATUS, token);
+	mbx_mem->len = SCMI_CAVM_SET_AVS_STATUS_MSG_LEN;
+	mbx_mem->flags = SCMI_FLAG_RESP_POLL;
+
+	SCMI_PAYLOAD_ARG1(mbx_mem->payload, status);
+	scmi_send_sync_command(ch);
+
+	/* Get the return values */
+	SCMI_PAYLOAD_RET_VAL1(mbx_mem->payload, ret);
+	assert_scmi(mbx_mem->len == SCMI_CAVM_SET_AVS_STATUS_RESP_LEN);
+	assert_scmi(token == SCMI_MSG_GET_TOKEN(mbx_mem->msg_header));
+
+	scmi_put_channel(ch);
+	return ret == SCMI_E_SUCCESS ?
+		SCMI_CAVM_SET_AVS_STATUS_RET_OK :
+			SCMI_CAVM_SET_AVS_STATUS_RET_FAIL;
+}
+
+
 int scmi_octeontx_flsf_clear_force_2ndry(void *p)
 {
 	mailbox_mem_t *mbx_mem;

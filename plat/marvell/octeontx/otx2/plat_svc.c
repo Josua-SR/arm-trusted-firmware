@@ -115,6 +115,10 @@ uintptr_t plat_octeontx_svc_smc_handler(uint32_t smc_fid,
 		break;
 
 #endif /* DEBUG_ATF_ENABLE_SERDES_DIAGNOSTIC_CMDS */
+	case PLAT_OCTEONTX_SET_AVS_STATUS:
+		ret = scmi_octeontx_set_avs_status(scmi_handle, x1);
+		SMC_RET1(handle, ret);
+		break;
 
 	default:
 		return otx2_svc_smc_handler(smc_fid, x1, x2, x3, x4,

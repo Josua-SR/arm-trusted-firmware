@@ -117,8 +117,10 @@
  */
 #define PLAT_OCTEONTX_SERDES_DBG_SET_LOOP	0xc2000d09
 
+#define PLAT_OCTEONTX_SET_AVS_STATUS	        0xc2000b08
+
 /* Number of family specific SMCs */
-#define OTX2_NUM_SMC_CALLS			13
+#define OTX2_NUM_SMC_CALLS			14
 
 /* API that allows to define platform specific SMC CALLS */
 uintptr_t otx2_svc_smc_handler(uint32_t smc_fid,
