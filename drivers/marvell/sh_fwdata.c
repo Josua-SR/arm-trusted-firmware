@@ -66,7 +66,7 @@ void sh_fwdata_init(void)
 		ERROR("SHARED FWDATA size misconfiguration\n");
 		return;
 	}
-	memset(fwdata, 0, sizeof(fwdata));
+	memset(fwdata, 0, sizeof(*fwdata));
 	fwdata->header_magic = SH_FWDATA_HEADER_MAGIC;
 	fwdata->version = SH_FWDATA_VERSION;
 
