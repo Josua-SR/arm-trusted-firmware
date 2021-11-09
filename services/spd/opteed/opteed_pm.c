@@ -164,6 +164,7 @@ static int32_t opteed_cpu_migrate_info(u_register_t *resident_cpu)
 	return OPTEE_MIGRATE_INFO;
 }
 
+#ifndef INCLUDE_OPTEE
 /*******************************************************************************
  * System is about to be switched off. Allow the OPTEED/OPTEE to perform
  * any actions needed.
@@ -203,7 +204,7 @@ static void opteed_system_reset(void)
 	 * must continue the reset anyway */
 	opteed_synchronous_sp_entry(optee_ctx);
 }
-
+#endif
 
 /*******************************************************************************
  * Structure populated by the OPTEE Dispatcher to be given a chance to
@@ -218,6 +219,11 @@ const spd_pm_ops_t opteed_pm = {
 	.svc_suspend_finish = opteed_cpu_suspend_finish_handler,
 	.svc_migrate = NULL,
 	.svc_migrate_info = opteed_cpu_migrate_info,
+#ifdef INCLUDE_OPTEE
+	.svc_system_off = NULL,
+	.svc_system_reset = NULL,
+#else
 	.svc_system_off = opteed_system_off,
 	.svc_system_reset = opteed_system_reset,
+#endif
 };
