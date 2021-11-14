@@ -115,7 +115,8 @@ int plat_octeontx_get_gser_count(void)
 
 int plat_octeontx_get_gserp_count(void)
 {
-	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 3))
+	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 3)
+	    || IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 4))
 		return 5;
 
 	return 0;
@@ -189,7 +190,8 @@ int plat_octeontx_get_mcc_count(void)
 /* Return number of lanes available for different QLMs. */
 int plat_get_max_lane_num(int qlm)
 {
-	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 3))
+	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 3)
+	    || IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 4))
 		return 4;
 
 	if ((qlm == 4) || (qlm == 5))
@@ -329,7 +331,8 @@ void plat_add_mmio()
 	add_map_record(CAVM_FUS_BAR_E_FUS_PF_BAR0,
 			CAVM_FUS_BAR_E_FUS_PF_BAR0_SIZE, attr);
 
-	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 3)) {
+	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 3)
+	    || IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 4)) {
 		device_type_count = plat_octeontx_get_cgx_count();
 		for (i = 0; i < device_type_count; i++)
 			add_map_record(CAVM_GSERR_BAR_E_GSERRX_PF_BAR0(i),
@@ -426,7 +429,8 @@ void plat_add_mmio()
 	add_map_record(CAVM_TSN_BAR_E_TSNX_PF_BAR0(9),
 		       CAVM_TSN_BAR_E_TSNX_PF_BAR0_SIZE, attr);
 
-	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 3))
+	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 3)
+	    || IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 4))
 		add_map_record(CAVM_TSN_BAR_E_TSNX_PF_BAR0(10),
 		       CAVM_TSN_BAR_E_TSNX_PF_BAR0_SIZE, attr);
 

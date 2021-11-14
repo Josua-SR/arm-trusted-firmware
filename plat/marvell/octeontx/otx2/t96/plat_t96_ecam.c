@@ -144,7 +144,8 @@ static int ecam_probe_cgx_p3(unsigned long long arg)
 
 static int ecam_probe_cgx(unsigned long long arg)
 {
-	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 3))
+	if (IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 3) ||
+		IS_OCTEONTX_VAR(read_midr(), T96PARTNUM, 4))
 		return ecam_probe_cgx_p3(arg);
 	else
 		return ecam_probe_cgx_p1(arg);

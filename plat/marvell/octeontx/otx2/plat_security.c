@@ -430,8 +430,9 @@ void octeontx_configure_pem_ep_security(int pem, int secure)
 
 	switch (MIDR_PARTNUM(midr)) {
 	case F95PARTNUM:
-		/* f95 pass2.0 doesn't have PEM */
-		if (IS_OCTEONTX_VAR(midr, F95PARTNUM, 2))
+		/* f95 pass2.0 & pass3.0 doesn't have PEM */
+		if (IS_OCTEONTX_VAR(midr, F95PARTNUM, 2)
+		    || IS_OCTEONTX_VAR(midr, F95PARTNUM, 3))
 			break;
 		/* fall through for f95 pass 1.x */
 	case T96PARTNUM:
