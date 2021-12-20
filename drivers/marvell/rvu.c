@@ -881,10 +881,12 @@ static void conf_msix_admin_blk_offset(void)
 	}
 
 	if (!plat_octeontx_bcfg->rvu_config.cpt_dis) {
-		cpt_int_cfg.u = CSR_READ(CAVM_CPTX_PRIV_AF_INT_CFG(0));
-		cpt_int_cfg.s.msix_offset = af_msix_used;
-		CSR_WRITE(CAVM_CPTX_PRIV_AF_INT_CFG(0), cpt_int_cfg.u);
-		af_msix_used += cpt_int_cfg.s.msix_size;
+		for (i = 0; i < SW_RVU_CPT_NUM_PF; i++) {
+			cpt_int_cfg.u = CSR_READ(CAVM_CPTX_PRIV_AF_INT_CFG(i));
+			cpt_int_cfg.s.msix_offset = af_msix_used;
+			CSR_WRITE(CAVM_CPTX_PRIV_AF_INT_CFG(i), cpt_int_cfg.u);
+			af_msix_used += cpt_int_cfg.s.msix_size;
+		}
 	}
 
 	for (i = 0; i < SW_RVU_REE_NUM_PF; i++) {

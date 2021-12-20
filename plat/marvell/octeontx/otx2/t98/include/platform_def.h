@@ -232,6 +232,8 @@
 
 #define SW_RVU_REE_NUM_PF       2
 
+#define SW_RVU_CPT_NUM_PF	2
+
 /* Priority levels for OcteonTX platforms */
 #if SDEI_SUPPORT
 /* Non-interrupt SDEI explicit events are used by RAS for EL0-2 notification;
