@@ -182,7 +182,7 @@ void octeontx_security_setup(void)
 	    || IS_OCTEONTX_VAR(midr, F95PARTNUM, 1)
 	    || IS_OCTEONTX_PN(midr, LOKIPARTNUM)
 	    || IS_OCTEONTX_PASS(midr, F95OPARTNUM, 1, 0)
-	    || IS_OCTEONTX_PASS(midr, T98PARTNUM, 1, 0))
+	    || IS_OCTEONTX_VAR(midr, T98PARTNUM, 1))
 		disable_poison();
 
 	while (region->number != LAST_CCS_REGION) {
