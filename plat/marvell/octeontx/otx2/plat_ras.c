@@ -209,6 +209,12 @@ struct otx2_ghes_err_record *otx2_begin_ghes(const char *name,
 		return NULL;
 	}
 
+	/* if consumer not registered */
+	if (err_ring->reg != OTX2_GHES_ERR_RING_SIG) {
+		debug2ras("%s unset reg\n", __func__);
+		return NULL;
+	}
+
 	tail = err_ring->tail;
 	head = err_ring->head;
 	if (((head + 1) % err_ring->size) != tail) {
@@ -332,25 +338,32 @@ void otx2_map_ghes(void)
  *   len:      allocated length for entirety of ring (including header)
  *   entries:  if non-zero, # of entries to use in ring
  *             if zero, # of entries to use in ring is calculated dynamically
+ *   reinit:   force reinitialize buffer accidentally memory can stay in previous state
  *
  * Returns,
  *   false if ring was NOT already initialized
  *   !false if ring WAS already initialized
  */
 static bool
-err_ring_init(struct otx2_ghes_err_ring *err_ring, int len, int entries)
+err_ring_init(struct otx2_ghes_err_ring *err_ring, int len, int entries, bool reinit)
 {
 	bool init = false;
 
 	if (err_ring && len) {
+		err_ring->reg = 0;
 		init = (err_ring->sig == OTX2_GHES_ERR_RING_SIG);
-		if (!init) {
+		if (!init || reinit) {
 			err_ring->sig = OTX2_GHES_ERR_RING_SIG;
 			err_ring->head = err_ring->tail = 0;
 			err_ring->size = entries ? entries :
 			   (len -
 			    offsetof(struct otx2_ghes_err_ring, records[0])) /
 			   sizeof(err_ring->records[0]);
+		}
+		if (!reinit) {
+			/* BERT buffer must be registered at boot */
+			debug2ras("%s setup reg\n", __func__);
+			err_ring->reg = OTX2_GHES_ERR_RING_SIG;
 		}
 	}
 
@@ -372,13 +385,13 @@ int otx2_ras_init(void)
 	for (i = 0; i < ARRAY_SIZE(cfg->fdt_ghes); i++) {
 		err_ring = cfg->fdt_ghes[i].base[GHES_PTR_RING];
 		ring_len = cfg->fdt_ghes[i].size[GHES_PTR_RING];
-		err_ring_init(err_ring, ring_len, 0);
+		err_ring_init(err_ring, ring_len, 0, 1);
 	}
 
 	/* set default BERT ring size */
 	err_ring = cfg->fdt_bert.base[GHES_PTR_RING];
 	ring_len = cfg->fdt_bert.size[GHES_PTR_RING];
-	err_ring_init(err_ring, ring_len, BERT_RAS_RING_SIZE);
+	err_ring_init(err_ring, ring_len, BERT_RAS_RING_SIZE, 0);
 
 #if DEBUG_RAS
 	otx2_begin_ghes("bert", &err_ring);
