@@ -1294,8 +1294,6 @@ Below table lists the I2C MUX/Switches supported and the corresponding DTS compa
     { "nxp,pca9548", I2C_BUS_PCA9548, I2C_SWITCH, 0, 8 },
   };
 
-NOTE: MCP supports only PCA9548 driver currently. If a platform requires other I2C switch/MUX type, corresponding driver should be added in MCP.
-
 4.7 GPIO Expanders supported
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
