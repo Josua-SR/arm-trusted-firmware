@@ -9,6 +9,8 @@ HANDLE_EA_EL3_FIRST	:=       1
 # Include common Marvell platform's makefile helper
 include plat/marvell/octeontx/platform.mk
 
+ENABLE_BACKTRACE 	:=	1
+
 PLAT_XLAT_TABLES_DYNAMIC :=	1
 $(eval $(call add_define,PLAT_XLAT_TABLES_DYNAMIC))
 
