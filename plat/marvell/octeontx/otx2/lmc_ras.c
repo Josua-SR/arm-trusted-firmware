@@ -1739,6 +1739,11 @@ int lmcoe_ras_check_ecc_errors(int mcc, int lmcoe)
 	if (av && !secure && err_rec)
 		fatal = 0;
 
+	/*reset ECC injection*/
+	CSR_WRITE(CAVM_LMCX_CHAR_MASK0(lmc), 0);
+	CSR_WRITE(CAVM_LMCX_CHAR_MASK2(lmc), 0);
+	CSR_WRITE(CAVM_LMCX_ECC_PARITY_TEST(lmc), 0);
+
 	return fatal;
 }
 
@@ -2016,8 +2021,9 @@ static int dram_inject_error(struct elx_map *m, int bit, int flags)
 	__asm__ volatile ("sys #0,c11,c1,#2, %0" : : "r"(m->pa) : "memory");
 	dmbsy();
 
-	/* Disable error injection */
-	dram_set_poison(m->lmcx, m->mapped, bit, false);
+	/* Disable error injection immediately for physical addr*/
+	if (m->va == m->pa)
+		dram_set_poison(m->lmcx, m->mapped, bit, false);
 
 	if (m->mapped) {
 		dcivac((uint64_t)m->mapped);
