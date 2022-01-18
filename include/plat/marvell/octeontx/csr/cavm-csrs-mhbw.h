@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2018-2021 Marvell
+* Copyright (C) 2018-2022 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -68,7 +68,7 @@
  *
  * MHBW Read DMA Command Enumeration
  * This enumeration describes the different command types for reads from
- * L2C/DRAM.
+ * LLC/DRAM.
  */
 #define CAVM_MHBW_PNB_RD_CMD_E_LDD (0)
 #define CAVM_MHBW_PNB_RD_CMD_E_LDT (1)
@@ -80,7 +80,7 @@
  *
  * MHBW Write DMA Command Enumeration
  * This enumeration describes the different command types for writes to
- * L2C/DRAM.
+ * LLC/DRAM.
  */
 #define CAVM_MHBW_PNB_WR_CMD_E_RSVD0 (3)
 #define CAVM_MHBW_PNB_WR_CMD_E_STF (1)
@@ -215,7 +215,68 @@ union cavm_mhbw_jd_dma_cfg_word_0_s
         uint64_t reserved_60_63        : 4;
 #endif /* Word 0 - End */
     } s;
-    /* struct cavm_mhbw_jd_dma_cfg_word_0_s_s cn; */
+    /* struct cavm_mhbw_jd_dma_cfg_word_0_s_s cn9; */
+    /* struct cavm_mhbw_jd_dma_cfg_word_0_s_s cnf95xx; */
+    /* struct cavm_mhbw_jd_dma_cfg_word_0_s_s f95mm; */
+    /* struct cavm_mhbw_jd_dma_cfg_word_0_s_s f95o; */
+    struct cavm_mhbw_jd_dma_cfg_word_0_s_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_60_63        : 4;
+        uint64_t group_id              : 4;  /**< [ 59: 56] Group ID is used for multi-threaded DMA ports only. Groups must use
+                                                                 sequential IDs starting with 0. If more than 16 groups are required,
+                                                                 the GROUP_IDs can be repeated, e.g., 0, 1, 2,..., 15, 0, 1,... */
+        uint64_t reserved_54_55        : 2;
+        uint64_t thread_id             : 6;  /**< [ 53: 48] Thread ID for this command. Thread IDs can be in the range 0-63,
+                                                                 regardless of the number of threads supported on a given port. */
+        uint64_t block_size            : 16; /**< [ 47: 32] Defines the DMA block size in 32-bit words. For both RD/WR DMA and all DMA modes,
+                                                                 [BLOCK_SIZE] must be a multiple of 2 or 4 for 64-bit or 128-/256-bit ports.
+                                                                 Note that for WR DMA, DMA_MODE 0x3 (TWO_D_BLK_DMA_BLKCNT), [BLOCK_SIZE] must be
+                                                                 a multiple of 4 or 8 for 64-bit or 128-/256-bit ports, respectively. */
+        uint64_t chunk_size            : 16; /**< [ 31: 16] For multi-threaded read DMA ports, this field specifies how many words
+                                                                 are read from the thread before switching to the next thread.
+                                                                 [CHUNK_SIZE] is specified as a number of 32-bit words, and must be
+                                                                 of the same granularity as the port width. */
+        uint64_t reserved_9_15         : 7;
+        uint64_t cmd_type              : 2;  /**< [  8:  7] Command type for LLC/DRAM access. The read and write operations are
+                                                                 enumerated with MHBW_PNB_RD_CMD_E and MHBW_PNB_WR_CMD_E respectively.
+
+                                                                 Note that DMA to/from BPHY SMEM ignores this field. */
+        uint64_t dswap                 : 3;  /**< [  6:  4] The byte swap mode for DMA to/from LLC/DRAM.  The swap operations are
+                                                                 enumerated in MHBW_PNB_DSWAP_E.
+
+                                                                 Note that DMA to/from BPHY SMEM ignores this field. */
+        uint64_t target_mem            : 1;  /**< [  3:  3] Defines the target memory for the operation as enumerated in MHBW_TMEM_SEL_E. */
+        uint64_t dma_mode              : 3;  /**< [  2:  0] Selects the DMA mode, enumerated by MHBW_DMA_MODE_E. */
+#else /* Word 0 - Little Endian */
+        uint64_t dma_mode              : 3;  /**< [  2:  0] Selects the DMA mode, enumerated by MHBW_DMA_MODE_E. */
+        uint64_t target_mem            : 1;  /**< [  3:  3] Defines the target memory for the operation as enumerated in MHBW_TMEM_SEL_E. */
+        uint64_t dswap                 : 3;  /**< [  6:  4] The byte swap mode for DMA to/from LLC/DRAM.  The swap operations are
+                                                                 enumerated in MHBW_PNB_DSWAP_E.
+
+                                                                 Note that DMA to/from BPHY SMEM ignores this field. */
+        uint64_t cmd_type              : 2;  /**< [  8:  7] Command type for LLC/DRAM access. The read and write operations are
+                                                                 enumerated with MHBW_PNB_RD_CMD_E and MHBW_PNB_WR_CMD_E respectively.
+
+                                                                 Note that DMA to/from BPHY SMEM ignores this field. */
+        uint64_t reserved_9_15         : 7;
+        uint64_t chunk_size            : 16; /**< [ 31: 16] For multi-threaded read DMA ports, this field specifies how many words
+                                                                 are read from the thread before switching to the next thread.
+                                                                 [CHUNK_SIZE] is specified as a number of 32-bit words, and must be
+                                                                 of the same granularity as the port width. */
+        uint64_t block_size            : 16; /**< [ 47: 32] Defines the DMA block size in 32-bit words. For both RD/WR DMA and all DMA modes,
+                                                                 [BLOCK_SIZE] must be a multiple of 2 or 4 for 64-bit or 128-/256-bit ports.
+                                                                 Note that for WR DMA, DMA_MODE 0x3 (TWO_D_BLK_DMA_BLKCNT), [BLOCK_SIZE] must be
+                                                                 a multiple of 4 or 8 for 64-bit or 128-/256-bit ports, respectively. */
+        uint64_t thread_id             : 6;  /**< [ 53: 48] Thread ID for this command. Thread IDs can be in the range 0-63,
+                                                                 regardless of the number of threads supported on a given port. */
+        uint64_t reserved_54_55        : 2;
+        uint64_t group_id              : 4;  /**< [ 59: 56] Group ID is used for multi-threaded DMA ports only. Groups must use
+                                                                 sequential IDs starting with 0. If more than 16 groups are required,
+                                                                 the GROUP_IDs can be repeated, e.g., 0, 1, 2,..., 15, 0, 1,... */
+        uint64_t reserved_60_63        : 4;
+#endif /* Word 0 - End */
+    } loki;
 };
 
 /**
@@ -343,7 +404,46 @@ union cavm_mhbw_jd_dma_cfg_word_2_s
     } cnf95xxp2;
     /* struct cavm_mhbw_jd_dma_cfg_word_2_s_cnf95xxp2 f95mm; */
     /* struct cavm_mhbw_jd_dma_cfg_word_2_s_cnf95xxp2 f95o; */
-    /* struct cavm_mhbw_jd_dma_cfg_word_2_s_cnf95xxp2 loki; */
+    struct cavm_mhbw_jd_dma_cfg_word_2_s_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t stride                : 32; /**< [ 63: 32] Signed distance in bytes between the start of consecutive blocks of 2D
+                                                                 DMA. Must be two's complement value in the range ABS([STRIDE]) \< 128 MB.
+                                                                 The stride distance must be aligned to the DMA port width. */
+        uint64_t block_param           : 32; /**< [ 31:  0] When MHBW_JD_DMA_CFG_WORD_0_S[DMA_MODE] = MHBW_DMA_MODE_E::TWO_D_BLK_DMA_BLKMSK,
+                                                                 [BLOCK_PARAM] is a block-skip mask. Each bit 31..0 corresponds to one
+                                                                 of 32 blocks. Setting a bit in the mask will cause the DMA command to
+                                                                 skip that block. Note that a value of 0xFFFFFFFF is illegal, a command
+                                                                 must have at least one block that is NOT skipped.
+
+                                                                 When MHBW_JD_DMA_CFG_WORD_0_S[DMA_MODE] = MHBW_DMA_MODE_E::TWO_D_BLK_DMA_BLKCNT,
+                                                                 [BLOCK_PARAM] is the number of blocks of DMA, and no blocks are
+                                                                 skipped. Must be in the range [0x1, 0x400].
+
+                                                                 When MHBW_JD_DMA_CFG_WORD_0_S[DMA_MODE] =
+                                                                 MHBW_DMA_MODE_E::THREE_D_BLK_DMA, [BLOCK_PARAM] is the number of
+                                                                 blocks in each 3D block. No blocks are skipped. Must be in the range
+                                                                 [0x1, 0x400]. */
+#else /* Word 0 - Little Endian */
+        uint64_t block_param           : 32; /**< [ 31:  0] When MHBW_JD_DMA_CFG_WORD_0_S[DMA_MODE] = MHBW_DMA_MODE_E::TWO_D_BLK_DMA_BLKMSK,
+                                                                 [BLOCK_PARAM] is a block-skip mask. Each bit 31..0 corresponds to one
+                                                                 of 32 blocks. Setting a bit in the mask will cause the DMA command to
+                                                                 skip that block. Note that a value of 0xFFFFFFFF is illegal, a command
+                                                                 must have at least one block that is NOT skipped.
+
+                                                                 When MHBW_JD_DMA_CFG_WORD_0_S[DMA_MODE] = MHBW_DMA_MODE_E::TWO_D_BLK_DMA_BLKCNT,
+                                                                 [BLOCK_PARAM] is the number of blocks of DMA, and no blocks are
+                                                                 skipped. Must be in the range [0x1, 0x400].
+
+                                                                 When MHBW_JD_DMA_CFG_WORD_0_S[DMA_MODE] =
+                                                                 MHBW_DMA_MODE_E::THREE_D_BLK_DMA, [BLOCK_PARAM] is the number of
+                                                                 blocks in each 3D block. No blocks are skipped. Must be in the range
+                                                                 [0x1, 0x400]. */
+        uint64_t stride                : 32; /**< [ 63: 32] Signed distance in bytes between the start of consecutive blocks of 2D
+                                                                 DMA. Must be two's complement value in the range ABS([STRIDE]) \< 128 MB.
+                                                                 The stride distance must be aligned to the DMA port width. */
+#endif /* Word 0 - End */
+    } loki;
 };
 
 /**
@@ -400,7 +500,26 @@ union cavm_mhbw_jd_dma_cfg_word_3_s
     } cnf95xxp2;
     /* struct cavm_mhbw_jd_dma_cfg_word_3_s_cnf95xxp2 f95mm; */
     /* struct cavm_mhbw_jd_dma_cfg_word_3_s_cnf95xxp2 f95o; */
-    /* struct cavm_mhbw_jd_dma_cfg_word_3_s_cnf95xxp2 loki; */
+    struct cavm_mhbw_jd_dma_cfg_word_3_s_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t stride_3d             : 32; /**< [ 63: 32] Signed distance in bytes between the start of consecutive blocks of 3D
+                                                                 DMA. Must be two's complement value in the range ABS([STRIDE_3D]) \< 128 MB.
+                                                                 The stride distance must be aligned to the DMA port width. */
+        uint64_t reserved_11_31        : 21;
+        uint64_t num_3d_blocks         : 11; /**< [ 10:  0] The number of 3D blocks. I.e., the 2D block DMA pattern specified by
+                                                                 MHBW_JD_DMA_CFG_WORD_2_S is repeated [NUM_3D_BLOCKS] times. Must be in
+                                                                 the range [0x1, 0x400]. */
+#else /* Word 0 - Little Endian */
+        uint64_t num_3d_blocks         : 11; /**< [ 10:  0] The number of 3D blocks. I.e., the 2D block DMA pattern specified by
+                                                                 MHBW_JD_DMA_CFG_WORD_2_S is repeated [NUM_3D_BLOCKS] times. Must be in
+                                                                 the range [0x1, 0x400]. */
+        uint64_t reserved_11_31        : 21;
+        uint64_t stride_3d             : 32; /**< [ 63: 32] Signed distance in bytes between the start of consecutive blocks of 3D
+                                                                 DMA. Must be two's complement value in the range ABS([STRIDE_3D]) \< 128 MB.
+                                                                 The stride distance must be aligned to the DMA port width. */
+#endif /* Word 0 - End */
+    } loki;
 };
 
 /**
@@ -4771,7 +4890,88 @@ union cavm_mhbwx_fyi
     } cnf95xx;
     /* struct cavm_mhbwx_fyi_s f95mm; */
     /* struct cavm_mhbwx_fyi_cnf95xx f95o; */
-    /* struct cavm_mhbwx_fyi_cnf95xx loki; */
+    struct cavm_mhbwx_fyi_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t psm_did               : 6;  /**< [ 63: 58](RO/H) The PSM ID used to schedule jobs on this MHAB (i.e., the bit to set in
+                                                                 PSM_RSRC_TBL()[MAB_MAP] to map a job type to this MHAB). */
+        uint64_t reserved_57           : 1;
+        uint64_t pnb                   : 1;  /**< [ 56: 56](RO/H) The PNB channel number for LLC/DRAM access. */
+        uint64_t ghb                   : 4;  /**< [ 55: 52](RO/H) The GHAB number the MHAB attached to. */
+        uint64_t reserved_50_51        : 2;
+        uint64_t ghb_port              : 2;  /**< [ 49: 48](RO/H) The GHAB port number the MHAB attached to. */
+        uint64_t reserved_40_47        : 8;
+        uint64_t ab_cores              : 2;  /**< [ 39: 38](RO/H) The number of HABs in the MHAB, minus 1. */
+        uint64_t ab_cfg_credit_ena     : 1;  /**< [ 37: 37](RO/H) TODO
+                                                                 Internal:
+                                                                 This bit specifies if the AB config interface uses credit based access. */
+        uint64_t num_ab_rd_ports       : 2;  /**< [ 36: 35](RO/H) The number of read ports for each HAB, minus 1. */
+        uint64_t num_ab_wr_ports       : 2;  /**< [ 34: 33](RO/H) The number of write ports for each HAB, minus 1. */
+        uint64_t num_ab_job_slots      : 2;  /**< [ 32: 31](RO/H) The number of job slots available in each HAB, minus 1. */
+        uint64_t ab_rd_port_0          : 2;  /**< [ 30: 29](RO/H) The width of read port 0, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. */
+        uint64_t ab_rd_port_1          : 2;  /**< [ 28: 27](RO/H) The width of read port 1, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. Value is undefined if
+                                                                 MHBW()_FYI[NUM_AB_RD_PORTS] \< 1. */
+        uint64_t ab_rd_port_2          : 2;  /**< [ 26: 25](RO/H) The width of read port 2, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. Value is undefined if
+                                                                 MHBW()_FYI[NUM_AB_RD_PORTS] \< 2. */
+        uint64_t ab_rd_port_3          : 2;  /**< [ 24: 23](RO/H) The width of read port 3, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. Value is undefined if
+                                                                 MHBW()_FYI[NUM_AB_RD_PORTS] \< 3. */
+        uint64_t ab_wr_port_0          : 2;  /**< [ 22: 21](RO/H) The width of write port 0, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. */
+        uint64_t ab_wr_port_1          : 2;  /**< [ 20: 19](RO/H) The width of write port 1, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. Value is undefined if
+                                                                 MHBW()_FYI[NUM_AB_WR_PORTS] \< 1. */
+        uint64_t ab_wr_port_2          : 2;  /**< [ 18: 17](RO/H) The width of write port 2, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. Value is undefined if
+                                                                 MHBW()_FYI[NUM_AB_WR_PORTS] \< 2. */
+        uint64_t ab_wr_port_3          : 2;  /**< [ 16: 15](RO/H) The width of write port 3, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. Value is undefined if
+                                                                 MHBW()_FYI[NUM_AB_WR_PORTS] \< 3. */
+        uint64_t reserved_0_14         : 15;
+#else /* Word 0 - Little Endian */
+        uint64_t reserved_0_14         : 15;
+        uint64_t ab_wr_port_3          : 2;  /**< [ 16: 15](RO/H) The width of write port 3, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. Value is undefined if
+                                                                 MHBW()_FYI[NUM_AB_WR_PORTS] \< 3. */
+        uint64_t ab_wr_port_2          : 2;  /**< [ 18: 17](RO/H) The width of write port 2, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. Value is undefined if
+                                                                 MHBW()_FYI[NUM_AB_WR_PORTS] \< 2. */
+        uint64_t ab_wr_port_1          : 2;  /**< [ 20: 19](RO/H) The width of write port 1, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. Value is undefined if
+                                                                 MHBW()_FYI[NUM_AB_WR_PORTS] \< 1. */
+        uint64_t ab_wr_port_0          : 2;  /**< [ 22: 21](RO/H) The width of write port 0, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. */
+        uint64_t ab_rd_port_3          : 2;  /**< [ 24: 23](RO/H) The width of read port 3, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. Value is undefined if
+                                                                 MHBW()_FYI[NUM_AB_RD_PORTS] \< 3. */
+        uint64_t ab_rd_port_2          : 2;  /**< [ 26: 25](RO/H) The width of read port 2, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. Value is undefined if
+                                                                 MHBW()_FYI[NUM_AB_RD_PORTS] \< 2. */
+        uint64_t ab_rd_port_1          : 2;  /**< [ 28: 27](RO/H) The width of read port 1, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. Value is undefined if
+                                                                 MHBW()_FYI[NUM_AB_RD_PORTS] \< 1. */
+        uint64_t ab_rd_port_0          : 2;  /**< [ 30: 29](RO/H) The width of read port 0, specified using the enumeration
+                                                                 MHBW_AB_PORT_WIDTH_E. */
+        uint64_t num_ab_job_slots      : 2;  /**< [ 32: 31](RO/H) The number of job slots available in each HAB, minus 1. */
+        uint64_t num_ab_wr_ports       : 2;  /**< [ 34: 33](RO/H) The number of write ports for each HAB, minus 1. */
+        uint64_t num_ab_rd_ports       : 2;  /**< [ 36: 35](RO/H) The number of read ports for each HAB, minus 1. */
+        uint64_t ab_cfg_credit_ena     : 1;  /**< [ 37: 37](RO/H) TODO
+                                                                 Internal:
+                                                                 This bit specifies if the AB config interface uses credit based access. */
+        uint64_t ab_cores              : 2;  /**< [ 39: 38](RO/H) The number of HABs in the MHAB, minus 1. */
+        uint64_t reserved_40_47        : 8;
+        uint64_t ghb_port              : 2;  /**< [ 49: 48](RO/H) The GHAB port number the MHAB attached to. */
+        uint64_t reserved_50_51        : 2;
+        uint64_t ghb                   : 4;  /**< [ 55: 52](RO/H) The GHAB number the MHAB attached to. */
+        uint64_t pnb                   : 1;  /**< [ 56: 56](RO/H) The PNB channel number for LLC/DRAM access. */
+        uint64_t reserved_57           : 1;
+        uint64_t psm_did               : 6;  /**< [ 63: 58](RO/H) The PSM ID used to schedule jobs on this MHAB (i.e., the bit to set in
+                                                                 PSM_RSRC_TBL()[MAB_MAP] to map a job type to this MHAB). */
+#endif /* Word 0 - End */
+    } loki;
 };
 typedef union cavm_mhbwx_fyi cavm_mhbwx_fyi_t;
 
@@ -4976,7 +5176,90 @@ union cavm_mhbwx_jd_cfg
     } cnf95xxp2;
     /* struct cavm_mhbwx_jd_cfg_cnf95xxp2 f95mm; */
     /* struct cavm_mhbwx_jd_cfg_s f95o; */
-    /* struct cavm_mhbwx_jd_cfg_cnf95xxp2 loki; */
+    struct cavm_mhbwx_jd_cfg_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t addr_range_chk_ena    : 1;  /**< [ 63: 63](R/W) LLC/DRAM and SMEM address range check enable. */
+        uint64_t ghb_throttle_dis      : 1;  /**< [ 62: 62](R/W) GHAB interface throttle disable. */
+        uint64_t reserved_58_61        : 4;
+        uint64_t ghb_rd_weight         : 6;  /**< [ 57: 52](R/W) The weighted round-robin arbitration weight used in the GHAB when
+                                                                 arbitrating for read requests from this MHAB. A value of zero will
+                                                                 only allow requests when there are no competing requests from other
+                                                                 MHABs in the same GHAB, or when all competing MHABs have an effective
+                                                                 weight of zero. A higher weight guarantees a greater share of the GHAB
+                                                                 bandwidth. */
+        uint64_t reserved_50_51        : 2;
+        uint64_t ghb_wr_weight         : 6;  /**< [ 49: 44](R/W) The weighted round-robin arbitration weight used in the GHAB when
+                                                                 arbitrating for write requests from this MHAB. A value of zero will
+                                                                 only allow requests when there are no competing requests from other
+                                                                 MHABs in the same GHAB, or when all competing MHABs have an effective
+                                                                 weight of zero. A higher weight guarantees a greater share of the GHAB
+                                                                 bandwidth. */
+        uint64_t ghb_rd_off_rate       : 8;  /**< [ 43: 36](R/W) This field specifies the number of cycles a GHAB idle gap can be.
+                                                                 An idle gap is a gap inserted during a bursty transfer.
+                                                                 A value of 0 means no gaps. */
+        uint64_t ghb_rd_on_rate        : 8;  /**< [ 35: 28](R/W) This field specifies the number of contiguous cycles a bursty GHAB transfer can be.
+                                                                 A value of 0 stops all GHAB transactions. This field should never be set to 0. */
+        uint64_t ghb_wr_off_rate       : 8;  /**< [ 27: 20](R/W) This field specifies the number of cycles a GHAB idle gap can be.
+                                                                 An idle gap is a gap inserted during a bursty transfer.
+                                                                 A value of 0 means no gaps. */
+        uint64_t ghb_wr_on_rate        : 8;  /**< [ 19: 12](R/W) This field specifies the number of contiguous cycles a bursty GHAB transfer can be.
+                                                                 A value of 0 stops all GHAB transactions. This field should never be set to 0.
+                                                                 For writes to LLC/DRAM, hardware allows up to seven cycles over the ON rate limit if the
+                                                                 terminal count does not align to the cacheline boundary. */
+        uint64_t reserved_8_11         : 4;
+        uint64_t timeout_mult          : 4;  /**< [  7:  4](R/W) This set of bits, specifies the timeout multiplier used when
+                                                                 calculating job timeout thresholds. See MHBW_JD_HDR_WORD_0_S[TOTH] for
+                                                                 details. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t jd_fetch_cmd_type     : 2;  /**< [  1:  0](R/W) Specifies the command type used when reading a job descriptor
+                                                                 (including subdescriptor sections) from main memory. Command types
+                                                                 are enumerated in MHBW_PNB_RD_CMD_E.  Note that if
+                                                                 MHBW_PNB_RD_CMD_E::LDWB is specified, then any requests for less than
+                                                                 128 bytes will be automatically converted to type LDT to avoid
+                                                                 accidental loss of data. */
+#else /* Word 0 - Little Endian */
+        uint64_t jd_fetch_cmd_type     : 2;  /**< [  1:  0](R/W) Specifies the command type used when reading a job descriptor
+                                                                 (including subdescriptor sections) from main memory. Command types
+                                                                 are enumerated in MHBW_PNB_RD_CMD_E.  Note that if
+                                                                 MHBW_PNB_RD_CMD_E::LDWB is specified, then any requests for less than
+                                                                 128 bytes will be automatically converted to type LDT to avoid
+                                                                 accidental loss of data. */
+        uint64_t reserved_2_3          : 2;
+        uint64_t timeout_mult          : 4;  /**< [  7:  4](R/W) This set of bits, specifies the timeout multiplier used when
+                                                                 calculating job timeout thresholds. See MHBW_JD_HDR_WORD_0_S[TOTH] for
+                                                                 details. */
+        uint64_t reserved_8_11         : 4;
+        uint64_t ghb_wr_on_rate        : 8;  /**< [ 19: 12](R/W) This field specifies the number of contiguous cycles a bursty GHAB transfer can be.
+                                                                 A value of 0 stops all GHAB transactions. This field should never be set to 0.
+                                                                 For writes to LLC/DRAM, hardware allows up to seven cycles over the ON rate limit if the
+                                                                 terminal count does not align to the cacheline boundary. */
+        uint64_t ghb_wr_off_rate       : 8;  /**< [ 27: 20](R/W) This field specifies the number of cycles a GHAB idle gap can be.
+                                                                 An idle gap is a gap inserted during a bursty transfer.
+                                                                 A value of 0 means no gaps. */
+        uint64_t ghb_rd_on_rate        : 8;  /**< [ 35: 28](R/W) This field specifies the number of contiguous cycles a bursty GHAB transfer can be.
+                                                                 A value of 0 stops all GHAB transactions. This field should never be set to 0. */
+        uint64_t ghb_rd_off_rate       : 8;  /**< [ 43: 36](R/W) This field specifies the number of cycles a GHAB idle gap can be.
+                                                                 An idle gap is a gap inserted during a bursty transfer.
+                                                                 A value of 0 means no gaps. */
+        uint64_t ghb_wr_weight         : 6;  /**< [ 49: 44](R/W) The weighted round-robin arbitration weight used in the GHAB when
+                                                                 arbitrating for write requests from this MHAB. A value of zero will
+                                                                 only allow requests when there are no competing requests from other
+                                                                 MHABs in the same GHAB, or when all competing MHABs have an effective
+                                                                 weight of zero. A higher weight guarantees a greater share of the GHAB
+                                                                 bandwidth. */
+        uint64_t reserved_50_51        : 2;
+        uint64_t ghb_rd_weight         : 6;  /**< [ 57: 52](R/W) The weighted round-robin arbitration weight used in the GHAB when
+                                                                 arbitrating for read requests from this MHAB. A value of zero will
+                                                                 only allow requests when there are no competing requests from other
+                                                                 MHABs in the same GHAB, or when all competing MHABs have an effective
+                                                                 weight of zero. A higher weight guarantees a greater share of the GHAB
+                                                                 bandwidth. */
+        uint64_t reserved_58_61        : 4;
+        uint64_t ghb_throttle_dis      : 1;  /**< [ 62: 62](R/W) GHAB interface throttle disable. */
+        uint64_t addr_range_chk_ena    : 1;  /**< [ 63: 63](R/W) LLC/DRAM and SMEM address range check enable. */
+#endif /* Word 0 - End */
+    } loki;
 };
 typedef union cavm_mhbwx_jd_cfg cavm_mhbwx_jd_cfg_t;
 
@@ -5312,7 +5595,26 @@ union cavm_mhbwx_phymem_range
     } cnf95xxp2;
     /* struct cavm_mhbwx_phymem_range_cnf95xxp2 f95mm; */
     /* struct cavm_mhbwx_phymem_range_cnf95xxp2 f95o; */
-    /* struct cavm_mhbwx_phymem_range_cnf95xxp2 loki; */
+    struct cavm_mhbwx_phymem_range_loki
+    {
+#if __BYTE_ORDER == __BIG_ENDIAN /* Word 0 - Big Endian */
+        uint64_t reserved_57_63        : 7;
+        uint64_t smem_max_addr         : 25; /**< [ 56: 32](R/W) A relative address in SMEM that defines the top of the range to be checked.
+                                                                 Program this field with the value SMEM_address \>\> 4 (shifted by 4).
+                                                                 The maximum value for this field is 0x17 FFFF. */
+        uint64_t reserved_25_31        : 7;
+        uint64_t smem_min_addr         : 25; /**< [ 24:  0](R/W) A relative address in SMEM which defines the bottom of the range to be checked.
+                                                                 Program this field with the value SMEM_address \>\> 4 (shifted by 4). */
+#else /* Word 0 - Little Endian */
+        uint64_t smem_min_addr         : 25; /**< [ 24:  0](R/W) A relative address in SMEM which defines the bottom of the range to be checked.
+                                                                 Program this field with the value SMEM_address \>\> 4 (shifted by 4). */
+        uint64_t reserved_25_31        : 7;
+        uint64_t smem_max_addr         : 25; /**< [ 56: 32](R/W) A relative address in SMEM that defines the top of the range to be checked.
+                                                                 Program this field with the value SMEM_address \>\> 4 (shifted by 4).
+                                                                 The maximum value for this field is 0x17 FFFF. */
+        uint64_t reserved_57_63        : 7;
+#endif /* Word 0 - End */
+    } loki;
 };
 typedef union cavm_mhbwx_phymem_range cavm_mhbwx_phymem_range_t;
 
@@ -5339,7 +5641,7 @@ static inline uint64_t CAVM_MHBWX_PHYMEM_RANGE(uint64_t a)
 /**
  * Register (RSL) mhbw#_sysmem_range_max
  *
- * MHBW L2C/DDR Address Range Max Register
+ * MHBW LLC/DRAM Address Range Max Register
  * This register specifies the legal maximum address for system memory access.
  */
 union cavm_mhbwx_sysmem_range_max
@@ -5396,7 +5698,7 @@ static inline uint64_t CAVM_MHBWX_SYSMEM_RANGE_MAX(uint64_t a)
 /**
  * Register (RSL) mhbw#_sysmem_range_min
  *
- * MHBW L2C/DDR Address Range Min Register
+ * MHBW LLC/DRAM Address Range Min Register
  * This register specifies the legal minimum address for system memory access.
  */
 union cavm_mhbwx_sysmem_range_min

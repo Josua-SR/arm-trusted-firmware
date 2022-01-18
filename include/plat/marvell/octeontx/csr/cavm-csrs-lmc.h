@@ -3,7 +3,7 @@
 /* This file is auto-generated. Do not edit */
 
 /***********************license start***********************************
-* Copyright (C) 2018-2021 Marvell
+* Copyright (C) 2018-2022 Marvell
 * SPDX-License-Identifier: BSD-3-Clause
 * https://spdx.org/licenses
 ***********************license end**************************************/
@@ -29185,9 +29185,9 @@ union cavm_lmcx_timing_params1
         uint64_t reserved_62_63        : 2;
 #endif /* Word 0 - End */
     } cnf95xxp2;
-    /* struct cavm_lmcx_timing_params1_cn96xxp3 f95mm; */
+    /* struct cavm_lmcx_timing_params1_cnf95xxp2 f95mm; */
     /* struct cavm_lmcx_timing_params1_cn96xxp3 f95o; */
-    /* struct cavm_lmcx_timing_params1_cn96xxp3 loki; */
+    /* struct cavm_lmcx_timing_params1_cnf95xxp2 loki; */
 };
 typedef union cavm_lmcx_timing_params1 cavm_lmcx_timing_params1_t;
 
